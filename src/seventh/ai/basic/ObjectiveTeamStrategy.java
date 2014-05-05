@@ -1,0 +1,114 @@
+/*
+ * see license.txt 
+ */
+package seventh.ai.basic;
+
+import seventh.game.GameInfo;
+import seventh.game.PlayerInfo;
+import seventh.game.Team;
+import seventh.game.type.ObjectiveGameType;
+import seventh.shared.TimeStep;
+
+/**
+ * Handles the objective based game type.
+ * 
+ * @author Tony
+ *
+ */
+public class ObjectiveTeamStrategy implements TeamStrategy {
+
+	private Team team;
+	
+	private TeamStrategy strategy;
+//	private Stats stats;
+	
+	private DefaultAISystem aiSystem;
+	
+	/**
+	 * 
+	 */
+	public ObjectiveTeamStrategy(DefaultAISystem aiSystem, Team team) {
+		this.aiSystem = aiSystem;
+		this.team = team;		
+	}
+
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public void onGoaless(Brain brain) {
+		if(strategy!=null) {
+			strategy.onGoaless(brain);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.AIGameTypeStrategy#startOfRound(seventh.game.Game)
+	 */
+	@Override
+	public void startOfRound(GameInfo game) {
+		ObjectiveGameType gameType = (ObjectiveGameType) game.getGameType();
+		
+		if( gameType.getAttacker().getId() == this.team.getId() ) {
+			strategy = new OffenseObjectiveTeamStrategy(this.aiSystem, team);
+		}
+		else {
+			strategy = new DefenseObjectiveTeamStrategy(this.aiSystem, team);
+		}
+		
+		strategy.startOfRound(game);
+	}
+
+	/* (non-Javadoc)
+	 * @see seventh.ai.AIGameTypeStrategy#endOfRound(seventh.game.Game)
+	 */
+	@Override
+	public void endOfRound(GameInfo game) {
+//		List<BombTarget> targets = game.getBombTargets();
+//		for(int i = 0; i < targets.size(); i++) {
+//			BombTarget target = targets.get(i);
+//			if(!target.isAlive()) {
+//				int amount = 1;
+//				if(stats.destroyedBombTargets.containsKey(target.getBounds())) {
+//					amount = stats.destroyedBombTargets.get(target.getBounds());
+//					amount += 1;
+//				}
+//				stats.destroyedBombTargets.put(target.getBounds(), amount);
+//			}
+//		}
+		if(strategy!=null) {
+			strategy.endOfRound(game);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.AIGameTypeStrategy#playerKilled(seventh.game.PlayerInfo)
+	 */
+	@Override
+	public void playerKilled(PlayerInfo player) {
+		if(strategy != null) {
+			strategy.playerKilled(player);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.AIGameTypeStrategy#playerSpawned(seventh.game.PlayerInfo)
+	 */
+	@Override
+	public void playerSpawned(PlayerInfo player) {
+		if(strategy != null) {
+			strategy.playerSpawned(player);
+		}	
+	}
+
+	/* (non-Javadoc)
+	 * @see seventh.ai.AIGameTypeStrategy#update(seventh.shared.TimeStep, seventh.game.Game)
+	 */
+	@Override
+	public void update(TimeStep timeStep, GameInfo game) {	
+		if(strategy!=null) {
+			strategy.update(timeStep, game);
+		}
+	}
+
+}
