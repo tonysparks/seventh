@@ -211,15 +211,33 @@ public class World {
 		return result;
 	}
 	
-	
+	/**
+	 * @param entity
+	 * @return a random position anywhere in the game world
+	 */
 	public Vector2f getRandomSpot(Entity entity) {
 		return getRandomSpot(entity, 0, 0, map.getMapWidth()-20, map.getMapHeight()-20);
 	}
 	
+	
+	/**
+	 * @param entity
+	 * @param bounds
+	 * @return a random position anywhere in the supplied bounds
+	 */
 	public Vector2f getRandomSpot(Entity entity, Rectangle bounds) {
 		return getRandomSpot(entity, bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 	
+	/**
+	 * 
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return a random position anywhere in the supplied bounds
+	 */
 	public Vector2f getRandomSpot(Entity entity, int x, int y, int width, int height) {
 		Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
 		Rectangle temp = new Rectangle(entity.getBounds());
@@ -234,6 +252,16 @@ public class World {
 		return pos;
 	}
 	
+	/**
+	 * 
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param notIn
+	 * @return a random position anywhere in the supplied bounds and not in the supplied {@link Rectangle}
+	 */
 	public Vector2f getRandomSpotNotIn(Entity entity, int x, int y, int width, int height, Rectangle notIn) {
 		Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
 		Rectangle temp = new Rectangle(entity.getBounds());
@@ -255,6 +283,11 @@ public class World {
 		return random;
 	}
 	
+	
+	/**
+	 * @param pos
+	 * @return the Zone at the supplied position
+	 */
 	public Zone getZone(Vector2f pos) {
 		return this.zones.getZone(pos);
 	}
@@ -279,6 +312,15 @@ public class World {
 		return result;
 	}
 	
+	
+	/**
+	 * Locates the best hiding position
+	 * 
+	 * @param obstacles list of obstacles to hide by
+	 * @param myPos the Agents current position
+	 * @param targetPos the position which you want to hide from
+	 * @return the best hiding position or the ZERO vector if non could be found
+	 */
 	public Vector2f findBestHidingPosition(List<Tile> obstacles, Vector2f myPos, Vector2f targetPos) {
 		float distToClosest=0f;
 		Vector2f bestHidingSpot = new Vector2f();
@@ -296,6 +338,8 @@ public class World {
 				continue;
 			}
 			
+			
+			/* if this hiding spot is closer to the agent, use it */
 			float dist = Vector2f.Vector2fDistanceSq(nextHidingSpot, myPos);
 			if(dist < distToClosest || bestHidingSpot.isZero()) {
 				bestHidingSpot.set(nextHidingSpot);
@@ -308,6 +352,7 @@ public class World {
 	
 	/**
 	 * Attempts to find {@link Cover} between the agent and an attack direction
+	 * 
 	 * @param entity
 	 * @param attackDir
 	 * @return a place to take {@link Cover}
@@ -329,6 +374,7 @@ public class World {
 	
 	/**
 	 * Calculates the possible {@link AttackDirection}'s from the supplied {@link Entity}s position.
+	 * 
 	 * @param entity
 	 * @return the list of possible {@link AttackDirection}s
 	 */
@@ -355,10 +401,7 @@ public class World {
 			}
 			
 			currentAngle += 360f/maxDirectionsToCheck;
-		}
-		
-		
-		
+		}						
 		
 		return this.attackDirections;
 	}

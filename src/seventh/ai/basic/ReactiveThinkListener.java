@@ -7,6 +7,7 @@ import java.util.List;
 
 import seventh.ai.basic.SimpleThoughtProcess.ThinkListener;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.Bomb;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
@@ -39,6 +40,13 @@ public class ReactiveThinkListener implements ThinkListener {
 		this.goal = new Goal();
 	}
 	
+	
+	/**
+	 * Interrupt the current goal to react to
+	 * a world event
+	 * 
+	 * @param brain
+	 */
 	private void interrupt(Brain brain) {
 		if(!this.isInterrupted) {
 			goal.interrupt(brain);
@@ -46,6 +54,13 @@ public class ReactiveThinkListener implements ThinkListener {
 		}
 	}
 	
+	
+	/**
+	 * Check to see if we should be high tailing it away from a bomb
+	 * 
+	 * @param brain
+	 * @return true if this entity should move away from an active bomb
+	 */
 	private boolean checkIfShouldMoveAwayFromActiveBomb(Brain brain) {
 
 		if(movingAwayFromBomb!=null && movingAwayFromBomb.isAlive()) {
@@ -77,8 +92,14 @@ public class ReactiveThinkListener implements ThinkListener {
 					List<BombTarget> targets = zone.getTargets();
 					for(int i = 0; i < targets.size(); i++) {
 						BombTarget target = targets.get(i);
+						
+						/* if this is an active bomb, let's see if
+						 * we are too close for comfort
+						 */
 						if(target.bombActive() && target.isAlive()) {							
 							Bomb bomb = target.getBomb();
+							
+							/* we are in the blast radius, so let's move to a safer location */
 							if(bomb.getBlastRadius().intersects(me.getBounds())) {
 								movingAwayFromBomb = target;
 							
@@ -106,7 +127,8 @@ public class ReactiveThinkListener implements ThinkListener {
 									}
 									
 								}
-													
+												
+								/* if we found a safer zone, move to it */
 								if(adjacentZone != null) {
 									motion.moveTo(world.getRandomSpot(me, adjacentZone.getBounds()));
 								}
@@ -155,27 +177,38 @@ public class ReactiveThinkListener implements ThinkListener {
 		}
 		
 		/* are we receiving orders? if so make these highest priority */
-		Action command = brain.getCommunicator().process(brain);
+		Action command = brain.getCommunicator().receiveAction(brain);
 		if(command != null) {			
 			this.goal.end(brain);
 			this.goal.addFirstAction(command);
 		}
 		else {
+			
+			/* if we were interrupted, we should 
+			 * be able to resume our goal now
+			 */
 			if(this.isInterrupted) {
 				this.goal.resume(brain);
 				this.isInterrupted = false;
 			}
 			
 			
+			/* if we don't have any goals left,
+			 * let's ping the TeamStrategy to see
+			 * if there is anything we should be doing
+			 */
 			if(this.goal.isFinished(brain)) {		
 				if(this.strategy != null) {
 					this.strategy.onGoaless(brain);
 				}
 			}
 			
+			
+			/* if all else fails, start wandering around
+			 * looking for bad guys
+			 */
 			if(this.goal.isFinished(brain)) {
 				
-				/* If we have no goals, just wander around */
 				Locomotion motion = brain.getMotion();
 				if(!motion.isMoving() && !motion.isAttacking()) {
 					motion.wander();
@@ -186,6 +219,12 @@ public class ReactiveThinkListener implements ThinkListener {
 			}
 		}
 		
+//		debugDraw();
+	}
+	
+	@SuppressWarnings("unused")
+	private void debugDraw() {
+
 		Action action = goal.currentAction();
 		if(action != null) {
 			DebugDraw.drawString("Goal Action: " + action.getClass().getSimpleName(), 800, 50, 0xff00ff00);
@@ -200,10 +239,10 @@ public class ReactiveThinkListener implements ThinkListener {
 		Locomotion motion = brain.getMotion();
 		PlayerEntity bot = brain.getEntityOwner();
 
-//		motion.moveTo(brain.getWorld().getRandomSpot(bot));
-//		motion.scanArea();
-//		return true;		
-		return false;
+		motion.moveTo(brain.getWorld().getRandomSpot(bot));
+		motion.scanArea();
+		return true;		
+//		return false;
 	}
 
 	/* (non-Javadoc)
@@ -242,8 +281,6 @@ public class ReactiveThinkListener implements ThinkListener {
 		
 		Locomotion motion = brain.getMotion();
 		boolean attacking = motion.isAttacking(); 
-		
-//		System.out.println("See enemies: " + attacking);
 		
 		// Now lets check to see if any enemies
 		// are in our sights.  If so, attack! 

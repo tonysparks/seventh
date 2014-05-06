@@ -11,6 +11,10 @@ import seventh.game.Entity;
 import seventh.math.Rectangle;
 
 /**
+ * A {@link Zone} represents a section of the game world.  We break the game world
+ * into {@link Zone}s so that we can gather statistics about "hot" areas and makes
+ * it easier to defend or attack areas of the map.
+ * 
  * @author Tony
  *
  */
@@ -21,6 +25,8 @@ public class Zone {
 	
 	private List<BombTarget> targets;
 	
+	private ZoneStats stats;
+	
 	/**
 	 * @param id
 	 * @param bounds
@@ -29,6 +35,14 @@ public class Zone {
 		this.id = id;
 		this.bounds = bounds;
 		this.targets = new ArrayList<BombTarget>();
+		this.stats = new ZoneStats(this);
+	}
+	
+	/**
+	 * @return the stats
+	 */
+	public ZoneStats getStats() {
+		return stats;
 	}
 	
 	/**
@@ -59,6 +73,10 @@ public class Zone {
 		return targets;
 	}
 	
+	
+	/**
+	 * Clears any registered targets
+	 */
 	public void clearTargets() {
 		this.targets.clear();
 	}

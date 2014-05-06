@@ -1,10 +1,12 @@
 /*
  * see license.txt 
  */
-package seventh.ai.basic;
+package seventh.ai.basic.teamstrategy;
 
 import java.util.List;
 
+import seventh.ai.basic.Brain;
+import seventh.ai.basic.DefaultAISystem;
 import seventh.game.Bomb;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
@@ -15,7 +17,7 @@ import seventh.game.Team;
 import seventh.shared.TimeStep;
 
 /**
- * Handles the objective based game type.
+ * Handles the defensive strategy objective based game type.
  * 
  * @author Tony
  *
@@ -40,7 +42,6 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void onGoaless(Brain brain) {
-		// TODO Auto-generated method stub
 		
 	}
 	

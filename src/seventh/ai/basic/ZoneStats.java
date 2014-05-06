@@ -4,6 +4,9 @@
 package seventh.ai.basic;
 
 /**
+ * Some useful statistics about a zone.  This helps the AI
+ * make some decisions on strategy.
+ * 
  * @author Tony
  *
  */
@@ -15,11 +18,26 @@ public class ZoneStats {
 	private int numberOfAlliedDeaths;
 	private int numberOfAlliedKills;
 	
+	private Zone zone;
+	
 	/**
-	 * 
 	 */
-	public ZoneStats() {
-		// TODO Auto-generated constructor stub
+	public ZoneStats(Zone zone) {
+		this.zone = zone;
+	}	
+	
+	/**
+	 * @return the {@link Zone}
+	 */
+	public Zone getZone() {
+		return zone;
+	}
+	
+	/**
+	 * @return the total number of deaths in this Zone
+	 */
+	public int getTotalKilled() {
+		return this.numberOfAlliedDeaths + this.numberOfAxisDeaths;
 	}
 	
 	public void addAxisDeath() {

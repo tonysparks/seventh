@@ -52,7 +52,7 @@ public class FeelSensor implements Sensor, OnDamageListener {
 	/**
 	 * Test for anything touching this entity.
 	 */
-	public void feel() {
+	private void feel() {
 		this.memory.store(FEEL, this.damager);
 	}
 
@@ -67,6 +67,8 @@ public class FeelSensor implements Sensor, OnDamageListener {
 		else {
 			this.damager = null;
 		}
+		
+		feel();
 		
 	}
 	

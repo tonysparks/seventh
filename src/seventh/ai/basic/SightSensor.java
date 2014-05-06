@@ -76,13 +76,15 @@ public class SightSensor implements Sensor {
 			this.timeToRemember = SIGHT_MEMORY;
 		}*/	
 		
+		see();
+		
 	}
 
 	/**
 	 * Looks for anything interesting in the 
 	 * current view port
 	 */
-	public void see() {	
+	private void see() {	
 		if(timeToSee <= 0) {
 			this.entitiesInView.clear();
 			this.world.getPlayersInLineOfSight(this.entitiesInView, this.entity);

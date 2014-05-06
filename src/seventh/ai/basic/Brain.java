@@ -5,6 +5,7 @@ package seventh.ai.basic;
 
 import java.util.List;
 
+import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.graph.GraphNode;
@@ -109,10 +110,12 @@ public class Brain {
 			this.thoughtProcess.think(timeStep, this);
 			
 			
-			debugDraw();
+			//debugDraw();
 		}		
 	}
 	
+	
+	@SuppressWarnings("unused")
 	private void debugDraw() {
 		world.getCover(entityOwner, entityOwner.getPos());
 		

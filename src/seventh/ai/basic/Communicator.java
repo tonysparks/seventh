@@ -7,9 +7,13 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.teamstrategy.TeamStrategy;
 
 
 /**
+ * Allows for giving an Agent to be given orders/Goals from another 
+ * source (either a {@link TeamStrategy}, remote command, another agent, etc) 
+ * 
  * @author Tony
  *
  */
@@ -28,11 +32,11 @@ public class Communicator {
 	}
 	
 	/**
-	 * Drains one command per execution.
+	 * Receives any pending {@link Action}s.
 	 * 
 	 * @param brain
 	 */
-	public Action process(Brain brain) {
+	public Action receiveAction(Brain brain) {
 		Action cmd = commands.poll();
 		return cmd;
 	}

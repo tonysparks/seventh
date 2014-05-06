@@ -58,7 +58,7 @@ public class SeventhGame implements ApplicationListener {
 	private static final String HEADER = 
 			"=============================================================================\n" +
 			"                                                                             \n" +
-			"                             === RED on RED ===                              \n" +
+			"                             === The Seventh ===                             \n" +
 			"                                5d Studios (c)                               \n" +
 			"                                                                             \n" +
 			"                                                                             \n" +

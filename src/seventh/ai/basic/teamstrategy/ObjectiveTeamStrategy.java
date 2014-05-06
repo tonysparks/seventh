@@ -1,8 +1,10 @@
 /*
  * see license.txt 
  */
-package seventh.ai.basic;
+package seventh.ai.basic.teamstrategy;
 
+import seventh.ai.basic.Brain;
+import seventh.ai.basic.DefaultAISystem;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;

@@ -39,13 +39,13 @@ public class MiniMap implements Renderable {
 		
 		java.util.Map<TextureRegion, Integer> cache = new HashMap<TextureRegion, Integer>();
 		
-		int ratioWidth = map.getMapWidth()/4;
-		int ratioHeight = map.getMapHeight()/4;
+		int ratioWidth = map.getMapWidth()/8;
+		int ratioHeight = map.getMapHeight()/8;
 		
 		Pixmap pix = TextureUtil.createPixmap(ratioWidth, ratioHeight);
 
-		int width = map.getTileWidth()/4;
-		int height = map.getTileHeight()/4;
+		int width = map.getTileWidth()/8;
+		int height = map.getTileHeight()/8;
 		
 		Layer[] layers = map.getBackgroundLayers();
 		for(int y = 0; y < map.getTileWorldHeight(); y++) {

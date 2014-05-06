@@ -1,5 +1,5 @@
 /*
- * 
+ * See license
  */
 package seventh;
 

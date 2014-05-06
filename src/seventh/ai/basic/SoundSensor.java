@@ -11,6 +11,8 @@ import seventh.game.events.SoundEmittedEvent;
 import seventh.shared.TimeStep;
 
 /**
+ * Listens for sounds
+ * 
  * @author Tony
  *
  */
@@ -64,12 +66,14 @@ public class SoundSensor implements Sensor {
 		if(this.timeToHear > 0) {
 			this.timeToHear -= timeStep.getDeltaTime();
 		}		
+		
+		listen();
 	}
 
 	/**
 	 * Listen for sounds
 	 */
-	public void listen() {	
+	private void listen() {	
 		if(timeToHear <= 0) 
 		{			
 			this.sounds.clear();

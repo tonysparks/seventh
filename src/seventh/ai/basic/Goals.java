@@ -24,6 +24,12 @@ public class Goals {
 		this.runtime = runtime;
 	}
 	
+	
+	/**
+	 * Get an {@link Action} defined in a {@link Leola} script
+	 * @param action
+	 * @return
+	 */
 	public Action getScriptedAction(String action) {
 		LeoObject actionFunction  = runtime.get(action);
 		if(LeoObject.isTrue(actionFunction)) {

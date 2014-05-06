@@ -456,7 +456,7 @@ public class ClientGame {
 		
 		lightSystem.render(canvas, camera, 0);
 				
-//		miniMap.render(canvas, camera, 0);
+		miniMap.render(canvas, camera, 0);
 		
 		DebugDraw.enable(false);
 		DebugDraw.render(canvas, camera);

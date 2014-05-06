@@ -17,7 +17,10 @@ import seventh.shared.TimeStep;
  */
 public class StareAtEntityAction extends AdapterAction {
 
-	private static final int MAX_SLOP = (int)((Math.PI/30.0) * 100.0);
+	/**
+	 * Max value to offset aiming
+	 */
+	private static final float MAX_SLOP = (float)(Math.PI/8);
 	
 	private Entity stareAtMe;
 	private long lastVisibleTime;
@@ -46,7 +49,10 @@ public class StareAtEntityAction extends AdapterAction {
 		List<PlayerEntity> entitiesInView = brain.getSensors().getSightSensor().getEntitiesInView();
 		if(entitiesInView.contains(this.stareAtMe)) {
 			this.lastVisibleTime = 0;
-			float slop = 0.0f;//brain.getWorld().getRandom().nextInt(MAX_SLOP+25) / 100.0f;
+			
+			/* add some slop value so that the Agent isn't too accurate */
+			float slop = brain.getWorld().getRandom().nextFloat() * (MAX_SLOP/2f);
+			
 			me.setOrientation(Entity.getAngleBetween(entityPos, me.getPos()) + slop );		
 		}
 		else {

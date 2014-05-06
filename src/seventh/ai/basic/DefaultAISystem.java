@@ -9,6 +9,9 @@ import java.util.Random;
 import leola.vm.Args;
 import leola.vm.Leola;
 import seventh.ai.AISystem;
+import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
+import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
+import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.Game;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
@@ -22,6 +25,11 @@ import seventh.shared.DebugDraw;
 import seventh.shared.TimeStep;
 
 /**
+ * The Default AI System implementation.  This implementation is based
+ * off of making Reactive Decisions based off of Sensory inputs.  If no
+ * immediate decision can be made, a general goal (objective) is worked
+ * towards.
+ * 
  * @author Tony
  *
  */
@@ -91,6 +99,11 @@ public class DefaultAISystem implements AISystem {
 				
 	}
 	
+	
+	/**
+	 * @param player
+	 * @return the team strategy for a given player 
+	 */
 	private TeamStrategy getStrategyFor(PlayerInfo player) {
 		if(Team.ALLIED_TEAM == player.getTeamId()) {
 			return this.alliedAIStrategy;
@@ -135,6 +148,9 @@ public class DefaultAISystem implements AISystem {
 	 */
 	@Override
 	public void destroy() {	
+		for(int i = 0; i < this.brains.length; i++) {
+			this.brains[i] = null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -203,6 +219,11 @@ public class DefaultAISystem implements AISystem {
 		//debugDrawZones();
 	}
 
+	
+	/**
+	 * Draws the {@link Zones}
+	 */
+	@SuppressWarnings("unused")
 	private void debugDrawZones() {
 		Zone[][] zs = zones.getZones();
 		for(int y = 0; y < zs.length; y++) {
@@ -218,6 +239,7 @@ public class DefaultAISystem implements AISystem {
 	/**
 	 * Helpful debug for AI
 	 */
+	@SuppressWarnings("unused")
 	private void debugDraw() {
 		
 		int y = 100;

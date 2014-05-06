@@ -13,7 +13,6 @@ import seventh.ai.basic.actions.FollowEntityAction;
 import seventh.ai.basic.actions.HeadScanAction;
 import seventh.ai.basic.actions.LookAtAction;
 import seventh.ai.basic.actions.MoveAction;
-import seventh.ai.basic.actions.StareAtAction;
 import seventh.ai.basic.actions.StareAtEntityAction;
 import seventh.ai.basic.actions.SwitchWeaponAction;
 import seventh.ai.basic.actions.ThrowGrenadeAction;
@@ -33,6 +32,8 @@ import seventh.shared.TimeStep;
 
 
 /**
+ * Used for handling Agent motion
+ * 
  * @author Tony
  *
  */
@@ -98,6 +99,7 @@ public class Locomotion {
 		return pathFeeder;
 	}
 	
+	@SuppressWarnings("unused")
 	private void debugDraw() {
 		int y = 100;
 		int x = 20;
@@ -124,7 +126,7 @@ public class Locomotion {
 	 * @param timeStep
 	 */
 	public void update(TimeStep timeStep) {
-		debugDraw();
+		//debugDraw();
 		
 		if(!walkingGoal.isFinished(brain)) {
 			walkingGoal.update(brain, timeStep);
@@ -229,10 +231,7 @@ public class Locomotion {
 	
 	public void lookAt(Vector2f pos) {		
 		this.facingGoal.setAction(new LookAtAction(this.me, pos));
-	}
-	public void stareAt(Vector2f position) {
-		this.facingGoal.setAction(new StareAtAction(position));
-	}
+	}	
 	public void stareAtEntity(Entity entity) {
 		this.facingGoal.setAction(new StareAtEntityAction(entity));
 	}

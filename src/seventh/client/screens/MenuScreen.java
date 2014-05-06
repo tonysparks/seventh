@@ -246,24 +246,9 @@ public class MenuScreen implements Screen {
 		canvas.setFont(theme.getPrimaryFontName(), 94);
 				
 		int fontColor = theme.getForegroundColor();
-		String message = "RED";
-		RenderFont.drawShadedString(canvas, message
-									, canvas.getWidth()/3 - canvas.getWidth(message)
-									, canvas.getHeight()/6, fontColor);
-		
-
-		canvas.setFont(theme.getSecondaryFontName(), 48);
-		message = "on";
-		RenderFont.drawShadedString(canvas, message
-				, canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/6, fontColor);
-		
-		canvas.setFont(theme.getPrimaryFontName(), 94);		
-		fontColor = theme.getForegroundColor();
-		message = "RED";
-		RenderFont.drawShadedString(canvas, message
-									, canvas.getWidth() - canvas.getWidth()/3
-									, canvas.getHeight()/6, fontColor);
-
+		String message = "The Seventh";
+		int center = (canvas.getWidth() - canvas.getWidth(message)) / 2;
+		RenderFont.drawShadedString(canvas, message, center, canvas.getHeight()/6, fontColor);
 		
 		this.uiManager.render(canvas);
 		

@@ -6,6 +6,9 @@ package seventh.ai.basic;
 import seventh.shared.TimeStep;
 
 /**
+ * A {@link ThoughtProcess} that does nothing, this is to allow for
+ * having Agents that do nothing for debugging purposes.
+ * 
  * @author Tony
  *
  */

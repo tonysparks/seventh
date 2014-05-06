@@ -77,10 +77,10 @@ public class MapGraph<T> {
 				Tile currentTile = currentNode.getValue();
 				Tile goalTile = goal.getValue();
 				
-				int distance = ((currentTile.getX() - goalTile.getX()) *
-							    (currentTile.getX() - goalTile.getX())) +
-							   ((currentTile.getY() - goalTile.getY()) *
-							    (currentTile.getY() - goalTile.getY()));
+				int distance = ((goalTile.getX() - currentTile.getX()) *
+							    (goalTile.getX() - currentTile.getX())) +
+							   ((goalTile.getY() - currentTile.getY()) *
+							    (goalTile.getY() - currentTile.getY()));
 				
 				return distance;
 			}

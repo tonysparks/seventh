@@ -6,6 +6,8 @@ package seventh.ai.basic;
 import seventh.shared.TimeStep;
 
 /**
+ * Just a container for all of our sensory inputs
+ * 
  * @author Tony
  *
  */
@@ -21,6 +23,12 @@ public class Sensors {
 		this.feelSensor = new FeelSensor(brain);
 	}
 	
+	
+	/**
+	 * Resets each {@link Sensor}
+	 * 
+	 * @param brain
+	 */
 	public void reset(Brain brain) {
 		this.sightSensor.reset(brain);
 		this.soundSensor.reset(brain);
@@ -55,10 +63,6 @@ public class Sensors {
 	public void update(TimeStep timeStep) {
 		this.sightSensor.update(timeStep);
 		this.soundSensor.update(timeStep);
-		this.feelSensor.update(timeStep);
-		
-		this.sightSensor.see();
-		this.soundSensor.listen();
-		this.feelSensor.feel();
+		this.feelSensor.update(timeStep);		
 	}
 }
