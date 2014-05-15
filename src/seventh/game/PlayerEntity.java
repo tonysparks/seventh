@@ -29,6 +29,8 @@ import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 
 /**
+ * A controllable {@link Entity} by either AI or a Player.  
+ * 
  * @author Tony
  *
  */

@@ -11,6 +11,8 @@ import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Weapon;
 
 /**
+ * A {@link Player}s current inventory of {@link Weapon}s.
+ * 
  * @author Tony
  *
  */

@@ -10,6 +10,9 @@ import seventh.game.net.NetTeam;
 import seventh.math.Vector2f;
 
 /**
+ * A team is a collection of {@link Player}s.  The team contains a score, at the
+ * end of a game the team with the highest score wins!
+ * 
  * @author Tony
  *
  */

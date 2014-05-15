@@ -5,6 +5,10 @@ package seventh.game;
 
 
 /**
+ * A simple structure holding the information a player has issued
+ * as input.  This structure is sent to the server for processing (moving,
+ * shooting, etc. for the PlayerEntity).
+ * 
  * @author Tony
  *
  */

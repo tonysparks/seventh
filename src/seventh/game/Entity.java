@@ -12,6 +12,9 @@ import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 /**
+ * Base class for anything that is able to be interacted with in the game world.
+ * 
+ * 
  * @author Tony
  *
  */

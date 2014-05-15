@@ -16,6 +16,9 @@ import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
 /**
+ * A Bomb is something that can be planted on a {@link BombTarget} and makes 
+ * it go boom!
+ * 
  * @author Tony
  *
  */

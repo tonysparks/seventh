@@ -6,6 +6,8 @@ package seventh.game;
 import seventh.map.Tile.SurfaceType;
 
 /**
+ * Simple utility class to convert {@link SurfaceType}'s to {@link SoundType}'s
+ * 
  * @author Tony
  *
  */

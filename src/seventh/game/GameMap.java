@@ -7,6 +7,8 @@ import seventh.game.net.NetMap;
 import seventh.map.Map;
 
 /**
+ * The current game map information
+ * 
  * @author Tony
  *
  */

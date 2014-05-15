@@ -4,6 +4,8 @@
 package seventh.game;
 
 /**
+ * All available sounds in the game
+ * 
  * @author Tony
  *
  */
