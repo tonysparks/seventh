@@ -63,6 +63,14 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		this.goals = new Goals(aiSystem.getRuntime());
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getTeam()
+	 */
+	@Override
+	public Team getTeam() {
+		return this.team;
+	}
 
 	/* (non-Javadoc)
 	 * @see seventh.ai.AIGameTypeStrategy#startOfRound(seventh.game.Game)

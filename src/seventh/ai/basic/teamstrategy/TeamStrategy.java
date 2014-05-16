@@ -6,6 +6,7 @@ package seventh.ai.basic.teamstrategy;
 import seventh.ai.basic.Brain;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
+import seventh.game.Team;
 import seventh.game.type.GameType;
 import seventh.shared.TimeStep;
 
@@ -17,6 +18,11 @@ import seventh.shared.TimeStep;
  */
 public interface TeamStrategy {
 
+	/**
+	 * @return the Team this strategy is for
+	 */
+	public Team getTeam();
+	
 	/**
 	 * The agent has no immeidate goals, free to take
 	 * orders

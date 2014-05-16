@@ -13,7 +13,8 @@ import seventh.math.Vector2f;
 
 
 /**
- * Feeds the next graph node
+ * Feeds the next graph node.  This is the path planner for an agent.  This allows an agent to
+ * know which tile to move to next
  * 
  * @author Tony
  *
@@ -23,7 +24,7 @@ public class PathFeeder<E> {
 	private int currentNode;
 	private Vector2f destination;
 	
-	
+	private int hashCode;
 	
 	/**
 	 * @param path
@@ -31,8 +32,21 @@ public class PathFeeder<E> {
 	public PathFeeder(List<GraphNode<Tile, E>> path) {
 		this.path = path;//path.size() > 2 ? path.subList(1, path.size()): path;
 		this.currentNode = 0;
-		this.destination = new Vector2f(); 
+		this.destination = new Vector2f();
+		
+		hashCode = 1;        
+		for(int i = 0; i < path.size(); i++) {
+			hashCode = 31*hashCode + path.get(i).hashCode();
+		}
 	} 
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return hashCode;
+	}
 
 	/**
 	 * @return the path
@@ -87,9 +101,7 @@ public class PathFeeder<E> {
 	 * @return true if the current position is about the end of the path
 	 */
 	public boolean atDestination() {
-		if (currentNode == path.size())
-			return true;
-		return false;
+		return (currentNode >= path.size());
 	}
 }
 

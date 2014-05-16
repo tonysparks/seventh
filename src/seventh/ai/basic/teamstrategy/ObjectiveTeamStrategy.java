@@ -19,11 +19,8 @@ import seventh.shared.TimeStep;
  */
 public class ObjectiveTeamStrategy implements TeamStrategy {
 
-	private Team team;
-	
+	private Team team;	
 	private TeamStrategy strategy;
-//	private Stats stats;
-	
 	private DefaultAISystem aiSystem;
 	
 	/**
@@ -32,6 +29,14 @@ public class ObjectiveTeamStrategy implements TeamStrategy {
 	public ObjectiveTeamStrategy(DefaultAISystem aiSystem, Team team) {
 		this.aiSystem = aiSystem;
 		this.team = team;		
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getTeam()
+	 */
+	@Override
+	public Team getTeam() {
+		return this.team;
 	}
 
 	/* (non-Javadoc)
@@ -66,18 +71,6 @@ public class ObjectiveTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void endOfRound(GameInfo game) {
-//		List<BombTarget> targets = game.getBombTargets();
-//		for(int i = 0; i < targets.size(); i++) {
-//			BombTarget target = targets.get(i);
-//			if(!target.isAlive()) {
-//				int amount = 1;
-//				if(stats.destroyedBombTargets.containsKey(target.getBounds())) {
-//					amount = stats.destroyedBombTargets.get(target.getBounds());
-//					amount += 1;
-//				}
-//				stats.destroyedBombTargets.put(target.getBounds(), amount);
-//			}
-//		}
 		if(strategy!=null) {
 			strategy.endOfRound(game);
 		}

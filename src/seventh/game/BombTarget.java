@@ -78,6 +78,13 @@ public class BombTarget extends Entity {
 	}
 	
 	/**
+	 * @return if a player is disarming the bomb
+	 */
+	public boolean bombDisarming() {
+		return this.bomb==null || this.bomb.isDisarming();
+	}
+	
+	/**
 	 * @return true if a bomb is already associated with this 
 	 */
 	public boolean isBombAttached() {

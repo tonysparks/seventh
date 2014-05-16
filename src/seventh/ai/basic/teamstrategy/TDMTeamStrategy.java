@@ -6,6 +6,7 @@ package seventh.ai.basic.teamstrategy;
 import seventh.ai.basic.Brain;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
+import seventh.game.Team;
 import seventh.shared.TimeStep;
 
 /**
@@ -16,10 +17,20 @@ import seventh.shared.TimeStep;
  */
 public class TDMTeamStrategy implements TeamStrategy {
 
+	private Team team;
 	/**
 	 * 
 	 */
-	public TDMTeamStrategy() {	
+	public TDMTeamStrategy(Team team) {
+		this.team = team;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getTeam()
+	 */
+	@Override
+	public Team getTeam() {
+		return this.team;
 	}
 	
 	/* (non-Javadoc)

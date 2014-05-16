@@ -164,15 +164,15 @@ public class BufferIO {
 	public static void write(IOBuffer buffer, String str) {
 		
 		byte[] chars = str.getBytes();
-		byte len = (byte) chars.length;
-		buffer.put( len );
+		int len = chars.length;
+		buffer.putUnsignedByte(len);
 		for(byte i = 0; i < len; i++) {
 			buffer.put(chars[i]);
 		}		
 	}
 	
 	public static String readString(IOBuffer buffer) {
-		byte len = buffer.get();
+		int len = buffer.getUnsignedByte();
 		byte[] chars = new byte[len];
 		for(byte i = 0; i < len; i++) {
 			chars[i] = buffer.get();

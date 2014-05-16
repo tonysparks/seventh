@@ -51,7 +51,7 @@ public class StareAtEntityAction extends AdapterAction {
 			this.lastVisibleTime = 0;
 			
 			/* add some slop value so that the Agent isn't too accurate */
-			float slop = brain.getWorld().getRandom().nextFloat() * (MAX_SLOP/2f);
+			float slop = brain.getWorld().getRandom().nextFloat() * (MAX_SLOP/3f);
 			
 			me.setOrientation(Entity.getAngleBetween(entityPos, me.getPos()) + slop );		
 		}

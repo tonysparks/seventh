@@ -110,7 +110,7 @@ public class Brain {
 			this.thoughtProcess.think(timeStep, this);
 			
 			
-			//debugDraw();
+			debugDraw();
 		}		
 	}
 	
@@ -125,15 +125,15 @@ public class Brain {
 		}
 		
 		
-		PathFeeder<?> pathPlanner = motion.getPathFeeder();
-		if(pathPlanner != null) {
-			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
-				Tile tile = node.getValue();
-				if(tile != null) {
-					DebugDraw.drawRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0xff00ff00);
-				}
-			}
-		}
+//		PathFeeder<?> pathPlanner = motion.getPathFeeder();
+//		if(pathPlanner != null) {
+//			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
+//				Tile tile = node.getValue();
+//				if(tile != null) {
+//					DebugDraw.drawRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0xff00ff00);
+//				}
+//			}
+//		}
 	}
 
 	/**

@@ -53,6 +53,30 @@ public class Team {
 		this.players = new ArrayList<Player>();
 	}
 	
+	/**
+	 * Returns the number of players in the supplied list that are on this 
+	 * team.
+	 * @param players
+	 * @return the number of players in the list on this team
+	 */
+	public int getNumberOfPlayersOnTeam(List<PlayerEntity> players) {
+		int sum = 0;
+		for(int i = 0; i < players.size(); i++) {
+			PlayerEntity player = players.get(i);
+			if(player != null) {
+				Team team = player.getTeam();
+				
+				if(team != null) {
+					if(team.getId() == getId()) {
+						sum++;
+					}
+				}
+			}
+		}
+		
+		return sum;
+	}
+	
 	public String getName() {
 		return getName(getId());
 	}
@@ -253,6 +277,21 @@ public class Team {
 		}
 		
 		return deaths;
+	}
+	
+	/**
+	 * The number of total alive players on this team
+	 * @return the number of alive players on this team
+	 */
+	public int getNumberOfAlivePlayers() {
+		int numberOfAlivePlayers = 0;
+		for(int i = 0; i < this.players.size(); i++) {
+			if(this.players.get(i).isAlive()) {
+				numberOfAlivePlayers++;
+			}
+		}
+		
+		return numberOfAlivePlayers;
 	}
 	
 	public NetTeam getNetTeam() {

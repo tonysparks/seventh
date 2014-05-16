@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import seventh.game.Bomb;
+import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.PlayerEntity;
 import seventh.game.SoundType;
@@ -83,6 +85,15 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 		boolean onClosestSound(TimeStep timeStep, Brain brain, SoundEmittedEvent closestSound);
 		
 		/**
+		 * The agent is within the blast radius of an active bomb
+		 * @param timeStep
+		 * @param brain
+		 * @param target
+		 * @return true if we should stop processing
+		 */
+		boolean onTooCloseToActiveBomb(TimeStep timeStep, Brain brain, BombTarget target);
+		
+		/**
 		 * The start of the thinking process
 		 * @param timeStep
 		 * @param brain
@@ -115,7 +126,7 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 	private Timer stuckTimer;
 	private long nextStuckCheck;
 	private Vector2f previousPosition;
-		
+	
 	/**
 	 * Cached list of entities in view
 	 */
@@ -289,6 +300,38 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 		return false;
 	}
 	
+	/**
+	 * Check to see if the agent is too close to an active bomb
+	 * 
+	 * @param brain
+	 * @return the {@link BombTarget} with an active bomb on it.  Null if not too close
+	 */
+	private BombTarget checkIfCloseToActiveBomb(Brain brain) {
+
+		World world = brain.getWorld();
+							
+		List<BombTarget> targets = world.getBombTargetsWithActiveBombs();
+		for(int i = 0; i < targets.size(); i++) {
+			BombTarget target = targets.get(i);
+			
+			/* if this is an active bomb, let's see if
+			 * we are too close for comfort
+			 */													
+			Zone zone = world.getZone(target.getCenterPos());
+			if(zone != null) {
+				Bomb bomb = target.getBomb();
+				
+				/* we are in the blast radius, so let's move to a safer location */
+				if(bomb.getBlastRadius().intersects(brain.getEntityOwner().getBounds())) {
+					return target;
+				}
+			}
+			
+		}		
+		
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.Strategy#onKilled(seventh.ai.basic.Brain)
 	 */
@@ -347,6 +390,13 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 		SoundEmittedEvent sound = checkSounds(brain);
 		if(sound != null) {
 			if(this.thinkListener.onClosestSound(timeStep, brain, sound)) {
+				return;
+			}
+		}
+		
+		BombTarget target = checkIfCloseToActiveBomb(brain);
+		if(target != null) {
+			if(this.thinkListener.onTooCloseToActiveBomb(timeStep, brain, target)) {
 				return;
 			}
 		}

@@ -44,6 +44,7 @@ public class World {
 	private List<SoundEmittedEvent> lastFramesSounds;
 	
 	private List<AttackDirection> attackDirections;
+	private List<BombTarget> activeBombs;
 	
 	private Zones zones;
 	
@@ -72,6 +73,8 @@ public class World {
 		
 		this.lastFramesSounds = new ArrayList<SoundEmittedEvent>();
 		this.attackDirections = new ArrayList<AttackDirection>();
+		
+		this.activeBombs = new ArrayList<BombTarget>();
 	}
 	
 	/**
@@ -142,6 +145,23 @@ public class World {
 	 */
 	public boolean hasBombTargets() {
 		return !this.game.getBombTargets().isEmpty();
+	}
+	
+	/**
+	 * @return {@link BombTarget}'s that have an active bomb on it
+	 */
+	public List<BombTarget> getBombTargetsWithActiveBombs() {
+		this.activeBombs.clear();
+		
+		List<BombTarget> targets = getBombTargets();
+		for(int i = 0; i < targets.size(); i++) {
+			BombTarget target = targets.get(i);
+			if(target.isAlive() && target.bombActive()) {
+				activeBombs.add(target);
+			}
+		}
+		
+		return this.activeBombs;
 	}
 	
 	/**
@@ -290,6 +310,53 @@ public class World {
 	 */
 	public Zone getZone(Vector2f pos) {
 		return this.zones.getZone(pos);
+	}
+	
+	public Zone getZone(int x, int y) {
+		return this.zones.getZone(x, y);
+	}
+	
+	
+	/**
+	 * Attempts to find an adjacent {@link Zone} given the minimum distance
+	 * @param zone
+	 * @param minDistance
+	 * @return an adjacent zone or null if none are found
+	 */
+	public Zone findAdjacentZone(Zone zone, int minDistance) {
+		Rectangle bounds = zone.getBounds();
+		int fuzzy = 5;
+		
+		/* try right */			
+		int adjacentZoneX = bounds.x + bounds.width + fuzzy + minDistance;
+		int adjacentZoneY = bounds.y + minDistance;
+		
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);								
+		if(adjacentZone==zone||adjacentZone==null) {
+			
+			/* try left */			
+			adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
+			adjacentZoneY = bounds.y;
+			
+			adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+			if(adjacentZone==zone||adjacentZone==null) {
+				
+				/* try down */				
+				adjacentZoneX = bounds.x;
+				adjacentZoneY = bounds.y + (bounds.height + fuzzy + minDistance);;
+				
+				adjacentZone = getZone(adjacentZoneX, adjacentZoneY);										
+				if(adjacentZone==zone||adjacentZone==null) {
+					
+					/* try up */					
+					adjacentZoneX = bounds.x;
+					adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);;
+					adjacentZone = getZone(adjacentZoneX, adjacentZoneY);	
+				}
+			}
+			
+		}
+		return adjacentZone;
 	}
 	
 	/**

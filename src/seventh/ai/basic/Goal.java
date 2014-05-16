@@ -79,8 +79,12 @@ public class Goal extends AdapterAction {
 			}
 			
 			if(action.isFinished(brain)) {
+				
 				action.end(brain);
-				this.actions.poll();
+				
+				/* remove this action because the action may have pushed another action on the queue */
+				this.actions.remove(action); 
+				
 				Action nextAction = this.actions.peek();
 				if(nextAction != null) {
 					nextAction.start(brain);

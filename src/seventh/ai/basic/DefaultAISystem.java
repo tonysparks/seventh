@@ -82,8 +82,8 @@ public class DefaultAISystem implements AISystem {
 			this.axisAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAxisTeam());
 		}
 		else {
-			this.alliedAIStrategy = new TDMTeamStrategy();
-			this.axisAIStrategy = new TDMTeamStrategy();
+			this.alliedAIStrategy = new TDMTeamStrategy(gameType.getAlliedTeam());
+			this.axisAIStrategy = new TDMTeamStrategy(gameType.getAxisTeam());
 		}
 		
 		PlayerInfos players = game.getPlayerInfos();

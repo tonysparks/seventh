@@ -66,4 +66,9 @@ public class Goals {
 		return action;
 	}
 	
+//	public Action scanArea() {
+//		Action action = getScriptedAction("scanArea");
+//		return action;
+//	}
+	
 }

@@ -32,7 +32,7 @@ public class MoveAction extends AdapterAction {
 	public void start(Brain brain) {
 		Vector2f position = brain.getEntityOwner().getPos();
 		
-		PathFeeder<?> feeder = brain.getWorld().getGraph().findPath(position, destination);
+		PathFeeder<?> feeder = brain.getWorld().getGraph().findFuzzyPath(position, destination);
 		brain.getMotion().setPathFeeder(feeder);
 	}
 	

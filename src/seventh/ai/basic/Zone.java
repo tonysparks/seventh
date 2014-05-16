@@ -106,6 +106,23 @@ public class Zone {
 	}
 	
 	/**
+	 * @return true if there is an active bomb
+	 */
+	public boolean hasActiveBomb() {
+		
+		for(int i = 0; i < targets.size(); i++) {
+			BombTarget target = targets.get(i);
+			if(target.isAlive()) {
+				if(target.bombActive() || target.bombPlanting()) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * @param entity
 	 * @return true if the supplied Entity is in this {@link Zone}
 	 */

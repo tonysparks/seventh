@@ -458,7 +458,7 @@ public class ClientGame {
 				
 		miniMap.render(canvas, camera, 0);
 		
-		DebugDraw.enable(false);
+		DebugDraw.enable(true);
 		DebugDraw.render(canvas, camera);
 		
 		canvas.setShader(null);

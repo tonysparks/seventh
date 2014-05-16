@@ -3,11 +3,18 @@
  */
 package seventh.ai.basic.teamstrategy;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
-import seventh.game.Bomb;
+import seventh.ai.basic.Goals;
+import seventh.ai.basic.Stats;
+import seventh.ai.basic.World;
+import seventh.ai.basic.Zone;
+import seventh.ai.basic.Zones;
+import seventh.ai.basic.actions.Action;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
@@ -25,24 +32,179 @@ import seventh.shared.TimeStep;
 public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 
 	private Team team;
+	private DefaultAISystem aiSystem;	
 	
-	private Player[] defenders;
-	private DefaultAISystem aiSystem;
+	private Zones zones;
+	private Random random;
+	
+	private Zone zoneToAttack;
+	
+	private Stats stats;
+	private DefensiveState currentState;
+		
+	private World world;
+	private Goals goals;
+	
+	private List<PlayerEntity> playersInZone;
+	
+	enum DefensiveState {		
+		DEFUSE_BOMB,
+		ATTACK_ZONE,
+		DEFEND,
+		DONE,
+	}
+	
 	/**
 	 * 
 	 */
 	public DefenseObjectiveTeamStrategy(DefaultAISystem aiSystem, Team team) {
-		this.aiSystem = aiSystem;		
+		this.aiSystem = aiSystem;
 		this.team = team;
-		 
+		
+		this.stats = aiSystem.getStats();
+		this.zones = aiSystem.getZones();
+		this.random = aiSystem.getRandom();
+		
+		this.goals = new Goals(aiSystem.getRuntime());
+		
+		this.playersInZone = new ArrayList<>();
+		
 	}
 	
 	/* (non-Javadoc)
-	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getTeam()
 	 */
 	@Override
-	public void onGoaless(Brain brain) {
+	public Team getTeam() {
+		return this.team;
+	}
+
+	/* (non-Javadoc)
+	 * @see seventh.ai.AIGameTypeStrategy#startOfRound(seventh.game.Game)
+	 */
+	@Override
+	public void startOfRound(GameInfo game) {		
+		this.zoneToAttack = calculateZoneToAttack();	
+		this.currentState = DefensiveState.DEFEND;		
+		this.world = new World(game, zones);
+	}
+	
+	
+	/**
+	 * @param brain
+	 * @return the current marching orders
+	 */
+	private Action getCurrentAction(Brain brain) {
+		Action action = null;
 		
+		if(this.zoneToAttack==null) {
+			this.zoneToAttack = calculateZoneToAttack();
+		}
+		
+		switch(this.currentState) {
+			case DEFEND:
+				if(zoneToAttack != null) {
+					BombTarget target = getPlantedBombTarget(zoneToAttack);
+					if(target!=null) {
+						action = goals.defendPlantedBomb(target);
+					}
+					else {
+						action = goals.defend(zoneToAttack);
+					}
+				}
+				break;				
+			case DEFUSE_BOMB:			
+				action = goals.defuseBomb();			
+				break;
+				
+			case ATTACK_ZONE:
+			case DONE:			
+			default:
+				if(zoneToAttack != null) {
+					action = goals.infiltrate(zoneToAttack);
+				}
+				break;		
+		}
+		
+		return action;
+	}
+	
+	
+	/**
+	 * @return determine which {@link Zone} to attack
+	 */
+	private Zone calculateZoneToAttack() {
+		Zone zoneToAttack = null;
+		
+		List<Zone> zonesWithBombs = this.zones.getBombTargetZones();
+		if(!zonesWithBombs.isEmpty()) {
+			
+			/* Look for targets that are being planted or have been
+			 * planted so that we can give them highest priority
+			 */
+			List<Zone> zonesToAttack = new ArrayList<>();
+			for(int i = 0; i < zonesWithBombs.size(); i++) {
+				Zone zone = zonesWithBombs.get(i);
+				
+				if(zone.hasActiveBomb()) {
+					zonesToAttack.add(zone);
+				}
+			}
+			
+			
+			if(zonesToAttack.isEmpty()) {
+				
+				/* All targets are free of bombs, so lets pick a random one to 
+				 * go to
+				 */
+				zoneToAttack = zonesWithBombs.get(random.nextInt(zonesWithBombs.size()));
+
+				/* check to see if there are too many agents around this bomb */
+				if(world != null && zonesToAttack != null) {
+					world.playersIn(this.playersInZone, zoneToAttack.getBounds());
+					
+					int numberOfFriendliesInArea = team.getNumberOfPlayersOnTeam(playersInZone);
+					if(numberOfFriendliesInArea > 0) {
+						float percentageOfTeamInArea = team.getNumberOfAlivePlayers() / numberOfFriendliesInArea;
+						if(percentageOfTeamInArea > 0.3f ) {
+							zoneToAttack = world.findAdjacentZone(zoneToAttack, 30);
+						}
+					}
+				}
+			}
+			else {
+				/* someone has planted or is planting a bomb on a target, go rush to defend
+				 * it
+				 */
+				zoneToAttack = zonesToAttack.get(random.nextInt(zonesToAttack.size()));
+			}
+			
+		}
+		
+		/*
+		 * If all else fails, just pick a statistically
+		 * good Zone to go to
+		 */
+		if(zoneToAttack == null) {
+			zoneToAttack = stats.getDeadliesZone();
+		}
+		
+		return zoneToAttack;
+	}
+
+	/**
+	 * @param zone
+	 * @return the {@link BombTarget} that has a bomb planted on it in the supplied {@link Zone}
+	 */
+	private BombTarget getPlantedBombTarget(Zone zone) {
+		List<BombTarget> targets = zone.getTargets();
+		for(int i = 0; i < targets.size(); i++) {
+			BombTarget target = targets.get(i);
+			if(target.bombPlanting() || target.bombActive()) {
+				return target;
+			}
+		}
+		return null;
 	}
 	
 	/* (non-Javadoc)
@@ -50,8 +212,6 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void playerKilled(PlayerInfo player) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/* (non-Javadoc)
@@ -59,80 +219,111 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void playerSpawned(PlayerInfo player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see seventh.ai.AIGameTypeStrategy#startOfRound(seventh.game.Game)
-	 */
-	@Override
-	public void startOfRound(GameInfo game) {				
-		List<BombTarget> targets = game.getBombTargets();
-		
-		this.defenders = new Player[targets.size()];
-		
-		Player nextPlayer = team.getAliveBot();
-		for(int i = 0; i < targets.size(); i++) {
-			BombTarget target = targets.get(i);
-			if(nextPlayer!=null) {
-				
-				Brain brain = this.aiSystem.getBrain(nextPlayer.getId());
-				if(brain != null) {
-//					brain.getThoughtProcess().setStrategy(new DefendAreaStrategy(target.getCenterPos()));
-				}
-			}
+		if(player.isBot()) {
+			Brain brain = aiSystem.getBrain(player);
 			
-			nextPlayer = team.getNextAliveBotFrom(nextPlayer);
-		}
+			Action action = getCurrentAction(brain);
+			if(action != null) {
+				brain.getCommunicator().post(action);
+			}
+		}	
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see seventh.ai.AIGameTypeStrategy#endOfRound(seventh.game.Game)
 	 */
 	@Override
 	public void endOfRound(GameInfo game) {		
+		this.currentState = DefensiveState.DEFEND;
+		this.zoneToAttack = null;
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public void onGoaless(Brain brain) {
+		Action action = getCurrentAction(brain);
+		if(action != null) {
+			brain.getCommunicator().post(action);
+		}
+	}
+	
+	
+	/**
+	 * @param zone
+	 * @return true if there is a {@link BombTarget} that has been planted
+	 * and someone is actively disarming it
+	 */
+	private boolean isBombBeingDisarmed(Zone zone) {
+		boolean bombDisarming = false;
+		
+		List<BombTarget> targets = zone.getTargets();
+		for(int i = 0; i < targets.size(); i++) {
+			BombTarget target = targets.get(i);
+			if(target.isBombAttached() && target.bombDisarming()) {				
+				bombDisarming = true;
+				break;
+			}
+		}
+		
+		return bombDisarming;
+	}
+	
+	/**
+	 * Gives all the available Agents orders
+	 */
+	private void giveOrders(DefensiveState state) {
+		if(currentState != state) {
+			currentState = state;
+			
+			List<Player> players = team.getPlayers();
+			for(int i = 0; i < players.size(); i++) {
+				Player player = players.get(i);
+				if(player.isBot() && player.isAlive()) {
+					Brain brain = aiSystem.getBrain(player);
+					brain.getCommunicator().post(getCurrentAction(brain));		
+				}
+			}
+		}
+	}
+		
 	/* (non-Javadoc)
 	 * @see seventh.ai.AIGameTypeStrategy#update(seventh.shared.TimeStep, seventh.game.Game)
 	 */
 	@Override
 	public void update(TimeStep timeStep, GameInfo game) {
-		List<BombTarget> targets = game.getBombTargets();
+	
+		/* if no zone to attack, exit out */
+		if(zoneToAttack == null) {
+			return;
+		}
 		
-		for(int i = 0; i < targets.size(); i++) {
-			BombTarget target = targets.get(i);
-			if(this.defenders[i] == null || !this.defenders[i].isAlive()) {
 			
-				if(target.bombPlanting()) {
-					Bomb bomb = target.getBomb();
-					if(bomb != null) {
-						PlayerEntity planter = bomb.getPlanter();
-						Player defender = team.getClosestBotTo(planter);
-						if(defender != null) {
-							this.defenders[i] = defender;
-							
-							Brain brain = aiSystem.getBrain(defender);
-							if(brain != null) {
-//								brain.getThoughtProcess().setStrategy(new AttackStrategy(planter));
-							}
-						}
-					}
-				}
-				else if (target.bombActive()) {
-					Player defender = team.getClosestBotTo(target);
-					if(defender != null) {
-						this.defenders[i] = defender;
-						
-						Brain brain = aiSystem.getBrain(defender);
-						if(brain != null) {
-//							brain.getThoughtProcess().setStrategy(new DefuseBombStrategy());
-						}
-					}
-				}
+		/* Determine if the zone to attack still has
+		 * Bomb Targets on it
+		 */
+		if(zoneToAttack.hasActiveBomb()) {
+			
+			if(isBombBeingDisarmed(zoneToAttack)) {
+				giveOrders(DefensiveState.ATTACK_ZONE);
+			}
+			else {
+				giveOrders(DefensiveState.DEFUSE_BOMB);
+			}						
+	
+		}
+		else {
+			
+			/* no more bomb targets, calculate a new 
+			 * zone to attack...
+			 */
+			zoneToAttack = calculateZoneToAttack();			
+			if(zoneToAttack != null) {				
+				giveOrders(DefensiveState.ATTACK_ZONE);
 			}
 		}
+	
 	}
 
 }
