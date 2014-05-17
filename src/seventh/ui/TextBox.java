@@ -3,11 +3,16 @@
  */
 package seventh.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.Inputs;
 import seventh.client.gfx.Theme;
 import seventh.client.sfx.Sounds;
 import seventh.ui.Label.TextAlignment;
+import seventh.ui.events.TextBoxActionEvent;
+import seventh.ui.events.TextBoxActionListener;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -28,7 +33,9 @@ public class TextBox extends Widget {
 	private Label label;
 	private Label textLbl;
 	
-	private int maxSize;
+	private int maxSize;	
+	
+	private List<TextBoxActionListener> textBoxActionListeners;
 	
 	/**
 	 * @param eventDispatcher
@@ -36,6 +43,7 @@ public class TextBox extends Widget {
 	public TextBox(EventDispatcher eventDispatcher) {
 		super(eventDispatcher);
 		
+		this.textBoxActionListeners = new ArrayList<TextBoxActionListener>();
 		this.inputBuffer = new StringBuilder();
 		this.cursorIndex = 0;
 		this.isCtrlDown = false;
@@ -182,7 +190,8 @@ public class TextBox extends Widget {
 						break;
 					}
 					case '\r':
-					case '\n': {					
+					case '\n': {		
+						fireTextBoxActionEvent(new TextBoxActionEvent(this, TextBox.this));
 						break;
 					}				
 					default: {
@@ -215,6 +224,24 @@ public class TextBox extends Widget {
 		
 		this.label.destroy();
 		this.textLbl.destroy();
+	}
+	
+	/**
+	 * Distributes the {@link TextBoxActionEvent} to each listener
+	 * @param event
+	 */
+	protected void fireTextBoxActionEvent(TextBoxActionEvent event) {
+		for(TextBoxActionListener l : this.textBoxActionListeners) {
+			l.onEnterPressed(event);
+		}
+	}
+	
+	public void addTextBoxActionListener(TextBoxActionListener l) {
+		this.textBoxActionListeners.add(l);
+	}
+	
+	public void removeTextBoxActionListener(TextBoxActionListener l) {
+		this.textBoxActionListeners.remove(l);
 	}
 	
 	/**

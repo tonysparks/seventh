@@ -26,6 +26,7 @@ import seventh.client.gfx.LightEffectShader;
 import seventh.client.gfx.RippleEffectShader;
 import seventh.client.gfx.Terminal;
 import seventh.client.gfx.Theme;
+import seventh.client.screens.AnimationEditorScreen;
 import seventh.client.screens.LoadingScreen;
 import seventh.client.screens.MenuScreen;
 import seventh.client.sfx.Sounds;
@@ -214,6 +215,13 @@ public class SeventhGame implements ApplicationListener {
 				} catch (Exception e) {
 					console.println("*** Error loading animations: " + e);
 				}
+			}
+		});
+		
+		console.addCommand(new Command("animation_editor"){			
+			@Override
+			public void execute(Console console, String... args) {
+				setScreen(new AnimationEditorScreen(new MenuScreen(SeventhGame.this)));
 			}
 		});
 	}

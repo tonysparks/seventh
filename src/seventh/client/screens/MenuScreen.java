@@ -101,6 +101,13 @@ public class MenuScreen implements Screen {
 		uiPos.y += 80;
 		
 		this.creditsBtn = setupButton(uiPos, "Credits");
+		this.creditsBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+			
+			@Override
+			public void onButtonClicked(ButtonEvent event) {
+				app.setScreen(new AnimationEditorScreen(MenuScreen.this));
+			}
+		});
 		
 		uiPos.y += 80;
 		
