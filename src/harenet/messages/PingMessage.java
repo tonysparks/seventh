@@ -6,7 +6,10 @@ package harenet.messages;
 import harenet.MessageHeader;
 
 /**
- * Ping message
+ * Ping message.  One side of the connection can initiate
+ * a {@link PingMessage} and the other side will respond back with
+ * a {@link PongMessage}.  These messages are used to calculate the 
+ * round trip time of a {@link Message}.
  * 
  * @author Tony
  *

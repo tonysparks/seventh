@@ -6,7 +6,8 @@ package harenet.messages;
 import harenet.MessageHeader;
 
 /**
- * A network message that is guaranteed to arrive at the peer.
+ * A network message that is <b>NOT</b> guaranteed to arrive at the peer. This message
+ * can contain a user defined {@link NetMessage} to transfer.
  * 
  * @author Tony
  *

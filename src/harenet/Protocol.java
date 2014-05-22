@@ -7,6 +7,10 @@ import harenet.messages.NetMessageFactory;
 
 
 /**
+ * Simple base Harenet protocol header.  Each UDP packet will contain
+ * this protocol header information.  This hold information such as
+ * the protocol ID, version, peerId and sequencing mechanisms.
+ * 
  * @author Tony
  *
  */

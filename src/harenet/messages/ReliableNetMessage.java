@@ -6,7 +6,8 @@ package harenet.messages;
 import harenet.MessageHeader;
 
 /**
- * A Reliable message is one that is guaranteed to make it to the peer.
+ * A Reliable message is one that is guaranteed to make it to the peer.  This message
+ * can contain a user defined {@link NetMessage} to transfer.
  * 
  * @author Tony
  *

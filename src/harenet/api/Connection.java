@@ -31,10 +31,25 @@ public interface Connection extends Endpoint {
 	 */
 	public int getReturnTripTime();
 	
+	/**
+	 * @return the number of bytes sent over the wire to the 
+	 * remote computer
+	 */
 	public long getNumberOfBytesSent();
+	
+	/**
+	 * @return the number of bytes received
+	 */
 	public long getNumberOfBytesReceived();
 
+	/**
+	 * @return the average bit rate received
+	 */
 	public long getAvgBitsPerSecRecv();
+	
+	/**
+	 * @return the average bit rate sent
+	 */
 	public long getAvgBitsPerSecSent();
 	
 	/**

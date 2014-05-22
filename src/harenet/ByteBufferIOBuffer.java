@@ -6,6 +6,8 @@ package harenet;
 import java.nio.ByteBuffer;
 
 /**
+ * An IOBuffer backed by a {@link ByteBuffer} 
+ * 
  * @author Tony
  *
  */

@@ -6,6 +6,9 @@ package harenet.messages;
 import harenet.IOBuffer;
 
 /**
+ * Represents a reliable message.  These types of messages will be sent
+ * to until acknowledgment has been received.
+ * 
  * @author Tony
  *
  */

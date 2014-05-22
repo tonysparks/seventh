@@ -10,7 +10,7 @@ import java.nio.InvalidMarkException;
 import java.nio.ReadOnlyBufferException;
 
 /**
- * IO Buffer
+ * A means for doing Input/Output on a buffer.
  * 
  * @author Tony
  *

@@ -17,7 +17,8 @@ import harenet.MessageHeader;
  */
 public abstract class AbstractMessage implements Message {
 
-	protected byte type;
+	/* the type is the only value sent over the wire for this class */
+	protected byte type; 
 	protected short sizeInBytes;
 	
 	protected int messageId;
@@ -31,6 +32,7 @@ public abstract class AbstractMessage implements Message {
 	private transient long timeReceived;
 	
 	/**
+	 * @param type
 	 */
 	public AbstractMessage(byte type) {
 		this.type = type;

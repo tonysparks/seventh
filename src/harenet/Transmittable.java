@@ -7,6 +7,8 @@ import harenet.messages.NetMessageFactory;
 
 
 /**
+ * Internal interface for Harenet protocol level message transferring.
+ * 
  * @author Tony
  *
  */

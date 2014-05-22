@@ -1,9 +1,5 @@
 /*
- * (c)2006 Expeditors International of Washington, Inc.
- * Business confidential and proprietary.  This information may not be reproduced
- * in any form without advance written consent of an authorized officer of the
- * copyright holder.
- *
+ * see license.txt
  */
 package harenet.api.impl;
 
@@ -22,8 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * JeNet {@link Server} implementation
- *
+ * Harenet {@link Server} implementation
+ * @author Tony 
  */
 public class HareNetServer extends HareNetEndpoint implements Server {
 

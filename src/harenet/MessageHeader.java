@@ -15,6 +15,9 @@ import harenet.messages.ReliableNetMessage;
 import harenet.messages.UnReliableNetMessage;
 
 /**
+ * The Harenet protocol message headers.  Serves as a means for 
+ * creating Harenet messages.
+ * 
  * @author Tony
  *
  */

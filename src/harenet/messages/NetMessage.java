@@ -8,7 +8,8 @@ import harenet.IOBuffer;
 import java.nio.ByteBuffer;
 
 /**
- * A network message
+ * A network message.  Clients of the Harenet API can implement
+ * there own {@link NetMessage}'s to transmit.
  * 
  * @author Tony
  *

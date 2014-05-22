@@ -6,7 +6,8 @@ package harenet.messages;
 import harenet.MessageHeader;
 
 /**
- * Ping message
+ * Pong message, this is a response from a {@link PingMessage}.
+ * This Ping/Pong is used to calculate round trip time (ping).
  * 
  * @author Tony
  *

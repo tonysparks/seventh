@@ -21,6 +21,9 @@ import java.util.Iterator;
 import java.util.Queue;
 
 /**
+ * Represents a {@link Host} machine.  This is able to send and receive
+ * messages from remote {@link Peer}s
+ * 
  * @author Tony
  * 
  */
@@ -54,17 +57,30 @@ public class Host {
 	private Peer localPeer;
 	
 	/**
+	 * Listens for messages and {@link Peer} connection state events.
 	 * 
 	 * @author Tony
 	 *
 	 */
 	public static interface MessageListener {
 		
+		/**
+		 * The {@link Peer} has connected to the {@link Host}
+		 * 
+		 * @param peer
+		 */
 		public void onConnected(Peer peer);
+		
+		/**
+		 * The {@link Peer} has disconnected from the {@link Host}
+		 * 
+		 * @param peer
+		 */
 		public void onDisconnected(Peer peer);
 		
 		/**
 		 * A message has been received
+		 * 
 		 * @param peer
 		 * @param message
 		 */
@@ -104,11 +120,6 @@ public class Host {
 		
 		protocol = new Protocol();
 	}
-
-//	private Random random = new Random();
-//	boolean doAction(int probability) {
-//		return true;//random.nextInt(probability) != (probability/2);
-//	}
 	
 	/**
 	 * @return the config
@@ -118,8 +129,9 @@ public class Host {
 	}
 	
 	/**
-	 * Reserves the ID slot
-	 * @param id
+	 * Reserves the next available ID slot.
+	 * 
+	 * @param id the ID which is reserved.
 	 */
 	public int reserveId() {
 		synchronized (this) {					
@@ -232,10 +244,18 @@ public class Host {
 
 		return INVALID_PEER_ID;
 	}
+	
+	/**
+	 * @param peerId
+	 * @return true if the supplied ID is valid
+	 */
+	private boolean isValidPeerId(byte peerId) {
+		return peerId > INVALID_PEER_ID && peerId < this.maxConnections;
+	}
 
 	void disconnect(Peer peer) {
 		byte id = peer.getId();
-		if (id > INVALID_PEER_ID && id < maxConnections) {
+		if (isValidPeerId(id)) {
 			if(peers[id] != null) {
 				peers[id].send(new DisconnectMessage());
 								
@@ -259,9 +279,11 @@ public class Host {
 	 * @param peerId
 	 */
 	public void sendTo(Message message, byte peerId) {
-		Peer peer = peers[peerId];
-		if(peer != null) {
-			peer.send(message);
+		if(isValidPeerId(peerId)) {
+			Peer peer = peers[peerId];
+			if(peer != null) {
+				peer.send(message);
+			}
 		}
 	}
 	
@@ -347,8 +369,8 @@ public class Host {
 	public void update(MessageListener listener, int timeout) throws IOException {
 		// algorithm:
 		// For each Client:
-		// 1) read in queued up Messages from clients
-		// 2) send out Packet
+		// 1) send out Packet
+		// 2) read in queued up Messages from clients
 		// 3) receive Packet
 		// 4) parse Packet
 		// 5) place Message in client Queue
@@ -423,8 +445,7 @@ public class Host {
 			byte numberOfMessages = 0;
 			
 			/* always give priority to the reliable packets */
-			numberOfMessages += packReliableMessages(writeBuffer, protocol, peer);
-			protocol.setNumberOfMessages(numberOfMessages);
+			numberOfMessages += packReliableMessages(writeBuffer, protocol, peer);			
 			
 			/* if there is space, go ahead and put in the unreliable packets */
 			numberOfMessages += packUnreliableMessages(writeBuffer, protocol, peer);			
@@ -590,7 +611,6 @@ public class Host {
 		try {
 			peer.setLastSendTime(System.currentTimeMillis());
 			peer.addNumberOfBytesSent(buffer.limit());
-//			return doAction(20) ? datagramChannel.send(buffer.asByteBuffer(), peer.getAddress()) : buffer.limit();
 			return datagramChannel.send(buffer.asByteBuffer(), peer.getAddress());
 		} 
 		catch (Exception e) {		
@@ -651,7 +671,7 @@ public class Host {
 		
 			
 			/* lets read in the messages */	
-			if(peerId > INVALID_PEER_ID && peerId < maxConnections) {
+			if(isValidPeerId(peerId)) {
 
 				/* if this isn't a server we reassign the peer
 				 * to the correct id (since it was assigned from

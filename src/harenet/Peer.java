@@ -18,6 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
+ * A {@link Peer} is a representation of a remote client.  The {@link Host}
+ * can send and receive messages from a {@link Peer}.
+ * 
  * @author Tony
  *
  */
@@ -372,35 +375,7 @@ public class Peer {
 		
 		return ackHistory;
 	}
-	
-	public static void main(String[] args) throws Exception {
-		int ackBuffer[] = new int[32];
-		for(int i = 0; i < ackBuffer.length;i++) {
-			ackBuffer[i] = i-1;
-		}
 		
-		//ackBuffer[15] = 0;
-		ackBuffer[0] = 0;
-		
-		int ackBufferIndex = 11;
-		
-		int remoteSequence = 49;
-		
-		int ackHistory = 0;
-		for(int i = 0; i < ackBuffer.length; i++) {
-			int previusSeq = ackBuffer[(ackBufferIndex + i) % ackBuffer.length];
-			if(previusSeq < remoteSequence) {
-				int newAckDelta =  remoteSequence - previusSeq;
-				if(newAckDelta > 0 && newAckDelta < 32) {
-					ackHistory = ackHistory | (1<<newAckDelta);
-				}
-			}
-		}
-		
-		System.out.println(Integer.toBinaryString(ackHistory));
-		System.out.println();		
-	}
-	
 	/**
 	 * @return the roundTripTime
 	 */
@@ -541,7 +516,6 @@ public class Peer {
 		for(Map.Entry<Integer, Message> e : this.receivedReliableMessages.entrySet()) {
 			if(currentTime - e.getValue().getTimeReceived() > timeout) {
 				this.receivedReliableMessages.remove(e.getKey());
-//				System.out.println("Timing out: " + e.getKey());
 			}
 		}		
 	}
@@ -554,12 +528,8 @@ public class Peer {
 	public boolean isDuplicateMessage(Message msg) {
 		boolean isDup = this.receivedReliableMessages.containsKey(msg.getMessageId());
 		if ( !isDup ) {
-//			System.out.println("Storing: " + msg.getMessageId());
 			this.receivedReliableMessages.put(msg.getMessageId(), msg);
 			msg.setTimeReceived(System.currentTimeMillis());			
-		}
-		else {
-//			System.out.println("Duplicate: " + msg.getMessageId());
 		}
 		
 		return isDup;

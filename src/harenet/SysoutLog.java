@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * Simple <code>System.out</code> implementation of the {@link Log} interface.
+ * 
  * @author Tony
  *
  */

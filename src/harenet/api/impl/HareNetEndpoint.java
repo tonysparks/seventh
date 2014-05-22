@@ -1,9 +1,5 @@
 /*
- * (c)2006 Expeditors International of Washington, Inc.
- * Business confidential and proprietary.  This information may not be reproduced
- * in any form without advance written consent of an authorized officer of the
- * copyright holder.
- *
+ * see license.txt
  */
 package harenet.api.impl;
 
@@ -23,8 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import seventh.shared.Cons;
 
 /**
- * JeNet Endpoint implementation.
- *
+ * Harenet Endpoint implementation.
+ * @author Tony
  */
 public abstract class HareNetEndpoint implements Endpoint {
 

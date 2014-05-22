@@ -8,6 +8,9 @@ import harenet.messages.Message;
 import java.net.InetSocketAddress;
 
 /**
+ * A {@link DummyPeer} simulates an connected {@link Peer}.  This does not 
+ * actually send or receive any data from a {@link Host}
+ * 
  * @author Tony
  *
  */

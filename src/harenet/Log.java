@@ -4,6 +4,8 @@
 package harenet;
 
 /**
+ * Simple logging interface
+ * 
  * @author Tony
  *
  */

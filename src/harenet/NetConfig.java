@@ -6,6 +6,8 @@ package harenet;
 import harenet.messages.NetMessageFactory;
 
 /**
+ * The Harenet configuration.  This allows for tweaking
+ * a number of parameters to better suit your needs.
  * 
  * @author Tony
  *
