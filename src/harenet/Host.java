@@ -136,7 +136,7 @@ public class Host {
 	public int reserveId() {
 		synchronized (this) {					
 			byte id = findOpenId();
-			if(id >= 0 && id < peers.length) {
+			if(isValidPeerId(id)) {
 				if(peers[id] == null) {
 					peers[id] = new DummyPeer(this, (byte)id);
 				}
