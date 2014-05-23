@@ -23,13 +23,14 @@ public class PathFeeder<E> {
 	private List<GraphNode<Tile, E>> path;
 	private int currentNode;
 	private Vector2f destination;
-	
+	private Vector2f finalDestination;
 	private int hashCode;
 	
 	/**
 	 * @param path
 	 */
-	public PathFeeder(List<GraphNode<Tile, E>> path) {
+	public PathFeeder(Vector2f finalDestination, List<GraphNode<Tile, E>> path) {
+		this.finalDestination = finalDestination;
 		this.path = path;//path.size() > 2 ? path.subList(1, path.size()): path;
 		this.currentNode = 0;
 		this.destination = new Vector2f();
@@ -46,6 +47,13 @@ public class PathFeeder<E> {
 	@Override
 	public int hashCode() {
 		return hashCode;
+	}
+	
+	/**
+	 * @return the final destination
+	 */
+	public Vector2f getDestination() {
+		return this.finalDestination;
 	}
 
 	/**

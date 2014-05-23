@@ -90,7 +90,7 @@ public class MapGraph<T> {
 		GraphNode<Tile, T> startNode = getNodeByWorld((int)start.x, (int)start.y);
 		GraphNode<Tile, T> destNode = getNodeByWorld((int)destination.x, (int)destination.y);
 		List<GraphNode<Tile, T>> resultPath = searchPath.search(startNode, destNode);
-		return new PathFeeder(resultPath == null ? new ArrayList<GraphNode<Tile,T>>() : resultPath); 
+		return new PathFeeder(destination, resultPath == null ? new ArrayList<GraphNode<Tile,T>>() : resultPath); 
 	}
 	
 
@@ -125,6 +125,6 @@ public class MapGraph<T> {
 		GraphNode<Tile, T> startNode = getNodeByWorld((int)start.x, (int)start.y);
 		GraphNode<Tile, T> destNode = getNodeByWorld((int)destination.x, (int)destination.y);
 		List<GraphNode<Tile, T>> resultPath = searchPath.search(startNode, destNode);
-		return new PathFeeder(resultPath == null ? new ArrayList<GraphNode<Tile,T>>() : resultPath); 
+		return new PathFeeder(destination, resultPath == null ? new ArrayList<GraphNode<Tile,T>>() : resultPath); 
 	}	
 }
