@@ -8,7 +8,6 @@ import java.util.List;
 import seventh.ai.basic.SimpleThoughtProcess.ThinkListener;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
-import seventh.game.Bomb;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.PlayerEntity;
@@ -25,7 +24,7 @@ import seventh.shared.TimeStep;
  */
 public class ReactiveThinkListener implements ThinkListener {
 	
-	private Goal goal;
+	private Goal longTermGoal;
 	private TeamStrategy strategy;
 	private boolean isInterrupted;
 	private boolean movingAwayFromBomb;
@@ -35,7 +34,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	 */
 	public ReactiveThinkListener(TeamStrategy strategy) {
 		this.strategy = strategy;
-		this.goal = new Goal();
+		this.longTermGoal = new Goal();
 	}
 	
 	
@@ -47,7 +46,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	 */
 	private void interrupt(Brain brain) {
 		if(!this.isInterrupted) {
-			goal.interrupt(brain);
+			longTermGoal.interrupt(brain);
 			this.isInterrupted = true;
 		}
 	}
@@ -85,8 +84,8 @@ public class ReactiveThinkListener implements ThinkListener {
 		/* are we receiving orders? if so make these highest priority */
 		Action command = brain.getCommunicator().receiveAction(brain);
 		if(command != null) {			
-			this.goal.end(brain);
-			this.goal.addFirstAction(command);
+			this.longTermGoal.end(brain);
+			this.longTermGoal.addFirstAction(command);
 		}
 		else {
 			
@@ -94,7 +93,7 @@ public class ReactiveThinkListener implements ThinkListener {
 			 * be able to resume our goal now
 			 */
 			if(this.isInterrupted) {
-				this.goal.resume(brain);
+				this.longTermGoal.resume(brain);
 				this.isInterrupted = false;
 			}
 			
@@ -103,7 +102,7 @@ public class ReactiveThinkListener implements ThinkListener {
 			 * let's ping the TeamStrategy to see
 			 * if there is anything we should be doing
 			 */
-			if(this.goal.isFinished(brain)) {		
+			if(this.longTermGoal.isFinished(brain)) {		
 				if(this.strategy != null) {
 					this.strategy.onGoaless(brain);
 				}
@@ -113,7 +112,7 @@ public class ReactiveThinkListener implements ThinkListener {
 			/* if all else fails, start wandering around
 			 * looking for bad guys
 			 */
-			if(this.goal.isFinished(brain)) {
+			if(this.longTermGoal.isFinished(brain)) {
 				
 				Locomotion motion = brain.getMotion();
 				if(!motion.isMoving() && !motion.isAttacking()) {
@@ -121,7 +120,7 @@ public class ReactiveThinkListener implements ThinkListener {
 				}
 			}
 			else {
-				this.goal.update(brain, timeStep);
+				this.longTermGoal.update(brain, timeStep);
 			}
 		}
 		
@@ -131,7 +130,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	@SuppressWarnings("unused")
 	private void debugDraw() {
 
-		Action action = goal.currentAction();
+		Action action = longTermGoal.currentAction();
 		if(action != null) {
 			DebugDraw.drawString("Goal Action: " + action.getClass().getSimpleName(), 800, 50, 0xff00ff00);
 		}
@@ -228,7 +227,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	 * @see seventh.ai.basic.SimpleThoughtProcess.ThinkListener#onTooCloseToActiveBomb(seventh.shared.TimeStep, seventh.ai.basic.Brain, seventh.game.BombTarget)
 	 */
 	@Override
-	public boolean onTooCloseToActiveBomb(TimeStep timeStep, Brain brain, BombTarget target) {
+	public boolean onTooCloseToActiveBomb(TimeStep timeStep, Brain brain, BombTarget target) {		
 		return false;
 		
 //		World world = brain.getWorld();

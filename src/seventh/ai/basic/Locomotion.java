@@ -154,9 +154,18 @@ public class Locomotion {
 	private void moveEntity() {
 
 		moveDelta.zeroOut();
-		if(pathFeeder!=null && !pathFeeder.atDestination()) {
-			Vector2f nextDest = pathFeeder.nextDestination(me.getPos());
-			moveDelta.set(nextDest);
+		if(pathFeeder!=null) {
+			if (!pathFeeder.atDestination()) {
+				Vector2f nextDest = pathFeeder.nextDestination(me.getPos());
+				moveDelta.set(nextDest);
+			}
+			else {
+				Vector2f nextDest = pathFeeder.getDestination();
+				Vector2f.Vector2fSubtract(nextDest, me.getPos(), moveDelta);	
+				if(moveDelta.lengthSquared() < 36) {
+					moveDelta.zeroOut();
+				}
+			}
 		}
 		
 		directMove(moveDelta);
@@ -224,9 +233,29 @@ public class Locomotion {
 	public void stopMoving() {
 		this.walkingGoal.end(brain);
 	}
+	public void stopUsingHands() {
+		this.handsGoal.end(brain);
+	}
+	
+	/**
+	 * @return the destination this entity is moving towards, or null if no
+	 * destination
+	 */
+	public Vector2f getDestination() {
+		if(this.pathFeeder != null) {
+			return pathFeeder.getDestination();
+		}
+		return null;
+	}
 	
 	public boolean isMoving() {
 		return this.walkingGoal.hasAction() && !this.walkingGoal.isFinished(brain);
+	}
+	public boolean isPlanting() {
+		return this.handsGoal.hasAction() && this.handsGoal.is(BombAction.class);
+	}
+	public boolean isDefusing() {
+		return this.handsGoal.hasAction() && this.handsGoal.is(BombAction.class);
 	}
 	
 	public void lookAt(Vector2f pos) {		

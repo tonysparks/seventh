@@ -110,14 +110,16 @@ public class Brain {
 			this.thoughtProcess.think(timeStep, this);
 			
 			
-			debugDraw();
+			//debugDraw();
+			//debugDrawPathPlanner();
 		}		
 	}
 	
 	
 	@SuppressWarnings("unused")
 	private void debugDraw() {
-		world.getCover(entityOwner, entityOwner.getPos());
+		Cover cover = world.getCover(entityOwner, entityOwner.getPos());
+		DebugDraw.fillRectRelative( (int)cover.getCoverPos().x, (int)cover.getCoverPos().y, 5, 5, 0xff00ff00);
 		
 		List<AttackDirection> attackDirections = world.getAttackDirections(entityOwner);
 		for(AttackDirection dir : attackDirections) {
@@ -125,15 +127,20 @@ public class Brain {
 		}
 		
 		
-//		PathFeeder<?> pathPlanner = motion.getPathFeeder();
-//		if(pathPlanner != null) {
-//			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
-//				Tile tile = node.getValue();
-//				if(tile != null) {
-//					DebugDraw.drawRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0xff00ff00);
-//				}
-//			}
-//		}
+
+	}
+	
+	@SuppressWarnings("unused")
+	private void debugDrawPathPlanner() {
+		PathFeeder<?> pathPlanner = motion.getPathFeeder();
+		if(pathPlanner != null) {
+			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
+				Tile tile = node.getValue();
+				if(tile != null) {
+					DebugDraw.drawRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0xff00ff00);
+				}
+			}
+		}		
 	}
 
 	/**

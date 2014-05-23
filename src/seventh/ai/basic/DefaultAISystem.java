@@ -181,8 +181,10 @@ public class DefaultAISystem implements AISystem {
 			brain.spawned();
 		}
 		
-		this.alliedAIStrategy.playerSpawned(player);
-		this.axisAIStrategy.playerSpawned(player);
+		TeamStrategy teamStrategy = getStrategyFor(player);
+		if(teamStrategy != null) {
+			teamStrategy.playerSpawned(player);
+		}		
 	}
 	
 	/* (non-Javadoc)
@@ -194,9 +196,10 @@ public class DefaultAISystem implements AISystem {
 		if(brain != null) {			
 			brain.killed();
 		}
-		
-		this.alliedAIStrategy.playerKilled(player);
-		this.axisAIStrategy.playerKilled(player);
+		TeamStrategy teamStrategy = getStrategyFor(player);
+		if(teamStrategy != null) {
+			teamStrategy.playerKilled(player);
+		}
 	}
 	
 	/* (non-Javadoc)

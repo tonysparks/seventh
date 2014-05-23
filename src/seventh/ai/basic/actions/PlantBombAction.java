@@ -4,7 +4,9 @@
 package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.Locomotion;
 import seventh.game.BombTarget;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 /**
@@ -27,11 +29,27 @@ public class PlantBombAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {				
-		if(!bomb.isTouching(brain.getEntityOwner())) {								
-			brain.getMotion().moveTo(bomb.getCenterPos());
-		}
-		
-		brain.getMotion().plantBomb(bomb);
+//		if(!bomb.isTouching(brain.getEntityOwner())) {								
+//			brain.getMotion().moveTo(bomb.getCenterPos());
+//		}
+//		
+//		brain.getMotion().plantBomb(bomb);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.AdapterAction#end(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public void end(Brain brain) {
+		brain.getMotion().stopUsingHands();
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.AdapterAction#interrupt(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public void interrupt(Brain brain) {
+		brain.getMotion().stopUsingHands();
 	}
 	
 	/* (non-Javadoc)
@@ -51,6 +69,17 @@ public class PlantBombAction extends AdapterAction {
 			getActionResult().setSuccess();
 		}
 		else {
+			Locomotion motion = brain.getMotion();
+			if(!bomb.isTouching(brain.getEntityOwner())) {
+				Vector2f dest = motion.getDestination();
+				if(dest == null || !dest.equals(bomb.getCenterPos())) {
+					motion.moveTo(bomb.getCenterPos());
+				}
+			}
+			else if(!bomb.bombPlanting() || !motion.isPlanting()) {
+				motion.plantBomb(bomb);
+			}
+			
 			getActionResult().setFailure();
 		}
 	}

@@ -4,6 +4,7 @@
 package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.Locomotion;
 import seventh.game.BombTarget;
 import seventh.shared.TimeStep;
 
@@ -25,22 +26,20 @@ public class DefuseBombAction extends AdapterAction {
 	}
 	
 	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+	 * @see seventh.ai.basic.actions.AdapterAction#interrupt(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public void start(Brain brain) {		
-		brain.getMotion().defuseBomb(bomb);
+	public void interrupt(Brain brain) {
+		brain.getMotion().stopUsingHands();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#resume(seventh.ai.basic.Brain)
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.AdapterAction#end(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public void resume(Brain brain) {
-		brain.getMotion().defuseBomb(bomb);
+	public void end(Brain brain) {
+		brain.getMotion().stopUsingHands();
 	}
-	
 	
 	/**
 	 * @return true if the bomb is defused
@@ -62,6 +61,17 @@ public class DefuseBombAction extends AdapterAction {
 	public void update(Brain brain, TimeStep timeStep) {
 		if(isDefused()) {
 			this.getActionResult().setSuccess();
+		}
+		else {
+			Locomotion motion = brain.getMotion();
+			if(!bomb.isTouching(brain.getEntityOwner())) {								
+				motion.moveTo(bomb.getCenterPos());
+			}
+			else if(!bomb.bombDisarming() || !motion.isDefusing()) {
+				motion.defuseBomb(bomb);
+			}
+			
+			getActionResult().setFailure();
 		}
 	}
 	

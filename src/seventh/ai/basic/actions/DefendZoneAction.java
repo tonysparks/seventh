@@ -51,6 +51,9 @@ public class DefendZoneAction extends AdapterAction {
 	 */
 	@Override
 	public void resume(Brain brain) {
+		if(zone==null) {
+			zone = brain.getWorld().getZone(brain.getEntityOwner().getCenterPos());
+		}
 		Vector2f pos = brain.getWorld().getRandomSpot(brain.getEntityOwner(), zone.getBounds());
 		
 		Locomotion motion = brain.getMotion();
@@ -64,6 +67,9 @@ public class DefendZoneAction extends AdapterAction {
 	public void update(Brain brain, TimeStep timeStep) {
 		Locomotion motion = brain.getMotion();
 		if(!motion.isMoving()) {
+			if(zone==null) {
+				zone = brain.getWorld().getZone(brain.getEntityOwner().getCenterPos());
+			}
 			Vector2f pos = brain.getWorld().getRandomSpot(brain.getEntityOwner(), zone.getBounds());
 			motion.moveTo(pos);
 		}

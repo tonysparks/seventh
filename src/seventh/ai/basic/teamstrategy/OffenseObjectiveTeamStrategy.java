@@ -14,6 +14,7 @@ import seventh.ai.basic.Stats;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.Zones;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.MoveAction;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
@@ -46,6 +47,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		INFILTRATE,
 		PLANT_BOMB,
 		DEFEND,
+		RANDOM,
 		DONE,
 	}
 	
@@ -112,6 +114,9 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 			break;
 		case PLANT_BOMB:			
 			action = goals.plantBomb();			
+			break;
+		case RANDOM:
+			action = goals.goToRandomSpot(brain);
 			break;
 		case DONE:			
 		default:

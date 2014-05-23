@@ -327,35 +327,63 @@ public class World {
 		Rectangle bounds = zone.getBounds();
 		int fuzzy = 5;
 		
-		/* try right */			
-		int adjacentZoneX = bounds.x + bounds.width + fuzzy + minDistance;
-		int adjacentZoneY = bounds.y + minDistance;
+		Zone adjacentZone = null;
 		
-		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);								
-		if(adjacentZone==zone||adjacentZone==null) {
-			
-			/* try left */			
-			adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
-			adjacentZoneY = bounds.y;
-			
-			adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-			if(adjacentZone==zone||adjacentZone==null) {
-				
-				/* try down */				
-				adjacentZoneX = bounds.x;
-				adjacentZoneY = bounds.y + (bounds.height + fuzzy + minDistance);;
-				
-				adjacentZone = getZone(adjacentZoneX, adjacentZoneY);										
-				if(adjacentZone==zone||adjacentZone==null) {
-					
-					/* try up */					
-					adjacentZoneX = bounds.x;
-					adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);;
-					adjacentZone = getZone(adjacentZoneX, adjacentZoneY);	
-				}
+		final int numberOfDirections = 4;
+		int adjacentIndex = random.nextInt(numberOfDirections);
+		for(int i = 0; i < numberOfDirections && adjacentZone==null; i++) {
+			switch(adjacentIndex) {
+				case 0:
+					adjacentZone = getNorthZone(bounds, fuzzy, minDistance);
+					break;
+				case 1:
+					adjacentZone = getEastZone(bounds, fuzzy, minDistance);
+					break;
+				case 2:
+					adjacentZone = getSouthZone(bounds, fuzzy, minDistance);
+					break;
+				case 3:
+					adjacentZone = getWestZone(bounds, fuzzy, minDistance);
+					break;
+				default:
+					return null;
 			}
 			
+			adjacentIndex = (adjacentIndex+1) %  numberOfDirections;
 		}
+		
+		return adjacentZone;
+	}
+	
+	private Zone getNorthZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x;
+		int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);;
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		return adjacentZone;
+	}
+	
+	private Zone getEastZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x + bounds.width + fuzzy + minDistance;
+		int adjacentZoneY = bounds.y + minDistance;
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		return adjacentZone;
+	}
+	
+	private Zone getSouthZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x;
+		int adjacentZoneY = bounds.y + (bounds.height + fuzzy + minDistance);;
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		return adjacentZone;
+	}
+	
+	private Zone getWestZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
+		int adjacentZoneY = bounds.y;
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
 		return adjacentZone;
 	}
 	

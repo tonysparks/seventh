@@ -6,6 +6,7 @@ package seventh.ai.basic;
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.MoveAction;
 import seventh.ai.basic.actions.ScriptedGoal;
 import seventh.ai.basic.actions.WaitAction;
 import seventh.game.BombTarget;
@@ -64,6 +65,10 @@ public class Goals {
 		Action action = getScriptedAction("defendPlantedBomb");
 		action.getActionResult().setValue(target);
 		return action;
+	}
+	
+	public Action goToRandomSpot(Brain brain) {
+		return new MoveAction(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
 	}
 	
 //	public Action scanArea() {
