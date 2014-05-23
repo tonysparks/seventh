@@ -323,8 +323,7 @@ public class ClientGame {
 					fowTiles = Geom.calculateLineOfSight(fowTiles, entity.getCenterPos(), entity.getFacing(), entity.getLineOfSite(), map, entity.getHeightMask());
 					Geom.addFadeEffect(map, fowTiles);
 					
-					nextFOWUpdate = 100;
-					camera.setMovementSpeed(new Vector2f(130, 130));
+					nextFOWUpdate = 100;					
 				}			
 			}
 		}
@@ -458,7 +457,7 @@ public class ClientGame {
 				
 		miniMap.render(canvas, camera, 0);
 		
-		DebugDraw.enable(true);
+		DebugDraw.enable(false);
 		DebugDraw.render(canvas, camera);
 		
 		canvas.setShader(null);
@@ -1027,6 +1026,8 @@ public class ClientGame {
 		
 		scoreboard.setGameEnded(false);
 		scoreboard.setWinner(null);
+		
+		this.hud.getMessageLog().clearLogs();
 		
 		showScoreBoard(false);
 		applyFullGameState(msg.gameState);

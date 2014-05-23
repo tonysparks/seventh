@@ -35,7 +35,14 @@ public class ClientBombTarget extends ClientEntity {
 	public boolean killIfOutdated(long gameClock) {	
 		return false;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientEntity#isBackgroundObject()
+	 */
+	@Override
+	public boolean isBackgroundObject() {
+		return true;
+	}
 	
 	/* (non-Javadoc)
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)

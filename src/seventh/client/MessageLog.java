@@ -67,6 +67,10 @@ public class MessageLog  implements Renderable {
 		this.logs.add(message);		
 	}
 
+	public void clearLogs() {
+		logs.clear();
+	}
+	
 	/* (non-Javadoc)
 	 * @see leola.live.gfx.Renderable#update(leola.live.TimeStep)
 	 */
