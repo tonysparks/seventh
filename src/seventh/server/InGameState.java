@@ -14,6 +14,7 @@ import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
 import leola.vm.Args;
 import leola.vm.Leola;
+import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.GameMap;
 import seventh.game.LightBulb;
@@ -202,7 +203,8 @@ public class InGameState implements State {
 			@Override
 			@EventMethod
 			public void onBombPlanted(BombPlantedEvent event) {
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombPlantedMessage());
+				int bombTargetId = event.getBombTarget() != null ? event.getBombTarget().getId() : Entity.INVALID_ENTITY_ID;
+				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombPlantedMessage(bombTargetId));
 			}
 		});
 		
@@ -210,7 +212,8 @@ public class InGameState implements State {
 			@EventMethod
 			@Override
 			public void onBombDisarmedEvent(BombDisarmedEvent event) {
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombDisarmedMessage());				
+				int bombTargetId = event.getBombTarget() != null ? event.getBombTarget().getId() : Entity.INVALID_ENTITY_ID;
+				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombDisarmedMessage(bombTargetId));				
 			}
 		});
 		

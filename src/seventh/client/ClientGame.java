@@ -79,14 +79,16 @@ import com.badlogic.gdx.graphics.GL20;
  */
 public class ClientGame {	
 	private SeventhGame app;
-	private java.util.Map<Integer, ClientPlayer> players;
+	
 	private Map map;
 	
 	private ClientPlayer localPlayer;
 	
+	private java.util.Map<Integer, ClientPlayer> players;
 	private java.util.Map<Integer, ClientEntity> entities;	
 	private List<ClientEntity> entityList;
 	private List<ClientEntity> deadEntities;
+	private List<ClientBombTarget> bombTargets;
 //	private List<ClientPlayerEntity> playerEntities;
 	
 	private List<FrameBufferRenderable> frameBufferRenderables;
@@ -160,6 +162,7 @@ public class ClientGame {
 		this.entityList = new ArrayList<ClientEntity>();
 		this.deadEntities = new ArrayList<ClientEntity>();
 //		this.playerEntities = new ArrayList<ClientPlayerEntity>();
+		this.bombTargets = new ArrayList<ClientBombTarget>();
 		
 		this.frameBufferRenderables = new ArrayList<>();
 		
@@ -259,20 +262,6 @@ public class ClientGame {
 	 * @param timeStep
 	 */
 	public void update(TimeStep timeStep) {
-		
-		// TODO
-		/*ShaderProgram shader = RippleEffectShader.getInstance().getShader();
-		shader.begin();
-		{
-			effectsTime += Gdx.graphics.getDeltaTime()*2.0f;
-			shader.setUniformf("time", effectsTime);		
-			shader.setUniformi("u_ripplemap", 1);
-			shader.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		}
-		shader.end();
-		*/
-		// TODO
-		
 		this.lightSystem.update(timeStep);
 		
 		long gameClock = timeStep.getGameClock();
@@ -317,14 +306,18 @@ public class ClientGame {
 		
 				Sounds.setPosition(cameraCenterAround);
 				
+				/* Calculates the Fog Of War
+				 */
 				nextFOWUpdate -= timeStep.getDeltaTime();
 				if(nextFOWUpdate <= 0) {
-					//fowTiles.clear();
 					fowTiles = Geom.calculateLineOfSight(fowTiles, entity.getCenterPos(), entity.getFacing(), entity.getLineOfSite(), map, entity.getHeightMask());
 					Geom.addFadeEffect(map, fowTiles);
 					
+					/* only calculate every 100 ms */
 					nextFOWUpdate = 100;					
 				}			
+				
+				
 			}
 		}
 		
@@ -599,6 +592,36 @@ public class ClientGame {
 		else {
 			playerVelocity.x = 0;
 		}
+				
+		/* Check to see if the user is planting or disarming
+		 * a bomb
+		 */
+		hud.setAtBomb(false);
+		if(Keys.USE.isDown(keys)) {
+			if(this.localPlayer != null && this.localPlayer.isAlive()) {
+				Rectangle bounds = this.localPlayer.getEntity().getBounds(); 
+				for(int i = 0; i < bombTargets.size(); i++) {
+					ClientBombTarget target = bombTargets.get(i);					
+					if(target.isAlive()) {
+						if(bounds.intersects(target.getBounds())) {
+							
+							/* if we are disarming it takes longer
+							 * than planting
+							 */
+							if(target.isBombPlanted()) {
+								hud.setBombCompletionTime(5_000);
+							}
+							else {
+								hud.setBombCompletionTime(3_000);
+							}
+							
+							hud.setAtBomb(true);
+							break;
+						}
+					}
+				}
+			}
+		}		
 	}
 	
 	/**
@@ -722,10 +745,12 @@ public class ClientGame {
 			}
 			case BOMB_TARGET: {
 				entity = new ClientBombTarget(this, pos);
+				bombTargets.add( (ClientBombTarget)entity);
 				break;
 			}
 			case BOMB: {
 				entity = new ClientBomb(this, pos);
+				
 				break;
 			}
 			case LIGHT_BULB: {
@@ -769,6 +794,7 @@ public class ClientGame {
 		
 		this.entities.clear();
 		this.entityList.clear();
+		this.bombTargets.clear();
 		this.lightSystem.removeAllLights();
 				
 		applyGameStats(gs.stats);
@@ -1083,6 +1109,7 @@ public class ClientGame {
 			
 			ent.setAlive(false);			
 			entityList.remove(ent);
+			bombTargets.remove(ent);
 			
 			OnRemove onRemove = ent.getOnRemove();
 			if(onRemove != null) {
@@ -1102,6 +1129,7 @@ public class ClientGame {
 	public void destroy() {
 		this.entities.clear();
 		this.entityList.clear();
+		this.bombTargets.clear();
 //		this.playerEntities.clear();
 		
 		this.lightSystem.destroy();
@@ -1134,6 +1162,12 @@ public class ClientGame {
 	 */
 	public void bombPlanted(BombPlantedMessage msg) {
 		hud.postMessage("Bomb has been planted!");
+		for(int i = 0; i < bombTargets.size(); i++) {
+			ClientBombTarget target = bombTargets.get(i);
+			if(target.getId() == msg.bombTargetId) {
+				target.setBombPlanted(true);
+			}
+		}
 	}
 	
 	/**
@@ -1142,6 +1176,13 @@ public class ClientGame {
 	 */
 	public void bombDisarmed(BombDisarmedMessage msg) {
 		hud.postMessage("Bomb has been disarmed!");
+		
+		for(int i = 0; i < bombTargets.size(); i++) {
+			ClientBombTarget target = bombTargets.get(i);
+			if(target.getId() == msg.bombTargetId) {
+				target.setBombPlanted(false);
+			}
+		}
 	}
 
 	/**

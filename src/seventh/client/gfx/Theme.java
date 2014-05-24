@@ -4,10 +4,12 @@
  */
 package seventh.client.gfx;
 
-import com.badlogic.gdx.graphics.Color;
+import seventh.ui.Widget;
 
 
 /**
+ * Applies a consistent {@link Theme} for UI {@link Widget}s
+ * 
  * @author Tony
  *
  */
@@ -43,18 +45,6 @@ public class Theme {
 		this.primaryFontFile = primaryFontFile;
 		this.secondaryFontName = secondaryFontName;
 		this.secondaryFontFile = secondaryFontFile;
-		
-//		try {			
-//			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(primaryFontFile)));
-//		} catch (Exception e) {
-//			Cons.println("Unable to load font: " + e);
-//		}
-//		
-//		try {			
-//			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(secondaryFontFile)));
-//		} catch (Exception e) {
-//			Cons.println("Unable to load font: " + e);
-//		}
 	}
 
 	/**

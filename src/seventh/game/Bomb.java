@@ -165,6 +165,13 @@ public class Bomb extends Entity {
 	}
 	
 	/**
+	 * @return the bombTarget
+	 */
+	public BombTarget getBombTarget() {
+		return bombTarget;
+	}
+	
+	/**
 	 * Plants this bomb on the supplied {@link BombTarget}
 	 * 
 	 * @param planter

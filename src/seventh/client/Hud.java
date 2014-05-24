@@ -17,7 +17,10 @@ import seventh.client.gfx.Renderable;
 import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.Entity.Type;
+import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
+import seventh.ui.ProgressBar;
+import seventh.ui.view.ProgressBarView;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -43,6 +46,10 @@ public class Hud implements Renderable {
 	private ClientPlayer localPlayer;
 	private Date gameClockDate;
 	
+	private ProgressBar bombProgressBar;
+	private ProgressBarView bombProgressBarView;
+	private long bombTime, completionTime;
+	private boolean isAtBomb, useButtonReleased;
 	/**
 	 * 
 	 */
@@ -64,9 +71,13 @@ public class Hud implements Renderable {
 		};
 		this.centerLog.setFontSize(24);
 		
-		this.scoreboard = game.getScoreboard();
-		
-		this.gameClockDate = new Date();			
+		this.scoreboard = game.getScoreboard();		
+		this.gameClockDate = new Date();		
+		this.bombProgressBar = new ProgressBar();
+		this.bombProgressBar.setTheme(app.getTheme());
+		this.bombProgressBar.setBounds(new Rectangle(300, 15));
+		this.bombProgressBar.getBounds().centerAround(screenWidth/2, app.getScreenHeight() - 80);
+		this.bombProgressBarView = new ProgressBarView(bombProgressBar);
 	}
 
 	/**
@@ -114,6 +125,27 @@ public class Hud implements Renderable {
 		Sounds.playGlobalSound(Sounds.logAlert);
 	}
 	
+	/**
+	 * @param isAtBomb the isAtBomb to set
+	 */
+	public void setAtBomb(boolean isAtBomb) {
+		this.isAtBomb = isAtBomb;
+	}
+	
+	/**
+	 * @return the isAtBomb
+	 */
+	public boolean isAtBomb() {
+		return isAtBomb;
+	}
+	
+	/**
+	 * @param completionTime the completionTime to set
+	 */
+	public void setBombCompletionTime(long completionTime) {
+		this.completionTime = completionTime;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see leola.live.gfx.Renderable#update(leola.live.TimeStep)
@@ -123,6 +155,33 @@ public class Hud implements Renderable {
 		killLog.update(timeStep);
 		messageLog.update(timeStep);		
 		centerLog.update(timeStep);
+		
+		if(this.isAtBomb) {
+			
+			/* this forces the user to release the USE key
+			 * which therefore doesn't spaz out the progress bar
+			 * with continuous repeated progress
+			 */
+			if(useButtonReleased) {
+				bombTime += timeStep.getDeltaTime();
+				float percentageCompleted = (float) ((float)bombTime / this.completionTime);			
+				bombProgressBar.setProgress( (int)(percentageCompleted * 100));
+				bombProgressBar.show();
+				
+				if(bombProgressBar.getProgress() >= 99) {
+					bombTime = 0;
+					bombProgressBar.hide();
+					useButtonReleased = false;
+				}
+			}						
+		}
+		else {
+			bombProgressBar.hide();
+			bombProgressBar.setProgress(0);
+			bombTime = 0;
+			useButtonReleased = true;
+		}
+		bombProgressBarView.update(timeStep);
 	}
 	
 	/* (non-Javadoc)
@@ -163,6 +222,8 @@ public class Hud implements Renderable {
 		drawClock(canvas);
 		
 		drawSpectating(canvas);
+		
+		drawBombProgressBar(canvas, camera);
 	}
 	
 	private void drawWeaponIcons(Canvas canvas, ClientWeapon weapon) {
@@ -298,6 +359,10 @@ public class Hud implements Renderable {
 		canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );		
 		
 		canvas.drawSprite(Art.staminaIcon, x + 108, y - 14, null);
+	}
+	
+	private void drawBombProgressBar(Canvas canvas, Camera camera) {
+		this.bombProgressBarView.render(canvas, camera, 0);
 	}
 	
 }

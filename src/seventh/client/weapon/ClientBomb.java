@@ -28,7 +28,7 @@ public class ClientBomb extends ClientEntity {
 	 */
 	public ClientBomb(ClientGame game, Vector2f pos) {
 		super(game, pos);
-		this.tickMarker = 10;
+		this.tickMarker = 10;				
 	}
 
 	/* (non-Javadoc)

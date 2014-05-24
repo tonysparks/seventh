@@ -18,16 +18,34 @@ import seventh.math.Vector2f;
 public class ClientBombTarget extends ClientEntity {
 
 	private Sprite sprite;
+	private boolean isBombPlanted;
+	
 	/**
 	 * @param pos
 	 */
 	public ClientBombTarget(ClientGame game, Vector2f pos) {
 		super(game, pos);
 		
+		this.isBombPlanted = false;
 		this.sprite = new Sprite(Art.computerImage);
 		this.sprite.setSize(32, 32);
+		getBounds().setSize(32, 32);
 	}
 
+	/**
+	 * @param isBombPlanted the isBombPlanted to set
+	 */
+	public void setBombPlanted(boolean isBombPlanted) {
+		this.isBombPlanted = isBombPlanted;
+	}
+	
+	/**
+	 * @return the isBombPlanted
+	 */
+	public boolean isBombPlanted() {
+		return isBombPlanted;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.client.ClientEntity#killIfOutdated(long)
 	 */
