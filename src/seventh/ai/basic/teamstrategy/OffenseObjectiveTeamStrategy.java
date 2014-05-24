@@ -14,7 +14,6 @@ import seventh.ai.basic.Stats;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.Zones;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.MoveAction;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
@@ -42,6 +41,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	private OffensiveState currentState;
 		
 	private Goals goals;
+	private long timeUntilOrganizedAttack;
 	
 	enum OffensiveState {
 		INFILTRATE,
@@ -80,7 +80,8 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	@Override
 	public void startOfRound(GameInfo game) {		
 		this.zoneToAttack = calculateZoneToAttack();	
-		this.currentState = OffensiveState.INFILTRATE;		
+		this.currentState = OffensiveState.RANDOM;		
+		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(30_000);
 	}
 	
 	
@@ -197,7 +198,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void endOfRound(GameInfo game) {		
-		this.currentState = OffensiveState.INFILTRATE;
+		this.currentState = OffensiveState.RANDOM;
 		this.zoneToAttack = null;
 	}
 
@@ -256,7 +257,18 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void update(TimeStep timeStep, GameInfo game) {
-	
+		
+		/* lets do some random stuff for a while, this
+		 * helps keep things dynamic
+		 */
+		if(this.timeUntilOrganizedAttack > 0) {
+			this.timeUntilOrganizedAttack -= timeStep.getDeltaTime();
+			
+			giveOrders(OffensiveState.RANDOM);
+			return;
+		}
+		
+		
 		/* if no zone to attack, exit out */
 		if(zoneToAttack == null) {
 			return;

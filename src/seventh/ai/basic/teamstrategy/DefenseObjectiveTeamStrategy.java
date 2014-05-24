@@ -45,12 +45,14 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	private World world;
 	private Goals goals;
 	
+	private long timeUntilOrganizedAttack;
 	private List<PlayerEntity> playersInZone;
 	
 	enum DefensiveState {		
 		DEFUSE_BOMB,
 		ATTACK_ZONE,
 		DEFEND,
+		RANDOM,
 		DONE,
 	}
 	
@@ -85,7 +87,8 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	@Override
 	public void startOfRound(GameInfo game) {		
 		this.zoneToAttack = calculateZoneToAttack();	
-		this.currentState = DefensiveState.DEFEND;		
+		this.currentState = DefensiveState.RANDOM;		
+		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(60_000);		
 		this.world = new World(game, zones);
 	}
 	
@@ -116,7 +119,9 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 			case DEFUSE_BOMB:			
 				action = goals.defuseBomb();			
 				break;
-				
+			case RANDOM:
+				action = goals.goToRandomSpot(brain);
+				break;
 			case ATTACK_ZONE:
 			case DONE:			
 			default:
@@ -294,6 +299,16 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	@Override
 	public void update(TimeStep timeStep, GameInfo game) {
 	
+		/* lets do some random stuff for a while, this
+		 * helps keep things dynamic
+		 */
+		if(this.timeUntilOrganizedAttack > 0) {
+			this.timeUntilOrganizedAttack -= timeStep.getDeltaTime();
+			
+			giveOrders(DefensiveState.RANDOM);
+			return;
+		}
+		
 		/* if no zone to attack, exit out */
 		if(zoneToAttack == null) {
 			return;

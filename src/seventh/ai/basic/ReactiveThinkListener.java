@@ -24,17 +24,28 @@ import seventh.shared.TimeStep;
  */
 public class ReactiveThinkListener implements ThinkListener {
 	
-	private Goal longTermGoal;
+	private Goal longTermGoal;	
 	private TeamStrategy strategy;
 	private boolean isInterrupted;
-	private boolean movingAwayFromBomb;
+	
+//	enum State {
+//		None,
+//		Combat,
+//		SeekingCover,
+//		Hiding,
+//		Wandering,
+//		PlantingBomb,
+//		DefusingBomb,
+//		Defending,		
+//		MovingAway,
+//	}
 	
 	/**
 	 * 
 	 */
 	public ReactiveThinkListener(TeamStrategy strategy) {
 		this.strategy = strategy;
-		this.longTermGoal = new Goal();
+		this.longTermGoal = new Goal();		
 	}
 	
 	
@@ -79,8 +90,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	 */
 	@Override
 	public void onEndThink(TimeStep timeStep, Brain brain) {
-		this.movingAwayFromBomb = false;
-		
+				
 		/* are we receiving orders? if so make these highest priority */
 		Action command = brain.getCommunicator().receiveAction(brain);
 		if(command != null) {			
@@ -170,7 +180,6 @@ public class ReactiveThinkListener implements ThinkListener {
 			if(attacker instanceof Bullet) {	
 				interrupt(brain);
 				motion.lookAt(((Bullet) attacker).getOwner().getCenterPos());	
-//				motion.lookAt(attacker.getCenterPos());
 				attacking = true;
 			}
 		}
@@ -227,48 +236,13 @@ public class ReactiveThinkListener implements ThinkListener {
 	 * @see seventh.ai.basic.SimpleThoughtProcess.ThinkListener#onTooCloseToActiveBomb(seventh.shared.TimeStep, seventh.ai.basic.Brain, seventh.game.BombTarget)
 	 */
 	@Override
-	public boolean onTooCloseToActiveBomb(TimeStep timeStep, Brain brain, BombTarget target) {		
-		return false;
+	public boolean onTooCloseToActiveBomb(TimeStep timeStep, Brain brain, BombTarget target) {	
+		Locomotion motion = brain.getMotion();
+		if(!motion.isMoving()) {
+			motion.wander();
+		}
 		
-//		World world = brain.getWorld();
-//		if(movingAwayFromBomb) {
-//			movingAwayFromBomb = target.isAlive() && target.bombActive();									
-//			return true;
-//		}
-//		
-//		
-//		/* if we are defusing, we should be by the bomb */
-//		PlayerEntity me = brain.getEntityOwner();
-//		if(me.isDefusingBomb()) {
-//			return false;
-//		}
-//		
-//		/* we might be trying to kill someone by the bomb */
-//		Locomotion motion = brain.getMotion();
-//		if(motion.isAttacking()) {
-//			return false;
-//		}
-//		
-//		Bomb bomb = target.getBomb();
-//		if(bomb==null) {
-//			return false;
-//		}
-//
-//		movingAwayFromBomb = true;
-//											
-//		Zone bombZone = world.getZone(target.getCenterPos());
-//		Zone adjacentZone = world.findAdjacentZone(bombZone, bomb.getBlastRadius().width);
-//						
-//		/* if we found a safer zone, move to it */
-//		if(adjacentZone != null) {
-//			motion.moveTo(world.getRandomSpot(me, adjacentZone.getBounds()));
-//		}
-//		else {
-//			/* if there isn't a close zone, just move to a random spot -- shouldn't happen */
-//			motion.moveTo(world.getRandomSpot(me));
-//		}
-//		
-//		return true;
+		return false;
 	}
 
 }

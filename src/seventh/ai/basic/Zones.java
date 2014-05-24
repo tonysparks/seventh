@@ -36,7 +36,7 @@ public class Zones {
 		this.game = game;
 		bombTargetZones = new ArrayList<>();
 		
-		final int ZONE_SIZE_IN_TILES = 8;
+		final int ZONE_SIZE_IN_TILES = 12;
 		
 		Map map = game.getMap();
 
