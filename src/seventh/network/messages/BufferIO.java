@@ -15,6 +15,7 @@ import seventh.game.net.NetExplosion;
 import seventh.game.net.NetFire;
 import seventh.game.net.NetLight;
 import seventh.game.net.NetPlayer;
+import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetRocket;
 import seventh.math.Vector2f;
 
@@ -208,6 +209,10 @@ public class BufferIO {
 			}
 			case BOMB_TARGET: {
 				result = new NetEntity();
+				break;
+			}
+			case PLAYER_PARTIAL: {
+				result = new NetPlayerPartial();
 				break;
 			}
 			case PLAYER: {

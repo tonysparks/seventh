@@ -42,7 +42,7 @@ public abstract class Entity {
 			return (byte)ordinal();
 		}
 		
-		public State fromNetValue(byte b) {
+		public static State fromNetValue(byte b) {
 			return values()[b];
 		}
 	}
@@ -65,6 +65,7 @@ public abstract class Entity {
 	}
 	
 	public static enum Type {
+		PLAYER_PARTIAL, 
 		PLAYER,
 		BULLET,
 		EXPLOSION,

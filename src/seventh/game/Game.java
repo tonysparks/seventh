@@ -1105,10 +1105,7 @@ public class Game implements GameInfo {
 		if(player == null) {
 			return null;
 		}
-		
-		
-		
-		
+								
 		NetGameUpdate netUpdate = new NetGameUpdate();
 		NetSound[] sounds = null;
 		
@@ -1136,15 +1133,20 @@ public class Game implements GameInfo {
 				 * Calculate all the sounds this player can hear
 				 */			
 				aSoundsHeard.clear();
-				playerEntity.getHeardSounds(soundEvents, aSoundsHeard);			
+				aSoundsHeard = playerEntity.getHeardSounds(soundEvents, aSoundsHeard);			
 				sounds = NetSound.toNetSounds(aSoundsHeard);
 							
 				/*
 				 * Calculate all the visuals this player can see
 				 */
 				aEntitiesInView.clear();
-				playerEntity.getEntitiesInView(this);
+				aEntitiesInView = playerEntity.getEntitiesInView(this);
 				NetEntity.toNetEntities(aEntitiesInView, netUpdate.entities);
+				
+				/* now add the players full entity state */
+				if(playerEntity.isAlive()) {
+					netUpdate.entities[playerEntity.getId()] = playerEntity.getNetPlayer();
+				}
 			}
 		}
 		
@@ -1154,7 +1156,7 @@ public class Game implements GameInfo {
 			}
 		}
 		
-		netUpdate.time = time;
+		netUpdate.time = (int)time;
 		netUpdate.sounds = sounds;
 		netUpdate.spectatingPlayerId = player.getSpectatingPlayerId();
 		return netUpdate;

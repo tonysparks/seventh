@@ -8,6 +8,7 @@ import java.util.List;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
+import seventh.game.net.NetPlayerPartial;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Kar98;
 import seventh.game.weapons.M1Garand;
@@ -92,6 +93,7 @@ public class PlayerEntity extends Entity {
 	public static final float STAMINA_RECOVER_RATE = 0.5f;
 	
 	private NetPlayer player;
+	private NetPlayerPartial partialPlayer;
 	private Team team;
 	
 	private long invinceableTime;	
@@ -122,6 +124,9 @@ public class PlayerEntity extends Entity {
 		
 		this.player = new NetPlayer();
 		this.player.id = id;
+		
+		this.partialPlayer = new NetPlayerPartial();
+		this.partialPlayer.id = id;
 				
 		this.bounds.set(position, PLAYER_WIDTH, PLAYER_HEIGHT);
 		this.inputVel = new Vector2f();
@@ -932,10 +937,7 @@ public class PlayerEntity extends Entity {
 			boolean isCalculatedEntity = entType==Type.PLAYER;//||entType==Type.GRENADE||entType==Type.NAPALM_GRENADE;
 			
 			if(isCalculatedEntity && game.isEnableFOW()) {				
-				if(ent.getId() == id) {
-					entitiesInView.add(ent);
-				}
-				else {
+				if(ent.getId() != id) {
 					Vector2f pos = ent.getCenterPos();
 					
 					Vector2f.Vector2fSubtract(pos, centerPos, this.enemyDir);
@@ -1050,7 +1052,7 @@ public class PlayerEntity extends Entity {
 	 */
 	@Override
 	public NetEntity getNetEntity() {
-		return getNetPlayer();
+		return getNetPlayerPartial();
 	}
 	/**
 	 * Read the state
@@ -1080,4 +1082,28 @@ public class PlayerEntity extends Entity {
 		
 		return player;
 	}	
+	
+	
+	/**
+	 * Gets the Partial network update.  The {@link NetPlayerPartial} is used for Players
+	 * that are NOT the local player
+	 * @return the {@link NetPlayerPartial}
+	 */
+	public NetPlayerPartial getNetPlayerPartial() {
+		setNetEntity(partialPlayer);
+		partialPlayer.orientation = (short) Math.toDegrees(this.orientation);
+		
+		partialPlayer.state = currentState.netValue();								
+		partialPlayer.health = (byte)getHealth(); 
+		
+		Weapon weapon = inventory.currentItem();
+		if(weapon!=null) {
+			partialPlayer.weapon = weapon.getNetWeapon();
+		}
+		else {
+			partialPlayer.weapon = null;
+		}
+		
+		return partialPlayer;
+	}
 }

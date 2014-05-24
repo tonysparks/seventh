@@ -677,6 +677,13 @@ public class ClientGame {
 		Type type = Type.fromNet(ent.type);
 		Vector2f pos = new Vector2f(ent.posX, ent.posY);
 		switch(type) {
+			case PLAYER_PARTIAL: {
+				ClientPlayer player = this.players.get(ent.id);
+				if(player!=null) {					
+					entity = new ClientPlayerEntity(this, player, pos);					
+				}
+				break;
+			}
 			case PLAYER: {
 				ClientPlayer player = this.players.get(ent.id);
 				if(player!=null) {

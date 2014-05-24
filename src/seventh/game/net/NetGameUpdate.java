@@ -22,7 +22,7 @@ public class NetGameUpdate implements NetMessage {
 	public NetEntity[] entities;
 	public NetSound[] sounds;
 	
-	public long time;
+	public int time;
 	public int spectatingPlayerId = -1;
 	
 
@@ -86,7 +86,7 @@ public class NetGameUpdate implements NetMessage {
 			spectatingPlayerId = buffer.getUnsignedByte();
 		}
 		
-		time = buffer.getLong();
+		time = buffer.getInt();
 		
 		
 	}
@@ -155,7 +155,7 @@ public class NetGameUpdate implements NetMessage {
 			buffer.putUnsignedByte(spectatingPlayerId);
 		}
 		
-		buffer.putLong(this.time);
+		buffer.putInt(this.time);
 		
 
 	}

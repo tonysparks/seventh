@@ -29,6 +29,7 @@ import seventh.game.Entity.Type;
 import seventh.game.PlayerEntity;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
+import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetWeapon;
 import seventh.map.Map;
 import seventh.math.Vector2f;
@@ -414,19 +415,45 @@ public class ClientPlayerEntity extends ClientEntity {
 	@Override
 	public void updateState(NetEntity state, long time) {
 		super.updateState(state, time);		
-		NetPlayer ps = (NetPlayer) state;
 		
-		this.currentState = State.values()[ps.state];
-		int newHealth = ps.health;
-		this.damageDelta = newHealth - this.health;
-		this.health = ps.health;
-		this.stamina = ps.stamina;
-		
-		this.numberOfGrenades = ps.grenades;
-		
-		this.flashLight.setOn(ps.flashLightOn);
-		
-		updateWeaponState(ps.weapon, time);		
+		/*
+		 * There a full and partial NetPlayer updates.  It
+		 * would have been nice to have NetPlayer inherit
+		 * from NetPlayerPartial but due to some bit optimizations
+		 * it made it a bit awkward, so we live with this
+		 * redundant code
+		 * 
+		 * The Partial updates are for the entities that the
+		 * local player doesn't control (they don't need to 
+		 * know their stamina, ammo, etc. so we can save some 
+		 * bytes by not sending them)
+		 */
+		if(state instanceof NetPlayer) {
+			NetPlayer ps = (NetPlayer) state;
+			
+			this.currentState = State.fromNetValue(ps.state);
+			int newHealth = ps.health;
+			this.damageDelta = newHealth - this.health;
+			this.health = ps.health;
+			this.stamina = ps.stamina;
+			
+			this.numberOfGrenades = ps.grenades;
+			
+			this.flashLight.setOn(ps.flashLightOn);
+			
+			updateWeaponState(ps.weapon, time);
+		}
+		else {
+			NetPlayerPartial ps = (NetPlayerPartial) state;
+			this.currentState = State.fromNetValue(ps.state);
+			int newHealth = ps.health;
+			this.damageDelta = newHealth - this.health;
+			this.health = ps.health;
+			
+			this.flashLight.setOn(false);
+			
+			updateWeaponState(ps.weapon, time);
+		}
 	}
 
 	/**
@@ -612,15 +639,8 @@ public class ClientPlayerEntity extends ClientEntity {
 		bloodEmitter.render(canvas, camera, alpha);
 		
 		sprite.render(canvas, camera, alpha);
-						
-		
-		
-		
 		canvas.setCompositeAlpha(1.0f);
-//		canvas.fillCircle(2, rx, ry, 0xffff0000);
-//		rx = (int)(getCenterPos().x - c.x);
-//		ry = (int)(getCenterPos().y - c.y);
-//		canvas.fillCircle(2, rx, ry, 0xff00ff00);
+
 	}
 
 }
