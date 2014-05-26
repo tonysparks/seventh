@@ -68,6 +68,8 @@ public class Game implements GameInfo {
 	public static final int MAX_PLAYERS = 12;
 	public static final int MAX_PERSISTANT_ENTITIES = 64;
 	
+	public static final int SPAWN_INVINCEABLILITY_TIME = 2_000;
+	
 	public static final Type[] alliedWeapons = {
 		Type.THOMPSON,
 		Type.SHOTGUN,
@@ -673,7 +675,7 @@ public class Game implements GameInfo {
 		
 			
 		// give them two seconds of invinceability		
-		playerEntity.setInvinceableTime(2000);
+		playerEntity.setInvinceableTime(SPAWN_INVINCEABLILITY_TIME);
 		playerEntity.onKill = new KilledListener() {
 			
 			@Override
@@ -770,8 +772,7 @@ public class Game implements GameInfo {
 					Player spectateMe = gameType.getNextPlayerToSpectate(getPlayers(), player);
 					player.setSpectating(spectateMe);
 				}
-				
-				if(Keys.RIGHT.isDown(this.previousKeys) && !Keys.RIGHT.isDown(msg.keys)) {
+				else if(Keys.RIGHT.isDown(this.previousKeys) && !Keys.RIGHT.isDown(msg.keys)) {
 					Player spectateMe = gameType.getNextPlayerToSpectate(getPlayers(), player);
 					player.setSpectating(spectateMe);
 				}
