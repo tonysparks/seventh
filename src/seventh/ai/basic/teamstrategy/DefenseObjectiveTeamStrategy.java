@@ -254,6 +254,21 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		}
 	}
 	
+	/**
+	 * @return true if a bomb has been planted
+	 */
+	private boolean isBombPlanted() {
+		List<BombTarget> targets = world.getBombTargets();
+		for(int i = 0; i < targets.size(); i++) {
+			BombTarget target = targets.get(i);
+			if(target.isAlive()) {
+				if(target.bombActive()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * @param zone
@@ -287,7 +302,9 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 				Player player = players.get(i);
 				if(player.isBot() && player.isAlive()) {
 					Brain brain = aiSystem.getBrain(player);
-					brain.getCommunicator().post(getCurrentAction(brain));		
+					if( !brain.getMotion().isDefusing() ) {					
+						brain.getCommunicator().post(getCurrentAction(brain));
+					}
 				}
 			}
 		}
@@ -299,46 +316,36 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	@Override
 	public void update(TimeStep timeStep, GameInfo game) {
 	
-		/* lets do some random stuff for a while, this
-		 * helps keep things dynamic
-		 */
-		if(this.timeUntilOrganizedAttack > 0) {
-			this.timeUntilOrganizedAttack -= timeStep.getDeltaTime();
-			
-			giveOrders(DefensiveState.RANDOM);
-			return;
-		}
-		
-		/* if no zone to attack, exit out */
-		if(zoneToAttack == null) {
-			return;
-		}
-		
-			
-		/* Determine if the zone to attack still has
-		 * Bomb Targets on it
-		 */
-		if(zoneToAttack.hasActiveBomb()) {
+		/* drop everything and go disarm the bomb */
+		if(isBombPlanted()) {
+			zoneToAttack = calculateZoneToAttack();
 			
 			if(isBombBeingDisarmed(zoneToAttack)) {
 				giveOrders(DefensiveState.ATTACK_ZONE);
 			}
 			else {
 				giveOrders(DefensiveState.DEFUSE_BOMB);
-			}						
-	
+			}
 		}
 		else {
-			
-			/* no more bomb targets, calculate a new 
-			 * zone to attack...
+		
+			/* lets do some random stuff for a while, this
+			 * helps keep things dynamic
 			 */
+			if(this.timeUntilOrganizedAttack > 0) {
+				this.timeUntilOrganizedAttack -= timeStep.getDeltaTime();
+				
+				giveOrders(DefensiveState.RANDOM);
+				return;
+			}
+			
+			
 			zoneToAttack = calculateZoneToAttack();			
 			if(zoneToAttack != null) {				
 				giveOrders(DefensiveState.ATTACK_ZONE);
 			}
+			
 		}
-	
 	}
 
 }

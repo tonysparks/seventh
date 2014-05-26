@@ -162,7 +162,7 @@ public class Locomotion {
 			else {
 				Vector2f nextDest = pathFeeder.getDestination();
 				Vector2f.Vector2fSubtract(nextDest, me.getPos(), moveDelta);	
-				if(moveDelta.lengthSquared() < 25) {
+				if(moveDelta.lengthSquared() < 26) {
 					moveDelta.zeroOut();
 				}
 			}

@@ -281,16 +281,17 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 			/* if we are still roughly within X amount of pixels from the last check (Y milliseconds),
 			 * then we are declared stuck.
 			 */
-			if(Vector2f.Vector2fApproxEquals(previousPosition, bot.getPos(), 5.0f)) {						
+			if(Vector2f.Vector2fApproxEquals(previousPosition, bot.getPos(), 5.0f)) {		
+				this.stuckTimer.start();
 				this.stuckTimer.update(timeStep);
 				
 				if(this.stuckTimer.isTime()) {								
-					this.stuckTimer.reset();
+					this.stuckTimer.stop();
 					return true;
 				}						
 			}
 			else {
-				this.stuckTimer.reset();
+				this.stuckTimer.stop();
 			}
 			
 		}
@@ -309,7 +310,10 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 	private BombTarget checkIfCloseToActiveBomb(Brain brain) {
 
 		World world = brain.getWorld();
-							
+		if(!world.isOnOffense(brain.getEntityOwner().getTeam())) {
+			return null;
+		}
+		
 		List<BombTarget> targets = world.getBombTargetsWithActiveBombs();
 		for(int i = 0; i < targets.size(); i++) {
 			BombTarget target = targets.get(i);
