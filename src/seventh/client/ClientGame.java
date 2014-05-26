@@ -18,7 +18,6 @@ import seventh.client.gfx.Canvas;
 import seventh.client.gfx.FrameBufferRenderable;
 import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
-import seventh.client.gfx.MiniMap;
 import seventh.client.gfx.particle.AnimationEffect;
 import seventh.client.gfx.particle.BloodEmitter;
 import seventh.client.gfx.particle.Effect;
@@ -78,8 +77,9 @@ import com.badlogic.gdx.graphics.GL20;
  *
  */
 public class ClientGame {	
-	private SeventhGame app;
 	
+	
+	private SeventhGame app;	
 	private Map map;
 	
 	private ClientPlayer localPlayer;
@@ -97,8 +97,7 @@ public class ClientGame {
 	private List<Tile> fowTiles;
 	
 	private long gameClock;
-			
-	
+				
 	private Camera camera;
 	private Vector2f cameraCenterAround;
 	
@@ -120,9 +119,7 @@ public class ClientGame {
 	private Vector2f playerVelocity;
 	private LightSystem lightSystem;
 	
-	private MiniMap miniMap;
-	
-//	private float effectsTime;
+	private ClientEntityListener entityListener;
 	
 	/**
 	 * Listens for {@link ClientEntity} life cycle
@@ -145,7 +142,6 @@ public class ClientGame {
 		public void onEntityDestroyed(ClientEntity ent);
 	}
 	
-	private ClientEntityListener entityListener;
 	
 	/**
 	 * @throws Exception 
@@ -182,13 +178,10 @@ public class ClientGame {
 
 		this.cacheRect = new Rectangle();
 	
-		this.lightSystem = //new Box2dLightSystem(this); 
-			new ImageBasedLightSystem();		
+		this.lightSystem = new ImageBasedLightSystem();		
 		this.frameBufferRenderables.add(lightSystem);
 		
-		this.entityListener = lightSystem.getClientEntityListener();
-		
-		this.miniMap = new MiniMap(this);
+		this.entityListener = lightSystem.getClientEntityListener();		
 	}
 	
 	/**
@@ -292,11 +285,28 @@ public class ClientGame {
 			r.update(timeStep);
 		}
 		
-		if(this.localPlayer.isAlive()||this.localPlayer.isSpectating()) {
-			ClientPlayerEntity entity = (this.localPlayer.isAlive()) ? this.localPlayer.getEntity() :
-											(this.players.containsKey(this.localPlayer.getSpectatingPlayerId())) ? 
-													this.players.get(this.localPlayer.getSpectatingPlayerId()).getEntity() : null;
-													
+		updateFow(timeStep);
+		
+		map.update(timeStep);		
+		camera.update(timeStep);
+		hud.update(timeStep);			
+	}
+	
+	
+	/**
+	 * Handles calculating the local players Fog Of War
+	 * @param timeStep
+	 */
+	private void updateFow(TimeStep timeStep) {
+		if(this.localPlayer.isAlive()||this.localPlayer.isSpectating()) {						
+			ClientPlayerEntity entity = null;
+			if(this.localPlayer.isAlive()) {
+				entity = this.localPlayer.getEntity();
+			}
+			else if(this.players.containsKey(this.localPlayer.getSpectatingPlayerId())) { 
+				entity = this.players.get(this.localPlayer.getSpectatingPlayerId()).getEntity();
+			}
+																								
 			if(entity!=null) {
 				entity.movementPrediction(map, timeStep, playerVelocity);
 				
@@ -320,13 +330,6 @@ public class ClientGame {
 				
 			}
 		}
-		
-		map.update(timeStep);
-		
-		miniMap.update(timeStep);
-		
-		camera.update(timeStep);
-		hud.update(timeStep);			
 	}
 	
 	/**
@@ -360,70 +363,18 @@ public class ClientGame {
 			}
 		}
 	}
-	
-	/*
-	private void renderRipple(Canvas canvas) {
-		canvas.fboBegin();
-		canvas.setDefaultTransforms();
-		canvas.setShader(null);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		canvas.begin();
-		map.render(canvas, camera, 0);
 		
-		backgroundEffects.render(canvas, camera, 0);
-		int size = this.entityList.size();		
-		for(int i = 0; i < size; i++) {
-			ClientEntity entity = this.entityList.get(i);
-			entity.render(canvas, camera, 0);			
-		}						
-		
-//		this.lightSystem.render(canvas, camera, 0);
-		
-		foregroundEffects.render(canvas, camera, 0);
-		map.renderForeground(canvas, camera, 0);
-		
-		canvas.setColor(0, 45);
-		map.renderSolid(canvas, camera, 0);
-		
-		canvas.setShader(null);
-		hud.render(canvas, camera, 0);
-		
-		canvas.end();
-		canvas.fboEnd();
-		
-	
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		canvas.setDefaultTransforms();
-		ShaderProgram shader = RippleEffectShader.getInstance().getShader();		
-		canvas.begin();		
-		//canvas.setShader(shader);
-		canvas.setShader(null);
-		//canvas.bindFrameBuffer(1);
-		
-		TextureRegion tex = new TextureRegion(canvas.getFrameBuffer());
-		canvas.drawImage(tex, 0,0, null);
-		
-		canvas.setShader(shader);
-		Art.fireWeaponLight.getTexture().bind(0);
-		tex.setRegion(200, 200, 400, 400);
-		canvas.drawImage(tex, 200,200, null);				
-		canvas.end();
-	}*/
-	
 	/**
 	 * Renders the game
 	 * 
 	 * @param canvas
 	 */
 	public void render(Canvas canvas) {				
-		//renderRipple(canvas);
 		renderFrameBuffer(canvas);
 						
 		canvas.begin();		
 		map.render(canvas, camera, 0);
 		canvas.end();
-		
-		//renderRipple(canvas);
 		
 		backgroundEffects.render(canvas, camera, 0);
 		
@@ -447,8 +398,6 @@ public class ClientGame {
 		map.renderSolid(canvas, camera, 0);
 		
 		lightSystem.render(canvas, camera, 0);
-				
-		miniMap.render(canvas, camera, 0);
 		
 		DebugDraw.enable(false);
 		DebugDraw.render(canvas, camera);
@@ -516,6 +465,13 @@ public class ClientGame {
 	 */
 	public Scoreboard getScoreboard() {
 		return scoreboard;
+	}
+	
+	/**
+	 * @return the bombTargets
+	 */
+	public List<ClientBombTarget> getBombTargets() {
+		return bombTargets;
 	}
 	
 	/**
@@ -1080,7 +1036,12 @@ public class ClientGame {
 	public void teamTextMessage(TeamTextMessage msg) {
 		ClientPlayer player = players.get(msg.playerId);
 		if(player != null) {
-			hud.postMessage("(Team) " + player.getName() + ": " + msg.message);
+			if(player.isAlive()) {
+				hud.postMessage("(Team) " + player.getName() + ": " + msg.message);
+			}
+			else {
+				hud.postMessage("(Team) (Dead)" + player.getName() + ": " + msg.message);
+			}
 		}
 		else {
 			hud.postMessage("(Team) : " + msg.message);
@@ -1090,7 +1051,12 @@ public class ClientGame {
 	public void textMessage(TextMessage msg) {
 		ClientPlayer player = players.get(msg.playerId);
 		if(player != null) {
-			hud.postMessage(player.getName() + ": " + msg.message);
+			if(player.isAlive()) {
+				hud.postMessage(player.getName() + ": " + msg.message);
+			}
+			else {
+				hud.postMessage("(Dead) " + player.getName() + ": " + msg.message);
+			}
 		}
 		else {
 			hud.postMessage(msg.message);

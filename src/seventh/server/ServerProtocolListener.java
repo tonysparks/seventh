@@ -318,7 +318,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 	}
 	
 	public void textMessage(Connection conn, TextMessage msg) throws IOException  {
-		msg.playerId = conn.getId();
+		msg.playerId = conn.getId();		
 		this.server.sendToAll(Endpoint.FLAG_RELIABLE, msg);
 	}
 	
@@ -326,7 +326,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 		RemoteClient client = this.clients.get(conn.getId());
 		msg.playerId = conn.getId();
 		
-		Player player = client.getPlayer();
+		Player player = client.getPlayer();		
 		Team team = this.game.getGameType().getTeam(player);
 		NetTeam netTeam = team.getNetTeam();
 		for(int i = 0; i < netTeam.playerIds.length; i++) {

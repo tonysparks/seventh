@@ -23,6 +23,16 @@ public class Colors {
 	}
 
 	/**
+	 * Sets the Alpha component of the color
+	 * @param color
+	 * @param alpha
+	 * @return the color merged with the supplied alpha
+	 */
+	public static int setAlpha(int color, int alpha) {		
+		return (alpha << 24) | ((color<<8)>>>8);
+	}
+	
+	/**
 	 * Converts the {@link Vector3f} into a int color
 	 * @param v
 	 * @param alpha

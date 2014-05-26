@@ -67,5 +67,13 @@ public class BombTargetObjective implements Objective {
 	public boolean isCompleted(GameInfo game) {
 		return target != null && !target.isAlive();
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.type.Objective#isInProgress(seventh.game.GameInfo)
+	 */
+	@Override
+	public boolean isInProgress(GameInfo game) {
+		return target != null && target.bombActive();
+	}
 
 }

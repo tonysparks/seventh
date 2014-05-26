@@ -131,6 +131,11 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		}
 		else {
 
+			// If there are objectives that are in progress
+			// we must force the attackers to disarm them,
+			// even if all the attackers are dead
+			int numberOfObjectivesInProgress = 0;
+			
 			// if we are currently playing, check
 			// and see if the objectives have been completed		
 			int size = this.outstandingObjectives.size();
@@ -138,6 +143,9 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 				Objective obj = this.outstandingObjectives.get(i); 
 				if (obj.isCompleted(game)) {
 					this.completedObjectives.add(obj);
+				}
+				else if(obj.isInProgress(game)) {
+					numberOfObjectivesInProgress++;
 				}
 			}
 			
@@ -153,7 +161,8 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 			else if(getRemainingTime() <= 0 ) {
 				endRound(defender, game);
 			}
-			else if( attacker.isTeamDead() && attacker.teamSize() > 0) {
+			else if( attacker.isTeamDead() && attacker.teamSize() > 0 
+				&& (!this.outstandingObjectives.isEmpty() ? numberOfObjectivesInProgress < this.outstandingObjectives.size() : true) ) {
 				endRound(defender, game);
 			}			
 			else {

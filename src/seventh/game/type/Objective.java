@@ -31,4 +31,15 @@ public interface Objective {
 	 * @return true if completed, false otherwise
 	 */
 	public boolean isCompleted(GameInfo game);	
+	
+	
+	/**
+	 * Determines if the objective is in progress, i.e., the
+	 * defenders must take action to destroy/defend it. (such as
+	 * a bomb is planted and the defenders must disarm it).
+	 * @param game
+	 * @return true if the objective is in progress which requires
+	 * the defenders to take action.
+	 */
+	public boolean isInProgress(GameInfo game);
 }

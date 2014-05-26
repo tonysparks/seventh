@@ -4,7 +4,9 @@
 package seventh.client.gfx;
 
 import java.util.HashMap;
+import java.util.List;
 
+import seventh.client.ClientBombTarget;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientTeam;
@@ -30,7 +32,9 @@ public class MiniMap implements Renderable {
 
 	private ClientGame game;
 	private TextureRegion miniMap;
-	private long gameClock;
+	private long gameClock;	
+	private int mapColor;
+	
 	/**
 	 */
 	public MiniMap(ClientGame game) {
@@ -39,13 +43,15 @@ public class MiniMap implements Renderable {
 		
 		java.util.Map<TextureRegion, Integer> cache = new HashMap<TextureRegion, Integer>();
 		
-		int ratioWidth = map.getMapWidth()/8;
-		int ratioHeight = map.getMapHeight()/8;
+		int size = 10;
+		
+		int ratioWidth = map.getMapWidth()/size;
+		int ratioHeight = map.getMapHeight()/size;
 		
 		Pixmap pix = TextureUtil.createPixmap(ratioWidth, ratioHeight);
 
-		int width = map.getTileWidth()/8;
-		int height = map.getTileHeight()/8;
+		int width = map.getTileWidth()/size;
+		int height = map.getTileHeight()/size;
 		
 		Layer[] layers = map.getBackgroundLayers();
 		for(int y = 0; y < map.getTileWorldHeight(); y++) {
@@ -103,6 +109,22 @@ public class MiniMap implements Renderable {
 		this.miniMap = new TextureRegion(new Texture(pix));
 		this.miniMap.flip(false, true);
 		
+		this.mapColor = 0xff_ff_ff_ff;
+		
+	}
+	
+	/**
+	 * @param mapAlpha the mapAlpha to set
+	 */
+	public void setMapAlpha(int mapAlpha) {		
+		this.mapColor = Colors.setAlpha(mapColor, mapAlpha);
+	}
+	
+	/**
+	 * @param mapColor the mapColor to set
+	 */
+	public void setMapColor(int mapColor) {
+		this.mapColor = mapColor;
 	}
 
 	/* (non-Javadoc)
@@ -118,12 +140,15 @@ public class MiniMap implements Renderable {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
-		canvas.drawImage(miniMap, 0, 0, null);
+		canvas.drawImage(miniMap, 0, 0, mapColor);
 		
 		Map map = game.getMap();
 		
 		float xr = (float)miniMap.getRegionWidth() / (float)map.getMapWidth();
 		float yr = (float)miniMap.getRegionHeight() / (float)map.getMapHeight();
+		
+		xr -= 0.01f;
+		yr -= 0.01f;
 		
 		for(ClientPlayer ent : game.getPlayers().values()) {
 			if(ent.isAlive() && (ent.getEntity().getLastUpdate() > gameClock-1000)) {
@@ -143,6 +168,27 @@ public class MiniMap implements Renderable {
 				
 				canvas.fillCircle(3.0f, x, y, team.getColor());
 			}
+		}
+		
+		/* Draw the bomb targets */
+		List<ClientBombTarget> targets = game.getBombTargets();
+		for(int i = 0; i < targets.size(); i++) {
+			ClientBombTarget target = targets.get(i);
+			Vector2f p = target.getCenterPos();
+			
+			int x = (int)(xr * p.x);
+			int y = (int)(yr * p.y);
+						
+			if(target.isAlive()) {
+										
+				if(target.isBombPlanted()) {
+					canvas.fillCircle(4.0f, x-1, y-1, 0xfaFF3300);
+				}
+				canvas.fillCircle(3.0f, x, y, 0xfa009933);
+			}
+//			else {
+//				canvas.fillCircle(3.0f, x, y, 0xfaFF3300);
+//			}
 		}
 	}
 

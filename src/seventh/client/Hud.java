@@ -12,6 +12,7 @@ import java.util.TimeZone;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.MiniMap;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
 import seventh.client.sfx.Sounds;
@@ -42,6 +43,8 @@ public class Hud implements Renderable {
 	private KillLog killLog;
 	private MessageLog messageLog, centerLog;
 	private Scoreboard scoreboard;
+	
+	private MiniMap miniMap;
 	
 	private ClientPlayer localPlayer;
 	private Date gameClockDate;
@@ -78,6 +81,8 @@ public class Hud implements Renderable {
 		this.bombProgressBar.setBounds(new Rectangle(300, 15));
 		this.bombProgressBar.getBounds().centerAround(screenWidth/2, app.getScreenHeight() - 80);
 		this.bombProgressBarView = new ProgressBarView(bombProgressBar);
+		
+		this.miniMap = new MiniMap(game);
 	}
 
 	/**
@@ -146,16 +151,7 @@ public class Hud implements Renderable {
 		this.completionTime = completionTime;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see leola.live.gfx.Renderable#update(leola.live.TimeStep)
-	 */
-	@Override
-	public void update(TimeStep timeStep) {
-		killLog.update(timeStep);
-		messageLog.update(timeStep);		
-		centerLog.update(timeStep);
-		
+	private void updateProgressBar(TimeStep timeStep) {
 		if(this.isAtBomb) {
 			
 			/* this forces the user to release the USE key
@@ -184,6 +180,21 @@ public class Hud implements Renderable {
 		bombProgressBarView.update(timeStep);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see leola.live.gfx.Renderable#update(leola.live.TimeStep)
+	 */
+	@Override
+	public void update(TimeStep timeStep) {
+		killLog.update(timeStep);
+		messageLog.update(timeStep);		
+		centerLog.update(timeStep);
+		miniMap.update(timeStep);		
+		miniMap.setMapAlpha( scoreboard.isVisible() ? 0x3f : 0x8f);
+		
+		updateProgressBar(timeStep);
+	}
+	
 	/* (non-Javadoc)
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
@@ -195,6 +206,7 @@ public class Hud implements Renderable {
 		killLog.render(canvas, camera, 0);
 		messageLog.render(canvas, camera, 0);
 		centerLog.render(canvas, camera, 0);
+		miniMap.render(canvas, camera, alpha);
 		
 		if(localPlayer.isAlive()) {
 			ClientPlayerEntity ent = localPlayer.getEntity();
@@ -259,24 +271,27 @@ public class Hud implements Renderable {
 	private void drawScore(Canvas canvas) {				
 		canvas.setFont("Consola", 18);
 		
-		int x = 0;
-		int y = 20;
+		int textLen = canvas.getWidth("WWWWW");
+		int x = canvas.getWidth() / 2 - textLen;
+		int y = canvas.getHeight() - 10;
 		
 		int width = 50;
+		int height = 20;
 		
-		canvas.fillRect(x, y-15, width, 20, 0x8fffffff & ClientTeam.ALLIES.getColor());
-		canvas.drawRect(x, y-15, width, 20, 0xff000000);
+		canvas.fillRect(x, y-15, width, height, 0x8fffffff & ClientTeam.ALLIES.getColor());
+		canvas.drawRect(x, y-15, width, height, 0xff000000);
 		
 		String txt = scoreboard.getAlliedScore() + "";
 		RenderFont.drawShadedString(canvas, txt, x + (width - canvas.getWidth(txt)) - 1, y, 0xffffffff);
-
-		y += 20;
 		
-		canvas.fillRect(x, y-15, width, 20, 0x8fffffff & ClientTeam.AXIS.getColor());
-		canvas.drawRect(x, y-15, width, 20, 0xff000000);
+		x += textLen + 2;
+		canvas.fillRect(x-2, y-15, 2, height, 0xff000000);
+		
+		canvas.fillRect(x, y-15, width, height, 0x8fffffff & ClientTeam.AXIS.getColor());
+		canvas.drawRect(x, y-15, width, height, 0xff000000);
 				
 		txt = scoreboard.getAxisScore() + "";
-		RenderFont.drawShadedString(canvas, txt, x + (width - canvas.getWidth(txt)) - 1, y, 0xffffffff);
+		RenderFont.drawShadedString(canvas, txt, x + 4, y, 0xffffffff);
 	}
 	
 	private void drawClock(Canvas canvas) {
