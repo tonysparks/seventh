@@ -665,13 +665,13 @@ public class Sounds {
 		case IMPACT_WOOD:
 			playFreeSound(impactWood, x, y);
 			break;
-		case MECH_STEP1:
+		case TANK_MOVE1:
 			playFreeSound(mechForwardFootstep, x, y);
 			break;
-		case MECH_STEP2:
+		case TANK_MOVE2:
 			playFreeSound(mechRetractFootstep, x, y);
 			break;
-		case MECH_TORSO_MOVE:
+		case TANK_TURRET_MOVE:
 			playFreeSound(mechTorsoMove, x, y);
 			break;			
 		case MUTE:

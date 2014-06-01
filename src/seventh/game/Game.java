@@ -35,6 +35,8 @@ import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.type.GameType;
 import seventh.game.type.GameType.GameState;
+import seventh.game.vehicles.Tank;
+import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Fire;
 import seventh.game.weapons.Weapon;
@@ -102,6 +104,7 @@ public class Game implements GameInfo {
 	private GameType gameType;
 	
 	private List<BombTarget> bombTargets;
+	private List<Vehicle> vehicles;
 	
 	private Players players;
 				
@@ -161,6 +164,7 @@ public class Game implements GameInfo {
 		this.deadFrames = new int[MAX_ENTITIES];
 		
 		this.bombTargets = new ArrayList<BombTarget>();
+		this.vehicles = new ArrayList<Vehicle>();
 		
 		this.soundEvents = new ArrayList<SoundEmittedEvent>();
 		this.lastFramesSoundEvents = new ArrayList<SoundEmittedEvent>();
@@ -248,22 +252,9 @@ public class Game implements GameInfo {
 			}
 		});
 		
-		aiSystem.init(this);
+		aiSystem.init(this);		
 	}
 		
-	
-	/**
-	 * @return the next available slot for an entity
-	 */
-//	public int getNextPlayerId() {
-//		for(int i = 0; i < MAX_PLAYERS; i++) {
-//			if(playerEntities[i] == null) {
-//				return i;
-//			}
-//		}
-//		
-//		return -1;
-//	}
 	
 	/**
 	 * @return the next available slot for an entity
@@ -336,7 +327,6 @@ public class Game implements GameInfo {
 	 * @return the id of the added bot
 	 */
 	public int addBot(int id, String name) {
-		//int id = getNextPlayerId();
 		if(id >= 0) {			
 			playerJoined(new Player( id, true, false, name));
 		}
@@ -427,6 +417,14 @@ public class Game implements GameInfo {
 		return players;
 	}
 	
+	/**
+	 * @return the vehicles
+	 */
+	@Override
+	public List<Vehicle> getVehicles() {
+		return vehicles;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.GameInfo#getPlayerInfos()
 	 */
@@ -471,7 +469,6 @@ public class Game implements GameInfo {
 			}
 		}			
 		
-//		System.out.println("ENTIES: " + numberOfActiveEntities); // TODO
 		this.aiSystem.update(timeStep);
 								
 		GameState gameState = this.gameType.update(this, timeStep);
@@ -619,6 +616,9 @@ public class Game implements GameInfo {
 			this.playerEntities[i] = null;
 		}
 		
+		this.bombTargets.clear();
+		this.vehicles.clear();
+		
 		this.players.resetStats();
 		this.aiSystem.destroy();
 		
@@ -640,6 +640,7 @@ public class Game implements GameInfo {
 			playerEntities[id] = player;
 		}
 	}
+		
 	
 	/**
 	 * Spawns a {@link PlayerEntity}
@@ -670,8 +671,7 @@ public class Game implements GameInfo {
 		}
 					
 		// Spawn a bot (or dummy bot if need-be) or a remote controlled entity
-		final PlayerEntity playerEntity = player.isMech() ? new MechPlayerEntity(id, spawnPosition, this) 
-														  : new PlayerEntity(id, spawnPosition, this);	
+		final PlayerEntity playerEntity = new PlayerEntity(id, spawnPosition, this);	
 		
 			
 		// give them two seconds of invinceability		
@@ -798,10 +798,47 @@ public class Game implements GameInfo {
 		}	
 	}
 	
+	
 	/**
+	 * Spawns a new {@link Tank}
+	 * @param x
+	 * @param y
+	 * @return the {@link Tank}
+	 */
+	public Tank newTank(float x, float y) {
+		return newTank(new Vector2f(x, y));
+	}
+	
+	/**
+	 * Spawns a new {@link Tank}
+	 * @param pos
+	 * @return the {@link Tank}
+	 */
+	public Tank newTank(Vector2f pos) {
+		final Tank tank = new Tank(pos, this);		
+		tank.onKill = new KilledListener() {
+			
+			@Override
+			public void onKill(Entity entity, Entity killer) {
+				vehicles.remove(tank);
+				if(tank.hasOperator()) {
+					tank.getOperator().kill(killer);
+				}
+			}
+		};
+		
+		vehicles.add(tank);
+		addEntity(tank);
+		
+		return tank;
+	}
+	
+	/**
+	 * Spawns a new {@link DroppedItem}
+	 * 
 	 * @param pos
 	 * @param item
-	 * @return
+	 * @return the item
 	 */
 	public DroppedItem newDroppedItem(Vector2f pos, Weapon item) {
 		DroppedItem droppedItem = new DroppedItem(pos, this, item);
@@ -811,8 +848,9 @@ public class Game implements GameInfo {
 	
 	
 	/**
+	 * Spawns a new {@link Bomb}
 	 * @param target
-	 * @return
+	 * @return the bomb
 	 */
 	public Bomb newBomb(BombTarget target) {
 		Bomb bomb = new Bomb(target.getCenterPos(), this);		
@@ -821,8 +859,9 @@ public class Game implements GameInfo {
 	}
 	
 	/**
+	 * Spawns a new {@link BombTarget}
 	 * @param position
-	 * @return
+	 * @return the bomb target
 	 */
 	public BombTarget newBombTarget(Vector2f position) {
 		final BombTarget target = new BombTarget(position, this);
@@ -928,6 +967,62 @@ public class Game implements GameInfo {
 			newFire(position.createClone(), speed, vel, owner, damage);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.GameInfo#getCloseBombTarget(seventh.game.PlayerEntity)
+	 */
+	@Override
+	public BombTarget getCloseBombTarget(PlayerEntity entity) {
+		BombTarget handleMe = null;
+		
+		int size = this.bombTargets.size();
+		for(int i = 0; i < size; i++) {
+			BombTarget target = this.bombTargets.get(i);
+			if(target.canHandle(entity)) {
+									
+				if(target.bombActive()) {
+					Bomb bomb = target.getBomb();
+					bomb.disarm(entity);						
+											
+					emitSound(entity.getId(), SoundType.BOMB_DISARM, entity.getPos());						
+				}
+				else {
+					if(!target.isBombAttached()) {							
+						Bomb bomb = newBomb(target); 
+						bomb.plant(entity, target);
+						target.attachBomb(bomb);
+						emitSound(entity.getId(), SoundType.BOMB_PLANT, entity.getPos());
+					}												
+				}								
+				handleMe = target;
+				break;
+			}
+		}
+		
+		return handleMe;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.GameInfo#getCloseOperableVehicle(seventh.game.Entity)
+	 */
+	@Override
+	public Vehicle getCloseOperableVehicle(Entity operator) {
+		Vehicle rideMe = null;
+		for(int i = 0; i < this.vehicles.size(); i++) {
+			Vehicle vehicle = this.vehicles.get(i);
+			if(vehicle.isAlive()) {
+				if(vehicle.canOperate(operator)) {
+					rideMe = vehicle;
+					break;
+				}
+			}
+		}
+		
+		return rideMe;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.GameInfo#doesTouchOthers(seventh.game.Entity)
 	 */
@@ -968,6 +1063,27 @@ public class Game implements GameInfo {
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.GameInfo#doesTouchVehicles(seventh.game.Entity)
+	 */
+	@Override
+	public boolean doesTouchVehicles(Entity ent) {
+		for(int i = 0; i < this.vehicles.size(); i++) {
+			Entity other = this.vehicles.get(i);
+			if(other != null) {
+				if(other != ent && other.bounds.intersects(ent.bounds)) {
+					if(ent.onTouch != null) {
+						ent.onTouch.onTouch(ent, other);
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.GameInfo#doesTouchPlayers(seventh.game.Entity, seventh.math.Vector2f, seventh.math.Vector2f)
 	 */
@@ -977,7 +1093,7 @@ public class Game implements GameInfo {
 			for(int i = 0; i < this.playerEntities.length; i++) {
 				Entity other = this.playerEntities[i];
 				if(other != null) {
-					if(other != ent && other.bounds.intersects(ent.bounds)) {								
+					if(other != ent && other.canTakeDamage() && other.bounds.intersects(ent.bounds)) {								
 						if(isEntityReachable(other, origin, dir)) {
 							ent.onTouch.onTouch(ent, other);
 							return true;										

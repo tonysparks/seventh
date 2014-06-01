@@ -23,7 +23,6 @@ import seventh.client.weapon.ClientShotgun;
 import seventh.client.weapon.ClientSpringfield;
 import seventh.client.weapon.ClientThompson;
 import seventh.client.weapon.ClientWeapon;
-import seventh.game.Entity;
 import seventh.game.Entity.State;
 import seventh.game.Entity.Type;
 import seventh.game.PlayerEntity;
@@ -31,7 +30,6 @@ import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetWeapon;
-import seventh.map.Map;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
@@ -40,7 +38,7 @@ import seventh.shared.WeaponConstants;
  * @author Tony
  *
  */
-public class ClientPlayerEntity extends ClientEntity {
+public class ClientPlayerEntity extends ClientControllableEntity {
 	
 	private final ClientWeapon[] WEAPONS = new ClientWeapon[10];
 	
@@ -49,31 +47,23 @@ public class ClientPlayerEntity extends ClientEntity {
 	private int stamina;
 		
 	private long invinceableTime;
-		
-	private State currentState;
-	
-	
+			
 	private PlayerSprite sprite;
-	private boolean isLocalPlayer;
-	
+		
 	private int fadeAlphaColor;
 	private int teamColor;
 	
 	private ClientPlayer player;
 	private ClientWeapon weapon;
 	private byte numberOfGrenades;
-	
-	protected int lineOfSite;
+		
 	private int weaponWeight;
-
-	private Vector2f predictedPos;
-	private Vector2f renderPos;
 	
 	private BloodEmitter bloodEmitter;
-	private long lastMoveTime;
-	
-	private Light flashLight;
+		
 	private Light mussleFlash;
+	
+	
 	/**
 	 * 
 	 */
@@ -83,39 +73,28 @@ public class ClientPlayerEntity extends ClientEntity {
 		type = Type.PLAYER;
 		changeTeam(ClientTeam.NONE);
 			
-		this.currentState = State.IDLE;
-		this.isLocalPlayer = false;		
+		this.currentState = State.IDLE;	
 		this.invinceableTime = 0;		
-		this.lineOfSite = WeaponConstants.DEFAULT_LINE_OF_SIGHT;
+		this.lineOfSight = WeaponConstants.DEFAULT_LINE_OF_SIGHT;
 		
 		this.bloodEmitter = new BloodEmitter(new Vector2f());//, 3, 300000, -50001);
 		this.bloodEmitter.stop();
-		
-		this.predictedPos = new Vector2f();
-		this.renderPos = new Vector2f();
-		
+				
 		this.bounds.width = 24;//16;
 		this.bounds.height = 24;
 		
-		LightSystem lightSystem = game.getLightSystem();
-		this.flashLight = lightSystem.newConeLight();		
-		this.flashLight.setTexture(Art.flashLight);
-		
+		LightSystem lightSystem = game.getLightSystem();				
 		this.mussleFlash = lightSystem.newPointLight();
 		this.mussleFlash.setTexture(Art.fireWeaponLight);
 		this.mussleFlash.setColor(0.5f,0.5f,0.5f);
-						
-//		lightSystem.addLight(getFlashLight());
-//		lightSystem.addLight(getMussleFlash());
-		
+								
 		setPlayer(player);
 				
 		setOnRemove(new OnRemove() {
 			
 			@Override
 			public void onRemove(ClientEntity me, ClientGame game) {
-				LightSystem lightSystem = game.getLightSystem();
-				lightSystem.removeLight(flashLight);
+				LightSystem lightSystem = game.getLightSystem();				
 				lightSystem.removeLight(mussleFlash);
 			}
 		});
@@ -132,14 +111,7 @@ public class ClientPlayerEntity extends ClientEntity {
 	public boolean killIfOutdated(long gameClock) {	
 		return false;
 	}
-	
-	/**
-	 * @return true if a mech
-	 */
-	public boolean isMech() {
-		return false;
-	}
-	
+
 	
 	/**
 	 * @param player the player to set
@@ -162,13 +134,13 @@ public class ClientPlayerEntity extends ClientEntity {
 		}
 	}
 	
+		
 	/**
-	 * @return the flashLight
+	 * @return the player
 	 */
-	public Light getFlashLight() {
-		return flashLight;
+	public ClientPlayer getPlayer() {
+		return player;
 	}
-	
 	
 	/**
 	 * @return the mussleFlash
@@ -182,57 +154,7 @@ public class ClientPlayerEntity extends ClientEntity {
 	 */
 	public BloodEmitter getBloodEmitter() {
 		return bloodEmitter;
-	}
-	
-	/**
-	 * @return the height mask for if the entity is crouching or standing
-	 */
-	public int getHeightMask() {
-		if( currentState == State.CROUCHING ) {
-			return Entity.CROUCHED_HEIGHT_MASK;
-		}
-		return Entity.STANDING_HEIGHT_MASK;
-	}
-	
-	/**
-	 * @return the client side predicted position
-	 */
-	public Vector2f getPredictedPos() {
-		return predictedPos;
-	}
-	
-	/**
-	 * @return the renderPos
-	 */
-	public Vector2f getRenderPos() {
-		//clientSideCorrection(pos, predictedPos, renderPos);
-		if(this.isLocalPlayer) {
-			renderPos.x = predictedPos.x * 0.6f + pos.x * 0.4f;
-			renderPos.y = predictedPos.y * 0.6f + pos.y * 0.4f;
-			//Vector2f.Vector2fCopy(predictedPos, renderPos);
-		}
-		else {
-			Vector2f.Vector2fCopy(pos, renderPos);
-		}
-		
-		//return predictedPos;
-		return renderPos;
-	}
-	
-	public Vector2f getRenderCenterPos() {
-		//clientSideCorrection(pos, predictedPos, renderPos);
-		if(this.isLocalPlayer) {
-			renderPos.x = (predictedPos.x+(bounds.width/2)) * 0.6f + (pos.x+(bounds.width/2) * 0.4f);
-			renderPos.y = (predictedPos.y+(bounds.height/2)) * 0.6f + (pos.y+(bounds.height/2) * 0.4f);
-			//Vector2f.Vector2fCopy(predictedPos, renderPos);
-		}
-		else {
-			Vector2f.Vector2fCopy(pos, renderPos);
-		}
-		
-		//return predictedPos;
-		return renderPos;
-	}
+	}	
 	
 		
 	/**
@@ -240,28 +162,6 @@ public class ClientPlayerEntity extends ClientEntity {
 	 */
 	public int getPlayerId() {
 		return this.player.getId();
-	}
-
-	
-	/**
-	 * @return the isLocalPlayer
-	 */
-	public boolean isLocalPlayer() {
-		return isLocalPlayer;
-	}
-	
-	/**
-	 * @param isLocalPlayer the isLocalPlayer to set
-	 */
-	public void setLocalPlayer(boolean isLocalPlayer) {
-		this.isLocalPlayer = isLocalPlayer;
-	}
-	
-	/**
-	 * @return the currentState
-	 */
-	public State getCurrentState() {
-		return currentState;
 	}
 	
 	/**
@@ -278,12 +178,6 @@ public class ClientPlayerEntity extends ClientEntity {
 		return health;
 	}
 	
-	/**
-	 * @return the lineOfSite
-	 */
-	public int getLineOfSite() {
-		return lineOfSite;
-	}
 	
 	/**
 	 * @return the weapon
@@ -324,47 +218,13 @@ public class ClientPlayerEntity extends ClientEntity {
 		this.teamColor = team.getColor();
 	}
 	
-	/**
-	 * Does client side movement prediction
-	 */
-	public void movementPrediction(Map map, TimeStep timeStep, Vector2f vel) {				
-		if(isAlive() && !vel.isZero()) {			
-			int movementSpeed = calculateMovementSpeed();
-									
-			double dt = timeStep.asFraction();
-			int newX = (int)Math.round(predictedPos.x + vel.x * movementSpeed * dt);
-			int newY = (int)Math.round(predictedPos.y + vel.y * movementSpeed * dt);
-						
-			bounds.x = newX;
-			if( map.rectCollides(bounds) ) {
-				bounds.x = (int)predictedPos.x;
-						
-			}
-			
-			bounds.y = newY;
-			if( map.rectCollides(bounds)) {
-				bounds.y = (int)predictedPos.y;								
-			}
-			
-			predictedPos.x = bounds.x;
-			predictedPos.y = bounds.y;
-			
-			clientSideCorrection(pos, predictedPos, predictedPos, 0.15f);
-			lastMoveTime = timeStep.getGameClock();
-		}		
-		else {
-			float alpha = 0.15f + 0.108f * (float)((timeStep.getGameClock() - lastMoveTime) / timeStep.getDeltaTime());
-			if(alpha > 0.75f) {
-				alpha = 0.75f;
-			}
-			clientSideCorrection(pos, predictedPos, predictedPos, alpha);
-		}
-	}
+	
 	
 	/**
 	 * @return calculates the movement speed based on
 	 * state + current weapon + stamina
 	 */
+	@Override
 	protected int calculateMovementSpeed() {
 		int speed = PlayerEntity.PLAYER_SPEED;
 		int mSpeed = speed;
@@ -382,31 +242,6 @@ public class ClientPlayerEntity extends ClientEntity {
 		}
 		
 		return mSpeed;
-	}
-	
-	/**
-	 * Correct the position
-	 * 
-	 * @param serverPos
-	 * @param predictedPos
-	 * @param out the output vector
-	 */
-	public void clientSideCorrection(Vector2f serverPos, Vector2f predictedPos, Vector2f out, float alpha) {
-		//float alpha = 0.15f;
-		float dist = Vector2f.Vector2fDistanceSq(serverPos, predictedPos);
-		
-		/* if the entity is more than two tile off, snap
-		 * into position
-		 */
-		if(dist > 62 * 62) {			
-			Vector2f.Vector2fCopy(serverPos, out);
-		}		
-		else //if (dist > 22 * 22) 
-		{					
-			out.x = predictedPos.x + (alpha * (serverPos.x - predictedPos.x));
-			out.y = predictedPos.y + (alpha * (serverPos.y - predictedPos.y));			
-		}			
-			
 	}
 	
 	/* (non-Javadoc)
@@ -439,9 +274,14 @@ public class ClientPlayerEntity extends ClientEntity {
 			
 			this.numberOfGrenades = ps.grenades;
 			
-			this.flashLight.setOn(ps.flashLightOn);
-			
-			updateWeaponState(ps.weapon, time);
+			if(ps.isOperatingVehicle) {
+				if(this.vehicle == null || this.vehicle.getId() != ps.vehicleId) {
+					this.vehicle = game.getVehicleById(ps.vehicleId);
+				}
+			}
+			else {
+				updateWeaponState(ps.weapon, time);
+			}
 		}
 		else {
 			NetPlayerPartial ps = (NetPlayerPartial) state;
@@ -450,9 +290,14 @@ public class ClientPlayerEntity extends ClientEntity {
 			this.damageDelta = newHealth - this.health;
 			this.health = ps.health;
 			
-			this.flashLight.setOn(false);
-			
-			updateWeaponState(ps.weapon, time);
+			if(ps.isOperatingVehicle) {
+				if(this.vehicle == null || this.vehicle.getId() != ps.vehicleId) {
+					this.vehicle = game.getVehicleById(ps.vehicleId);
+				}
+			}
+			else {
+				updateWeaponState(ps.weapon, time);
+			}
 		}
 	}
 
@@ -464,67 +309,67 @@ public class ClientPlayerEntity extends ClientEntity {
 	 */
 	protected void updateWeaponState(NetWeapon netWeapon, long time) {
 		if(netWeapon != null){
-			lineOfSite = WeaponConstants.DEFAULT_LINE_OF_SIGHT;
+			lineOfSight = WeaponConstants.DEFAULT_LINE_OF_SIGHT;
 			
 			Type type = Type.fromNet(netWeapon.type); 
 			switch(type) {
 				case THOMPSON: {
 					weapon = WEAPONS[0];
-					lineOfSite = WeaponConstants.THOMPSON_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.THOMPSON_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.THOMPSON_WEIGHT;
 					break;
 				}
 				case SHOTGUN: {
 					weapon = WEAPONS[1];
-					lineOfSite = WeaponConstants.SHOTGUN_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.SHOTGUN_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.SHOTGUN_WEIGHT;
 					break;
 				}
 				case ROCKET_LAUNCHER: {
 					weapon = WEAPONS[2];
-					lineOfSite = WeaponConstants.RPG_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.RPG_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.RPG_WEIGHT;
 					break;
 				}
 				case SPRINGFIELD: {
 					weapon = WEAPONS[3];
-					lineOfSite = WeaponConstants.SPRINGFIELD_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.SPRINGFIELD_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.SPRINGFIELD_WEIGHT;
 					break;
 				}	
 				case M1_GARAND: {
 					weapon = WEAPONS[4];
-					lineOfSite = WeaponConstants.M1GARAND_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.M1GARAND_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.M1GARAND_WEIGHT;
 					break;
 				}
 				case KAR98: {
 					weapon = WEAPONS[5];
-					lineOfSite = WeaponConstants.KAR98_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.KAR98_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.KAR98_WEIGHT;
 					break;
 				}
 				case MP44: {
 					weapon = WEAPONS[6];
-					lineOfSite = WeaponConstants.MP44_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.MP44_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.MP44_WEIGHT;
 					break;
 				}
 				case MP40: {
 					weapon = WEAPONS[7];
-					lineOfSite = WeaponConstants.MP40_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.MP40_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.MP40_WEIGHT;
 					break;
 				}
 				case PISTOL: {
 					weapon = WEAPONS[8];
-					lineOfSite = WeaponConstants.PISTOL_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.PISTOL_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.PISTOL_WEIGHT;
 					break;
 				}
 				case RISKER: {
 					weapon = WEAPONS[9];
-					lineOfSite = WeaponConstants.RISKER_LINE_OF_SIGHT;
+					lineOfSight = WeaponConstants.RISKER_LINE_OF_SIGHT;
 					weaponWeight = WeaponConstants.RISKER_WEIGHT;
 					break;
 				}
@@ -555,14 +400,14 @@ public class ClientPlayerEntity extends ClientEntity {
 						
 		long clockTime = timeStep.getGameClock();
 		// 
-		if(weapon != null && (isLocalPlayer || (lastUpdate+500) >= clockTime)) {
+		if(weapon != null && (isControlledByLocalPlayer() || (lastUpdate+500) >= clockTime)) {
 			weapon.update(timeStep);
 		}
 		
 		this.sprite.update(timeStep);
 		
 		
-		if ((lastUpdate+150) < clockTime && !isLocalPlayer) {
+		if ((lastUpdate+150) < clockTime && !isControlledByLocalPlayer()) {
 			fadeAlphaColor = 255 - ((int)(clockTime-lastUpdate)/3);
 			if (fadeAlphaColor < 0) fadeAlphaColor = 0;						
 		}
@@ -570,22 +415,16 @@ public class ClientPlayerEntity extends ClientEntity {
 			fadeAlphaColor = 255;
 		}	
 		
-		Vector2f pos = //getRenderCenterPos(); 
-				getCenterPos();
-		flashLight.setPos(pos);
-		Vector2f flashLightPos = flashLight.getPos();
-		Vector2f.Vector2fMA(flashLightPos, getFacing(), 25.0f, flashLightPos);
-		//flashLight.setPos(flashLightPos);
+		if(currentState.isVehicleState()) {
+			if(this.vehicle != null) {
+				this.vehicle.setOperator(this);
+			}
+			
+			fadeAlphaColor = 0;
+		}
 		
-		flashLight.setOrientation(getOrientation());				
-		flashLight.setLuminacity(fadeAlphaColor/255.0f);
-//		flashLight.setOn(true);
-		flashLight.getColor().set(1.0f, 1.0f, 0.75f);
 		
-//		flashLight.setLightSize(40);
-//		flashLight.setLuminacity(0.35f);
-//		flashLight.setColor(1.0f, 1.0f, 0.75f);
-		
+		Vector2f pos = getCenterPos();		
 		mussleFlash.setPos(pos);
 		Vector2f.Vector2fMA(mussleFlash.getPos(), getFacing(), 40.0f, mussleFlash.getPos());
 		mussleFlash.setOrientation(getOrientation());

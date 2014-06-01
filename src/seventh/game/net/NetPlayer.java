@@ -7,14 +7,16 @@ import harenet.IOBuffer;
 import seventh.game.Entity.Type;
 
 /**
+ * The full player state.  This is message is for the local player.
+ * 
  * @author Tony
  *
  */
 public class NetPlayer extends NetEntity {
 
 	public static final int HAS_WEAPON = 2;
-	public static final int FLASHLIGHT_ON = 4;
-	public static final int IS_MECH = 8;
+	public static final int IS_OPERATING_VEHICLE = 4;
+//	public static final int IS_MECH = 8;
 	
 	public NetPlayer() {
 		this.type = Type.PLAYER.netValue();
@@ -25,8 +27,8 @@ public class NetPlayer extends NetEntity {
 	public byte health;	
 	public byte stamina;
 	
-	public boolean flashLightOn;
-	public boolean isMech;
+	public boolean isOperatingVehicle;
+	public int vehicleId;
 	
 	protected byte bits;
 	public NetWeapon weapon;
@@ -40,13 +42,10 @@ public class NetPlayer extends NetEntity {
 			bits |= HAS_WEAPON;
 		}
 		
-		if(flashLightOn) {
-			bits |= FLASHLIGHT_ON;
-		}
-		
-		if(isMech) {
-			bits |= IS_MECH;
-		}
+		if(isOperatingVehicle) {
+			bits = 0; /* clear the weapon bits */
+			bits |= IS_OPERATING_VEHICLE;
+		}		
 	}
 	
 	/* (non-Javadoc)
@@ -67,13 +66,10 @@ public class NetPlayer extends NetEntity {
 			weapon = new NetWeapon();
 			weapon.read(buffer);
 		}
-		
-		if((bits & FLASHLIGHT_ON) != 0) {
-			flashLightOn = true;
-		}
-		
-		if((bits & IS_MECH) != 0) {
-			isMech = true;
+				
+		if((bits & IS_OPERATING_VEHICLE) != 0) {
+			isOperatingVehicle = true;
+			vehicleId = buffer.getUnsignedByte();
 		}
 	}
 	
@@ -94,8 +90,12 @@ public class NetPlayer extends NetEntity {
 		buffer.put(health);
 		buffer.put(stamina);		
 		
-		if(weapon != null) {
+		if(weapon != null && !isOperatingVehicle) {
 			weapon.write(buffer);
+		}
+		
+		if(isOperatingVehicle) {
+			buffer.putUnsignedByte(vehicleId);
 		}
 	}
 }

@@ -44,12 +44,20 @@ public interface WeaponConstants {
 	public static final int RISKER_LINE_OF_SIGHT = 300;
 	public static final int RISKER_WEIGHT = 40;
 	
-	
+
 	/*
-	 * Mech properties
+	 * Tank properties
 	 */
-	public static final int MECH_DEFAULT_LINE_OF_SIGHT = 300;
-	public static final int MECH_MOVEMENT_SPEED = 70; // 50
-	public static final int MECH_WIDTH = 90;
-	public static final int MECH_HEIGHT = 90;
+	public static final int TANK_DEFAULT_LINE_OF_SIGHT = 300;
+	public static final int TANK_MOVEMENT_SPEED = 90; // 50
+	public static final int TANK_WIDTH = 70;
+	public static final int TANK_HEIGHT = 70;
+	
+	/**
+	 * Number of pixels the player must be away in order
+	 * to be able to operate a vehicle by pressing the USE
+	 * key
+	 */
+	public static final int VEHICLE_HITBOX_THRESHOLD = 15;
+	
 }

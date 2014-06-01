@@ -13,6 +13,7 @@ import java.io.IOException;
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
 import leola.vm.Args;
+import leola.vm.Args.ArgsBuilder;
 import leola.vm.Leola;
 import seventh.game.Entity;
 import seventh.game.Game;
@@ -148,8 +149,7 @@ public class InGameState implements State {
 				Player player = event.getPlayer();
 				msg.playerId = player.getId();
 				msg.posX = (short)event.getSpawnLocation().x;
-				msg.posY = (short)event.getSpawnLocation().y;
-				msg.isMech = (player.isAlive() && player.isMech());
+				msg.posY = (short)event.getSpawnLocation().y;				
 				
 				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
 			}
@@ -236,8 +236,8 @@ public class InGameState implements State {
 		File propertiesFile = new File(mapFile + ".props.leola");
 		if(propertiesFile.exists()) {
 			try {
-				Args args = new Args();
-				args.setBarebones(true);		
+				Args args = new ArgsBuilder().setAllowThreadLocals(false)
+											 .setBarebones(true).build();		
 				Leola runtime = new Leola(args);
 				
 				runtime.putGlobal("game", game);

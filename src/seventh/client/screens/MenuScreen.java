@@ -3,6 +3,7 @@
  */
 package seventh.client.screens;
 
+import leola.vm.Args.ArgsBuilder;
 import leola.vm.Leola;
 import seventh.client.Inputs;
 import seventh.client.Screen;
@@ -171,8 +172,8 @@ public class MenuScreen implements Screen {
 			@Override
 			public void run() {
 				try {
-					
-					final GameServer server = new GameServer(console, new Leola(), true, settings );
+					Leola runtime = new Leola(new ArgsBuilder().setAllowThreadLocals(false).build());
+					final GameServer server = new GameServer(console, runtime, true, settings );
 					server.setServerListener(new OnServerReadyListener() {
 						
 						@Override

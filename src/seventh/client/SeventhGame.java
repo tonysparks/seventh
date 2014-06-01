@@ -207,16 +207,16 @@ public class SeventhGame implements ApplicationListener {
 			}
 		});
 		
-		console.addCommand(new Command("v_reload_animation") {			
-			@Override
-			public void execute(Console console, String... args) {
-				try {
-					Art.debugAnimations(new Leola());
-				} catch (Exception e) {
-					console.println("*** Error loading animations: " + e);
-				}
-			}
-		});
+//		console.addCommand(new Command("v_reload_animation") {			
+//			@Override
+//			public void execute(Console console, String... args) {
+//				try {
+//					Art.debugAnimations(new Leola());
+//				} catch (Exception e) {
+//					console.println("*** Error loading animations: " + e);
+//				}
+//			}
+//		});
 		
 		console.addCommand(new Command("animation_editor"){			
 			@Override

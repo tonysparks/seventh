@@ -42,11 +42,11 @@ public class Bullet extends Entity {
 		public void onTouch(Entity me, Entity other) {
 			Bullet bullet = (Bullet)me;
 			Type otherType = other.getType();
-			if(otherType == Type.PLAYER || otherType == Type.MECH) {
-				if(other != bullet.lastEntityTouched) {
+			if(otherType.isDamagable()) {
+				if(other != bullet.lastEntityTouched && other.canTakeDamage()) {
 					
 					other.damage(me, bullet.getDamage());										
-					if(otherType==Type.MECH) {												
+					if(otherType.isVehicle()) {												
 						bullet.kill(other);		
 						game.emitSound(bullet.getId(), SoundType.IMPACT_METAL, bullet.getCenterPos());
 					}
@@ -59,12 +59,7 @@ public class Bullet extends Entity {
 																																			
 					bullet.lastEntityTouched = other;
 				}
-			}
-			else if (otherType == Type.LIGHT_BULB) {
-				bullet.kill(other);
-				other.kill(bullet);
-			}
-			
+			}			
 		}
 	}
 	
@@ -257,12 +252,17 @@ public class Bullet extends Entity {
 				else {
 					if ( game.doesTouchPlayers(this, origin, targetVel) && !this.piercing ) {
 						break;
-					}					
+					}			
+					if( game.doesTouchVehicles(this) ) {
+						break;
+					}
 				}
 			} while(!isBlocked && (bounds.x != newX || bounds.y != newY));
 		}
 		else {
-			game.doesTouchPlayers(this, origin, targetVel);
+			if(!game.doesTouchPlayers(this, origin, targetVel)) {
+				game.doesTouchVehicles(this);						
+			}
 		}
 		
 		getPos().set(bounds.x, bounds.y);

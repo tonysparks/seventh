@@ -64,6 +64,16 @@ public class BombTarget extends Entity {
 	}
 	
 	/**
+	 * Determines if the supplied {@link Entity} can plant/disarm
+	 * this {@link BombTarget}
+	 * @param handler
+	 * @return true if the supplied {@link Entity} is able to plant/disarm
+	 */
+	public boolean canHandle(Entity handler) {
+		return this.bounds.intersects(handler.getBounds());
+	}
+	
+	/**
 	 * @return if the bomb is planted
 	 */
 	public boolean bombActive() {

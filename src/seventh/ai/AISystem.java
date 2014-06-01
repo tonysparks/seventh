@@ -60,5 +60,12 @@ public interface AISystem extends Updatable {
 	 * The end of a match
 	 * @param game
 	 */
-	public void endOfRound(GameInfo game);	
+	public void endOfRound(GameInfo game);
+	
+	/**
+	 * Receives an {@link AICommand}
+	 * @param forBot
+	 * @param command
+	 */
+	public void receiveAICommand(PlayerInfo forBot, AICommand command);
 }

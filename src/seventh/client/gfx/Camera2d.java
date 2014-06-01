@@ -228,6 +228,7 @@ public class Camera2d implements Camera {
 	@Override
 	public void setPosition(Vector2f pos) {		
 		this.position.set(pos);
+		Vector2f.Vector2fSnap(position, position);
 	}
 
 	/* (non-Javadoc)

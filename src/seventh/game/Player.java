@@ -36,8 +36,7 @@ public class Player implements PlayerInfo {
 	private Player spectating;
 	private Team team;
 	private byte teamId;
-	private boolean isBot;
-	private boolean isMech;
+	private boolean isBot;	
 	private boolean isDummy;
 	
 	private long spawnTime;
@@ -270,13 +269,6 @@ public class Player implements PlayerInfo {
 		return ping;
 	}
 	
-	/* (non-Javadoc)
-	 * @see seventh.game.PlayerInfo#isMech()
-	 */
-	@Override
-	public boolean isMech() {
-		return isMech;
-	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.game.PlayerInfo#isBot()

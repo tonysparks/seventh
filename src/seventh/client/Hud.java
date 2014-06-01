@@ -212,7 +212,7 @@ public class Hud implements Renderable {
 			ClientPlayerEntity ent = localPlayer.getEntity();
 			ClientWeapon weapon = ent.getWeapon();
 			
-			if(!ent.isMech()) {
+			if(!ent.isOperatingVehicle()) {
 				drawWeaponIcons(canvas, weapon);			
 				drawGrenadeIcons(canvas, ent.getNumberOfGrenades());
 			}

@@ -66,18 +66,7 @@ public class LoadingState implements State {
 		return gameMap;			
 	}
 	
-	private GameType loadTDMGameType(String mapFile) throws Exception {
-//		String gameTypeFile = mapFile + ".tdm.leola";
-//		Cons.println("Loading " + gameTypeFile + " game type data...");
-//		LeoObject gameTypeData = this.runtime.eval(new File(gameTypeFile));
-//		if(!LeoObject.isTrue(gameTypeData) || !gameTypeData.isMap()) {
-//			throw new IllegalArgumentException("No gameTypeData defined in " + gameTypeFile);
-//		}
-//		
-//		LeoMap config = gameTypeData.as();
-//		int maxKills = config.getInt("maxKills");	
-//		long matchTime = config.getInt("matchTime") * 60 * 1000L;
-		
+	private GameType loadTDMGameType(String mapFile) throws Exception {		
 		int maxKills = server.getMaxScore();
 		long matchTime = server.getMatchTime();
 		

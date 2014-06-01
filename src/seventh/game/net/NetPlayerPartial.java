@@ -4,9 +4,13 @@
 package seventh.game.net;
 
 import harenet.IOBuffer;
+import seventh.game.Entity.State;
 import seventh.game.Entity.Type;
 
 /**
+ * This is a partial message for other entities that are NOT the local
+ * player.  
+ * 
  * @author Tony
  *
  */
@@ -21,6 +25,8 @@ public class NetPlayerPartial extends NetEntity {
 	public byte health;
 	public NetWeapon weapon;
 	
+	public boolean isOperatingVehicle;
+	public byte vehicleId;
 	
 	/* (non-Javadoc)
 	 * @see seventh.game.net.NetEntity#read(java.nio.ByteBuffer)
@@ -30,9 +36,21 @@ public class NetPlayerPartial extends NetEntity {
 		super.read(buffer);
 				
 		orientation = buffer.getShort();
-		state = buffer.get();		
+		state = buffer.get();
 		health = buffer.get();
-		readWeapon(buffer);
+		
+		/* If this player is in a vehicle,
+		 * send the vehicle ID in lieu of 
+		 * weapon information
+		 */
+		State aState = State.fromNetValue(state);
+		if(aState.isVehicleState()) {
+			isOperatingVehicle = true;
+			vehicleId = buffer.get();
+		}
+		else {			
+			readWeapon(buffer);
+		}
 	}
 	
 	/**
@@ -55,7 +73,19 @@ public class NetPlayerPartial extends NetEntity {
 		buffer.putShort(orientation);
 		buffer.put(state);		
 		buffer.put(health);
-		writeWeapon(buffer);
+		
+
+		/* If this player is in a vehicle,
+		 * send the vehicle ID in lieu of 
+		 * weapon information
+		 */
+		State aState = State.fromNetValue(state);
+		if(aState.isVehicleState()) {
+			buffer.put(vehicleId);
+		}
+		else {			
+			writeWeapon(buffer);
+		}
 	}
 	
 	/**

@@ -8,7 +8,11 @@ import java.util.Random;
 
 import leola.vm.Args;
 import leola.vm.Leola;
+import leola.vm.Args.ArgsBuilder;
+import seventh.ai.AICommand;
 import seventh.ai.AISystem;
+import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.commands.AICommands;
 import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
 import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
@@ -47,17 +51,22 @@ public class DefaultAISystem implements AISystem {
 	private Random random;
 	private Leola runtime;
 	
+	private Goals goals;
+	private AICommands aiCommands;
+	
 	/**
 	 * 
 	 */
 	public DefaultAISystem() {
 		this.brains = new Brain[Game.MAX_PLAYERS];
 		
-		try {
-			Args args = new Args();
-			args.enableVMThreadLocal(false);
+		try {			
+			Args args = new ArgsBuilder().setAllowThreadLocals(false)
+					 					 .setBarebones(true).build();		
 			this.runtime = new Leola(args);
 			this.runtime.eval(new File("./seventh/ai/goals.leola"));
+			
+			this.goals = new Goals(this.runtime);
 		}
 		catch(Exception e) {
 			Cons.println("Unable to load the Leola runtime : " + e);
@@ -74,6 +83,8 @@ public class DefaultAISystem implements AISystem {
 		
 		this.zones = new Zones(game);
 		this.stats = new Stats(game, this.zones);
+				
+		this.aiCommands = new AICommands(this);
 		
 		GameType gameType = game.getGameType();
 		
@@ -141,6 +152,20 @@ public class DefaultAISystem implements AISystem {
 	 */
 	public Stats getStats() {
 		return stats;
+	}
+	
+	/**
+	 * @return the game
+	 */
+	public GameInfo getGame() {
+		return game;
+	}
+	
+	/**
+	 * @return the goals
+	 */
+	public Goals getGoals() {
+		return goals;
 	}
 	
 	/* (non-Javadoc)
@@ -307,5 +332,20 @@ public class DefaultAISystem implements AISystem {
 			return getBrain(player.getId());
 		}
 		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.AISystem#receiveAICommand(seventh.game.PlayerInfo, seventh.ai.basic.commands.AICommand)
+	 */
+	@Override
+	public void receiveAICommand(PlayerInfo forBot, AICommand command) {
+		if(forBot.isBot() && forBot.isAlive()) {
+			Brain brain = getBrain(forBot);
+			if(brain != null) {
+				Action action = this.aiCommands.compile(command);
+				brain.getCommunicator().post(action);
+			}
+		}
+		
 	}
 }

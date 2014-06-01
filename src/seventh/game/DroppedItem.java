@@ -70,7 +70,7 @@ public class DroppedItem extends Entity {
 			for(int i = 0; i < size; i++) {
 				PlayerEntity ent = players[i];
 				if(ent != null) {
-					if(ent.isAlive() && !ent.isMech()) {
+					if(ent.isAlive() && !ent.getType().isVehicle()) {
 						if(ent.bounds.intersects(bounds)) {
 							ent.pickupItem(droppedItem);
 							softKill(); /* remove this dropped item */

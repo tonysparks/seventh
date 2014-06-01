@@ -6,6 +6,7 @@ package seventh.game;
 import java.util.List;
 
 import seventh.game.net.NetEntity;
+import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -20,6 +21,9 @@ import seventh.shared.TimeStep;
  */
 public abstract class Entity {
 	
+	/**
+	 * Invalid entity ID
+	 */
 	public static final int INVALID_ENTITY_ID = Integer.MIN_VALUE;
 
 	/**
@@ -34,6 +38,11 @@ public abstract class Entity {
 		WALKING,
 		RUNNING,
 		SPRINTING,
+		
+		ENTERING_VEHICLE,
+		OPERATING_VEHICLE,
+		EXITING_VEHICLE,
+		
 		DEAD,
 		
 		;
@@ -44,6 +53,15 @@ public abstract class Entity {
 		
 		public static State fromNetValue(byte b) {
 			return values()[b];
+		}
+		
+		/**
+		 * @return true if we are in the vehicle operation states
+		 */
+		public boolean isVehicleState() {
+			return this==OPERATING_VEHICLE||
+					this==ENTERING_VEHICLE||
+					this==EXITING_VEHICLE;
 		}
 	}
 	
@@ -64,6 +82,12 @@ public abstract class Entity {
 		
 	}
 	
+	/**
+	 * Entity Type
+	 * 
+	 * @author Tony
+	 *
+	 */
 	public static enum Type {
 		PLAYER_PARTIAL, 
 		PLAYER,
@@ -91,26 +115,33 @@ public abstract class Entity {
 		NAPALM_GRENADE,
 		PISTOL,
 		
-				
-		MECH,
+		RAILGUN,
+		
 		BOMB,
 		BOMB_TARGET,
 		
-		LIGHT_BULB,
-		
+		LIGHT_BULB,		
 		DROPPED_ITEM,
-		
-		/* mech weapons */
-		RAILGUN,
+								
+		/* Vehicles */
+		TANK,
 		
 		UNKNOWN,
 		
 		;
 		
+		/**
+		 * @return the byte representation of this Type
+		 */
 		public byte netValue() {
 			return (byte)this.ordinal();
 		}
 		
+		
+		/**
+		 * @param value the network value
+		 * @return the Type
+		 */
 		public static Type fromNet(byte value) {
 			if(value < 0 || value >= values().length) {
 				return UNKNOWN;
@@ -118,19 +149,58 @@ public abstract class Entity {
 			
 			return values()[value];
 		}
+		
+		/**
+		 * @return true if this is a vehicle
+		 */
+		public boolean isVehicle() {
+			return this == TANK;
+		}
+		
+		/**
+		 * @return true if this is a player
+		 */
+		public boolean isPlayer() {
+			return this == PLAYER || this == PLAYER_PARTIAL;
+		}
+		
+		/**
+		 * @return true if this is entity type can take damage
+		 */
+		public boolean isDamagable() {
+			return isPlayer() || isVehicle();
+		}
 	}
 
 	public static float getAngleBetween(Vector2f a, Vector2f b) {
 		return (float)Math.atan2(a.y-b.y,a.x-b.x);
 	}
 	
+	/**
+	 * Listens for when an Entity is killed
+	 * @author Tony
+	 *
+	 */
 	public static interface KilledListener {
 		void onKill(Entity entity, Entity killer);
 	}
+	
+	/**
+	 * Listens for when an Entity is damaged
+	 * @author Tony
+	 *
+	 */
 	public static interface OnDamageListener {
 		void onDamage(Entity damager, int amount);
 	}
 	
+	
+	/**
+	 * Listens for when an Entity is touched
+	 * 
+	 * @author Tony
+	 *
+	 */
 	public static interface OnTouchListener {
 		void onTouch(Entity me, Entity other);
 	}
@@ -151,7 +221,8 @@ public abstract class Entity {
 	
 	protected State currentState;
 	protected int speed;
-		
+	
+	private boolean canTakeDamage;
 	private boolean isAlive;
 	private int health;
 	
@@ -202,6 +273,7 @@ public abstract class Entity {
 		
 		this.vel = new Vector2f();
 		this.isAlive = true;
+		this.canTakeDamage = true;
 		this.health = 100;
 		
 		this.movementDir = new Vector2f();
@@ -209,6 +281,20 @@ public abstract class Entity {
 		this.bounds = new Rectangle();	
 		this.bounds.setLocation(position);
 		this.centerPos = new Vector2f();
+	}
+	
+	/**
+	 * @return true if this entity can take damage
+	 */
+	public boolean canTakeDamage() {
+		return this.canTakeDamage;
+	}
+	
+	/**
+	 * @param canTakeDamage the canTakeDamage to set
+	 */
+	public void setCanTakeDamage(boolean canTakeDamage) {
+		this.canTakeDamage = canTakeDamage;
 	}
 
 	/**
@@ -278,6 +364,13 @@ public abstract class Entity {
 	 */
 	public float getOrientation() {
 		return orientation;
+	}
+	
+	/**
+	 * @return the network friendly version of the orientation
+	 */
+	public short getNetOrientation() {
+		return (short) Math.toDegrees(getOrientation());
 	}
 	
 	/**
@@ -388,6 +481,14 @@ public abstract class Entity {
 	}
 	
 	/**
+	 * Continue to check Y coordinate if X was blocked
+	 * @return true if we should continue collision checks
+	 */
+	protected boolean continueIfBlock() {
+		return true;
+	}
+	
+	/**
 	 * @param dt
 	 * @return true if blocked
 	 */
@@ -425,19 +526,29 @@ public abstract class Entity {
 				bounds.x = (int)pos.x;
 				isBlocked = collideX(newX, bounds.x);				
 			}
-			else if(collidesAgainstMech(bounds)) {
+			else if(collidesAgainstVehicle(bounds)) {
 				bounds.x = (int)pos.x;				
 				isBlocked = true;
 			}
+			
 			
 			bounds.y = newY;
 			if( map.rectCollides(bounds)) {				
 				bounds.y = (int)pos.y;
 				isBlocked = collideY(newY, bounds.y);				
 			}
-			else if(collidesAgainstMech(bounds)) {				
+			else if(collidesAgainstVehicle(bounds)) {				
 				bounds.y = (int)pos.y;
 				isBlocked = true;
+			}
+			
+
+			/* some things want to stop dead it their tracks
+			 * if a component is blocked
+			 */
+			if(isBlocked && !continueIfBlock()) {
+				bounds.x = (int)pos.x;
+				bounds.y = (int)pos.y;
 			}
 						
 			pos.x = bounds.x;
@@ -461,23 +572,37 @@ public abstract class Entity {
 		return isBlocked;
 	}
 	
-	protected boolean collidesAgainstMech(Rectangle bounds) {
+	/**
+	 * Determines if the bounds touches any vehicle
+	 * @param bounds
+	 * @return true if we collide with a vehicle
+	 */
+	protected boolean collidesAgainstVehicle(Rectangle bounds) {
 		boolean collides = false;
-		PlayerEntity[] players = game.getPlayerEntities();
-		for(int i = 0; i < players.length; i++) {
-			PlayerEntity ent = players[i];
-			if(ent != null && ent != this && 
-			   ent.isAlive() && ent.getType()==Type.MECH) {
-				collides = bounds.intersects(ent.bounds);
+		List<Vehicle> vehicles = game.getVehicles();
+		for(int i = 0; i < vehicles.size(); i++) {
+			Vehicle vehicle = vehicles.get(i);
+			if(vehicle.isAlive() && this != vehicle && this != vehicle.getOperator()) {
+				
+				/* determine if moving to this bounds we would touch
+				 * the vehicle
+				 */
+				collides = bounds.intersects(vehicle.getBounds());
+				
+				/* if we touched, determine if we would be inside
+				 * the vehicle, if so, kill us
+				 */
+				if(collides) {
+					
+					if(getType().isPlayer() && vehicle.isMoving() && vehicle.getBounds().contains(bounds)) {
+						kill(vehicle);
+					}
+					
+					break;
+				}
 			}
 			
-			if(collides) {
-				if(ent.bounds.contains(bounds)) {
-					this.kill(ent);
-				}
-				
-				break;
-			}
+			
 		}
 		
 		return collides;
@@ -557,7 +682,7 @@ public abstract class Entity {
 //		netEntity.width = (byte)this.bounds.width;
 //		netEntity.height = (byte)this.bounds.height;
 		
-		netEntity.orientation = (short) Math.toDegrees(this.orientation);		
+		netEntity.orientation = getNetOrientation();		
 	}
 	
 	/**

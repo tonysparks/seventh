@@ -17,6 +17,7 @@ import seventh.game.net.NetLight;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetRocket;
+import seventh.game.net.NetTank;
 import seventh.math.Vector2f;
 
 /**
@@ -229,6 +230,10 @@ public class BufferIO {
 			}
 			case LIGHT_BULB: {
 				result = new NetLight();
+				break;
+			}
+			case TANK: {
+				result = new NetTank();
 				break;
 			}
 			default: {

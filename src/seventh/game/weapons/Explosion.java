@@ -53,7 +53,7 @@ public class Explosion extends Entity {
 			
 			@Override
 			public void onTouch(Entity me, Entity other) {
-				if(other.getType() != Type.EXPLOSION) {
+				if(other.getType() != Type.EXPLOSION && other.canTakeDamage()) {
 					
 					/* if this poor fellow is caught in the center
 					 * of the blast they feel the full effect

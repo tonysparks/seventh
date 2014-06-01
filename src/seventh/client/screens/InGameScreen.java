@@ -5,7 +5,6 @@ package seventh.client.screens;
 
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
-import seventh.client.ClientPlayerEntity;
 import seventh.client.ClientTeam;
 import seventh.client.ControllerInput;
 import seventh.client.Inputs;
@@ -13,14 +12,11 @@ import seventh.client.KeyMap;
 import seventh.client.Network;
 import seventh.client.Screen;
 import seventh.client.SeventhGame;
-import seventh.client.gfx.Art;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.InGameOptionsDialog;
 import seventh.client.gfx.InGameOptionsDialogView;
 import seventh.client.gfx.Theme;
-import seventh.client.gfx.particle.DebugAnimationEffect;
-import seventh.client.gfx.particle.DebugSpriteEffect;
 import seventh.client.gfx.particle.Effects;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
@@ -510,14 +506,14 @@ public class InGameScreen implements Screen {
 		this.teamSayTxtBx.destroy();
 	}
 
-	private void debugReloadPlayerModel() {
-		ClientPlayer player = game.getLocalPlayer();
-		if(player != null && player.isAlive()) {
-			ClientPlayerEntity ent = player.getEntity();
-			ent.setPlayer(player);
-			ent.changeTeam(ent.getTeam());
-		}
-	}
+//	private void debugReloadPlayerModel() {
+//		ClientPlayer player = game.getLocalPlayer();
+//		if(player != null && player.isAlive()) {
+//			ClientPlayerEntity ent = player.getEntity();
+//			ent.setPlayer(player);
+//			ent.changeTeam(ent.getTeam());
+//		}
+//	}
 	
 	/* (non-Javadoc)
 	 * @see palisma.shared.State#update(leola.live.TimeStep)
@@ -532,30 +528,30 @@ public class InGameScreen implements Screen {
 		// DEBUG
 		if(inputs.isKeyDown(Keys.ALT_LEFT)) {
 			
-			if( inputs.isKeyDown(Keys.P)) {
-				Art.reload();
-				debugReloadPlayerModel();
-				game.debugReloadGfx();
-			}
+//			if( inputs.isKeyDown(Keys.P)) {
+//				Art.reload();
+//				debugReloadPlayerModel();
+//				game.debugReloadGfx();
+//			}
 			
 			isDebugMode = true;
 			
 			
-			if(this.debugEffects.size() < 5) {
-				this.debugEffects.clearEffects();
-				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAlliedBackDeathAnim(), new Vector2f(88, 92), -90, false));
-				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAlliedFrontDeathAnim(), new Vector2f(188, 92), -90, false));
-								
-				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAxisBackDeathAnim(), new Vector2f(88, 242), -90, false));
-				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAxisFrontDeathAnim(), new Vector2f(188, 242), -90, false));
-				
-
-				this.debugEffects.addEffect(new DebugSpriteEffect(Art.alliedCharacterModel.getFrame(1), new Vector2f(80,80), 90, 0x6fffffff));
-				this.debugEffects.addEffect(new DebugSpriteEffect(Art.alliedCharacterModel.getFrame(1), new Vector2f(180,80), 90, 0x6fffffff));
-				
-				this.debugEffects.addEffect(new DebugSpriteEffect(Art.axisCharacterModel.getFrame(1), new Vector2f(80,230), 90, 0x6fffffff));
-				this.debugEffects.addEffect(new DebugSpriteEffect(Art.axisCharacterModel.getFrame(1), new Vector2f(180,230), 90, 0x6fffffff));
-			}
+//			if(this.debugEffects.size() < 5) {
+//				this.debugEffects.clearEffects();
+//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAlliedBackDeathAnim(), new Vector2f(88, 92), -90, false));
+//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAlliedFrontDeathAnim(), new Vector2f(188, 92), -90, false));
+//								
+//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAxisBackDeathAnim(), new Vector2f(88, 242), -90, false));
+//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAxisFrontDeathAnim(), new Vector2f(188, 242), -90, false));
+//				
+//
+//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.alliedCharacterModel.getFrame(1), new Vector2f(80,80), 90, 0x6fffffff));
+//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.alliedCharacterModel.getFrame(1), new Vector2f(180,80), 90, 0x6fffffff));
+//				
+//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.axisCharacterModel.getFrame(1), new Vector2f(80,230), 90, 0x6fffffff));
+//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.axisCharacterModel.getFrame(1), new Vector2f(180,230), 90, 0x6fffffff));
+//			}
 		}
 		else isDebugMode = false;
 		// ~~~~

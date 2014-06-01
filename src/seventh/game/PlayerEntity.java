@@ -9,6 +9,7 @@ import seventh.game.events.SoundEmittedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
+import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Kar98;
 import seventh.game.weapons.M1Garand;
@@ -35,8 +36,14 @@ import seventh.shared.WeaponConstants;
  * @author Tony
  *
  */
-public class PlayerEntity extends Entity {
+public class PlayerEntity extends Entity implements Controllable {
 
+	/**
+	 * The keys/actions that a player can make
+	 * 
+	 * @author Tony
+	 *
+	 */
 	public static enum Keys {
 		UP		(1<<0),
 		DOWN	(1<<1),
@@ -75,10 +82,6 @@ public class PlayerEntity extends Entity {
 		}
 	}
 	
-	private UserCommand previousCommand;
-	
-	private Inventory inventory;
-	
 	public static final int PLAYER_HEARING_RADIUS = 900;
 	public static final int PLAYER_WIDTH = 24;//16;
 	public static final int PLAYER_HEIGHT = 24;
@@ -88,6 +91,9 @@ public class PlayerEntity extends Entity {
 	private static final int RUN_DELAY_TIME = 300;
 	private static final int SPRINT_DELAY_TIME = 200;
 	
+	private static final int ENTERING_VEHICLE_TIME = 2500;
+	private static final int EXITING_VEHICLE_TIME = 2000;
+	
 	public static final byte MAX_STAMINA = 100;
 	public static final float STAMINA_DECAY_RATE = 2;
 	public static final float STAMINA_RECOVER_RATE = 0.5f;
@@ -96,6 +102,10 @@ public class PlayerEntity extends Entity {
 	private NetPlayerPartial partialPlayer;
 	private Team team;
 	
+	private UserCommand previousCommand;
+	
+	private Inventory inventory;
+		
 	private long invinceableTime;	
 	private int lineOfSight;
 	private int hearingRadius;
@@ -110,9 +120,10 @@ public class PlayerEntity extends Entity {
 	private Vector2f enemyDir;
 	
 	private BombTarget bombTarget;
+	private Vehicle operating;
 	
 	private boolean isFlashlightOn;
-	private long flashlightToggleTime;
+	private long vehicleTime;
 	
 	/**
 	 * @param position
@@ -214,8 +225,7 @@ public class PlayerEntity extends Entity {
 		unuse();
 		
 		/* suicides don't leave weapons */
-		if(killer != this) 
-		{
+		if(killer != this) {
 			dropItem(false);
 		}
 	}
@@ -323,21 +333,67 @@ public class PlayerEntity extends Entity {
 	 */
 	@Override
 	public boolean update(TimeStep timeStep) {
+		updateInvincibleTime(timeStep);
+		updateVehicleTime(timeStep);
+		
+		boolean blocked = false;		
+		if(!isOperatingVehicle()) {
+			
+			updateVelocity(timeStep);
+			blocked = super.update(timeStep);
+					
+			updateMovementSounds(timeStep);		
+			updateStamina(timeStep);
+			updateWeapons(timeStep);						
+			updateBombTargetUse(timeStep);
+		}
+		else {
+			moveTo(this.operating.getCenterPos());
+		}
+		
+		return blocked;
+	}
+
+	/**
+	 * Updates the {@link Entity#vel} with the inputs 
+	 * 
+	 * @param timeStep
+	 */
+	protected void updateVelocity(TimeStep timeStep) {
+		this.vel.set(inputVel);
+	}
+	
+	/**
+	 * Handles the invincible time
+	 * @param timeStep
+	 */
+	protected void updateInvincibleTime(TimeStep timeStep) {
 		if(this.invinceableTime>0) {
 			this.invinceableTime-=timeStep.getDeltaTime();
 		}
-		
-		if(this.flashlightToggleTime>0) {
-			this.flashlightToggleTime-=timeStep.getDeltaTime();
+	}
+	
+	/**
+	 * Handles the vehicle time
+	 * @param timeStep
+	 */
+	protected void updateVehicleTime(TimeStep timeStep) {
+		if(this.vehicleTime>0) {
+			this.vehicleTime -= timeStep.getDeltaTime();
+		}		
+		else {
+			if(currentState == State.ENTERING_VEHICLE) {
+				currentState = State.OPERATING_VEHICLE;					
+			}
 		}
-		
-		this.vel.set(inputVel);
-				
-		boolean blocked = super.update(timeStep);
-		
-		
-		makeMovementSounds(timeStep);
-		
+	}
+	
+	/**
+	 * Handles stamina
+	 * 
+	 * @param timeStep
+	 */
+	protected void updateStamina(TimeStep timeStep) {
 		if(currentState !=State.SPRINTING) {
 			stamina += STAMINA_RECOVER_RATE;
 			if(stamina > MAX_STAMINA) {
@@ -350,7 +406,15 @@ public class PlayerEntity extends Entity {
 				stamina = 0;
 			}
 		}
-		
+	}
+	
+	
+	/**
+	 * Handles the weapon updates
+	 * 
+	 * @param timeStep
+	 */
+	protected void updateWeapons(TimeStep timeStep) {
 		Weapon weapon = inventory.currentItem();
 		if(weapon!=null) {
 			if(firing) {
@@ -362,8 +426,15 @@ public class PlayerEntity extends Entity {
 		if(inventory.hasGrenades()) {
 			GrenadeBelt grenades = inventory.getGrenades();
 			grenades.update(timeStep);			
-		}		
-		
+		}	
+	}
+	
+	/**
+	 * Checks to see if we need to stop planting/disarming a {@link BombTarget}
+	 * 
+	 * @param timeStep
+	 */
+	protected void updateBombTargetUse(TimeStep timeStep) {
 		// if we are planting/defusing, make sure
 		// we are still over the bomb
 		if(this.bombTarget != null) {
@@ -381,16 +452,14 @@ public class PlayerEntity extends Entity {
 				}
 			}
 		}
-		
-		return blocked;
 	}
-
+	
 	/**
 	 * Handles making movement sounds
 	 * 
 	 * @param timeStep
 	 */
-	protected void makeMovementSounds(TimeStep timeStep) {
+	protected void updateMovementSounds(TimeStep timeStep) {
 		/* make walking sounds */
 		if( !inputVel.isZero() && (currentState==State.RUNNING||currentState==State.SPRINTING) ) {
 			if ( runTime <= 0 ) {				
@@ -479,115 +548,144 @@ public class PlayerEntity extends Entity {
 		}
 	}
 		
-	/**
-	 * Handles the users input commands
-	 * 
-	 * @param command
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#handleUserCommand(seventh.game.UserCommand)
 	 */
+	@Override
 	public void handleUserCommand(UserCommand command) {
-		int keys = command.getKeys();
-		int previousKeys = (previousCommand != null) ? previousCommand.getKeys() : 0;
-		float prevOrientation = (previousCommand != null) ? previousCommand.getOrientation() : -1; 		
-		
-		if( Keys.FIRE.isDown(keys) ) {
-//			if(Keys.FIRE.isDown(previousKeys)) {
-//				beginFire();
-//			}
-			firing = true;
-		}
-		else if(Keys.FIRE.isDown(previousKeys)) {
-			endFire();
-			firing = false;
-		}
-		//else firing = false;
-		
-		
-		if(Keys.THROW_GRENADE.isDown(keys)) {
-			pullGrenadePin();
-		}
-		
-		if(Keys.THROW_GRENADE.isDown(previousKeys) && !Keys.THROW_GRENADE.isDown(keys)) {
-			throwGrenade();			
-		}
-		
-		if(Keys.USE.isDown(keys)) {
-			use();
-		}
-		else /*if (Keys.USE.isDown(previousKeys))*/ {
-			unuse();	
-		}
-		
-		if(Keys.MELEE_ATTACK.isDown(keys)) {
-			meleeAttack();
-		}
-		else if(Keys.MELEE_ATTACK.isDown(previousKeys)) {
-			doneMeleeAttack();
-		}
-		
-		if(Keys.DROP_WEAPON.isDown(previousKeys) && !Keys.DROP_WEAPON.isDown(keys)) {			
-			dropItem(true);
-		}
-		
-		if(Keys.RELOAD.isDown(keys)) {
-			reload();
-		}
-		
-		if(Keys.WALK.isDown(keys)) {
-			walk();
-		}
-		else {
-			stopWalking();
-		}
+		if(isOperatingVehicle()) {
 			
-		
-//		boolean strafe = Keys.STRAFE.isDown(keys);
-		if(Keys.UP.isDown(keys)) {
-			moveUp();
-		}
-		else if(Keys.DOWN.isDown(keys)) {
-			moveDown();
-		}
-		else inputVel.y = 0;
-		
-		if(Keys.LEFT.isDown(keys)) {
-			moveLeft();
-		}
-		else if (Keys.RIGHT.isDown(keys)) {
-			moveRight();
-		}
-		else inputVel.x = 0;
-		
-		
-
-		if(Keys.SPRINT.isDown(keys)) {
-			if(!inputVel.isZero() && currentState != State.WALKING) {
-				sprint();
+			/* The USE key is the one that enters/exit
+			 * the vehicles
+			 */
+			if(Keys.USE.isDown(command.getKeys())) {
+				use();
+			}
+			else {
+			
+				/* this additional check makes sure we are not
+				 * entering/exiting the vehicle and controlling
+				 * it
+				 */
+				if(currentState==State.OPERATING_VEHICLE) {
+					this.operating.handleUserCommand(command);
+				}
 			}
 		}
 		else {
-			if(!inputVel.isZero() && currentState != State.WALKING) {
-				currentState = State.RUNNING;
-			}			
+		
+			int keys = command.getKeys();
+			int previousKeys = (previousCommand != null) ? previousCommand.getKeys() : 0;
+			float prevOrientation = (previousCommand != null) ? previousCommand.getOrientation() : -1; 		
+			
+			if( Keys.FIRE.isDown(keys) ) {
+				firing = true;
+			}
+			else if(Keys.FIRE.isDown(previousKeys)) {
+				endFire();
+				firing = false;
+			}		
+			
+			if(Keys.THROW_GRENADE.isDown(keys)) {
+				pullGrenadePin();
+			}
+			
+			if(Keys.THROW_GRENADE.isDown(previousKeys) && !Keys.THROW_GRENADE.isDown(keys)) {
+				throwGrenade();			
+			}
+			
+			if(Keys.USE.isDown(keys)) {
+				use();
+			}
+			else /*if (Keys.USE.isDown(previousKeys))*/ {
+				unuse();	
+			}
+			
+			if(Keys.MELEE_ATTACK.isDown(keys)) {
+				meleeAttack();
+			}
+			else if(Keys.MELEE_ATTACK.isDown(previousKeys)) {
+				doneMeleeAttack();
+			}
+			
+			if(Keys.DROP_WEAPON.isDown(previousKeys) && !Keys.DROP_WEAPON.isDown(keys)) {			
+				dropItem(true);
+			}
+			
+			if(Keys.RELOAD.isDown(keys)) {
+				reload();
+			}
+			
+			if(Keys.WALK.isDown(keys)) {
+				walk();
+			}
+			else {
+				stopWalking();
+			}
+			
+			
+			/* ============================================
+			 * Handles the movement of the character
+			 * ============================================
+			 */
+						
+			if(Keys.UP.isDown(keys)) {
+				moveUp();
+			}
+			else if(Keys.DOWN.isDown(keys)) {
+				moveDown();
+			}
+			else {
+	//			inputVel.y = 0;
+				noMoveY();
+			}
+			
+			if(Keys.LEFT.isDown(keys)) {
+				moveLeft();
+			}
+			else if (Keys.RIGHT.isDown(keys)) {
+				moveRight();
+			}
+			else {
+	//			inputVel.x = 0;
+				noMoveX();
+			}
+			
+			
+	
+			if(Keys.SPRINT.isDown(keys)) {
+				if(!inputVel.isZero() && currentState != State.WALKING) {
+					sprint();
+				}
+			}
+			else {
+				if(!inputVel.isZero() && currentState != State.WALKING) {
+					currentState = State.RUNNING;
+				}			
+			}
+			
+			if(Keys.CROUCH.isDown(keys)) {
+				crouch();
+			}
+			else {
+				standup();
+			}
+			
+			if(Keys.WEAPON_SWITCH_UP.isDown(keys)) {
+				nextWeapon();
+			}
+			else if (Keys.WEAPON_SWITCH_DOWN.isDown(keys)) {
+				prevWeapon();
+			}
+			
+			if(prevOrientation != command.getOrientation()) {
+				setOrientation(command.getOrientation());
+			}
+			
+			this.previousCommand = command;
 		}
 		
-		if(Keys.CROUCH.isDown(keys)) {
-			crouch();
-		}
-		else {
-			standup();
-		}
-		
-		if(Keys.WEAPON_SWITCH_UP.isDown(keys)) {
-			nextWeapon();
-		}
-		else if (Keys.WEAPON_SWITCH_DOWN.isDown(keys)) {
-			prevWeapon();
-		}
-		
-		if(prevOrientation != command.getOrientation())
-			setOrientation(command.getOrientation());
-		
-		this.previousCommand = command;
 	}
 	
 	/* (non-Javadoc)
@@ -608,15 +706,16 @@ public class PlayerEntity extends Entity {
 	
 	/**
 	 * Go in the walking position (makes no sounds)
-	 */
+	 */	
 	public void walk() {
 		if(currentState!=State.DEAD) {
 			currentState = State.WALKING;
 		}
 	}
 	
-	/**
-	 * Stop walking
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#stopWalking()
 	 */
 	public void stopWalking() {
 		if(currentState==State.WALKING) {
@@ -625,8 +724,9 @@ public class PlayerEntity extends Entity {
 	}
 	
 	
-	/**
-	 * Go in the crouching position
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#crouch()
 	 */
 	public void crouch() { 
 		if(currentState == State.IDLE) {			
@@ -635,8 +735,9 @@ public class PlayerEntity extends Entity {
 		}
 	}
 	
-	/**
-	 * Stop crouching
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#standup()
 	 */
 	public void standup() {
 		if(currentState==State.CROUCHING) {
@@ -645,6 +746,10 @@ public class PlayerEntity extends Entity {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#sprint()
+	 */
 	public void sprint() {
 		if(currentState!=State.DEAD && stamina > 0) {		
 			if(currentState!=State.SPRINTING) {
@@ -655,6 +760,10 @@ public class PlayerEntity extends Entity {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#reload()
+	 */	
 	public void reload() {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon!=null) {
@@ -662,6 +771,10 @@ public class PlayerEntity extends Entity {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#meleeAttack()
+	 */
 	public boolean meleeAttack() {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon != null) {
@@ -670,6 +783,10 @@ public class PlayerEntity extends Entity {
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#doneMeleeAttack()
+	 */
 	public void doneMeleeAttack() {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon != null) {
@@ -677,6 +794,11 @@ public class PlayerEntity extends Entity {
 		}
 	}
 	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#beginFire()
+	 */
 	public boolean beginFire() {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon!=null) {
@@ -686,6 +808,10 @@ public class PlayerEntity extends Entity {
 	}
 	
 		
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#endFire()
+	 */	
 	public boolean endFire() {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon!=null) {
@@ -694,6 +820,10 @@ public class PlayerEntity extends Entity {
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#pullGrenadePin()
+	 */	
 	public boolean pullGrenadePin() {
 		if(inventory.hasGrenades()) {
 			GrenadeBelt grenades = inventory.getGrenades();
@@ -702,6 +832,10 @@ public class PlayerEntity extends Entity {
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#throwGrenade()
+	 */	
 	public boolean throwGrenade() {
 		if(inventory.hasGrenades()) {
 			GrenadeBelt grenades = inventory.getGrenades();
@@ -710,6 +844,9 @@ public class PlayerEntity extends Entity {
 		return false;
 	}
 	
+	/**
+	 * @return true if the current weapon can fire
+	 */
 	public boolean canFire() {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon!=null) {
@@ -718,41 +855,72 @@ public class PlayerEntity extends Entity {
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#moveOrientation(float)
+	 */	
 	public void moveOrientation(float value) {
 		this.setOrientation(value);
 	}
 	
-
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#noMoveY()
+	 */	
 	public void noMoveY() {
 		vel.y = 0;
 		inputVel.y = 0;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#moveUp()
+	 */	
 	public void moveUp() {
 		vel.y = -1;
 		inputVel.y = -1;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#moveDown()
+	 */	
 	public void moveDown() {
 		vel.y = 1;
 		inputVel.y = 1;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#noMoveX()
+	 */	
 	public void noMoveX() {
 		vel.x = 0;
 		inputVel.x = 0;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#moveLeft()
+	 */	
 	public void moveLeft() {
 		vel.x = -1;
 		inputVel.x = -1;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#moveRight()
+	 */	
 	public void moveRight() {
 		vel.x = 1;
 		inputVel.x = 1;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#nextWeapon()
+	 */	
 	public void nextWeapon() {
 		Weapon weapon = inventory.nextItem();
 		if(weapon!=null) {
@@ -761,6 +929,11 @@ public class PlayerEntity extends Entity {
 		}
 		
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#prevWeapon()
+	 */	
 	public void prevWeapon() {
 		Weapon weapon = inventory.prevItem();
 		if(weapon!=null) {
@@ -801,47 +974,35 @@ public class PlayerEntity extends Entity {
 	
 	/**
 	 * Use can be used for either planting a bomb, or disarming it.
-	 */
+	 */	
 	public void use() {
-//		boolean shouldToggleFlashlight = true;
-		
-		if(this.bombTarget == null) {		
-			List<BombTarget> targets = game.getBombTargets();
-			int size = targets.size();
-			for(int i = 0; i < size; i++) {
-				BombTarget target = targets.get(i);
-				if(bounds.intersects(target.getBounds())) {
-										
-					if(target.bombActive()) {
-						Bomb bomb = target.getBomb();
-						bomb.disarm(this);						
-												
-						game.emitSound(getId(), SoundType.BOMB_DISARM, getPos());						
-					}
-					else {
-						if(!target.isBombAttached()) {							
-							Bomb bomb = game.newBomb(target); 
-							bomb.plant(this, target);
-							target.attachBomb(bomb);
-							game.emitSound(getId(), SoundType.BOMB_PLANT, getPos());
-						}												
-					}
-					
-					this.bombTarget = target;
-//					shouldToggleFlashlight = false;
-					break;
-				}
+		if(isOperatingVehicle()) {	
+			if(vehicleTime <= 0) {
+				leaveVehicle();
 			}
 		}
+		else {
 		
-//		if(shouldToggleFlashlight) {	
-//			if(flashlightToggleTime<=0) {
-//				isFlashlightOn = !isFlashlightOn;
-//				flashlightToggleTime = 300;
-//			}
-//		}
+			if(this.bombTarget == null) {		
+				this.bombTarget = game.getCloseBombTarget(this);
+			}
+			
+			if(this.bombTarget == null) {
+				Vehicle vehicle = game.getCloseOperableVehicle(this);
+				if(vehicle != null) {
+					if(vehicleTime <= 0) {
+						operateVehicle(vehicle);
+					}
+				}
+			}
+		}		
 	}
 	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.Controllable#unuse()
+	 */	
 	public void unuse() {
 		if(this.bombTarget != null) {
 			Bomb bomb = this.bombTarget.getBomb();
@@ -861,6 +1022,11 @@ public class PlayerEntity extends Entity {
 		}
 	}
 	
+	
+	/**
+	 * Updates the line of sight (LOS) depending
+	 * on the current {@link Weapon}
+	 */
 	private void checkLineOfSightChange() {
 		Weapon weapon = inventory.currentItem();
 		if(weapon !=null) {
@@ -883,7 +1049,45 @@ public class PlayerEntity extends Entity {
 		
 		return false;
 	}
-			
+	
+	/**
+	 * If this {@link PlayerEntity} is operating a {@link Vehicle}
+	 * @return true if operating a {@link Vehicle}
+	 */
+	public boolean isOperatingVehicle() {
+		return this.operating != null && this.operating.isAlive();
+	}
+	
+	/**
+	 * Leaves the {@link Vehicle}
+	 */
+	public void leaveVehicle() {
+		this.operating.stopOperating(this);
+		this.operating = null;
+		this.vehicleTime = EXITING_VEHICLE_TIME;
+		this.currentState = State.EXITING_VEHICLE;
+		setCanTakeDamage(true);
+	}
+	
+	/**
+	 * Operates the vehicle
+	 * 
+	 * @param vehicle
+	 */
+	public void operateVehicle(Vehicle vehicle) {
+		this.operating = vehicle;
+		this.operating.operate(this);
+		this.vehicleTime = ENTERING_VEHICLE_TIME;
+		this.currentState = State.ENTERING_VEHICLE;
+		setCanTakeDamage(false);
+	}
+	
+	/**
+	 * @return the {@link Vehicle} this {@link PlayerEntity} is operating
+	 */
+	public Vehicle getVehicle() {
+		return this.operating;
+	}
 	
 	/**
 	 * Retrieves the sounds heard by an Entity
@@ -1039,14 +1243,7 @@ public class PlayerEntity extends Entity {
 		
 		return entitiesInView;
 	}
-	
-	/**
-	 * @return true if this is a mech
-	 */
-	public boolean isMech() {
-		return getType()==Type.MECH;
-	}
-	
+		
 	/* (non-Javadoc)
 	 * @see palisma.game.Entity#getNetEntity()
 	 */
@@ -1054,6 +1251,8 @@ public class PlayerEntity extends Entity {
 	public NetEntity getNetEntity() {
 		return getNetPlayerPartial();
 	}
+	
+	
 	/**
 	 * Read the state
 	 * @return the {@link NetPlayer}
@@ -1061,16 +1260,20 @@ public class PlayerEntity extends Entity {
 	public NetPlayer getNetPlayer() {				
 		setNetEntity(player);
 		player.orientation = (short) Math.toDegrees(this.orientation);
-		
+
 		player.state = currentState.netValue();				
 		player.grenades = (byte)inventory.getGrenades().getNumberOfGrenades();
-		
-		player.flashLightOn = isFlashlightOn;
 		
 		player.health = (byte)getHealth(); 
 //		player.events = (byte)getEvents();
 		player.stamina = getStamina();
 		setEvents(0);
+		
+		player.isOperatingVehicle = isOperatingVehicle();
+		if(player.isOperatingVehicle) {
+			player.vehicleId = this.operating.getId(); 
+		}
+		
 		
 		Weapon weapon = inventory.currentItem();
 		if(weapon!=null) {
@@ -1091,10 +1294,15 @@ public class PlayerEntity extends Entity {
 	 */
 	public NetPlayerPartial getNetPlayerPartial() {
 		setNetEntity(partialPlayer);
-		partialPlayer.orientation = (short) Math.toDegrees(this.orientation);
+		partialPlayer.orientation = getNetOrientation();
 		
 		partialPlayer.state = currentState.netValue();								
 		partialPlayer.health = (byte)getHealth(); 
+		
+		player.isOperatingVehicle = isOperatingVehicle();
+		if(player.isOperatingVehicle) {
+			player.vehicleId = this.operating.getId(); 
+		}
 		
 		Weapon weapon = inventory.currentItem();
 		if(weapon!=null) {

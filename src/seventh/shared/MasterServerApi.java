@@ -13,7 +13,9 @@ import java.net.Proxy.Type;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import leola.vm.Args;
 import leola.vm.Leola;
+import leola.vm.Args.ArgsBuilder;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoNull;
 import leola.vm.types.LeoObject;
@@ -85,8 +87,10 @@ public class MasterServerApi {
 				sb.append(line.replace(":", "->")).append("\n");
 			}
 			sb.append(" ;");
-			Leola leola = new Leola();
-			result = leola.eval(sb.toString());			
+			Args args = new ArgsBuilder().setAllowThreadLocals(false)			
+					 .setBarebones(true).build();		
+			Leola runtime = new Leola(args);
+			result = runtime.eval(sb.toString());			
 		}
 		
 		return (result);

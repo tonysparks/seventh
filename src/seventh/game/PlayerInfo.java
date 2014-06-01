@@ -51,11 +51,6 @@ public interface PlayerInfo {
 	public abstract String getName();
 
 	/**
-	 * @return true if this player is controlling a mech
-	 */
-	public abstract boolean isMech();
-
-	/**
 	 * @return true if this player is a bot
 	 */
 	public abstract boolean isBot();

@@ -82,10 +82,15 @@ public class GunSwing {
 				continue;
 			}
 			
+			if(!other.canTakeDamage()) {
+				continue;
+			}
+			
 			/* first do an inexpensive check */
 			if(!hitBox.intersects(other.getBounds())) {
 				continue;
 			}
+			
 			
 			if(Line.lineIntersectsRectangle(origin, swing, other.getBounds())) {
 				other.damage(owner, damage);		

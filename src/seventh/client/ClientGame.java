@@ -37,7 +37,6 @@ import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetGameUpdate;
-import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
@@ -89,6 +88,7 @@ public class ClientGame {
 	private List<ClientEntity> entityList;
 	private List<ClientEntity> deadEntities;
 	private List<ClientBombTarget> bombTargets;
+	private List<ClientVehicle> vehicles;
 //	private List<ClientPlayerEntity> playerEntities;
 	
 	private List<FrameBufferRenderable> frameBufferRenderables;
@@ -159,6 +159,7 @@ public class ClientGame {
 		this.deadEntities = new ArrayList<ClientEntity>();
 //		this.playerEntities = new ArrayList<ClientPlayerEntity>();
 		this.bombTargets = new ArrayList<ClientBombTarget>();
+		this.vehicles = new ArrayList<ClientVehicle>();
 		
 		this.frameBufferRenderables = new ArrayList<>();
 		
@@ -299,15 +300,20 @@ public class ClientGame {
 	 */
 	private void updateFow(TimeStep timeStep) {
 		if(this.localPlayer.isAlive()||this.localPlayer.isSpectating()) {						
-			ClientPlayerEntity entity = null;
-			if(this.localPlayer.isAlive()) {
-				entity = this.localPlayer.getEntity();
+			ClientControllableEntity entity = null;
+			if(this.localPlayer.isAlive()) {				
+				entity = this.localPlayer.getEntity();				
 			}
 			else if(this.players.containsKey(this.localPlayer.getSpectatingPlayerId())) { 
 				entity = this.players.get(this.localPlayer.getSpectatingPlayerId()).getEntity();
 			}
+			
 																								
 			if(entity!=null) {
+				if( entity.isOperatingVehicle() ) {
+					entity = entity.getVehicle();
+				}
+				
 				entity.movementPrediction(map, timeStep, playerVelocity);
 				
 				cameraCenterAround.set(entity.getPos());
@@ -320,7 +326,7 @@ public class ClientGame {
 				 */
 				nextFOWUpdate -= timeStep.getDeltaTime();
 				if(nextFOWUpdate <= 0) {
-					fowTiles = Geom.calculateLineOfSight(fowTiles, entity.getCenterPos(), entity.getFacing(), entity.getLineOfSite(), map, entity.getHeightMask());
+					fowTiles = Geom.calculateLineOfSight(fowTiles, entity.getCenterPos(), entity.getFacing(), entity.getLineOfSight(), map, entity.getHeightMask());
 					Geom.addFadeEffect(map, fowTiles);
 					
 					/* only calculate every 100 ms */
@@ -475,6 +481,28 @@ public class ClientGame {
 	}
 	
 	/**
+	 * @return the vehicles
+	 */
+	public List<ClientVehicle> getVehicles() {
+		return vehicles;
+	}
+	
+	/**
+	 * @param id
+	 * @return the {@link ClientVehicle} that has the supplied ID, or null
+	 * if not found
+	 */
+	public ClientVehicle getVehicleById(int id) {
+		for(int i = 0; i < this.vehicles.size(); i++) {
+			ClientVehicle vehicle = this.vehicles.get(i);
+			if(vehicle.getId() == id) {
+				return vehicle;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @return the players
 	 */
 	public java.util.Map<Integer, ClientPlayer> getPlayers() {
@@ -588,7 +616,9 @@ public class ClientGame {
 	 */
 	public float calcPlayerOrientation(float mx, float my) {
 		if(this.localPlayer != null && this.localPlayer.isAlive()) {
-			Vector2f pos = localPlayer.getEntity().getCenterPos();
+			ClientPlayerEntity entity = localPlayer.getEntity();
+			
+			Vector2f pos = entity.isOperatingVehicle() ? entity.getVehicle().getCenterPos() : entity.getCenterPos();
 			Vector2f cameraPos = camera.getPosition();
 			
 			double orientation = Math.atan2((my+cameraPos.y)-pos.y, (mx+cameraPos.x)-pos.x);
@@ -642,18 +672,8 @@ public class ClientGame {
 			}
 			case PLAYER: {
 				ClientPlayer player = this.players.get(ent.id);
-				if(player!=null) {
-					if( ent instanceof NetPlayer) {
-						NetPlayer netPlayer = (NetPlayer)ent;
-						if(netPlayer.isMech) {
-							entity = new ClientMechPlayerEntity(this, player, pos);
-						}
-					}
-					
-					/* this is just a normal player */
-					if(entity == null) {
-						entity = new ClientPlayerEntity(this, player, pos);
-					}
+				if(player!=null) {					
+					entity = new ClientPlayerEntity(this, player, pos);				
 				}
 				break;
 			}
@@ -702,8 +722,9 @@ public class ClientGame {
 				}
 				break;
 			}
-			case MECH: {
+			case TANK: {
 				entity = new ClientTank(this, pos);
+				vehicles.add( (ClientVehicle)entity );
 				break;
 			}
 			case BOMB_TARGET: {
@@ -758,6 +779,7 @@ public class ClientGame {
 		this.entities.clear();
 		this.entityList.clear();
 		this.bombTargets.clear();
+		this.vehicles.clear();
 		this.lightSystem.removeAllLights();
 				
 		applyGameStats(gs.stats);
@@ -902,13 +924,12 @@ public class ClientGame {
 			
 			removeEntity(msg.playerId);
 			
-			ClientPlayerEntity entity = msg.isMech ? new ClientMechPlayerEntity(this, player, spawnLocation)  
-												   : new ClientPlayerEntity(this, player, spawnLocation);			
+			ClientPlayerEntity entity = new ClientPlayerEntity(this, player, spawnLocation);			
 			entity.spawned();
 			
 			if(localPlayer != null ) {
 				if( player == localPlayer) {			
-					entity.setLocalPlayer(true);
+					entity.setControlledByLocalPlayer(true);
 					camera.centerAroundNow(spawnLocation);
 				}			
 				else if ( localPlayer.getSpectatingPlayerId() == player.getId()) {
@@ -1083,6 +1104,7 @@ public class ClientGame {
 			ent.setAlive(false);			
 			entityList.remove(ent);
 			bombTargets.remove(ent);
+			vehicles.remove(ent);
 			
 			OnRemove onRemove = ent.getOnRemove();
 			if(onRemove != null) {
@@ -1103,6 +1125,7 @@ public class ClientGame {
 		this.entities.clear();
 		this.entityList.clear();
 		this.bombTargets.clear();
+		this.vehicles.clear();
 //		this.playerEntities.clear();
 		
 		this.lightSystem.destroy();

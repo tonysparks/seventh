@@ -18,7 +18,7 @@ import seventh.shared.WeaponConstants;
  * @author Tony
  *
  */
-public class MechRailgun extends Weapon {
+public class Railgun extends Weapon {
 
 
 	private int roundsPerSecond;
@@ -32,7 +32,7 @@ public class MechRailgun extends Weapon {
 	 * @param owner
 	 * @param type
 	 */
-	public MechRailgun(Game game, Entity owner) {
+	public Railgun(Game game, Entity owner) {
 		super(game, owner, Type.RAILGUN);
 		
 		this.roundsPerSecond = 15;

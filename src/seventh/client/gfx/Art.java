@@ -3,14 +3,10 @@
  */
 package seventh.client.gfx;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import leola.vm.Leola;
-import leola.vm.types.LeoArray;
-import leola.vm.types.LeoObject;
 import seventh.shared.Cons;
 
 import com.badlogic.gdx.graphics.Color;
@@ -123,28 +119,10 @@ public class Art {
 	public static TextureRegion bullet = null;
 	
 	
-	public static TextureRegion[] mechLegs = null;
-	public static TextureRegion mechTorso = null;
+	public static TextureRegion[] tankTracks = null;
+	public static TextureRegion tankTurret = null;
 	
 	public static int[] animationFrames = null;
-	
-	public static void debugAnimations(Leola runtime) {
-		try {
-			LeoObject obj = runtime.eval(new File("./seventh/gfx/animations.leola"));
-			if(obj != null) {
-				if(obj.isArray()) {
-					LeoArray arr = obj.as();
-					animationFrames = new int[arr.size()];
-					for(int i = 0; i < animationFrames.length; i++) {
-						animationFrames[i] = arr.get(i).asInt();
-					}
-				}
-			}
-		}
-		catch(Exception e) {
-			Cons.println("*** Error loading: ./seventh/gfx/animations.leola - " + e);
-		}
-	}
 	
 	public static void reload() {
 		destroy();
@@ -260,8 +238,8 @@ public class Art {
 		
 		bullet = loadImage("./seventh/gfx/bullet.png");
 		
-		mechLegs = TextureUtil.splitImage(loadImage("./seventh/gfx/player/mech_legs.png"), 2, 3);
-		mechTorso = loadImage("./seventh/gfx/player/mech_torso.png");
+		tankTracks = TextureUtil.splitImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 1, 1);
+		tankTurret = loadImage("./seventh/gfx/vehicles/tank_turret.png");
 	}
 
 	public static void destroy() {
@@ -343,8 +321,8 @@ public class Art {
 		
 		free(bullet);
 		
-		free(mechLegs);
-		free(mechTorso);
+		free(tankTracks);
+		free(tankTurret);
 	}
 	
 	public static void free(TextureRegion region) {
@@ -605,11 +583,12 @@ public class Art {
 		return newAnimatedImage(new int[] { 20, 20, 10, 20 }, riskerMuzzleFlash).loop(false);
 	}
 	
-	public static AnimatedImage newMechLegs() {
-		if(animationFrames != null) {
-			return newAnimatedImage(animationFrames, mechLegs);
-		}
-		int frameTime = 450;
-		return newAnimatedImage(new int[] { frameTime, frameTime, frameTime, frameTime, frameTime, frameTime }, mechLegs);
+	public static AnimatedImage newTankTracks() {
+		return newAnimatedImage(new int[] {100}, tankTracks);
+//		if(animationFrames != null) {
+//			return newAnimatedImage(animationFrames, tankTracks);
+//		}
+//		int frameTime = 450;
+//		return newAnimatedImage(new int[] { frameTime, frameTime, frameTime, frameTime, frameTime, frameTime }, tankTracks);
 	}
 }

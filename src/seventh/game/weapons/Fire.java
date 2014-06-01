@@ -47,7 +47,7 @@ public class Fire extends Bullet {
 			
 			@Override
 			public void onTouch(Entity me, Entity other) {
-				if(other.getType() == Type.PLAYER) {										
+				if(other.getType() == Type.PLAYER && other.canTakeDamage()) {										
 					other.damage(Fire.this, 2);											
 				}
 				

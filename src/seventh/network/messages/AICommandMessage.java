@@ -4,8 +4,7 @@
 package seventh.network.messages;
 
 import harenet.IOBuffer;
-import seventh.ai.basic.commands.AICommand;
-import seventh.ai.basic.commands.AICommandFactory;
+import seventh.ai.AICommand;
 
 
 
@@ -22,6 +21,7 @@ public class AICommandMessage extends AbstractNetMessage {
 	
 	public AICommandMessage() {
 		super(BufferIO.AI_COMMAND);
+		this.command = new AICommand();
 	}	
 	
 	/* (non-Javadoc)
@@ -30,9 +30,8 @@ public class AICommandMessage extends AbstractNetMessage {
 	@Override
 	public void read(IOBuffer buffer) {
 		super.read(buffer);
-		botId = buffer.getUnsignedByte();
-		byte cmdId = buffer.get();
-		command = AICommandFactory.newCommand(buffer, cmdId);
+		botId = buffer.getUnsignedByte();						
+		command.read(buffer);
 	}
 	
 	/* (non-Javadoc)
@@ -41,14 +40,7 @@ public class AICommandMessage extends AbstractNetMessage {
 	@Override
 	public void write(IOBuffer buffer) {	
 		super.write(buffer);
-		buffer.putUnsignedByte(botId);
-		
-		if(command!=null) {
-			buffer.put(command.getId());
-			command.write(buffer);
-		}
-		else {
-			buffer.put((byte)0);
-		}
+		buffer.putUnsignedByte(botId);		
+		command.write(buffer);
 	}
 }

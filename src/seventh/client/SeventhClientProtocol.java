@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 
 import leola.vm.Args;
+import leola.vm.Args.ArgsBuilder;
 import leola.vm.Leola;
 import leola.vm.types.LeoMap;
 import seventh.client.screens.InGameScreen;
@@ -82,8 +83,9 @@ public class SeventhClientProtocol implements ClientProtocol {
 		String contents = loadFileContents(file);
 		contents = "return " + contents.replace(":", "->"); /* converts to leola map format */
 
-		Args args = new Args();
-		args.setStackSize(1024 * 1024 * 2);
+		Args args = new ArgsBuilder().setAllowThreadLocals(false)
+									 .setStackSize(1024 * 1024 * 2)
+				 					 .setBarebones(true).build();		
 		Leola runtime = new Leola(args);
 		
 		LeoMap mapData = runtime.eval(contents).as();
@@ -157,10 +159,10 @@ public class SeventhClientProtocol implements ClientProtocol {
 		File propertiesFile = new File(mapFile + ".client.props.leola");
 		if(propertiesFile.exists()) {
 			try {
-				Args args = new Args();
-				args.setBarebones(true);		
+				Args args = new ArgsBuilder()
+						 .setAllowThreadLocals(false)				
+	 					 .setBarebones(true).build();		
 				Leola runtime = new Leola(args);
-				
 				runtime.putGlobal("game", game);
 				runtime.eval(propertiesFile);
 			}

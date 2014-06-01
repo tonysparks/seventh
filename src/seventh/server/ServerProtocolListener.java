@@ -346,14 +346,8 @@ public class ServerProtocolListener extends NetworkProtocol {
 		
 		PlayerInfo botPlayer = game.getPlayerById(msg.botId);
 		if(botPlayer.isBot()) {
-			if(player.getTeamId() == botPlayer.getTeamId()) {
-				
-				// TODO Implement means for sending AI commands !!
-				
-//				Brain brain = game.getAISystem().getBrain(botPlayer);								
-//				if(brain!=null) {
-//					brain.getCommunicator().post(msg.command);
-//				}
+			if(player.getTeamId() == botPlayer.getTeamId()) {				
+				game.getAISystem().receiveAICommand(botPlayer, msg.command);
 			}
 		}
 	}

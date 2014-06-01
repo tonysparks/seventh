@@ -10,6 +10,7 @@ import leola.frontend.listener.EventDispatcher;
 import seventh.ai.AISystem;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.type.GameType;
+import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.math.Vector2f;
@@ -95,6 +96,27 @@ public interface GameInfo {
 	public abstract List<BombTarget> getBombTargets();
 
 	/**
+	 * @return the vehicles
+	 */
+	public abstract List<Vehicle> getVehicles();
+	
+	
+	/**
+	 * Gets a {@link BombTarget} if its in arms length from the {@link PlayerEntity}
+	 * @param entity
+	 * @return the {@link BombTarget} that is touching the {@link PlayerEntity}, null otherwise
+	 */
+	public abstract BombTarget getCloseBombTarget(PlayerEntity entity);
+
+	/**
+	 * Determines if the supplied Entity is close enough to a {@link Vehicle}
+	 * to operate it (and that the {@link Vehicle} can be driven).
+	 * @param operator
+	 * @return the {@link Vehicle} to be operated on
+	 */
+	public abstract Vehicle getCloseOperableVehicle(Entity operator);
+	
+	/**
 	 * Determines if the supplied entity touches another
 	 * entity.  If the {@link Entity#onTouch} listener
 	 * is implemented, it will invoke it.
@@ -114,6 +136,17 @@ public interface GameInfo {
 	 */
 	public abstract boolean doesTouchPlayers(Entity ent);
 
+
+	/**
+	 * Determines if the supplied entity touches a
+	 * {@link Vehicle}.  If the {@link Entity#onTouch} listener
+	 * is implemented, it will invoke it.
+	 * 
+	 * @param ent
+	 * @return true if it does.
+	 */
+	public abstract boolean doesTouchVehicles(Entity ent);
+	
 	/**
 	 * Determines if the supplied entity touches another
 	 * entity.  If the {@link Entity#onTouch} listener
