@@ -796,6 +796,9 @@ public class Game implements GameInfo {
 		for(int i = 0; i < playerEntities.length; i++) {
 			playerEntities[i] = null;
 		}	
+		
+		this.bombTargets.clear();
+		this.vehicles.clear();
 	}
 	
 	

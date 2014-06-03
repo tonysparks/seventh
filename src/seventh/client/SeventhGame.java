@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.Date;
 
-import leola.vm.Leola;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
 

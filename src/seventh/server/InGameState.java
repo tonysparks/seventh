@@ -102,7 +102,7 @@ public class InGameState implements State {
 	/**
 	 * 
 	 */
-	public InGameState(Players players, GameMap map, GameType gameType, GameServer server) {
+	public InGameState(Players players, final GameMap map, GameType gameType, GameServer server) {
 		this.players = players;
 		this.server = server;
 		this.network = server.getServer();
@@ -149,7 +149,7 @@ public class InGameState implements State {
 				Player player = event.getPlayer();
 				msg.playerId = player.getId();
 				msg.posX = (short)event.getSpawnLocation().x;
-				msg.posY = (short)event.getSpawnLocation().y;				
+				msg.posY = (short)event.getSpawnLocation().y;												
 				
 				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
 			}
@@ -190,7 +190,9 @@ public class InGameState implements State {
 			
 			@Override
 			@EventMethod
-			public void onRoundStarted(RoundStartedEvent event) {				
+			public void onRoundStarted(RoundStartedEvent event) {
+				loadProperties(map.getMapFileName(), game);
+				
 				RoundStartedMessage msg = new RoundStartedMessage();
 				msg.gameState = game.getNetGameState();
 				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);	

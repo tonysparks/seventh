@@ -1124,7 +1124,7 @@ public class PlayerEntity extends Entity implements Controllable {
 		 */
 		Map map = game.getMap();
 		Entity[] entities = game.getEntities();
-		List<Entity> entitiesInView = game.aEntitiesInView;
+		List<Entity> entitiesInView = game.aEntitiesInView;				
 		
 		Vector2f centerPos = getCenterPos();				
 		Geom.calculateLineOfSight(game.aTiles, centerPos, getFacing(), getLineOfSight(), map, getHeightMask());						
