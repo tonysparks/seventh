@@ -63,10 +63,10 @@ public class AnimationEditorScreen implements Screen {
 	/**
 	 * 
 	 */
-	public AnimationEditorScreen(final MenuScreen menuScreen) {		
-		this.theme = menuScreen.getTheme();		
-		this.app = menuScreen.getApp();
-		this.uiManager = menuScreen.getUiManager();			
+	public AnimationEditorScreen(SeventhGame app) {
+		this.app = app;
+		this.theme = app.getTheme();			
+		this.uiManager = app.getUiManager();			
 		this.backgroundColor = 0xff000000;
 		
 		createUI();
@@ -89,7 +89,7 @@ public class AnimationEditorScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				app.setScreen(new MenuScreen(app));
+				app.popScreen();
 				Sounds.playGlobalSound(Sounds.uiNavigate);
 			}
 		});
@@ -389,7 +389,7 @@ public class AnimationEditorScreen implements Screen {
 		this.panelView.update(timeStep);
 						
 		if(uiManager.isKeyDown(Keys.ESCAPE)) {
-			app.setScreen(new MenuScreen(app));
+			app.popScreen();
 		}
 		
 		if(animation != null) {

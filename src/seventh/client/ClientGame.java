@@ -207,6 +207,13 @@ public class ClientGame {
 	}
 	
 	/**
+	 * Reload the video, readjusts the screen
+	 */
+	public void onReloadVideo() {
+		this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
+	}
+	
+	/**
 	 * @param x - screen x position
 	 * @param y - screen y position
 	 * @return the x and y converted to world coordinates

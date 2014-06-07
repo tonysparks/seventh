@@ -7,6 +7,7 @@ package seventh.client;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.Date;
+import java.util.Stack;
 
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
@@ -90,6 +91,7 @@ public class SeventhGame implements ApplicationListener {
 	private Network network;
 	
 	private boolean isVSync;
+	private Stack<Screen> screenStack;
 	
 	private UserInterfaceManager uiManager;
 	
@@ -101,7 +103,7 @@ public class SeventhGame implements ApplicationListener {
 		this.console = Cons.getImpl();
 		this.timeStep = new TimeStep();
 		this.terminal = new Terminal(console);
-		
+						
 		this.inputs = new InputMultiplexer();
 		
 		Cons.println(HEADER);
@@ -114,7 +116,8 @@ public class SeventhGame implements ApplicationListener {
 		this.keyMap = new KeyMap( (controls instanceof LeoMap) ? (LeoMap)controls : new LeoMap() );
 						
 		this.network = new Network(this.config, console);
-				
+		
+		this.screenStack = new Stack<Screen>();
 		this.sm = new StateMachine<Screen>();										
 		this.theme = new Theme();
 				
@@ -220,7 +223,7 @@ public class SeventhGame implements ApplicationListener {
 		console.addCommand(new Command("animation_editor"){			
 			@Override
 			public void execute(Console console, String... args) {
-				setScreen(new AnimationEditorScreen(new MenuScreen(SeventhGame.this)));
+				pushScreen(new AnimationEditorScreen(SeventhGame.this));
 			}
 		});
 	}
@@ -280,9 +283,9 @@ public class SeventhGame implements ApplicationListener {
 		Gdx.input.setInputProcessor(this.inputs);
 //		Gdx.input.setCursorCatched(true);
 		
-		initControllers();
-		
-		videoReload();
+		initControllers();		
+		videoReload();		
+		setScreen(new MenuScreen(this));
 	}
 
 	private void initControllers() {
@@ -327,7 +330,17 @@ public class SeventhGame implements ApplicationListener {
 		catch (IOException e) {
 			Cons.println("*** Unable to load font: " + e);
 		}
-		setScreen(new MenuScreen(this));
+
+//		if(!reloadCurrentScreen()) {
+//			setScreen(new MenuScreen(this));	
+//		}
+		
+//		if(this.screenStack.isEmpty())  {
+//			setScreen(new MenuScreen(this));
+//		}
+//		else {
+//			popScreen();
+//		}
 		setHWCursorVisible(false);
 	}
 	
@@ -372,12 +385,58 @@ public class SeventhGame implements ApplicationListener {
 	}
 	
 	/**
+	 * Pushes a {@link Screen} onto the stack.
+	 * 
 	 * @param newScreen
 	 */
-	public void setScreen(Screen newScreen) {
+	public void pushScreen(Screen newScreen) {
+		this.screenStack.add(newScreen);
+		preserveStackSetScreen(newScreen);
+	}
+	
+	/**
+	 * Pops a {@link Screen} off the stack.
+	 */
+	public void popScreen() {
+		if(!this.screenStack.isEmpty()) {
+			this.screenStack.pop();
+			if(!this.screenStack.isEmpty()) {
+				preserveStackSetScreen(this.screenStack.peek());
+			}
+		}
+	}
+	
+	/**
+	 * Pops and pushes the the current {@link Screen}, effectively
+	 * reloading it
+	 * @return true if actually reloaded a screen, false if no-op
+	 */
+	public boolean reloadCurrentScreen() {
+		if(!this.screenStack.isEmpty()) {
+			Screen screen = this.screenStack.pop();
+			preserveStackSetScreen(screen);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Preserves the stack state
+	 * @param newScreen
+	 */
+	private void preserveStackSetScreen(Screen newScreen) {
 		Screen previousScreen = this.sm.getCurrentState();
 		this.sm.changeState(newScreen);
 		updateInputs(previousScreen);
+	}
+	
+	/**
+	 * @param newScreen
+	 */
+	public void setScreen(Screen newScreen) {
+		this.screenStack.clear();
+		pushScreen(newScreen);
 	}
 	
 	/**

@@ -258,6 +258,13 @@ public class InGameScreen implements Screen {
 				app.setScreen(new MenuScreen(app));
 			}
 		});
+		this.dialog.getOptions().addOnButtonClickedListener(new OnButtonClickedListener() {
+			
+			@Override
+			public void onButtonClicked(ButtonEvent event) {
+				app.pushScreen(new OptionsScreen(app));
+			}
+		});
 		
 		this.dialogView = new InGameOptionsDialogView(dialog);
 		
@@ -351,6 +358,10 @@ public class InGameScreen implements Screen {
 	 */
 	@Override
 	public void enter() {
+		if(this.game != null) {
+			this.game.onReloadVideo();
+		}
+		
 		Console console = app.getConsole();
 		console.addCommand(new Command("ai") {
 			
@@ -506,14 +517,6 @@ public class InGameScreen implements Screen {
 		this.teamSayTxtBx.destroy();
 	}
 
-//	private void debugReloadPlayerModel() {
-//		ClientPlayer player = game.getLocalPlayer();
-//		if(player != null && player.isAlive()) {
-//			ClientPlayerEntity ent = player.getEntity();
-//			ent.setPlayer(player);
-//			ent.changeTeam(ent.getTeam());
-//		}
-//	}
 	
 	/* (non-Javadoc)
 	 * @see palisma.shared.State#update(leola.live.TimeStep)

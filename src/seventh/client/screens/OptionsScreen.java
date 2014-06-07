@@ -73,10 +73,10 @@ public class OptionsScreen implements Screen {
 	/**
 	 * 
 	 */
-	public OptionsScreen(final MenuScreen menuScreen) {		
-		this.theme = menuScreen.getTheme();		
-		this.app = menuScreen.getApp();
-		this.uiManager = menuScreen.getUiManager();			
+	public OptionsScreen(SeventhGame app) {
+		this.app = app;
+		this.theme = app.getTheme();				
+		this.uiManager = app.getUiManager();			
 		
 		this.flashText = new Timer(true, 1000);		
 		this.flashDelay = new Timer(false, 800);
@@ -153,7 +153,7 @@ public class OptionsScreen implements Screen {
 					
 					app.getTerminal().open();
 				}
-				app.setScreen(new MenuScreen(app));
+				app.popScreen();
 				Sounds.playGlobalSound(Sounds.uiNavigate);
 			}
 		});
@@ -167,7 +167,7 @@ public class OptionsScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				app.setScreen(new MenuScreen(app));
+				app.popScreen();
 				Sounds.playGlobalSound(Sounds.uiNavigate);
 			}
 		});
@@ -513,7 +513,7 @@ public class OptionsScreen implements Screen {
 			this.keyOverwriteLbl.hide();	
 			
 			if(uiManager.isKeyDown(Keys.ESCAPE)) {
-				app.setScreen(new MenuScreen(app));
+				app.popScreen();
 			}
 		}
 	}

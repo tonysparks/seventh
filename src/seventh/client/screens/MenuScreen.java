@@ -95,7 +95,7 @@ public class MenuScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				app.setScreen(new OptionsScreen(MenuScreen.this));				
+				app.pushScreen(new OptionsScreen(app));
 			}
 		});
 		
@@ -106,7 +106,7 @@ public class MenuScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				app.setScreen(new AnimationEditorScreen(MenuScreen.this));
+				app.pushScreen(new AnimationEditorScreen(app));
 			}
 		});
 		
