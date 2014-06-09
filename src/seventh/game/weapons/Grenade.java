@@ -70,6 +70,14 @@ public class Grenade extends Bullet {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.game.weapons.Bullet#getOwnerHeightMask()
+	 */
+	@Override
+	protected int getOwnerHeightMask() {
+		return Entity.STANDING_HEIGHT_MASK;
+	}
+	
 	protected void decreaseSpeed(float factor) {
 		speed =  (int)(speed * factor);
 	}

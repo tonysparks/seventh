@@ -9,7 +9,6 @@ import seventh.game.Entity.Type;
 import seventh.game.Game;
 import seventh.game.SoundType;
 import seventh.math.Vector2f;
-import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -18,10 +17,7 @@ import seventh.shared.WeaponConstants;
  */
 public class MP44 extends Weapon {
 
-	private int burst, burstCount;
-	private boolean firing;	
-	private boolean endFire;
-	private long burstRate, burstTime;
+	private int roundsPerSecond;
 	
 	/**
 	 * @param game
@@ -36,19 +32,13 @@ public class MP44 extends Weapon {
 		this.clipSize = 21;
 		this.totalAmmo = 42;
 		this.spread = 6;
-		this.burst = 3;
-		this.burstRate=70;		
 		this.bulletsInClip = this.clipSize;						
 		
 		this.lineOfSight = WeaponConstants.MP44_LINE_OF_SIGHT;	
 		this.weaponWeight = WeaponConstants.MP44_WEIGHT;
-		
-		this.endFire = true;
-		
 		this.netWeapon.type = Type.MP44.netValue();
 		
 		applyScriptAttributes("mp44");
-		this.burstCount = burst;
 	}
 
 	/* (non-Javadoc)
@@ -58,8 +48,7 @@ public class MP44 extends Weapon {
 	protected LeoMap applyScriptAttributes(String weaponName) {
 		LeoMap attributes = super.applyScriptAttributes(weaponName);
 		if(attributes!=null) {
-			this.burst = attributes.getInt("burst");
-			this.burstRate = attributes.getInt("burst_rate");
+			this.roundsPerSecond = attributes.getInt("rounds_per_second");
 		}
 		return attributes;
 	}
@@ -76,63 +65,29 @@ public class MP44 extends Weapon {
 		
 		return reloaded;
 	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.game.weapons.Weapon#update(seventh.shared.TimeStep)
-	 */
-	@Override
-	public void update(TimeStep timeStep) {
-	
-		super.update(timeStep);
 		
-		if(firing) {
-			burstTime-=timeStep.getDeltaTime();
-			if(burstTime<=0 && bulletsInClip>0) {
-				game.emitSound(getOwnerId(), SoundType.MP40_FIRE, getPos());
-				newBullet(false);
-				bulletsInClip--;
-				burstCount--;
-				burstTime=burstRate;
-				if(burstCount<=0) {
-					burstCount = burst;
-					this.firing = false;
-				}
-			}
-		}
-	}
-	
 	/* (non-Javadoc)
 	 * @see palisma.game.Weapon#beginFire()
 	 */
 	@Override
 	public boolean beginFire() {
-		if(canFire()) {			
-			weaponTime = 500;
-			this.firing = true;
+		if(canFire()) {
+			newBullet();
+			game.emitSound(getOwnerId(), SoundType.MP44_FIRE, getPos());
+			
+			weaponTime = 1000/roundsPerSecond;
+			bulletsInClip--;
+			
 			setFireState(); 
 			return true;
 		}
 		else if (bulletsInClip <= 0 ) {				
 			setFireEmptyState();			
 		}
-		this.endFire = false;
-		return false;
+
+		return false;		
 	}
-	
-	/* (non-Javadoc)
-	 * @see palisma.game.Weapon#endFire()
-	 */
-	@Override
-	public boolean endFire() {	
-		this.endFire = true;
-		return false;
-	}
-	
-	@Override
-	public boolean canFire() {	
-		return super.canFire() && this.endFire;
-	}
-	
+
 	/* (non-Javadoc)
 	 * @see palisma.game.Weapon#calculateVelocity(palisma.game.Direction)
 	 */

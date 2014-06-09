@@ -24,19 +24,19 @@ public class ClientMP44 extends ClientWeapon {
 		this.muzzleFlash = Art.newMP44MuzzleFlash();
 	}
 
-	@Override
-	protected boolean onFire() {		
-		return false;
-	}
+//	@Override
+//	protected boolean onFire() {		
+//		return false;
+//	}
 	/* (non-Javadoc)
 	 * @see seventh.client.weapon.ClientWeapon#isAutomatic()
 	 */
 	@Override
 	public boolean isAutomatic() {	
-		return false;
+		return true;
 	}
 	
 	public boolean isBurstFire() {
-		return true;
+		return false;
 	}
 }

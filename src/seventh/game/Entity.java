@@ -522,9 +522,12 @@ public abstract class Entity {
 			Map map = game.getMap();
 			
 			bounds.x = newX;
-			if( map.rectCollides(bounds) ) {				
-				bounds.x = (int)pos.x;
-				isBlocked = collideX(newX, bounds.x);				
+			if( map.rectCollides(bounds) ) {
+				isBlocked = collideX(newX, bounds.x);
+				if(isBlocked) { 
+					bounds.x = (int)pos.x;
+				}
+								
 			}
 			else if(collidesAgainstVehicle(bounds)) {
 				bounds.x = (int)pos.x;				
@@ -533,9 +536,11 @@ public abstract class Entity {
 			
 			
 			bounds.y = newY;
-			if( map.rectCollides(bounds)) {				
-				bounds.y = (int)pos.y;
-				isBlocked = collideY(newY, bounds.y);				
+			if( map.rectCollides(bounds)) {
+				isBlocked = collideY(newY, bounds.y);
+				if(isBlocked) {
+					bounds.y = (int)pos.y;
+				}
 			}
 			else if(collidesAgainstVehicle(bounds)) {				
 				bounds.y = (int)pos.y;

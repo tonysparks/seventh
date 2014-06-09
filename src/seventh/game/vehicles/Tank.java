@@ -13,6 +13,7 @@ import seventh.game.net.NetTank;
 import seventh.game.weapons.Bullet;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Railgun;
+import seventh.game.weapons.Rocket;
 import seventh.game.weapons.RocketLauncher;
 import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
@@ -155,6 +156,22 @@ public class Tank extends Vehicle {
 		};
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#collideX(int, int)
+	 */
+	@Override
+	protected boolean collideX(int newX, int oldX) {	
+		return false;//game.getMap().hasHeightMask(newX, bounds.y);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#collideY(int, int)
+	 */
+	@Override
+	protected boolean collideY(int newY, int oldY) {
+		return false;//game.getMap().hasHeightMask(bounds.x, newY);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -256,7 +273,11 @@ public class Tank extends Vehicle {
 				amount = 1;
 			} else if (damager instanceof Explosion) {
 				amount = 1;
-			} else {
+			} 
+			else if(damager instanceof Rocket) {
+				amount /= 2;
+			}
+			else {
 				amount /= 10;
 			}
 	
