@@ -6,9 +6,7 @@ package seventh.ai.basic;
 import java.io.File;
 import java.util.Random;
 
-import leola.vm.Args;
 import leola.vm.Leola;
-import leola.vm.Args.ArgsBuilder;
 import seventh.ai.AICommand;
 import seventh.ai.AISystem;
 import seventh.ai.basic.actions.Action;
@@ -26,6 +24,7 @@ import seventh.game.type.GameType;
 import seventh.math.Rectangle;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
+import seventh.shared.Scripting;
 import seventh.shared.TimeStep;
 
 /**
@@ -60,10 +59,8 @@ public class DefaultAISystem implements AISystem {
 	public DefaultAISystem() {
 		this.brains = new Brain[Game.MAX_PLAYERS];
 		
-		try {			
-			Args args = new ArgsBuilder().setAllowThreadLocals(false)
-					 					 .setBarebones(true).build();		
-			this.runtime = new Leola(args);
+		try {								
+			this.runtime = Scripting.newSandboxedRuntime();
 			this.runtime.eval(new File("./seventh/ai/goals.leola"));
 			
 			this.goals = new Goals(this.runtime);

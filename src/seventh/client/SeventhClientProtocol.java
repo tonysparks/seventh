@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 
-import leola.vm.Args;
-import leola.vm.Args.ArgsBuilder;
 import leola.vm.Leola;
 import leola.vm.types.LeoMap;
 import seventh.client.screens.InGameScreen;
@@ -42,6 +40,7 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.shared.Cons;
+import seventh.shared.Scripting;
 
 /**
  * The Seventh implementation of the {@link ClientProtocol}
@@ -83,11 +82,10 @@ public class SeventhClientProtocol implements ClientProtocol {
 		String contents = loadFileContents(file);
 		contents = "return " + contents.replace(":", "->"); /* converts to leola map format */
 
-		Args args = new ArgsBuilder().setAllowThreadLocals(false)
-									 .setStackSize(1024 * 1024 * 2)
-				 					 .setBarebones(true).build();		
-		Leola runtime = new Leola(args);
 		
+//		.setStackSize(1024 * 1024 * 2)
+		Leola runtime = Scripting.newSandboxedRuntime();
+						
 		LeoMap mapData = runtime.eval(contents).as();
 		MapLoader mapLoader = new TiledMapLoader();
 		Map map = mapLoader.loadMap(mapData, true);
@@ -159,10 +157,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 		File propertiesFile = new File(mapFile + ".client.props.leola");
 		if(propertiesFile.exists()) {
 			try {
-				Args args = new ArgsBuilder()
-						 .setAllowThreadLocals(false)				
-	 					 .setBarebones(true).build();		
-				Leola runtime = new Leola(args);
+				Leola runtime = Scripting.newSandboxedRuntime();
 				runtime.putGlobal("game", game);
 				runtime.eval(propertiesFile);
 			}

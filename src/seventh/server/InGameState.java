@@ -12,8 +12,6 @@ import java.io.IOException;
 
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
-import leola.vm.Args;
-import leola.vm.Args.ArgsBuilder;
 import leola.vm.Leola;
 import seventh.game.Entity;
 import seventh.game.Game;
@@ -59,6 +57,7 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.shared.Command;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.Scripting;
 import seventh.shared.State;
 import seventh.shared.TimeStep;
 
@@ -237,10 +236,8 @@ public class InGameState implements State {
 	private void loadProperties(String mapFile, Game game) {		
 		File propertiesFile = new File(mapFile + ".props.leola");
 		if(propertiesFile.exists()) {
-			try {
-				Args args = new ArgsBuilder().setAllowThreadLocals(false)
-											 .setBarebones(true).build();		
-				Leola runtime = new Leola(args);
+			try {	
+				Leola runtime = Scripting.newSandboxedRuntime();
 				
 				runtime.putGlobal("game", game);
 				runtime.eval(propertiesFile);

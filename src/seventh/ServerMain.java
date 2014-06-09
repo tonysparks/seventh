@@ -5,14 +5,13 @@ package seventh;
 
 import java.util.Scanner;
 
-import leola.vm.Args;
 import leola.vm.Leola;
-import leola.vm.Args.ArgsBuilder;
 import seventh.server.GameServer;
 import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.ConsoleFrame;
 import seventh.shared.DefaultConsole;
+import seventh.shared.Scripting;
 
 /**
  * Main entry point for the server
@@ -40,8 +39,8 @@ public class ServerMain {
 			public void run() {
 				try {
 					int port = DEFAULT_PORT;
-					Args leolaArgs = new ArgsBuilder().setAllowThreadLocals(false).build();		
-					Leola runtime = new Leola(leolaArgs);
+					
+					Leola runtime = Scripting.newRuntime();
 					GameServer server = new GameServer(console, runtime, false );
 					if (args.length > 0) {
 						try {
