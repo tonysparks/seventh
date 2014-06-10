@@ -46,6 +46,21 @@ public class MessageLog  implements Renderable {
 	}
 	
 	/**
+	 * Enables or disables the bleeding off of messages (removing them after
+	 * X amount of seconds)
+	 * 
+	 * @param bleedOffEnabled
+	 */
+	public void enableBleedOff(boolean bleedOffEnabled) {
+		if(!bleedOffEnabled) {
+			this.timeToShow.stop();
+		}
+		else {
+			this.timeToShow.start();
+		}
+	}
+	
+	/**
 	 * @param fontSize the fontSize to set
 	 */
 	public void setFontSize(int fontSize) {

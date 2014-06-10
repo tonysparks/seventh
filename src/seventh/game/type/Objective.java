@@ -42,4 +42,13 @@ public interface Objective {
 	 * the defenders to take action.
 	 */
 	public boolean isInProgress(GameInfo game);
+	
+	
+	/**
+	 * The {@link Objective}'s name.  This text is displayed
+	 * on the players HUD.
+	 * 
+	 * @return the name of the objective.
+	 */
+	public String getName();
 }

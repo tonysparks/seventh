@@ -41,7 +41,7 @@ public class Hud implements Renderable {
 	private ClientGame game;
 	private SeventhGame app;
 	private KillLog killLog;
-	private MessageLog messageLog, centerLog;
+	private MessageLog messageLog, centerLog, objectiveLog;
 	private Scoreboard scoreboard;
 	
 	private MiniMap miniMap;
@@ -64,7 +64,9 @@ public class Hud implements Renderable {
 		int screenWidth = game.getApp().getScreenWidth();
 		
 		this.killLog = new KillLog(screenWidth-260, 30, 5000);
-		this.messageLog = new MessageLog(10, 60, 15000, 6);
+		this.messageLog = new MessageLog(10, 60, 15000, 6);		
+		this.objectiveLog = new MessageLog(10, 20, 0, 10);
+		
 		this.centerLog = new MessageLog(screenWidth/2, 90, 3000, 2) {
 			@Override
 			protected void onRenderMesage(Canvas canvas, Camera camera, String message, int x, int y) {
@@ -97,6 +99,13 @@ public class Hud implements Renderable {
 	 */
 	public MessageLog getMessageLog() {
 		return messageLog;
+	}
+	
+	/**
+	 * @return the objectiveLog
+	 */
+	public MessageLog getObjectiveLog() {
+		return objectiveLog;
 	}
 
 	/**
@@ -189,6 +198,8 @@ public class Hud implements Renderable {
 		killLog.update(timeStep);
 		messageLog.update(timeStep);		
 		centerLog.update(timeStep);
+		objectiveLog.update(timeStep);
+		
 		miniMap.update(timeStep);		
 		miniMap.setMapAlpha( scoreboard.isVisible() ? 0x3f : 0x8f);
 		
@@ -202,11 +213,13 @@ public class Hud implements Renderable {
 	public void render(Canvas canvas, Camera camera, long alpha) {	
 		canvas.setFont("Consola", 12);
 		canvas.drawString("FPS: " + app.getFps(), canvas.getWidth() - 60, 10, 0xff10f0ef);
+		miniMap.render(canvas, camera, alpha);
 		
 		killLog.render(canvas, camera, 0);
 		messageLog.render(canvas, camera, 0);
 		centerLog.render(canvas, camera, 0);
-		miniMap.render(canvas, camera, alpha);
+		messageLog.render(canvas, camera, 0);
+				
 		
 		if(localPlayer.isAlive()) {
 			ClientPlayerEntity ent = localPlayer.getEntity();

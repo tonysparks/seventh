@@ -18,13 +18,15 @@ public class BombTargetObjective implements Objective {
 
 	private BombTarget target;
 	private Vector2f position;
-	
+	private String name;
 	
 	/**
+	 * @param name
 	 * @param position 
 	 */
-	public BombTargetObjective(Vector2f position) {
-		this.position = position;
+	public BombTargetObjective(Vector2f position, String name) {		
+		this.position = position;		
+		this.name = name != null ? name : "Bomb Target";
 	}
 
 	/* (non-Javadoc)
@@ -76,4 +78,11 @@ public class BombTargetObjective implements Objective {
 		return target != null && target.bombActive();
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.game.type.Objective#getName()
+	 */
+	@Override
+	public String getName() {	
+		return this.name;
+	}
 }
