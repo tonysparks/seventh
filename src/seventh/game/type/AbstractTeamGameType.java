@@ -23,7 +23,11 @@ import seventh.shared.TimeStep;
  */
 public abstract class AbstractTeamGameType implements GameType {
 
-	protected static final int RED=0, BLUE=1;
+	/**
+	 * The team indexes
+	 */
+	protected static final int AXIS=0, 
+							   ALLIED=1;
 	
 	private final int maxScore;
 	private final long matchTime;
@@ -58,8 +62,8 @@ public abstract class AbstractTeamGameType implements GameType {
 		this.timeRemaining = this.matchTime;
 		
 		this.teams = new Team[2];
-		this.teams[RED] = new Team(Team.AXIS_TEAM);
-		this.teams[BLUE] = new Team(Team.ALLIED_TEAM);
+		this.teams[AXIS] = Team.newAxisTeam();
+		this.teams[ALLIED] = Team.newAlliedTeam();
 		
 		this.highScoreTeams = new ArrayList<Team>(2);
 		
@@ -92,11 +96,11 @@ public abstract class AbstractTeamGameType implements GameType {
 	}
 	
 	public Team getAlliedTeam() {
-		return this.teams[BLUE];
+		return this.teams[ALLIED];
 	}
 	
 	public Team getAxisTeam() {
-		return this.teams[RED];
+		return this.teams[AXIS];
 	}
 	
 	protected Team getRandomTeam() {
@@ -179,14 +183,14 @@ public abstract class AbstractTeamGameType implements GameType {
 		
 		// check and see if they are already on a team
 		byte teamId = player.getTeamId();
-		if(teamId != Team.SPECTATOR_TEAM) {
+		if(teamId != Team.SPECTATOR_TEAM_ID) {
 			switch(teamId) {
-				case Team.ALLIED_TEAM: {
-					teams[BLUE].addPlayer(player);
+				case Team.ALLIED_TEAM_ID: {
+					teams[ALLIED].addPlayer(player);
 					break;
 				}
-				case Team.AXIS_TEAM: {
-					teams[RED].addPlayer(player);
+				case Team.AXIS_TEAM_ID: {
+					teams[AXIS].addPlayer(player);
 					break;
 				}
 				default: {
@@ -262,18 +266,18 @@ public abstract class AbstractTeamGameType implements GameType {
 	 */
 	public List<Team> getTeamsWithHighScore() {
 		this.highScoreTeams.clear();
-		int redScore = this.teams[RED].getScore();
-		int blueScore = this.teams[BLUE].getScore();
+		int axisScore = this.teams[AXIS].getScore();
+		int alliedScore = this.teams[ALLIED].getScore();
 		
-		if(redScore > blueScore) {
-			this.highScoreTeams.add(teams[RED]);
+		if(axisScore > alliedScore) {
+			this.highScoreTeams.add(teams[AXIS]);
 		}
-		else if (blueScore > redScore) {
-			this.highScoreTeams.add(teams[BLUE]);
+		else if (alliedScore > axisScore) {
+			this.highScoreTeams.add(teams[ALLIED]);
 		}
 		else {
-			this.highScoreTeams.add(this.teams[RED]);
-			this.highScoreTeams.add(this.teams[BLUE]);
+			this.highScoreTeams.add(this.teams[AXIS]);
+			this.highScoreTeams.add(this.teams[ALLIED]);
 		}
 		
 		return this.highScoreTeams;
@@ -323,8 +327,8 @@ public abstract class AbstractTeamGameType implements GameType {
 	 */
 	@Override
 	public NetGameTypeInfo getNetGameTypeInfo() {
-		this.gameTypeInfo.teams[0] = this.teams[RED].getNetTeam();
-		this.gameTypeInfo.teams[1] = this.teams[BLUE].getNetTeam();
+		this.gameTypeInfo.teams[AXIS] = this.teams[AXIS].getNetTeam();
+		this.gameTypeInfo.teams[ALLIED] = this.teams[ALLIED].getNetTeam();
 		return this.gameTypeInfo;
 	}
 	

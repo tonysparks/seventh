@@ -18,10 +18,49 @@ import seventh.math.Vector2f;
  */
 public class Team {
 
-	public static final byte ALLIED_TEAM=2, AXIS_TEAM=4, SPECTATOR_TEAM=-1;
+	/**
+	 * Team ID's
+	 */
+	public static final byte ALLIED_TEAM_ID = 2, 
+							 AXIS_TEAM_ID = 4, 
+							 SPECTATOR_TEAM_ID = -1;
+	
+	
+	/**
+	 * Team Names
+	 */
 	public static final String ALLIED_TEAM_NAME = "Allies";
 	public static final String AXIS_TEAM_NAME = "Axis";
 	public static final String SPECTATOR_NAME = "Spectator";
+	
+
+	/**
+	 * The Spectator team
+	 */
+	public static final Team SPECTATOR = new Team(SPECTATOR_TEAM_ID) {
+		
+		/**
+		 * Spectators are not allowed to score points
+		 */
+		public void score(int points) {			
+		}
+	};
+	
+	
+	/**
+	 * @return a new Allied team
+	 */
+	public static Team newAlliedTeam() {
+		return new Team(ALLIED_TEAM_ID);
+	}
+	
+	/**
+	 * @return a new Axis team
+	 */
+	public static Team newAxisTeam() {
+		return new Team(AXIS_TEAM_ID);
+	}
+	
 	
 	/**
 	 * Gets the Team name based on the Team ID.
@@ -31,10 +70,10 @@ public class Team {
 	 */
 	public static String getName(byte id) {
 		switch(id) {
-			case ALLIED_TEAM: {
+			case ALLIED_TEAM_ID: {
 				return ALLIED_TEAM_NAME;
 			}
-			case AXIS_TEAM: {
+			case AXIS_TEAM_ID: {
 				return AXIS_TEAM_NAME;
 			}
 			default: {
@@ -42,20 +81,18 @@ public class Team {
 			}
 		}
 	}
-	public final byte id;
+	private final byte id;
 	private List<Player> players;
 	private NetTeam netTeam;
 	
 	private int score;
 	
-	public static final Team SPECTATOR = new Team(SPECTATOR_TEAM) {
-		public void score(int points) {}
-	};
+	
 	
 	/**
 	 * 
 	 */
-	public Team(byte id) {
+	private Team(byte id) {
 		this.id = id;
 		netTeam = new NetTeam();
 		netTeam.id = id;		
@@ -87,10 +124,20 @@ public class Team {
 		return sum;
 	}
 	
+	
+	/**
+	 * @return the team name
+	 */
 	public String getName() {
 		return getName(getId());
 	}
 	
+	
+	/**
+	 * Score points
+	 * 
+	 * @param points
+	 */
 	public void score(int points) {
 		this.score += points;
 	}
@@ -118,14 +165,29 @@ public class Team {
 		p.setTeam(null);
 	}
 	
+	
+	/**
+	 * Determines if the supplied player is on the team
+	 * 
+	 * @param p
+	 * @return true if the supplied player is on the team
+	 */
 	public boolean onTeam(Player p) {
 		return this.players.contains(p);
 	}
 	
+	
+	/**
+	 * @return the number of players on this team
+	 */
 	public int teamSize() {
 		return this.players.size();
 	}
 	
+	
+	/**
+	 * @return the total number of kills this team as accrued
+	 */
 	public int getTotalKills() {
 		int kills = 0;
 		for(int i = 0; i < this.players.size(); i++) {
@@ -135,6 +197,10 @@ public class Team {
 		return kills;
 	}
 	
+	
+	/**
+	 * @return true if and only if each team member is dead
+	 */
 	public boolean isTeamDead() {
 		boolean isDead = true;
 		for(int i = 0; i < this.players.size(); i++) {
@@ -143,6 +209,11 @@ public class Team {
 		return isDead;
 	}
 	
+	
+	/**
+	 * @return a semi-random alive player that is on this team, null
+	 * if no player is alive
+	 */
 	public Player getAlivePlayer() {
 		for(int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(i);
@@ -153,6 +224,11 @@ public class Team {
 		return null;
 	}
 	
+	
+	/**
+	 * @return a semi-random alive player (that is a bot) that is on this team, null
+	 * if no player is alive 
+	 */
 	public Player getAliveBot() {
 		for(int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(i);
@@ -163,6 +239,10 @@ public class Team {
 		return null;
 	}
 	
+	
+	/**
+	 * @return all the players on this team
+	 */
 	public List<Player> getPlayers() {
 		return this.players;
 	}
@@ -213,6 +293,12 @@ public class Team {
 		return closest;
 	}
 	
+	
+	/**
+	 * The next alive player from the supplied Player slot
+	 * @param old
+	 * @return the next alive player, or null if no player is alive
+	 */
 	public Player getNextAlivePlayerFrom(Player old) {
 		
 		boolean found = false;
@@ -245,6 +331,12 @@ public class Team {
 		return null;
 	}
 	
+	
+	/**
+	 * The next alive bot from the supplied Player slot
+	 * @param old
+	 * @return the next alive bot, or null if no bot is alive
+	 */
 	public Player getNextAliveBotFrom(Player old) {
 		if(old==null) {
 			return getAliveBot();
@@ -280,6 +372,10 @@ public class Team {
 		return null;
 	}
 	
+	
+	/**
+	 * @return the total number of deaths accrued on this team
+	 */
 	public int getTotalDeaths() {
 		int deaths = 0;
 		for(int i = 0; i < this.players.size(); i++) {
@@ -304,6 +400,10 @@ public class Team {
 		return numberOfAlivePlayers;
 	}
 	
+	
+	/**
+	 * @return this team on a serializable form
+	 */
 	public NetTeam getNetTeam() {
 		netTeam.playerIds = new int[this.players.size()];
 		for(int i = 0; i < this.players.size(); i++) {

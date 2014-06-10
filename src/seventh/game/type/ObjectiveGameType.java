@@ -64,7 +64,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		
 		this.completedObjectives = new ArrayList<Objective>(this.outstandingObjectives.size());
 		
-		if(defenderTeamId == Team.ALLIED_TEAM) {
+		if(defenderTeamId == Team.ALLIED_TEAM_ID) {
 			this.attacker = getAxisTeam();
 			this.defender = getAlliedTeam();
 		}

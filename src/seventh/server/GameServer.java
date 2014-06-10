@@ -380,10 +380,10 @@ public class GameServer {
 						if(args.length > 1) {							
 							String team = args[1].trim().toLowerCase();
 							if(team.startsWith(Team.ALLIED_TEAM_NAME.toLowerCase())) {
-								game.playerSwitchedTeam(id, Team.ALLIED_TEAM);
+								game.playerSwitchedTeam(id, Team.ALLIED_TEAM_ID);
 							}
 							else if(team.startsWith(Team.AXIS_TEAM_NAME.toLowerCase())) {
-								game.playerSwitchedTeam(id, Team.AXIS_TEAM);
+								game.playerSwitchedTeam(id, Team.AXIS_TEAM_ID);
 							}
 						}
 						console.println("Added Bot...ID: " + id);

@@ -227,8 +227,8 @@ public class ServerProtocolListener extends NetworkProtocol {
 			if(team!=null) {
 				boolean allowed = false;
 				
-				switch(team.id) {
-					case Team.ALLIED_TEAM:
+				switch(team.getId()) {
+					case Team.ALLIED_TEAM_ID:
 						switch(weaponType) {
 							case THOMPSON:
 							case M1_GARAND:
@@ -241,7 +241,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 							default: allowed = false;
 						}
 						break;
-					case Team.AXIS_TEAM:
+					case Team.AXIS_TEAM_ID:
 						switch(weaponType) {
 							case MP40:
 							case MP44:

@@ -41,7 +41,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		List<Objective> objectives = new ArrayList<>();
 		List<Vector2f> alliedSpawnPoints = new ArrayList<>();
 		List<Vector2f> axisSpawnPoints = new ArrayList<Vector2f>();
-		byte defenders = Team.AXIS_TEAM;
+		byte defenders = Team.AXIS_TEAM_ID;
 		
 		File scriptFile = new File(mapFile + ".obj.leola");
 		if(!scriptFile.exists()) {
@@ -96,9 +96,9 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 							defenders = (byte)scriptedDefenders.asInt();
 							break;
 						case STRING:
-							if("allies".equalsIgnoreCase(scriptedDefenders.toString())) {
-								defenders = Team.ALLIED_TEAM;
-							}
+							if(Team.ALLIED_TEAM_NAME.equalsIgnoreCase(scriptedDefenders.toString())) {
+								defenders = Team.ALLIED_TEAM_ID;
+							}							
 							break;
 						default:{
 							Cons.println("*** ERROR -> defenders must either be a 2(for allies) or 4(for axis) or 'allies' or 'axis' values");

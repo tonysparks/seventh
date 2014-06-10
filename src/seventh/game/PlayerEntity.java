@@ -192,7 +192,7 @@ public class PlayerEntity extends Entity implements Controllable {
 				break;
 			default:
 				if(team != null) {
-					if(team.getId() == Team.ALLIED_TEAM) {
+					if(team.getId() == Team.ALLIED_TEAM_ID) {
 						weapon = new Thompson(game, this);
 					}
 					else {

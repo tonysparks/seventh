@@ -657,7 +657,7 @@ public class Game implements GameInfo {
 		
 	
 		Vector2f spawnPosition = new Vector2f(-1,-1);
-		if( player.getTeamId() == Team.ALLIED_TEAM ) {
+		if( player.getTeamId() == Team.ALLIED_TEAM_ID ) {
 			List<Vector2f> spawnPoints = gameType.getAlliedSpawnPoints();
 			if(!spawnPoints.isEmpty()) {			
 				spawnPosition.set(spawnPoints.get(random.nextInt(spawnPoints.size())));
@@ -740,14 +740,56 @@ public class Game implements GameInfo {
 		Player player = this.players.getPlayer(playerId);
 		if(player!=null) {
 			playerSwitched = gameType.switchTeam(player, teamId);
+			if(playerSwitched) {
 			
-			// always kill the player
-			if(playerSwitched && player.hasEntity()) {
-				player.commitSuicide();
-			}
-
-			if(Team.SPECTATOR_TEAM != teamId && playerSwitched) {
-				player.stopSpectating();
+				// always kill the player				
+				if(player.hasEntity()) {
+					player.commitSuicide();
+				}
+	
+				if(Team.SPECTATOR_TEAM_ID != teamId) {
+					player.stopSpectating();
+				}
+				
+				/* make sure the player has the teams weaponry */
+				switch(player.getWeaponClass()) {
+					case THOMPSON:
+						player.setWeaponClass(Type.MP40);
+						break;
+					case MP40: 
+						player.setWeaponClass(Type.THOMPSON);
+						break;
+						
+					case KAR98:
+						player.setWeaponClass(Type.SPRINGFIELD);
+						break;
+					case SPRINGFIELD:
+						player.setWeaponClass(Type.KAR98);
+						break;
+						
+					case MP44:
+						player.setWeaponClass(Type.M1_GARAND);
+						break;
+					case M1_GARAND:
+						player.setWeaponClass(Type.MP44);
+					
+					case SHOTGUN:
+					case ROCKET_LAUNCHER:
+					case RISKER:
+						break;
+						
+					/* make the player use the default weapon */
+					default: {
+						switch(teamId) {
+							case Team.ALLIED_TEAM_ID:
+								player.setWeaponClass(Type.THOMPSON);
+								break;
+							case Team.AXIS_TEAM_ID:
+								player.setWeaponClass(Type.MP40);
+								break;
+						}
+					}
+				}
 			}
 		}
 					

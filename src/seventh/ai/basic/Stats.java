@@ -112,10 +112,10 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 	@Override
 	public void onPlayerSpawned(PlayerSpawnedEvent event) {
 		switch(event.getPlayer().getTeamId()) {
-			case Team.ALLIED_TEAM:
+			case Team.ALLIED_TEAM_ID:
 				numberOfAlliesAlive++;
 				break;
-			case Team.AXIS_TEAM:
+			case Team.AXIS_TEAM_ID:
 				numberOfAxisAlive++;
 				break;					
 		}
@@ -134,7 +134,7 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 			ZoneStats stats = zone.getStats();
 			
 			Player killed = event.getPlayer();
-			if(killed.getTeamId()==Team.ALLIED_TEAM) {
+			if(killed.getTeamId()==Team.ALLIED_TEAM_ID) {
 				stats.addAlliedDeath();
 			}
 			else {
@@ -143,7 +143,7 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 			
 			PlayerInfo killer = players.getPlayerInfo(event.getKillerId());
 			if (killer != null) {
-				if(killer.getTeamId()==Team.ALLIED_TEAM) {
+				if(killer.getTeamId()==Team.ALLIED_TEAM_ID) {
 					stats.addAlliedKill();
 				}
 				else {

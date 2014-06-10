@@ -113,10 +113,10 @@ public class DefaultAISystem implements AISystem {
 	 * @return the team strategy for a given player 
 	 */
 	private TeamStrategy getStrategyFor(PlayerInfo player) {
-		if(Team.ALLIED_TEAM == player.getTeamId()) {
+		if(Team.ALLIED_TEAM_ID == player.getTeamId()) {
 			return this.alliedAIStrategy;
 		}
-		else if(Team.AXIS_TEAM == player.getTeamId()) {
+		else if(Team.AXIS_TEAM_ID == player.getTeamId()) {
 			return this.axisAIStrategy;
 		}
 		

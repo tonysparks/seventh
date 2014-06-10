@@ -389,7 +389,7 @@ public class Locomotion {
 			}
 			
 			if(index > -1 && index < Game.alliedWeapons.length) {
-				if(team.getId()==Team.ALLIED_TEAM) {
+				if(team.getId()==Team.ALLIED_TEAM_ID) {
 					return Game.alliedWeapons[index];
 				}
 				else {

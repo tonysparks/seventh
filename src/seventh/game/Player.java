@@ -457,7 +457,7 @@ public class Player implements PlayerInfo {
 		this.stats.deaths = (short)this.deaths;
 		this.stats.ping = (short)this.ping; 
 		this.stats.name = this.name;
-		this.stats.teamId = (team!=null) ? team.getId() : Team.SPECTATOR_TEAM;
+		this.stats.teamId = (team!=null) ? team.getId() : Team.SPECTATOR_TEAM_ID;
 		return this.stats;
 	}
 
