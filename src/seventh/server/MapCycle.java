@@ -7,6 +7,7 @@ import java.util.List;
 
 import seventh.shared.Command;
 import seventh.shared.Console;
+import seventh.shared.MapList;
 
 /**
  * The play list for maps.
@@ -60,9 +61,6 @@ public class MapCycle {
 	 */
 	public Command getMapAddCommand() {
 		return new Command("map_add") {
-			/* (non-Javadoc)
-			 * @see palisma.shared.Command#execute(palisma.shared.Console, java.lang.String[])
-			 */
 			@Override
 			public void execute(Console console, String... args) {
 				addMap(this.mergeArgsDelim(" ", args));
@@ -74,10 +72,7 @@ public class MapCycle {
 	 * @return the {@link Command} that removes from the map list
 	 */
 	public Command getMapRemoveCommand() {
-		return new Command("map_remove") {
-			/* (non-Javadoc)
-			 * @see palisma.shared.Command#execute(palisma.shared.Console, java.lang.String[])
-			 */
+		return new Command("map_remove") {			
 			@Override
 			public void execute(Console console, String... args) {
 				removeMap(this.mergeArgsDelim(" ", args));
@@ -107,9 +102,7 @@ public class MapCycle {
 	 * @param map
 	 */
 	public void setCurrentMap(String map) {
-		if(!map.toLowerCase().endsWith(".json")) {
-			map += ".json";
-		}
+		map = MapList.addFileExtension(map);
 		
 		if(!maps.contains(map)) {
 			addMap(map);

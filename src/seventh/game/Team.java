@@ -19,20 +19,30 @@ import seventh.math.Vector2f;
 public class Team {
 
 	public static final byte ALLIED_TEAM=2, AXIS_TEAM=4, SPECTATOR_TEAM=-1;
+	public static final String ALLIED_TEAM_NAME = "Allies";
+	public static final String AXIS_TEAM_NAME = "Axis";
+	public static final String SPECTATOR_NAME = "Spectator";
+	
+	/**
+	 * Gets the Team name based on the Team ID.
+	 * 
+	 * @param id the Team ID
+	 * @return the name representing the ID
+	 */
 	public static String getName(byte id) {
 		switch(id) {
 			case ALLIED_TEAM: {
-				return "Allies";
+				return ALLIED_TEAM_NAME;
 			}
 			case AXIS_TEAM: {
-				return "Axis";
+				return AXIS_TEAM_NAME;
 			}
 			default: {
-				return "Spectator";
+				return SPECTATOR_NAME;
 			}
 		}
 	}
-	public byte id;
+	public final byte id;
 	private List<Player> players;
 	private NetTeam netTeam;
 	

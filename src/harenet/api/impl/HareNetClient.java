@@ -217,7 +217,7 @@ public class HareNetClient extends HareNetEndpoint implements Client {
 					host.update(this.listener, timeout);
 				} 
 				catch (IOException e) {
-					e.printStackTrace();
+					host.getLogger().error(e.toString());
 				}
 			}
 		}

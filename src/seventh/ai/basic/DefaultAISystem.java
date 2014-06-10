@@ -60,7 +60,7 @@ public class DefaultAISystem implements AISystem {
 		this.brains = new Brain[Game.MAX_PLAYERS];
 		
 		try {								
-			this.runtime = Scripting.newSandboxedRuntime();
+			this.runtime = Scripting.newRuntime();
 			this.runtime.eval(new File("./seventh/ai/goals.leola"));
 			
 			this.goals = new Goals(this.runtime);

@@ -3,8 +3,6 @@
  */
 package seventh.client.screens;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +17,7 @@ import seventh.game.type.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.server.GameServer.GameServerSettings;
+import seventh.shared.MapList;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.KeyInput;
@@ -92,7 +91,7 @@ public class ServerSetupScreen implements Screen {
 		this.random = new Random();
 		
 
-		this.mapListings = getMapListing();
+		this.mapListings = MapList.getMapListing();
 		
 		this.gameSettings = new GameServerSettings();
 		this.gameSettings.currentMap = mapListings.isEmpty() ? null : this.mapListings.get(0);
@@ -118,26 +117,7 @@ public class ServerSetupScreen implements Screen {
 		
 		createUI();
 	}
-	
-	private List<String> getMapListing() {
-		final String path = "./seventh/maps/";
 		
-		File dir = new File(path);
-		File[] maps = dir.listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().endsWith(".json");
-			}
-		});
-		
-		List<String> mapNames = new ArrayList<String>(maps.length);
-		for(File f : maps) {
-			mapNames.add(path + f.getName().replace(".json", ""));
-		}
-		return mapNames;
-	}
-	
 	private String getNextRandomName() {
 		String name = null;
 		boolean found = false;
@@ -343,7 +323,7 @@ public class ServerSetupScreen implements Screen {
 		setupLabel(uiPos, "Match Time: ", false);
 		
 		uiPos.x = toggleX + 30;
-		final Label matchTimeLbl = setupLabel(uiPos, Integer.toString(gameSettings.matchTime), false);
+		final Label matchTimeLbl = setupLabel(uiPos, Long.toString(gameSettings.matchTime), false);
 		
 		uiPos.x = toggleX;
 		uiPos.y += yInc;
@@ -355,7 +335,7 @@ public class ServerSetupScreen implements Screen {
 				if(gameSettings.matchTime < 1) {
 					gameSettings.matchTime = 1;
 				}
-				matchTimeLbl.setText(Integer.toString(gameSettings.matchTime));
+				matchTimeLbl.setText(Long.toString(gameSettings.matchTime));
 			}
 		});
 		
@@ -366,7 +346,7 @@ public class ServerSetupScreen implements Screen {
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
 				gameSettings.matchTime++;				
-				matchTimeLbl.setText(Integer.toString(gameSettings.matchTime));
+				matchTimeLbl.setText(Long.toString(gameSettings.matchTime));
 			}
 		}); 
 		
@@ -391,7 +371,7 @@ public class ServerSetupScreen implements Screen {
 				}
 				
 				maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
-				matchTimeLbl.setText(Integer.toString(gameSettings.matchTime));
+				matchTimeLbl.setText(Long.toString(gameSettings.matchTime));
 				
 				event.getButton().setText(gameSettings.gameType.name());
 			}

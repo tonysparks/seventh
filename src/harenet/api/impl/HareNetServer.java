@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class HareNetServer extends HareNetEndpoint implements Server {
 
-	private static final int MAX_CONNECTIONS = 32;
-	
 	private Host host;
 	private Connection[] connections;
 	
@@ -83,7 +81,7 @@ public class HareNetServer extends HareNetEndpoint implements Server {
 	 */
 	public HareNetServer(NetConfig netConfig) {
 		super(netConfig);
-		this.connections = new Connection[MAX_CONNECTIONS];		
+		this.connections = new Connection[netConfig.getMaxConnections()];		
 		this.listener = new ServerMessageListener();
 	}
 	
@@ -130,7 +128,7 @@ public class HareNetServer extends HareNetEndpoint implements Server {
 		try {
 			this.host.update(this.listener, timeout);
 		} catch (IOException e) {
-			e.printStackTrace();
+			this.host.getLogger().error(e.toString());
 		}
 	}
 

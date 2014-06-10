@@ -25,6 +25,7 @@ public class Scripting {
 	public static Leola newSandboxedRuntime() throws Exception {
 		Args args = new ArgsBuilder()
 						.setAllowThreadLocals(false)
+						
 						.setBarebones(true)
 						.setSandboxed(true)
 						.build();

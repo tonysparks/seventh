@@ -10,7 +10,6 @@ import harenet.messages.NetMessage;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -34,6 +33,7 @@ import seventh.shared.CommonCommands;
 import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.MapList;
 import seventh.shared.RconHash;
 import seventh.shared.State;
 import seventh.shared.StateMachine;
@@ -43,6 +43,8 @@ import seventh.shared.TimeStep;
 
 
 /**
+ * The {@link GameServer} handles running the game and listening for clients.
+ * 
  * @author Tony
  *
  */
@@ -80,7 +82,9 @@ public class GameServer {
 	
 	private String rconpassword;
 	
-	private MasterServerRegistration registration;	
+	private MasterServerRegistration registration;
+
+	private OnServerReadyListener serverListener;
 	
 	/**
 	 * A callback for when the server is loaded and is about to start
@@ -91,26 +95,32 @@ public class GameServer {
 	 */
 	public static interface OnServerReadyListener {
 		
+		/**
+		 * The server is ready for remote clients to connect.
+		 * 
+		 * @param server
+		 */
 		public void onServerReady(GameServer server);
 	}
 	
 	/**
 	 * Server Game Settings
+	 * 
 	 * @author Tony
 	 *
 	 */
 	public static class GameServerSettings {
 		public String currentMap;
-		public int maxScore;
-		public int matchTime;
+		public int maxScore;		
 		public int maxPlayers;
+		public long matchTime;
 		public GameType.Type gameType;
 		
 		public List<String> alliedTeam;
 		public List<String> axisTeam;
+		public boolean isDedicatedServer;					
 	}
 	
-	private OnServerReadyListener serverListener;
 	
 	/**
 	 * @param console
@@ -119,22 +129,139 @@ public class GameServer {
 	 * @param settings
 	 * @throws Exception
 	 */
-	public GameServer(final Console console, 
-					 final Leola runtime, 
-					 final boolean isLocal, 
-					 final GameServerSettings settings) throws Exception {
+	public GameServer(Console console, 
+					  Leola runtime, 
+					  boolean isLocal, 
+					  GameServerSettings settings) throws Exception {
 		
-		this(console, runtime, isLocal);
+		this.console = console;
+		this.runtime = runtime;		
+		this.isLocal = isLocal;
 		
-		final AtomicBoolean isReady = new AtomicBoolean(false);
-		sm.setListener(new StateMachineListener<State>() {
-			/* (non-Javadoc)
-			 * @see seventh.shared.StateMachine.StateMachineListener#onEnterState(java.lang.Object)
+		
+		readConfigurationSettings();
+
+		
+		/* if no settings are supplied, use
+		 * the default configured settings
+		 */
+		if(settings == null) {
+			settings = new GameServerSettings();
+			settings.gameType = getGameType();
+			settings.matchTime = getMatchTime();
+			settings.maxScore = getMaxScore();
+			settings.maxPlayers = getMaxPlayers();
+			
+			settings.isDedicatedServer = true;
+		}
+		
+		
+		init(settings);
+				
+	}
+	
+	/**
+	 * Defaults to a dedicated server in which uses the configured
+	 * default settings
+	 * 
+	 * @param console
+	 * @param runtime
+	 * @throws Exception
+	 */
+	public GameServer(Console console, Leola runtime) throws Exception  {
+		this(console, runtime, false, null);		
+	}
+	
+	
+	
+	/**
+	 * Reads in the configuration settings from the server_config.leola file
+	 * 
+	 * @throws Exception
+	 */
+	private void readConfigurationSettings() throws Exception {		
+		this.config = new Config("./seventh/server_config.leola", "server_config", runtime);
+		try {
+			this.serverName = this.config.setIfNull("name", "Seventh Server").toString();
+			
+			
+			/* Allow for a subset of the maps to be
+			 * cycled through 
 			 */
+			if(this.config.has("map_list")) {
+				LeoArray mapList = this.config.get("map_list").as();
+				List<String> maps = new ArrayList<String>(mapList.size());
+				for(LeoObject m : mapList) {
+					maps.add(m.toString());
+				}
+				this.mapCycle = new MapCycle(maps);
+			}
+			else {
+				
+				/* this just allows ALL maps that are in the maps
+				 * directory
+				 */
+				this.mapCycle = new MapCycle(MapList.getMapListing());
+			}
+			
+			
+			this.config.setIfNull("sv_maxscore", Leola.toLeoObject(50));
+			this.config.setIfNull("sv_matchtime", Leola.toLeoObject(20));
+			this.config.setIfNull("sv_gametype", Leola.toLeoObject("tdm"));
+			this.config.setIfNull("sv_maxplayers", Leola.toLeoObject(12));
+			
+			this.rconpassword = this.config.getString("rcon_password");
+		}
+		catch(Exception e) {
+			console.println("*** Unable to parse configuration file: " + config + " because of: " + e);			
+		}
+	}
+
+
+	/**
+	 * Initializes the {@link GameServer}
+	 * 
+	 * @param settings
+	 * @throws Exception
+	 */
+	private void init(final GameServerSettings settings) throws Exception {				
+		this.random = new Random();
+		this.sm = new StateMachine<State>();
+		
+		this.server = new HareNetServer(this.config.getNetConfig());
+
+		this.protocolListener = new ServerProtocolListener(this);
+		this.server.addConnectionListener(this.protocolListener);
+				
+		/* load some helper functions for objective scripts */
+		this.runtime.loadStatics(LeolaScriptLibrary.class);
+			
+		
+		/* if this is a dedicated server, we'll contact the 
+		 * master server so that users know about this server
+		 */
+		this.registration = new MasterServerRegistration(this);
+		if(settings.isDedicatedServer) {
+			this.registration.start();
+		}
+		
+		
+		/*
+		 * Load up the bots
+		 */
+		final AtomicBoolean isReady = new AtomicBoolean(false);
+		sm.setListener(new StateMachineListener<State>() {			
 			@Override
 			public void onEnterState(State state) {
 
-				if(settings!=null && (state instanceof InGameState)) {										
+				/* only listen for the first in game state
+				 * transition because we only need to 'wait'
+				 * for the server to be up the first time in.
+				 * 
+				 * This addresses the Single Player bug of the
+				 * Bots not spawning
+				 */
+				if( (state instanceof InGameState) ) {										
 					if(settings.alliedTeam != null) {
 						for(String name : settings.alliedTeam) {
 							console.execute("add_bot " + name + " allies");
@@ -152,7 +279,7 @@ public class GameServer {
 					 * to do this once for a game load!
 					 */
 					sm.setListener(null);
-					isReady.set(true);
+					isReady.set(true);					
 				}
 			}
 			
@@ -161,6 +288,8 @@ public class GameServer {
 			}
 		});
 		
+				
+		setupServerCommands(console);		
 		
 		setGameType(settings.gameType);
 		setMatchTime(settings.matchTime);
@@ -168,13 +297,12 @@ public class GameServer {
 		
 		if(settings.currentMap == null) {
 			settings.currentMap = mapCycle.getCurrentMap();
-		}
-		else {
-			mapCycle.setCurrentMap(settings.currentMap);
-		}
+		}		
+		mapCycle.setCurrentMap(settings.currentMap);
 		
-		
+		/* load up the map */
 		changeMap(settings.currentMap);
+		
 		
 		/* little hack to wait until we are done loading the 
 		 * game
@@ -186,75 +314,24 @@ public class GameServer {
 		}		
 	}
 	
+	
 	/**
-	 * @param console
-	 * @param runtime
-	 * @param isLocal
-	 * @throws Exception
+	 * Loads a new map
+	 * 
+	 * @param map
 	 */
-	public GameServer(Console console, Leola runtime, boolean isLocal) throws Exception  {
-		this.console = console;
-		this.runtime = runtime;		
-		this.isLocal = isLocal;
-				
-		this.random = new Random();
-		this.config = new Config("./seventh/server_config.leola", "server_config", runtime);
-		try {
-			this.serverName = this.config.setIfNull("name", "Seventh Server").toString();
-			if(this.config.has("map_list")) {
-				LeoArray mapList = this.config.get("map_list").as();
-				List<String> maps = new ArrayList<String>(mapList.size());
-				for(LeoObject m : mapList) {
-					maps.add(m.toString());
-				}
-				this.mapCycle = new MapCycle(maps);
-			}
-		}
-		catch(Exception e) {
-			console.println("*** Unable to parse configuration file: " + config + " because of: " + e);
-			
-		}
-						
-		this.config.setIfNull("sv_maxscore", Leola.toLeoObject(50));
-		this.config.setIfNull("sv_matchtime", Leola.toLeoObject(20));
-		this.config.setIfNull("sv_gametype", Leola.toLeoObject("tdm"));
-		
-		this.rconpassword = this.config.getString("rcon_password");
-		
-		if(this.mapCycle==null) {
-			this.mapCycle = new MapCycle(Arrays.asList("./seventh/maps/tdm_0.json"));
-		}
-		
-		this.server = new HareNetServer(this.config.getNetConfig());
-
-		this.protocolListener = new ServerProtocolListener(this);
-		this.server.addConnectionListener(this.protocolListener);
-//		this.server.addConnectionListener(new LagConnectionListener(125, 205, protocolListener));
-		
-		this.serverName = "The Seventh Server";
-		
-		// load some helper functions for objective scripts
-		this.runtime.loadStatics(LeolaScriptLibrary.class);
-		
-		setupServerCommands(console);
-		
-		this.sm = new StateMachine<State>();
-		changeMap(this.mapCycle.getCurrentMap());
-		
-		this.registration = new MasterServerRegistration(this);
-		this.registration.start();
-	}
-
-
 	private void changeMap(String map) {
-		if(!map.toLowerCase().endsWith(".json")) {
-			map += ".json";
-		}
-		
+		map = MapList.addFileExtension(map);		
 		this.currentMap = map;
 		this.sm.changeState(new LoadingState(this, map));
 	}
 	
+	
+	/**
+	 * Setups server side console commands
+	 * 
+	 * @param console
+	 */
 	private void setupServerCommands(Console console) {
 		CommonCommands.addCommonCommands(console);
 		
@@ -302,10 +379,10 @@ public class GameServer {
 						
 						if(args.length > 1) {							
 							String team = args[1].trim().toLowerCase();
-							if(team.startsWith("allies")) {
+							if(team.startsWith(Team.ALLIED_TEAM_NAME.toLowerCase())) {
 								game.playerSwitchedTeam(id, Team.ALLIED_TEAM);
 							}
-							else if(team.startsWith("axis")) {
+							else if(team.startsWith(Team.AXIS_TEAM_NAME.toLowerCase())) {
 								game.playerSwitchedTeam(id, Team.AXIS_TEAM);
 							}
 						}
@@ -546,7 +623,7 @@ public class GameServer {
 		return this.config.getInt("sv_matchtime") * 60 * 1000L;
 	}
 	
-	public void setMatchTime(int matchTime) {
+	public void setMatchTime(long matchTime) {
 		this.config.set(matchTime, "sv_matchtime");
 	}
 	
@@ -559,6 +636,23 @@ public class GameServer {
 	
 	public void setMaxScore(int maxscore) {
 		this.config.set(maxscore, "sv_maxscore");
+	}
+	
+	
+	/**
+	 * @return the max number of players allowed on this server
+	 */
+	public int getMaxPlayers() {
+		return this.config.getInt("sv_maxplayers");
+	}
+	
+	/**
+	 * Sets the max number of players
+	 * 
+	 * @param maxPlayers
+	 */
+	public void setMaxPlayers(int maxPlayers) {
+		this.config.set(maxPlayers, "sv_maxplayers");
 	}
 	
 	/**
@@ -653,6 +747,7 @@ public class GameServer {
 	
 	/**
 	 * Starts the server listening on the supplied port
+	 * 
 	 * @param port
 	 * @throws Exception
 	 */
@@ -722,6 +817,12 @@ public class GameServer {
 		}
 	}
 	
+	
+	/**
+	 * Executes a server frame
+	 * 
+	 * @param timeStep
+	 */
 	private void serverFrame(TimeStep timeStep) {	
 		if(!this.isLocal) {
 			this.console.update(timeStep);

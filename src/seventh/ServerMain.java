@@ -41,7 +41,7 @@ public class ServerMain {
 					int port = DEFAULT_PORT;
 					
 					Leola runtime = Scripting.newRuntime();
-					GameServer server = new GameServer(console, runtime, false );
+					GameServer server = new GameServer(console, runtime);
 					if (args.length > 0) {
 						try {
 							port =  Integer.parseInt(args[0]);
@@ -67,7 +67,7 @@ public class ServerMain {
 		else {
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					new ConsoleFrame("Palisma Server", BANNER, console);
+					new ConsoleFrame("The Seventh Server", BANNER, console);
 					gameThread.start();
 				}
 			});

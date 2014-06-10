@@ -129,6 +129,13 @@ public class Host {
 	}
 	
 	/**
+	 * @return the {@link Log} instance
+	 */
+	public Log getLogger() {
+		return config.getLog();
+	}
+	
+	/**
 	 * Reserves the next available ID slot.
 	 * 
 	 * @param id the ID which is reserved.
