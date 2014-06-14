@@ -529,35 +529,7 @@ public class InGameScreen implements Screen {
 		this.teamSayTxtBxView.update(timeStep);
 		
 		// DEBUG
-		if(inputs.isKeyDown(Keys.ALT_LEFT)) {
-			
-//			if( inputs.isKeyDown(Keys.P)) {
-//				Art.reload();
-//				debugReloadPlayerModel();
-//				game.debugReloadGfx();
-//			}
-			
-			isDebugMode = true;
-			
-			
-//			if(this.debugEffects.size() < 5) {
-//				this.debugEffects.clearEffects();
-//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAlliedBackDeathAnim(), new Vector2f(88, 92), -90, false));
-//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAlliedFrontDeathAnim(), new Vector2f(188, 92), -90, false));
-//								
-//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAxisBackDeathAnim(), new Vector2f(88, 242), -90, false));
-//				this.debugEffects.addEffect(new DebugAnimationEffect(Art.newAxisFrontDeathAnim(), new Vector2f(188, 242), -90, false));
-//				
-//
-//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.alliedCharacterModel.getFrame(1), new Vector2f(80,80), 90, 0x6fffffff));
-//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.alliedCharacterModel.getFrame(1), new Vector2f(180,80), 90, 0x6fffffff));
-//				
-//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.axisCharacterModel.getFrame(1), new Vector2f(80,230), 90, 0x6fffffff));
-//				this.debugEffects.addEffect(new DebugSpriteEffect(Art.axisCharacterModel.getFrame(1), new Vector2f(180,230), 90, 0x6fffffff));
-//			}
-		}
-		else isDebugMode = false;
-		// ~~~~
+		isDebugMode = inputs.isKeyDown(Keys.ALT_LEFT);
 		
 		if(!dialog.isOpen() && (sayTxtBx.isDisabled()&&teamSayTxtBx.isDisabled()) ) {
 		

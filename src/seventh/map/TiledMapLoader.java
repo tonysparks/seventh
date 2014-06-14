@@ -13,6 +13,7 @@ import leola.vm.types.LeoObject;
 import leola.vm.types.LeoString;
 import seventh.client.gfx.TextureUtil;
 import seventh.map.Map.SceneDef;
+import seventh.map.Tile.SurfaceType;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -45,14 +46,15 @@ public class TiledMapLoader implements MapLoader {
 		def.setTileHeight(tileHeight);
 		
 		TilesetAtlas atlas = null;
-		
+		SurfaceType[][] surfaces = new SurfaceType[height][width];
+		def.setSurfaces(surfaces);
 		
 		LeoArray tilesets = map.getByString("tilesets").as();
 		atlas = parseTilesets(tilesets, loadAssets);
 		
 		
 		LeoArray layers = map.getByString("layers").as();
-		List<Layer> mapLayers = parseLayers(layers, atlas, loadAssets, tileWidth, tileHeight);
+		List<Layer> mapLayers = parseLayers(layers, atlas, loadAssets, tileWidth, tileHeight, surfaces);
 		
 		List<Layer> backgroundLayers = new ArrayList<Layer>();
 		List<Layer> foregroundLayers = new ArrayList<Layer>();
@@ -75,7 +77,29 @@ public class TiledMapLoader implements MapLoader {
 		return theMap;
 	}
 	
-	private List<Layer> parseLayers(LeoArray layers,TilesetAtlas atlas, boolean loadImages, int tileWidth, int tileHeight) throws Exception {
+	/**
+	 * Parses the {@link SurfaceType}s layer
+	 * @param surfaces
+	 * @param data
+	 * @param width
+	 * @param tileWidth
+	 * @param tileHeight
+	 */
+	private void parseSurfaces(SurfaceType[][] surfaces, TilesetAtlas atlas, LeoArray data, int width, int tileWidth, int tileHeight) {
+		int y = -1; // account for zero
+		for(int x = 0; x < data.size(); x++) {
+						
+			if(x % width == 0) {									
+				y++;
+			}
+			
+			int tileId = data.get(x).asInt();
+			int surfaceId = atlas.getTileId(tileId)-1; /* minus one to get back to zero based */
+			surfaces[y][x % width] = SurfaceType.fromId(surfaceId);
+		}
+	}		
+	
+	private List<Layer> parseLayers(LeoArray layers,TilesetAtlas atlas, boolean loadImages, int tileWidth, int tileHeight, SurfaceType[][] surfaces) throws Exception {
 		
 		List<Layer> mapLayers = new ArrayList<Layer>(layers.size());
 		
@@ -84,9 +108,13 @@ public class TiledMapLoader implements MapLoader {
 			LeoMap layer = l.as();
 			
 			LeoArray data = layer.getByString("data").as();
+			int width = layer.getInt("width");	
+			
 			boolean isCollidable = false;
 			boolean isForeground = false;
 			boolean isProperty = false;
+			boolean isSurfaceTypes = false;
+			
 			int heightMask = 0;
 			if ( layer.has(LeoString.valueOf("properties"))) {
 				LeoMap properties = layer.getByString("properties").as();			
@@ -101,16 +129,24 @@ public class TiledMapLoader implements MapLoader {
 				if(properties.containsKeyByString("lights")) {
 					isProperty = true;
 				}
+				
+				if(properties.containsKeyByString("surfaces")) {
+					isSurfaceTypes = true;
+				}
+								
 			}
+			
+			if(isSurfaceTypes) {
+				parseSurfaces(surfaces, atlas, data, width, tileWidth, tileHeight);
+				continue;
+			}
+			
 			Layer mapLayer = new Layer(isCollidable, isForeground, isProperty, index, heightMask);
 			mapLayers.add(mapLayer);
 			
 			if(!isForeground) {
 				index++;
-			}
-			
-			int width = layer.getInt("width");					
-			
+			}													
 			
 			List<Tile> row = null;
 			
@@ -136,7 +172,7 @@ public class TiledMapLoader implements MapLoader {
 						}
 												
 						tile.setPosition( (x%width) * tileWidth, y);
-						tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
+//						tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
 						
 						if(isCollidable) {
 							int collisionId = atlas.getTileId(tileId);
@@ -153,7 +189,7 @@ public class TiledMapLoader implements MapLoader {
 					if(tileId != 0) {
 						Tile tile = new Tile(null, tileWidth,tileHeight);
 						tile.setPosition( (x%width) * tileWidth, y);
-						tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
+//						tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
 						
 						if(isCollidable) {
 							int collisionId = atlas.getTileId(tileId);

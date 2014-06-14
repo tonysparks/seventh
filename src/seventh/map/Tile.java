@@ -7,7 +7,9 @@ package seventh.map;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
+import seventh.math.Circle;
 import seventh.math.Rectangle;
+import seventh.math.Triangle;
 import seventh.shared.TimeStep;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,16 +29,23 @@ public class Tile implements Renderable {
 	public static final int TILE_EAST_INVISIBLE = 8;
 	public static final int TILE_WEST_INVISIBLE = 16;
 	
+	
+	/**
+	 * The type of surface the world {@link Tile} has.
+	 * 
+	 * @author Tony
+	 *
+	 */
 	public static enum SurfaceType {
+		UNKNOWN,
+		
 		CEMENT,
 		METAL,
 		WOOD,
 		GRASS,
 		DIRT,
 		SAND,
-		WATER,
-		
-		UNKNOWN,
+		WATER,		
 		;
 		
 		public static SurfaceType fromId(int id) {
@@ -729,6 +738,135 @@ public class Tile implements Renderable {
 				
 			}
 		},
+		
+		UPPER_LEFT_TRIANGLE(26) {
+			
+			@Override
+			public boolean pointCollide(Rectangle a, int x, int y) {
+				float x0 = a.x;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y;
+				float x2 = a.x;
+				float y2 = a.y + a.height;
+								
+				return Triangle.pointIntersectsTriangle(x, y, x0, y0, x1, y1, x2, y2);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, Rectangle b) {
+				float x0 = a.x;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y;
+				float x2 = a.x;
+				float y2 = a.y + a.height;
+								
+				return Triangle.rectangleIntersectsTriangle(b, x0, y0, x1, y1, x2, y2);
+			}
+		},
+		
+		UPPER_RIGHT_TRIANGLE(27) {
+			
+			@Override
+			public boolean pointCollide(Rectangle a, int x, int y) {
+				float x0 = a.x;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y;
+				float x2 = a.x + a.width;
+				float y2 = a.y + a.height;
+								
+				return Triangle.pointIntersectsTriangle(x, y, x0, y0, x1, y1, x2, y2);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, Rectangle b) {
+				float x0 = a.x;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y;
+				float x2 = a.x + a.width;
+				float y2 = a.y + a.height;
+				
+				return Triangle.rectangleIntersectsTriangle(b, x0, y0, x1, y1, x2, y2);
+			}
+		},
+		
+		BOTTOM_LEFT_TRIANGLE(28) {
+			
+			@Override
+			public boolean pointCollide(Rectangle a, int x, int y) {
+				float x0 = a.x;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y + a.height;
+				float x2 = a.x;
+				float y2 = a.y + a.height;
+								
+				return Triangle.pointIntersectsTriangle(x, y, x0, y0, x1, y1, x2, y2);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, Rectangle b) {
+				float x0 = a.x;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y + a.height;
+				float x2 = a.x;
+				float y2 = a.y + a.height;
+				
+				return Triangle.rectangleIntersectsTriangle(b, x0, y0, x1, y1, x2, y2);
+			}
+		},
+		
+		BOTTOM_RIGHT_TRIANGLE(29) {
+			
+			@Override
+			public boolean pointCollide(Rectangle a, int x, int y) {
+				float x0 = a.x + a.width;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y + a.height;
+				float x2 = a.x;
+				float y2 = a.y + a.height;
+								
+				return Triangle.pointIntersectsTriangle(x, y, x0, y0, x1, y1, x2, y2);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, Rectangle b) {
+				float x0 = a.x + a.width;
+				float y0 = a.y;
+				float x1 = a.x + a.width;
+				float y1 = a.y + a.height;
+				float x2 = a.x;
+				float y2 = a.y + a.height;
+				
+				return Triangle.rectangleIntersectsTriangle(b, x0, y0, x1, y1, x2, y2);
+			}
+		},
+		
+		CENTER_CIRCLE(30) {
+			
+			@Override
+			public boolean pointCollide(Rectangle a, int x, int y) {
+				float circleX = a.x + a.width/2;
+				float circleY = a.y + a.height/2;
+				float radius = 16f;
+								
+				return Circle.circleContainsPoint(circleX, circleY, radius, x, y);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, Rectangle b) {
+				float circleX = a.x + a.width/2;
+				float circleY = a.y + a.height/2;
+				float radius = 16f;
+								
+				return Circle.circleIntersectsRect(circleX, circleY, radius, b);
+			}
+		}
 		
 		;
 		

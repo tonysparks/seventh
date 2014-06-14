@@ -24,6 +24,7 @@ import seventh.game.weapons.Thompson;
 import seventh.game.weapons.Weapon;
 import seventh.map.Map;
 import seventh.map.Tile;
+import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Geom;
@@ -467,9 +468,9 @@ public class PlayerEntity extends Entity implements Controllable {
 				int x = (int)cpos.x;
 				int y = (int)cpos.y;
 				
-				Tile tile = game.getMap().getWorldTile(0, x, y);
-				if(tile != null) {
-					game.emitSound(getId(), SurfaceTypeToSoundType.toSoundType(tile.getSurfaceType()) , cpos);
+				SurfaceType surface = game.getMap().getSurfaceTypeByWorld(x, y);
+				if(surface != null) {
+					game.emitSound(getId(), SurfaceTypeToSoundType.toSurfaceSoundType(surface) , cpos);
 				}
 				if(currentState == State.SPRINTING) {
 					if(stamina > 0) {

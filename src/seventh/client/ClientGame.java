@@ -431,17 +431,17 @@ public class ClientGame {
 		int debugColor = 0xa300aa00;
 		canvas.drawRect( (int)(entity.bounds.x-cameraPos.x), (int)(entity.bounds.y-cameraPos.y)
 				   ,entity.bounds.width, entity.bounds.height, debugColor);
-		
-		Vector2f center = entity.getCenterPos();				
-		Tile tile = map.getWorldTile(0, (int)center.x, (int)center.y);
-		if(tile != null) {
-			canvas.fillRect(tile.getX()-(int)cameraPos.x, tile.getY()-(int)cameraPos.y, tile.getWidth(), tile.getHeight(), debugColor);
-			canvas.fillRect(tile.getX()-(int)cameraPos.x, tile.getY()-(int)cameraPos.y, 2, 2, 0xff00ff00);
-			canvas.drawString(center + " : (" + tile.getX() + "," + tile.getY() + ")"
-					, (int)center.x-(int)cameraPos.x-20, (int)center.y-(int)cameraPos.y+50, debugColor);
-		}
-		
-		canvas.fillRect((int)center.x-(int)cameraPos.x, (int)center.y-(int)cameraPos.y, 2, 2, 0xff00ff00);
+//		
+//		Vector2f center = entity.getCenterPos();				
+//		Tile tile = map.getWorldTile(0, (int)center.x, (int)center.y);
+//		if(tile != null) {
+//			canvas.fillRect(tile.getX()-(int)cameraPos.x, tile.getY()-(int)cameraPos.y, tile.getWidth(), tile.getHeight(), debugColor);
+//			canvas.fillRect(tile.getX()-(int)cameraPos.x, tile.getY()-(int)cameraPos.y, 2, 2, 0xff00ff00);
+//			canvas.drawString(center + " : (" + tile.getX() + "," + tile.getY() + ")"
+//					, (int)center.x-(int)cameraPos.x-20, (int)center.y-(int)cameraPos.y+50, debugColor);
+//		}
+//		
+//		canvas.fillRect((int)center.x-(int)cameraPos.x, (int)center.y-(int)cameraPos.y, 2, 2, 0xff00ff00);
 	}
 	
 	

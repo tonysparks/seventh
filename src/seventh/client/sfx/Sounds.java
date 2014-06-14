@@ -276,7 +276,7 @@ public class Sounds {
 			config = cfg;
 			volume = config.getFloat("sound", "volume");
 			
-			SoundSystemConfig.setMasterGain(volume);			
+			SoundSystemConfig.setMasterGain(volume);					
 			SoundSystemConfig.setLogger(new SoundSystemLogger() {
 				@Override
 				public void errorMessage(String message, String error, int code) {
@@ -372,9 +372,6 @@ public class Sounds {
 	
 	private static Sound loadSound(String soundFile) {
 		try {
-//			Clip clip = AudioSystem.getClip();						
-//			Sound sound = new Sound(service, clip, new SoundData( AudioSystem.getAudioInputStream(new File(soundFile))));
-			
 			Sound sound = new Sound(soundFile, soundSystem);			
 			return sound;
 		}
@@ -659,7 +656,7 @@ public class Sounds {
 		case IMPACT_DEFAULT:
 			playFreeSound(impactDefault, x, y);
 			break;
-		case IMPACT_FOLIAGE:
+		case IMPACT_FOLIAGE:			
 			playFreeSound(impactFoliage, x, y);
 			break;
 		case IMPACT_WOOD:

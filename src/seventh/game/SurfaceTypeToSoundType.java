@@ -13,7 +13,12 @@ import seventh.map.Tile.SurfaceType;
  */
 public class SurfaceTypeToSoundType {
 
-	public static SoundType toSoundType(SurfaceType surface) {
+	/**
+	 * Converts the {@link SurfaceType} to a sound for foot steps
+	 * @param surface
+	 * @return the appropriate foot steps sound
+	 */
+	public static SoundType toSurfaceSoundType(SurfaceType surface) {
 		SoundType result = SoundType.SURFACE_NORMAL;
 		switch(surface) {
 			case CEMENT:
@@ -47,4 +52,43 @@ public class SurfaceTypeToSoundType {
 		return result;
 	}
 
+	
+	/**
+	 * Converts to the appropriate impact sound (for bullets)
+	 * @param surface
+	 * @return
+	 */
+	public static SoundType toImpactSoundType(SurfaceType surface) {
+		SoundType result = SoundType.IMPACT_DEFAULT;
+		switch(surface) {
+			case CEMENT:
+				result = SoundType.IMPACT_DEFAULT; // TODO
+				break;
+			case DIRT:
+				result = SoundType.IMPACT_DEFAULT;
+				break;
+			case GRASS:
+				result = SoundType.IMPACT_FOLIAGE;
+				break;
+			case METAL:
+				result = SoundType.IMPACT_METAL;
+				break;
+			case SAND:
+				result = SoundType.IMPACT_DEFAULT;
+				break;
+			case UNKNOWN:
+				result = SoundType.IMPACT_DEFAULT;
+				break;
+			case WATER:
+				result = SoundType.IMPACT_DEFAULT; // TODO
+				break;
+			case WOOD:
+				result = SoundType.IMPACT_WOOD;
+				break;
+			default:
+				break;
+			
+		}
+		return result;
+	}
 }

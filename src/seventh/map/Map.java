@@ -9,6 +9,7 @@ import java.util.List;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
+import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
@@ -64,6 +65,22 @@ public abstract interface Map extends Renderable {
 		 * Background Image
 		 */
 		private TextureRegion backgroundImage;
+		
+		private SurfaceType[][] surfaces;
+		
+		/**
+		 * @return the surfaces
+		 */
+		public SurfaceType[][] getSurfaces() {
+			return surfaces;
+		}
+		
+		/**
+		 * @param surfaces the surfaces to set
+		 */
+		public void setSurfaces(SurfaceType[][] surfaces) {
+			this.surfaces = surfaces;
+		}
 		
 		/**
 		 * @return the layers
@@ -220,6 +237,17 @@ public abstract interface Map extends Renderable {
 	public abstract Tile getTile( int layer, int x, int y );
 	
 	/**
+	 * Retrieve a Tile.
+	 * 
+	 * @param x - x array coordinate
+	 * @param y - y array coordinate
+	 * @return
+	 */
+	public abstract Tile getCollidableTile(int x, int y );
+	
+	
+	
+	/**
 	 * Get a {@link Tile} from world coordinates
 	 * @param layer
 	 * @param x - x in world coordinate space
@@ -227,6 +255,34 @@ public abstract interface Map extends Renderable {
 	 * @return
 	 */
 	public abstract Tile getWorldTile( int layer, int x, int y);
+	
+	
+	/**
+	 * Retrieves the {@link SurfaceType} given the supplied x and y index
+	 * @param x
+	 * @param y
+	 * @return the {@link SurfaceType}
+	 */
+	public abstract SurfaceType getSurfaceTypeByIndex(int x, int y);
+	
+	/**
+	 * Retrieves the {@link SurfaceType} given the supplied world coordinates
+	 * @param x
+	 * @param y
+	 * @return the {@link SurfaceType}
+	 */
+	public abstract SurfaceType getSurfaceTypeByWorld(int x, int y);
+
+	
+	/**
+	 * Get a {@link Tile} from world coordinates
+	 * 
+	 * @param x - x in world coordinate space
+	 * @param y - y in world coordinate space
+	 * @return
+	 */
+	public abstract Tile getWorldCollidableTile(int x, int y);
+	
 	
 	/**
 	 * Queries to see if there is a heightMask from world coordinates
@@ -393,3 +449,4 @@ public abstract interface Map extends Renderable {
 	 */
 	public abstract void setMask(List<Tile> tiles, int mask);
 }
+

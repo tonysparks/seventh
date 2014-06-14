@@ -27,6 +27,25 @@ public class Circle {
 		this.radius = radius;
 	}
 
+	public static boolean circleContainsPoint(Circle circle, Vector2f a) {
+		return circleContainsPoint(circle.origin.x, circle.origin.y, circle.radius, a.x, a.y);
+	}
+	
+	/**
+	 * Determines if the point is in the circle
+	 * 
+	 * @param cx
+	 * @param cy
+	 * @param radius
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public static boolean circleContainsPoint(float cx, float cy, float radius, float x, float y) {
+		float distSq = (cx - x) * 2 + (cy - y) * 2;
+		return distSq <= radius*radius;
+	}
+	
 	/**
 	 * Check and see if the circle is contained within the supplied rectangle.
 	 *
@@ -35,18 +54,27 @@ public class Circle {
 	 * @return
 	 */
 	public static boolean circleContainsRect(Circle circle, Rectangle rect) {
+		return circleContainsRect(circle.origin.x, circle.origin.y, circle.radius, rect);
+	}
+
+	/**
+	 * Check and see if the circle is contained within the supplied rectangle.
+	 *
+	 * @param circle
+	 * @param rect
+	 * @return
+	 */
+	public static boolean circleContainsRect(float cx, float cy, float radius, Rectangle rect) {
 		int x = rect.getX();
 		int y = rect.getY();
 		int width = rect.getWidth();
 		int height = rect.getHeight();
-
-        Vector2f lowerLeft  = new Vector2f( x, y+height );
-        Vector2f upperRight = new Vector2f( x+width, y );
-
+		
         // check if it is inside
-        return (circle.origin.x > lowerLeft.x && circle.origin.x < upperRight.x &&
-        	    circle.origin.y < lowerLeft.y && circle.origin.y > upperRight.y );
+        return (cx > x && cx < x+width &&
+        	    cy < y+height && cy > y );
 	}
+	
 
 	/**
 	 * Determine if the supplied {@link Circle} intersects the {@link Rectangle}.
@@ -56,30 +84,30 @@ public class Circle {
 	 * @return
 	 */
 	public static boolean circleIntersectsRect(Circle circle, Rectangle rect) {
-		int x = rect.getX();
-		int y = rect.getY();
-		int width = rect.getWidth();
-		int height = rect.getHeight();
+		return circleIntersectsRect(circle.origin.x, circle.origin.y, circle.radius, rect);
+	}
 
-        Vector2f lowerLeft  = new Vector2f( x, y+height );
-        Vector2f upperRight = new Vector2f( x+width, y );
-        Vector2f upperLeft  = new Vector2f( x, y );
-        Vector2f lowerRight = new Vector2f( x+width, y+height);
+	/**
+	 * Determine if the supplied {@link Circle} intersects the {@link Rectangle}.
+	 *
+	 * @param circle
+	 * @param rect
+	 * @return
+	 */
+	public static boolean circleIntersectsRect(float cx, float cy, float radius, Rectangle rect) {
+		float circleDistanceX = Math.abs(cx - rect.x);
+	    float circleDistanceY = Math.abs(cy - rect.y);
 
-        // check if it is inside
-        if (circle.origin.x > lowerLeft.x && circle.origin.x < upperRight.x &&
-        	circle.origin.y < lowerLeft.y && circle.origin.y > upperRight.y ) {
-            return true;
-        }
+	    if (circleDistanceX > (rect.width/2 + radius)) { return false; }
+	    if (circleDistanceY > (rect.height/2 + radius)) { return false; }
 
-        // check each line for intersection
-        if (circleIntersectsLine(circle, upperLeft, lowerLeft ) ) return true;
-        if (circleIntersectsLine(circle, lowerLeft, lowerRight) ) return true;
-        if (circleIntersectsLine(circle, upperLeft, upperRight) ) return true;
-        if (circleIntersectsLine(circle, upperRight, lowerRight) ) return true;
+	    if (circleDistanceX <= (rect.width/2)) { return true; } 
+	    if (circleDistanceY <= (rect.height/2)) { return true; }
 
-        // no collision
-        return false;
+	    float cornerDistanceSq = (circleDistanceX - rect.width/2) * (circleDistanceX - rect.width/2) +
+	                             (circleDistanceY - rect.height/2) * (circleDistanceY - rect.height/2);
+
+	    return (cornerDistanceSq <= (radius * radius));
 	}
 
 	/**

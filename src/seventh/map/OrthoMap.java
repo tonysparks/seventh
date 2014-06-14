@@ -13,6 +13,7 @@ import seventh.client.gfx.Canvas;
 import seventh.client.gfx.ShadeTiles;
 import seventh.graph.Edge;
 import seventh.graph.GraphNode;
+import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -72,6 +73,11 @@ public class OrthoMap implements Map {
 	 * Background image
 	 */
 	private TextureRegion backgroundImage;
+	
+	/**
+	 * The surfaces
+	 */
+	private SurfaceType[][] surfaces;
 	
 	private java.util.Map<Integer, TextureRegion> shadeTilesLookup;
 	
@@ -416,6 +422,8 @@ public class OrthoMap implements Map {
 		
 		this.collidableLayers=null;
 		
+		this.surfaces = null;
+		
 		this.mapOffset = null;
 		this.backgroundImage = null;
 		
@@ -485,7 +493,28 @@ public class OrthoMap implements Map {
 
 		return getTile(layer, wx, wy);
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#getWorldCollidableTile(int, int)
+	 */
+	@Override
+	public Tile getWorldCollidableTile(int x, int y) {
+		if(checkBounds(x, y)) {
+			return null;
+		}
+		
+//		Vector2f w = worldToTile(x, y);
+		int tileOffset_x = 0;//(x % this.tileWidth);
+		int wx = (tileOffset_x + x) / this.tileWidth;
 
+		int tileOffset_y = 0;//(y % this.tileHeight);
+		int wy = (tileOffset_y + y) / this.tileHeight;
+	
+		return getCollidableTile(wx, wy);
+	}
+	
+	
+	
 	/* (non-Javadoc)
 	 * @see leola.live.game.Map#hasHeightMask(int, int)
 	 */
@@ -522,6 +551,21 @@ public class OrthoMap implements Map {
 	
 	public Tile getTile(int layer, int x, int y) {
 		return this.backgroundLayers[layer].getRow(y).get(x);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#getCollidableTile(int, int)
+	 */
+	@Override
+	public Tile getCollidableTile(int x, int y) {
+		for(int i = 0; i < collidableLayers.length; i++) {
+			Tile tile = collidableLayers[i].getRow(y).get(x);
+			if(tile != null) {
+				return tile;
+			}
+		}
+		
+		return null;
 	}
 
 	/*
@@ -576,6 +620,8 @@ public class OrthoMap implements Map {
 //		for(Tile t : tiles) {
 //			t.setMask(1);
 //		}
+		
+		this.surfaces = info.getSurfaces();
 		
 		if(this.shadeTilesLookup != null) {
 			this.shadeTilesLookup = createShadeLookup(45);
@@ -1063,6 +1109,31 @@ public class OrthoMap implements Map {
 //				 , viewport.getHeight()
 //				 , camPos.x
 //				 , camPos.y);
+	}
+
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#getSurfaceTypeByIndex(int, int)
+	 */
+	@Override
+	public SurfaceType getSurfaceTypeByIndex(int x, int y) {
+		return this.surfaces[y][x];
+	}
+
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#getSurfaceTypeByWorld(int, int)
+	 */
+	@Override
+	public SurfaceType getSurfaceTypeByWorld(int x, int y) {
+		if(checkBounds(x, y)) {
+			return null;
+		}
+		
+		int tileOffset_x = 0;
+		int wx = (tileOffset_x + x) / this.tileWidth;
+
+		int tileOffset_y = 0;
+		int wy = (tileOffset_y + y) / this.tileHeight;
+		return this.surfaces[wy][wx];
 	}
 
 

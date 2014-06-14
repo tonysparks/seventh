@@ -6,10 +6,11 @@ package seventh.game.weapons;
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.SoundType;
+import seventh.game.SurfaceTypeToSoundType;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
 import seventh.map.Map;
-import seventh.map.Tile;
+import seventh.map.Tile.SurfaceType;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -130,29 +131,11 @@ public class Bullet extends Entity {
 	 * @param x
 	 * @param y
 	 */
-	protected void emitImpactSound(int x, int y) {
-		Tile tile = game.getMap().getWorldTile(0, x, y);
-		if(tile!=null) {
-			switch(tile.getSurfaceType()) {			
-				case GRASS:
-					game.emitSound(getId(), SoundType.IMPACT_FOLIAGE, getPos());
-					break;
-				case METAL:
-					game.emitSound(getId(), SoundType.IMPACT_METAL, getPos());
-					break;
-				
-				case WOOD:
-					game.emitSound(getId(), SoundType.IMPACT_WOOD, getPos());
-					break;
-				case CEMENT:
-				case DIRT:
-				case UNKNOWN:
-				case SAND:			
-				case WATER:				
-				default:
-					game.emitSound(getId(), SoundType.IMPACT_DEFAULT, getPos());
-					break;				
-			}			
+	protected void emitImpactSound(int x, int y) {		
+		SurfaceType surface = game.getMap().getSurfaceTypeByWorld(x,y);		
+		if(surface != null) {
+			SoundType sound = SurfaceTypeToSoundType.toImpactSoundType(surface);			
+			game.emitSound(getId(), sound, getPos());						
 		}
 		else {
 			game.emitSound(getId(), SoundType.IMPACT_DEFAULT, getPos());
@@ -166,7 +149,12 @@ public class Bullet extends Entity {
 	@Override
 	protected boolean collideX(int newX, int oldX) {
 		kill(this);
-		emitImpactSound(oldX, bounds.y);
+		
+		/* adjust so it offsets to the correct tile 
+		 * get the bullet direction and adjust to mid-tile
+		 */
+		int adjustX = (newX - oldX) * 12; 
+		emitImpactSound(newX + adjustX, bounds.y);
 		return true;
 	}
 	
@@ -176,7 +164,12 @@ public class Bullet extends Entity {
 	@Override
 	protected boolean collideY(int newY, int oldY) {
 		kill(this);
-		emitImpactSound(bounds.x, oldY);
+		
+		/* adjust so it offsets to the correct tile 
+		 * get the bullet direction and adjust to mid-tile
+		 */
+		int adjustY = (newY - oldY) * 12;
+		emitImpactSound(bounds.x, newY + adjustY);
 		return true;
 	}
 			
@@ -210,14 +203,13 @@ public class Bullet extends Entity {
 			do {		
 				
 				if(bounds.x != newX) {
-					if(dx==0) {
-//						System.out.println("x WHAT!");	
+					if(dx==0) {	
 						break;
 					}
 					
 					bounds.x += dx;
 					if( map.rectCollides(bounds, heightMask) ) {
-						isBlocked = collideX(newX, bounds.x-dx);
+						isBlocked = collideX(bounds.x, bounds.x-dx);
 						if(isBlocked) {
 							bounds.x -= dx;
 						}
@@ -227,13 +219,12 @@ public class Bullet extends Entity {
 				if(bounds.y != newY && !isBlocked) {
 
 					if(dy==0) {
-//						System.out.println("y WHAT!");
 						break;
 					}
 					
 					bounds.y += dy;
 					if( map.rectCollides(bounds, heightMask)) {
-						isBlocked = collideY(newY, bounds.y-dy);	
+						isBlocked = collideY(bounds.y, bounds.y-dy);	
 						if(isBlocked) {
 							bounds.y -= dy;
 						}

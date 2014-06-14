@@ -68,6 +68,25 @@ public class Line {
 
 	}
 	
+//	public static boolean lineIntersectsRect(float x0, float y0, float x1, float y1, Rectangle rect) {
+//		
+//		float l = rect.x;
+//		
+//		float d = x1 - x0;
+//		if(d==0) return false;
+//		
+//		float m = (y1 - y0) / (x1 - x0);
+//		float c = y0 - (m*x0);
+//		
+//		float topIntersection = 0f;
+//		float bottomIntersection = 0f;
+//		
+//		if(m>0) {
+//			topIntersection = (m*rect.x + c);
+//		}
+//		return false;
+//	}
+	
 	/**
 	 * Determine if a line intersects with a {@link Rectangle}.
 	 * 
