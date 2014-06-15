@@ -358,6 +358,27 @@ public class Widget {
 	
 	
 	/**
+	 * Fire a touch dragged event
+	 * 
+	 * @param mouseEvent
+	 * @param isPressed
+	 * @return true if the event was consumed
+	 */
+	protected boolean fireTouchDraggedEvent(int mx, int my, int btn) {
+		int size = this.inputListeners.size();
+		for(int i = 0; i < size; i++ ) {
+			Inputs l = this.inputListeners.get(i);
+						
+			/* is the event done with? */
+			if ( l.touchDragged(mx, my, btn) ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * @return the parent
 	 */
 	public Widget getParent() {
@@ -752,6 +773,23 @@ public class Widget {
 				Widget widget = this.globalWidgets.get(i);
 				if ( /*widget.hasFocus() &&*/ ! widget.isDisabled() ) {
 					if ( widget.fireMouseEvent(x, y, pointer, button, false) ) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		
+		/* (non-Javadoc)
+		 * @see seventh.client.Inputs#touchDragged(int, int, int)
+		 */
+		@Override
+		public boolean touchDragged(int x, int y, int pointer) {
+			int size = globalWidgets.size();
+			for(int i = 0; i < size; i++) {
+				Widget widget = this.globalWidgets.get(i);
+				if ( /*widget.hasFocus() &&*/ ! widget.isDisabled() ) {
+					if ( widget.fireTouchDraggedEvent(x, y, pointer) ) {
 						return true;
 					}
 				}
