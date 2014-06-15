@@ -113,7 +113,7 @@ public class SeventhGame implements ApplicationListener {
 
 		this.config = config;
 		LeoObject controls = this.config.get("controls");
-		this.keyMap = new KeyMap( (controls instanceof LeoMap) ? (LeoMap)controls : new LeoMap() );
+		this.keyMap = new KeyMap( (controls.isMap()) ? (LeoMap)controls : new LeoMap() );
 						
 		this.network = new Network(this.config, console);
 		
@@ -226,6 +226,27 @@ public class SeventhGame implements ApplicationListener {
 				pushScreen(new AnimationEditorScreen(SeventhGame.this));
 			}
 		});
+		
+		console.addCommand(new Command("mouse_sensitivity") {
+			
+			@Override
+			public void execute(Console console, String... args) {
+				seventh.client.gfx.Cursor cursor = uiManager.getCursor();
+				if(args.length==0) {
+					console.println(cursor.getMouseSensitivity());
+				}
+				else {
+					try {
+						float value = Float.parseFloat(args[0]);
+						cursor.setMouseSensitivity(value);
+					}
+					catch(NumberFormatException e) {
+						console.println("Must be a number between 0 and 1");
+					}
+				}
+				
+			}
+		});
 	}
 
 	/**
@@ -239,6 +260,9 @@ public class SeventhGame implements ApplicationListener {
 		}
 	
 		try {
+			/* make sure the mouse doesn't move off the screen */
+			Gdx.input.setCursorCatched(true);
+			
 			Cursor emptyCursor = null;
 			if (Mouse.isCreated()) {
 				int min = org.lwjgl.input.Cursor.getMinCursorSize();
@@ -621,6 +645,11 @@ public class SeventhGame implements ApplicationListener {
 	@Override
 	public void resume() {
 		setHWCursorVisible(false);
+		/* the mouse gets captured, so when we 
+		 * gain focus back, center the mouse so the 
+		 * user can find it
+		 */
+		getUiManager().getCursor().centerMouse();
 	}
 
 	/**

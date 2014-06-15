@@ -25,13 +25,17 @@ import seventh.ui.KeyInput;
 import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;
 import seventh.ui.Panel;
+import seventh.ui.Slider;
 import seventh.ui.TextBox;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.OnButtonClickedListener;
+import seventh.ui.events.OnSliderMovedListener;
+import seventh.ui.events.SliderMovedEvent;
 import seventh.ui.view.ButtonView;
 import seventh.ui.view.LabelView;
 import seventh.ui.view.PanelView;
+import seventh.ui.view.SliderView;
 import seventh.ui.view.TextBoxView;
 
 import com.badlogic.gdx.Gdx;
@@ -45,6 +49,11 @@ import com.badlogic.gdx.Input.Keys;
  *
  */
 public class OptionsScreen implements Screen {
+	
+	/**
+	 * Cached for performance reasons.
+	 */
+	private static final DisplayMode[] displayModes = Gdx.graphics.getDisplayModes();
 	
 	
 	private SeventhGame app;
@@ -66,10 +75,12 @@ public class OptionsScreen implements Screen {
 	
 	private int isKeyModifyOn;
 	
-	private DisplayMode mode;
+	private DisplayMode mode;	
 	private boolean isFullscreen;
 	private int displayModeIndex;
-			
+	
+	 
+	
 	/**
 	 * 
 	 */
@@ -225,9 +236,7 @@ public class OptionsScreen implements Screen {
 		
 		uiPos.y += yInc;
 		
-		Label mouseSensitivityLbl = new Label("Mouse Sensitivity: ");
-		final Label mouseSensitivityValueLbl = new Label("Mouse Sensitivity: ");
-		
+		Label mouseSensitivityLbl = new Label("Mouse Sensitivity: ");		
 //		mouseSensitivityLbl.setTheme(theme);
 		mouseSensitivityLbl.setBounds(new Rectangle(80, 20));
 		mouseSensitivityLbl.getBounds().x = 110;
@@ -240,57 +249,35 @@ public class OptionsScreen implements Screen {
 		optionsPanel.addWidget(mouseSensitivityLbl);
 		panelView.addElement(new LabelView(mouseSensitivityLbl));
 		
-		uiPos.x = 420;
-		uiPos.y += 10;
-		Button mouseMinusBtn = setupButton(uiPos, "-", false );
-		mouseMinusBtn.getBounds().width = 50;
-		mouseMinusBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+		uiPos.x = 300;
+		uiPos.y += 5;
+		
+		Slider mouseSensitivitySlider = new Slider();
+		mouseSensitivitySlider.setTheme(theme);
+		mouseSensitivitySlider.getBounds().setSize(100, 5);
+		mouseSensitivitySlider.getBounds().setLocation(uiPos);
+		// valid ranges from 0.5 to 2.0
+		int handlePos = (int)((uiManager.getCursor().getMouseSensitivity()/2f) * 100.0f);
+		mouseSensitivitySlider.moveHandle(handlePos);
+		mouseSensitivitySlider.addSliderMoveListener(new OnSliderMovedListener() {
+			
+			@Override
+			public void onSliderMoved(SliderMovedEvent event) {
+				Cursor cursor = uiManager.getCursor();
+				int value = event.getSlider().getIndex();
 				
-				@Override
-				public void onButtonClicked(ButtonEvent event) {
-					Cursor cursor = uiManager.getCursor();
-					float sensitivity = cursor.getMouseSensitivity();
-					sensitivity -= 0.01f;
-					if(sensitivity<=0.05f) {
-						sensitivity=0.05f;
-					}
-					
-					cursor.setMouseSensitivity(sensitivity);
-					mouseSensitivityValueLbl.setText( (int)(sensitivity*100) + "");
+				float sensitivity = value / 50f;
+				if(value <= 0) {
+					sensitivity = 0.5f;
 				}
-			});
+				cursor.setMouseSensitivity(sensitivity);
+			}
+		});
 		
+		optionsPanel.addWidget(mouseSensitivitySlider);
+		panelView.addElement(new SliderView(mouseSensitivitySlider));
 		
-		uiPos.x -= 90;
-		uiPos.y -= 10;
-		mouseSensitivityValueLbl.setBounds(new Rectangle(80, 20));
-		mouseSensitivityValueLbl.getBounds().x = (int)uiPos.x;
-		mouseSensitivityValueLbl.getBounds().y = (int)uiPos.y;
-		mouseSensitivityValueLbl.setTextAlignment(TextAlignment.LEFT);
-		mouseSensitivityValueLbl.setFont(theme.getSecondaryFontName());
-		mouseSensitivityValueLbl.setTextSize(18);
-		mouseSensitivityValueLbl.setText( (int)(uiManager.getCursor().getMouseSensitivity()*100) + "");
-		
-		optionsPanel.addWidget(mouseSensitivityValueLbl);
-		panelView.addElement(new LabelView(mouseSensitivityValueLbl));
-		
-		uiPos.x += 175;
-		uiPos.y += 10;
-		Button mousePlusBtn = setupButton(uiPos, "+", false );
-		mousePlusBtn.getBounds().width = 50;
-		mousePlusBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
-				
-				@Override
-				public void onButtonClicked(ButtonEvent event) {
-					Cursor cursor = uiManager.getCursor();
-					float sensitivity = cursor.getMouseSensitivity();
-					sensitivity += 0.01f;
-										
-					cursor.setMouseSensitivity(sensitivity);
-					mouseSensitivityValueLbl.setText( (int)(sensitivity*100) + "");
-				}
-			});
-		; uiPos.y += yInc;
+		uiPos.y += yInc;
 		
 		keyOverwriteLbl = new Label("Press any key");
 		keyOverwriteLbl.setTheme(theme);
@@ -323,10 +310,9 @@ public class OptionsScreen implements Screen {
 		resBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
-			public void onButtonClicked(ButtonEvent event) {
-				DisplayMode[] modes = Gdx.graphics.getDisplayModes();
-				displayModeIndex = (displayModeIndex + 1) % modes.length;
-				mode = modes[displayModeIndex];
+			public void onButtonClicked(ButtonEvent event) {				
+				displayModeIndex = (displayModeIndex + 1) % displayModes.length;
+				mode = displayModes[displayModeIndex];
 								
 				resBtn.setText("Resolution: '" +  mode.width+"x" + mode.height + "'");
 			}
@@ -366,26 +352,49 @@ public class OptionsScreen implements Screen {
 		soundLbl.setTextAlignment(TextAlignment.LEFT);
 		soundLbl.setFont(theme.getPrimaryFontName());
 		soundLbl.setTextSize(18);
+				
+		this.panelView.addElement(new LabelView(soundLbl));
+		
+		uiPos.x = app.getScreenWidth()/2 + startX - 25;
+		uiPos.y = bottomPanelY - 5;
+						
+		final Slider slider = new Slider();		
+		slider.setTheme(theme);
+		slider.getBounds().setSize(100, 5);
+		slider.getBounds().setLocation(uiPos);
+		slider.addSliderMoveListener(new OnSliderMovedListener() {
+			
+			@Override
+			public void onSliderMoved(SliderMovedEvent event) {
+				int value = event.getSlider().getIndex();					
+				Sounds.setVolume(value / 100.0f);
+			}
+		});
+		
+		int v = (int)(Sounds.getVolume() * 100.0f);
+		slider.moveHandle(v);
+		this.optionsPanel.addWidget(slider);
+		this.panelView.addElement(new SliderView(slider));
 		
 		uiPos.x = app.getScreenWidth()/2 + startX;
 		uiPos.y = bottomPanelY;
-		final Button sndBtn = setupButton(uiPos, "Volume: '" +  Sounds.getVolume() * 100 + "%'", false); uiPos.y += yInc;
+		
+		final Button sndBtn = setupButton(uiPos, "Volume: ", false); uiPos.y += yInc;
+		sndBtn.getBounds().width = 80;
 		sndBtn.getTextLabel().setForegroundColor(0xffffffff);
 		sndBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				int v = (int)(Sounds.getVolume() * 100.0f);
-				v += 10;
-				if(v>100) {
-					v = 0;
+				int value = slider.getIndex();
+				value += 10;
+				if(value > 100) {
+					value = 0;
 				}
-				Sounds.setVolume(v/100.0f);
-				sndBtn.setText("Volume: '" + v + "%'");
+				slider.moveHandle(value);
 			}
 		});
 		
-		this.panelView.addElement(new LabelView(soundLbl));
 	}
 
 	private void refreshConfigUI() {

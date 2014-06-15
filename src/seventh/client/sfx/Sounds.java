@@ -581,8 +581,8 @@ public class Sounds {
 			playFreeSound(mp40Reload, x, y);
 			break;			
 			
-		case SURFACE_GRASS:
-			playFreeSound(grassWalk, x, y);
+		case SURFACE_GRASS:			
+			playFreeSound(grassWalk, x, y);			
 			break;
 		case SURFACE_METAL:
 			playFreeSound(metalWalk, x, y);

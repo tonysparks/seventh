@@ -5,6 +5,7 @@ package seventh.client.gfx;
 
 import seventh.math.Vector2f;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -42,7 +43,26 @@ public class Cursor {
 	 * @param mouseSensitivity the mouseSensitivity to set
 	 */
 	public void setMouseSensitivity(float mouseSensitivity) {
-		this.mouseSensitivity = mouseSensitivity;		
+		this.mouseSensitivity = mouseSensitivity;	
+	}
+	
+	/**
+	 * Centers the mouse
+	 */
+	public void centerMouse() {
+		int x = Gdx.graphics.getWidth()/2;
+		int y = Gdx.graphics.getHeight()/2;	
+		moveNativeMouse(x, y);
+		moveTo(x,y);
+	}
+	
+	/**
+	 * Moves the native mouse
+	 * @param x
+	 * @param y
+	 */
+	private void moveNativeMouse(int x, int y) {
+		Gdx.input.setCursorPosition(x,y);
 	}
 	
 	/**
@@ -81,7 +101,7 @@ public class Cursor {
 			this.cursorPos.y -= deltaY;
 			
 			this.prevX = x;
-			this.prevY = y;			
+			this.prevY = y;						
 		}
 	}
 	

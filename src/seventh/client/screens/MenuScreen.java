@@ -8,6 +8,7 @@ import seventh.client.Inputs;
 import seventh.client.Screen;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Colors;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
@@ -257,6 +258,9 @@ public class MenuScreen implements Screen {
 		String message = "The Seventh";
 		int center = (canvas.getWidth() - canvas.getWidth(message)) / 2;
 		RenderFont.drawShadedString(canvas, message, center, canvas.getHeight()/6, fontColor);
+		
+		canvas.setFont(theme.getSecondaryFontName(), 12);
+		RenderFont.drawShadedString(canvas, SeventhGame.getVersion(), 5, canvas.getHeight()-5, Colors.setAlpha(fontColor, 150));
 		
 		this.uiManager.render(canvas);
 		

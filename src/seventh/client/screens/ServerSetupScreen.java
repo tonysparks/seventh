@@ -20,6 +20,7 @@ import seventh.server.GameServer.GameServerSettings;
 import seventh.shared.MapList;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
+import seventh.ui.Checkbox;
 import seventh.ui.KeyInput;
 import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;
@@ -27,8 +28,11 @@ import seventh.ui.Panel;
 import seventh.ui.TextBox;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
+import seventh.ui.events.CheckboxEvent;
 import seventh.ui.events.OnButtonClickedListener;
+import seventh.ui.events.OnCheckboxClickedListener;
 import seventh.ui.view.ButtonView;
+import seventh.ui.view.CheckboxView;
 import seventh.ui.view.LabelView;
 import seventh.ui.view.PanelView;
 import seventh.ui.view.TextBoxView;
@@ -195,18 +199,18 @@ public class ServerSetupScreen implements Screen {
 			
 		Label headerLbl = new Label("Game Setup");
 		headerLbl.setTheme(theme);
-		headerLbl.setBounds(new Rectangle(0,50, app.getScreenWidth(), 100));
+		headerLbl.setBounds(new Rectangle(0,50, app.getScreenWidth(), 80));
 		headerLbl.setTextAlignment(TextAlignment.CENTER);
 		headerLbl.setFont(theme.getPrimaryFontName());
 		headerLbl.setTextSize(54);
 				
 
 		uiPos.x = 10;
-		uiPos.y = 160;
+		uiPos.y = 120;
 		setupLabel(uiPos, "Settings", true);
 		
 		final int startX = 30;
-		final int startY = 200;
+		final int startY = 160;
 		final int yInc = 20;
 		final int xInc = 100;
 		
@@ -376,10 +380,28 @@ public class ServerSetupScreen implements Screen {
 				event.getButton().setText(gameSettings.gameType.name());
 			}
 		});
+		
+
+		uiPos.x = startX;
+		uiPos.y += yInc;
+		
+		Checkbox isDedicatedServer = new Checkbox(gameSettings.isDedicatedServer);
+		isDedicatedServer.setTheme(theme);				
+		isDedicatedServer.setLabelText("Public Server");
+		isDedicatedServer.getBounds().setLocation(uiPos);
+		isDedicatedServer.addCheckboxClickedListener(new OnCheckboxClickedListener() {
 			
+			@Override
+			public void onCheckboxClicked(CheckboxEvent event) {
+				gameSettings.isDedicatedServer = event.getCheckbox().isChecked();
+			}
+		});
+		
+		this.optionsPanel.addWidget(isDedicatedServer);
+		this.panelView.addElement(new CheckboxView(isDedicatedServer));
 		
 		uiPos.x = 10;
-		uiPos.y += yInc;
+		uiPos.y += yInc * 2;
 		setupLabel(uiPos, "Team", true);
 		
 		uiPos.x = startX + 100;
@@ -582,7 +604,8 @@ public class ServerSetupScreen implements Screen {
 	 */
 	@Override
 	public void exit() {
-		this.optionsPanel.hide();
+		this.optionsPanel.destroy();
+		this.panelView.clear();
 	}
 	
 	/* (non-Javadoc)
@@ -590,6 +613,8 @@ public class ServerSetupScreen implements Screen {
 	 */
 	@Override
 	public void destroy() {
+		this.optionsPanel.destroy();
+		this.panelView.clear();
 	}
 	
 	/* (non-Javadoc)
