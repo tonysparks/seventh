@@ -437,17 +437,19 @@ public class Terminal implements Updatable, Logger {
 	
 	/**
 	 * Toggles the console
+	 * @return true if opening, false if closing
 	 */
-	public void toggle() {		
+	public boolean toggle() {		
 		Sounds.playGlobalSound(Sounds.uiSelect);
 		
 		if(!this.isActive) {
 			this.isActive = true;
 			this.isOpening = true;			
+			return true;
 		}
-		else {
-			this.isCollapsing = true;
-		}
+		
+		this.isCollapsing = true;				
+		return false;
 	}
 	
 	/**

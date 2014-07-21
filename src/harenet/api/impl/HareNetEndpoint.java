@@ -16,8 +16,6 @@ import harenet.messages.UnReliableNetMessage;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import seventh.shared.Cons;
-
 /**
  * Harenet Endpoint implementation.
  * @author Tony
@@ -107,7 +105,7 @@ public abstract class HareNetEndpoint implements Endpoint {
 				update(this.pollRate);							
 			}
 			catch(Exception e) {
-				Cons.println("*** Error updating network: " + e);
+				this.netConfig.getLog().error("*** Error updating network: " + e);
 			}
 		}
 		

@@ -62,6 +62,7 @@ public abstract class Weapon {
 	protected int totalAmmo;
 	protected int spread;
 	protected int lineOfSight;
+	protected int bulletRange;
 	
 	private State state;
 	
@@ -99,6 +100,8 @@ public abstract class Weapon {
 		this.bulletSpawnDistance = 35.0f;
 		this.rocketSpawnDistance = 40.0f;
 		this.grenadeSpawnDistance = 50.0f;
+		
+		this.bulletRange = 5000;
 	}
 	
 	/**
@@ -120,6 +123,7 @@ public abstract class Weapon {
 			this.bulletsInClip = this.clipSize;
 					
 			this.spread = attributes.getInt("spread");
+			this.bulletRange = attributes.getInt("bullet_range");
 			return attributes;
 		}
 		
@@ -170,6 +174,13 @@ public abstract class Weapon {
 	
 	public int getOwnerId() {
 		return this.owner.getId();
+	}
+	
+	/**
+	 * @return the bulletRange
+	 */
+	public int getBulletRange() {
+		return bulletRange;
 	}
 	
 	/**
@@ -405,8 +416,9 @@ public abstract class Weapon {
 		
 		final int speed = 2000;
 		
-		Entity bullet = new Bullet(pos, speed, game, owner, vel, damage, isPiercing);
-						
+		Bullet bullet = new Bullet(pos, speed, game, owner, vel, damage, isPiercing);
+		bullet.setMaxDistance(getBulletRange());				
+		
 		game.addEntity(bullet);		
 		return bullet;
 	}

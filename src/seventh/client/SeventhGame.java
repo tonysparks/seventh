@@ -327,8 +327,8 @@ public class SeventhGame implements ApplicationListener {
 		this.inputs.addProcessor(new Inputs() {
 			@Override
 			public boolean keyUp(int key) {			
-				if(key == Keys.GRAVE) {
-					terminal.toggle();
+				if(key == Keys.GRAVE) {				
+					Gdx.input.setCursorCatched(!terminal.toggle());					
 					return true;
 				}
 				return false;
@@ -355,16 +355,6 @@ public class SeventhGame implements ApplicationListener {
 			Cons.println("*** Unable to load font: " + e);
 		}
 
-//		if(!reloadCurrentScreen()) {
-//			setScreen(new MenuScreen(this));	
-//		}
-		
-//		if(this.screenStack.isEmpty())  {
-//			setScreen(new MenuScreen(this));
-//		}
-//		else {
-//			popScreen();
-//		}
 		setHWCursorVisible(false);
 	}
 	

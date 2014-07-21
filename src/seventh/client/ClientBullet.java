@@ -46,12 +46,17 @@ public class ClientBullet extends ClientEntity {
 				
 				Vector2f pos = me.getCenterPos();
 				Vector2f.Vector2fMA(pos, vel, 5.0f, pos);
+//				
+//				boolean hitWall = game.doesCollide(pos, 32, 32);
+//				
+//				if(hitWall) {
+//					game.addBackgroundEffect(new BulletImpactEmitter(pos, vel, 200, 0, false));
+//				}
 				
-				boolean hitWall = game.doesCollide(pos, 32, 32);
-				
-				if(hitWall) {
+				if(!game.doesEntityTouchOther(me)) {
 					game.addBackgroundEffect(new BulletImpactEmitter(pos, vel, 200, 0, false));
 				}
+				
 			}
 		});
 	}

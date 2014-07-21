@@ -1125,6 +1125,32 @@ public class ClientGame {
 		return false;
 	}
 	
+	
+	/**
+	 * Determines if the supplied entity touches any other entities.
+	 * 
+	 * NOTE: This isn't entirely accurate measurement because entities positions
+	 * are only updated if they are within the clients visible view port.
+	 * It is very possible for this function to return a false positive.
+	 * 
+	 * @param entity
+	 * @return true if the supplied entity touches another entity
+	 */
+	public boolean doesEntityTouchOther(ClientEntity entity) {
+		for(int i = 0; i < this.entityList.size(); i++) {
+			ClientEntity other = this.entityList.get(i);
+			if(other != null && other != entity) {
+				if(entity.isAlive()) {
+					if(entity.touches(other)) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Cleans up resources
 	 */

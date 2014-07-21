@@ -66,6 +66,7 @@ public class Player implements PlayerInfo {
 	public Player(int id, boolean isBot, boolean isDummy, String name) {
 		this.id = id;		
 		this.isBot = isBot;
+		this.isDummy = isDummy;
 		this.name = name;
 		this.joinTime = System.currentTimeMillis();
 		this.stats = new NetPlayerStat();

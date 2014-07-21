@@ -280,6 +280,7 @@ public abstract class ClientEntity implements Renderable {
 	public long getLastUpdate() {
 		return lastUpdate;
 	}
+	
 
 	/**
 	 * @return the events
@@ -302,6 +303,15 @@ public abstract class ClientEntity implements Renderable {
 	 */
 	public boolean killIfOutdated(long gameClock) {
 		return (gameClock - lastUpdate) > 2000;
+	}
+	
+	/**
+	 * Determines if this entity touches another entity
+	 * @param other
+	 * @return true if both entities touch
+	 */
+	public boolean touches(ClientEntity other) {
+		return this.bounds.intersects(other.getBounds());
 	}
 	
 }

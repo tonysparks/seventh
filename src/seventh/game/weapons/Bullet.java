@@ -27,6 +27,7 @@ public class Bullet extends Entity {
 	
 	private NetBullet netBullet;
 	private int ownerHeightMask;
+	private int maxDistance;
 	
 	private boolean piercing;
 	private Entity lastEntityTouched;
@@ -95,6 +96,26 @@ public class Bullet extends Entity {
 		
 		this.ownerHeightMask = owner.getHeightMask();
 		this.piercing = isPiercing;
+		
+		this.maxDistance = 5000;
+	}
+	
+	/**
+	 * @return the maxDistance
+	 */
+	public int getMaxDistance() {
+		return maxDistance;
+	}
+	
+	/**
+	 * Sets the max distance
+	 * @param maxDistance
+	 */
+	public void setMaxDistance(int maxDistance) {
+		/* adds a little bit of a fuzzy distance so that the bullets don't
+		 * all destroy equally
+		 */
+		this.maxDistance = maxDistance + game.getRandom().nextInt(64);
 	}
 	
 	/**
@@ -248,6 +269,16 @@ public class Bullet extends Entity {
 						break;
 					}
 				}
+				
+				/* if this has traveled the max distance, kill it */
+				delta.set(bounds.x, bounds.y);
+				float distanceTraveledSq = Vector2f.Vector2fDistanceSq(origin, delta);
+				int maxDistance = getMaxDistance();
+				if(distanceTraveledSq > (maxDistance*maxDistance) ) {					
+					kill(this);
+					break;
+				}
+				
 			} while(!isBlocked && (bounds.x != newX || bounds.y != newY));
 		}
 		else {
@@ -256,8 +287,7 @@ public class Bullet extends Entity {
 			}
 		}
 		
-		getPos().set(bounds.x, bounds.y);
-			
+		getPos().set(bounds.x, bounds.y);		
 		
 		return isBlocked;
 	}
