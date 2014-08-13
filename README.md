@@ -8,6 +8,7 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
 * 9 different weapons
 * Melee
 * Grenades
+* Bots
 * Multiplayer and Single player (Single player vs. Bots)
 
 ##TODO##
@@ -19,7 +20,7 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
 * Destructable terrain
 * Update HUD
 * Tweak game design
-
+* Add more intelligence to Bots
 
 ##Technical Stuff##
 * Custom built reliable messaging protocol over UDP
