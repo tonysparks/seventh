@@ -110,7 +110,7 @@ public abstract class Weapon {
 	 * @return the attributes if available, otherwise null
 	 */
 	protected LeoMap applyScriptAttributes(String weaponName) {	
-		Config config = game.getConfig();
+		Config config = game.getConfig().getConfig();
 				
 		LeoObject values = config.get("weapons", weaponName);
 		if(values!=null&&values.isMap()) {

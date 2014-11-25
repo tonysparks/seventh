@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import seventh.shared.Command;
-import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.TimeStep;
@@ -33,7 +32,7 @@ public class Network {
 	 * @param config
 	 * @param console
 	 */
-	public Network(Config config, Console console) {
+	public Network(ClientSeventhConfig config, Console console) {
 		this.client = new HareNetClient(config.getNetConfig());
 		console.addCommand(new Command("netstat") {
 			/* (non-Javadoc)

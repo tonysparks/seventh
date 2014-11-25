@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import seventh.client.ClientSeventhConfig;
 import seventh.client.SeventhGame;
+import seventh.client.VideoConfig;
 import seventh.shared.Config;
 
 import com.badlogic.gdx.Graphics.DisplayMode;
@@ -33,9 +35,9 @@ public class ClientMain {
 	 * @return the client configuration file
 	 * @throws Exception
 	 */
-	private static Config loadConfig() throws Exception {
+	private static ClientSeventhConfig loadConfig() throws Exception {
 		Config config = new Config(CLIENT_CFG_PATH, "client_config");
-		return config;
+		return new ClientSeventhConfig(config);
 	}
 	
 	
@@ -45,13 +47,12 @@ public class ClientMain {
 	 * @return the best display mode
 	 * @throws Exception
 	 */
-	private static DisplayMode findBestDimensions(Config config) throws Exception {
+	private static DisplayMode findBestDimensions(VideoConfig config) throws Exception {
 		
-		if( config.getBool("video", "width") && 
-		    config.getBool("video", "height")) {
+		if(config.isPresent()) {
 			
-			int width = config.getInt("video", "width");
-			int height = config.getInt("video", "height");
+			int width = config.getWidth();
+			int height = config.getHeight();
 			
 			DisplayMode[] modes = LwjglApplicationConfiguration.getDisplayModes();
 			for(DisplayMode mode : modes) {
@@ -91,7 +92,7 @@ public class ClientMain {
 	 */
 	public static void main(String[] args) throws Exception {
 		
-		Config config = null;
+		ClientSeventhConfig config = null;
 		try {
 			
 			/*
@@ -109,18 +110,20 @@ public class ClientMain {
 			});
 			
 			config = loadConfig();
-			DisplayMode displayMode = findBestDimensions(config);
+			VideoConfig vConfig = config.getVideo();
+			DisplayMode displayMode = findBestDimensions(vConfig);
 			
 			LwjglApplicationConfiguration.disableAudio = true;			
 			LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 			
 			cfg.setFromDisplayMode(displayMode);
-			cfg.fullscreen = config.getBool("video", "fullscreen");
+			cfg.fullscreen = vConfig.isFullscreen();
 			cfg.title = "The Seventh " + SeventhGame.getVersion();
 			cfg.forceExit = true;
 			cfg.resizable = false;
 			cfg.useGL20 = true;			
-			
+			cfg.vSyncEnabled = vConfig.isVsync();
+						
 			if(!cfg.fullscreen) {
 				cfg.width = 1024;
 				cfg.height = 768;

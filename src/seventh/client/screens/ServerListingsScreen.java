@@ -22,7 +22,7 @@ import seventh.game.type.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
-import seventh.shared.MasterServerApi;
+import seventh.shared.MasterServerClient;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.Label;
@@ -267,7 +267,7 @@ public class ServerListingsScreen implements Screen {
 			
 			@Override
 			public void run() {
-				MasterServerApi api = new MasterServerApi(app.getConfig());
+				MasterServerClient api = new MasterServerClient(app.getConfig().getMasterServerConfig());
 				try {
 					LeoObject result = api.getServerListings(null);					
 					if(LeoObject.isTrue(result)) {

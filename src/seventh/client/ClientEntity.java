@@ -20,7 +20,7 @@ public abstract class ClientEntity implements Renderable {
 	protected int id;
 	
 	protected ClientGame game;
-	protected Vector2f pos, facing, centerPos;
+	protected Vector2f pos, facing, centerPos, movementDir;
 	protected Rectangle bounds;
 	protected float orientation;
 		
@@ -67,8 +67,11 @@ public abstract class ClientEntity implements Renderable {
 		this.pos = pos;
 //		this.pos = new Vector2f();		
 		this.facing = new Vector2f();
-		this.bounds = new Rectangle();
 		this.centerPos = new Vector2f();
+		this.movementDir = new Vector2f();
+		
+		this.bounds = new Rectangle();
+		
 		this.isAlive = true;
 //		this.pos.set(pos);
 	}
@@ -210,6 +213,11 @@ public abstract class ClientEntity implements Renderable {
 			
 			this.bounds.setLocation(pos);
 			
+			/* calculate movement direction */
+			this.movementDir.x = nextState.posX - prevState.posX;
+			this.movementDir.y = nextState.posY - prevState.posY;
+			
+			
 			//if( Math.abs(prevState.orientation - nextState.orientation) > (Math.PI/2))
 			if( Math.abs(prevState.orientation - nextState.orientation) > (30))
 			{
@@ -223,6 +231,16 @@ public abstract class ClientEntity implements Renderable {
 		}
 	}
 	
+	/**
+	 * @return the movementDir
+	 */
+	public Vector2f getMovementDir() {
+		return movementDir;
+	}
+	
+	/**
+	 * @return the previous position
+	 */
 	public Vector2f getPrevPos() {
 		return this.pos;
 	}

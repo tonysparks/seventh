@@ -53,6 +53,14 @@ public class Art {
 	public static  Model legsModel = null;	
 	public static  Model alliedCharacterModel = null;
 	public static  Model axisCharacterModel = null;
+	
+	public static Model alliedPositionModel = null;
+	public static Model axisPositionModel = null;
+	
+	public static Model alliedWalkModel = null;
+	public static Model alliedSprintModel = null;
+	public static TextureRegion alliedCrouchLegs = null;
+	
 		
 	public static  TextureRegion shotgunIcon = null;
 	public static  TextureRegion rocketIcon = null;	
@@ -159,6 +167,13 @@ public class Art {
 		alliedCharacterModel = new Model(loadImage("./seventh/gfx/player/allied_01.png"), 128, 128, 2, 3);
 		axisCharacterModel = new Model(loadImage("./seventh/gfx/player/axis_01.png"), 128, 128, 2, 3);
 
+		alliedPositionModel = new Model(loadImage("./seventh/gfx/player/allied_positions.png"), 201, 173, 2, 3);
+		axisPositionModel = new Model(loadImage("./seventh/gfx/player/axis_positions.png"), 256, 256, 2, 3);
+		
+		alliedWalkModel = new Model(loadImage("./seventh/gfx/player/allied_legs_walk.png"), 372, 196, 2, 4);
+		alliedSprintModel = new Model(loadImage("./seventh/gfx/player/allied_legs_sprint.png"), 256, 190, 2, 3);
+		alliedCrouchLegs = loadImage("./seventh/gfx/player/allied_crouch_legs.png");
+		
 		shotgunIcon = loadImage("./seventh/gfx/weapons/shotgun_icon.png");
 		rocketIcon = loadImage("./seventh/gfx/weapons/rpg_icon.png");
 		springfieldIcon = loadImage("./seventh/gfx/weapons/springfield_icon.png");

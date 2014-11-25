@@ -47,8 +47,8 @@ import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
 import seventh.network.messages.UserInputMessage;
-import seventh.shared.Config;
 import seventh.shared.Cons;
+import seventh.shared.SeventhConfig;
 import seventh.shared.TimeStep;
 
 /**
@@ -133,7 +133,7 @@ public class Game implements GameInfo {
 	private final float DISTANCE_CHECK;
 	private final int TILE_WIDTH, TILE_HEIGHT;
 	
-	private Config config;
+	private SeventhConfig config;
 
 	
 	private int lastValidId;
@@ -141,12 +141,18 @@ public class Game implements GameInfo {
 	private AISystem aiSystem;
 	
 	/**
+	 * @param config
 	 * @param players
 	 * @param gameType
 	 * @param gameMap
 	 * @param dispatcher
 	 */
-	public Game(Config config, final Players players, final GameType gameType, GameMap gameMap, EventDispatcher dispatcher) {
+	public Game(SeventhConfig config, 
+			final Players players, 
+			final GameType gameType, 
+			GameMap gameMap, 
+			EventDispatcher dispatcher) {
+		
 		this.config = config;
 		this.gameType = gameType;		
 		this.gameType.registerListeners(this, dispatcher);
@@ -357,7 +363,7 @@ public class Game implements GameInfo {
 	 * @see seventh.game.GameInfo#getConfig()
 	 */
 	@Override
-	public Config getConfig() {
+	public SeventhConfig getConfig() {
 		return config;
 	}
 	

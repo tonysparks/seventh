@@ -14,7 +14,7 @@ import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.math.Vector2f;
-import seventh.shared.Config;
+import seventh.shared.SeventhConfig;
 
 /**
  * Used for acquiring information about the current game state
@@ -32,7 +32,7 @@ public interface GameInfo {
 	/**
 	 * @return the config
 	 */
-	public abstract Config getConfig();
+	public abstract SeventhConfig getConfig();
 
 	/**
 	 * @return the random

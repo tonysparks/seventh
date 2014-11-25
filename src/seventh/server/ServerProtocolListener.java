@@ -10,7 +10,6 @@ import harenet.messages.NetMessage;
 
 import java.io.IOException;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import seventh.game.Entity.Type;
@@ -41,10 +40,12 @@ import seventh.shared.NetworkProtocol;
 
 
 /**
+ * Handles the server side of the {@link NetworkProtocol} of The Seventh.
+ * 
  * @author Tony
  *
  */
-public class ServerProtocolListener extends NetworkProtocol {
+public class ServerProtocolListener extends NetworkProtocol implements GameSessionListener {
 	
 	private class OutboundMessage {
 		
@@ -66,26 +67,44 @@ public class ServerProtocolListener extends NetworkProtocol {
 		}				
 	}
 	
-	private java.util.Map<Integer, RemoteClient> clients;
+	private RemoteClients clients;	
 	private Game game;
 	
-	private GameServer gameServer;
+	private ServerContext serverContext;
 	private Server server;
 	private Console console;
 	private Queue<OutboundMessage> outboundQ;
 	
+	
 	/**
+	 * @param serverContext
 	 */
-	public ServerProtocolListener(GameServer gameServer) {
-		super(gameServer.getServer());
+	public ServerProtocolListener(ServerContext serverContext) {
+		super(serverContext.getServer());
 		
-		this.gameServer = gameServer;
-		this.server = gameServer.getServer();	
-		this.console = gameServer.getConsole();
+		this.serverContext = serverContext;
+		this.server = serverContext.getServer();	
+		this.console = serverContext.getConsole();
 		
-		this.clients = new ConcurrentHashMap<Integer,RemoteClient>();
+		this.clients = serverContext.getClients();
+		
 		this.outboundQ = new ConcurrentLinkedQueue<ServerProtocolListener.OutboundMessage>();
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.server.GameSessionListener#onGameSessionCreated(seventh.server.GameSession)
+	 */
+	@Override
+	public void onGameSessionCreated(GameSession session) {		
+		this.game = session.getGame();
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.server.GameSessionListener#onGameSessionDestroyed(seventh.server.GameSession)
+	 */
+	@Override
+	public void onGameSessionDestroyed(GameSession session) {		
 	}
 	
 	/**
@@ -96,20 +115,17 @@ public class ServerProtocolListener extends NetworkProtocol {
 			try {
 				OutboundMessage oMsg = this.outboundQ.poll();
 				switch(oMsg.type) {
-				case ALL_CLIENTS:
-//					this.server.sendToAllTCP(msg.msg);
-					this.server.sendToAll(oMsg.flags, oMsg.msg);
-					break;
-				case ALL_EXCEPT:
-//					this.server.sendToAllExceptTCP(msg.id, msg.msg);
-					this.server.sendToAllExcept(oMsg.flags, oMsg.msg, oMsg.id);
-					break;
-				case ONE:
-//					this.server.sendToTCP(msg.id, msg.msg);
-					this.server.sendTo(oMsg.flags, oMsg.msg, oMsg.id);
-					break;
-				default:
-					break;			
+					case ALL_CLIENTS:
+						this.server.sendToAll(oMsg.flags, oMsg.msg);
+						break;
+					case ALL_EXCEPT:
+						this.server.sendToAllExcept(oMsg.flags, oMsg.msg, oMsg.id);
+						break;
+					case ONE:
+						this.server.sendTo(oMsg.flags, oMsg.msg, oMsg.id);
+						break;
+					default:
+						break;			
 				}
 			}
 			catch(Exception e) {
@@ -127,34 +143,13 @@ public class ServerProtocolListener extends NetworkProtocol {
 	public void queueSendToClient(int protocolFlags, NetMessage message, int id) {
 		this.outboundQ.add(new OutboundMessage(message, MessageType.ONE, id, protocolFlags));
 	}
-	
-	/**
-	 * @param game the game to set
-	 */
-	public void setGame(Game game) {
-		this.game = game;
-	}
-	
-	/**
-	 * @return the game
-	 */
-	public Game getGame() {
-		return game;
-	}
-	
-	/**
-	 * @return the clients
-	 */
-	public java.util.Map<Integer, RemoteClient> getClients() {
-		return clients;
-	}
 		
 	/* (non-Javadoc)
 	 * @see com.esotericsoftware.kryonet.Listener#connected(com.esotericsoftware.kryonet.Connection)
 	 */
 	@Override
 	public void onConnected(Connection conn) {				
-		this.clients.put(conn.getId(), new RemoteClient(conn));
+		this.clients.addRemoteClient(conn.getId(), new RemoteClient(conn));
 	}
 	
 	/* (non-Javadoc)
@@ -164,10 +159,12 @@ public class ServerProtocolListener extends NetworkProtocol {
 	public void onDisconnected(Connection conn) {							
 		try {
 			this.clientDisconnect(conn, new ClientDisconnectMessage());
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			Cons.println("*** Error disconnecting client: " + e);
 		}		
-		this.clients.remove(conn.getId());		
+		
+		this.clients.removeClient(conn.getId());		
 	}
 	
 	/*
@@ -218,7 +215,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 	 * @param message
 	 */
 	private void playerSwitchWeaponClass(Connection conn, PlayerSwitchWeaponClassMessage message) {
-		RemoteClient client = this.clients.get(conn.getId());
+		RemoteClient client = this.clients.getClient(conn.getId());
 		if(client!=null) {
 			Player player = client.getPlayer();
 			
@@ -266,7 +263,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 	}
 
 	public void connectRequest(Connection conn, ConnectRequestMessage msg) throws IOException {
-		RemoteClient client = this.clients.get(conn.getId());
+		RemoteClient client = this.clients.getClient(conn.getId());
 		client.setName(msg.name);
 		
 		this.game.playerJoined(client.getPlayer());
@@ -288,7 +285,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 	}
 	
 	public void clientReady(Connection conn, ClientReadyMessage msg) {
-		RemoteClient client = this.clients.get(conn.getId());	
+		RemoteClient client = this.clients.getClient(conn.getId());	
 		if(client != null) {
 			if(!client.isReady()) {
 				client.setReady(true);
@@ -323,7 +320,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 	}
 	
 	public void teamTextMessage(Connection conn, TeamTextMessage msg) throws IOException  {
-		RemoteClient client = this.clients.get(conn.getId());
+		RemoteClient client = this.clients.getClient(conn.getId());
 		msg.playerId = conn.getId();
 		
 		Player player = client.getPlayer();		
@@ -335,13 +332,13 @@ public class ServerProtocolListener extends NetworkProtocol {
 	}
 	
 	public void playerNameChangedMessage(Connection conn, PlayerNameChangeMessage msg ) throws IOException {
-		RemoteClient client = this.clients.get(conn.getId());	
+		RemoteClient client = this.clients.getClient(conn.getId());	
 		Player player = client.getPlayer();
 		player.setName(msg.name);
 	}
 	
 	public void aiCommand(Connection conn, AICommandMessage msg) throws IOException {
-		RemoteClient client = this.clients.get(conn.getId());	
+		RemoteClient client = this.clients.getClient(conn.getId());	
 		Player player = client.getPlayer();
 		
 		PlayerInfo botPlayer = game.getPlayerById(msg.botId);
@@ -353,7 +350,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 	}
 	
 	public void rconMessage(Connection conn, RconMessage msg) throws IOException {
-		RemoteClient client = this.clients.get(conn.getId());
+		RemoteClient client = this.clients.getClient(conn.getId());
 		if(client != null) {
 			String cmd = msg.getCommand();
 			if(cmd != null) {
@@ -368,7 +365,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 				 */
 				
 				if(cmd.startsWith("login")) {
-					long token = gameServer.createToken();
+					long token = this.serverContext.createToken();
 					RconTokenMessage tokenMessage = new RconTokenMessage(token);
 					client.setRconToken(token);
 					
@@ -376,7 +373,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 				}
 				else if (cmd.startsWith("logoff")) {
 					client.setRconAuthenticated(false);
-					client.setRconToken(GameServer.INVALID_TOKEN);
+					client.setRconToken(ServerContext.INVALID_RCON_TOKEN);
 				}
 				else if(cmd.startsWith("password")) {
 					if(!client.hasRconToken()) {
@@ -387,7 +384,7 @@ public class ServerProtocolListener extends NetworkProtocol {
 						String password = cmd.replace("password ", "");
 						
 						// if the password hashes match, they are authenticated
-						String serverPassword = gameServer.getRconPassword(client.getRconToken()); 
+						String serverPassword = this.serverContext.getRconPassword(client.getRconToken()); 
 						
 						if( serverPassword.equals(password) ) {
 							client.setRconAuthenticated(true);

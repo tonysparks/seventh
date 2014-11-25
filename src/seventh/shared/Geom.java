@@ -23,6 +23,12 @@ import seventh.math.Vector2f;
 public class Geom {
 			
 	/**
+	 * The right vector, used for retrieving the angle
+	 * or other vectors
+	 */
+	public static final Vector2f RIGHT_VECTOR = new Vector2f(1, 0);
+	
+	/**
 	 * Utility function for calculating entity line of sight
 	 * 
 	 * @param tiles

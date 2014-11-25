@@ -31,7 +31,7 @@ public class RemoteClient {
 		this.player = new Player(conn.getId());				
 		this.isReady = false;		
 		
-		this.rconToken = GameServer.INVALID_TOKEN;
+		this.rconToken = ServerContext.INVALID_RCON_TOKEN;
 		this.isRconAuthenticated = false;
 	}
 	
@@ -53,7 +53,7 @@ public class RemoteClient {
 	 * @return true if this remote client has a valid rcon token
 	 */
 	public boolean hasRconToken() {
-		return this.rconToken != GameServer.INVALID_TOKEN;
+		return this.rconToken != ServerContext.INVALID_RCON_TOKEN;
 	}
 	
 	/**

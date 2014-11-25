@@ -7,14 +7,11 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.Proxy.Type;
 import java.net.URL;
 import java.net.URLEncoder;
 
 import leola.vm.Leola;
-import leola.vm.types.LeoMap;
 import leola.vm.types.LeoNull;
 import leola.vm.types.LeoObject;
 import seventh.game.GameInfo;
@@ -24,33 +21,41 @@ import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
 import seventh.server.GameServer;
+import seventh.server.ServerContext;
+import seventh.server.ServerSeventhConfig;
 
 /**
+ * API to the Master Server.  The master server is responsible for keeping track of game servers
+ * so that client know which are available.
+ * 
  * @author Tony
  *
  */
-public class MasterServerApi {
+public class MasterServerClient {
 
-	private String masterServerUrl;
+	/**
+	 * Encoding
+	 */
+	private static final String ENCODING = "UTF8";
 	
-	private String proxy;
-	private int proxyPort;
+	private String masterServerUrl;
+			
 	private String proxyUser;
 	private String proxyPw;
+	
+	private Proxy proxy;
 	
 	/**
 	 * 
 	 */
-	public MasterServerApi(Config config) {
-		this.masterServerUrl = config.getString("master_server", "url");
+	public MasterServerClient(MasterServerConfig config) {
+		this.masterServerUrl = config.getUrl();
 				
-		LeoObject proxyObj = config.get("master_server", "proxy_settings");
-		if(LeoObject.isTrue(proxyObj)) {
-			LeoMap map = proxyObj.as();
-			this.proxy = map.getString("address");
-			this.proxyPort = map.getInt("port");
-			this.proxyUser = map.getString("user");
-			this.proxyPw = map.getString("password");
+		this.proxy = config.getProxy();
+		
+		if(this.proxy != null && !this.proxy.equals(Proxy.NO_PROXY)) {			
+			this.proxyUser = config.getProxyUser();
+			this.proxyPw = config.getProxyPassword();
 		}
 	}
 	
@@ -98,7 +103,7 @@ public class MasterServerApi {
 	 * @param gameServer the game server
 	 * @throws Exception
 	 */
-	public void sendHeartbeat(GameServer gameServer) throws Exception {
+	public void sendHeartbeat(ServerContext serverContext) throws Exception {
 		URL url = new URL(this.masterServerUrl);
 		HttpURLConnection conn = connect(url);
 		
@@ -107,7 +112,7 @@ public class MasterServerApi {
 		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 		conn.setRequestProperty("seventh_version", GameServer.VERSION);
 		
-		String urlParameters = populateGameServerPingParameters(gameServer);
+		String urlParameters = populateGameServerPingParameters(serverContext);
 		
 		// Send post request
 		conn.setDoOutput(true);
@@ -131,8 +136,7 @@ public class MasterServerApi {
 	 * @throws Exception
 	 */
 	private HttpURLConnection connect(URL url) throws Exception {
-		if(this.proxy != null) {
-			Proxy proxy = new Proxy(Type.HTTP, new InetSocketAddress(this.proxy, this.proxyPort));			
+		if(this.proxy != null && !this.proxy.equals(Proxy.NO_PROXY)) {						
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
 			if(this.proxyUser!=null) {
 				String uname_pwd = proxyUser + ":" + proxyPw;
@@ -145,14 +149,15 @@ public class MasterServerApi {
 		return (HttpURLConnection) url.openConnection();
 	}
 	
-	private String populateGameServerPingParameters(GameServer gameServer) throws Exception {
-		GameInfo game = gameServer.getProtocolListener().getGame();
-		
+	private String populateGameServerPingParameters(ServerContext serverContext) throws Exception {
+		ServerSeventhConfig config = serverContext.getConfig();
+						
 		StringBuilder sb = new StringBuilder();		
-		sb.append("server_name=").append(URLEncoder.encode(gameServer.getServerName(), "UTF8"));		
-		sb.append("&game_type=").append(URLEncoder.encode(gameServer.getGameType().name(), "UTF8"));
-		if(game != null) {
-			sb.append("&map=").append(URLEncoder.encode(gameServer.getMapCycle().getCurrentMap(), "UTF8"));
+		sb.append("server_name=").append(URLEncoder.encode(config.getServerName(), ENCODING));		
+		sb.append("&game_type=").append(URLEncoder.encode(config.getGameType().name(), ENCODING));
+		if(serverContext.hasGameSession()) {
+			GameInfo game = serverContext.getGameSession().getGame();
+			sb.append("&map=").append(URLEncoder.encode(serverContext.getMapCycle().getCurrentMap(), ENCODING));
 			sb.append("&time=").append(game.getGameType().getRemainingTime());
 			
 			NetTeamStat[] stats = game.getGameType().getNetTeamStats();
@@ -166,36 +171,32 @@ public class MasterServerApi {
 				sb.append("&axis=");
 				
 				NetTeam axis = info.teams[0];		
-				if(axis!=null) {
-					for(int i = 0; i < axis.playerIds.length; i++) {
-						PlayerInfo player = players.getPlayerInfo(axis.playerIds[i]);
-						if(player!=null) {
-							sb.append("\"");
-							sb.append(URLEncoder.encode(player.getName().replace(",", "."), "UTF8"));
-							sb.append("\"");
-							sb.append(URLEncoder.encode(",", "UTF8"));
-						}
-					}
-				}
+				appendTeam(players, axis, sb);
 				
 				sb.append("&allied=");
 				
-				NetTeam allied = info.teams[1];	
-				if(allied!=null) {
-					for(int i = 0; i < allied.playerIds.length; i++) {
-						PlayerInfo player = players.getPlayerInfo(allied.playerIds[i]);
-						if(player!=null) {
-							sb.append(URLEncoder.encode(player.getName().replace(",", "."), "UTF8"));
-							sb.append(URLEncoder.encode(",", "UTF8"));
-						}
-					}
-				}
+				NetTeam allied = info.teams[1];
+				appendTeam(players, allied, sb);
 			}
 		
 		}
-		sb.append("&port=").append(gameServer.getPort());
+		sb.append("&port=").append(serverContext.getPort());
 		
 		return sb.toString();
+	}
+	
+	private void appendTeam(PlayerInfos players, NetTeam team, StringBuilder sb) throws Exception {
+		if(team!=null) {
+			for(int i = 0; i < team.playerIds.length; i++) {
+				PlayerInfo player = players.getPlayerInfo(team.playerIds[i]);
+				if(player!=null) {
+					sb.append("\"");
+					sb.append(URLEncoder.encode(player.getName().replace(",", "."), ENCODING));
+					sb.append("\"");
+					sb.append(URLEncoder.encode(",", ENCODING));
+				}
+			}
+		}
 	}
 
 }
