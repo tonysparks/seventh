@@ -14,6 +14,7 @@ import seventh.shared.Console;
 import seventh.shared.ConsoleFrame;
 import seventh.shared.DefaultConsole;
 import seventh.shared.Scripting;
+import seventh.shared.SeventhConstants;
 
 /**
  * Main entry point for the server
@@ -22,9 +23,7 @@ import seventh.shared.Scripting;
  *
  */
 public class ServerMain {
-	
-	private static final int DEFAULT_PORT = 9844;
-	
+		
 	private static final String BANNER =
 	"\n\n\n\t\t*** The Seventh Server ***\n" +
 	"\t\t    5d Studios (c)\n\n"
@@ -40,7 +39,7 @@ public class ServerMain {
 			@Override
 			public void run() {
 				try {
-					int port = DEFAULT_PORT;
+					int port = SeventhConstants.DEFAULT_PORT;
 					
 					Leola runtime = Scripting.newRuntime();
 					ServerSeventhConfig config = new ServerSeventhConfig(new Config("./seventh/server_config.leola", "server_config", runtime));
@@ -49,12 +48,14 @@ public class ServerMain {
 						try {
 							port =  Integer.parseInt(args[0]);
 						}
-						catch(Exception e) {}
+						catch(Exception e) {
+							port = config.getPort();	
+						}
 					}
 					else {
-						// TODO Use port from config file
-						//port = server.getp
+						port = config.getPort();
 					}
+					
 					server.start(port);
 				} 
 				catch (Exception e) {
