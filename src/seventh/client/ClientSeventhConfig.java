@@ -16,7 +16,7 @@ import seventh.shared.SeventhConfig;
  */
 public class ClientSeventhConfig extends SeventhConfig {
 
-	
+	 
 	private KeyMap keyMap;
 	private VideoConfig video;
 	
