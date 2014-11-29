@@ -52,4 +52,21 @@ public class DummyThoughtProcess implements ThoughtProcess {
 	public void think(TimeStep timeStep, Brain brain) {
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("type", getClass().getSimpleName());
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
 }

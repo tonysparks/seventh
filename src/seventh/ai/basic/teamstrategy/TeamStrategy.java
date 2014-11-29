@@ -8,6 +8,7 @@ import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.type.GameType;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
@@ -16,7 +17,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public interface TeamStrategy {
+public interface TeamStrategy extends Debugable {
 
 	/**
 	 * @return the Team this strategy is for

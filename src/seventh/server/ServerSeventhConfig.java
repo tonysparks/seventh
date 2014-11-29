@@ -42,6 +42,20 @@ public class ServerSeventhConfig extends SeventhConfig {
 	}
 	
 	/**
+	 * @return the class path
+	 */
+	public String getDebuggerClasspath() {
+		return this.config.getString("debugger", "classpath");
+	}
+	
+	/**
+	 * @return the debugger class name
+	 */
+	public String getDebuggerClassName() {
+		return this.config.getStr("", "debugger", "class_name");
+	}
+	
+	/**
 	 * @return the listening port
 	 */
 	public int getPort() {

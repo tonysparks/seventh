@@ -3,22 +3,15 @@
  */
 package seventh.server;
 
-import java.io.File;
-
 import leola.vm.Leola;
-import seventh.game.Game;
 import seventh.game.GameMap;
-import seventh.game.LightBulb;
 import seventh.game.Players;
 import seventh.game.type.GameType;
 import seventh.game.type.ObjectiveScript;
 import seventh.game.type.TeamDeathMatchScript;
 import seventh.map.GameLeolaLibrary;
-import seventh.map.Layer;
 import seventh.map.Map;
-import seventh.map.Tile;
 import seventh.shared.Cons;
-import seventh.shared.Scripting;
 import seventh.shared.State;
 import seventh.shared.TimeStep;
 
@@ -94,47 +87,7 @@ public class LoadingState implements State {
 		return script.loadGameType(mapFile, maxScore, matchTime);
 	}
 	
-	/**
-	 * Load the maps properties file
-	 * 
-	 * @param mapFile
-	 * @param game
-	 */
-	private void loadProperties(GameMap gameMap, Game game) {		
-		File propertiesFile = new File(gameMap.getMapFileName() + ".props.leola");
-		if(propertiesFile.exists()) {
-			try {	
-				Leola runtime = Scripting.newSandboxedRuntime();
-				
-				runtime.putGlobal("game", game);
-				runtime.eval(propertiesFile);
-				
-				Map map = game.getMap();
-				Layer[] layers = map.getBackgroundLayers();
-				for(int i = 0; i < layers.length; i++) {
-					Layer layer = layers[i];
-					if(layer != null) {
-						if(layer.isLightLayer()) {
-							for(int y = 0; y < map.getTileWorldHeight(); y++) {
-								for(int x = 0; x < map.getTileWorldWidth(); x++) {
-									Tile tile = layer.getRow(y).get(x);
-									if(tile != null) {
-										LightBulb light = game.newLight(map.tileToWorld(x, y));
-										light.setColor(0.9f, 0.85f, 0.85f);
-										light.setLuminacity(0.95f);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			catch(Exception e) {
-				Cons.println("*** ERROR -> Loading map properties file: " + propertiesFile.getName() + " -> ");
-				Cons.println(e);
-			}
-		}
-	}
+
 	
 	/**
 	 * Ends the game
@@ -177,11 +130,7 @@ public class LoadingState implements State {
 				}
 			}			
 			
-			this.gameSession = new GameSession(serverContext.getConfig(), gameMap, gameType, players);		
-			Game game = this.gameSession.getGame();
-			
-			
-			loadProperties(gameMap, game);			
+			this.gameSession = new GameSession(serverContext.getConfig(), gameMap, gameType, players);									
 		}
 		catch(Exception e) {
 			Cons.println("*** Unable to load map: " + this.mapFile + " -> " + e);

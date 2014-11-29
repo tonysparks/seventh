@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import leola.vm.Leola;
 import seventh.shared.Console;
+import seventh.shared.Debugable.DebugableListener;
 import seventh.shared.MapList;
 import seventh.shared.RconHash;
 import seventh.shared.State;
@@ -100,6 +101,20 @@ public class ServerContext {
 		
 		this.gameSession = new AtomicReference<>();
 		this.mapCycle = new MapCycle(config.getMapListings());
+	}
+	
+	/**
+	 * @return true if there is a debug listener
+	 */
+	public boolean hasDebugListener() {
+		return this.gameServer.getDebugListener() != null;
+	}
+	
+	/**
+	 * @return the {@link DebugableListener}
+	 */
+	public DebugableListener getDebugableListener() {
+		return this.gameServer.getDebugListener();
 	}
 	
 	/**

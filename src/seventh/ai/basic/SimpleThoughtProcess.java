@@ -15,6 +15,7 @@ import seventh.game.SoundType;
 import seventh.game.Team;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.math.Vector2f;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -31,7 +32,7 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 	 * @author Tony
 	 *
 	 */
-	public static interface ThinkListener {
+	public static interface ThinkListener extends Debugable {
 				
 		/**
 		 * The agent has spawned
@@ -410,5 +411,31 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 		this.thinkListener.onEndThink(timeStep, brain);
 		
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override 
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("type", getClass().getSimpleName())
+		  .add("stuck_timer", this.stuckTimer.getRemainingTime());
+		
+		Object[] ids = new Object[this.attackableEntities.size()];
+		for(int i = 0; i < this.attackableEntities.size(); i++) {
+			ids[i] = this.attackableEntities.get(i);
+		}
+		me.add("attackable_entities", ids);
+		me.add("think_listener", this.thinkListener);
+		
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}	
 }

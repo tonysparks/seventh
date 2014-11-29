@@ -3,10 +3,13 @@
  */
 package seventh.game;
 
+import java.util.Date;
+
 import seventh.game.Entity.Type;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.math.Vector2f;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
@@ -15,7 +18,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class Player implements PlayerInfo {
+public class Player implements PlayerInfo, Debugable {
 
 	/**
 	 * Delay to next spawn
@@ -472,4 +475,30 @@ public class Player implements PlayerInfo {
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("id", getId())
+		  .add("name", getName())
+		  .add("deaths", getDeaths())
+		  .add("kills", getKills())
+		  .add("ping", getPing())
+		  .add("time_joined", new Date(getJoinTime()).toString())		  
+		  .add("weapon_class", getWeaponClass().name())
+		  .add("isAlive", isAlive())
+		  .add("entity_id", isAlive() ? getEntity().getId() : null);
+		;
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
 }

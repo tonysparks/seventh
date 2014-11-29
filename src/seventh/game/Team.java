@@ -8,6 +8,7 @@ import java.util.List;
 
 import seventh.game.net.NetTeam;
 import seventh.math.Vector2f;
+import seventh.shared.Debugable;
 
 /**
  * A team is a collection of {@link Player}s.  The team contains a score, at the
@@ -16,7 +17,7 @@ import seventh.math.Vector2f;
  * @author Tony
  *
  */
-public class Team {
+public class Team implements Debugable {
 
 	/**
 	 * Team ID's
@@ -422,5 +423,30 @@ public class Team {
 		}
 		
 		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("name", getName())
+		  .add("id", getId())
+		  .add("score",getScore())
+		  .add("total_deaths",getTotalDeaths())
+		  .add("total_kills",getTotalKills())		
+		  .add("players", getPlayers())		  
+		;
+		
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {	
+		return getDebugInformation().toString();
 	}
 }

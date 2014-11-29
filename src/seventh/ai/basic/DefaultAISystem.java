@@ -345,4 +345,25 @@ public class DefaultAISystem implements AISystem {
 		}
 		
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("brains", this.brains)
+		  .add("stats", this.stats)
+		  .add("allied_strategy", this.alliedAIStrategy)
+		  .add("axis_strategy", this.axisAIStrategy);
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
 }

@@ -251,7 +251,7 @@ public class InGameState implements State {
 			}
 		});
 	}
-	
+		
 	/**
 	 * Load the maps properties file
 	 * 
@@ -293,8 +293,6 @@ public class InGameState implements State {
 			}
 		}
 	}
-	
-
 
 	/* (non-Javadoc)
 	 * @see palisma.shared.State#enter()
@@ -370,6 +368,10 @@ public class InGameState implements State {
 			}
 			
 			gameEndTime += timeStep.getDeltaTime();
+		}
+		
+		if(this.serverContext.hasDebugListener()) {
+			this.serverContext.getDebugableListener().onDebugable(this.game);
 		}
 	}
 	

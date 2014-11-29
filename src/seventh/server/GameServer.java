@@ -13,6 +13,7 @@ import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import leola.vm.Leola;
+import leola.vm.util.Classpath;
 import seventh.game.Game;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
@@ -27,6 +28,7 @@ import seventh.shared.CommonCommands;
 import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.Debugable.DebugableListener;
 import seventh.shared.State;
 import seventh.shared.StateMachine;
 import seventh.shared.StateMachine.StateMachineListener;
@@ -58,6 +60,7 @@ public class GameServer {
 	
 	private MasterServerRegistration registration;
 	private OnServerReadyListener serverListener;
+	private DebugableListener debugListener;
 	
 	/**
 	 * A callback for when the server is loaded and is about to start
@@ -190,6 +193,12 @@ public class GameServer {
 			this.registration.start();
 		}
 		
+
+		/* attempt to attach a debugger */
+		DebugableListener debugableListener = createDebugListener(config);
+		if(debugableListener != null) {
+			setDebugListener(debugableListener);
+		}
 		
 		/*
 		 * Load up the bots
@@ -253,11 +262,45 @@ public class GameServer {
 		/* little hack to wait until we are done loading the 
 		 * game
 		 */
-		long timeout = 10_000;
-		while(!isReady.get() && timeout > 0) {
-			Thread.sleep(500);
-			timeout -= 500;
-		}		
+//		long timeout = 10_000;
+//		while(!isReady.get() && timeout > 0) {
+//			Thread.sleep(500);
+//			timeout -= 500;
+//		}		
+	}
+	
+	
+	/**
+	 * Attempt to create a {@link DebugableListener} from the supplied configuration
+	 * 
+	 * @param config
+	 * @return the {@link DebugableListener} if one is available, or null
+	 */
+	private DebugableListener createDebugListener(ServerSeventhConfig config) {
+		try {
+			String className = config.getDebuggerClassName();
+			if(className != null && !"".equals(className)) {
+				
+				/* add jars to the class path if needed */
+				String classpath = config.getDebuggerClasspath();
+				if(classpath != null && !"".equals(classpath)) {
+					Classpath.loadJars(classpath);
+				}
+				
+				Class<?> aClass = Class.forName(className);
+				DebugableListener listener = (DebugableListener)aClass.newInstance();
+				if(listener != null) {
+					listener.init(config);
+				}
+				
+				return listener;
+			}
+		}
+		catch(Throwable t) {
+			Cons.println("Unable to load the debugger: " + t);
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -521,7 +564,21 @@ public class GameServer {
 	public void setServerListener(OnServerReadyListener serverListener) {
 		this.serverListener = serverListener;
 	}
-		
+	
+	/**
+	 * @param debugListener the debugListener to set
+	 */
+	public void setDebugListener(DebugableListener debugListener) {
+		this.debugListener = debugListener;
+	}
+	
+	/**
+	 * @return the debugListener
+	 */
+	public DebugableListener getDebugListener() {
+		return debugListener;
+	}
+	
 	/**
 	 * @return the isRunning
 	 */
@@ -618,6 +675,11 @@ public class GameServer {
 			server.stop();
 			server.close();
 			this.registration.shutdown();
+			
+			if(this.debugListener != null) {
+				this.debugListener.shutdown();
+			}
+			
 			Cons.println("Server shutdown completed!");
 		}
 	}

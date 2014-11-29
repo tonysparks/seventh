@@ -29,6 +29,8 @@ public class ServerMain {
 	"\t\t    5d Studios (c)\n\n"
 	;
 	
+
+	
 	public static void main(final String [] args) {
 		final Console console = new DefaultConsole();
 		Cons.setImpl(console);
@@ -44,6 +46,8 @@ public class ServerMain {
 					Leola runtime = Scripting.newRuntime();
 					ServerSeventhConfig config = new ServerSeventhConfig(new Config("./seventh/server_config.leola", "server_config", runtime));
 					GameServer server = new GameServer(config, console, runtime);
+					
+					
 					if (args.length > 0) {
 						try {
 							port =  Integer.parseInt(args[0]);

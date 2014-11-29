@@ -9,6 +9,7 @@ import java.util.List;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.math.Rectangle;
+import seventh.shared.Debugable;
 
 /**
  * A {@link Zone} represents a section of the game world.  We break the game world
@@ -18,7 +19,7 @@ import seventh.math.Rectangle;
  * @author Tony
  *
  */
-public class Zone {
+public class Zone implements Debugable {
 
 	private Rectangle bounds;
 	private int id;
@@ -130,4 +131,22 @@ public class Zone {
 		return this.bounds.intersects(entity.getBounds());
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("id", this.id)
+		  .add("bounds", this.bounds);
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
 }

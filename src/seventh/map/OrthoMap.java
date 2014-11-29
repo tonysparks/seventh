@@ -1136,5 +1136,60 @@ public class OrthoMap implements Map {
 		return this.surfaces[wy][wx];
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("width", this.mapWidth)
+		  .add("height", this.mapHeight)
+		  .add("tileWidth", this.tileWidth)
+		  .add("tileHeight", this.tileHeight)
+		  .add("maxX", this.maxX)
+		  .add("maxY", this.maxY);
+		
+		String[] tiles = new String[this.maxY];
+		for(int i = 0; i < tiles.length; i++) {
+			tiles[i] = "\"";
+		}
+		
+		Layer[] layers = getCollidableLayers();
+		for(int y = 0; y < getTileWorldHeight(); y++) {
+			for(int x = 0; x < getTileWorldWidth(); x++) {
+				Tile topTile = null;
+				for(int i = 0; i < layers.length; i++) {
+					Tile tile = layers[i].getRow(y).get(x); 
+					if(tile != null) {
+						topTile = tile;
+						break;
+					}
+				}
+				
+				if(topTile != null) {
+					tiles[y] += "X";
+				}
+				else {
+					tiles[y] += "O";
+				}
+			}
+		}
+		
+		for(int i = 0; i < tiles.length; i++) {
+			tiles[i] += "\"";
+		}
+		
+		me.add("tiles", tiles);
+		
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {	
+		return getDebugInformation().toString();
+	}
 
 }
