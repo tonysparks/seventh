@@ -1349,6 +1349,7 @@ public class Game implements GameInfo, Debugable {
 		  .add("bombTargets", this.bombTargets)
 		  .add("map", this.map)
 		  .add("game_type", this.gameType)
+		  .add("ai", this.aiSystem)
 		  ;
 		  	
 		return me;

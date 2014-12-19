@@ -423,7 +423,10 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 		
 		Object[] ids = new Object[this.attackableEntities.size()];
 		for(int i = 0; i < this.attackableEntities.size(); i++) {
-			ids[i] = this.attackableEntities.get(i);
+			PlayerEntity entity = this.attackableEntities.get(i);
+			if(entity != null) {
+				ids[i] = entity.getId(); 
+			}
 		}
 		me.add("attackable_entities", ids);
 		me.add("think_listener", this.thinkListener);

@@ -208,7 +208,7 @@ public class Brain implements Debugable {
 	public DebugInformation getDebugInformation() {
 		DebugInformation me = new DebugInformation();
 		me.add("goals", getGoals())
-		  .add("entity_id", getEntityOwner().getId())
+		  .add("entity_id", (this.entityOwner!=null) ? getEntityOwner().getId() : null)
 		  .add("thoughts", getThoughtProcess());
 		return me;
 	}
