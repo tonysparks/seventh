@@ -201,17 +201,14 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	 * @param team
 	 */
 	public void changeTeam(ClientTeam team) {		
-		switch(team) {
-			case ALLIES: {				
-				this.sprite = new PlayerSprite(this, Art.alliedCharacterModel, Art.legsModel);
-				break;
-			}
+		switch(team) {			
 			case AXIS: {
-				this.sprite = new PlayerSprite(this, Art.axisCharacterModel, Art.legsModel);
+				this.sprite = new PlayerSprite(this, Art.axisBodyModel, Art.axisWalkModel, Art.axisCrouchLegs, Art.axisSprintModel);
 				break;
 			}
+			case ALLIES:
 			default: {
-				this.sprite = new PlayerSprite(this, Art.alliedCharacterModel, Art.legsModel);				
+				this.sprite = new PlayerSprite(this, Art.alliedBodyModel, Art.alliedWalkModel, Art.alliedCrouchLegs, Art.alliedSprintModel);				
 			}
 		}
 		

@@ -32,6 +32,7 @@ import seventh.ui.view.ButtonView;
 import seventh.ui.view.PanelView;
 import seventh.ui.view.TextBoxView;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -59,6 +60,7 @@ public class AnimationEditorScreen implements Screen {
 	private AnimatedImage animation;
 	private boolean stepping;
 	private int frameNumber;
+	private long keyDelay;
 	
 	/**
 	 * 
@@ -282,11 +284,7 @@ public class AnimationEditorScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				int numberOfFrames = animation.getAnimation().getNumberOfFrames();
-				if(animation != null && numberOfFrames > 0) {
-					stepping = true;
-					frameNumber = (animation.getAnimation().getCurrentFrame() + 1) % numberOfFrames;
-				}
+				nextFrame();
 			}
 		});
 		
@@ -299,14 +297,7 @@ public class AnimationEditorScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				int numberOfFrames = animation.getAnimation().getNumberOfFrames();
-				if(animation != null && numberOfFrames > 0) {
-					stepping = true;
-					frameNumber = (animation.getAnimation().getCurrentFrame() - 1) % numberOfFrames;
-					if(frameNumber<0) {
-						frameNumber = numberOfFrames-1;
-					}
-				}
+				prevFrame();
 			}
 		});
 		
@@ -381,15 +372,34 @@ public class AnimationEditorScreen implements Screen {
 	public void destroy() {
 	}
 	
+		
 	/* (non-Javadoc)
 	 * @see seventh.shared.State#update(seventh.shared.TimeStep)
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
 		this.panelView.update(timeStep);
-						
+				
+		uiManager.update(timeStep);
+		
 		if(uiManager.isKeyDown(Keys.ESCAPE)) {
 			app.popScreen();
+		}
+
+		if(stepping) { 
+			if(Gdx.input.isKeyPressed(Keys.LEFT) && keyDelay <= 0) {
+				prevFrame();
+				keyDelay = 300;
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.RIGHT) && keyDelay <= 0) {
+				nextFrame();
+				keyDelay = 300;
+			}
+		}
+		
+		if(keyDelay > 0) {
+			keyDelay -= timeStep.getDeltaTime();
 		}
 		
 		if(animation != null) {
@@ -439,17 +449,24 @@ public class AnimationEditorScreen implements Screen {
 		
 		canvas.fillRect(0, canvas.getHeight()/3, canvas.getWidth(), canvas.getHeight()/2, backgroundColor);
 		canvas.drawRect(0, canvas.getHeight()/3, canvas.getWidth(), canvas.getHeight()/2, fontColor);
+
+		renderAnimation(canvas, animation);
+
+		this.uiManager.render(canvas);
+	}
+	
+	private void renderAnimation(Canvas canvas, AnimatedImage animation) {
 		
 		if(animation != null) {
-			
+			int fontColor = theme.getForegroundColor();	
 			TextureRegion frame = animation.getCurrentImage();
 			int x = canvas.getWidth()/2 - frame.getRegionWidth()/2;
-			int y = canvas.getHeight()/2;
+			int y = canvas.getHeight()/2 - frame.getRegionWidth();
 			canvas.drawRect(x,y, frame.getRegionWidth(), frame.getRegionHeight(), 0xff00ff00);
 			canvas.drawImage(frame, x, y, null);
 			
 			canvas.setFont("Courier New", 14);
-			message = frame.getRegionWidth() + " px";
+			String message = frame.getRegionWidth() + " px";
 			canvas.drawString(message, x + (frame.getRegionWidth()/2) - canvas.getWidth(message)/2, y + frame.getRegionHeight() + canvas.getHeight("W"), fontColor);
 			
 			message = frame.getRegionHeight() + " px";
@@ -457,10 +474,8 @@ public class AnimationEditorScreen implements Screen {
 			
 			renderAnimationWheel(canvas, frame);
 		}
-		
-
-		this.uiManager.render(canvas);
 	}
+	
 
 	private void renderAnimationWheel(Canvas canvas, TextureRegion activeFrame) {
 		/* render the animation frames */
@@ -480,6 +495,29 @@ public class AnimationEditorScreen implements Screen {
 			canvas.drawRect(x,y, frame.getRegionWidth(), frame.getRegionHeight(), frameColor);
 			x+=frame.getRegionWidth();
 		}
+	}
+	
+	private void prevFrame() {
+		if(animation != null) {
+			int numberOfFrames = animation.getAnimation().getNumberOfFrames();
+			if(numberOfFrames > 0) {
+				stepping = true;
+				frameNumber = (animation.getAnimation().getCurrentFrame() - 1) % numberOfFrames;
+				if(frameNumber<0) {
+					frameNumber = numberOfFrames-1;
+				}
+			}
+		}		
+	}
+	
+	private void nextFrame() {
+		if(animation != null) {
+			int numberOfFrames = animation.getAnimation().getNumberOfFrames();
+			if(numberOfFrames > 0) {
+				stepping = true;
+				frameNumber = (animation.getAnimation().getCurrentFrame() + 1) % numberOfFrames;
+			}
+		}		
 	}
 	
 	/* (non-Javadoc)

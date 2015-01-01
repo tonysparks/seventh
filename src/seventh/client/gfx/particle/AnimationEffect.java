@@ -43,7 +43,7 @@ public class AnimationEffect implements Effect {
 	 * @param persist
 	 */
 	public AnimationEffect(AnimatedImage anim, Vector2f pos, float rotation, boolean persist) {
-		this(anim, pos, rotation, persist, 5000);
+		this(anim, pos, rotation, persist, 12000);
 	}
 
 	/**

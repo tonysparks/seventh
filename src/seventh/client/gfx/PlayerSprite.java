@@ -7,6 +7,7 @@ package seventh.client.gfx;
 import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.particle.Effects;
+import seventh.client.weapon.ClientRocketLauncher;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.Entity.State;
 import seventh.game.weapons.Weapon;
@@ -21,24 +22,23 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
+ * Renders the Player
+ * 
  * @author Tony
  *
  */
 public class PlayerSprite implements Renderable {
 
 	private ClientPlayerEntity entity;
-		
-//	private AnimatedImage walkingAnimation, 
-//						  bodyAnimation, 
-//						  bodyReloadAnimation,
-//						  bodyWeaponSwitch;
 	
 	private final AnimatedImage idleBody, 
 						  crouchBody,
 						  walkBody, 
 						  runBody, 
 						  sprintBody, 
-						  reloadBody;
+						  reloadBody,
+						  switchWeaponBody,
+						  meleeBody;
 	
 		
 	private final AnimatedImage idleLegsAnimation,
@@ -56,15 +56,25 @@ public class PlayerSprite implements Renderable {
 	private int direction;
 	private float xOffset, yOffset;
 	
-	//private Sprite legsSprite, bodySprite, weaponSprite;
+	private boolean isReloading, 
+					isSwitching, 
+					isMelee, 
+					isFiring;
+	
+	
+	private Effects effects;	
 	private Sprite sprite;
 	
-	private boolean isReloading, isSwitching, isMelee, isFiring;	
-	private Effects effects;	
-
 	private long flashTime;
 	private boolean showFlash, toggleFlash;
 	
+	
+	/**
+	 * Debug class
+	 * 
+	 * @author Tony
+	 *
+	 */
 	static class Adjustments {
 		public float xOffset, yOffset;
 		public float x, y;
@@ -112,25 +122,29 @@ public class PlayerSprite implements Renderable {
 	/**
 	 * 
 	 */
-	public PlayerSprite(ClientPlayerEntity entity, Model bodyModel, Model legsModel) {
+	public PlayerSprite(ClientPlayerEntity entity, 
+						Model bodyModel, 
+						Model walkLegsModel,
+						TextureRegion crouchLegsModel,
+						Model sprintLegsModel) {
 		this.entity = entity;
 		
 		this.effects = new Effects();				
 		
-		Model alliedBody = Art.alliedPositionModel;
-		idleBody = newAnimation(100, alliedBody.getFrame(0));
-		crouchBody = newAnimation(100, alliedBody.getFrame(3));
-		walkBody = newAnimation(100, alliedBody.getFrame(2));
-		runBody = newAnimation(100, alliedBody.getFrame(0)); 
-		sprintBody = newAnimation(100, alliedBody.getFrame(1));
-		reloadBody = newAnimation(100, alliedBody.getFrame(5));
-		
-		Model alliedWalkLegs = Art.alliedWalkModel;
-		idleLegsAnimation = newAnimation(150, alliedWalkLegs.getFrame(0));
-		crouchingLegsAnimation = newAnimation(150, Art.alliedCrouchLegs);
-		walkLegsAnimation = newAnimation(150, alliedWalkLegs.getFrames());
-		runLegsAnimation = newAnimation(100, alliedWalkLegs.getFrames()); 
-		sprintLegsAnimation = newAnimation(190, Art.alliedSprintModel.getFrames()); // 150
+		idleBody = newAnimation(100, bodyModel.getFrame(0));
+		crouchBody = newAnimation(100, bodyModel.getFrame(3));
+		walkBody = newAnimation(100, bodyModel.getFrame(2));
+		runBody = newAnimation(100, bodyModel.getFrame(0)); 
+		sprintBody = newAnimation(100, bodyModel.getFrame(1));
+		reloadBody = newAnimation(500, bodyModel.getFrame(5), bodyModel.getFrame(0));
+		switchWeaponBody = newAnimation(100, bodyModel.getFrame(5));
+		meleeBody = newAnimation(100, bodyModel.getFrame(1));
+				
+		idleLegsAnimation = newAnimation(150, walkLegsModel.getFrame(0));
+		crouchingLegsAnimation = newAnimation(0, crouchLegsModel);
+		walkLegsAnimation = newAnimation(150, walkLegsModel.getFrames());
+		runLegsAnimation = newAnimation(100, walkLegsModel.getFrames()); 
+		sprintLegsAnimation = newAnimation(130, sprintLegsModel.getFrames()); // 150
 		
 		activeBodyPosition = idleBody; 
 		activeLegsAnimation = idleLegsAnimation;
@@ -175,7 +189,6 @@ public class PlayerSprite implements Renderable {
 		/* bob cycling */
 		int max = 5;				
 		double swingSpeed = 2.0;
-		Vector2f dir = entity.getFacing();
 		xOffset = yOffset = 0;
 		
 		activeBodyPosition = idleBody; 
@@ -214,7 +227,9 @@ public class PlayerSprite implements Renderable {
 			activeLegsAnimation = sprintLegsAnimation;
 			
 			max = 10;
-			swingSpeed = 2.0f;								
+			swingSpeed = 2.0f;				
+			
+			//Vector2f dir = entity.getFacing();
 			//xOffset += (dir.y * direction) * 1.12f;
 			//yOffset += (dir.x * direction) * 1.12f;			
 			walkingCycle.start();
@@ -252,9 +267,18 @@ public class PlayerSprite implements Renderable {
 			this.isSwitching = weapon.getState() == seventh.game.weapons.Weapon.State.SWITCHING;
 			this.isMelee = weapon.getState() == seventh.game.weapons.Weapon.State.MELEE_ATTACK;
 			this.isFiring = weapon.getState() == seventh.game.weapons.Weapon.State.FIRING;
+						
+			// TODO
+//			this.isMelee = true;
 			
-			if(!this.isReloading) {
-//				this.bodyReloadAnimation.reset();
+			if( this.isReloading ) {
+				this.activeBodyPosition = reloadBody;
+			}
+			else if (this.isMelee) {
+				this.activeBodyPosition =  meleeBody;
+			}
+			else if (this.isSwitching) {
+				this.activeBodyPosition = switchWeaponBody;
 			}
 			
 //			if(weapon.isFirstFire()) {
@@ -297,9 +321,7 @@ public class PlayerSprite implements Renderable {
 		}
 		
 		activeLegsAnimation.update(timeStep);
-		activeBodyPosition.update(timeStep);
-//		bodyAnimation.update(timeStep);
-//		bodyReloadAnimation.update(timeStep);	
+		activeBodyPosition.update(timeStep);		
 	}
 
 	/**
@@ -316,26 +338,23 @@ public class PlayerSprite implements Renderable {
 			
 			renderMuzzleFlash(canvas, weapon, rx, ry, rot);
 			
-			//
-			// TODO - clean up magic numbers
-			//
-						
 			TextureRegion gun = weapon.getWeaponImage();
 			setTextureRegion(sprite, gun);
 			
-			sprite.setScale(1.0f);
-			
+			sprite.setScale(1.0f);					
+									
 			switch(this.entity.getCurrentState()) {
 				case SPRINTING: {
-					sprite.setPosition(rx-12.0f, ry-43.0f);
-					sprite.setOrigin(12.0f, 43.0f);
-					sprite.setRotation(rot - 60.0f);
+					// original
+//					sprite.setRotation(rot - 60.0f);										
+//					sprite.setPosition(rx-13f, ry-39f);
+//					sprite.setOrigin(14f, 40f);
 					
-					sprite.setPosition(rx-adjustments.xOffset, ry-adjustments.yOffset);
-					sprite.setOrigin(adjustments.x, adjustments.y);
-					
-					canvas.drawString(adjustments.toString(), 350, 100, 0xffffffff);
-					
+					sprite.setRegionY(-32);
+					sprite.setRegionHeight(64);
+					sprite.setRotation(rot - 240f);					
+					sprite.setPosition(rx - 16f, ry + 11f);
+					sprite.setOrigin(17f, -10f);
 					
 					break;
 				}
@@ -345,21 +364,42 @@ public class PlayerSprite implements Renderable {
 					break;				
 				}
 				default: {
-
 					sprite.setPosition(rx-10.0f, ry-34.0f);
-					sprite.setOrigin(12.0f, 35.0f);
-
-					if(this.isReloading) {
-						sprite.setRotation(rot - 12.0f);
-					}
-					else if (this.isMelee) {
-						sprite.scale(-0.1f);	
-						sprite.setRotation(rot + 15.0f);
-					}
+					sprite.setOrigin(12.0f, 35.0f);					
 				}
 			}
+									
+			if(this.isReloading) {
+				if(reloadBody.getAnimation().getCurrentFrame() == 0) {
+					sprite.setRotation(rot - 12.0f);
+				}
+			}
+			else if (this.isMelee) {
+				// TODO: fix melee weapon				
+				
+				sprite.setRegionY(-32);
+				sprite.setRegionHeight(64);			
+				
+				sprite.setRotation(rot - 240f);				
+				sprite.setPosition(rx - 16f, ry + 11f);
+				sprite.setOrigin(17f, -10f);
+				
+//				sprite.setPosition(rx-adjustments.xOffset, ry-adjustments.yOffset);
+//				sprite.setOrigin(adjustments.x, adjustments.y);				
+			}
 			
-			canvas.drawSprite(sprite);			
+			if(weapon instanceof ClientRocketLauncher) {
+//				sprite.setRotation(rot - 60.0f);			
+				// TODO: Crouching
+				sprite.setPosition(rx+3f, ry-31f);
+				sprite.setOrigin(-2f, 33f);
+				
+//				sprite.setPosition(rx-adjustments.xOffset, ry-adjustments.yOffset);
+//				sprite.setOrigin(adjustments.x, adjustments.y);
+			}
+			
+			canvas.drawSprite(sprite);
+			debugRenderSprite(canvas, sprite, 0xffffff00);
 		}
 	}
 	
@@ -397,17 +437,23 @@ public class PlayerSprite implements Renderable {
 						muzzleAnim.moveToLastFrame();						
 					}
 					
-					float offsetX = 24.0f;
+					boolean isCrouching = entity.getCurrentState()==State.CROUCHING; 
+					
+					float offsetX = isCrouching ? 22f : 26f; //24 
 					if(weapon.hasLongBarrel()) {
-						offsetX = 32.0f;
+						offsetX = isCrouching ? 26f : 32f; //32.0f;
 					}
+					
+					float offsetY = isCrouching ? -12f : -16f;
+					
+					sprite.setPosition(rx+offsetX, ry+offsetY);
+					sprite.setOrigin(-offsetX, -offsetY); //18
 										
-					sprite.setPosition(rx+offsetX, ry-18f);
-					sprite.setOrigin(-offsetX, 18f);		
-					sprite.setRotation(rot-80f);
-										
+					sprite.setRotation(rot-80f);										
 					canvas.drawSprite(sprite);
-					sprite.setRotation(rot);
+//					debugRenderSprite(canvas, sprite, 0xffff00ff);
+					
+					sprite.setRotation(rot);										
 				}
 			}
 			else {				
@@ -428,11 +474,13 @@ public class PlayerSprite implements Renderable {
 	private void renderBody(Canvas canvas, float rx, float ry, float rot, int color) {
 		
 //		int offset = 32;//16;
-		float x = rx - 32f;//offset;
-		float y = ry - 42f;//offset;
+		float x = rx - 32f;//offset; -32
+		float y = ry - 42f;//offset; -42
 		
 		State currentState = this.entity.getCurrentState();
 		
+		// TODO: do the math to do this outside
+		// in imageScaler program
 		sprite.setScale(0.8f, 0.8f);
 		
 		/* Renders the feet
@@ -452,19 +500,13 @@ public class PlayerSprite implements Renderable {
 				sprite.setRotation(rot);
 				sprite.setPosition(x, y);
 				
-				/* set the scale for the body */
-	//			Vector2f m = entity.getMovementDir();
-	//			double angle = Vector2f.Vector2fAngle(m, Geom.RIGHT_VECTOR);
-				
-				sprite.setScale(0.8f, 0.8f);
 				Vector2f facing = entity.getFacing();
-				sprite.translate(facing.x * 6.0f, facing.y * 6.0f);
+				sprite.translate(facing.x * -6.0f, facing.y * -6.0f);
 				break;
 			}
 			case SPRINTING: {
 				sprite.setRotation(rot);
 				sprite.setPosition(x, y);
-				//sprite.setScale(.72f, .72f);
 				
 				setTextureRegion(sprite, activeLegsAnimation.getCurrentImage());
 						
@@ -473,10 +515,7 @@ public class PlayerSprite implements Renderable {
 				sprite.translate(6f, 6);
 				
 				sprite.setRotation(rot);
-				sprite.setPosition(x, y);
-				
-				/* set the scale for the body */
-				sprite.setScale(.8f, .8f);
+				sprite.setPosition(x, y);				
 				break;
 			}
 			default: {
@@ -484,40 +523,28 @@ public class PlayerSprite implements Renderable {
 				sprite.setPosition(x, y);
 								
 				setTextureRegion(sprite, activeLegsAnimation.getCurrentImage());
-						
-				sprite.translate(-12f, -5);
-				canvas.drawSprite(sprite);
-				sprite.translate(12f, 5);
 				
-				/* set the scale for the body */
-				sprite.setScale(.8f, .8f);
+				Vector2f facing = entity.getFacing();
+				float fx = facing.x + -12.0f;
+				float fy = facing.y - 5.0f;
+				
+				sprite.translate(fx, fy);
+				canvas.drawSprite(sprite);
+				sprite.translate(-fx, -fy);
 			}
 		}
+				
+//		debugRenderSprite(canvas, sprite, 0xff00ff00);
 		
 		/* Renders the body
 		 */
 		{
-//			if( this.isReloading || this.isMelee ) {
-//				setTextureRegion(sprite, bodyReloadAnimation.getCurrentImage());
-//			}
-//			else if (this.isSwitching) {
-//				setTextureRegion(sprite, bodyWeaponSwitch.getCurrentImage());
-//			}
-//			else {
-//				setTextureRegion(sprite, bodyAnimation.getCurrentImage());			
-//			}
+
+			setTextureRegion(sprite, activeBodyPosition.getCurrentImage());		
+			canvas.drawSprite(sprite);				
 			
-			setTextureRegion(sprite, activeBodyPosition.getCurrentImage());
 			
-			if(color < 1) {
-				/* solely for debug information */
-				canvas.drawSprite(sprite, sprite.getX(), sprite.getY(), 0x5f00aa00);
-			}
-			else { 
-				//sprite.translateX(5f);
-				canvas.drawSprite(sprite);
-				//sprite.translateX(-5f);
-			}
+			debugRenderSprite(canvas, sprite, 0xff00ffff);
 		}
 	}
 	
@@ -537,28 +564,14 @@ public class PlayerSprite implements Renderable {
 				
 		double angle = Math.toDegrees(entity.getOrientation()) + 90.0;
 		float rot = (float)(angle + bobCycle);		
-		
-//		showFlash=false;
-		if(showFlash) {
-			/*canvas.setShader(FireEffectShader.getInstance().
-					begin().
-					setParam("time", time+=Gdx.graphics.getDeltaTime()).
-					end().getShader());*/
-			entity.getMussleFlash().setOn(true);
-		}
-		else {
-			entity.getMussleFlash().setOn(false);
-		}
+				
+		entity.getMussleFlash().setOn(showFlash);
 		
 		
 		renderBody(canvas, rx, ry, rot, color);
 		
 		ClientWeapon weapon = this.entity.getWeapon();
-		renderWeapon(canvas, weapon, rx, ry, rot);
-		
-		if(showFlash) {
-			//canvas.setShader(null);
-		}
+		renderWeapon(canvas, weapon, rx, ry, rot);		
 	}
 
 	
@@ -569,6 +582,8 @@ public class PlayerSprite implements Renderable {
 	public void render(Canvas canvas, Camera camera, long alpha) {
 		Vector2f cameraPos = camera.getPosition();
 		
+		// TODO: delete
+		canvas.drawString(adjustments.toString(), 350, 100, 0xffffffff);
 		
 		effects.render(canvas,camera, alpha);
 		
@@ -588,6 +603,18 @@ public class PlayerSprite implements Renderable {
 		sprite.setSize(region.getRegionWidth(), region.getRegionHeight());
 		sprite.setOrigin(region.getRegionWidth()/2f, region.getRegionHeight()/2f);
 		sprite.flip(false, true);		
+	}
+			
+	public static void debugRenderSprite(Canvas canvas, Sprite sprite, int color) {		
+//		canvas.drawSprite(sprite, sprite.getX(), sprite.getY(), 0x5f00aa00);				
+//		canvas.drawRect( (int)sprite.getX(), (int)sprite.getY(), sprite.getRegionWidth(), sprite.getRegionHeight(), 0x5fff0000);
+		
+		if(false) 
+		{
+			canvas.drawSprite(sprite, sprite.getX(), sprite.getY(), Colors.setAlpha(color, 0x5f));				
+			canvas.drawRect( (int)sprite.getX(), (int)sprite.getY(), sprite.getRegionWidth(), sprite.getRegionHeight(), Colors.setAlpha(color, 0x5f));
+			canvas.fillRect( (int)(sprite.getX() + sprite.getOriginX()), (int)(sprite.getY() + sprite.getOriginY()), 5, 5, Colors.setAlpha(color, 0x5f));//0xff0000ff);
+		}
 	}
 
 }

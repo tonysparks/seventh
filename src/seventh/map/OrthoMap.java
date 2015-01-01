@@ -937,10 +937,17 @@ public class OrthoMap implements Map {
 						}
 						
 						Tile tile = layer.getRow(indexY).get(indexX);
-						if ( tile != null ) {							
+						Tile maskedTile = getTile(0, indexX, indexY);
+						if ( tile != null ) {
+							if(maskedTile == null || maskedTile.getMask() == 0) {
+//								canvas.setCompositeAlpha(0.1f);
+							
+							
 							tile.setRenderingPosition(pixelX + vx, pixelY + vy);
 							tile.render(canvas, camera, alpha);
-							//break;
+							}							
+//							canvas.setCompositeAlpha(1f);
+							
 						}
 					}
 				}

@@ -419,7 +419,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			}			
 		}
 		else {
-		// TODO	stamina -= STAMINA_DECAY_RATE;
+			stamina -= STAMINA_DECAY_RATE;
 			if(stamina < 0) {
 				stamina = 0;
 				currentState = State.RUNNING;
@@ -800,22 +800,35 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @see seventh.game.Controllable#sprint()
 	 */
 	public void sprint() {
+		
+		/*
+		 * We only allow sprinting in very special cases:
+		 * 1) you are not dead
+		 * 2) you have enough stamina
+		 * 3) you are not firing your weapon
+		 * 4) you are not currently using a Rocket Launcher
+		 * 5) recovery time has been met
+		 */
+		
 		if(currentState!=State.DEAD &&				
 		   stamina > 0 &&
 		   !firing &&
-		   !wasSprinting &&
+		   !wasSprinting &&		   
 		   recoveryTime <= 0) {		
-			
-			if(currentState!=State.SPRINTING) {
-				game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());
+		
+			Weapon weapon = this.inventory.currentItem();
+			if(weapon == null || !weapon.getType().equals(Type.ROCKET_LAUNCHER)) {			
+				if(currentState!=State.SPRINTING) {
+					game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());
+				}
+				
+				currentState = State.SPRINTING;				
+				return;
 			}
-			
-			currentState = State.SPRINTING;			
 		}
-		else {
-			wasSprinting = true;
-			currentState = State.RUNNING;
-		}
+		
+		wasSprinting = true;
+		currentState = State.RUNNING;
 	}
 	
 	/*
