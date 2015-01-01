@@ -348,4 +348,24 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("zone_to_attack", this.zoneToAttack)
+		  .add("time_to_attack", this.timeUntilOrganizedAttack)
+		  .add("state", this.currentState)
+		  ;
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
 }

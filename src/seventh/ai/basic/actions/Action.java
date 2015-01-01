@@ -4,6 +4,7 @@
 package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
@@ -12,7 +13,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public interface Action {
+public interface Action extends Debugable {
 
 	/**
 	 * Starts the action, only invoked once upon starting the

@@ -9,6 +9,7 @@ import seventh.client.Inputs;
 import seventh.client.KeyMap;
 import seventh.client.Screen;
 import seventh.client.SeventhGame;
+import seventh.client.VideoConfig;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.RenderFont;
@@ -118,17 +119,18 @@ public class OptionsScreen implements Screen {
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
 				try {
+					VideoConfig vConfig = app.getConfig().getVideo();
 					if(isFullscreen != app.isFullscreen()) {
-						app.getConfig().set(isFullscreen, "video", "fullscreen");
+						vConfig.setFullscreen(isFullscreen);
 						
 						if(!isFullscreen) {
-							app.getConfig().set(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, "video", "width");
-							app.getConfig().set(SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT, "video", "height");						
+							vConfig.setWidth(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH);
+							vConfig.setHeight(SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);						
 							Gdx.graphics.setDisplayMode(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT, isFullscreen);							
 						}
 						else if (mode!=null) {
-							app.getConfig().set(mode.width, "video", "width");
-							app.getConfig().set(mode.height, "video", "height");
+							vConfig.setWidth(mode.width);
+							vConfig.setHeight(mode.height);
 							Gdx.graphics.setDisplayMode(mode.width, mode.height, true);		
 						}
 						else {														
@@ -137,9 +139,9 @@ public class OptionsScreen implements Screen {
 						app.restartVideo();
 					}
 					else if(mode!=null) {
-						if(app.isFullscreen()) {
-							app.getConfig().set(mode.width, "video", "width");
-							app.getConfig().set(mode.height, "video", "height");
+						if(app.isFullscreen()) {							
+							vConfig.setWidth(mode.width);
+							vConfig.setHeight(mode.height);
 							Gdx.graphics.setDisplayMode(mode.width, mode.height, true);
 							app.restartVideo();
 						}
@@ -147,15 +149,15 @@ public class OptionsScreen implements Screen {
 					
 					if(nameTxtBox!=null) {
 						String name = nameTxtBox.getText();
-						String cfgName = app.getConfig().getString("name"); 
+						String cfgName = app.getConfig().getPlayerName(); 
 						if(name != null && cfgName != null) {
 							if(!name.equals(cfgName)) {
-								app.getConfig().set(name, "name");
+								app.getConfig().setPlayerName(name);
 							}
 						}
 					}
 					
-					app.getConfig().set(uiManager.getCursor().getMouseSensitivity(), "mouse_sensitivity");
+					app.getConfig().setMouseSensitivity(uiManager.getCursor().getMouseSensitivity());
 					
 					app.getConfig().save();
 				} catch (IOException e) {
@@ -193,7 +195,7 @@ public class OptionsScreen implements Screen {
 		nameTxtBox.getLabel().setTextSize(24);
 		nameTxtBox.setFocus(false);
 		nameTxtBox.setMaxSize(16);
-		nameTxtBox.setText(app.getConfig().getString("name"));
+		nameTxtBox.setText(app.getConfig().getPlayerName());
 		nameTxtBox.getTextLabel().setForegroundColor(0xffffffff);
 		
 		this.optionsPanel.addWidget(nameTxtBox);
@@ -336,7 +338,7 @@ public class OptionsScreen implements Screen {
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
 				app.setVSync(!app.isVSync());
-				app.getConfig().set(app.isVSync(), "video", "vsync");
+				app.getConfig().getVideo().setVsync(app.isVSync());
 				vsyncBtn.setText("VSync: '" +  app.isVSync() + "'");				
 			}
 		});

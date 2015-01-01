@@ -76,4 +76,21 @@ public class TDMTeamStrategy implements TeamStrategy {
 	public void update(TimeStep timeStep, GameInfo game) {
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		// TODO
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
 }

@@ -261,8 +261,9 @@ public /*strictfp*/ final class Vector2f {
 	}
 
 
+	@Override
 	public String toString() {
-		return "(" + this.x + "," + this.y + ")";
+		return "{ \"x\": " + this.x + ", \"y\": " + this.y + "}";
 	}
 
 	/* (non-Javadoc)

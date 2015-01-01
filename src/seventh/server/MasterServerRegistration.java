@@ -5,11 +5,12 @@ package seventh.server;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import seventh.shared.Config;
 import seventh.shared.Cons;
-import seventh.shared.MasterServerApi;
+import seventh.shared.MasterServerClient;
+import seventh.shared.MasterServerConfig;
 
 
 /**
@@ -20,34 +21,55 @@ import seventh.shared.MasterServerApi;
  */
 public class MasterServerRegistration implements Runnable {
 
-	private GameServer gameServer;
-	private MasterServerApi serverApi;
+	private ServerContext serverContext;
+	private MasterServerClient serverClient;
 	
 	private int pingRate;
 	
 	private ScheduledExecutorService service;
 	
 	/**
-	 * @param gameServer
+	 * @param serverContext
 	 */
-	public MasterServerRegistration(GameServer gameServer) {
-		this.gameServer = gameServer;
-		
-		Config config = gameServer.getConfig();
-		this.serverApi = new MasterServerApi(config);		
-		this.pingRate = config.getInt("master_server", "ping_rate_minutes");		
-		this.service = Executors.newSingleThreadScheduledExecutor();
+	public MasterServerRegistration(ServerContext serverContext) {
+		this.serverContext = serverContext;
+				
+		MasterServerConfig config = serverContext.getConfig().getMasterServerConfig();
+		this.serverClient = new MasterServerClient(config);		
+		this.pingRate = config.getPingRateMinutes();
 	}
 	
+	
+	/**
+	 * Start the background process in which pings the master server at a fixed rate
+	 * for as long as this game server is operational.
+	 * 
+	 */
 	public void start() {
-		this.service.scheduleWithFixedDelay(this, pingRate, pingRate, TimeUnit.MINUTES);
+		if(this.service == null) {
+		
+			this.service = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+				
+				@Override
+				public Thread newThread(Runnable r) {
+					Thread thread = new Thread(r, "master-server-ping");
+					thread.setDaemon(true);
+					
+					return thread;
+				}
+			});
+			this.service.scheduleWithFixedDelay(this, pingRate, pingRate, TimeUnit.MINUTES);
+		}
 	}
 	
 	/**
 	 * Shuts down the heartbeat
 	 */
 	public void shutdown() {
-		this.service.shutdownNow();
+		if(this.service != null) {
+			this.service.shutdownNow();
+			this.service = null;
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -69,6 +91,6 @@ public class MasterServerRegistration implements Runnable {
 	 * @throws Exception
 	 */
 	public void sendHeartbeat() throws Exception {
-		this.serverApi.sendHeartbeat(gameServer);
+		this.serverClient.sendHeartbeat(this.serverContext);
 	}	
 }

@@ -4,7 +4,6 @@
 package seventh.server;
 
 import leola.vm.Leola;
-import seventh.game.Game;
 import seventh.game.GameMap;
 import seventh.game.Players;
 import seventh.game.type.GameType;
@@ -14,38 +13,39 @@ import seventh.map.GameLeolaLibrary;
 import seventh.map.Map;
 import seventh.shared.Cons;
 import seventh.shared.State;
-import seventh.shared.StateMachine;
 import seventh.shared.TimeStep;
 
 /**
+ * Responsible for loading maps
+ * 
  * @author Tony
  *
  */
 public class LoadingState implements State {
 	
-	private GameMap map;
-	private GameType gameType;
-	
-	private	Players players;
-	
+	private ServerContext serverContext;
 	private Leola runtime;
+	private GameSession gameSession;
+	private	Players players;
 	private String mapFile;
-	private StateMachine<State> sm;
-		
-	private GameServer server;
 	
-	private boolean successfullyLoaded;
+	private GameSessionListener gameSessionListener;
+	
 	/**
-	 * 
+	 * @param serverContext
+	 * @param gameSessionListener
+	 * @param mapFile
 	 */
-	public LoadingState(GameServer server, String mapFile) {
-		this.server = server;
-		
-		this.sm = server.getSm();
-		this.runtime = server.getRuntime();
+	public LoadingState(ServerContext serverContext, GameSessionListener gameSessionListener, String mapFile) {
+		this.serverContext = serverContext;
+		this.gameSessionListener = gameSessionListener;
 				
 		this.mapFile = mapFile;
-		this.successfullyLoaded = false;				
+		
+		this.runtime = serverContext.getRuntime();
+		
+		/* indicates we haven't successfully loaded the map */
+		this.gameSession = null;
 	}
 
 	/**
@@ -67,8 +67,10 @@ public class LoadingState implements State {
 	}
 	
 	private GameType loadTDMGameType(String mapFile) throws Exception {		
-		int maxKills = server.getMaxScore();
-		long matchTime = server.getMatchTime();
+		ServerSeventhConfig config = this.serverContext.getConfig();
+		
+		int maxKills = config.getMaxScore();
+		long matchTime = config.getMatchTime();
 		
 //		Cons.println("Successfully loaded!");
 		TeamDeathMatchScript script = new TeamDeathMatchScript(runtime);
@@ -76,23 +78,29 @@ public class LoadingState implements State {
 	}
 	
 	private GameType loadObjGameType(String mapFile) throws Exception {
-		int maxScore = server.getMaxScore();
-		long matchTime = server.getMatchTime();
+		ServerSeventhConfig config = this.serverContext.getConfig();
+		
+		int maxScore = config.getMaxScore();
+		long matchTime = config.getMatchTime();
 		
 		ObjectiveScript script = new ObjectiveScript(runtime);
 		return script.loadGameType(mapFile, maxScore, matchTime);
 	}
 	
+
+	
 	/**
 	 * Ends the game
 	 */
 	private void endGame() {				
-		Game game = this.server.getProtocolListener().getGame();
-		if(game != null) {								
-			/* remember which players are still playing */
-			this.players = game.getPlayers();
-			game.destroy();
+		
+		if(this.serverContext.hasGameSession()) {
+			GameSession session = this.serverContext.getGameSession(); 
+			this.gameSessionListener.onGameSessionDestroyed(session);
 			
+			/* remember which players are still playing */
+			this.players = session.getPlayers();
+			session.destroy();			
 		}
 		else {
 			this.players = new Players();			
@@ -108,19 +116,21 @@ public class LoadingState implements State {
 
 			endGame();
 			
-			this.map = loadMap(mapFile);
-			switch(server.getGameType()) {
+			GameMap gameMap = loadMap(mapFile);
+			GameType gameType = null;
+			
+			switch(this.serverContext.getConfig().getGameType()) {
 				case OBJ: {
-					this.gameType = loadObjGameType(mapFile);
+					gameType = loadObjGameType(mapFile);
 					break;
 				}
 				case TDM: {
-					this.gameType = loadTDMGameType(mapFile);
+					gameType = loadTDMGameType(mapFile);
 					break;
 				}
 			}			
-								
-			this.successfullyLoaded = true;
+			
+			this.gameSession = new GameSession(serverContext.getConfig(), gameMap, gameType, players);									
 		}
 		catch(Exception e) {
 			Cons.println("*** Unable to load map: " + this.mapFile + " -> " + e);
@@ -132,12 +142,13 @@ public class LoadingState implements State {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
-		if(successfullyLoaded) {
-			Cons.println("Starting the game...");
-			sm.changeState(new InGameState(players, map, gameType, server));
+		if(this.gameSession != null) {
+			Cons.println("Starting the game...");								
+			this.gameSessionListener.onGameSessionCreated(gameSession);			
+			this.serverContext.getStateMachine().changeState(new InGameState(serverContext, gameSession));
 		}
 		else {
-			sm.changeState(new ServerStartState());
+			this.serverContext.getStateMachine().changeState(new ServerStartState());
 		}
 	}
 

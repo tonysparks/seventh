@@ -4,7 +4,7 @@
 package seventh.network.messages;
 
 import harenet.IOBuffer;
-import seventh.server.GameServer;
+import seventh.server.ServerContext;
 
 
 
@@ -21,7 +21,7 @@ public class RconTokenMessage extends AbstractNetMessage {
 	/**
 	 */
 	public RconTokenMessage() {
-		this(GameServer.INVALID_TOKEN);
+		this(ServerContext.INVALID_RCON_TOKEN);
 	}
 	
 	/**

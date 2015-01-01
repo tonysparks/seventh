@@ -115,7 +115,7 @@ public class ClientDroppedItem extends ClientEntity {
 			float x = (pos.x - cameraPos.x);
 			float y = (pos.y - cameraPos.y);
 			weapon.setPosition(x-54, y-24);						
-			//canvas.fillCircle(10.0f, (int)x, (int)y, 0x3f4a4f8f);
+			canvas.fillCircle(10.0f, (int)x, (int)y, 0x3f4a4f8f);
 			canvas.drawSprite(weapon);
 //			canvas.fillRect(x, y, bounds.width, bounds.height, 0x0f00ff00);
 			

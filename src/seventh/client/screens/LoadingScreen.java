@@ -116,7 +116,7 @@ public class LoadingScreen implements Screen {
 							network.setProtocolHandler(protocol);
 							
 							ConnectRequestMessage msg = new ConnectRequestMessage();
-							msg.name = app.getConfig().get("name").toString();
+							msg.name = app.getConfig().getPlayerName();
 							
 							network.sendReliableMessage(msg);
 						}

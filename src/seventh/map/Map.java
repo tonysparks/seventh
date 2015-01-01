@@ -12,6 +12,7 @@ import seventh.client.gfx.Renderable;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.Debugable;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -22,7 +23,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author Tony
  *
  */
-public abstract interface Map extends Renderable {
+public abstract interface Map extends Renderable, Debugable {
 	
 	/**
 	 * Scene Definition

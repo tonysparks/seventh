@@ -7,11 +7,14 @@ import java.util.Scanner;
 
 import leola.vm.Leola;
 import seventh.server.GameServer;
+import seventh.server.ServerSeventhConfig;
+import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.ConsoleFrame;
 import seventh.shared.DefaultConsole;
 import seventh.shared.Scripting;
+import seventh.shared.SeventhConstants;
 
 /**
  * Main entry point for the server
@@ -20,13 +23,13 @@ import seventh.shared.Scripting;
  *
  */
 public class ServerMain {
-	
-	private static final int DEFAULT_PORT = 9844;
-	
+		
 	private static final String BANNER =
 	"\n\n\n\t\t*** The Seventh Server ***\n" +
 	"\t\t    5d Studios (c)\n\n"
 	;
+	
+
 	
 	public static void main(final String [] args) {
 		final Console console = new DefaultConsole();
@@ -38,20 +41,25 @@ public class ServerMain {
 			@Override
 			public void run() {
 				try {
-					int port = DEFAULT_PORT;
+					int port = SeventhConstants.DEFAULT_PORT;
 					
 					Leola runtime = Scripting.newRuntime();
-					GameServer server = new GameServer(console, runtime);
+					ServerSeventhConfig config = new ServerSeventhConfig(new Config("./seventh/server_config.leola", "server_config", runtime));
+					GameServer server = new GameServer(config, console, runtime);
+					
+					
 					if (args.length > 0) {
 						try {
 							port =  Integer.parseInt(args[0]);
 						}
-						catch(Exception e) {}
+						catch(Exception e) {
+							port = config.getPort();	
+						}
 					}
 					else {
-						// TODO Use port from config file
-						//port = server.getp
+						port = config.getPort();
 					}
+					
 					server.start(port);
 				} 
 				catch (Exception e) {

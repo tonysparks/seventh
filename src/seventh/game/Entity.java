@@ -10,6 +10,7 @@ import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
@@ -19,7 +20,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public abstract class Entity {
+public abstract class Entity implements Debugable {
 	
 	/**
 	 * Invalid entity ID
@@ -62,6 +63,14 @@ public abstract class Entity {
 			return this==OPERATING_VEHICLE||
 					this==ENTERING_VEHICLE||
 					this==EXITING_VEHICLE;
+		}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {
+			return "\"" + name() + "\"";
 		}
 	}
 	
@@ -169,6 +178,14 @@ public abstract class Entity {
 		 */
 		public boolean isDamagable() {
 			return isPlayer() || isVehicle();
+		}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {		
+			return "\"" + name() + "\"";
 		}
 	}
 
@@ -721,6 +738,36 @@ public abstract class Entity {
 		}
 		
 		return closest;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation(seventh.shared.Debugable.DebugEntryChain)
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("id", getId())
+		  .add("pos", getPos())
+		  .add("vel", getVel())
+		  .add("movementDir", getMovementDir())
+		  .add("centerPos", getCenterPos())
+		  .add("facing", getFacing())
+		  .add("bounds", getBounds())
+		  .add("orientation", getOrientation())
+		  .add("state", getCurrentState())
+		  .add("speed", getSpeed())
+		  .add("isAlive", isAlive())
+		  .add("health", getHealth())
+		  .add("type", getType());				
+		return me;		
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
 	}
 }
 

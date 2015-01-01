@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.AdapterAction;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
@@ -16,7 +17,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class Goal extends AdapterAction {
+public class Goal extends AdapterAction implements Debugable {
 
 	private Deque<Action> actions;
 	private boolean isFirstAction;
@@ -165,4 +166,21 @@ public class Goal extends AdapterAction {
 		return this.actions.isEmpty();
 	}
 		
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("actions", this.actions);
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {	
+		return getDebugInformation().toString();
+	}
 }

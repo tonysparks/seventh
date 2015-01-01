@@ -12,11 +12,11 @@ import paulscode.sound.SoundSystemException;
 import paulscode.sound.SoundSystemLogger;
 import paulscode.sound.codecs.CodecWav;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
+import seventh.client.ClientSeventhConfig;
 import seventh.game.SoundType;
 import seventh.game.net.NetSound;
 import seventh.math.Vector2f;
 import seventh.shared.Command;
-import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.Console;
 
@@ -115,9 +115,12 @@ public class Sounds {
 	public static final int[] mechRetractFootstep = {107};
 	public static final int[] mechTorsoMove = {108};
 	
+	public static final int[] breadthLite = {109,110,111};
+	public static final int[] breadthHeavy = {112,113,114};
+	
 	private static Sound[][] channels = new Sound[32][];
 	private static float volume = 0.1f;
-	private static Config config;
+	private static ClientSeventhConfig config;
 	
 	private static Sound[] createChannel() {
 		return new Sound[] {					
@@ -263,18 +266,26 @@ public class Sounds {
 			loadSound("./seventh/sfx/player/footsteps/mech_footstep02.wav") ,   // 107
 			
 			loadSound("./seventh/sfx/player/mech_torso_move.wav") ,   // 108
+			
+			loadSound("./seventh/sfx/player/breathing_lite01.wav") ,   // 109
+			loadSound("./seventh/sfx/player/breathing_lite02.wav") ,   // 110
+			loadSound("./seventh/sfx/player/breathing_lite03.wav") ,   // 111
+			
+			loadSound("./seventh/sfx/player/breathing_heavy01.wav") ,   // 112
+			loadSound("./seventh/sfx/player/breathing_heavy02.wav") ,   // 113
+			loadSound("./seventh/sfx/player/breathing_heavy03.wav") ,   // 114
 		};
 	};
 
 	private static SoundSystem soundSystem;
 	
-	public static void init(Config cfg) {
+	public static void init(ClientSeventhConfig cfg) {
 		try {
 			Cons.println("Initializing the sound subsystem...");
 			Cons.getImpl().addCommand(getVolumeCommand());
 			
 			config = cfg;
-			volume = config.getFloat("sound", "volume");
+			volume = config.getVolume();
 			
 			SoundSystemConfig.setMasterGain(volume);					
 			SoundSystemConfig.setLogger(new SoundSystemLogger() {
@@ -316,7 +327,7 @@ public class Sounds {
 		Sounds.volume = volume;		
 		soundSystem.setMasterVolume(volume);
 		if(config!=null) {			
-			config.set(volume, "sound", "volume");
+			config.setVolume(volume);
 		}
 	}
 	
@@ -670,7 +681,13 @@ public class Sounds {
 			break;
 		case TANK_TURRET_MOVE:
 			playFreeSound(mechTorsoMove, x, y);
-			break;			
+			break;		
+		case BREATH_HEAVY: 
+			playFreeSound(breadthHeavy, x, y);
+			break;
+		case BREATH_LITE:
+			playFreeSound(breadthLite, x, y);
+			break;
 		case MUTE:
 			
 		default:

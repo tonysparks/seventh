@@ -173,7 +173,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 	@Override
 	public void connectAccepted(Connection conn, ConnectAcceptedMessage msg) {				
 		this.localPlayerId = msg.playerId;
-		this.players.put(localPlayerId, new ClientPlayer(app.getConfig().get("name").toString(), localPlayerId));
+		this.players.put(localPlayerId, new ClientPlayer(app.getConfig().getPlayerName(), localPlayerId));
 		
 		applyGameState(msg.gameState, localPlayerId, true);
 	}

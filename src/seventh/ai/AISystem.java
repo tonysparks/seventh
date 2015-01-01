@@ -5,6 +5,7 @@ package seventh.ai;
 
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
+import seventh.shared.Debugable;
 import seventh.shared.Updatable;
 
 /**
@@ -13,7 +14,7 @@ import seventh.shared.Updatable;
  * @author Tony
  *
  */
-public interface AISystem extends Updatable {
+public interface AISystem extends Updatable, Debugable {
 	
 	/**
 	 * Initialize the AI system

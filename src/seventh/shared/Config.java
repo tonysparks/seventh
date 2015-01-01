@@ -159,6 +159,15 @@ public class Config {
 		return defaultValue;
 	}
 	
+	public String getStr(String defaultValue, String ...keys ) {
+		LeoObject obj = get(keys);
+		if(obj != null) {
+			return obj.toString();
+		}
+		
+		return defaultValue;
+	}
+	
 	public String getString(String ...keys ) {
 		LeoObject obj = get(keys);
 		return obj.toString();

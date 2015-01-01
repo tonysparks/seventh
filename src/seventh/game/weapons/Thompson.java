@@ -30,7 +30,7 @@ public class Thompson extends Weapon {
 		this.roundsPerSecond = 7;
 		this.damage = 21;
 		this.reloadTime = 1600;
-		this.clipSize = 30;
+		this.clipSize = 30; 
 		this.totalAmmo = 180;
 		this.spread = 8;
 		this.bulletsInClip = this.clipSize;		
@@ -39,7 +39,8 @@ public class Thompson extends Weapon {
 		
 		this.netWeapon.type = Type.THOMPSON.netValue();
 		
-		applyScriptAttributes("thompson");
+		applyScriptAttributes("thompson");		
+		this.bulletsInClip = this.clipSize;
 	}
 	
 

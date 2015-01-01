@@ -92,8 +92,13 @@ public class PlayerEntity extends Entity implements Controllable {
 	private static final int RUN_DELAY_TIME = 300;
 	private static final int SPRINT_DELAY_TIME = 200;
 	
+	private static final float WALK_SPEED_FACTOR = 0.484f;
+	private static final float SPRINT_SPEED_FACTOR = 1.95f;
+	
 	private static final int ENTERING_VEHICLE_TIME = 2500;
 	private static final int EXITING_VEHICLE_TIME = 2000;
+	
+	private static final int RECOVERY_TIME = 2000;
 	
 	public static final byte MAX_STAMINA = 100;
 	public static final float STAMINA_DECAY_RATE = 2;
@@ -113,10 +118,12 @@ public class PlayerEntity extends Entity implements Controllable {
 	private Rectangle hearingBounds, visualBounds;
 	
 	private float stamina;
+	private boolean completedRecovery;
 	
 	protected Vector2f inputVel;
 	private boolean firing;
-	private long runTime;
+	private long runTime, recoveryTime;
+	private boolean wasSprinting;
 	
 	private Vector2f enemyDir;
 	
@@ -394,19 +401,40 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * 
 	 * @param timeStep
 	 */
-	protected void updateStamina(TimeStep timeStep) {
-		if(currentState !=State.SPRINTING) {
+	protected void updateStamina(TimeStep timeStep) {		
+		if(currentState != State.SPRINTING) {
 			stamina += STAMINA_RECOVER_RATE;
 			if(stamina > MAX_STAMINA) {
 				stamina = MAX_STAMINA;
 			}
+			
+			/* if are not sprinting anymore, 
+			 * start recovering 
+			 */			
+			if(recoveryTime > 0) {
+				recoveryTime -= timeStep.getDeltaTime();
+				if(recoveryTime <= 0) {
+					completedRecovery = true;
+				}
+			}			
 		}
 		else {
 			stamina -= STAMINA_DECAY_RATE;
 			if(stamina < 0) {
 				stamina = 0;
+				currentState = State.RUNNING;
+				
+				recoveryTime = RECOVERY_TIME;
 			}
+			
+//			float recoveryTimeNeeded = MAX_STAMINA/2f; 
+//			if(stamina < recoveryTimeNeeded) {
+//				// Take percentage of the stamina to time to recovery and adjust the
+//				// recovery time accordingly
+//				recoveryTime = RECOVERY_TIME - (long)(RECOVERY_TIME * (stamina / recoveryTimeNeeded)); 				
+//			}
 		}
+				
 	}
 	
 	
@@ -464,26 +492,43 @@ public class PlayerEntity extends Entity implements Controllable {
 		/* make walking sounds */
 		if( !inputVel.isZero() && (currentState==State.RUNNING||currentState==State.SPRINTING) ) {
 			if ( runTime <= 0 ) {				
-				Vector2f cpos = getCenterPos();
-				int x = (int)cpos.x;
-				int y = (int)cpos.y;
+				Vector2f soundPos = getCenterPos();
+				int x = (int)soundPos.x;
+				int y = (int)soundPos.y;
 				
 				SurfaceType surface = game.getMap().getSurfaceTypeByWorld(x, y);
 				if(surface != null) {
-					game.emitSound(getId(), SurfaceTypeToSoundType.toSurfaceSoundType(surface) , cpos);
+					game.emitSound(getId(), SurfaceTypeToSoundType.toSurfaceSoundType(surface) , soundPos);
 				}
+				else {
+					game.emitSound(getId(), SoundType.SURFACE_NORMAL , soundPos);
+				}
+				
 				if(currentState == State.SPRINTING) {
 					if(stamina > 0) {
 						runTime = SPRINT_DELAY_TIME;
-						game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());
+						game.emitSound(getId(), SoundType.RUFFLE, soundPos);						
 					}
-					else {
+					else {						
 						runTime = RUN_DELAY_TIME;	
 					}
+					
 				}
 				else {
 					runTime = RUN_DELAY_TIME;
 				}
+				
+				
+				/* if we are near end of stamina, breadth hard */
+				if (stamina <= STAMINA_DECAY_RATE) {
+					game.emitSound(getId(), SoundType.BREATH_HEAVY, soundPos);
+				}
+				
+				/* if we have recovered enough stamina, let out a lite breadth */
+				if(completedRecovery) {
+					game.emitSound(getId(), SoundType.BREATH_LITE, soundPos);
+					completedRecovery = false;
+				}								
 			}
 			else {
 				runTime -= timeStep.getDeltaTime();
@@ -500,17 +545,20 @@ public class PlayerEntity extends Entity implements Controllable {
 	 */
 	@Override
 	protected int calculateMovementSpeed() {
+		/* The player's speed is impacted by:
+		 * 1) the state of the player (walking, running or sprinting)
+		 * 2) the weapon he is currently wielding
+		 */
+		
+		
 		int mSpeed = this.speed;
 		if(currentState==State.WALKING) {
-			mSpeed = (int)( (float)this.speed * 0.484f);
+			mSpeed = (int)( (float)this.speed * WALK_SPEED_FACTOR);
 		}
 		else if(currentState == State.SPRINTING) {
 			if(stamina > 0) {
-				mSpeed = (int)( (float)this.speed * 1.35f);
+				mSpeed = (int)( (float)this.speed * SPRINT_SPEED_FACTOR);
 			}
-//			else {
-//				mSpeed = (int)(this.speed * 0.8);	
-//			}
 		}
 
 		Weapon weapon = inventory.currentItem();
@@ -652,15 +700,15 @@ public class PlayerEntity extends Entity implements Controllable {
 	//			inputVel.x = 0;
 				noMoveX();
 			}
-			
-			
-	
+				
 			if(Keys.SPRINT.isDown(keys)) {
-				if(!inputVel.isZero() && currentState != State.WALKING) {
+				if(!inputVel.isZero() && currentState != State.WALKING) {										
 					sprint();
 				}
 			}
 			else {
+				this.wasSprinting = false;
+				
 				if(!inputVel.isZero() && currentState != State.WALKING) {
 					currentState = State.RUNNING;
 				}			
@@ -752,13 +800,35 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @see seventh.game.Controllable#sprint()
 	 */
 	public void sprint() {
-		if(currentState!=State.DEAD && stamina > 0) {		
-			if(currentState!=State.SPRINTING) {
-				game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());
+		
+		/*
+		 * We only allow sprinting in very special cases:
+		 * 1) you are not dead
+		 * 2) you have enough stamina
+		 * 3) you are not firing your weapon
+		 * 4) you are not currently using a Rocket Launcher
+		 * 5) recovery time has been met
+		 */
+		
+		if(currentState!=State.DEAD &&				
+		   stamina > 0 &&
+		   !firing &&
+		   !wasSprinting &&		   
+		   recoveryTime <= 0) {		
+		
+			Weapon weapon = this.inventory.currentItem();
+			if(weapon == null || !weapon.getType().equals(Type.ROCKET_LAUNCHER)) {			
+				if(currentState!=State.SPRINTING) {
+					game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());
+				}
+				
+				currentState = State.SPRINTING;				
+				return;
 			}
-			
-			currentState = State.SPRINTING;			
 		}
+		
+		wasSprinting = true;
+		currentState = State.RUNNING;
 	}
 	
 	/*

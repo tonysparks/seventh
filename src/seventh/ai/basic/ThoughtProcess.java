@@ -3,6 +3,7 @@
  */
 package seventh.ai.basic;
 
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
@@ -11,7 +12,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public interface ThoughtProcess {
+public interface ThoughtProcess extends Debugable {
 
 	/**
 	 * This brain has freshly spawned

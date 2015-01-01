@@ -458,14 +458,7 @@ public class ClientGame {
 	public void setRconToken(long rconToken) {
 		this.rconToken = rconToken;
 	}
-	
-	/**
-	 * @return the clients ping
-	 */
-	public int getPing() {
-		return this.localPlayer.getPing();
-	}
-	
+		
 	/**
 	 * @return the lightSystem
 	 */
@@ -990,22 +983,22 @@ public class ClientGame {
 						case ALLIES: {
 							if(random.nextBoolean()) {
 								anim = Art.newAlliedFrontDeathAnim();
-								Vector2f.Vector2fMA(pos, entity.getFacing(), 25, pos);
+								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
 							}
 							else {
-								anim = Art.newAlliedBackDeathAnim();
-								Vector2f.Vector2fMA(pos, entity.getFacing(), -35, pos);
+								anim = Art.newAlliedBackDeathAnim();								
+								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
 							}														
 							break;
 						}
 						case AXIS: {
 							if(random.nextBoolean()) {
 								anim = Art.newAxisFrontDeathAnim();
-								Vector2f.Vector2fMA(pos, entity.getFacing(), 25, pos);
+								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
 							}
 							else {
-								anim = Art.newAxisBackDeathAnim();
-								Vector2f.Vector2fMA(pos, entity.getFacing(), -35, pos);
+								anim = Art.newAxisBackDeathAnim();								
+								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
 							}
 							break;
 						}

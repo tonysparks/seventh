@@ -5,6 +5,7 @@
 package seventh.game.type;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -350,4 +351,33 @@ public abstract class AbstractTeamGameType implements GameType {
 		return stats;
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		  
+	    me.add("game_type", getType().name())
+		  .add("match_time", new Date(getMatchTime()).toString())
+		  .add("max_score", getMaxScore())
+		  .add("remaining_time", getRemainingTime() / 1000)
+		  .add("allied_spawn_points", getAlliedSpawnPoints())
+		  .add("axis_spawn_points", getAxisSpawnPoints())
+		  .add("teams", new Team[] { 
+				  getAlliedTeam(),
+				  getAxisTeam()
+		  });
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
+	
 }
+

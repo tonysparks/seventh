@@ -14,13 +14,14 @@ import seventh.game.Team;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeamStat;
 import seventh.math.Vector2f;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
  * @author Tony
  *
  */
-public interface GameType {
+public interface GameType extends Debugable {
 
 	public static enum Type {
 		TDM,

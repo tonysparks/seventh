@@ -12,6 +12,7 @@ import seventh.graph.GraphNode;
 import seventh.map.PathFeeder;
 import seventh.map.Tile;
 import seventh.shared.DebugDraw;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 /**
@@ -21,7 +22,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class Brain {
+public class Brain implements Debugable {
 		
 	private Locomotion motion;
 	private Memory memory;
@@ -198,5 +199,25 @@ public class Brain {
 	 */
 	public Goal getGoals() {
 		return goals;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("goals", getGoals())
+		  .add("entity_id", (this.entityOwner!=null) ? getEntityOwner().getId() : null)
+		  .add("thoughts", getThoughtProcess());
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
 	}
 }

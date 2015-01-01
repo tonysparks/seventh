@@ -47,8 +47,9 @@ import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
 import seventh.network.messages.UserInputMessage;
-import seventh.shared.Config;
 import seventh.shared.Cons;
+import seventh.shared.Debugable;
+import seventh.shared.SeventhConfig;
 import seventh.shared.TimeStep;
 
 /**
@@ -57,7 +58,15 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class Game implements GameInfo {
+public class Game implements GameInfo, Debugable {
+	
+	
+	/**
+	 * Null Node Data.
+	 * 
+	 * @author Tony
+	 *
+	 */
 	private static class NodeData implements GraphNodeFactory<Void> {		
 		@Override
 		public Void createEdgeData(Map map, GraphNode<Tile, Void> left,
@@ -133,7 +142,7 @@ public class Game implements GameInfo {
 	private final float DISTANCE_CHECK;
 	private final int TILE_WIDTH, TILE_HEIGHT;
 	
-	private Config config;
+	private SeventhConfig config;
 
 	
 	private int lastValidId;
@@ -141,12 +150,18 @@ public class Game implements GameInfo {
 	private AISystem aiSystem;
 	
 	/**
+	 * @param config
 	 * @param players
 	 * @param gameType
 	 * @param gameMap
 	 * @param dispatcher
 	 */
-	public Game(Config config, final Players players, final GameType gameType, GameMap gameMap, EventDispatcher dispatcher) {
+	public Game(SeventhConfig config, 
+			final Players players, 
+			final GameType gameType, 
+			GameMap gameMap, 
+			EventDispatcher dispatcher) {
+		
 		this.config = config;
 		this.gameType = gameType;		
 		this.gameType.registerListeners(this, dispatcher);
@@ -357,7 +372,7 @@ public class Game implements GameInfo {
 	 * @see seventh.game.GameInfo#getConfig()
 	 */
 	@Override
-	public Config getConfig() {
+	public SeventhConfig getConfig() {
 		return config;
 	}
 	
@@ -1322,5 +1337,21 @@ public class Game implements GameInfo {
 		netUpdate.sounds = sounds;
 		netUpdate.spectatingPlayerId = player.getSpectatingPlayerId();
 		return netUpdate;
+	}
+		
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		me.add("entities", this.entities)
+		  .add("bombTargets", this.bombTargets)
+		  .add("map", this.map)
+		  .add("game_type", this.gameType)
+		  .add("ai", this.aiSystem)
+		  ;
+		  	
+		return me;
 	}
 }

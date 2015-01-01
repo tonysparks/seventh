@@ -61,6 +61,9 @@ public enum SoundType {
 	
 	MELEE_SWING,
 	MELEE_HIT,
+
+	BREATH_LITE,
+	BREATH_HEAVY,
 	
 	EXPLOSION,
 	WEAPON_SWITCH,

@@ -3,6 +3,7 @@
  */
 package seventh.client.gfx;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,19 +18,25 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
+ * Art assets
+ * 
+ * 
  * @author Tony
  *
  */
 public class Art {
 	private static final Random random = new Random();
 	
+	/**
+	 * Simple black image used to overlay
+	 */
 	public static final TextureRegion BLACK_IMAGE = new TextureRegion();
-	static {
-		Pixmap map = TextureUtil.createPixmap(128, 128);
-		map.setColor(Color.BLACK);
-		map.fillRectangle(0, 0, map.getWidth(), map.getHeight());
-		BLACK_IMAGE.setTexture(new Texture(map));
-	}
+	
+	
+	/*----------------------------------------------------------------
+	 * Art for the Game
+     *----------------------------------------------------------------*/
+	 
 	
 	public static  TextureRegion shotgunImage = null;
 	public static  TextureRegion rpgImage = null;			
@@ -47,13 +54,25 @@ public class Art {
 	public static  TextureRegion riskerImage = null;
 	
 	public static  TextureRegion bombImage = null;
-	public static TextureRegion computerImage = null;	
+	public static  TextureRegion computerImage = null;	
 	
-	public static  TextureRegion legsImage = null;		
-	public static  Model legsModel = null;	
-	public static  Model alliedCharacterModel = null;
-	public static  Model axisCharacterModel = null;
-		
+//	public static  TextureRegion legsImage = null;		
+//	public static  Model legsModel = null;	
+//	public static  Model alliedCharacterModel = null;
+//	public static  Model axisCharacterModel = null;
+	
+	
+	public static  Model alliedBodyModel = null;		
+	public static  Model alliedWalkModel = null;
+	public static  Model alliedSprintModel = null;
+	public static  TextureRegion alliedCrouchLegs = null;
+	
+	public static  Model axisBodyModel = null;
+	public static  Model axisWalkModel = null;
+	public static  Model axisSprintModel = null;
+	public static  TextureRegion axisCrouchLegs = null;	
+	
+	
 	public static  TextureRegion shotgunIcon = null;
 	public static  TextureRegion rocketIcon = null;	
 	public static  TextureRegion springfieldIcon = null;	
@@ -65,15 +84,15 @@ public class Art {
 	public static  TextureRegion pistolIcon = null;
 	public static  TextureRegion riskerIcon = null;
 	
-	private static  TextureRegion[] explosionImage = null;
-	private static  TextureRegion[] fireImage = null;
-	private static  TextureRegion[] rocketImage = null;
+	private static TextureRegion[] explosionImage = null;
+	private static TextureRegion[] fireImage = null;
+	private static TextureRegion[] rocketImage = null;
 	
 	public static  TextureRegion deathsImage = null;
-	private static  TextureRegion[] alliedBackDeathImage = null;		
-	private static  TextureRegion[] alliedFrontDeathImage = null;	
-	private static  TextureRegion[] axisBackDeathImage = null;
-	private static  TextureRegion[] axisFrontDeathImage = null;	
+	private static TextureRegion[] alliedBackDeathImage = null;		
+	private static TextureRegion[] alliedFrontDeathImage = null;	
+	private static TextureRegion[] axisBackDeathImage = null;
+	private static TextureRegion[] axisFrontDeathImage = null;	
 	
 	public static  TextureRegion[] bloodImages = null;
 	public static  TextureRegion[] gibImages = null;
@@ -97,39 +116,52 @@ public class Art {
 	
 	public static  TextureRegion cursorImg = null;		
 	
-	public static TextureRegion[] thompsonMuzzleFlash = null;
-	public static TextureRegion[] m1GarandMuzzleFlash = null;
-	public static TextureRegion[] springfieldMuzzleFlash = null;
-	public static TextureRegion[] kar98MuzzleFlash = null;
-	public static TextureRegion[] mp44MuzzleFlash = null;
-	public static TextureRegion[] mp40MuzzleFlash = null;
-	public static TextureRegion[] shotgunMuzzleFlash = null;
-	public static TextureRegion[] rocketMuzzleFlash = null;
-	public static TextureRegion[] riskerMuzzleFlash = null;
+	public static  TextureRegion[] thompsonMuzzleFlash = null;
+	public static  TextureRegion[] m1GarandMuzzleFlash = null;
+	public static  TextureRegion[] springfieldMuzzleFlash = null;
+	public static  TextureRegion[] kar98MuzzleFlash = null;
+	public static  TextureRegion[] mp44MuzzleFlash = null;
+	public static  TextureRegion[] mp40MuzzleFlash = null;
+	public static  TextureRegion[] shotgunMuzzleFlash = null;
+	public static  TextureRegion[] rocketMuzzleFlash = null;
+	public static  TextureRegion[] riskerMuzzleFlash = null;
 	
-	public static Sprite healthIcon = null;
-	public static Sprite staminaIcon = null;
-	public static Sprite upArrow = null;
-	public static Sprite downArrow = null;
+	public static  Sprite healthIcon = null;
+	public static  Sprite staminaIcon = null;
+	public static  Sprite upArrow = null;
+	public static  Sprite downArrow = null;
 	
-	public static TextureRegion fireWeaponLight = null;
-	public static TextureRegion lightMap = null;
-	public static TextureRegion flashLight = null;
+	public static  TextureRegion fireWeaponLight = null;
+	public static  TextureRegion lightMap = null;
+	public static  TextureRegion flashLight = null;
 	
-	public static TextureRegion bullet = null;
+	public static  TextureRegion bullet = null;
 	
 	
-	public static TextureRegion[] tankTracks = null;
-	public static TextureRegion tankTurret = null;
+	public static  TextureRegion[] tankTracks = null;
+	public static  TextureRegion tankTurret = null;
 	
-	public static int[] animationFrames = null;
 	
+	/**
+	 * Reloads the graphics
+	 */
 	public static void reload() {
 		destroy();
 		load();
 	}
 	
-	public static void load() {
+	
+	/**
+	 * Loads the graphics
+	 */
+	public static void load() {		
+		{
+			Pixmap map = TextureUtil.createPixmap(128, 128);
+			map.setColor(Color.BLACK);
+			map.fillRectangle(0, 0, map.getWidth(), map.getHeight());
+			BLACK_IMAGE.setTexture(new Texture(map));
+		}
+		
 
 		shotgunImage = loadImage("./seventh/gfx/weapons/m3.bmp", 0xff00ff);
 		rpgImage = loadImage("./seventh/gfx/weapons/rpg.bmp", 0xff00ff);
@@ -153,12 +185,23 @@ public class Art {
 		bombImage = loadImage("./seventh/gfx/weapons/bomb.bmp", 0xff00ff);
 		computerImage = loadImage("./seventh/gfx/computer.bmp");
 
-		legsImage = loadImage("./seventh/gfx/player/legs.bmp", 0xff00ff);
-		legsModel = new Model(legsImage, 128, 64, 2, 4);
+//		legsImage = loadImage("./seventh/gfx/player/legs.bmp", 0xff00ff);
+//		legsModel = new Model(legsImage, 128, 64, 2, 4);
+//
+//		alliedCharacterModel = new Model(loadImage("./seventh/gfx/player/allied_01.png"), 128, 128, 2, 3);
+//		axisCharacterModel = new Model(loadImage("./seventh/gfx/player/axis_01.png"), 128, 128, 2, 3);
 
-		alliedCharacterModel = new Model(loadImage("./seventh/gfx/player/allied_01.png"), 128, 128, 2, 3);
-		axisCharacterModel = new Model(loadImage("./seventh/gfx/player/axis_01.png"), 128, 128, 2, 3);
-
+		alliedBodyModel = new Model(loadImage("./seventh/gfx/player/allied_positions.png"), 201, 173, 2, 3);				
+		alliedWalkModel = new Model(loadImage("./seventh/gfx/player/allied_legs_walk.png"), 372, 196, 2, 4);
+		alliedSprintModel = new Model(loadImage("./seventh/gfx/player/allied_legs_sprint.png"), 256, 190, 2, 3);
+		alliedCrouchLegs = loadImage("./seventh/gfx/player/allied_crouch_legs.png");
+						
+		axisBodyModel = new Model(loadImage("./seventh/gfx/player/axis_positions.png"), 201, 173, 2, 3);		
+		axisWalkModel = new Model(loadImage("./seventh/gfx/player/axis_legs_walk.png"), 372, 196, 2, 4);
+		axisSprintModel = new Model(loadImage("./seventh/gfx/player/axis_legs_sprint.png"), 256, 190, 2, 3);
+		axisCrouchLegs = loadImage("./seventh/gfx/player/axis_crouch_legs.png");
+		
+		
 		shotgunIcon = loadImage("./seventh/gfx/weapons/shotgun_icon.png");
 		rocketIcon = loadImage("./seventh/gfx/weapons/rpg_icon.png");
 		springfieldIcon = loadImage("./seventh/gfx/weapons/springfield_icon.png");
@@ -179,16 +222,26 @@ public class Art {
 		deathsImage = loadImage("./seventh/gfx/player/death_symbol.png");
 		
 
+//		alliedBackDeathImage = TextureUtil.splitImage(
+//				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_01_death_01.png"), 0, 0, 170, 200), 2, 3);
+//
+//		alliedFrontDeathImage = TextureUtil.splitImage(
+//				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_01_death_02.png"), 0, 0, 170, 200), 2, 3);
+
 		alliedBackDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_01_death_01.png"), 0, 0, 170, 200), 2, 3);
+				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_01.png"), 0, 0, 300, 210), 2, 4);
 
 		alliedFrontDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_01_death_02.png"), 0, 0, 170, 200), 2, 3);
-
+				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_02.png"), 0, 0, 310, 175), 2, 6);		
+		
+//		axisBackDeathImage = TextureUtil.splitImage(
+//				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_01_death_01.png"), 0, 0, 170, 200), 2, 3);
+//		axisFrontDeathImage = TextureUtil.splitImage(
+//				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_01_death_02.png"), 0, 0, 170, 200), 2, 3);		
 		axisBackDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_01_death_01.png"), 0, 0, 170, 200), 2, 3);
+				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_01.png"), 0, 0, 300, 210), 2, 4);
 		axisFrontDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_01_death_02.png"), 0, 0, 170, 200), 2, 3);
+				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_02.png"), 0, 0, 310, 180), 2, 6);
 
 		bloodImages = TextureUtil.splitImage(loadImage("./seventh/gfx/particles/blood.png"), 2, 4);
 		gibImages = TextureUtil.splitImage(loadImage("./seventh/gfx/particles/gibs.png"), 2, 2);
@@ -242,95 +295,63 @@ public class Art {
 		tankTurret = loadImage("./seventh/gfx/vehicles/tank_turret.png");
 	}
 
+	
+	/**
+	 * Releases all the textures
+	 */
 	public static void destroy() {
-
-		free(shotgunImage);
-		free(rpgImage);
-
-		free(grenadeImage);
-		free(grenadeIcon);
-
-		free(springfieldImage);
-		free(thompsonImage);
-		free(m1GarandImage);
-		free(kar98Image);
-		free(mp44Image);
-		free(mp40Image);
-		free(pistolImage);
-		free(riskerImage);
-
-		free(bombImage);
-
-		free(legsImage);
-		free(legsModel);
-
-		free(alliedCharacterModel);
-		free(axisCharacterModel);
-
-		free(shotgunIcon);
-		free(rocketIcon);
-		free(springfieldIcon);
-		free(thompsonIcon);
-		free(m1GarandIcon);
-		free(kar98Icon);
-		free(mp44Icon);
-		free(mp40Icon);
-		free(pistolIcon);
-		free(riskerIcon);
-		
-		// private static final TextureRegion[] explosionImage =
-		// TextureUtil.splitImage(
-		// TextureUtil.resizeImage(loadImage("./seventh/gfx/explosion1.png"),
-		// 128,128), 4, 4);
-		free(explosionImage);
-		free(fireImage);
-		free(rocketImage);
-
-		free(deathsImage);
-
-		free(alliedBackDeathImage);
-
-		free(alliedFrontDeathImage);
-
-		free(axisBackDeathImage);
-		free(axisFrontDeathImage);
-
-		free(bloodImages);
-		free(gibImages);
-
-		free(smokeImage);
-
-		free(smallAssaultRifleIcon);
-		free(smallShotgunIcon);
-		free(smallRocketIcon);
-		free(smallSniperRifleIcon);
-		free(smallM1GarandIcon);
-		free(smallGrenadeIcon);
-		free(smallExplosionIcon);
-		free(smallkar98Icon);
-		free(smallmp44Icon);
-		free(smallmp40Icon);
-		free(smallPistolIcon);
-		free(smallRiskerIcon);
-		
-		free(cursorImg);		
-		
-		free(fireWeaponLight);
-		free(flashLight);
-		free(lightMap);
-		
-		free(bullet);
-		
-		free(tankTracks);
-		free(tankTurret);
+		try {
+			
+			/*
+			 * Iterate through all of the static fields,
+			 * free the Sprite's, TextureRegion's, and Model's
+			 */			
+			Field[] fields = Art.class.getFields();
+			for(Field field : fields) {
+				field.setAccessible(true);
+				
+				Class<?> type = field.getType();
+				Object value = field.get(null);
+				
+				if(value != null) {
+					if(type.equals(Sprite.class)) {
+						free( (Sprite)value );
+					}
+					else if(type.equals(TextureRegion.class)) {
+						free( (TextureRegion)value );
+					}
+					else if(type.equals(TextureRegion[].class)) {
+						free( (TextureRegion[])value );
+					}
+					else if(type.equals(Model.class)) {
+						free( (Model)value );
+					}
+				}
+			}
+		}
+		catch(Exception e) {
+			Cons.println("Problem freeing the textures: " + e);
+		}
 	}
 	
+	
+	/**
+	 * Frees the texture
+	 * 
+	 * @param region
+	 */
 	public static void free(TextureRegion region) {
 		if(region != null) {
 			region.getTexture().dispose();
 		}
 	}
 	
+	
+	/**
+	 * Frees the textures
+	 * 
+	 * @param region
+	 */
 	public static void free(TextureRegion[] region) {
 		if(region != null) {
 			for(TextureRegion r : region)
@@ -338,6 +359,12 @@ public class Art {
 		}
 	}
 	
+	
+	/**
+	 * Frees the memory associated with the model
+	 * 
+	 * @param model
+	 */
 	public static void free(Model model) {
 		if(model!=null) {
 			model.destroy();
@@ -345,24 +372,50 @@ public class Art {
 	}
 	
 	
+	
+	/**
+	 * Loads an image from the file system
+	 * 
+	 * @param image
+	 * @return the texture
+	 */
 	public static TextureRegion loadImage(String image) {
 		try {
 			return TextureUtil.loadImage(image);
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			Cons.println("*** A problem occured loading an image: " + e);
 		}
+		
 		return new TextureRegion(TextureUtil.createImage(10, 10));
 	}
 	
+	
+	/**
+	 * Loads a pixel map from the file system.
+	 * 
+	 * @param image
+	 * @return the Pixmap
+	 */
 	public static Pixmap loadPixmap(String image) {
 		try {
 			return TextureUtil.loadPixmap(image);
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			Cons.println("*** A problem occured loading an image: " + e);
 		}
+		
 		return new Pixmap(10, 10, Format.RGBA8888);
 	}
 	
+	
+	
+	/**
+	 * Loads the image from the file system, with a supplied color mask
+	 * @param image
+	 * @param mask the color to change to transparent
+	 * @return the texture
+	 */
 	public static TextureRegion loadImage(String image, int mask) {
 		try {
 			Pixmap map = TextureUtil.loadPixmap(image);
@@ -370,12 +423,21 @@ public class Art {
 			map.dispose();
 			
 			return region;
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			Cons.println("*** A problem occured loading an image: " + e);
 		}
+		
 		return new TextureRegion(TextureUtil.createImage(10, 10));
 	}
 	
+	
+	/**
+	 * Model consists of multiple frames
+	 * 
+	 * @author Tony
+	 *
+	 */
 	public static class Model {
 		private TextureRegion[] frames;
 		public Model(TextureRegion image, int width, int height, int row, int col) {			
@@ -389,10 +451,18 @@ public class Art {
 			return frames;
 		}
 		
+		/**
+		 * @param i
+		 * @return the frame at the supplied index
+		 */
 		public TextureRegion getFrame(int i) {
 			return frames[i];
 		}
 		
+		
+		/**
+		 * Destroys all images 
+		 */
 		public void destroy() {
 			if(frames!=null) {
 				for(int i = 0; i < frames.length;i++) {
@@ -445,9 +515,10 @@ public class Art {
 	}
 	
 	public static AnimatedImage newAlliedBackDeathAnim() {
-		int frameTime = 150;
+		int frameTime = 120;
 		Animation animation = newAnimation(new int[] {
-			frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,
+			frameTime, frameTime, frameTime, frameTime, 
+			frameTime, frameTime, frameTime, frameTime*9,			
 		});
 		AnimatedImage anim = new AnimatedImage(alliedBackDeathImage, animation);
 		anim.loop(false);
@@ -455,9 +526,11 @@ public class Art {
 	}
 	
 	public static AnimatedImage newAlliedFrontDeathAnim() {
-		int frameTime = 150;
+		int frameTime = 120;
 		Animation animation = newAnimation(new int[] {
-			frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,
+			frameTime, frameTime, frameTime, frameTime, 
+			frameTime, frameTime, frameTime, frameTime,
+			frameTime, frameTime, frameTime, frameTime*9,
 		});
 		AnimatedImage anim = new AnimatedImage(alliedFrontDeathImage, animation);
 		anim.loop(false);
@@ -465,9 +538,10 @@ public class Art {
 	}
 	
 	public static AnimatedImage newAxisBackDeathAnim() {
-		int frameTime = 150;
+		int frameTime = 120;
 		Animation animation = newAnimation(new int[] {
-			frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,
+			frameTime, frameTime, frameTime, frameTime, 
+		    frameTime, frameTime, frameTime, frameTime*9,
 		});
 		AnimatedImage anim = new AnimatedImage(axisBackDeathImage, animation);
 		anim.loop(false);
@@ -475,9 +549,11 @@ public class Art {
 	}
 	
 	public static AnimatedImage newAxisFrontDeathAnim() {
-		int frameTime = 150;
+		int frameTime = 120;
 		Animation animation = newAnimation(new int[] {
-			frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,
+			frameTime, frameTime, frameTime, frameTime,
+			frameTime, frameTime, frameTime, frameTime, 
+			frameTime, frameTime, frameTime, frameTime*9,
 		});
 		AnimatedImage anim = new AnimatedImage(axisFrontDeathImage, animation);
 		anim.loop(false);

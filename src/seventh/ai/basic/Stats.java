@@ -14,6 +14,7 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.PlayerSpawnedEvent;
 import seventh.game.events.PlayerSpawnedListener;
+import seventh.shared.Debugable;
 
 /**
  * Keeps interesting statistics about the game
@@ -21,7 +22,7 @@ import seventh.game.events.PlayerSpawnedListener;
  * @author Tony
  *
  */
-public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombExplodedListener {
+public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombExplodedListener, Debugable {
 
 	private Zones zones;
 	private PlayerInfos players;
@@ -153,4 +154,21 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation me = new DebugInformation();
+		// TODO
+		return me;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getDebugInformation().toString();
+	}
 }

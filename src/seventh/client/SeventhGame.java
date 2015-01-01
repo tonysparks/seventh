@@ -9,9 +9,6 @@ import java.nio.IntBuffer;
 import java.util.Date;
 import java.util.Stack;
 
-import leola.vm.types.LeoMap;
-import leola.vm.types.LeoObject;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
@@ -33,7 +30,6 @@ import seventh.client.sfx.Sounds;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.shared.Command;
 import seventh.shared.CommonCommands;
-import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.StateMachine;
@@ -67,13 +63,13 @@ public class SeventhGame implements ApplicationListener {
 			"                                                                             \n" 
 			;
 	
-	private static final String VERSION = "v0.1.0.22-BETA";
+	private static final String VERSION = "v0.1.0.23-BETA";
 	public static final int DEFAULT_MINIMIZED_SCREEN_WIDTH = 1024;
 	public static final int DEFAULT_MINIMIZED_SCREEN_HEIGHT = 768;
 	
 	private StateMachine<Screen> sm;
 	
-	private Config config;
+	private ClientSeventhConfig config;
 	
 	private Terminal terminal;
 	private Console console;
@@ -97,9 +93,11 @@ public class SeventhGame implements ApplicationListener {
 	
 	private static final float TICK_RATE = 1.0f / 30.0f;
 	private static final long DELTA_TIME = 1000 / 30;
+	
 	/**
+	 * @param config
 	 */
-	public SeventhGame(Config config) throws Exception {
+	public SeventhGame(ClientSeventhConfig config) throws Exception {
 		this.console = Cons.getImpl();
 		this.timeStep = new TimeStep();
 		this.terminal = new Terminal(console);
@@ -111,9 +109,8 @@ public class SeventhGame implements ApplicationListener {
 		Cons.println("Start Stamp: " + new Date());
 		
 
-		this.config = config;
-		LeoObject controls = this.config.get("controls");
-		this.keyMap = new KeyMap( (controls.isMap()) ? (LeoMap)controls : new LeoMap() );
+		this.config = config;		
+		this.keyMap = config.getKeyMap();
 						
 		this.network = new Network(this.config, console);
 		
@@ -148,8 +145,8 @@ public class SeventhGame implements ApplicationListener {
 		console.addCommand(new Command("name") {
 			@Override
 			public void execute(Console console, String... args) {
-				String newName = this.mergeArgsDelim(" ", args);
-				config.set(newName, "name");
+				String newName = this.mergeArgsDelim(" ", args);				
+				config.setPlayerName(newName);
 				if(network != null) {
 					PlayerNameChangeMessage msg = new PlayerNameChangeMessage();
 					msg.name = newName;
@@ -299,7 +296,7 @@ public class SeventhGame implements ApplicationListener {
 
 		this.uiManager = new UserInterfaceManager();
 		seventh.client.gfx.Cursor cursor = this.uiManager.getCursor();
-		float sensitivity = config.getFloat("mouse_sensitivity");
+		float sensitivity = config.getMouseSensitivity();
 		if(sensitivity > 0) {
 			cursor.setMouseSensitivity(sensitivity);
 		}
@@ -337,7 +334,7 @@ public class SeventhGame implements ApplicationListener {
 		
 		this.inputs.addProcessor(this.terminal.getInputs());
 		
-		setVSync(config.getBool("video", "vsync"));
+		setVSync(config.getVideo().isVsync());
 		
 		
 		this.canvas = new GdxCanvas();
@@ -492,7 +489,7 @@ public class SeventhGame implements ApplicationListener {
 	/**
 	 * @return the config
 	 */
-	public Config getConfig() {
+	public ClientSeventhConfig getConfig() {
 		return config;
 	}
 

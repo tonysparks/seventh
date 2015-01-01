@@ -38,7 +38,6 @@ import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
 import seventh.game.net.NetGameUpdate;
-import seventh.game.type.GameType;
 import seventh.map.Layer;
 import seventh.map.Map;
 import seventh.map.Tile;
@@ -54,6 +53,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
+import seventh.server.RemoteClients.RemoteClientIterator;
 import seventh.shared.Command;
 import seventh.shared.Cons;
 import seventh.shared.Console;
@@ -64,18 +64,12 @@ import seventh.shared.TimeStep;
 
 
 /**
+ * Represents the state in which the game is active.
+ * 
  * @author Tony
  *
  */
 public class InGameState implements State {
-
-	private Game game;
-	private java.util.Map<Integer, RemoteClient> clients;
-	
-	private GameServer server;
-	private ServerProtocolListener listener;
-	
-	private EventDispatcher dispatcher;
 	/**
 	 * Send out game stat updates every 20 seconds
 	 */
@@ -87,9 +81,21 @@ public class InGameState implements State {
 	 * score display and players to calm down from the carnage
 	 */
 	private static final long GAME_END_DELAY = 20000;
+	
+	private ServerContext serverContext;
+	private GameSession gameSession;
+	
+	private ServerProtocolListener listener;
+	
+	private EventDispatcher dispatcher;
+	
 	private long nextGameStatUpdate, nextGamePartialStatUpdate, gameEndTime;
 	private boolean gameEnded;
-		
+	
+	private Game game;
+	private RemoteClients clients;
+	
+	
 	private GameStatsMessage statsMessage;
 	private GamePartialStatsMessage partialStatsMessage;
 	
@@ -98,28 +104,47 @@ public class InGameState implements State {
 	
 	private Server network;
 	
+	private RemoteClientIterator clientIterator;
+	
 	/**
-	 * 
+	 * @param serverContext
+	 * @param gameSession
 	 */
-	public InGameState(Players players, final GameMap map, GameType gameType, GameServer server) {
-		this.players = players;
-		this.server = server;
-		this.network = server.getServer();
-		this.clients = server.getClients();
+	public InGameState(final ServerContext serverContext, 
+					   final GameSession gameSession) {
+		this.serverContext = serverContext;
+		this.gameSession = gameSession;
 		
-		this.dispatcher = new EventDispatcher();				
-		this.game = new Game(server.getConfig(), players, gameType, map, dispatcher);
-						
-		this.listener = this.server.getProtocolListener();
-		this.listener.setGame(this.game);
+		this.players = gameSession.getPlayers();		
+		this.network = serverContext.getServer();
+		this.clients = serverContext.getClients();		
+		this.listener = serverContext.getServerProtocolListener();
 		
-		loadProperties(map.getMapFileName(), game);
+		this.dispatcher = gameSession.getEventDispatcher();				
+		this.game = gameSession.getGame();
+								
+		loadProperties(gameSession.getMap(), game);
 		
 		this.nextGameStatUpdate = GAME_STAT_UPDATE;
 		this.nextGamePartialStatUpdate = GAME_PARTIAL_STAT_UPDATE;
 				
 		this.statsMessage = new GameStatsMessage();
 		this.partialStatsMessage = new GamePartialStatsMessage();
+		
+		this.clientIterator = new RemoteClientIterator() {
+			
+			@Override
+			public void onRemoteClient(RemoteClient client) {
+				if(client.isReady()) {			
+					sendGameUpdateMessage(client.getId());
+				}
+				
+				if(calculatePing) {
+					int ping = client.getConnection().getReturnTripTime();
+					client.getPlayer().setPing(ping);
+				}				
+			}
+		};
 		
 		this.dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
 			
@@ -190,7 +215,7 @@ public class InGameState implements State {
 			@Override
 			@EventMethod
 			public void onRoundStarted(RoundStartedEvent event) {
-				loadProperties(map.getMapFileName(), game);
+				loadProperties(gameSession.getMap(), game);
 				
 				RoundStartedMessage msg = new RoundStartedMessage();
 				msg.gameState = game.getNetGameState();
@@ -226,15 +251,15 @@ public class InGameState implements State {
 			}
 		});
 	}
-	
+		
 	/**
 	 * Load the maps properties file
 	 * 
 	 * @param mapFile
 	 * @param game
 	 */
-	private void loadProperties(String mapFile, Game game) {		
-		File propertiesFile = new File(mapFile + ".props.leola");
+	private void loadProperties(GameMap gameMap, Game game) {		
+		File propertiesFile = new File(gameMap.getMapFileName() + ".props.leola");
 		if(propertiesFile.exists()) {
 			try {	
 				Leola runtime = Scripting.newSandboxedRuntime();
@@ -268,38 +293,13 @@ public class InGameState implements State {
 			}
 		}
 	}
-	
-	
-	
-	private void gameReady() {
-		GameReadyMessage msg = new GameReadyMessage();
-		msg.gameState = this.game.getNetGameState();
-		sendReadyMessage(msg);	
-	}
-	
-	private void sendReadyMessage(GameReadyMessage msg) {
-		Server s = server.getServer();
-		for(Connection conn : s.getConnections()) {
-			try {
-				if(conn != null) {
-					RemoteClient client = server.getClients().get(conn.getId());
-					if(client != null && client.isReady()) {
-						conn.send(Endpoint.FLAG_RELIABLE, msg);
-					}
-				}
-			} 
-			catch (IOException e) {
-				Cons.println("Failed to send game ready state message - " + e );	
-			}
-		}
-	}
 
 	/* (non-Javadoc)
 	 * @see palisma.shared.State#enter()
 	 */
 	@Override
 	public void enter() {			
-		server.getConsole().addCommand(new Command("sv_fow") {
+		this.serverContext.getConsole().addCommand(new Command("sv_fow") {
 			
 			@Override
 			public void execute(Console console, String... args) {
@@ -315,7 +315,7 @@ public class InGameState implements State {
 		this.gameEnded = false;
 		this.gameEndTime = 0;
 						
-		players.forEachPlayer(new PlayerIterator() {
+		this.players.forEachPlayer(new PlayerIterator() {
 			
 			@Override
 			public void onPlayer(Player player) {
@@ -326,19 +326,16 @@ public class InGameState implements State {
 		
 		this.game.startGame();
 		
-		gameReady();
+		sendReadyMessage();
 	}
 
 	/* (non-Javadoc)
 	 * @see palisma.shared.State#exit()
 	 */
 	@Override
-	public void exit() {
-		this.game.destroy();
-		this.dispatcher.removeAllEventListeners();
-		this.dispatcher.clearQueue();
-		
-		server.getConsole().removeCommand("sv_fow");
+	public void exit() {		
+		this.gameSession.destroy();		
+		this.serverContext.getConsole().removeCommand("sv_fow");
 	}
 	
 	/* (non-Javadoc)
@@ -359,26 +356,47 @@ public class InGameState implements State {
 			sendGamePartialStatMessage(timeStep);
 		}
 		
-		for(RemoteClient c : this.clients.values()) {
-			if(c.isReady()) {			
-				sendGameUpdateMessage(c.getId());
-			}
-			
-			if(calculatePing) {
-				int ping = c.getConnection().getReturnTripTime();
-				c.getPlayer().setPing(ping);
-			}
-		}
-
+		this.clients.foreach(this.clientIterator);
+		
 		this.game.postUpdate();
 		
 		// check for game end
 		if(gameEnded) {
-			if(gameEndTime>GAME_END_DELAY) {				
-				server.getSm().changeState(new LoadingState(server, server.getMapCycle().getNextMap()));
+			if(gameEndTime>GAME_END_DELAY) {	
+				/* load up the next level */
+				serverContext.spawnGameSession();				
 			}
 			
 			gameEndTime += timeStep.getDeltaTime();
+		}
+		
+		if(this.serverContext.hasDebugListener()) {
+			this.serverContext.getDebugableListener().onDebugable(this.game);
+		}
+	}
+	
+	
+	/**
+	 * Send out a message to all clients indicating that
+	 * the game is now ready for play
+	 * 
+	 */
+	private void sendReadyMessage() {
+		GameReadyMessage msg = new GameReadyMessage();
+		msg.gameState = this.game.getNetGameState();
+		
+		for(Connection conn : serverContext.getServer().getConnections()) {
+			try {
+				if(conn != null) {
+					RemoteClient client = clients.getClient(conn.getId());
+					if(client != null && client.isReady()) {
+						conn.send(Endpoint.FLAG_RELIABLE, msg);
+					}
+				}
+			} 
+			catch (IOException e) {
+				Cons.println("Failed to send game ready state message - " + e );	
+			}
 		}
 	}
 	
