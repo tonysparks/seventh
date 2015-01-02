@@ -61,4 +61,8 @@ public class StareAtEntityAction extends AdapterAction {
 				
 	}
 
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("stareAt", this.stareAtMe);
+	}
 }

@@ -144,4 +144,8 @@ public class DecoratorAction extends AdapterAction {
 		}
 	}
 
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return action != null ? action.getDebugInformation() : super.getDebugInformation();
+	}
 }

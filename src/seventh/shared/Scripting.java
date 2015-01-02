@@ -43,7 +43,7 @@ public class Scripting {
 	 */
 	public static Leola newRuntime() throws Exception {
 		Args leolaArgs = new ArgsBuilder().setAllowThreadLocals(false).build();		
-		Leola runtime = new Leola(leolaArgs);
+		Leola runtime = new Leola(leolaArgs);		
 		return runtime;
 	}
 

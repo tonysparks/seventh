@@ -93,4 +93,9 @@ public class DefuseBombAction extends AdapterAction {
 		
 		return isDefused();
 	}
+	
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("target", this.bomb.getId());
+	}
 }

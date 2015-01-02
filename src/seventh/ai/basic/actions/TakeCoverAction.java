@@ -27,12 +27,15 @@ public class TakeCoverAction extends AdapterAction {
 	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public void start(Brain brain) {		
-		Cover cover = brain.getWorld().getCover(brain.getEntityOwner(), targetPos);
-		if(!cover.getCoverPos().isZero()) {
-			brain.getMotion().lookAt(cover.getAttackDir());
-			brain.getGoals().addFirstAction(new MoveToAction(cover.getCoverPos()));			
-		}
+	public void start(Brain brain) {
+		
+		// TODO :: move to leola script
+		
+//		Cover cover = brain.getWorld().getCover(brain.getEntityOwner(), targetPos);
+//		if(!cover.getCoverPos().isZero()) {
+//			brain.getMotion().lookAt(cover.getAttackDir());
+//			brain.getGoals().addFirstAction(new MoveToAction(cover.getCoverPos()));			
+//		}
 	}
 	
 	/* (non-Javadoc)

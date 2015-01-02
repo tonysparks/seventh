@@ -583,7 +583,7 @@ public class PlayerSprite implements Renderable {
 		Vector2f cameraPos = camera.getPosition();
 		
 		// TODO: delete
-		canvas.drawString(adjustments.toString(), 350, 100, 0xffffffff);
+		//canvas.drawString(adjustments.toString(), 350, 100, 0xffffffff);
 		
 		effects.render(canvas,camera, alpha);
 		

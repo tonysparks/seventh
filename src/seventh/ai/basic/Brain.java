@@ -33,18 +33,13 @@ public class Brain implements Debugable {
 	private World world;
 	
 	private PlayerInfo player;
-	private PlayerEntity entityOwner;
-	
-	private TeamStrategy strategy;
-	
-	private Goal goals;
+	private PlayerEntity entityOwner;			
 	
 	/**
 	 * @param runtime
 	 * @param world
 	 */
 	public Brain(TeamStrategy strategy, World world, PlayerInfo player) {
-		this.strategy = strategy;
 		this.world = world;
 		this.player = player;
 		
@@ -56,22 +51,18 @@ public class Brain implements Debugable {
 		this.sensors = new Sensors(this);
 		this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy), this);
 		this.communicator = new Communicator();
-		this.goals = new Goal();
-
 	}
 	
 	/**
 	 * Called after the player is all set, and this entity
 	 * is ready to roll
 	 */
-	public void spawned() {
+	public void spawned(TeamStrategy strategy) {
 		this.entityOwner = player.getEntity();
 		
 		this.communicator.reset(this);
 		this.sensors.reset(this);
-		this.motion.reset(this);
-		
-		this.goals.cancel();
+		this.motion.reset(this);				
 				
 		/* if this is a Dummy bot, make it just sit there */
 		if(player.isDummyBot()) {		
@@ -192,14 +183,7 @@ public class Brain implements Debugable {
 	public PlayerEntity getEntityOwner() {
 		return entityOwner;
 	}
-	
-	
-	/**
-	 * @return the goals
-	 */
-	public Goal getGoals() {
-		return goals;
-	}
+		
 	
 	/* (non-Javadoc)
 	 * @see seventh.shared.Debugable#getDebugInformation()
@@ -207,8 +191,7 @@ public class Brain implements Debugable {
 	@Override
 	public DebugInformation getDebugInformation() {
 		DebugInformation me = new DebugInformation();
-		me.add("goals", getGoals())
-		  .add("entity_id", (this.entityOwner!=null) ? getEntityOwner().getId() : null)
+		me.add("entity_id", (this.entityOwner!=null) ? getEntityOwner().getId() : null)
 		  .add("thoughts", getThoughtProcess());
 		return me;
 	}

@@ -263,7 +263,8 @@ public class InGameState implements State {
 		if(propertiesFile.exists()) {
 			try {	
 				Leola runtime = Scripting.newSandboxedRuntime();
-				
+					
+				runtime.loadStatics(SeventhScriptingCommonLibrary.class);
 				runtime.putGlobal("game", game);
 				runtime.eval(propertiesFile);
 				

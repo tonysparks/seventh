@@ -85,5 +85,10 @@ public class DefendZoneAction extends AdapterAction {
 		return timeSpentDefending >= timeToDefend;
 		
 	}
+	
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("zone", zone);
+	}
 
 }

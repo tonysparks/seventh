@@ -69,4 +69,9 @@ public class FireAtAction extends AdapterAction {
 		}
 	}
 
+	
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("fireAt", this.fireAtMe);
+	}
 }

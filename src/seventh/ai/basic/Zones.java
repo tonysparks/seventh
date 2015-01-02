@@ -8,6 +8,7 @@ import java.util.List;
 
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
+import seventh.game.PlayerEntity;
 import seventh.map.Map;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -54,14 +55,63 @@ public class Zones {
 		
 		zones = new Zone[numberOfRows][numberOfCols];
 		
+		Rectangle entityBounds = new Rectangle(PlayerEntity.PLAYER_WIDTH, PlayerEntity.PLAYER_HEIGHT);
+		
 		int id = 0;
 		for(int y = 0; y < numberOfRows; y++) {
-			for(int x = 0; x < numberOfCols; x++) {
-				zones[y][x] = new Zone(id++, new Rectangle(x * zoneWidth, y * zoneHeight, zoneWidth, zoneHeight));
+			for(int x = 0; x < numberOfCols; x++) {				
+				Rectangle bounds = new Rectangle(x * zoneWidth, y * zoneHeight, zoneWidth, zoneHeight);
+				boolean isHabitable = hasHabitableLocation(entityBounds, bounds, map);
+																
+				zones[y][x] = new Zone(id++, bounds, isHabitable);
 			}
 		}			
 	}
 
+	/**
+	 * Determines if a player could fit somewhere inside this zone
+	 * 
+	 * @param entityBounds
+	 * @param zoneBounds
+	 * @param map
+	 * @return true if a player could fit in this zone
+	 */
+	private boolean hasHabitableLocation(Rectangle entityBounds, Rectangle zoneBounds, Map map) {
+		int x = zoneBounds.x;
+		int y = zoneBounds.y;
+		
+		entityBounds.setLocation(x, y);
+		
+		int maxX = zoneBounds.x+zoneBounds.width;
+		int maxY = zoneBounds.y+zoneBounds.height;
+		
+		boolean hitMaxX = false;
+		boolean hitMaxY = false;
+		
+		while (map.rectCollides(entityBounds)) {
+			if(x+entityBounds.width <= maxX) {
+				x += entityBounds.width; 
+			}
+			else {
+				hitMaxX = true;
+			}
+			
+			if(y+entityBounds.height <= maxY) {
+				y += entityBounds.height;			
+			}
+			else {
+				hitMaxY = true;
+			}
+			
+			entityBounds.setLocation(x, y);
+			
+			if(hitMaxX && hitMaxY) {
+				return false;
+			}
+		}
+				
+		return true;
+	}
 	
 	/**
 	 * Determines which Zone's the {@link BombTarget}s
@@ -77,7 +127,7 @@ public class Zones {
 		List<BombTarget> targets = game.getBombTargets();
 		for(BombTarget target : targets) {
 			Zone zone = getZone(target.getCenterPos());
-			if(zone != null) {
+			if(zone != null && zone.isHabitable()) {
 				zone.addTarget(target);
 				bombTargetZones.add(zone);
 			}					

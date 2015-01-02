@@ -28,15 +28,26 @@ public class Zone implements Debugable {
 	
 	private ZoneStats stats;
 	
+	private boolean isHabitable;
+	
 	/**
 	 * @param id
 	 * @param bounds
+	 * @param isHabitable
 	 */
-	public Zone(int id, Rectangle bounds) {
+	public Zone(int id, Rectangle bounds, boolean isHabitable) {
 		this.id = id;
 		this.bounds = bounds;
 		this.targets = new ArrayList<BombTarget>();
 		this.stats = new ZoneStats(this);
+		this.isHabitable = isHabitable;
+	}
+	
+	/**
+	 * @return the isHabitable
+	 */
+	public boolean isHabitable() {
+		return isHabitable;
 	}
 	
 	/**

@@ -182,7 +182,7 @@ public class GameServer {
 		
 						
 		/* load some helper functions for objective scripts */
-		runtime.loadStatics(LeolaScriptLibrary.class);
+		runtime.loadStatics(SeventhScriptingCommonLibrary.class);
 			
 		
 		/* if this is a dedicated server, we'll contact the 

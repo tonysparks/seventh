@@ -175,8 +175,10 @@ public class Locomotion {
 	 * Scans the area
 	 */
 	public void scanArea() {
-		Action action = new HeadScanAction();
-		this.facingGoal.setAction(action);
+		if(!this.facingGoal.is(HeadScanAction.class)) {
+			Action action = new HeadScanAction();
+			this.facingGoal.setAction(action);
+		}
 	}
 	
 	/**

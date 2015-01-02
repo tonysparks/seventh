@@ -78,4 +78,11 @@ public class MoveToAction extends AdapterAction {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.AdapterAction#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("destination", this.destination);
+	}
 }

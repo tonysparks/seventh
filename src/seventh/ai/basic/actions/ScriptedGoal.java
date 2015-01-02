@@ -101,4 +101,14 @@ public class ScriptedGoal extends AdapterAction {
 		return goal.getActionResult();
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.AdapterAction#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {	
+		DebugInformation me = new DebugInformation();
+		me.add("type", getClass().getSimpleName());
+		me.add("goal", goal);
+		return me;
+	}
 }

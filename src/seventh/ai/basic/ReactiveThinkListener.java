@@ -66,7 +66,8 @@ public class ReactiveThinkListener implements ThinkListener {
 	 * @see seventh.ai.basic.strategy.SimpleStrategy.ThinkListener#onDeath(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public void onDeath(Brain brain) {		
+	public void onDeath(Brain brain) {
+		this.longTermGoal.cancel();
 	}
 	
 	/* (non-Javadoc)
@@ -74,6 +75,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	 */
 	@Override
 	public void onSpawned(Brain brain) {
+		this.longTermGoal.cancel();
 		brain.getMotion().pickWeapon();
 	}
 

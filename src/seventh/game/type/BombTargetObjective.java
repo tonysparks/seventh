@@ -21,8 +21,15 @@ public class BombTargetObjective implements Objective {
 	private String name;
 	
 	/**
-	 * @param name
-	 * @param position 
+	 * @param name 
+	 */
+	public BombTargetObjective(Vector2f position) {		
+		this(position, null);
+	}
+	
+	/**
+	 * @param position
+	 * @param name 
 	 */
 	public BombTargetObjective(Vector2f position, String name) {		
 		this.position = position;		

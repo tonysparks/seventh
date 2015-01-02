@@ -76,4 +76,10 @@ public class BombAction extends AdapterAction {
 		}
 	}
 
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation()
+				.add("target", this.bombTarget.getId())
+				.add("plant", plant);
+	}
 }

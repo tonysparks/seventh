@@ -102,4 +102,9 @@ public class PlantBombAction extends AdapterAction {
 		/* still working on being the hero */
 		return false;
 	}
+	
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("target", this.bomb.getId());
+	}
 }

@@ -23,12 +23,13 @@ public class MathLeolaLibrary implements LeolaLibrary {
 	@Override
 	@LeolaIgnore
 	public void init(Leola leola, LeoNamespace namespace) throws Exception {
-		runtime = leola;
-		
-		LeoNamespace math = this.runtime.getOrCreateNamespace("math");
-		math.store(this);
-
-		namespace.put("math", math);
+		this.runtime = leola;
+		this.runtime.putIntoNamespace(this, namespace);
+//		
+//		LeoNamespace math = this.runtime.getOrCreateNamespace("math");
+//		math.store(this);
+//
+//		namespace.put("math", math);
 	}
 	
 	public Vector2f newVec2(Double x, Double y) {

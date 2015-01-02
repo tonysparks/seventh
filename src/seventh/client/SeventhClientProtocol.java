@@ -39,6 +39,7 @@ import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Cons;
 import seventh.shared.Scripting;
 
@@ -158,6 +159,8 @@ public class SeventhClientProtocol implements ClientProtocol {
 		if(propertiesFile.exists()) {
 			try {
 				Leola runtime = Scripting.newSandboxedRuntime();
+				
+				runtime.loadStatics(SeventhScriptingCommonLibrary.class);
 				runtime.putGlobal("game", game);
 				runtime.eval(propertiesFile);
 			}

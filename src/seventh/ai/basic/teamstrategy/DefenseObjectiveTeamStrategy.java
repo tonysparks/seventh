@@ -356,7 +356,7 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		DebugInformation me = new DebugInformation();
 		me.add("zone_to_attack", this.zoneToAttack)
 		  .add("time_to_attack", this.timeUntilOrganizedAttack)
-		  .add("state", this.currentState)
+		  .add("state", this.currentState.name())
 		  ;
 		return me;
 	}

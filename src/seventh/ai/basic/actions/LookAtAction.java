@@ -41,4 +41,9 @@ public class LookAtAction extends AdapterAction {
 		return true;
 	}
 
+	
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("orientation", Math.toDegrees(orientation));
+	}
 }

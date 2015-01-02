@@ -74,4 +74,8 @@ public class MoveAction extends AdapterAction {
 		}
 	}
 
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("destination", this.destination);
+	}
 }

@@ -30,13 +30,13 @@ public class FileSystemAssetWatcher implements AssetWatcher {
 
         private AtomicReference<T> asset;
         private AssetLoader<T> loader;  
-        private String filename;
+        private File filename;
         
         /**
          * @param filename
          * @param loader
          */
-        public WatchedAssetImpl(String filename, AssetLoader<T> loader) throws IOException {
+        public WatchedAssetImpl(File filename, AssetLoader<T> loader) throws IOException {
             this.asset = new AtomicReference<T>();
             this.loader = loader;
             this.filename = filename;
@@ -53,13 +53,13 @@ public class FileSystemAssetWatcher implements AssetWatcher {
         @Override
         public void release() {
             this.asset.set(null);
-            removeWatchedAsset(this.filename);
+            removeWatchedAsset(this.filename.getAbsolutePath());
         }
         
         
         @Override
         public void onAssetChanged() throws IOException {
-            this.asset.set(loader.loadAsset(filename));
+            this.asset.set(loader.loadAsset(filename.getAbsolutePath()));
         }
         
         
@@ -135,9 +135,10 @@ public class FileSystemAssetWatcher implements AssetWatcher {
 
     
     @Override
-    public <T> WatchedAsset<T> loadAsset(String filename, AssetLoader<T> loader) throws IOException {        
-        WatchedAsset<T> asset = new WatchedAssetImpl<T>(filename, loader);
-        this.watchedAssets.put(new File(filename), asset);
+    public <T> WatchedAsset<T> loadAsset(String filename, AssetLoader<T> loader) throws IOException {
+    	File file = new File(pathToWatch.toFile(), filename.toString());
+        WatchedAsset<T> asset = new WatchedAssetImpl<T>(file, loader);
+        this.watchedAssets.put(file, asset);
         
         return asset;
     }
@@ -145,7 +146,7 @@ public class FileSystemAssetWatcher implements AssetWatcher {
     
     @Override
     public void removeWatchedAsset(String filename) {
-        this.watchedAssets.remove(filename);
+        this.watchedAssets.remove(new File(filename));
     }
     
     

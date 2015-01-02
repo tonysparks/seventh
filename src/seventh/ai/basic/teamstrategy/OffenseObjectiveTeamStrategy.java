@@ -81,7 +81,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	public void startOfRound(GameInfo game) {		
 		this.zoneToAttack = calculateZoneToAttack();	
 		this.currentState = OffensiveState.RANDOM;		
-		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(30_000);
+		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(30_000);				
 	}
 	
 	
@@ -315,7 +315,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		DebugInformation me = new DebugInformation();
 		me.add("zone_to_attack", this.zoneToAttack)
 		  .add("time_to_attack", this.timeUntilOrganizedAttack)
-		  .add("state", this.currentState)
+		  .add("state", this.currentState.name())
 		  ;
 		return me;
 	}

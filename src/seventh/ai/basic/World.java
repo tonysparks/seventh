@@ -263,10 +263,17 @@ public class World {
 		Rectangle temp = new Rectangle(entity.getBounds());
 		temp.setLocation(pos);
 		
+		int loopChecker = 0;
+		
 		while (map.rectCollides(temp)) {
 			pos.x = x + random.nextInt(width);
 			pos.y = y + random.nextInt(height);
 			temp.setLocation(pos);
+			
+			// this bounds doesn't have a free spot
+			if(loopChecker++ > 1000) {
+				return null;
+			}
 		}
 		
 		return pos;

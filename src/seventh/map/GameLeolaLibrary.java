@@ -18,6 +18,8 @@ import seventh.client.gfx.Camera2d;
 import seventh.math.Vector2f;
 
 /**
+ * Game components 
+ * 
  * @author Tony
  *
  */
@@ -31,13 +33,19 @@ public class GameLeolaLibrary implements LeolaLibrary {
 	@Override
 	@LeolaIgnore
 	public void init(Leola leola, LeoNamespace namespace) throws Exception {
-		runtime = leola;
-		LeoNamespace game = this.runtime.getOrCreateNamespace("game");
-		game.store(this);
-
-		namespace.put("game", game);
+		this.runtime = leola;
+		this.runtime.putIntoNamespace(this, namespace);		
 	}
 	
+	
+	/**
+	 * Loads a map
+	 * 
+	 * @param mapFile the map file
+	 * @param loadAssets whether or not to load the Assets along with the map
+	 * @return the {@link Map}
+	 * @throws Exception
+	 */
 	public Map loadMap(String mapFile, boolean loadAssets) throws Exception {
 		File file = new File(mapFile);
 		String contents = loadFileContents(file);

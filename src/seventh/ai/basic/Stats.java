@@ -55,13 +55,16 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 		
 		Zone[][] zs = this.zones.getZones();
 		for(int y = 0; y < zs.length; y++) {
-			for(int x = 0; x < zs[y].length; x++) {
-				ZoneStats s = zs[y][x].getStats();
-				
-				int totalKilled = s.getTotalKilled();
-				if(deadliest == null || killCount < totalKilled) {
-					deadliest = s.getZone();
-					killCount = totalKilled;
+			for(int x = 0; x < zs[y].length; x++) {				
+				Zone zone = zs[y][x];
+				if(zone.isHabitable()) {
+					ZoneStats s = zone.getStats();
+					
+					int totalKilled = s.getTotalKilled();
+					if(deadliest == null || killCount < totalKilled) {
+						deadliest = s.getZone();
+						killCount = totalKilled;
+					}
 				}
 			}
 		}

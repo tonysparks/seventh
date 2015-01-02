@@ -4,6 +4,7 @@
 package seventh.ai.basic;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 import leola.vm.Leola;
@@ -22,8 +23,12 @@ import seventh.game.PlayerInfos.PlayerInfoIterator;
 import seventh.game.Team;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;
+import seventh.server.SeventhScriptingCommonLibrary;
+import seventh.shared.AssetLoader;
+import seventh.shared.AssetWatcher;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
+import seventh.shared.FileSystemAssetWatcher;
 import seventh.shared.Scripting;
 import seventh.shared.TimeStep;
 
@@ -53,17 +58,43 @@ public class DefaultAISystem implements AISystem {
 	private Goals goals;
 	private AICommands aiCommands;
 	
+	private AssetWatcher watcher;
+	
 	/**
 	 * 
 	 */
 	public DefaultAISystem() {
 		this.brains = new Brain[Game.MAX_PLAYERS];
 		
-		try {								
+		
+		try {						
 			this.runtime = Scripting.newRuntime();
+			
+			this.runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+			this.runtime.loadLibrary(new AILeolaLibrary(), "ai");			
+			
 			this.runtime.eval(new File("./seventh/ai/goals.leola"));
 			
 			this.goals = new Goals(this.runtime);
+			
+			
+			this.watcher = new FileSystemAssetWatcher(new File("./seventh/ai"));
+			this.watcher.loadAsset("goals.leola", new AssetLoader<File>() {				
+				@Override
+				public File loadAsset(String filename) throws IOException {
+					try {
+						Cons.println("Evaluating: " + filename);
+						runtime.eval(new File(filename));
+						Cons.println("Successfully evaluated: " + filename);
+					} 
+					catch (Exception e) {
+						Cons.println("*** Error evaluating: " + filename);
+						Cons.println("*** " + e);
+					}
+					return null;
+				}
+			});
+						
 		}
 		catch(Exception e) {
 			Cons.println("Unable to load the Leola runtime : " + e);
@@ -105,6 +136,7 @@ public class DefaultAISystem implements AISystem {
 			}
 		});
 				
+		this.watcher.startWatching();
 	}
 	
 	
@@ -169,10 +201,12 @@ public class DefaultAISystem implements AISystem {
 	 * @see seventh.ai.AISystem#destroy()
 	 */
 	@Override
-	public void destroy() {	
+	public void destroy() {
+		this.watcher.stopWatching();
+		
 		for(int i = 0; i < this.brains.length; i++) {
 			this.brains[i] = null;
-		}
+		}				
 	}
 
 	/* (non-Javadoc)
@@ -198,12 +232,14 @@ public class DefaultAISystem implements AISystem {
 	 */
 	@Override
 	public void playerSpawned(PlayerInfo player) {
+		TeamStrategy teamStrategy = getStrategyFor(player);
+		
 		Brain brain = getBrain(player);
 		if(brain != null) {			
-			brain.spawned();
+			brain.spawned(teamStrategy);
 		}
 		
-		TeamStrategy teamStrategy = getStrategyFor(player);
+		
 		if(teamStrategy != null) {
 			teamStrategy.playerSpawned(player);
 		}		

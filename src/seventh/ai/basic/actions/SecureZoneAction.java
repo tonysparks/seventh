@@ -34,7 +34,9 @@ public class SecureZoneAction extends AdapterAction {
 	@Override
 	public void start(Brain brain) {
 		Vector2f pos = brain.getWorld().getRandomSpot(brain.getEntityOwner(), zone.getBounds());
-		brain.getMotion().moveTo(pos);
+		if(pos != null) {	
+			brain.getMotion().moveTo(pos);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -69,4 +71,8 @@ public class SecureZoneAction extends AdapterAction {
 		
 	}
 
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation().add("zone", this.zone);
+	}
 }

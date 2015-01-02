@@ -42,4 +42,10 @@ public class WaitAction extends AdapterAction {
 		return this.currentWaitTime > this.timeToWait;
 	}
 
+	@Override
+	public DebugInformation getDebugInformation() {	
+		return super.getDebugInformation()
+				.add("timeToWait", this.timeToWait)
+				.add("currentWaitTime", this.currentWaitTime);
+	}
 }
