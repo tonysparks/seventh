@@ -170,14 +170,20 @@ public class Peer {
 	}
 	
 	public long getAvgBitsPerSecRecv() {
-		long totalTimeConnected = System.currentTimeMillis() - this.timeConnected;
-		return (long)( (numberOfBytesRecv*8) / (totalTimeConnected/1000) );
+		long totalTimeConnected = (System.currentTimeMillis() - this.timeConnected)/1000;
+		if(totalTimeConnected > 0) {
+			return (long)( (numberOfBytesRecv*8) / totalTimeConnected );
+		}
+		return 0;
 	}
 	
 	
 	public long getAvgBitsPerSecSent() {
-		long totalTimeConnected = System.currentTimeMillis() - this.timeConnected;
-		return (long)( (numberOfBytesSent*8) / (totalTimeConnected/1000) );
+		long totalTimeConnected = (System.currentTimeMillis() - this.timeConnected)/1000;
+		if(totalTimeConnected > 0) {
+			return (long)( (numberOfBytesSent*8) / totalTimeConnected );
+		}
+		return 0;
 	}
 	
 	

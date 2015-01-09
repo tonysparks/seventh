@@ -409,7 +409,7 @@ public class Hud implements Renderable {
 		int y = canvas.getHeight() - 125;
 		
 		canvas.fillRect( x, y, 100, 15, 0xcf696969 );
-		if (usedMemory > 0) {
+		if (usedMemory > 0 && maxMemory > 0) {
 			double percentage = ((double)usedMemory / (double)maxMemory);
 			canvas.fillRect( x, y, (int)(100 * percentage), 15, 0xdf3f3f3f );
 		}
