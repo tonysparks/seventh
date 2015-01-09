@@ -13,6 +13,7 @@ import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.CoverEntityAction;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
+import seventh.math.Vector2f;
 import seventh.shared.Cons;
 
 /**
@@ -58,7 +59,7 @@ public class AICommands {
 			
 		});
 		
-		this.aiCommands.put("follow_me", new Command() {
+		this.aiCommands.put("followMe", new Command() {
 
 			@Override
 			public Action parse(String... args) {
@@ -74,6 +75,22 @@ public class AICommands {
 			}
 			
 		});
+		
+		this.aiCommands.put("takeCover", new Command() {
+			
+			@Override
+			public Action parse(String... args) {
+				Vector2f attackDir = new Vector2f();
+				if(args.length > 1) {
+					int x = Integer.parseInt(args[0]);
+					int y = Integer.parseInt(args[1]);
+					attackDir.set(x, y);
+				}
+				
+				Action action = goals.takeCover(attackDir);
+				return action;
+			}
+		});
 	}
 	
 	/**
@@ -84,7 +101,7 @@ public class AICommands {
 	public Action compile(AICommand cmd) {
 		Action result = null;
 		String message = cmd.getMessage();
-		if(message != null && "".equals(message)) {
+		if(message != null && !"".equals(message)) {
 			String[] msgs = message.split(",");
 			try {
 				Command command = this.aiCommands.get(msgs[0]);

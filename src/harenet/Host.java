@@ -47,7 +47,7 @@ public class Host {
 	private Peer[] peers;
 	private int maxConnections;
 	private int numberOfConnections;
-	
+		
 	private Protocol protocol;
 	
 	private Log log;
@@ -719,6 +719,8 @@ public class Host {
 						parseMessages(peer, buffer, protocol);
 					}
 					else {
+						peer.addDroppedPacket();
+						
 						if(log.enabled()) {
 							log.error("Out of order packet:" + seqNumber + " should be: " + peer.getRemoteSequence());
 						}

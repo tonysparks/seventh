@@ -195,9 +195,11 @@ public class GameServer {
 		
 
 		/* attempt to attach a debugger */
-		DebugableListener debugableListener = createDebugListener(config);
-		if(debugableListener != null) {
-			setDebugListener(debugableListener);
+		if(config.isDebuggerEnabled()) {
+			DebugableListener debugableListener = createDebugListener(config);
+			if(debugableListener != null) {
+				setDebugListener(debugableListener);
+			}
 		}
 		
 		/*

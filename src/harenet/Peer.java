@@ -75,6 +75,7 @@ public class Peer {
 	
 	private long numberOfBytesSent;
 	private long numberOfBytesRecv;
+	private long numberOfDroppedPackets;
 	
 	private int[] ackBuffer;
 	private int ackBufferIndex;
@@ -164,6 +165,10 @@ public class Peer {
 		this.numberOfBytesSent += bytes;
 	}
 	
+	public void addDroppedPacket() {
+		this.numberOfDroppedPackets++;
+	}
+	
 	public long getAvgBitsPerSecRecv() {
 		long totalTimeConnected = System.currentTimeMillis() - this.timeConnected;
 		return (long)( (numberOfBytesRecv*8) / (totalTimeConnected/1000) );
@@ -173,6 +178,14 @@ public class Peer {
 	public long getAvgBitsPerSecSent() {
 		long totalTimeConnected = System.currentTimeMillis() - this.timeConnected;
 		return (long)( (numberOfBytesSent*8) / (totalTimeConnected/1000) );
+	}
+	
+	
+	/**
+	 * @return the numberOfDroppedPackets
+	 */
+	public long getNumberOfDroppedPackets() {
+		return numberOfDroppedPackets;
 	}
 	
 	/**

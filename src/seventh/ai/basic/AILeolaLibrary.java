@@ -20,6 +20,7 @@ import seventh.ai.basic.actions.MoveToAction;
 import seventh.ai.basic.actions.MoveToBombAction;
 import seventh.ai.basic.actions.PlantBombAction;
 import seventh.ai.basic.actions.SecureZoneAction;
+import seventh.ai.basic.actions.WaitAction;
 import seventh.game.BombTarget;
 import seventh.math.Vector2f;
 
@@ -53,6 +54,7 @@ public class AILeolaLibrary implements LeolaLibrary {
 		namespace.setObject("goals", Leola.toLeoObject(this.goals));
 	}
 	
+		
 	/*--------------------------------------------------------------------------
 	 *                      Math functions
 	  --------------------------------------------------------------------------*/
@@ -106,7 +108,10 @@ public class AILeolaLibrary implements LeolaLibrary {
 	public DefendAttackDirectionsAction defendAttackDirectionsAction(List<AttackDirection> attackDirs) {
 		return new DefendAttackDirectionsAction(attackDirs);
 	}
-	
+
+	public WaitAction waitAction(long timeToWaitMSec) {
+		return new WaitAction(timeToWaitMSec);
+	}
 	
 	/**
 	 * Loads a function with a generator into an {@link Action} so that
@@ -118,4 +123,5 @@ public class AILeolaLibrary implements LeolaLibrary {
 	public Action action(String action) {
 		return this.goals.getScriptedAction(action);
 	}
+	
 }

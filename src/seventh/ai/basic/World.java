@@ -475,6 +475,22 @@ public class World {
 	}
 	
 	/**
+	 * Attempts to find the closest position which will serve as 'cover' between the agent and an attack direction
+	 * 
+	 * @param entity
+	 * @param attackDir
+	 * @return the position to take cover
+	 */
+	public Vector2f getClosestCoverPosition(Entity entity, Vector2f attackDir) {
+		Vector2f pos = entity.getCenterPos();
+		map.getTilesInCircle( (int)pos.x, (int)pos.y, 250, tiles);
+		List<Tile> collidableTiles = map.getCollisionTilesAt(tiles, new ArrayList<Tile>());
+		
+		Vector2f bestHidingSpot = findBestHidingPosition(collidableTiles, pos, attackDir);	
+		return bestHidingSpot;
+	}
+	
+	/**
 	 * Calculates the possible {@link AttackDirection}'s from the supplied {@link Entity}s position.
 	 * 
 	 * @param entity

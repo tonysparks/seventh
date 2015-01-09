@@ -15,7 +15,6 @@ import seventh.ai.basic.commands.AICommands;
 import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
 import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
-import seventh.game.Game;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.PlayerInfos;
@@ -30,6 +29,7 @@ import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
 import seventh.shared.FileSystemAssetWatcher;
 import seventh.shared.Scripting;
+import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 
 /**
@@ -64,7 +64,7 @@ public class DefaultAISystem implements AISystem {
 	 * 
 	 */
 	public DefaultAISystem() {
-		this.brains = new Brain[Game.MAX_PLAYERS];
+		this.brains = new Brain[SeventhConstants.MAX_PLAYERS];
 		
 		
 		try {						
@@ -376,7 +376,9 @@ public class DefaultAISystem implements AISystem {
 			Brain brain = getBrain(forBot);
 			if(brain != null) {
 				Action action = this.aiCommands.compile(command);
-				brain.getCommunicator().post(action);
+				if(action != null) {
+					brain.getCommunicator().post(action);
+				}
 			}
 		}
 		

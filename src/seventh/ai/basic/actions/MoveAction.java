@@ -19,10 +19,23 @@ public class MoveAction extends AdapterAction {
 	private Vector2f destination;
 	
 	/**
+	 */
+	public MoveAction() {
+		this(new Vector2f());
+	}
+	
+	/**
 	 * @param destination
 	 */
 	public MoveAction(Vector2f destination) {	
 		this.destination = destination;
+	}
+	
+	/**
+	 * @param destination the destination to set
+	 */
+	public void setDestination(Vector2f destination) {
+		this.destination.set(destination);
 	}
 	
 	/* (non-Javadoc)

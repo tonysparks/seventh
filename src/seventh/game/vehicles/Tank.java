@@ -7,7 +7,6 @@ import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.PlayerEntity.Keys;
 import seventh.game.SoundType;
-import seventh.game.UserCommand;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Bullet;
@@ -29,7 +28,10 @@ import seventh.shared.WeaponConstants;
 public class Tank extends Vehicle {
 
 	private final NetTank netTank;
-	private UserCommand previousCommand;
+	
+	private int previousKeys;
+	private float previousOrientation;
+	
 	private long nextMovementSound;
 	private long lastTorsoMovementSound;
 
@@ -299,11 +301,8 @@ public class Tank extends Vehicle {
 	 * @see seventh.game.Controllable#handleUserCommand(seventh.game.UserCommand)
 	 */
 	@Override
-	public void handleUserCommand(UserCommand command) {
-		
-		int keys = command.getKeys();
-		int previousKeys = (previousCommand != null) ? previousCommand.getKeys() : 0;
-		float prevOrientation = (previousCommand != null) ? previousCommand.getOrientation() : -1; 		
+	public void handleUserCommand(int keys, float orientation) {
+				
 		
 		if( Keys.FIRE.isDown(keys) ) {
 			isFiringPrimary = true;
@@ -348,11 +347,12 @@ public class Tank extends Vehicle {
 			stopThrottle();
 		}
 				
-		if(prevOrientation != command.getOrientation()) {
-			setTurretOrientation(command.getOrientation());
+		if(previousOrientation != orientation) {
+			setTurretOrientation(orientation);
 		}
 		
-		this.previousCommand = command;
+		this.previousKeys = keys;
+		this.previousOrientation = orientation;
 	}
 
 		

@@ -20,9 +20,13 @@ public class AICommandMessage extends AbstractNetMessage {
 	public AICommand command;
 	
 	public AICommandMessage() {
+		this(new AICommand());
+	}
+	
+	public AICommandMessage(AICommand cmd) {
 		super(BufferIO.AI_COMMAND);
-		this.command = new AICommand();
-	}	
+		this.command = cmd;
+	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.network.messages.AbstractNetMessage#read(harenet.IOBuffer)

@@ -42,6 +42,13 @@ public class ServerSeventhConfig extends SeventhConfig {
 	}
 	
 	/**
+	 * @return true if the debugger is enabled
+	 */
+	public boolean isDebuggerEnabled() {
+		return this.config.getBool("debugger", "enabled");
+	}
+	
+	/**
 	 * @return the class path
 	 */
 	public String getDebuggerClasspath() {

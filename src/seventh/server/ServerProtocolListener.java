@@ -343,7 +343,9 @@ public class ServerProtocolListener extends NetworkProtocol implements GameSessi
 		
 		PlayerInfo botPlayer = game.getPlayerById(msg.botId);
 		if(botPlayer.isBot()) {
-			if(player.getTeamId() == botPlayer.getTeamId()) {				
+			// TODO
+			//if(player.getTeamId() == botPlayer.getTeamId()) 
+			{				
 				game.getAISystem().receiveAICommand(botPlayer, msg.command);
 			}
 		}

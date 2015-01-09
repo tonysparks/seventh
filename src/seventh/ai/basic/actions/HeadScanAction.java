@@ -28,6 +28,16 @@ public class HeadScanAction extends AdapterAction {
 	}
 
 
+	/**
+	 * Rest this action
+	 */
+	public void reset() {
+		this.sampleTime = 0;
+		this.destinationOrientation = 0;
+		this.dir.zeroOut();
+		this.prevDir.zeroOut();
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.ai.Action#isFinished()
 	 */

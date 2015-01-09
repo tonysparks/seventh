@@ -34,6 +34,14 @@ public class ClientGrenade extends ClientEntity {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.client.ClientEntity#isBackgroundObject()
+	 */
+	@Override
+	public boolean isBackgroundObject() {
+		return true;
+	}
+	
+	/* (non-Javadoc)
 	 * @see palisma.client.ClientEntity#update(leola.live.TimeStep)
 	 */
 	@Override

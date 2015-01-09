@@ -3,6 +3,7 @@
  */
 package seventh.client.screens;
 
+import seventh.ai.AICommand;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientTeam;
@@ -21,6 +22,7 @@ import seventh.client.gfx.particle.Effects;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.network.messages.AICommandMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.TeamTextMessage;
@@ -367,30 +369,11 @@ public class InGameScreen implements Screen {
 			
 			@Override
 			public void execute(Console console, String... args) {
-				if(args.length > 1) {
-										
-//					AICommandMessage msg = new AICommandMessage();
-//					msg.botId = Integer.parseInt(args[0]);
-//					String cmd = args[1];
-//					if("plant".equalsIgnoreCase(cmd)) {
-//						msg.command = new PlantBombAICommand();
-//					}
-//					else if("defuse".equalsIgnoreCase(cmd)) {
-//						msg.command = new DefuseBombAICommand();
-//					}
-//					else if("defend".equalsIgnoreCase(cmd)) {
-//						ClientPlayer player = game.getLocalPlayer();
-//						Vector2f pos = player.isAlive() ? player.getEntity().getCenterPos().createClone() : new Vector2f();
-//						if(args.length > 2) {
-//							pos.x = Integer.parseInt(args[2]);
-//							pos.y = Integer.parseInt(args[3]);
-//						}
-//						msg.command = new DefendAICommand(pos);
-//					}
-//					else {
-//						msg.command = new DefaultAICommand();
-//					}
-//					network.queueSendReliableMessage(msg);	
+				if(args.length > 1) {										
+					AICommandMessage msg = new AICommandMessage();
+					msg.botId = Integer.parseInt(args[0]);
+					msg.command = new AICommand(this.mergeArgsDelimAt(",", 1, args));
+					network.queueSendReliableMessage(msg);	
 				}
 				else {
 					console.println("<usage> ai [botid] [command] [args]");

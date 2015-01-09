@@ -3,6 +3,11 @@
  */
 package seventh.game;
 
+import static seventh.shared.SeventhConstants.MAX_ENTITIES;
+import static seventh.shared.SeventhConstants.MAX_PERSISTANT_ENTITIES;
+import static seventh.shared.SeventhConstants.MAX_PLAYERS;
+import static seventh.shared.SeventhConstants.SPAWN_INVINCEABLILITY_TIME;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -74,12 +79,7 @@ public class Game implements GameInfo, Debugable {
 			return null;
 		}				
 	}
-	
-	public static final int MAX_ENTITIES = 256;
-	public static final int MAX_PLAYERS = 12;
-	public static final int MAX_PERSISTANT_ENTITIES = 64;
-	
-	public static final int SPAWN_INVINCEABLILITY_TIME = 2_000;
+		
 	
 	public static final Type[] alliedWeapons = {
 		Type.THOMPSON,
@@ -822,7 +822,7 @@ public class Game implements GameInfo, Debugable {
 		if(player != null) {			
 			if(player.isAlive()) {
 				PlayerEntity entity = player.getEntity();				
-				entity.handleUserCommand(new UserCommand(msg.keys, msg.orientation));								
+				entity.handleUserCommand(msg.keys, msg.orientation);								
 			}
 			else if (player.isSpectating()) {
 				if(Keys.LEFT.isDown(this.previousKeys) && !Keys.LEFT.isDown(msg.keys)) {

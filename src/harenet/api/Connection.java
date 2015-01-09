@@ -52,6 +52,12 @@ public interface Connection extends Endpoint {
 	 */
 	public long getAvgBitsPerSecSent();
 	
+	
+	/**
+	 * @return the number of dropped packets
+	 */
+	public long getNumberOfDroppedPackets();
+	
 	/**
 	 * Sends a message to the server
 	 * @param protocolFlags

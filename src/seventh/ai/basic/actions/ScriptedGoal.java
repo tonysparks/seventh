@@ -8,7 +8,6 @@ import leola.vm.types.LeoObject;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Goal;
 import seventh.shared.Cons;
-import seventh.shared.DebugDraw;
 import seventh.shared.TimeStep;
 
 /**
@@ -76,13 +75,13 @@ public class ScriptedGoal extends AdapterAction {
 			}
 		}
 		
-		Action action = goal.currentAction();
-		if(action != null) {
-			DebugDraw.drawString("Script Action: " + action.getClass().getSimpleName(), 800, 70, 0xff00ff00);
-		}
-		else {
-			DebugDraw.drawString("Script Action: ", 800, 70, 0xff00ff00);
-		}
+//		Action action = goal.currentAction();
+//		if(action != null) {
+//			DebugDraw.drawString("Script Action: " + action.getClass().getSimpleName(), 800, 70, 0xff00ff00);
+//		}
+//		else {
+//			DebugDraw.drawString("Script Action: ", 800, 70, 0xff00ff00);
+//		}
 	}
 	
 	/* (non-Javadoc)

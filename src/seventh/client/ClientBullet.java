@@ -22,10 +22,36 @@ public class ClientBullet extends ClientEntity {
 	private Vector2f origin;
 	private int ownerId;
 	private int count;
-	private final int trailSize;
+	private int trailSize;
+	
+	static class BulletOnRemove implements OnRemove {
+		private Vector2f vel = new Vector2f();
+		
+		@Override
+		public void onRemove(ClientEntity me, ClientGame game) {
+			ClientBullet bullet = (ClientBullet)me;			 
+			Vector2f.Vector2fSubtract(bullet.getPos(), bullet.getOrigin(), vel);
+			Vector2f.Vector2fNormalize(vel, vel);
+			
+			Vector2f pos = me.getCenterPos();
+			Vector2f.Vector2fMA(pos, vel, 5.0f, pos);
+//			
+//			boolean hitWall = game.doesCollide(pos, 32, 32);
+//			
+//			if(hitWall) {
+//				game.addBackgroundEffect(new BulletImpactEmitter(pos, vel, 200, 0, false));
+//			}
+			
+			if(!game.doesEntityTouchOther(me)) {
+				game.addBackgroundEffect(new BulletImpactEmitter(pos, vel, 200, 0, false));
+			}
+			
+		}
+	}
 	
 	/**
-	 * 
+	 * @param game
+	 * @param pos
 	 */
 	public ClientBullet(ClientGame game, Vector2f pos) {
 		super(game, pos);
@@ -35,30 +61,36 @@ public class ClientBullet extends ClientEntity {
 		Random random = game.getRandom();
 		trailSize = random.nextInt(2) + 1;
 		
-		setOnRemove(new OnRemove() {
-			
-			@Override
-			public void onRemove(ClientEntity me, ClientGame game) {
-				ClientBullet bullet = (ClientBullet)me;
-				Vector2f vel = new Vector2f(); 
-				Vector2f.Vector2fSubtract(bullet.getPos(), bullet.getOrigin(), vel);
-				Vector2f.Vector2fNormalize(vel, vel);
-				
-				Vector2f pos = me.getCenterPos();
-				Vector2f.Vector2fMA(pos, vel, 5.0f, pos);
-//				
-//				boolean hitWall = game.doesCollide(pos, 32, 32);
-//				
-//				if(hitWall) {
-//					game.addBackgroundEffect(new BulletImpactEmitter(pos, vel, 200, 0, false));
-//				}
-				
-				if(!game.doesEntityTouchOther(me)) {
-					game.addBackgroundEffect(new BulletImpactEmitter(pos, vel, 200, 0, false));
-				}
-				
-			}
-		});
+		setOnRemove(new BulletOnRemove());
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientEntity#reset()
+	 */
+	@Override
+	public void reset() {	
+		super.reset();
+		
+		origin.zeroOut();
+		oldPos.zeroOut();
+		
+		ownerId = 0;
+		count = 0;
+		trailSize = game.getRandom().nextInt(2) + 1;
+		
+		lastUpdate = 0;
+
+		prevState = null;
+		nextState = null;
+	}
+	
+	/**
+	 * @param origin the origin to set
+	 */
+	public void setOrigin(Vector2f origin) {
+		this.pos.set(origin);
+		this.origin.set(origin);
+		this.oldPos.set(origin);		
 	}
 	
 	/* (non-Javadoc)

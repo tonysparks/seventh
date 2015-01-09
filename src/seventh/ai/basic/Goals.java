@@ -10,6 +10,7 @@ import seventh.ai.basic.actions.MoveAction;
 import seventh.ai.basic.actions.ScriptedGoal;
 import seventh.ai.basic.actions.WaitAction;
 import seventh.game.BombTarget;
+import seventh.math.Vector2f;
 
 
 /**
@@ -69,6 +70,12 @@ public class Goals {
 	
 	public Action goToRandomSpot(Brain brain) {
 		return new MoveAction(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
+	}
+	
+	public Action takeCover(Vector2f attackDir) {
+		Action action = getScriptedAction("takeCover");
+		action.getActionResult().setValue(attackDir);
+		return action;
 	}
 	
 //	public Action scanArea() {

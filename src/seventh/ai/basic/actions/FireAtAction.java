@@ -20,14 +20,22 @@ public class FireAtAction extends AdapterAction {
 
 	private Entity fireAtMe;
 	private long lastContactTime;
+	
 	/**
-	 * 
+	 * @param fireAtMe 
 	 */
 	public FireAtAction(Entity fireAtMe) {
+		reset(fireAtMe);
+	}
+
+	/**
+	 * @param fireAtMe the fireAtMe to set
+	 */
+	public void reset(Entity fireAtMe) {
 		this.fireAtMe = fireAtMe;
 		this.getActionResult().setFailure();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see palisma.ai.Action#isFinished()
 	 */

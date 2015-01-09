@@ -27,8 +27,16 @@ public class StareAtEntityAction extends AdapterAction {
 	private final long timeSinceLastSeenExpireMSec;
 	
 	public StareAtEntityAction(Entity stareAtMe) {
-		this.stareAtMe = stareAtMe;
+		reset(stareAtMe);
 		timeSinceLastSeenExpireMSec = 1_000;
+	}
+	
+	/**
+	 * @param stareAtMe the stareAtMe to set
+	 */
+	public void reset(Entity stareAtMe) {
+		this.stareAtMe = stareAtMe;		
+		this.lastVisibleTime = 0;
 	}
 
 	/* (non-Javadoc)

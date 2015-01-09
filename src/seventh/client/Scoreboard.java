@@ -127,7 +127,7 @@ public class Scoreboard {
 		int defaultColor = 0xffffffff;
 
 		RenderFont.drawShadedString(canvas, "Name                     Kills     Deaths     Ping", x, y, defaultColor);
-		List<ClientPlayer> vals = new ArrayList<ClientPlayer>(game.getPlayers().values());
+		List<ClientPlayer> vals = game.getPlayers().asList();
 		Map<ClientTeam, List<ClientPlayer>> teams = new HashMap<ClientTeam, List<ClientPlayer>>();
 		teams.put(ClientTeam.NONE, new ArrayList<ClientPlayer>());
 		teams.put(ClientTeam.ALLIES, new ArrayList<ClientPlayer>());

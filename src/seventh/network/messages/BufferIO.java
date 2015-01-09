@@ -64,8 +64,6 @@ public class BufferIO {
 	
 	public static final byte AI_COMMAND = 28;
 	
-	
-	
 	/**
 	 * The Seventh {@link NetMessageFactory} implementation
 	 * 
@@ -80,7 +78,7 @@ public class BufferIO {
 		 */
 		public NetMessage readNetMessage(IOBuffer buffer) {
 			NetMessage message = null;
-			
+							
 			byte type = buffer.get();
 			switch(type) {
 				case BOMB_DIARMED: message = new BombDisarmedMessage();

@@ -36,6 +36,7 @@ public abstract class ClientEntity implements Renderable {
 	
 	private boolean isAlive;
 	
+	private boolean isDestroyed;
 	/**
 	 * Invoked on each update
 	 * @author Tony
@@ -74,6 +75,38 @@ public abstract class ClientEntity implements Renderable {
 		
 		this.isAlive = true;
 //		this.pos.set(pos);
+	}
+	
+	/**
+	 * A destroyed object mean it can be reused.  This is purely
+	 * for performance reasons.
+	 * 
+	 * @return the isDestroyed
+	 */
+	public boolean isDestroyed() {
+		return isDestroyed;
+	}
+	
+	/**
+	 * Destroys this entity
+	 */
+	public void destroy() {
+		this.isDestroyed = true;
+	}
+	
+	/**
+	 * Reset's this object so that it can be reused 
+	 * again by the engine.
+	 */
+	public void reset() {
+		this.isDestroyed = false;
+		this.isAlive = true;
+		
+		this.pos.zeroOut();
+		this.facing.zeroOut();
+		this.centerPos.zeroOut();
+		this.movementDir.zeroOut();
+		this.bounds.setLocation(this.pos);
 	}
 	
 	/**

@@ -8,7 +8,6 @@ import harenet.api.Connection;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.HashMap;
 
 import leola.vm.Leola;
 import leola.vm.types.LeoMap;
@@ -42,6 +41,7 @@ import seventh.network.messages.TextMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Cons;
 import seventh.shared.Scripting;
+import seventh.shared.SeventhConstants;
 
 /**
  * The Seventh implementation of the {@link ClientProtocol}
@@ -59,7 +59,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 	private SeventhGame app;
 	private Network network;
 	
-	private java.util.Map<Integer, ClientPlayer> players;
+	private ClientPlayers players;
 	private int localPlayerId;
 	
 	private ClientGame game;
@@ -74,7 +74,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 		
 		this.localPlayerId = -1;
 		
-		this.players = new HashMap<Integer, ClientPlayer>();
+		this.players = new ClientPlayers(SeventhConstants.MAX_PLAYERS);
 	}
 	
 	
@@ -176,7 +176,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 	@Override
 	public void connectAccepted(Connection conn, ConnectAcceptedMessage msg) {				
 		this.localPlayerId = msg.playerId;
-		this.players.put(localPlayerId, new ClientPlayer(app.getConfig().getPlayerName(), localPlayerId));
+		this.players.addPlayer(new ClientPlayer(app.getConfig().getPlayerName(), localPlayerId));
 		
 		applyGameState(msg.gameState, localPlayerId, true);
 	}

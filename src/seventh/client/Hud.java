@@ -4,6 +4,8 @@
  */
 package seventh.client;
 
+import harenet.api.Client;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -203,7 +205,7 @@ public class Hud implements Renderable {
 		miniMap.update(timeStep);		
 		miniMap.setMapAlpha( scoreboard.isVisible() ? 0x3f : 0x8f);
 		
-		updateProgressBar(timeStep);
+		updateProgressBar(timeStep);		
 	}
 	
 	/* (non-Javadoc)
@@ -249,6 +251,9 @@ public class Hud implements Renderable {
 		drawSpectating(canvas);
 		
 		drawBombProgressBar(canvas, camera);
+		
+		drawMemoryUsage(canvas);
+		drawNetworkUsage(canvas);
 	}
 	
 	private void drawWeaponIcons(Canvas canvas, ClientWeapon weapon) {
@@ -323,7 +328,7 @@ public class Hud implements Renderable {
 		if(localPlayer.isSpectating()) {
 			
 			String message = "Spectating";
-			ClientPlayer spectated = game.getPlayers().get(localPlayer.getSpectatingPlayerId());
+			ClientPlayer spectated = game.getPlayers().getPlayer(localPlayer.getSpectatingPlayerId());
 			if(spectated!=null) {
 				message += ": " + spectated.getName();
 			}
@@ -393,4 +398,57 @@ public class Hud implements Renderable {
 		this.bombProgressBarView.render(canvas, camera, 0);
 	}
 	
+	
+	private void drawMemoryUsage(Canvas canvas) {
+		Runtime runtime = Runtime.getRuntime();
+		long maxMemory = runtime.totalMemory() / (1024*1024);
+		long usedMemory = maxMemory - runtime.freeMemory() / (1024*1024);
+		
+		
+		int x = 20;
+		int y = canvas.getHeight() - 125;
+		
+		canvas.fillRect( x, y, 100, 15, 0xcf696969 );
+		if (usedMemory > 0) {
+			double percentage = ((double)usedMemory / (double)maxMemory);
+			canvas.fillRect( x, y, (int)(100 * percentage), 15, 0xdf3f3f3f );
+		}
+		canvas.drawRect( x-1, y, 101, 15, 0xff000000 );
+		
+		// add a shadow effect
+		canvas.drawLine( x, y+1, x+100, y+1, 0x8f000000 );
+		canvas.drawLine( x, y+2, x+100, y+2, 0x5f000000 );
+		canvas.drawLine( x, y+3, x+100, y+3, 0x2f000000 );
+		canvas.drawLine( x, y+4, x+100, y+4, 0x0f000000 );
+		canvas.drawLine( x, y+5, x+100, y+5, 0x0b000000 );
+		
+		y = y+15;
+		canvas.drawLine( x, y-5, x+100, y-5, 0x0b000000 );
+		canvas.drawLine( x, y-4, x+100, y-4, 0x0f000000 );
+		canvas.drawLine( x, y-3, x+100, y-3, 0x2f000000 );
+		canvas.drawLine( x, y-2, x+100, y-2, 0x5f000000 );
+		canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );		
+		
+		canvas.setFont("Consola", 14);
+		canvas.drawString(usedMemory + " MiB / " + maxMemory + " MiB", x - 20, y - 20, 0xff00CC00);
+	}
+	
+
+	/**
+	 * Network usage
+	 * 
+	 * @param canvas
+	 */
+	private void drawNetworkUsage(Canvas canvas) {
+		int x = 10;
+		int y = canvas.getHeight() - 225;
+				
+		canvas.setFont("Consola", 14);
+		Client client = app.getNetwork().getClient();
+		canvas.drawString("R: " + client.getAvgBitsPerSecRecv() + " B/S", x, y - 20, 0xff00CC00);
+		canvas.drawString("S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 40, 0xff00CC00);
+		canvas.drawString("D: " + client.getNumberOfDroppedPackets(), x, y - 60, 0xff00CC00);
+		canvas.drawString("UR: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, 0xff00CC00);
+		canvas.drawString("US: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, 0xff00CC00);
+	}
 }

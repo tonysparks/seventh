@@ -28,6 +28,7 @@ import seventh.map.Map;
 import seventh.map.PathFeeder;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
+import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
 
@@ -37,7 +38,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class Locomotion {
+public class Locomotion implements Debugable {
 
 	private Brain brain;	
 			
@@ -52,6 +53,16 @@ public class Locomotion {
 	
 	private Random random;
 	
+	/*
+	 * cached common actions
+	 */
+	private HeadScanAction headScan;
+	private MoveAction moveAction;
+	private LookAtAction lookAt;
+	private StareAtEntityAction stareAt;
+	private FireAtAction fireAt;
+	
+	
 	/**
 	 * 
 	 */
@@ -63,6 +74,12 @@ public class Locomotion {
 		this.handsGoal = new DecoratorAction(brain);
 		
 		this.moveDelta = new Vector2f();
+		
+		this.headScan = new HeadScanAction();
+		this.moveAction = new MoveAction();
+		this.lookAt = new LookAtAction(0);
+		this.stareAt = new StareAtEntityAction(null);
+		this.fireAt = new FireAtAction(null);
 		
 		reset(brain);
 	}
@@ -176,8 +193,8 @@ public class Locomotion {
 	 */
 	public void scanArea() {
 		if(!this.facingGoal.is(HeadScanAction.class)) {
-			Action action = new HeadScanAction();
-			this.facingGoal.setAction(action);
+			this.headScan.reset();
+			this.facingGoal.setAction(this.headScan);
 		}
 	}
 	
@@ -215,8 +232,9 @@ public class Locomotion {
 	 * @return an {@link Action} to invoke
 	 */
 	public void moveTo(Vector2f dest) {
-		Action action = new MoveAction(dest);		
-		this.walkingGoal.setAction(action);
+//		Action action = new MoveAction(dest);
+		this.moveAction.setDestination(dest);
+		this.walkingGoal.setAction(this.moveAction);
 	}
 	
 	/**
@@ -261,17 +279,20 @@ public class Locomotion {
 	}
 	
 	public void lookAt(Vector2f pos) {		
-		this.facingGoal.setAction(new LookAtAction(this.me, pos));
+		this.lookAt.reset(me, pos);
+		this.facingGoal.setAction(this.lookAt);
 	}	
 	public void stareAtEntity(Entity entity) {
-		this.facingGoal.setAction(new StareAtEntityAction(entity));
+		this.stareAt.reset(entity);
+		this.facingGoal.setAction(this.stareAt);
 	}
 	public boolean isStaringAtEntity() {
 		return this.facingGoal.is(StareAtEntityAction.class);
 	}
 	
 	public void fireAt(Entity entity) {
-		this.handsGoal.setAction(new FireAtAction(entity));
+		this.fireAt.reset(entity);
+		this.handsGoal.setAction(this.fireAt);
 	}
 	
 	public boolean handsInUse() {
@@ -434,5 +455,26 @@ public class Locomotion {
 		}
 		
 		return -1;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Debugable#getDebugInformation()
+	 */
+	@Override
+	public DebugInformation getDebugInformation() {
+		DebugInformation info = new DebugInformation();
+		info.add("hands", this.handsGoal)
+		    .add("feet", this.walkingGoal)
+		    .add("facing", this.facingGoal)
+		    ;
+		return info;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {	
+		return getDebugInformation().toString();
 	}
 }

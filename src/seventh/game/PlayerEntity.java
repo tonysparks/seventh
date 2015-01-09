@@ -107,8 +107,9 @@ public class PlayerEntity extends Entity implements Controllable {
 	private NetPlayer player;
 	private NetPlayerPartial partialPlayer;
 	private Team team;
-	
-	private UserCommand previousCommand;
+		
+	private int previousKeys;
+	private float previousOrientation;
 	
 	private Inventory inventory;
 		
@@ -602,13 +603,13 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @see seventh.game.Controllable#handleUserCommand(seventh.game.UserCommand)
 	 */
 	@Override
-	public void handleUserCommand(UserCommand command) {
+	public void handleUserCommand(int keys, float orientation) {
 		if(isOperatingVehicle()) {
 			
 			/* The USE key is the one that enters/exit
 			 * the vehicles
 			 */
-			if(Keys.USE.isDown(command.getKeys())) {
+			if(Keys.USE.isDown(keys)) {
 				use();
 			}
 			else {
@@ -618,15 +619,14 @@ public class PlayerEntity extends Entity implements Controllable {
 				 * it
 				 */
 				if(currentState==State.OPERATING_VEHICLE) {
-					this.operating.handleUserCommand(command);
+					this.operating.handleUserCommand(keys, orientation);
 				}
 			}
 		}
 		else {
-		
-			int keys = command.getKeys();
-			int previousKeys = (previousCommand != null) ? previousCommand.getKeys() : 0;
-			float prevOrientation = (previousCommand != null) ? previousCommand.getOrientation() : -1; 		
+					
+//			int previousKeys = (previousCommand != null) ? previousCommand.getKeys() : 0;
+//			float prevOrientation = (previousCommand != null) ? previousCommand.getOrientation() : -1; 		
 			
 			if( Keys.FIRE.isDown(keys) ) {
 				firing = true;
@@ -728,11 +728,12 @@ public class PlayerEntity extends Entity implements Controllable {
 				prevWeapon();
 			}
 			
-			if(prevOrientation != command.getOrientation()) {
-				setOrientation(command.getOrientation());
+			if(previousOrientation != orientation) {
+				setOrientation(orientation);
 			}
 			
-			this.previousCommand = command;
+			this.previousKeys = keys;
+			this.previousOrientation = orientation;
 		}
 		
 	}

@@ -86,6 +86,13 @@ public class Network {
 	}
 	
 	/**
+	 * @return the client
+	 */
+	public Client getClient() {
+		return client;
+	}
+	
+	/**
 	 * Connects to the server
 	 * 
 	 * @param host

@@ -5,9 +5,9 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
-import seventh.game.Game;
 import seventh.network.messages.BufferIO;
 import seventh.shared.BitArray;
+import seventh.shared.SeventhConstants;
 
 /**
  * @author Tony
@@ -38,10 +38,10 @@ public class NetGameUpdate implements NetMessage {
 	 * 
 	 */
 	public NetGameUpdate() {
-		entityBitArray = new BitArray(Game.MAX_ENTITIES - 1);		
-		entities = new NetEntity[Game.MAX_ENTITIES];
+		entityBitArray = new BitArray(SeventhConstants.MAX_ENTITIES - 1);		
+		entities = new NetEntity[SeventhConstants.MAX_ENTITIES];
 		
-		deadPersistantEntities = new BitArray(Game.MAX_PERSISTANT_ENTITIES - 1);
+		deadPersistantEntities = new BitArray(SeventhConstants.MAX_PERSISTANT_ENTITIES - 1);
 		hasDeadEntities = true;
 		
 		numberOfInts = entityBitArray.numberOfInts();

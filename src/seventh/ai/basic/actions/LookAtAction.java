@@ -19,11 +19,22 @@ public class LookAtAction extends AdapterAction {
 	public LookAtAction(float orientation) {
 		this.orientation = orientation;		
 	}
+	
 	public LookAtAction(Entity entity, Vector2f position) {		
-		Vector2f entityPos = entity.getPos();
-		this.orientation = Entity.getAngleBetween(position, entityPos);
+		reset(entity, position);
 	}
 
+	/**
+	 * Sets the orientation to move in order for the Entity to look at the
+	 * dest vector.
+	 * 
+	 * @param me
+	 * @param dest
+	 */
+	public void reset(Entity me, Vector2f dest) {
+		this.orientation = Entity.getAngleBetween(dest, me.getPos());
+	}
+	
 	/* (non-Javadoc)
 	 * @see palisma.ai.Action#start(palisma.ai.Brain)
 	 */

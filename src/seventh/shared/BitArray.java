@@ -3,7 +3,6 @@
  */
 package seventh.shared;
 
-import seventh.game.Game;
 
 /**
  * @author Tony
@@ -96,7 +95,7 @@ public class BitArray {
 		
 		System.out.println("NumberOfBytes:" + a.numberOfBytes() + " : " + a.size() + " : " + a);
 		
-		BitArray b = new BitArray(Game.MAX_PERSISTANT_ENTITIES - 1);
+		BitArray b = new BitArray(SeventhConstants.MAX_PERSISTANT_ENTITIES - 1);
 		
 //		int[] ents = new int[256];
 		for(int i = 2; i < b.size(); i++) {

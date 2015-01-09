@@ -5,6 +5,8 @@ package seventh.game;
 
 import java.util.Random;
 
+import seventh.shared.SeventhConstants;
+
 /**
  * Simple structure that holds the Players, this structure allows for
  * mutable operations on the list of Players.
@@ -25,7 +27,7 @@ public class Players implements PlayerInfos {
 	 * 
 	 */
 	public Players() {
-		this.players = new Player[Game.MAX_PLAYERS];
+		this.players = new Player[SeventhConstants.MAX_PLAYERS];
 		this.random = new Random();
 	}
 	

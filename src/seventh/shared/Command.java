@@ -53,7 +53,7 @@ public abstract class Command {
 	protected String mergeArgsDelimAt(String delimeter, int index, String ...args) {
 		StringBuilder sb = new StringBuilder();
 		for(int i = index; i < args.length; i++) {
-			if(i>0) sb.append(delimeter);
+			if(i>index) sb.append(delimeter);
 			sb.append(args[i]);
 		}
 		

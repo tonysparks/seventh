@@ -15,7 +15,8 @@ public interface Controllable {
 	/**
 	 * Handles the users input commands
 	 * 
-	 * @param command
+	 * @param keys
+	 * @param orientation
 	 */
-	public void handleUserCommand(UserCommand command);			
+	public void handleUserCommand(int keys, float orientation);			
 }

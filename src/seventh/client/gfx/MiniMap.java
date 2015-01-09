@@ -9,6 +9,7 @@ import java.util.List;
 import seventh.client.ClientBombTarget;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
+import seventh.client.ClientPlayers;
 import seventh.client.ClientTeam;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.weapons.Weapon.State;
@@ -150,8 +151,10 @@ public class MiniMap implements Renderable {
 		xr -= 0.01f;
 		yr -= 0.01f;
 		
-		for(ClientPlayer ent : game.getPlayers().values()) {
-			if(ent.isAlive() && (ent.getEntity().getLastUpdate() > gameClock-1000)) {
+		ClientPlayers players = game.getPlayers();
+		for(int i = 0; i < players.getMaxNumberOfPlayers(); i++) {
+			ClientPlayer ent = players.getPlayer(i);
+			if(ent != null && ent.isAlive() && (ent.getEntity().getLastUpdate() > gameClock-1000)) {
 				ClientTeam team = ent.getTeam();
 				Vector2f p = ent.getEntity().getCenterPos();
 				

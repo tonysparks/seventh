@@ -129,6 +129,15 @@ public class HareNetClient extends HareNetEndpoint implements Client {
 		return peer.getAvgBitsPerSecSent();
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see harenet.api.Connection#getNumberOfDroppedPackets()
+	 */
+	@Override
+	public long getNumberOfDroppedPackets() {	
+		return peer.getNumberOfDroppedPackets();
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.jenet.api.Connection#isConnected()
 	 */

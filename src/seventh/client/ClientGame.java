@@ -5,7 +5,6 @@ package seventh.client;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -29,7 +28,6 @@ import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientBomb;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
-import seventh.game.Game;
 import seventh.game.PlayerEntity.Keys;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
@@ -63,6 +61,7 @@ import seventh.network.messages.TextMessage;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
 import seventh.shared.Geom;
+import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 
 import com.badlogic.gdx.Gdx;
@@ -83,13 +82,15 @@ public class ClientGame {
 	
 	private ClientPlayer localPlayer;
 	
-	private java.util.Map<Integer, ClientPlayer> players;
-	private java.util.Map<Integer, ClientEntity> entities;	
-	private List<ClientEntity> entityList;
-	private List<ClientEntity> deadEntities;
+	private ClientEntities entities;
+	private ClientPlayers players;
+	
+	private ClientBulletPool bulletPool;
+	
+	private ClientEntity[] renderingOrderEntities;
+	
 	private List<ClientBombTarget> bombTargets;
 	private List<ClientVehicle> vehicles;
-//	private List<ClientPlayerEntity> playerEntities;
 	
 	private List<FrameBufferRenderable> frameBufferRenderables;
 	
@@ -146,18 +147,17 @@ public class ClientGame {
 	/**
 	 * @throws Exception 
 	 */
-	public ClientGame(SeventhGame app, java.util.Map<Integer, ClientPlayer> players, Map map, int localPlayerId) throws Exception {
+	public ClientGame(SeventhGame app, ClientPlayers players, Map map, int localPlayerId) throws Exception {
 		this.app = app;		
 		this.players = players;
 		this.map = map;
-								
-		this.localPlayer = players.get(localPlayerId);
-		
+														
 		this.scoreboard = new Scoreboard(this);
-		this.entities = new HashMap<Integer, ClientEntity>();
-		this.entityList = new ArrayList<ClientEntity>();
-		this.deadEntities = new ArrayList<ClientEntity>();
-//		this.playerEntities = new ArrayList<ClientPlayerEntity>();
+		
+		this.localPlayer = players.getPlayer(localPlayerId);		
+		this.entities = new ClientEntities(SeventhConstants.MAX_ENTITIES);	
+		this.renderingOrderEntities = new ClientEntity[SeventhConstants.MAX_ENTITIES];		
+		
 		this.bombTargets = new ArrayList<ClientBombTarget>();
 		this.vehicles = new ArrayList<ClientVehicle>();
 		
@@ -183,7 +183,9 @@ public class ClientGame {
 		this.frameBufferRenderables.add(lightSystem);
 		
 		this.entityListener = lightSystem.getClientEntityListener();		
-	}
+		
+		this.bulletPool = new ClientBulletPool(this, SeventhConstants.MAX_ENTITIES);
+	}	
 	
 	/**
 	 * @return the map
@@ -266,23 +268,22 @@ public class ClientGame {
 		this.lightSystem.update(timeStep);
 		
 		long gameClock = timeStep.getGameClock();
-		this.deadEntities.clear();
-		
-		int size = this.entityList.size();
+				
+		ClientEntity[] entityList = entities.getEntities();
+		int size = entityList.length;
 		for(int i = 0; i < size; i++) {
-			ClientEntity ent = this.entityList.get(i);
-			ent.update(timeStep);
-			
-			if(ent.killIfOutdated(gameClock)) {
-				this.deadEntities.add(ent);
+			ClientEntity ent = entityList[i];
+			if(ent != null) {
+				ent.update(timeStep);
+				
+				if(ent.killIfOutdated(gameClock)) {
+					removeEntity(ent.getId());	
+				}
 			}
+			
+			
 		}
 
-		size = this.deadEntities.size();
-		for(int i = 0; i < size; i++) {
-			ClientEntity ent = deadEntities.get(i);
-			removeEntity(ent.getId());
-		}
 		
 		backgroundEffects.update(timeStep);
 		foregroundEffects.update(timeStep);
@@ -311,8 +312,8 @@ public class ClientGame {
 			if(this.localPlayer.isAlive()) {				
 				entity = this.localPlayer.getEntity();				
 			}
-			else if(this.players.containsKey(this.localPlayer.getSpectatingPlayerId())) { 
-				entity = this.players.get(this.localPlayer.getSpectatingPlayerId()).getEntity();
+			else if(players.containsPlayer(this.localPlayer.getSpectatingPlayerId())) { 
+				entity = players.getPlayer(this.localPlayer.getSpectatingPlayerId()).getEntity();
 			}
 			
 																								
@@ -391,15 +392,36 @@ public class ClientGame {
 		
 		backgroundEffects.render(canvas, camera, 0);
 		
-		int size = this.entityList.size();		
+				
+		ClientEntity[] entityList = entities.getEntities();
+		int size = entityList.length;
+		
+		
+		/* first render the background entities */
 		for(int i = 0; i < size; i++) {
-			ClientEntity entity = this.entityList.get(i);
-			entity.render(canvas, camera, 0);
-
-			boolean debug = false;
-			if(debug) {
-				debugRenderEntity(canvas, entity);								
+			/* clear out the foreground entities */
+			renderingOrderEntities[i] = null;
+			
+			ClientEntity entity = entityList[i];			
+			if(entity != null) {
+				
+				if(entity.isBackgroundObject()) {
+					entity.render(canvas, camera, 0);
+				}
+				else {
+					renderingOrderEntities[i] = entity;
+				}				
 			}
+		}						
+		
+		/* now render the foreground entities */
+		for(int i = 0; i < size; i++) {			
+			ClientEntity entity = renderingOrderEntities[i];			
+			if(entity != null) {								
+				entity.render(canvas, camera, 0);				
+			}
+			
+			renderingOrderEntities[i] = null;
 		}						
 		
 		//this.lightSystem.render(canvas, camera, 0);
@@ -426,11 +448,11 @@ public class ClientGame {
 	 * @param canvas
 	 * @param entity
 	 */
-	private void debugRenderEntity(Canvas canvas, ClientEntity entity) {
-		Vector2f cameraPos = camera.getPosition();		
-		int debugColor = 0xa300aa00;
-		canvas.drawRect( (int)(entity.bounds.x-cameraPos.x), (int)(entity.bounds.y-cameraPos.y)
-				   ,entity.bounds.width, entity.bounds.height, debugColor);
+//	private void debugRenderEntity(Canvas canvas, ClientEntity entity) {
+//		Vector2f cameraPos = camera.getPosition();		
+//		int debugColor = 0xa300aa00;
+//		canvas.drawRect( (int)(entity.bounds.x-cameraPos.x), (int)(entity.bounds.y-cameraPos.y)
+//				   ,entity.bounds.width, entity.bounds.height, debugColor);
 //		
 //		Vector2f center = entity.getCenterPos();				
 //		Tile tile = map.getWorldTile(0, (int)center.x, (int)center.y);
@@ -442,7 +464,7 @@ public class ClientGame {
 //		}
 //		
 //		canvas.fillRect((int)center.x-(int)cameraPos.x, (int)center.y-(int)cameraPos.y, 2, 2, 0xff00ff00);
-	}
+//	}
 	
 	
 	/**
@@ -505,7 +527,7 @@ public class ClientGame {
 	/**
 	 * @return the players
 	 */
-	public java.util.Map<Integer, ClientPlayer> getPlayers() {
+	public ClientPlayers getPlayers() {
 		return players;
 	}
 	
@@ -654,7 +676,7 @@ public class ClientGame {
 	}
 	
 	private void createEntity(NetEntity ent) {				
-		if(this.entities.containsKey(ent.id)) {
+		if(this.entities.containsEntity(ent.id)) {
 			return;
 		}
 		
@@ -664,21 +686,21 @@ public class ClientGame {
 		Vector2f pos = new Vector2f(ent.posX, ent.posY);
 		switch(type) {
 			case PLAYER_PARTIAL: {
-				ClientPlayer player = this.players.get(ent.id);
+				ClientPlayer player = players.getPlayer(ent.id);
 				if(player!=null) {					
 					entity = new ClientPlayerEntity(this, player, pos);					
 				}
 				break;
 			}
 			case PLAYER: {
-				ClientPlayer player = this.players.get(ent.id);
+				ClientPlayer player = players.getPlayer(ent.id);
 				if(player!=null) {					
 					entity = new ClientPlayerEntity(this, player, pos);				
 				}
 				break;
 			}
 			case BULLET: {
-				entity = new ClientBullet(this, pos);
+				entity = this.bulletPool.alloc(ent.id, pos);
 				break;
 			}
 			case ROCKET: {
@@ -748,26 +770,19 @@ public class ClientGame {
 		
 		if(entity != null) {
 			entity.updateState(ent, gameClock);
-			entities.put(ent.id, entity);
+			entities.addEntity(ent.id, entity);
+			renderingOrderEntities[ent.id] = entity;
 			
 			entityListener.onEntityCreated(entity);
-			
-			/* Hack to render players,etc.
-			 * above dropped weapons and bombs
-			 */
-			if(entity.isBackgroundObject()) {
-				entityList.add(0, entity);
-			}
-			else {
-				entityList.add(entity);
-			}
 		}
 	}
 	
 
 	public void applyFullGameState(NetGameState gs) {
 		
-		for(ClientEntity ent : this.entityList) {
+		ClientEntity[] entityList = this.entities.getEntities();
+		for(int i = 0; i < entityList.length; i++) {
+			ClientEntity ent = entityList[i];
 			if(ent!=null) {
 				OnRemove remove = ent.getOnRemove();
 				if(remove!=null) {
@@ -775,9 +790,8 @@ public class ClientGame {
 				}
 			}
 		}
-		
-		this.entities.clear();
-		this.entityList.clear();
+				
+		this.entities.clear();		
 		this.bombTargets.clear();
 		this.vehicles.clear();
 		this.lightSystem.removeAllLights();
@@ -810,8 +824,8 @@ public class ClientGame {
 			for(int i = 0; i < size; i++) {
 				NetEntity netEnt = netUpdate.entities[i];
 				if(netEnt != null) {
-					if(entities.containsKey(netEnt.id)) {
-						ClientEntity ent = entities.get(netEnt.id);
+					if(entities.containsEntity(netEnt.id)) {
+						ClientEntity ent = entities.getEntity(netEnt.id);
 						if(Type.fromNet(netEnt.type) == ent.getType()) {						
 							ent.updateState(netEnt, gameClock);
 						}
@@ -826,7 +840,7 @@ public class ClientGame {
 				}
 				else {
 					
-					if( i < Game.MAX_PERSISTANT_ENTITIES) {
+					if( i < SeventhConstants.MAX_PERSISTANT_ENTITIES) {
 						/* if a persistant entity has been removed, lets
 						 * remove it on the client side
 						 */
@@ -855,7 +869,7 @@ public class ClientGame {
 			int previousSpec = localPlayer.getSpectatingPlayerId();
 			localPlayer.setSpectatingPlayerId(netUpdate.spectatingPlayerId);
 			if(previousSpec != netUpdate.spectatingPlayerId) {
-				ClientEntity ent = this.entities.get(netUpdate.spectatingPlayerId);
+				ClientEntity ent = this.entities.getEntity(netUpdate.spectatingPlayerId);
 				if(ent!=null) {
 					camera.centerAroundNow(ent.getCenterPos());
 				}
@@ -871,15 +885,15 @@ public class ClientGame {
 			for(NetPlayerStat stat : stats.playerStats) {
 				int playerId = stat.playerId;
 				
-				if(!players.containsKey(playerId)) {
+				if(!players.containsPlayer(playerId)) {
 					ClientPlayer player = new ClientPlayer(stat.name, playerId);
-					players.put(playerId, player);									
+					players.addPlayer(player);									
 				}
 				
-				ClientPlayer player = players.get(playerId);
+				ClientPlayer player = players.getPlayer(playerId);
 				player.updateStats(stat);
 				
-				ClientEntity entity = entities.get(playerId); 
+				ClientEntity entity = entities.getEntity(playerId); 
 				if( entity instanceof ClientPlayerEntity ) {
 					player.setEntity( (ClientPlayerEntity) entity );
 				}
@@ -898,11 +912,11 @@ public class ClientGame {
 			for(NetPlayerPartialStat stat : stats.playerStats) {
 				int playerId = stat.playerId;
 				
-				if(players.containsKey(playerId)) {																						
-					ClientPlayer player = players.get(playerId);
+				if(players.containsPlayer(playerId)) {																						
+					ClientPlayer player = players.getPlayer(playerId);
 					player.updatePartialStats(stat);
 					
-					ClientEntity entity = entities.get(playerId); 
+					ClientEntity entity = entities.getEntity(playerId); 
 					if( entity instanceof ClientPlayerEntity ) {
 						player.setEntity( (ClientPlayerEntity) entity );
 					}
@@ -918,7 +932,7 @@ public class ClientGame {
 	}
 
 	public void playerSpawned(PlayerSpawnedMessage msg) {
-		ClientPlayer player = players.get(msg.playerId);
+		ClientPlayer player = players.getPlayer(msg.playerId);
 		if(player != null) {
 			Vector2f spawnLocation = new Vector2f(msg.posX, msg.posY);	
 			
@@ -938,9 +952,7 @@ public class ClientGame {
 			}
 			
 			
-			entities.put(msg.playerId, entity);
-			entityList.add(entity);
-//			playerEntities.add(entity);
+			entities.addEntity(msg.playerId, entity);
 			entityListener.onEntityCreated(entity);
 			
 			Sounds.startPlaySound(Sounds.respawnSnd, msg.playerId, spawnLocation.x, spawnLocation.y);
@@ -949,7 +961,7 @@ public class ClientGame {
 	}
 	
 	public void playerKilled(PlayerKilledMessage msg) {
-		ClientPlayer player = players.get(msg.playerId);
+		ClientPlayer player = players.getPlayer(msg.playerId);
 		if(player != null) {
 			
 			Type meansOfDeath = Type.fromNet(msg.deathType);
@@ -1014,7 +1026,7 @@ public class ClientGame {
 								
 			}
 			
-			hud.postDeathMessage(player, players.get(msg.killedById), meansOfDeath);
+			hud.postDeathMessage(player, players.getPlayer(msg.killedById), meansOfDeath);
 			removeEntity(msg.playerId);
 		}
 	}
@@ -1055,7 +1067,7 @@ public class ClientGame {
 	}
 
 	public void teamTextMessage(TeamTextMessage msg) {
-		ClientPlayer player = players.get(msg.playerId);
+		ClientPlayer player = players.getPlayer(msg.playerId);
 		if(player != null) {
 			if(player.isAlive()) {
 				hud.postMessage("(Team) " + player.getName() + ": " + msg.message);
@@ -1070,7 +1082,7 @@ public class ClientGame {
 	}
 	
 	public void textMessage(TextMessage msg) {
-		ClientPlayer player = players.get(msg.playerId);
+		ClientPlayer player = players.getPlayer(msg.playerId);
 		if(player != null) {
 			if(player.isAlive()) {
 				hud.postMessage(player.getName() + ": " + msg.message);
@@ -1085,12 +1097,12 @@ public class ClientGame {
 	}
 	
 	public void playerConnected(PlayerConnectedMessage msg) {
-		this.players.put(msg.playerId, new ClientPlayer(msg.name, msg.playerId));
+		this.players.addPlayer(new ClientPlayer(msg.name, msg.playerId));
 		hud.postMessage(msg.name + " has joined the game.");
 	}
 
 	public void playerDisconnected(PlayerDisconnectedMessage msg) {
-		ClientPlayer player = this.players.remove(msg.playerId);
+		ClientPlayer player = this.players.removePlayer(msg.playerId);
 		if(player != null) {			
 			removeEntity(player.getId());
 			hud.postMessage(player.getName() + " has left the game.");
@@ -1098,11 +1110,12 @@ public class ClientGame {
 	}
 	
 	private boolean removeEntity(int id) {
-		ClientEntity ent = entities.remove(id);
+		ClientEntity ent = entities.removeEntity(id);
 		if(ent != null) {	
 			
-			ent.setAlive(false);			
-			entityList.remove(ent);
+			ent.setAlive(false);		
+			ent.destroy();
+			
 			bombTargets.remove(ent);
 			vehicles.remove(ent);
 			
@@ -1130,8 +1143,9 @@ public class ClientGame {
 	 * @return true if the supplied entity touches another entity
 	 */
 	public boolean doesEntityTouchOther(ClientEntity entity) {
-		for(int i = 0; i < this.entityList.size(); i++) {
-			ClientEntity other = this.entityList.get(i);
+		ClientEntity[] entityList = entities.getEntities();
+		for(int i = 0; i < entityList.length; i++) {
+			ClientEntity other = entityList[i];
 			if(other != null && other != entity) {
 				if(entity.isAlive()) {
 					if(entity.touches(other)) {
@@ -1148,11 +1162,10 @@ public class ClientGame {
 	 * Cleans up resources
 	 */
 	public void destroy() {
-		this.entities.clear();
-		this.entityList.clear();
+		this.bulletPool.clear();
+		this.entities.clear();		
 		this.bombTargets.clear();
 		this.vehicles.clear();
-//		this.playerEntities.clear();
 		
 		this.lightSystem.destroy();
 		
@@ -1164,7 +1177,7 @@ public class ClientGame {
 	 * @param msg
 	 */
 	public void playerSwitchedTeam(PlayerSwitchTeamMessage msg) {
-		ClientPlayer player = this.players.get(msg.playerId);
+		ClientPlayer player = this.players.getPlayer(msg.playerId);
 		if(player != null) {
 			ClientTeam newTeam = ClientTeam.fromId(msg.teamId);
 			player.changeTeam(newTeam);
