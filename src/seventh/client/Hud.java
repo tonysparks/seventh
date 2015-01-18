@@ -251,7 +251,7 @@ public class Hud implements Renderable {
 		drawSpectating(canvas);
 		
 		drawBombProgressBar(canvas, camera);
-		
+			
 		drawMemoryUsage(canvas);
 		drawNetworkUsage(canvas);
 	}

@@ -9,12 +9,12 @@ import java.util.Random;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
-import seventh.ai.basic.Goals;
 import seventh.ai.basic.Stats;
 import seventh.ai.basic.World;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.Zones;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.Goals;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
@@ -67,7 +67,8 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		this.zones = aiSystem.getZones();
 		this.random = aiSystem.getRandom();
 		
-		this.goals = new Goals(aiSystem.getRuntime());
+		this.goals = aiSystem.getGoals(); 
+//				new Goals(aiSystem.getRuntime());
 		
 		this.playersInZone = new ArrayList<>();
 		
@@ -89,7 +90,7 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		this.zoneToAttack = calculateZoneToAttack();	
 		this.currentState = DefensiveState.RANDOM;		
 		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(60_000);		
-		this.world = new World(game, zones);
+		this.world = new World(game, zones, goals);
 	}
 	
 	

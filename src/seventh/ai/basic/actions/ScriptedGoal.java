@@ -6,7 +6,6 @@ package seventh.ai.basic.actions;
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.ai.basic.Brain;
-import seventh.ai.basic.Goal;
 import seventh.shared.Cons;
 import seventh.shared.TimeStep;
 

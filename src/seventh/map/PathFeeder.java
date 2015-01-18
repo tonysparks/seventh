@@ -8,7 +8,9 @@ import static seventh.math.Vector2f.Vector2fCopy;
 
 import java.util.List;
 
+import seventh.game.PlayerEntity;
 import seventh.graph.GraphNode;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
 
@@ -80,6 +82,45 @@ public class PathFeeder<E> {
 		return currentNode == 0 && !path.isEmpty();
 	}
 
+	public Vector2f nextDestination(PlayerEntity ent) {
+//		destination.x = bounds.x;
+//		destination.y = bounds.y;
+		Rectangle bounds = ent.getBounds();
+		
+		destination.zeroOut();
+		
+		if(! path.isEmpty() && currentNode < path.size() ) {
+			GraphNode<Tile, E> node = path.get(currentNode);
+			Tile tile = node.getValue();
+			
+//			if( Math.abs(tile.getX() - (int)currentPosition.x) < 6 
+//				&& Math.abs(tile.getY() - (int)currentPosition.y) < 6
+//				/*tile.getBounds().contains(currentPosition)*/) {
+//				currentNode++;				
+//			}
+//			destination.x = (tile.getX() - (int)currentPosition.x);
+//			destination.y = (tile.getY() - (int)currentPosition.y);
+			
+//			int centerX = tile.getX() + tile.getWidth()/2;
+//			int centerY = tile.getY() + tile.getHeight()/2;
+//						
+			if(tile.getBounds().intersects(bounds)) {
+				currentNode++;			
+				
+				if(ent.isSprinting()) {
+					if(currentNode < path.size()) {
+						tile = path.get(currentNode).getValue();
+					}
+				}
+			}
+			
+			destination.x = (tile.getX() - bounds.x);
+			destination.y = (tile.getY() - bounds.y);
+		}
+		
+		return destination;
+	}
+	
 	/**
 	 * Gets the next destination vector
 	 * @param currentPosition
@@ -92,14 +133,25 @@ public class PathFeeder<E> {
 			GraphNode<Tile, E> node = path.get(currentNode);
 			Tile tile = node.getValue();
 			
-			if( Math.abs(tile.getX() - (int)currentPosition.x) < 6 
-				&& Math.abs(tile.getY() - (int)currentPosition.y) < 6
-				/*tile.getBounds().contains(currentPosition)*/) {
+//			if( Math.abs(tile.getX() - (int)currentPosition.x) < 6 
+//				&& Math.abs(tile.getY() - (int)currentPosition.y) < 6
+//				/*tile.getBounds().contains(currentPosition)*/) {
+//				currentNode++;				
+//			}
+//			destination.x = (tile.getX() - (int)currentPosition.x);
+//			destination.y = (tile.getY() - (int)currentPosition.y);
+			
+			int centerX = tile.getX();// + tile.getWidth()/2;
+			int centerY = tile.getY();// + tile.getHeight()/2;
+			
+			if(Math.abs(centerX - (int)currentPosition.x) < 6 
+			&& Math.abs(centerY - (int)currentPosition.y) < 6) {
 				currentNode++;				
 			}
 			
-			destination.x = (tile.getX() - (int)currentPosition.x);
-			destination.y = (tile.getY() - (int)currentPosition.y);
+			destination.x = (int)((tile.getX() - (int)currentPosition.x));
+			destination.y = (int)((tile.getY() - (int)currentPosition.y));
+//			System.out.println(destination);
 		}
 		
 		return destination;

@@ -85,7 +85,7 @@ public class SightSensor implements Sensor {
 	 * current view port
 	 */
 	private void see() {	
-		if(timeToSee <= 0) {
+		if(timeToSee <= 0 && this.entity != null) {
 			this.entitiesInView.clear();
 			this.world.getPlayersInLineOfSight(this.entitiesInView, this.entity);
 			

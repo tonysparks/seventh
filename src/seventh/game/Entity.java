@@ -52,8 +52,10 @@ public abstract class Entity implements Debugable {
 			return (byte)ordinal();
 		}
 		
+		private static State[] values = values();
+		
 		public static State fromNetValue(byte b) {
-			return values()[b];
+			return values[b];
 		}
 		
 		/**
@@ -146,17 +148,18 @@ public abstract class Entity implements Debugable {
 			return (byte)this.ordinal();
 		}
 		
+		private static Type[] values = values();
 		
 		/**
 		 * @param value the network value
 		 * @return the Type
 		 */
 		public static Type fromNet(byte value) {
-			if(value < 0 || value >= values().length) {
+			if(value < 0 || value >= values.length) {
 				return UNKNOWN;
 			}
 			
-			return values()[value];
+			return values[value];
 		}
 		
 		/**

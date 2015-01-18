@@ -7,15 +7,22 @@ import java.util.Random;
 
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.BombAction;
+import seventh.ai.basic.actions.CrouchAction;
 import seventh.ai.basic.actions.DecoratorAction;
+import seventh.ai.basic.actions.DropWeaponAction;
 import seventh.ai.basic.actions.FireAtAction;
 import seventh.ai.basic.actions.FollowEntityAction;
 import seventh.ai.basic.actions.HeadScanAction;
 import seventh.ai.basic.actions.LookAtAction;
+import seventh.ai.basic.actions.MeleeAction;
 import seventh.ai.basic.actions.MoveAction;
+import seventh.ai.basic.actions.ReloadAction;
+import seventh.ai.basic.actions.ShootAction;
+import seventh.ai.basic.actions.SprintAction;
 import seventh.ai.basic.actions.StareAtEntityAction;
 import seventh.ai.basic.actions.SwitchWeaponAction;
 import seventh.ai.basic.actions.ThrowGrenadeAction;
+import seventh.ai.basic.actions.WalkAction;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
@@ -42,9 +49,10 @@ public class Locomotion implements Debugable {
 
 	private Brain brain;	
 			
-	private DecoratorAction walkingGoal;
+	private DecoratorAction destinationGoal;
 	private DecoratorAction facingGoal;
 	private DecoratorAction handsGoal;
+	private DecoratorAction legsGoal;
 	
 	private PlayerEntity me;
 	
@@ -61,7 +69,13 @@ public class Locomotion implements Debugable {
 	private LookAtAction lookAt;
 	private StareAtEntityAction stareAt;
 	private FireAtAction fireAt;
-	
+	private CrouchAction crouchAction;
+	private WalkAction walkAction;
+	private SprintAction sprintAction;
+	private ReloadAction reloadAction;
+	private MeleeAction meleeAction;
+	private DropWeaponAction dropWeaponAction;
+	private ShootAction shootAction;
 	
 	/**
 	 * 
@@ -69,7 +83,8 @@ public class Locomotion implements Debugable {
 	public Locomotion(Brain brain) {
 		this.brain = brain;
 		this.random = brain.getWorld().getRandom();
-		this.walkingGoal = new DecoratorAction(brain);
+		this.destinationGoal = new DecoratorAction(brain);
+		this.legsGoal = new DecoratorAction(brain);
 		this.facingGoal = new DecoratorAction(brain);
 		this.handsGoal = new DecoratorAction(brain);
 		
@@ -80,6 +95,13 @@ public class Locomotion implements Debugable {
 		this.lookAt = new LookAtAction(0);
 		this.stareAt = new StareAtEntityAction(null);
 		this.fireAt = new FireAtAction(null);
+		this.crouchAction = new CrouchAction();
+		this.walkAction = new WalkAction();
+		this.sprintAction = new SprintAction();
+		this.reloadAction = new ReloadAction();
+		this.meleeAction = new MeleeAction();
+		this.dropWeaponAction = new DropWeaponAction();
+		this.shootAction = new ShootAction();
 		
 		reset(brain);
 	}
@@ -88,9 +110,10 @@ public class Locomotion implements Debugable {
 	 * Resets, generally this was caused by a death
 	 */
 	public void reset(Brain brain) {
-		this.walkingGoal.end(brain);
+		this.destinationGoal.end(brain);
 		this.facingGoal.end(brain);
 		this.handsGoal.end(brain);
+		this.legsGoal.end(brain);
 		
 		this.me = brain.getEntityOwner();
 	}
@@ -127,7 +150,7 @@ public class Locomotion implements Debugable {
 		DebugDraw.drawString(String.format(message, "Motion", "State", "IsFinished"), x, y, color);
 		DebugDraw.drawString("====================================", x, y += yOffset, color);
 		
-		String text = String.format(message, "Walking", walkingGoal.getAction() != null ? walkingGoal.getAction().getClass().getSimpleName():"[none]", walkingGoal.isFinished(brain));				
+		String text = String.format(message, "Walking", destinationGoal.getAction() != null ? destinationGoal.getAction().getClass().getSimpleName():"[none]", destinationGoal.isFinished(brain));				
 		DebugDraw.drawString(text, x, y += yOffset, color);
 		
 		text = String.format(message, "Facing", facingGoal.getAction() != null ? facingGoal.getAction().getClass().getSimpleName():"[none]", facingGoal.isFinished(brain));				
@@ -145,15 +168,19 @@ public class Locomotion implements Debugable {
 	public void update(TimeStep timeStep) {
 		//debugDraw();
 		
-		if(!walkingGoal.isFinished(brain)) {
-			walkingGoal.update(brain, timeStep);
+		if(!destinationGoal.isFinished(brain)) {
+			destinationGoal.update(brain, timeStep);
+		}
+		
+		if(!legsGoal.isFinished(brain)) {
+			legsGoal.update(brain, timeStep);
 		}
 		
 		if(!facingGoal.isFinished(brain)) {
 			facingGoal.update(brain, timeStep);
 		}
 		else {
-			if(!walkingGoal.isFinished(brain)) {
+			if(!destinationGoal.isFinished(brain)) {
 				scanArea();
 			}
 		}
@@ -173,7 +200,8 @@ public class Locomotion implements Debugable {
 		moveDelta.zeroOut();
 		if(pathFeeder!=null) {
 			if (!pathFeeder.atDestination()) {
-				Vector2f nextDest = pathFeeder.nextDestination(me.getPos());
+//				Vector2f nextDest = pathFeeder.nextDestination(me.getPos());
+				Vector2f nextDest = pathFeeder.nextDestination(me);
 				moveDelta.set(nextDest);
 			}
 			else {
@@ -234,7 +262,7 @@ public class Locomotion implements Debugable {
 	public void moveTo(Vector2f dest) {
 //		Action action = new MoveAction(dest);
 		this.moveAction.setDestination(dest);
-		this.walkingGoal.setAction(this.moveAction);
+		this.destinationGoal.setAction(this.moveAction);
 	}
 	
 	/**
@@ -248,10 +276,10 @@ public class Locomotion implements Debugable {
 	public void followEntity(Entity entity) {
 		Action action = new FollowEntityAction(entity);
 		
-		this.walkingGoal.setAction(action);
+		this.destinationGoal.setAction(action);
 	}
 	public void stopMoving() {
-		this.walkingGoal.end(brain);
+		this.destinationGoal.end(brain);
 	}
 	public void stopUsingHands() {
 		this.handsGoal.end(brain);
@@ -269,13 +297,85 @@ public class Locomotion implements Debugable {
 	}
 	
 	public boolean isMoving() {
-		return this.walkingGoal.hasAction() && !this.walkingGoal.isFinished(brain);
+		return this.destinationGoal.hasAction() && !this.destinationGoal.isFinished(brain);
 	}
 	public boolean isPlanting() {
 		return this.handsGoal.hasAction() && this.handsGoal.is(BombAction.class);
 	}
 	public boolean isDefusing() {
 		return this.handsGoal.hasAction() && this.handsGoal.is(BombAction.class);
+	}
+	
+	
+	/**
+	 * Crouch down
+	 */
+	public void crouch() {
+		this.destinationGoal.end(this.brain);		
+		this.legsGoal.end(this.brain);
+		this.legsGoal.setAction(this.crouchAction);
+	}
+	
+	/**
+	 * Stop crouching
+	 */
+	public void standup() {
+		if(isCrouching()) {
+			this.legsGoal.end(this.brain);
+		}
+	}
+	
+	/**
+	 * @return true if crouching
+	 */
+	public boolean isCrouching() {
+		return this.legsGoal.is(CrouchAction.class);
+	}
+	
+	/**
+	 * @return true if sprinting
+	 */
+	public boolean isSprinting() {
+		return this.legsGoal.is(SprintAction.class);
+	}
+	
+	/**
+	 * @return true if walking
+	 */
+	public boolean isWalking() {
+		return this.legsGoal.is(WalkAction.class);
+	}
+	
+	public void walk() {
+		this.legsGoal.setAction(this.walkAction);
+	}
+	
+	public void stopWalking() {
+		if(this.legsGoal.is(WalkAction.class)) {
+			this.legsGoal.end(brain);
+		}
+	}
+	
+	
+	public void sprint() {
+		this.legsGoal.setAction(this.sprintAction);
+	}
+	
+	public void stopSprinting() {
+		if(this.legsGoal.is(SprintAction.class)) {
+			this.legsGoal.end(brain);
+		}
+	}
+	
+	public void reload() {
+		this.handsGoal.setAction(this.reloadAction);
+	}
+	
+	public void meleeAttack() {
+		this.handsGoal.setAction(this.meleeAction);
+	}
+	public void dropWeapon() {
+		this.handsGoal.setAction(this.dropWeaponAction);
 	}
 	
 	public void lookAt(Vector2f pos) {		
@@ -293,6 +393,16 @@ public class Locomotion implements Debugable {
 	public void fireAt(Entity entity) {
 		this.fireAt.reset(entity);
 		this.handsGoal.setAction(this.fireAt);
+	}
+	
+	public void shoot() {
+		this.handsGoal.setAction(this.shootAction);
+	}
+	
+	public void stopShooting() {
+		if(this.handsGoal.is(ShootAction.class)) {
+			this.handsGoal.end(this.brain);
+		}
 	}
 	
 	public boolean handsInUse() {
@@ -319,7 +429,7 @@ public class Locomotion implements Debugable {
 				stareAtEntity(ent);
 			}
 			//if (! isMoving() && !isTooClose(ent) )
-			if( !walkingGoal.is(FollowEntityAction.class) )
+			if( !destinationGoal.is(FollowEntityAction.class) )
 			{
 				followEntity(ent);
 			}
@@ -352,7 +462,7 @@ public class Locomotion implements Debugable {
 	 * @param y the Y direction to move
 	 */
 	public void directMove(float x, float y) {
-		final float threshold = 0f;
+		final float threshold = 0f; // was 0
 		
 		if (x < -threshold ) {
 			me.moveLeft(); 
@@ -464,8 +574,9 @@ public class Locomotion implements Debugable {
 	public DebugInformation getDebugInformation() {
 		DebugInformation info = new DebugInformation();
 		info.add("hands", this.handsGoal)
-		    .add("feet", this.walkingGoal)
+		    .add("destination", this.destinationGoal)
 		    .add("facing", this.facingGoal)
+		    .add("legs", this.legsGoal)
 		    ;
 		return info;
 	}

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import seventh.ai.basic.actions.Goals;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.GameInfo;
@@ -48,16 +49,19 @@ public class World {
 	
 	private Zones zones;
 	
+	private Goals goals;
+	
 	/**
 	 * @param entities
 	 * @param map
 	 * @param graph
 	 */
-	public World(GameInfo game, Zones zones) {
+	public World(GameInfo game, Zones zones, Goals goals) {
 		super();
 				
 		this.game = game;
 		this.zones = zones;
+		this.goals = goals;
 		
 		this.entities = game.getEntities();
 		this.players = game.getPlayerEntities();
@@ -75,6 +79,14 @@ public class World {
 		this.attackDirections = new ArrayList<AttackDirection>();
 		
 		this.activeBombs = new ArrayList<BombTarget>();
+	}
+	
+	
+	/**
+	 * @return the goals
+	 */
+	public Goals getGoals() {
+		return goals;
 	}
 	
 	/**

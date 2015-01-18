@@ -587,6 +587,7 @@ public class PlayerSprite implements Renderable {
 		
 		effects.render(canvas,camera, alpha);
 		
+		
 //		Vector2f pos = entity.getPos();		
 //		renderPlayer(canvas, cameraPos, pos, 0);
 		
@@ -595,6 +596,14 @@ public class PlayerSprite implements Renderable {
 		
 		Vector2f renderPos = entity.getRenderPos();
 		renderPlayer(canvas, cameraPos, renderPos, 1);
+				
+//		int x1 = (int)(entity.getCenterPos().x - cameraPos.x);
+//		int y1 = (int)(entity.getCenterPos().y - cameraPos.y);
+//		Vector2f dest = new Vector2f();
+//		Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), 100f, dest);
+//		int x2 = (int)(dest.x - cameraPos.x);
+//		int y2 = (int)(dest.y - cameraPos.y);
+//		canvas.drawLine(x1,y1,x2,y2, null);
 	}
 	
 	private void setTextureRegion(Sprite sprite, TextureRegion region) {

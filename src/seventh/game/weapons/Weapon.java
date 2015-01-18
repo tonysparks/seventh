@@ -41,12 +41,14 @@ public abstract class Weapon {
 			return (byte)ordinal();
 		}
 		
+		private static State[] values = values();
+		
 		public static State fromNet(byte value) {
-			if(value < 0 || value >= values().length) {
+			if(value < 0 || value >= values.length) {
 				return UNKNOWN;
 			}
 			
-			return values()[value];
+			return values[value];
 		}
 	}
 	
@@ -247,6 +249,13 @@ public abstract class Weapon {
 	 */
 	public boolean isFiring() {
 		return state == State.FIRING;
+	}
+	
+	/**
+	 * @return true if this weapon is currently reloading
+	 */
+	public boolean isReloading() {
+		return state == State.RELOADING;
 	}
 	
 	/**

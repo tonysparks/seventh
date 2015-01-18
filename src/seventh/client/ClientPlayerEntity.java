@@ -226,10 +226,10 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		int speed = PlayerEntity.PLAYER_SPEED;
 		int mSpeed = speed;
 		if(currentState==State.WALKING) {
-			mSpeed = (int)( (float)speed * 0.484f);
+			mSpeed = (int)( (float)speed * PlayerEntity.WALK_SPEED_FACTOR);
 		}
 		else if(currentState == State.SPRINTING) {			
-			mSpeed = (int)( (float)speed * 1.35f);		
+			mSpeed = (int)( (float)speed * PlayerEntity.SPRINT_SPEED_FACTOR); // 1.35		
 		}
 				
 		mSpeed -= weaponWeight;

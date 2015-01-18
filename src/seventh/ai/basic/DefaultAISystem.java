@@ -11,6 +11,7 @@ import leola.vm.Leola;
 import seventh.ai.AICommand;
 import seventh.ai.AISystem;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.commands.AICommands;
 import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
 import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
@@ -131,7 +132,7 @@ public class DefaultAISystem implements AISystem {
 			@Override
 			public void onPlayerInfo(PlayerInfo player) {
 				if(player.isBot()) {					
-					brains[player.getId()] = new Brain(getStrategyFor(player), new World(game, zones), player);
+					brains[player.getId()] = new Brain(getStrategyFor(player), new World(game, zones, goals), player);
 				}	
 			}
 		});
@@ -215,7 +216,7 @@ public class DefaultAISystem implements AISystem {
 	@Override
 	public void playerJoined(PlayerInfo player) {
 		if(player.isBot()) {
-			this.brains[player.getId()] = new Brain(getStrategyFor(player), new World(game, zones), player);
+			this.brains[player.getId()] = new Brain(getStrategyFor(player), new World(game, zones, goals), player);
 		}
 	}
 	

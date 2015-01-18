@@ -49,7 +49,7 @@ public class Brain implements Debugable {
 		
 		this.motion = new Locomotion(this);
 		this.sensors = new Sensors(this);
-		this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy), this);
+		this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);
 		this.communicator = new Communicator();
 	}
 	
@@ -69,7 +69,7 @@ public class Brain implements Debugable {
 			this.thoughtProcess = DummyThoughtProcess.getInstance();
 		}
 		else {
-			this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy), this);			
+			this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);			
 		}
 		
 		this.thoughtProcess.onSpawn(this);		

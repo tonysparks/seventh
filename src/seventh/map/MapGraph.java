@@ -82,7 +82,7 @@ public class MapGraph<T> {
 							   ((goalTile.getY() - currentTile.getY()) *
 							    (goalTile.getY() - currentTile.getY()));
 				
-				return distance + random.nextInt(100);
+				return distance + random.nextInt(100000);
 			}
 		};
 		

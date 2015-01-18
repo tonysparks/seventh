@@ -7,6 +7,8 @@ import java.util.List;
 
 import seventh.ai.basic.SimpleThoughtProcess.ThinkListener;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.Goal;
+import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
@@ -25,8 +27,11 @@ import seventh.shared.TimeStep;
 public class ReactiveThinkListener implements ThinkListener {
 	
 	private Goal longTermGoal;	
+	private Goal reactiveGoal;
 	private TeamStrategy strategy;
 	private boolean isInterrupted;
+	
+	private Goals goals;
 	
 //	enum State {
 //		None,
@@ -43,9 +48,12 @@ public class ReactiveThinkListener implements ThinkListener {
 	/**
 	 * 
 	 */
-	public ReactiveThinkListener(TeamStrategy strategy) {
+	public ReactiveThinkListener(TeamStrategy strategy, Goals goals) {
 		this.strategy = strategy;
-		this.longTermGoal = new Goal();		
+		this.goals = goals;
+		
+		this.longTermGoal = new Goal();	
+		this.reactiveGoal = new Goal();
 	}
 	
 	
@@ -68,6 +76,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	@Override
 	public void onDeath(Brain brain) {
 		this.longTermGoal.cancel();
+		this.reactiveGoal.cancel();
 	}
 	
 	/* (non-Javadoc)
@@ -83,7 +92,11 @@ public class ReactiveThinkListener implements ThinkListener {
 	 * @see seventh.ai.basic.strategy.SimpleStrategy.ThinkListener#onBeginThink(seventh.shared.TimeStep, seventh.ai.basic.Brain)
 	 */
 	@Override
-	public boolean onBeginThink(TimeStep timeStep, Brain brain) {		
+	public boolean onBeginThink(TimeStep timeStep, Brain brain) {
+		
+		// TODO:
+//		this.reactiveGoal.update(brain, timeStep);
+//		return !this.reactiveGoal.isFinished(brain);
 		return false;
 	}
 	
@@ -159,7 +172,6 @@ public class ReactiveThinkListener implements ThinkListener {
 		motion.moveTo(brain.getWorld().getRandomSpot(bot));
 		motion.scanArea();
 		return true;		
-//		return false;
 	}
 
 	/* (non-Javadoc)

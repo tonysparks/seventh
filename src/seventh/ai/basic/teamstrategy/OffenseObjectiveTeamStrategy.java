@@ -9,11 +9,11 @@ import java.util.Random;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
-import seventh.ai.basic.Goals;
 import seventh.ai.basic.Stats;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.Zones;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.Goals;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
@@ -62,7 +62,8 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		this.zones = aiSystem.getZones();
 		this.random = aiSystem.getRandom();
 		
-		this.goals = new Goals(aiSystem.getRuntime());
+		this.goals = aiSystem.getGoals(); 
+				//new Goals(aiSystem.getRuntime());
 		
 	}
 	

@@ -8,9 +8,9 @@ import java.util.Map;
 
 import seventh.ai.AICommand;
 import seventh.ai.basic.DefaultAISystem;
-import seventh.ai.basic.Goals;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.CoverEntityAction;
+import seventh.ai.basic.actions.Goals;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.math.Vector2f;
@@ -89,6 +89,18 @@ public class AICommands {
 				
 				Action action = goals.takeCover(attackDir);
 				return action;
+			}
+		});
+		
+		this.aiCommands.put("action", new Command() {
+			
+			@Override
+			public Action parse(String... args) {
+				if(args.length > 0) {
+					Action action = goals.getScriptedAction(args[0]);
+					return action;
+				}
+				return null;
 			}
 		});
 	}

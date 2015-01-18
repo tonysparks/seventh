@@ -6,6 +6,7 @@ package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
 import seventh.game.PlayerEntity;
+import seventh.map.PathFeeder;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -15,16 +16,18 @@ import seventh.shared.TimeStep;
  */
 public class HeadScanAction extends AdapterAction {
 
-	private long sampleTime;
-	private float destinationOrientation;
-	private Vector2f dir, prevDir;
+	/**
+	 * Full circle
+	 */
+	private static final float fullCircle = (float)Math.toRadians(360);
+	
+	private long sampleTime;	
+	private Vector2f destination;
 	
 	/**
-	 * 
 	 */
-	public HeadScanAction() {
-		this.dir = new Vector2f();
-		this.prevDir = new Vector2f();
+	public HeadScanAction() {		
+		this.destination = new Vector2f();
 	}
 
 
@@ -33,9 +36,7 @@ public class HeadScanAction extends AdapterAction {
 	 */
 	public void reset() {
 		this.sampleTime = 0;
-		this.destinationOrientation = 0;
-		this.dir.zeroOut();
-		this.prevDir.zeroOut();
+		this.destination.zeroOut();
 	}
 	
 	/* (non-Javadoc)
@@ -53,43 +54,47 @@ public class HeadScanAction extends AdapterAction {
 	public void update(Brain brain, TimeStep timeStep) {
 		PlayerEntity ent = brain.getEntityOwner();
 		
+		/* only update the destination once in a while to 
+		 * avoid the jitters				
+		 */
 		this.sampleTime -= timeStep.getDeltaTime();
-		if(this.sampleTime < 0) {			
+		if(this.sampleTime < 0) {
+			PathFeeder<?> feeder = brain.getMotion().getPathFeeder();
 			
-			/* I must do this in order to smooth out the direction of
-			 * the agent -- during path finding it bounces back and forth
-			 * between nodes because of movement delta's being large
-			 */
-			Vector2f.Vector2fSubtract(ent.getPos(), dir, dir);
-			dir.x = (prevDir.x + dir.x) / 2f;
-			dir.y = (prevDir.y + dir.y) / 2f;
-			
-			destinationOrientation = (float)Vector2f.Vector2fAngle(dir, Vector2f.RIGHT_VECTOR);
-			
-			prevDir.set(dir);
-			dir.set(ent.getPos());
-			
-			float destinationDegree = -(float)Math.toDegrees(destinationOrientation);
-				
-			float currentDegree = (float)Math.toDegrees(ent.getOrientation());
-			float deltaDegree = destinationDegree - currentDegree;
-			
-			/* find the normalized delta */
-			if(deltaDegree>0) {
-				deltaDegree=1;
-			}
-			else if(deltaDegree < 0) {
-				deltaDegree=-1;
+			Vector2f dest = null;
+			if(feeder != null) {
+				dest = feeder.nextDestination(ent);			
 			}
 			else {
-				deltaDegree=0;
+				dest = ent.getMovementDir();
 			}
 			
-			float rotationSpeed = 150.0f;
-			currentDegree += deltaDegree * rotationSpeed * timeStep.asFraction();		
-			ent.setOrientation( (float)Math.toRadians(currentDegree));
-			this.sampleTime = 0;
-		}			
+			Vector2f.Vector2fNormalize(dest, dest);
+			
+			destination.set(dest);
+			this.sampleTime = 200;
+		}
+		
+		
+		float currentOrientation = ent.getOrientation();
+		float destinationOrientation = (float)(Math.atan2(destination.y, destination.x));
+		
+		// Thank you: http://dev.bennage.com/blog/2013/03/05/game-dev-03/
+		float deltaOrientation = (destinationOrientation - currentOrientation);
+		float deltaOrientationAbs = Math.abs(deltaOrientation);
+		if(deltaOrientationAbs > Math.PI) {
+			deltaOrientation = deltaOrientationAbs - fullCircle;
+		}
+		
+		final double movementSpeed = Math.toRadians(15.0f);
+		
+		if(deltaOrientation != 0) {
+			float direction = deltaOrientation / deltaOrientationAbs;
+			currentOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));
+			currentOrientation %= fullCircle;
+		}
+		
+		ent.setOrientation( currentOrientation );										
 	}
 
 }

@@ -1,13 +1,12 @@
 /*
  * see license.txt 
  */
-package seventh.ai.basic;
+package seventh.ai.basic.actions;
 
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.AdapterAction;
+import seventh.ai.basic.Brain;
 import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 
@@ -35,6 +34,15 @@ public class Goal extends AdapterAction implements Debugable {
 	 */
 	public void cancel() {		
 		this.actions.clear();
+	}
+	
+	/**
+	 * Replaces the current actions, with the supplied action
+	 * @param action
+	 */
+	public void replace(Action action) {
+		cancel();
+		addFirstAction(action);
 	}
 	
 	/* (non-Javadoc)

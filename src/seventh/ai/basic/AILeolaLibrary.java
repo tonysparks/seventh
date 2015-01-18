@@ -16,6 +16,7 @@ import seventh.ai.basic.actions.DefuseBombAction;
 import seventh.ai.basic.actions.EvaluateAttackDirectionsAction;
 import seventh.ai.basic.actions.FindClosestBombTarget;
 import seventh.ai.basic.actions.FindSafeDistanceFromActiveBombAction;
+import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.MoveToAction;
 import seventh.ai.basic.actions.MoveToBombAction;
 import seventh.ai.basic.actions.PlantBombAction;

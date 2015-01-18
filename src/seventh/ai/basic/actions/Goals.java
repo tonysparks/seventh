@@ -1,14 +1,12 @@
 /*
  * see license.txt 
  */
-package seventh.ai.basic;
+package seventh.ai.basic.actions;
 
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
-import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.MoveAction;
-import seventh.ai.basic.actions.ScriptedGoal;
-import seventh.ai.basic.actions.WaitAction;
+import seventh.ai.basic.Brain;
+import seventh.ai.basic.Zone;
 import seventh.game.BombTarget;
 import seventh.math.Vector2f;
 
@@ -75,6 +73,11 @@ public class Goals {
 	public Action takeCover(Vector2f attackDir) {
 		Action action = getScriptedAction("takeCover");
 		action.getActionResult().setValue(attackDir);
+		return action;
+	}
+	
+	public Action moveToRandomSpot() {
+		Action action = getScriptedAction("moveToRandomSpot");
 		return action;
 	}
 	

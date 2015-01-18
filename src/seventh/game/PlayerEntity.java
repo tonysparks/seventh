@@ -92,8 +92,8 @@ public class PlayerEntity extends Entity implements Controllable {
 	private static final int RUN_DELAY_TIME = 300;
 	private static final int SPRINT_DELAY_TIME = 200;
 	
-	private static final float WALK_SPEED_FACTOR = 0.484f;
-	private static final float SPRINT_SPEED_FACTOR = 1.95f;
+	public static final float WALK_SPEED_FACTOR = 0.484f;
+	public static final float SPRINT_SPEED_FACTOR = 1.45f; // 1.95f
 	
 	private static final int ENTERING_VEHICLE_TIME = 2500;
 	private static final int EXITING_VEHICLE_TIME = 2000;
@@ -707,11 +707,12 @@ public class PlayerEntity extends Entity implements Controllable {
 				}
 			}
 			else {
-				this.wasSprinting = false;
-				
-				if(!inputVel.isZero() && currentState != State.WALKING) {
-					currentState = State.RUNNING;
-				}			
+				stopSprinting();
+//				this.wasSprinting = false;
+//				
+//				if(!inputVel.isZero() && currentState != State.WALKING) {
+//					currentState = State.RUNNING;
+//				}			
 			}
 			
 			if(Keys.CROUCH.isDown(keys)) {
@@ -832,15 +833,67 @@ public class PlayerEntity extends Entity implements Controllable {
 		currentState = State.RUNNING;
 	}
 	
+	public void stopSprinting() {
+		this.wasSprinting = false;
+		
+		if(!inputVel.isZero() && currentState != State.WALKING) {
+			currentState = State.RUNNING;
+		}	
+	}
+	
+	/**
+	 * @return true if we are walking
+	 */
+	public boolean isWalking() {
+		return this.currentState == State.WALKING;
+	}
+	
+	/**
+	 * @return true if we are running
+	 */
+	public boolean isRunning() {
+		return this.currentState == State.RUNNING;
+	}
+	
+	/**
+	 * @return true if we are sprinting
+	 */
+	public boolean isSprinting() {
+		return this.currentState == State.SPRINTING;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see seventh.game.Controllable#reload()
 	 */	
-	public void reload() {
+	public boolean reload() {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon!=null) {
-			weapon.reload();
+			return weapon.reload();
 		}
+		return false;
+	}
+	
+	/**
+	 * @return true if we are currently reloading a weapon
+	 */
+	public boolean isReloading() {
+		Weapon weapon = this.inventory.currentItem();
+		if(weapon!=null) {
+			return weapon.isReloading();
+		}
+		return false;
+	}
+	
+	/**
+	 * @return true if we are currently melee attacking
+	 */
+	public boolean isMeleeAttacking() {
+		Weapon weapon = this.inventory.currentItem();
+		if(weapon!=null) {
+			return weapon.isMeleeAttacking();
+		}
+		return false;
 	}
 	
 	/*
@@ -888,6 +941,17 @@ public class PlayerEntity extends Entity implements Controllable {
 		Weapon weapon = this.inventory.currentItem();
 		if(weapon!=null) {
 			return weapon.endFire();
+		}
+		return false;
+	}
+	
+	/**
+	 * @return true if the weapon is being fired
+	 */
+	public boolean isFiring() {
+		Weapon weapon = this.inventory.currentItem();
+		if(weapon!=null) {
+			return weapon.isFiring();
 		}
 		return false;
 	}
