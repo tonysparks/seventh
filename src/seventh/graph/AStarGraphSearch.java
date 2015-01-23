@@ -42,6 +42,15 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
         return 0; /* Make the H value 0, this essentially makes the A* algorithm Dijkstra's algorithm */
     }
     
+    /**
+     * If this node should be ignored
+     * 
+     * @param node
+     * @return true if this node should be ignored
+     */
+    protected boolean shouldIgnore(GraphNode<E, T> node) {
+    	return false;
+    }
     
     /**
      * Retrieves the lowest score (Heuristic 'H') in the supplied set from the map of total scores ('F').
@@ -176,7 +185,7 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
                 GraphNode<E, T> y = edge.getRight();
                 
                 /* If this node has been visited before, ignore it and move on */
-                if ( y == null || closedSet.contains(y)) {
+                if ( y == null || closedSet.contains(y) || shouldIgnore(y)) {
                     continue;
                 }
                 

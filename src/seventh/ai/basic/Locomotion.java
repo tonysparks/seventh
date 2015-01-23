@@ -3,6 +3,7 @@
  */
 package seventh.ai.basic;
 
+import java.util.List;
 import java.util.Random;
 
 import seventh.ai.basic.actions.Action;
@@ -255,13 +256,42 @@ public class Locomotion implements Debugable {
 	}
 	
 	/**
-	 * Moves the 
+	 * Moves to the destination, the bot will do a optimized path
+	 * to the destination
+	 * 
 	 * @param dest
 	 * @return an {@link Action} to invoke
 	 */
 	public void moveTo(Vector2f dest) {
-//		Action action = new MoveAction(dest);
 		this.moveAction.setDestination(dest);
+		this.moveAction.setFuzzyNess(0);
+		this.moveAction.clearAvoids();
+		this.destinationGoal.setAction(this.moveAction);
+	}
+	
+	/**
+	 * Similar to {@link Locomotion#moveTo(Vector2f)} but the path
+	 * to the destination is not in a straight line
+	 * 
+	 * @param dest
+	 */
+	public void dodgeTo(Vector2f dest) {
+		this.moveAction.setDestination(dest);
+		this.moveAction.setFuzzyNess(1_000_000);
+		this.moveAction.clearAvoids();
+		this.destinationGoal.setAction(this.moveAction);
+	}
+	
+	/**
+	 * Moves to the destination, avoiding the supplied {@link Zone}s.
+	 * 
+	 * @param dest
+	 * @param avoid
+	 */
+	public void avoidMoveTo(Vector2f dest, List<Zone> avoid) {
+		this.moveAction.setDestination(dest);
+		this.moveAction.setFuzzyNess(0);
+		this.moveAction.setZonesToAvoid(avoid);
 		this.destinationGoal.setAction(this.moveAction);
 	}
 	
@@ -269,7 +299,7 @@ public class Locomotion implements Debugable {
 	 * Wanders around
 	 */
 	public void wander() {
-		moveTo(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
+		dodgeTo(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
 		scanArea();
 	}
 	

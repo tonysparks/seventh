@@ -278,7 +278,7 @@ public class DefaultAISystem implements AISystem {
 		this.axisAIStrategy.update(timeStep, game);
 				
 		//debugDraw();
-		//debugDrawZones();
+		debugDrawZones();
 	}
 
 	
@@ -294,6 +294,22 @@ public class DefaultAISystem implements AISystem {
 				Rectangle bounds = z.getBounds();
 				DebugDraw.drawStringRelative(z.getId()+"", bounds.x, bounds.y, 0xff00ffff);
 				DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffff00ff);
+			}
+		}
+		
+		
+		for(int i = 0; i < brains.length; i++) {
+			Brain brain = brains[i];
+			if(brain != null) {
+				if(brain.getPlayer().isAlive()) {
+					Zone[] adjacent = zones.getAdjacentZones(zones.getZone(brain.getEntityOwner().getCenterPos()));
+					for(Zone zone : adjacent) {
+						if(zone != null) {
+							Rectangle bounds = zone.getBounds();
+							DebugDraw.fillRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0x5ffff0ff);
+						}
+					}
+				}
 			}
 		}
 	}

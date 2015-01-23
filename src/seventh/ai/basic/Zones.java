@@ -186,15 +186,71 @@ public class Zones {
 		return zones[yIndex][xIndex];
 	}
 	
+	
+	/**
+	 * Finds the adjacent zones
+	 * 
+	 * @param zone
+	 * @return the adjacent zones
+	 */
+	public Zone[] getAdjacentZones(Zone zone) {
+		return getAdjacentZones(zone.getBounds().x, zone.getBounds().y);
+	}
+	
+	/**
+	 * Finds the adjacent nodes
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the adjacent nodes
+	 */
+	public Zone[] getAdjacentZones(int x, int y) {
+		
+		if(x<0 || y<0 || x>mapWidth || y>mapHeight) {
+			return null;
+		}
+		
+		int xIndex = x / zoneWidth;
+		int yIndex = y / zoneHeight;
+		
+		if (xIndex > zones[0].length-1 || yIndex > zones.length-1) {
+			return null;
+		}
+								
+		Zone[] adjacentZones = new Zone[8];
+		adjacentZones[0] = getZoneByIndex(xIndex,   yIndex+1);
+		adjacentZones[1] = getZoneByIndex(xIndex+1, yIndex+1);
+		adjacentZones[2] = getZoneByIndex(xIndex+1, yIndex);
+		adjacentZones[3] = getZoneByIndex(xIndex+1, yIndex-1);
+		adjacentZones[4] = getZoneByIndex(xIndex,   yIndex-1);
+		adjacentZones[5] = getZoneByIndex(xIndex-1, yIndex-1);
+		adjacentZones[6] = getZoneByIndex(xIndex-1, yIndex);
+		adjacentZones[7] = getZoneByIndex(xIndex-1, yIndex+1);
+		
+		return adjacentZones;
+		
+	}
+	
+	private Zone getZoneByIndex(int x, int y) {
+		if(y >= zones.length || x >= zones[0].length) {
+			return null;
+		}
+		
+		if(x < 0 || y < 0) {
+			return null;
+		}
+		
+		return zones[y][x];
+	}
 	/**
 	 * @param id
 	 * @return the {@link Zone}
 	 */
-	public Zone getZoneById(int id) {
-		// TODO
-//		int y = (id / this.numberOfRows) - 1;
-//		int x = (id-y) % this.numberOfCols;
-//		return this.zones[y][x];
-		return null;
-	}
+//	public Zone getZoneById(int id) {
+//		// TODO
+////		int y = (id / this.numberOfRows) - 1;
+////		int x = (id-y) % this.numberOfCols;
+////		return this.zones[y][x];
+//		return null;
+//	}
 }

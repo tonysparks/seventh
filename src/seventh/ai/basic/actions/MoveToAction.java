@@ -85,4 +85,11 @@ public class MoveToAction extends AdapterAction {
 	public DebugInformation getDebugInformation() {	
 		return super.getDebugInformation().add("destination", this.destination);
 	}
+	
+	/**
+	 * @return the destination
+	 */
+	public Vector2f getDestination() {
+		return destination;
+	}
 }

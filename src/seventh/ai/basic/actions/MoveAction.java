@@ -3,7 +3,11 @@
  */
 package seventh.ai.basic.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.Zone;
 import seventh.map.PathFeeder;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -17,6 +21,9 @@ import seventh.shared.TimeStep;
 public class MoveAction extends AdapterAction {
 
 	private Vector2f destination;
+	private int fuzzyNess;
+	
+	private List<Zone> zonesToAvoid;
 	
 	/**
 	 */
@@ -27,8 +34,17 @@ public class MoveAction extends AdapterAction {
 	/**
 	 * @param destination
 	 */
-	public MoveAction(Vector2f destination) {	
+	public MoveAction(Vector2f destination) {
+		this(0, destination);
+	}
+	
+	/**
+	 * @param destination
+	 */
+	public MoveAction(int fuzzyNess, Vector2f destination) {	
 		this.destination = destination;
+		this.fuzzyNess = fuzzyNess;
+		this.zonesToAvoid = new ArrayList<Zone>();
 	}
 	
 	/**
@@ -38,14 +54,38 @@ public class MoveAction extends AdapterAction {
 		this.destination.set(destination);
 	}
 	
+	/**
+	 * @param fuzzyNess the fuzzyNess to set
+	 */
+	public void setFuzzyNess(int fuzzyNess) {
+		this.fuzzyNess = fuzzyNess;
+	}
+	
+	/**
+	 * @param zonesToAvoid the zonesToAvoid to set
+	 */
+	public void setZonesToAvoid(List<Zone> zonesToAvoid) {
+		this.zonesToAvoid.addAll(zonesToAvoid);
+	}
+	
+	/**
+	 * Clears out the zones to avoid 
+	 */
+	public void clearAvoids() {
+		this.zonesToAvoid.clear();
+	}
+	
 	/* (non-Javadoc)
 	 * @see palisma.ai.Action#start(palisma.ai.Brain)
 	 */
 	@Override
 	public void start(Brain brain) {
 		Vector2f position = brain.getEntityOwner().getPos();
-		
-		PathFeeder<?> feeder = brain.getWorld().getGraph().findFuzzyPath(position, destination); 
+				
+		PathFeeder<?> feeder = this.zonesToAvoid.isEmpty() ? 
+					brain.getWorld().getGraph().findFuzzyPath(position, this.destination, this.fuzzyNess) :
+				    brain.getWorld().getGraph().findPathAvoidZones(position, this.destination, this.zonesToAvoid);
+					
 		brain.getMotion().setPathFeeder(feeder);
 	}
 	
@@ -63,6 +103,7 @@ public class MoveAction extends AdapterAction {
 	@Override
 	public void end(Brain brain) {
 		brain.getMotion().emptyPath();
+		this.zonesToAvoid.clear();
 	}
 
 	/* (non-Javadoc)

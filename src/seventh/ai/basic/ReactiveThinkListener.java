@@ -95,9 +95,9 @@ public class ReactiveThinkListener implements ThinkListener {
 	public boolean onBeginThink(TimeStep timeStep, Brain brain) {
 		
 		// TODO:
-//		this.reactiveGoal.update(brain, timeStep);
-//		return !this.reactiveGoal.isFinished(brain);
-		return false;
+		this.reactiveGoal.update(brain, timeStep);
+		return !this.reactiveGoal.isFinished(brain);
+//		return false;
 	}
 	
 	/* (non-Javadoc)
@@ -166,12 +166,15 @@ public class ReactiveThinkListener implements ThinkListener {
 	 */
 	@Override
 	public boolean onStuck(TimeStep timeStep, Brain brain) {
-		Locomotion motion = brain.getMotion();
-		PlayerEntity bot = brain.getEntityOwner();
-
-		motion.moveTo(brain.getWorld().getRandomSpot(bot));
-		motion.scanArea();
-		return true;		
+//		Locomotion motion = brain.getMotion();
+//		PlayerEntity bot = brain.getEntityOwner();
+//
+//		motion.moveTo(brain.getWorld().getRandomSpot(bot));
+//		motion.scanArea();
+//		return true;
+		
+		this.reactiveGoal.replace(goals.moveToRandomSpot());
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -180,25 +183,36 @@ public class ReactiveThinkListener implements ThinkListener {
 	@Override
 	public boolean onTouched(TimeStep timeStep, Brain brain, Entity attacker) {
 
-		Locomotion motion = brain.getMotion();
-		boolean attacking = motion.isAttacking(); 
+//		Locomotion motion = brain.getMotion();
+//		boolean attacking = motion.isAttacking(); 
+//		
+//		
+//		/* first check if we are getting shot
+//		 * if so, lets look at the attacker.
+//		 * if they are an enemy, we will attack (this will happen next frame)
+//		 */ 
+//		{
+//			
+//			if(attacker instanceof Bullet) {	
+//				interrupt(brain);
+//				motion.lookAt(((Bullet) attacker).getOwner().getCenterPos());	
+//				attacking = true;
+//			}
+//		}
+//		
+//		return attacking;
 		
 		
-		/* first check if we are getting shot
-		 * if so, lets look at the attacker.
-		 * if they are an enemy, we will attack (this will happen next frame)
-		 */
-		//if( !attacking ) 
-		{
-			
-			if(attacker instanceof Bullet) {	
-				interrupt(brain);
-				motion.lookAt(((Bullet) attacker).getOwner().getCenterPos());	
-				attacking = true;
-			}
+		if(!this.reactiveGoal.isFinished(brain)) {			
+			return true;
 		}
 		
-		return attacking;
+		if(attacker instanceof Bullet) {
+			this.reactiveGoal.replace(goals.onTouched(attacker));
+			return true;
+		}
+		
+		return false;
 	}
 
 	/* (non-Javadoc)

@@ -3,13 +3,17 @@
  */
 package seventh.ai.basic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import leola.vm.Leola;
 import leola.vm.lib.LeolaIgnore;
 import leola.vm.lib.LeolaLibrary;
+import leola.vm.types.LeoArray;
 import leola.vm.types.LeoNamespace;
+import leola.vm.types.LeoObject;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.AvoidMoveToAction;
 import seventh.ai.basic.actions.DefendAttackDirectionsAction;
 import seventh.ai.basic.actions.DefendZoneAction;
 import seventh.ai.basic.actions.DefuseBombAction;
@@ -69,6 +73,14 @@ public class AILeolaLibrary implements LeolaLibrary {
 	public MoveToAction moveToAction(Vector2f destination) {
 		return new MoveToAction(destination);
 	}
+	
+	public AvoidMoveToAction avoidMoveToAction(Vector2f destination, LeoArray zonesToAvoid) {
+		List<Zone> zones = new ArrayList<>(zonesToAvoid.size());
+		for(LeoObject obj : zonesToAvoid) {
+			zones.add( (Zone)obj.getValue());
+		}
+		return new AvoidMoveToAction(destination, zones);
+	}	
 	
 	public SecureZoneAction secureZoneAction(Zone zone) {
 		return new SecureZoneAction(zone);

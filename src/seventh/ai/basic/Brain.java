@@ -103,7 +103,7 @@ public class Brain implements Debugable {
 			
 			
 			//debugDraw();
-			//debugDrawPathPlanner();
+			debugDrawPathPlanner();
 		}		
 	}
 	

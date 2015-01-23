@@ -8,6 +8,7 @@ import leola.vm.types.LeoObject;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Zone;
 import seventh.game.BombTarget;
+import seventh.game.Entity;
 import seventh.math.Vector2f;
 
 
@@ -78,6 +79,12 @@ public class Goals {
 	
 	public Action moveToRandomSpot() {
 		Action action = getScriptedAction("moveToRandomSpot");
+		return action;
+	}
+	
+	public Action onTouched(Entity attacker) {
+		Action action = getScriptedAction("onTouched");
+		action.getActionResult().setValue(attacker);
 		return action;
 	}
 	
