@@ -426,7 +426,7 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				if(gameSettings.axisTeam.size() + gameSettings.alliedTeam.size() < gameSettings.maxPlayers) {
+				if(gameSettings.axisTeam.size() + gameSettings.alliedTeam.size() < gameSettings.maxPlayers-1) {
 					String name = getNextRandomName();
 					gameSettings.alliedTeam.add(name);
 					
@@ -458,7 +458,7 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				if(gameSettings.axisTeam.size() + gameSettings.alliedTeam.size() < gameSettings.maxPlayers) {
+				if(gameSettings.axisTeam.size() + gameSettings.alliedTeam.size() < gameSettings.maxPlayers-1) {
 				
 					String name = getNextRandomName();
 					gameSettings.axisTeam.add(name);

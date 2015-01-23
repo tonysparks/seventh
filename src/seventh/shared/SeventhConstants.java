@@ -20,5 +20,7 @@ public interface SeventhConstants {
 	public static final int MAX_PLAYERS = 12;
 	public static final int MAX_PERSISTANT_ENTITIES = 64;
 	
+	public static final int MAX_SOUNDS = 32;
+	
 	public static final int SPAWN_INVINCEABLILITY_TIME = 2_000;
 }

@@ -47,6 +47,20 @@ public class NetGameUpdate implements NetMessage {
 		numberOfInts = entityBitArray.numberOfInts();
 	}
 	
+	
+	/**
+	 * Clears out, ready for reuse
+	 */
+	public void clear() {
+		entityBitArray.clear();
+		for(int i = 0; i < entities.length; i++) {
+			entities[i] = null;
+		}
+		
+		deadPersistantEntities.clear();
+		hasDeadEntities = true;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.network.messages.NetMessage#read(java.nio.ByteBuffer)
 	 */

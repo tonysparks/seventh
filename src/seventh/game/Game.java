@@ -124,7 +124,8 @@ public class Game implements GameInfo, Debugable {
 	private Random random;
 	
 	private List<SoundEmittedEvent> soundEvents
-								  , lastFramesSoundEvents;	
+								  , lastFramesSoundEvents;		
+	
 	private boolean gameEnded;	
 	private boolean enableFOW;
 	private int previousKeys;
@@ -135,6 +136,7 @@ public class Game implements GameInfo, Debugable {
 	List<SoundEmittedEvent> aSoundsHeard = new ArrayList<SoundEmittedEvent>();
 	List<Entity> aEntitiesInView = new ArrayList<Entity>();
 		
+	private NetGameUpdate[] playerUpdates;
 	private NetGameState gameState;
 	private NetGameStats gameStats;
 	private NetGamePartialStats gamePartialStats;
@@ -177,6 +179,11 @@ public class Game implements GameInfo, Debugable {
 		this.playerEntities = new PlayerEntity[MAX_PLAYERS];
 		
 		this.deadFrames = new int[MAX_ENTITIES];
+		
+		this.playerUpdates = new NetGameUpdate[MAX_ENTITIES];
+		for(int i = 0; i < this.playerUpdates.length; i++) {
+			this.playerUpdates[i] = new NetGameUpdate();
+		}
 		
 		this.bombTargets = new ArrayList<BombTarget>();
 		this.vehicles = new ArrayList<Vehicle>();
@@ -505,7 +512,7 @@ public class Game implements GameInfo, Debugable {
 	 * Invoked after an update, a hack to work
 	 * around processing event queue
 	 */
-	public void postUpdate() {
+	public void postUpdate() {		
 		lastFramesSoundEvents.clear();
 		lastFramesSoundEvents.addAll(soundEvents);
 		soundEvents.clear();
@@ -1283,7 +1290,8 @@ public class Game implements GameInfo, Debugable {
 			return null;
 		}
 								
-		NetGameUpdate netUpdate = new NetGameUpdate();
+		NetGameUpdate netUpdate = this.playerUpdates[playerId]; 
+		netUpdate.clear();
 		NetSound[] sounds = null;
 		
 		

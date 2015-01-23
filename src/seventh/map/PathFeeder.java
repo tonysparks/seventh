@@ -144,7 +144,7 @@ public class PathFeeder<E> {
 	 * path is to the destination)
 	 */
 	public void findFuzzyPath(Vector2f start, Vector2f destination, final int fuzzyness) {
-		this.fuzzySearchPath.actualFuzzy = fuzzyness;
+		this.fuzzySearchPath.actualFuzzy = Math.max(1, fuzzyness);
 		this.finalDestination.set(destination);
 		List<GraphNode<Tile, E>> newPath = this.graph.findFuzzyPath(this.fuzzySearchPath, start, destination, fuzzyness);
 		setPath(newPath);
