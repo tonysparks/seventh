@@ -6,9 +6,13 @@ package seventh.map;
 
 import static seventh.math.Vector2f.Vector2fCopy;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import seventh.ai.basic.Zone;
 import seventh.game.PlayerEntity;
+import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -22,33 +26,150 @@ import seventh.math.Vector2f;
  *
  */
 public class PathFeeder<E> {
+	
+	private MapGraph<E> graph;
 	private List<GraphNode<Tile, E>> path;
 	private int currentNode;
 	private Vector2f destination;
-	private Vector2f finalDestination;
-	private int hashCode;
+	private Vector2f finalDestination;	
+	private Random random;
+	
+	private class FuzzySearchPath extends AStarGraphSearch<Tile, E> {
+		public int actualFuzzy;
+		
+		@Override
+		protected int heuristicEstimateDistance(
+				GraphNode<Tile, E> currentNode,
+				GraphNode<Tile, E> goal) {			
+			Tile currentTile = currentNode.getValue();
+			Tile goalTile = goal.getValue();
+			
+			int distance = ((goalTile.getX() - currentTile.getX()) *
+						    (goalTile.getX() - currentTile.getX())) +
+						   ((goalTile.getY() - currentTile.getY()) *
+						    (goalTile.getY() - currentTile.getY()));
+			
+			return distance + random.nextInt(actualFuzzy);
+		}
+	}
+	
+	private class AvoidSearchPath extends AStarGraphSearch<Tile,E> {
+		public List<Zone> zonesToAvoid;
+		
+		@Override
+		protected int heuristicEstimateDistance(
+				GraphNode<Tile, E> currentNode,
+				GraphNode<Tile, E> goal) {			
+			Tile currentTile = currentNode.getValue();
+			Tile goalTile = goal.getValue();
+			
+			int distance = ((goalTile.getX() - currentTile.getX()) *
+						    (goalTile.getX() - currentTile.getX())) +
+						   ((goalTile.getY() - currentTile.getY()) *
+						    (goalTile.getY() - currentTile.getY()));
+			
+			return distance;
+		}
+		
+		@Override
+		protected boolean shouldIgnore(GraphNode<Tile, E> node) {
+			Tile tile = node.getValue();
+			for(int i = 0; i < zonesToAvoid.size(); i++) {
+				Zone zone = zonesToAvoid.get(i);
+				if(zone.getBounds().intersects(tile.getBounds())) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
+	}
+	
+	private FuzzySearchPath fuzzySearchPath; 	
+	private AvoidSearchPath avoidSearchPath;
 	
 	/**
 	 * @param path
 	 */
-	public PathFeeder(Vector2f finalDestination, List<GraphNode<Tile, E>> path) {
-		this.finalDestination = finalDestination;
-		this.path = path;//path.size() > 2 ? path.subList(1, path.size()): path;
-		this.currentNode = 0;
+	public PathFeeder(MapGraph<E> graph) {
+		this.graph = graph;
+		this.finalDestination = new Vector2f();
 		this.destination = new Vector2f();
+		this.random = new Random();
 		
-		hashCode = 1;        
-		for(int i = 0; i < path.size(); i++) {
-			hashCode = 31*hashCode + path.get(i).hashCode();
-		}
+		this.path = new ArrayList<GraphNode<Tile, E>>();
+		this.currentNode = 0;
+		
+		this.fuzzySearchPath = new FuzzySearchPath();
+		this.avoidSearchPath = new AvoidSearchPath();		
 	} 
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	private void setPath(List<GraphNode<Tile, E>> newPath) {
+		clearPath();
+		if(newPath != null) {
+			for(int i = 0; i < newPath.size(); i++) {
+				this.path.add(newPath.get(i));
+			}
+		}
+	}
+	
+	/**
+	 * Clears out the path
 	 */
-	@Override
-	public int hashCode() {
-		return hashCode;
+	public void clearPath() {
+		this.currentNode = 0;
+		this.finalDestination.zeroOut();
+		this.path.clear();
+	}
+	
+	/**
+	 * Finds the optimal path between the start and end point
+	 * 
+	 * @param start
+	 * @param destination
+	 */
+	public void findPath(Vector2f start, Vector2f destination) {				
+		this.fuzzySearchPath.actualFuzzy = 1;
+		this.finalDestination.set(destination);
+		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
+		setPath(newPath);
+	}
+	
+	
+	/**
+	 * Finds a fuzzy (meaning not necessarily the most optimal but different) path between the start and end point
+	 * @param start
+	 * @param destination
+	 * @param the amount of fuzzy the add to the path (the greater the number the less efficient the 
+	 * path is to the destination)
+	 */
+	public void findFuzzyPath(Vector2f start, Vector2f destination, final int fuzzyness) {
+		this.fuzzySearchPath.actualFuzzy = fuzzyness;
+		this.finalDestination.set(destination);
+		List<GraphNode<Tile, E>> newPath = this.graph.findFuzzyPath(this.fuzzySearchPath, start, destination, fuzzyness);
+		setPath(newPath);
+	}
+	
+	/**
+	 * Finds a path, avoiding the supplied {@link Zone}s
+	 * 
+	 * 
+	 * @param start
+	 * @param destination
+	 * @param zonesToAvoid
+	 */
+	public void findAvoidancePath(Vector2f start, Vector2f destination, List<Zone> zonesToAvoid) {
+		this.avoidSearchPath.zonesToAvoid = zonesToAvoid;
+		this.finalDestination.set(destination);
+		List<GraphNode<Tile, E>> newPath = this.graph.findPathAvoidZones(this.avoidSearchPath, start, destination, zonesToAvoid);
+		setPath(newPath);
+	}
+	
+	/**
+	 * @return if there is currently a path
+	 */
+	public boolean hasPath() {
+		return !this.path.isEmpty();
 	}
 	
 	/**

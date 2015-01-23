@@ -72,43 +72,11 @@ public class MapGraph<T> {
 	 * @param zonesToAvoid
 	 * @return the list of node to travel to reach the destination
 	 */
-	public PathFeeder<T> findPathAvoidZones(Vector2f start, Vector2f destination, final List<Zone> zonesToAvoid) {		
-				
-		GraphSearchPath<Tile, T> searchPath = new AStarGraphSearch<Tile,T>(){			
-			@Override
-			protected int heuristicEstimateDistance(
-					GraphNode<Tile, T> currentNode,
-					GraphNode<Tile, T> goal) {			
-				Tile currentTile = currentNode.getValue();
-				Tile goalTile = goal.getValue();
-				
-				int distance = ((goalTile.getX() - currentTile.getX()) *
-							    (goalTile.getX() - currentTile.getX())) +
-							   ((goalTile.getY() - currentTile.getY()) *
-							    (goalTile.getY() - currentTile.getY()));
-				
-				return distance;
-			}
-			
-			@Override
-			protected boolean shouldIgnore(GraphNode<Tile, T> node) {
-				Tile tile = node.getValue();
-				for(int i = 0; i < zonesToAvoid.size(); i++) {
-					Zone zone = zonesToAvoid.get(i);
-					if(zone.getBounds().intersects(tile.getBounds())) {
-						return true;
-					}
-				}
-				
-				return false;
-			}
-		};
-		
-				
+	public List<GraphNode<Tile, T>> findPathAvoidZones(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination, final List<Zone> zonesToAvoid) {						
 		GraphNode<Tile, T> startNode = getNodeByWorld((int)start.x, (int)start.y);
 		GraphNode<Tile, T> destNode = getNodeByWorld((int)destination.x, (int)destination.y);
 		List<GraphNode<Tile, T>> resultPath = searchPath.search(startNode, destNode);
-		return new PathFeeder(destination, resultPath == null ? new ArrayList<GraphNode<Tile,T>>() : resultPath); 
+		return resultPath; 
 	}
 	
 	/**
@@ -119,31 +87,11 @@ public class MapGraph<T> {
 	 * path is to the destination)
 	 * @return the list of node to travel to reach the destination
 	 */
-	public PathFeeder<T> findFuzzyPath(Vector2f start, Vector2f destination, final int fuzzyNess) {		
-		
-		final int actualFuzzy = Math.max(1, fuzzyNess);
-		GraphSearchPath<Tile, T> searchPath = new AStarGraphSearch<Tile,T>(){			
-			@Override
-			protected int heuristicEstimateDistance(
-					GraphNode<Tile, T> currentNode,
-					GraphNode<Tile, T> goal) {			
-				Tile currentTile = currentNode.getValue();
-				Tile goalTile = goal.getValue();
-				
-				int distance = ((goalTile.getX() - currentTile.getX()) *
-							    (goalTile.getX() - currentTile.getX())) +
-							   ((goalTile.getY() - currentTile.getY()) *
-							    (goalTile.getY() - currentTile.getY()));
-				
-				return distance + random.nextInt(actualFuzzy);
-			}
-		};
-		
-				
+	public List<GraphNode<Tile, T>> findFuzzyPath(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination, final int fuzzyNess) {							
 		GraphNode<Tile, T> startNode = getNodeByWorld((int)start.x, (int)start.y);
 		GraphNode<Tile, T> destNode = getNodeByWorld((int)destination.x, (int)destination.y);
 		List<GraphNode<Tile, T>> resultPath = searchPath.search(startNode, destNode);
-		return new PathFeeder(destination, resultPath == null ? new ArrayList<GraphNode<Tile,T>>() : resultPath); 
+		return resultPath; 
 	}
 	
 
@@ -153,7 +101,7 @@ public class MapGraph<T> {
 	 * @param destination
 	 * @return the list of node to travel to reach the destination
 	 */
-	public PathFeeder<T> findPath(Vector2f start, Vector2f destination) {				
-		return findFuzzyPath(start, destination, 0);
+	public List<GraphNode<Tile, T>> findPath(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination) {				
+		return findFuzzyPath(searchPath, start, destination, 0);
 	}	
 }

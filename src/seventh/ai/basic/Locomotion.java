@@ -57,7 +57,7 @@ public class Locomotion implements Debugable {
 	
 	private PlayerEntity me;
 	
-	private PathFeeder<?> pathFeeder;
+	private final PathFeeder<?> pathFeeder;
 	private Vector2f moveDelta;
 	
 	private Random random;
@@ -83,6 +83,9 @@ public class Locomotion implements Debugable {
 	 */
 	public Locomotion(Brain brain) {
 		this.brain = brain;
+		
+		this.pathFeeder = new PathFeeder<>(brain.getWorld().getGraph());
+		
 		this.random = brain.getWorld().getRandom();
 		this.destinationGoal = new DecoratorAction(brain);
 		this.legsGoal = new DecoratorAction(brain);
@@ -118,19 +121,12 @@ public class Locomotion implements Debugable {
 		
 		this.me = brain.getEntityOwner();
 	}
-	
-	/**
-	 * @param pathFeeder the pathFeeder to set
-	 */
-	public void setPathFeeder(PathFeeder<?> pathFeeder) {
-		this.pathFeeder = pathFeeder;
-	}
-	
+		
 	/**
 	 * Remove the {@link PathFeeder}
 	 */
 	public void emptyPath() {
-		this.pathFeeder = null;
+		this.pathFeeder.clearPath();
 	}
 	
 	/**
@@ -199,7 +195,7 @@ public class Locomotion implements Debugable {
 	private void moveEntity() {
 
 		moveDelta.zeroOut();
-		if(pathFeeder!=null) {
+		if(pathFeeder.hasPath()) {
 			if (!pathFeeder.atDestination()) {
 //				Vector2f nextDest = pathFeeder.nextDestination(me.getPos());
 				Vector2f nextDest = pathFeeder.nextDestination(me);

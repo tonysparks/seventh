@@ -19,6 +19,31 @@ import java.util.Set;
  */
 public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
 
+    private Map<GraphNode<E,T>, Integer>  gScores   /* Distance from start to optimal path */
+    									, hScores   /* Heuristic scores */
+    									, fScores;  /* Sum of heuristic from node to goal */
+
+    private Map<GraphNode<E,T>, GraphNode<E,T>> cameFrom;  /* Nodes visited to reach goal node */
+
+
+    private Set<GraphNode<E,T>>  closedSet  /* List of nodes we do not care about anymore */
+    						   , openSet;   /* Working set of nodes to be tested */
+	
+    /**
+	 * 
+	 */
+	public AStarGraphSearch() {
+        gScores = new HashMap<GraphNode<E,T>, Integer>();    
+        hScores = new HashMap<GraphNode<E,T>, Integer>();            
+        fScores = new HashMap<GraphNode<E,T>, Integer>();    
+        
+        
+        cameFrom = new HashMap<GraphNode<E,T>, GraphNode<E,T>>();
+        
+        closedSet = new HashSet<GraphNode<E,T>>();
+        openSet   = new HashSet<GraphNode<E,T>>();
+	}
+    
 	/*
 	 * (non-Javadoc)
 	 * @see leola.live.game.graph.GraphSearchPath#search(leola.live.game.graph.GraphNode, leola.live.game.graph.GraphNode)
@@ -124,29 +149,14 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
      * @return the optimal node traversal from start to goal nodes.  null if no path found.
      */
     private List<GraphNode<E,T>> aStar(GraphNode<E,T> start, GraphNode<E,T> goal) {
-               
-        Map<GraphNode<E,T>, Integer>  gScores   /* Distance from start to optimal path */
-                                    , hScores   /* Heuristic scores */
-                                    , fScores;  /* Sum of heuristic from node to goal */
-                
-        Map<GraphNode<E,T>, GraphNode<E,T>> cameFrom;  /* Nodes visited to reach goal node */
-                
-        
-        Set<GraphNode<E,T>>  closedSet  /* List of nodes we do not care about anymore */
-                           , openSet;   /* Working set of nodes to be tested */
-        
-        
-        gScores = new HashMap<GraphNode<E,T>, Integer>();    
-        hScores = new HashMap<GraphNode<E,T>, Integer>();            
-        fScores = new HashMap<GraphNode<E,T>, Integer>();    
-        
-        
-        cameFrom = new HashMap<GraphNode<E,T>, GraphNode<E,T>>();
-        
-        closedSet = new HashSet<GraphNode<E,T>>();
-        openSet   = new HashSet<GraphNode<E,T>>();
-        
-        
+        gScores.clear();    
+        hScores.clear();            
+        fScores.clear();                    
+        cameFrom.clear();        
+        closedSet.clear();
+        openSet.clear();
+    	
+    	
         /* Push the start node so we have a starting point */
         openSet.add(start);
         

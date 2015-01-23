@@ -62,7 +62,7 @@ public class HeadScanAction extends AdapterAction {
 			PathFeeder<?> feeder = brain.getMotion().getPathFeeder();
 			
 			Vector2f dest = null;
-			if(feeder != null) {
+			if(feeder.hasPath()) {
 				dest = feeder.nextDestination(ent);			
 			}
 			else {

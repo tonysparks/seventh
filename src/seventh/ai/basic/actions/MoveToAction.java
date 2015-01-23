@@ -71,11 +71,8 @@ public class MoveToAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		PathFeeder<?> path = brain.getMotion().getPathFeeder();
-		if(path != null) {
-			return path.atDestination();
-		}
-		return false;
+		PathFeeder<?> path = brain.getMotion().getPathFeeder();		
+		return path.atDestination();		
 	}
 
 	/* (non-Javadoc)

@@ -21,7 +21,6 @@ import seventh.shared.TimeStep;
 public class CoverEntityAction extends AdapterAction {
 	
 	private Entity followMe;
-	private PathFeeder<?> feeder;
 	private Vector2f previousPosition;
 	
 	private long lastVisibleTime;
@@ -50,7 +49,7 @@ public class CoverEntityAction extends AdapterAction {
 	 */
 	@Override
 	public void interrupt(Brain brain) {
-		this.feeder = null;
+		brain.getMotion().emptyPath();
 	}
 
 	/* (non-Javadoc)
@@ -75,21 +74,20 @@ public class CoverEntityAction extends AdapterAction {
 			this.lastVisibleTime = 0;
 		}
 		
-		if(feeder == null || !feeder.onFirstNode()) {
+		PathFeeder<?> feeder = brain.getMotion().getPathFeeder();
+		if(!feeder.hasPath() || !feeder.onFirstNode()) {
 			Vector2f newPosition = this.followMe.getPos();
 			Vector2f start = brain.getEntityOwner().getPos();
 			float distance = Vector2f.Vector2fDistanceSq(start, newPosition);
 			
 			
 			if(distance > 1_000) {
-				feeder = brain.getWorld().getGraph().findPath(start, newPosition);			
-				brain.getMotion().setPathFeeder(feeder);	
+				feeder.findPath(start, newPosition);						
 			}			
 			else {
 				/* stop the agent */
 				if(feeder != null) {
-					feeder = null;
-					brain.getMotion().setPathFeeder(feeder);
+					feeder.clearPath();
 				}
 			}
 			

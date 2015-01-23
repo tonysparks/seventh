@@ -82,11 +82,14 @@ public class MoveAction extends AdapterAction {
 	public void start(Brain brain) {
 		Vector2f position = brain.getEntityOwner().getPos();
 				
-		PathFeeder<?> feeder = this.zonesToAvoid.isEmpty() ? 
-					brain.getWorld().getGraph().findFuzzyPath(position, this.destination, this.fuzzyNess) :
-				    brain.getWorld().getGraph().findPathAvoidZones(position, this.destination, this.zonesToAvoid);
-					
-		brain.getMotion().setPathFeeder(feeder);
+		PathFeeder<?> feeder = brain.getMotion().getPathFeeder(); 
+				
+		if(this.zonesToAvoid.isEmpty()) { 
+			feeder.findFuzzyPath(position, this.destination, this.fuzzyNess);
+		}
+		else {
+			feeder.findAvoidancePath(position, this.destination, this.zonesToAvoid);
+		}					
 	}
 	
 	/* (non-Javadoc)
@@ -112,7 +115,7 @@ public class MoveAction extends AdapterAction {
 	@Override
 	public boolean isFinished(Brain brain) {				
 		PathFeeder<?> path = brain.getMotion().getPathFeeder();
-		return path!=null ? path.atDestination() : true;
+		return !path.hasPath() || path.atDestination();
 	}
 
 	/* (non-Javadoc)

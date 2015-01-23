@@ -21,8 +21,7 @@ import seventh.shared.TimeStep;
  */
 public class FollowEntityAction extends AdapterAction {
 	
-	private Entity followMe;
-	private PathFeeder<?> feeder;
+	private Entity followMe;	
 	private Vector2f previousPosition;
 	
 	private long lastVisibleTime;
@@ -51,7 +50,7 @@ public class FollowEntityAction extends AdapterAction {
 	 */
 	@Override
 	public void interrupt(Brain brain) {
-		this.feeder = null;
+		brain.getMotion().emptyPath();
 	}
 
 	/* (non-Javadoc)
@@ -90,30 +89,25 @@ public class FollowEntityAction extends AdapterAction {
 			this.lastVisibleTime = 0;
 		}
 		
-		if(feeder == null || !feeder.onFirstNode()) {
+		PathFeeder<?> feeder = brain.getMotion().getPathFeeder();
+		if(!feeder.hasPath() || !feeder.onFirstNode()) {
 			Vector2f newPosition = this.followMe.getPos();
 			Vector2f start = brain.getEntityOwner().getPos();
 			
 			if(shouldMelee(brain.getEntityOwner(), followMe)) {
 				if(Vector2f.Vector2fDistanceSq(start, newPosition) > 1_000) {
-					feeder = brain.getWorld().getGraph().findPath(start, newPosition);			
-					brain.getMotion().setPathFeeder(feeder);	
+					feeder.findPath(start, newPosition);								
 				}
 			}
 			else if(Vector2f.Vector2fDistanceSq(start, newPosition) > 10_000) {
 				//if ( Vector2f.Vector2fDistanceSq(newPosition, previousPosition) > 1500 ) 
-				{
-					
-					feeder = brain.getWorld().getGraph().findPath(start, newPosition);			
-					brain.getMotion().setPathFeeder(feeder);	
+				{					
+					feeder.findPath(start, newPosition);								
 				}
 			}
 			else {
-				/* stop the agent */
-				if(feeder != null) {
-					feeder = null;
-					brain.getMotion().setPathFeeder(feeder);
-				}
+				/* stop the agent */				
+				feeder.clearPath();				
 			}
 			
 			previousPosition.set(newPosition);
