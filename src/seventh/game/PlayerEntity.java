@@ -6,6 +6,7 @@ package seventh.game;
 import java.util.List;
 
 import seventh.game.events.SoundEmittedEvent;
+import seventh.game.events.SoundEventPool;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
@@ -1231,21 +1232,21 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @param soundsHeard (the out parameter)
 	 * @return the same instance as soundsHeard, just returned for convenience
 	 */
-	public List<SoundEmittedEvent> getHeardSounds(List<SoundEmittedEvent> soundEvents, List<SoundEmittedEvent> soundsHeard) {
+	public List<SoundEmittedEvent> getHeardSounds(SoundEventPool soundEvents, List<SoundEmittedEvent> soundsHeard) {
 		
 		Vector2f pos = getCenterPos();
 		// NOTE: this is for performance reasons only, this is not thread-safe!!!
 		int radius = getHearingRadius();
 		this.hearingBounds.set( (int)pos.x - (radius/2), (int)pos.y - (radius/2), radius, radius);
 		
-		int size = soundEvents.size();
+		int size = soundEvents.numberOfSounds();		
 		for(int i = 0; i < size; i++) {
-			SoundEmittedEvent event = soundEvents.get(i);
+			SoundEmittedEvent event = soundEvents.getSound(i);
 			if(this.hearingBounds.contains(event.getPos())) {
 				soundsHeard.add(event);
 			}
 		}
-		
+				
 		return soundsHeard;
 	}
 	

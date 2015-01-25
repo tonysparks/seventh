@@ -11,9 +11,10 @@ import seventh.ai.basic.actions.Goals;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.GameInfo;
+import seventh.game.Player;
 import seventh.game.PlayerEntity;
 import seventh.game.Team;
-import seventh.game.events.SoundEmittedEvent;
+import seventh.game.events.SoundEventPool;
 import seventh.game.type.GameType;
 import seventh.game.type.ObjectiveGameType;
 import seventh.map.Map;
@@ -22,6 +23,7 @@ import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Geom;
+import seventh.shared.SeventhConstants;
 
 /**
  * Just a collection of data so that the {@link Brain}s 
@@ -42,7 +44,7 @@ public class World {
 	
 	private Rectangle tileBounds;
 	private GameInfo game;
-	private List<SoundEmittedEvent> lastFramesSounds;
+	private SoundEventPool lastFramesSounds;
 	
 	private List<AttackDirection> attackDirections;
 	private List<BombTarget> activeBombs;
@@ -75,7 +77,7 @@ public class World {
 		this.tileBounds.setWidth(map.getTileWidth());
 		this.tileBounds.setHeight(map.getTileHeight());
 		
-		this.lastFramesSounds = new ArrayList<SoundEmittedEvent>();
+		this.lastFramesSounds = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
 		this.attackDirections = new ArrayList<AttackDirection>();
 		
 		this.activeBombs = new ArrayList<BombTarget>();
@@ -99,10 +101,10 @@ public class World {
 	/**
 	 * @return the soundEvents
 	 */
-	public List<SoundEmittedEvent> getSoundEvents() {		
+	public SoundEventPool getSoundEvents() {		
 		this.lastFramesSounds.clear();
-		this.lastFramesSounds.addAll(this.game.getLastFramesSoundEvents());
-		this.lastFramesSounds.addAll(this.game.getSoundEvents());
+		this.lastFramesSounds.set(this.game.getLastFramesSoundEvents());
+		this.lastFramesSounds.set(this.game.getSoundEvents());
 		
 		return this.lastFramesSounds;
 	}
@@ -131,6 +133,17 @@ public class World {
 		}
 		return null;
 	}
+	
+	/**
+	 * @param playerId
+	 * @return the brain of the player
+	 */
+	public Brain getBrain(int playerId) {
+		DefaultAISystem aiSystem = (DefaultAISystem) game.getAISystem();
+		return aiSystem.getBrain(playerId);
+	}
+	
+	
 	
 	/**
 	 * @return the map
@@ -190,6 +203,14 @@ public class World {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * @param brain
+	 * @return the teammates of the supplied bot
+	 */
+	public List<Player> getTeammates(Brain brain) {
+		return brain.getPlayer().getTeam().getPlayers();
 	}
 	
 	/**

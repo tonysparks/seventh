@@ -5,6 +5,7 @@ package seventh.ai.basic;
 
 import java.util.List;
 
+import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
@@ -50,7 +51,7 @@ public class Brain implements Debugable {
 		this.motion = new Locomotion(this);
 		this.sensors = new Sensors(this);
 		this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);
-		this.communicator = new Communicator();
+		this.communicator = new Communicator(world);
 	}
 	
 	/**
@@ -89,6 +90,15 @@ public class Brain implements Debugable {
 	public PlayerInfo getPlayer() {
 		return player;
 	}
+	
+	/**
+	 * Broadcasts a command
+	 * 
+	 * @param cmd
+	 */
+	public void broadcastCommand(Action cmd) {
+		this.communicator.broadcastAction(this, cmd);
+	}
 		
 	/**
 	 * Lets the brain think for a game tick
@@ -103,7 +113,7 @@ public class Brain implements Debugable {
 			
 			
 			//debugDraw();
-			debugDrawPathPlanner();
+			//debugDrawPathPlanner();
 		}		
 	}
 	

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import seventh.shared.ArrayMap;
+
 /**
  * Uses the A* (A-Star) optimal-path searching algorithm.
  * 
@@ -33,13 +35,25 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
 	 * 
 	 */
 	public AStarGraphSearch() {
-        gScores = new HashMap<GraphNode<E,T>, Integer>();    
-        hScores = new HashMap<GraphNode<E,T>, Integer>();            
-        fScores = new HashMap<GraphNode<E,T>, Integer>();    
-        
-        
-        cameFrom = new HashMap<GraphNode<E,T>, GraphNode<E,T>>();
-        
+		boolean jdk = false;
+		
+		// TODO - Continue testing working on ArrayMap
+		// removing GC from HashMap Entries
+		if(jdk) {
+	        gScores = new HashMap<GraphNode<E,T>, Integer>();    
+	        hScores = new HashMap<GraphNode<E,T>, Integer>();            
+	        fScores = new HashMap<GraphNode<E,T>, Integer>();    
+	        
+	        
+	        cameFrom = new HashMap<GraphNode<E,T>, GraphNode<E,T>>();
+		}
+		else {
+			gScores = new ArrayMap<>();
+			hScores = new ArrayMap<GraphNode<E,T>, Integer>();
+			fScores = new ArrayMap<>();
+			cameFrom = new ArrayMap<GraphNode<E,T>, GraphNode<E,T>>();
+		}
+		
         closedSet = new HashSet<GraphNode<E,T>>();
         openSet   = new HashSet<GraphNode<E,T>>();
 	}

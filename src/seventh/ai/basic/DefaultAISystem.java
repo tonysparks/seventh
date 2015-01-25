@@ -278,7 +278,7 @@ public class DefaultAISystem implements AISystem {
 		this.axisAIStrategy.update(timeStep, game);
 				
 		//debugDraw();
-		debugDrawZones();
+		//debugDrawZones();
 	}
 
 	

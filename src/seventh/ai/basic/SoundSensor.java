@@ -8,6 +8,7 @@ import java.util.List;
 
 import seventh.game.PlayerEntity;
 import seventh.game.events.SoundEmittedEvent;
+import seventh.game.events.SoundEventPool;
 import seventh.shared.TimeStep;
 
 /**
@@ -77,8 +78,8 @@ public class SoundSensor implements Sensor {
 		if(timeToHear <= 0) 
 		{			
 			this.sounds.clear();
-			List<SoundEmittedEvent> emittedSounds = world.getSoundEvents();
-			if(!emittedSounds.isEmpty()) {
+			SoundEventPool emittedSounds = world.getSoundEvents();
+			if(emittedSounds.hasSounds()) {
 				this.entity.getHeardSounds(emittedSounds, this.sounds);
 			}
 			

@@ -8,7 +8,7 @@ import java.util.Random;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.ai.AISystem;
-import seventh.game.events.SoundEmittedEvent;
+import seventh.game.events.SoundEventPool;
 import seventh.game.type.GameType;
 import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
@@ -47,12 +47,12 @@ public interface GameInfo {
 	/**
 	 * @return the lastFramesSoundEvents
 	 */
-	public abstract List<SoundEmittedEvent> getLastFramesSoundEvents();
+	public abstract SoundEventPool getLastFramesSoundEvents();
 
 	/**
 	 * @return the soundEvents
 	 */
-	public abstract List<SoundEmittedEvent> getSoundEvents();
+	public abstract SoundEventPool getSoundEvents();
 
 	/**
 	 * @param playerId

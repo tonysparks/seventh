@@ -5,7 +5,6 @@ package seventh.game.events;
 
 import leola.frontend.listener.Event;
 import seventh.game.SoundType;
-import seventh.game.net.NetSound;
 import seventh.math.Vector2f;
 
 /**
@@ -16,9 +15,7 @@ public class SoundEmittedEvent extends Event {
 	private int id;
 	private SoundType soundType;
 	private Vector2f pos;
-	
-	private NetSound netSound;
-	
+		
 	/**
 	 * @param source
 	 * @param id
@@ -29,15 +26,37 @@ public class SoundEmittedEvent extends Event {
 		super(source);
 		this.id = id;
 		this.soundType = soundType;
-		this.pos = pos;
-		
-		this.netSound = new NetSound();
-		this.netSound.type = soundType.netValue();
-		this.netSound.posX = (short)pos.x;
-		this.netSound.posY = (short)pos.y;
-		
+		this.pos = pos;		
 	}
 	
+	
+	
+	/**
+	 * @param id the id to set
+	 */
+	protected void setId(int id) {
+		this.id = id;
+	}
+
+
+
+	/**
+	 * @param soundType the soundType to set
+	 */
+	protected void setSoundType(SoundType soundType) {
+		this.soundType = soundType;
+	}
+
+
+
+	/**
+	 * @param pos the pos to set
+	 */
+	protected void setPos(Vector2f pos) {
+		this.pos.set(pos);
+	}
+
+
 	/**
 	 * @return the id
 	 */
@@ -62,8 +81,12 @@ public class SoundEmittedEvent extends Event {
 	/**
 	 * @return the netSound
 	 */
-	public NetSound getNetSound() {
-		return netSound;
-	}
+//	public NetSound getNetSound() {
+//		this.netSound.type = soundType.netValue();
+//		this.netSound.posX = (short)pos.x;
+//		this.netSound.posY = (short)pos.y;
+//		
+//		return netSound;
+//	}
 	
 }

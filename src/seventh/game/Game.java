@@ -30,6 +30,7 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
+import seventh.game.events.SoundEventPool;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
@@ -55,6 +56,7 @@ import seventh.network.messages.UserInputMessage;
 import seventh.shared.Cons;
 import seventh.shared.Debugable;
 import seventh.shared.SeventhConfig;
+import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 
 /**
@@ -123,8 +125,8 @@ public class Game implements GameInfo, Debugable {
 	
 	private Random random;
 	
-	private List<SoundEmittedEvent> soundEvents
-								  , lastFramesSoundEvents;		
+	private SoundEventPool soundEvents
+					     , lastFramesSoundEvents;		
 	
 	private boolean gameEnded;	
 	private boolean enableFOW;
@@ -188,8 +190,8 @@ public class Game implements GameInfo, Debugable {
 		this.bombTargets = new ArrayList<BombTarget>();
 		this.vehicles = new ArrayList<Vehicle>();
 		
-		this.soundEvents = new ArrayList<SoundEmittedEvent>();
-		this.lastFramesSoundEvents = new ArrayList<SoundEmittedEvent>();
+		this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
+		this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
 		
 		this.aiSystem = new DefaultAISystem();
 		
@@ -253,7 +255,8 @@ public class Game implements GameInfo, Debugable {
 			@Override
 			@EventMethod
 			public void onSoundEmitted(SoundEmittedEvent event) {
-				soundEvents.add(event);
+//				soundEvents.add(event);
+				soundEvents.emitSound(event);
 			}
 		});				
 		
@@ -333,7 +336,7 @@ public class Game implements GameInfo, Debugable {
 	 * @param pos
 	 */
 	public void emitSound(int id, SoundType sound, Vector2f pos) {
-		soundEvents.add(new SoundEmittedEvent(this, id, sound, pos));
+		soundEvents.emitSound(id, sound, pos);
 	}
 	
 	/**
@@ -403,7 +406,7 @@ public class Game implements GameInfo, Debugable {
 	 * @see seventh.game.GameInfo#getLastFramesSoundEvents()
 	 */
 	@Override
-	public List<SoundEmittedEvent> getLastFramesSoundEvents() {
+	public SoundEventPool getLastFramesSoundEvents() {
 		return lastFramesSoundEvents;
 	}
 	
@@ -411,7 +414,7 @@ public class Game implements GameInfo, Debugable {
 	 * @see seventh.game.GameInfo#getSoundEvents()
 	 */
 	@Override
-	public List<SoundEmittedEvent> getSoundEvents() {
+	public SoundEventPool getSoundEvents() {
 		return soundEvents;
 	}
 	
@@ -514,7 +517,7 @@ public class Game implements GameInfo, Debugable {
 	 */
 	public void postUpdate() {		
 		lastFramesSoundEvents.clear();
-		lastFramesSoundEvents.addAll(soundEvents);
+		lastFramesSoundEvents.set(soundEvents);
 		soundEvents.clear();
 		
 		lastValidId = 0;
@@ -545,7 +548,6 @@ public class Game implements GameInfo, Debugable {
 		return playerEntities;
 	}
 	
-//	public void 
 	
 	/* (non-Javadoc)
 	 * @see seventh.game.GameInfo#getGraph()
@@ -748,11 +750,7 @@ public class Game implements GameInfo, Debugable {
 	public void addEntity(Entity ent) {
 		int id = ent.getId();
 		
-		if(id >= 0 && id < MAX_ENTITIES) {
-//			if(entities[id] != null) {
-//				entities[id].
-//			}
-			
+		if(id >= 0 && id < MAX_ENTITIES) {			
 			entities[id] = ent;
 		}
 	}
@@ -1290,14 +1288,14 @@ public class Game implements GameInfo, Debugable {
 			return null;
 		}
 								
-		NetGameUpdate netUpdate = this.playerUpdates[playerId]; 
-		netUpdate.clear();
-		NetSound[] sounds = null;
-		
+		NetGameUpdate netUpdate = this.playerUpdates[playerId];				
+		netUpdate.clear();				
 		
 		if (player.isPureSpectator()) {
 			NetEntity.toNetEntities(entities, netUpdate.entities);
-			sounds = NetSound.toNetSounds(soundEvents);
+			NetSound.toNetSounds(netUpdate.sounds, soundEvents);
+			netUpdate.numberOfSounds = (byte)soundEvents.numberOfSounds();
+			
 			/*
 			 * If the current player you are watching is dead,
 			 * follow another player
@@ -1319,8 +1317,9 @@ public class Game implements GameInfo, Debugable {
 				 */			
 				aSoundsHeard.clear();
 				aSoundsHeard = playerEntity.getHeardSounds(soundEvents, aSoundsHeard);			
-				sounds = NetSound.toNetSounds(aSoundsHeard);
-							
+				NetSound.toNetSounds(netUpdate.sounds, aSoundsHeard); 
+				netUpdate.numberOfSounds = (byte)aSoundsHeard.size();								
+				
 				/*
 				 * Calculate all the visuals this player can see
 				 */
@@ -1341,8 +1340,7 @@ public class Game implements GameInfo, Debugable {
 			}
 		}
 		
-		netUpdate.time = (int)time;
-		netUpdate.sounds = sounds;
+		netUpdate.time = (int)time;		
 		netUpdate.spectatingPlayerId = player.getSpectatingPlayerId();
 		return netUpdate;
 	}

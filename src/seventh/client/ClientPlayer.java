@@ -43,11 +43,7 @@ public class ClientPlayer {
 	
 	public void updatePartialStats(NetPlayerPartialStat state) {
 		this.stats.deaths = state.deaths;
-		this.stats.kills = state.kills;
-				
-		if(this.team.getId() != this.stats.teamId) {
-			changeTeam(ClientTeam.fromId(this.stats.teamId));			
-		}
+		this.stats.kills = state.kills;		
 	}
 	
 	public int getId() {

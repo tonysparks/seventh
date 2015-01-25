@@ -3,12 +3,13 @@
  */
 package seventh.game.net;
 
-import harenet.IOBuffer;
-import harenet.messages.NetMessage;
-
 import java.util.List;
 
+import harenet.IOBuffer;
+import harenet.messages.NetMessage;
 import seventh.game.events.SoundEmittedEvent;
+import seventh.game.events.SoundEventPool;
+import seventh.math.Vector2f;
 
 /**
  * @author Tony
@@ -52,16 +53,41 @@ public class NetSound implements NetMessage {
 	}
 	
 	/**
+	 * Converts the {@link SoundEmittedEvent} into a {@link NetSound}
+	 * @param event
+	 */
+	public void toNetSound(SoundEmittedEvent event) {
+		type = event.getSoundType().netValue();
+		Vector2f pos = event.getPos();
+		posX = (short)pos.x;
+		posY = (short)pos.y;
+	}
+	
+	/**
 	 * @param sounds
 	 * @return converts the List of {@link SoundEmittedEvent} to the respective {@link NetSound} array
 	 */
-	public static NetSound[] toNetSounds(List<SoundEmittedEvent> sounds) {
-		NetSound[] snds = new NetSound[sounds.size()];
+	public static NetSound[] toNetSounds(NetSound[] snds, List<SoundEmittedEvent> sounds) {
 		int size = sounds.size();
 		for(int i = 0; i < size; i++) {
-			snds[i] = sounds.get(i).getNetSound();
+			snds[i].toNetSound(sounds.get(i));//.getNetSound();
 		}
 		
 		return snds;
 	}
+	
+	/**
+	 * @param sounds
+	 * @return converts the List of {@link SoundEmittedEvent} to the respective {@link NetSound} array
+	 */
+	public static NetSound[] toNetSounds(NetSound[] snds, SoundEventPool sounds) {
+		int size = sounds.numberOfSounds(); 
+		for(int i = 0; i < size; i++) {
+			snds[i].toNetSound(sounds.getSound(i));
+		}
+		
+		return snds;
+	}
+	
+	
 }

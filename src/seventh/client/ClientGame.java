@@ -856,7 +856,7 @@ public class ClientGame {
 		}
 		
 		if(netUpdate.sounds != null) {
-			int size = netUpdate.sounds.length;
+			int size = netUpdate.numberOfSounds;
 			for(int i = 0; i < size; i++) {
 				NetSound snd = netUpdate.sounds[i];
 				if(snd!=null) {

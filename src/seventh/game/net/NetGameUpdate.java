@@ -6,6 +6,7 @@ package seventh.game.net;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.network.messages.BufferIO;
+import seventh.shared.Arrays;
 import seventh.shared.BitArray;
 import seventh.shared.SeventhConstants;
 
@@ -21,6 +22,7 @@ public class NetGameUpdate implements NetMessage {
 	
 	public NetEntity[] entities;
 	public NetSound[] sounds;
+	public byte numberOfSounds;
 	
 	public int time;
 	public int spectatingPlayerId = -1;
@@ -31,6 +33,7 @@ public class NetGameUpdate implements NetMessage {
 	private int numberOfInts;
 	
 	private boolean hasDeadEntities;
+	
 	
 	protected byte bits;
 	
@@ -45,6 +48,11 @@ public class NetGameUpdate implements NetMessage {
 		hasDeadEntities = true;
 		
 		numberOfInts = entityBitArray.numberOfInts();
+		
+		sounds = new NetSound[SeventhConstants.MAX_SOUNDS];	
+		for(int i = 0; i < sounds.length; i++) {
+			sounds[i] = new NetSound();
+		}
 	}
 	
 	
@@ -53,11 +61,12 @@ public class NetGameUpdate implements NetMessage {
 	 */
 	public void clear() {
 		entityBitArray.clear();
-		for(int i = 0; i < entities.length; i++) {
-			entities[i] = null;
-		}
-		
 		deadPersistantEntities.clear();
+		
+		Arrays.clear(entities);
+//		Arrays.clear(sounds);
+				
+		numberOfSounds = 0;
 		hasDeadEntities = true;
 	}
 	
@@ -81,10 +90,10 @@ public class NetGameUpdate implements NetMessage {
 		}
 		
 		if( (bits & SOUND_MASK) != 0) {
-			short len = (short)buffer.getUnsignedByte();
-			sounds = new NetSound[len];
-			for(short i = 0; i < len; i++) {
-				sounds[i] = new NetSound();
+			numberOfSounds = buffer.get();
+//			sounds = new NetSound[len];
+			for(short i = 0; i < numberOfSounds; i++) {
+//				sounds[i] = new NetSound();
 				sounds[i].read(buffer);
 			}
 		}
@@ -111,11 +120,13 @@ public class NetGameUpdate implements NetMessage {
 	@Override
 	public void write(IOBuffer buffer) {
 		bits = 0;
+		
+//		int soundLen = Arrays.usedLength(sounds);
 		if(entities != null && entities.length > 0) {
 			bits |= ENTITIES_MASK;
 		}
 		
-		if(sounds != null && sounds.length > 0) {
+		if(numberOfSounds > 0) {
 			bits |= SOUND_MASK;
 		}
 		 
@@ -150,10 +161,9 @@ public class NetGameUpdate implements NetMessage {
 			}
 		}
 		
-		if(sounds != null && sounds.length > 0) {
-			int len = sounds.length;
-			buffer.putUnsignedByte(sounds.length);
-			for(byte i = 0; i < len; i++) {
+		if(numberOfSounds > 0) {			
+			buffer.put(numberOfSounds);
+			for(byte i = 0; i < numberOfSounds; i++) {
 				sounds[i].write(buffer);
 			}
 		}
