@@ -169,6 +169,10 @@ public class Peer {
 		this.numberOfDroppedPackets++;
 	}
 	
+	public void addDroppedPacket(int numberOfPackets) {
+		this.numberOfDroppedPackets += numberOfDroppedPackets;
+	}
+	
 	public long getAvgBitsPerSecRecv() {
 		long totalTimeConnected = (System.currentTimeMillis() - this.timeConnected)/1000;
 		if(totalTimeConnected > 0) {

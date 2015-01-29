@@ -140,14 +140,14 @@ public class ServerSeventhConfig extends SeventhConfig {
 	 * @return the server name
 	 */
 	public String getServerName() {
-		return this.config.getStr("The Seventh Server", "server_name");
+		return this.config.getStr("The Seventh Server", "name");
 	}
 	
 	/**
 	 * @param serverName
 	 */
 	public void setServerName(String serverName) {
-		this.config.set(serverName, "server_name");
+		this.config.set(serverName, "name");
 	}
 	
 	

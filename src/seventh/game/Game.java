@@ -1288,7 +1288,9 @@ public class Game implements GameInfo, Debugable {
 			return null;
 		}
 								
-		NetGameUpdate netUpdate = this.playerUpdates[playerId];				
+		// TODO: Figure out a way to cache the NetGameUpdate object
+		NetGameUpdate netUpdate =  new NetGameUpdate();//
+					//this.playerUpdates[playerId];				
 		netUpdate.clear();				
 		
 		if (player.isPureSpectator()) {

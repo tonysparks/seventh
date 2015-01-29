@@ -113,6 +113,14 @@ public class OrthoMap implements Map {
 		return foregroundLayers;
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#hasWorldCollidableTile(int, int)
+	 */
+	@Override
+	public boolean hasWorldCollidableTile(int x, int y) {	
+		return getWorldCollidableTile(x, y) != null;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see seventh.map.Map#getCollisionTilesAt(java.util.List, java.util.List)

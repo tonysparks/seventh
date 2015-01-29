@@ -17,6 +17,11 @@ import harenet.MessageHeader;
 public class PingMessage extends AbstractMessage {
 	
 	/**
+	 * Cached instance to reduce GC load
+	 */
+	public static final PingMessage INSTANCE = new PingMessage();
+	
+	/**
 	 */
 	public PingMessage() {
 		super(MessageHeader.PING_MESSAGE);
@@ -27,6 +32,6 @@ public class PingMessage extends AbstractMessage {
 	 */
 	@Override
 	public Message copy() {	
-		return new PingMessage();
+		return INSTANCE;
 	}
 }

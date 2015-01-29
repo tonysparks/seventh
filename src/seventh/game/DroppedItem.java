@@ -41,7 +41,7 @@ public class DroppedItem extends Entity {
 		this.netEntity.type = Type.DROPPED_ITEM.netValue();
 		this.netEntity.droppedItem = droppedItem.getType().netValue();
 		
-		this.timeToLive = 1 * 60 * 1000; // stay on the ground for 2 minutes
+		this.timeToLive = 1 * 60 * 1000; // stay on the ground for 1 minute
 	}
 	
 	/* (non-Javadoc)

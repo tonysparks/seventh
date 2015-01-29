@@ -298,13 +298,13 @@ public class World {
 		
 		int loopChecker = 0;
 		
-		while (map.rectCollides(temp)) {
+		while (map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y) ) {
 			pos.x = x + random.nextInt(width);
 			pos.y = y + random.nextInt(height);
 			temp.setLocation(pos);
 			
 			// this bounds doesn't have a free spot
-			if(loopChecker++ > 1000) {
+			if(loopChecker++ > 100000) {
 				return null;
 			}
 		}
@@ -327,7 +327,7 @@ public class World {
 		Rectangle temp = new Rectangle(entity.getBounds());
 		temp.setLocation(pos);
 		
-		while (map.rectCollides(temp) || notIn.contains(temp)) {
+		while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || notIn.contains(temp)) {
 			pos.x = x + random.nextInt(width);
 			pos.y = y + random.nextInt(height);
 			temp.setLocation(pos);

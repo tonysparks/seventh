@@ -431,7 +431,7 @@ public class Host {
 				long currentTime = System.currentTimeMillis();
 				if ( currentTime - peer.getLastPingTime() >= config.getPingRate() ) {
 					peer.setLastPingTime(currentTime);
-					peer.send(new PingMessage());
+					peer.send(PingMessage.INSTANCE);
 				}
 			}
 			
@@ -478,7 +478,7 @@ public class Host {
 			else {
 				long amountOfTimeSinceLastPacket = System.currentTimeMillis() - peer.getLastSendTime();
 				if(amountOfTimeSinceLastPacket >= config.getHeartbeatTime()) {					
-					peer.send(new HeartbeatMessage());
+					peer.send(HeartbeatMessage.INSTANCE);
 				}
 			}											
 		}
@@ -713,7 +713,12 @@ public class Host {
 					/* if this is a newer packet, lets go ahead
 					 * and process it
 					 */
-					if(peer.isSequenceMoreRecent(seqNumber)) {								
+					if(peer.isSequenceMoreRecent(seqNumber)) {
+						int numberOfDroppedPackets = seqNumber - peer.getRemoteSequence();
+						if(numberOfDroppedPackets > 1) {
+							peer.addDroppedPacket(numberOfDroppedPackets);
+						}
+						
 						peer.setRemoteSequence(seqNumber);		
 						peer.setRemoteAck(protocol.getAckHistory(), protocol.getAcknowledge());
 						parseMessages(peer, buffer, protocol);
@@ -789,7 +794,7 @@ public class Host {
 			}
 			else {
 				if(message instanceof PingMessage) {
-					peer.send(new PongMessage());
+					peer.send(PongMessage.INSTANCE);
 				}
 				else if(message instanceof PongMessage) {
 					peer.pongMessageReceived();

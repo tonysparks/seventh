@@ -94,7 +94,7 @@ public class PlayerEntity extends Entity implements Controllable {
 	private static final int SPRINT_DELAY_TIME = 200;
 	
 	public static final float WALK_SPEED_FACTOR = 0.484f;
-	public static final float SPRINT_SPEED_FACTOR = 1.45f; // 1.95f
+	public static final float SPRINT_SPEED_FACTOR = 1.60f; // 1.95f
 	
 	private static final int ENTERING_VEHICLE_TIME = 2500;
 	private static final int EXITING_VEHICLE_TIME = 2000;

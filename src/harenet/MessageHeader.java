@@ -70,15 +70,15 @@ public class MessageHeader {
 				break;
 			}
 			case HEARTBEAT_MESSAGE: {
-				message = new HeartbeatMessage();
+				message = HeartbeatMessage.INSTANCE;
 				break;
 			}
 			case PING_MESSAGE: {
-				message = new PingMessage();
+				message = PingMessage.INSTANCE;
 				break;
 			}
 			case PONG_MESSAGE: {
-				message = new PongMessage();
+				message = PongMessage.INSTANCE;
 				break;
 			}
 		}

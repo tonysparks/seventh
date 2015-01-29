@@ -13,7 +13,7 @@ import harenet.MessageHeader;
  */
 public class DisconnectMessage extends AbstractMessage {
 
-
+	
 	/**
 	 */
 	public DisconnectMessage() {

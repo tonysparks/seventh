@@ -121,7 +121,6 @@ public class NetGameUpdate implements NetMessage {
 	public void write(IOBuffer buffer) {
 		bits = 0;
 		
-//		int soundLen = Arrays.usedLength(sounds);
 		if(entities != null && entities.length > 0) {
 			bits |= ENTITIES_MASK;
 		}

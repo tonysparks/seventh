@@ -14,6 +14,10 @@ import harenet.MessageHeader;
  */
 public class PongMessage extends AbstractMessage {
 	
+	/**
+	 * Cached instance to reduce GC load
+	 */
+	public static final PongMessage INSTANCE = new PongMessage();
 	
 	/**
 	 */
@@ -26,6 +30,6 @@ public class PongMessage extends AbstractMessage {
 	 */
 	@Override
 	public Message copy() {	
-		return new PongMessage();
+		return INSTANCE;
 	}
 }

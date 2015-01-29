@@ -44,7 +44,7 @@ public class ClientDroppedItem extends ClientEntity {
 		Type t = Type.fromNet(item.droppedItem);
 		if(this.droppedItem == null) 
 		{
-			setDroppedItem(t);
+			setDroppedItem(t);			
 		}
 	}
 	

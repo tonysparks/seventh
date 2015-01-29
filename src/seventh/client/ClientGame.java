@@ -678,11 +678,14 @@ public class ClientGame {
 	private void createEntity(NetEntity ent) {				
 		if(this.entities.containsEntity(ent.id)) {
 			return;
-		}
+		}				
 		
 		ClientEntity entity = null;
 		
 		Type type = Type.fromNet(ent.type);
+		
+//		System.out.println("Creating: " + type.name() + " id " + ent.id);
+		 
 		Vector2f pos = new Vector2f(ent.posX, ent.posY);
 		switch(type) {
 			case PLAYER_PARTIAL: {
@@ -1109,10 +1112,10 @@ public class ClientGame {
 		}
 	}
 	
-	private boolean removeEntity(int id) {
+	private boolean removeEntity(int id) {				
 		ClientEntity ent = entities.removeEntity(id);
 		if(ent != null) {	
-			
+//			System.out.println("Removing entity: " + id); 
 			ent.setAlive(false);		
 			ent.destroy();
 			

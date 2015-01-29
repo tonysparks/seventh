@@ -286,6 +286,15 @@ public abstract interface Map extends Renderable, Debugable {
 	
 	
 	/**
+	 * Determines if there is a collidable tile at the location.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return true if there is a collidable tile at this location
+	 */
+	public abstract boolean hasWorldCollidableTile(int x, int y);
+	
+	/**
 	 * Queries to see if there is a heightMask from world coordinates
 	 * 
 	 * @param x - x in world coordinate space
