@@ -33,6 +33,7 @@ public class FireAtAction extends AdapterAction {
 	 */
 	public void reset(Entity fireAtMe) {
 		this.fireAtMe = fireAtMe;
+		this.lastContactTime = 0;
 		this.getActionResult().setFailure();
 	}
 	
