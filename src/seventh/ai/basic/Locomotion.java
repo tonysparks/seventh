@@ -32,8 +32,10 @@ import seventh.game.PlayerEntity;
 import seventh.game.Team;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Weapon;
+import seventh.graph.GraphNode;
 import seventh.map.Map;
-import seventh.map.PathFeeder;
+import seventh.map.MapGraph;
+import seventh.map.Tile;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
@@ -57,7 +59,7 @@ public class Locomotion implements Debugable {
 	
 	private PlayerEntity me;
 	
-	private final PathFeeder<?> pathFeeder;
+	private final PathPlanner<?> pathPlanner;
 	private Vector2f moveDelta;
 	
 	private Random random;
@@ -84,7 +86,7 @@ public class Locomotion implements Debugable {
 	public Locomotion(Brain brain) {
 		this.brain = brain;
 		
-		this.pathFeeder = new PathFeeder<>(brain.getWorld().getGraph());
+		this.pathPlanner = new PathPlanner<>(brain.getWorld().getGraph());
 		
 		this.random = brain.getWorld().getRandom();
 		this.destinationGoal = new DecoratorAction(brain);
@@ -123,39 +125,54 @@ public class Locomotion implements Debugable {
 	}
 		
 	/**
-	 * Remove the {@link PathFeeder}
+	 * Remove the {@link PathPlanner}
 	 */
 	public void emptyPath() {
-		this.pathFeeder.clearPath();
+		this.pathPlanner.clearPath();
 	}
 	
 	/**
 	 * @return the pathFeeder
 	 */
-	public PathFeeder<?> getPathFeeder() {
-		return pathFeeder;
+	public PathPlanner<?> getPathPlanner() {
+		return pathPlanner;
 	}
 	
 	@SuppressWarnings("unused")
 	private void debugDraw() {
-		int y = 100;
-		int x = 20;
-		final int yOffset = 20;
-		int color = 0xff00ff00;
+//		int y = 100;
+//		int x = 20;
+//		final int yOffset = 20;
+//		int color = 0xff00ff00;
+//		
+//		final String message = "%-8s %-19s %-5s";
+//		DebugDraw.drawString(String.format(message, "Motion", "State", "IsFinished"), x, y, color);
+//		DebugDraw.drawString("====================================", x, y += yOffset, color);
+//		
+//		String text = String.format(message, "Walking", destinationGoal.getAction() != null ? destinationGoal.getAction().getClass().getSimpleName():"[none]", destinationGoal.isFinished(brain));				
+//		DebugDraw.drawString(text, x, y += yOffset, color);
+//		
+//		text = String.format(message, "Facing", facingGoal.getAction() != null ? facingGoal.getAction().getClass().getSimpleName():"[none]", facingGoal.isFinished(brain));				
+//		DebugDraw.drawString(text, x, y += yOffset, color);
+//		
+//		text = String.format(message, "Hands", handsGoal.getAction() != null ? handsGoal.getAction().getClass().getSimpleName():"[none]", handsGoal.isFinished(brain));				
+//		DebugDraw.drawString(text, x, y += yOffset, color);
 		
-		final String message = "%-8s %-19s %-5s";
-		DebugDraw.drawString(String.format(message, "Motion", "State", "IsFinished"), x, y, color);
-		DebugDraw.drawString("====================================", x, y += yOffset, color);
-		
-		String text = String.format(message, "Walking", destinationGoal.getAction() != null ? destinationGoal.getAction().getClass().getSimpleName():"[none]", destinationGoal.isFinished(brain));				
-		DebugDraw.drawString(text, x, y += yOffset, color);
-		
-		text = String.format(message, "Facing", facingGoal.getAction() != null ? facingGoal.getAction().getClass().getSimpleName():"[none]", facingGoal.isFinished(brain));				
-		DebugDraw.drawString(text, x, y += yOffset, color);
-		
-		text = String.format(message, "Hands", handsGoal.getAction() != null ? handsGoal.getAction().getClass().getSimpleName():"[none]", handsGoal.isFinished(brain));				
-		DebugDraw.drawString(text, x, y += yOffset, color);
-		
+		MapGraph<?> graph = brain.getWorld().getGraph();
+		for(int y = 0; y < graph.graph.length; y++) {
+			for(int x = 0; x < graph.graph[0].length; x++) {
+				GraphNode<Tile, ?> node = graph.getNodeByIndex(x, y);
+				if(node != null) {
+					Tile t = node.getValue();
+					//DebugDraw.fillRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0x1f00ff00);
+					//DebugDraw.drawRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0x8f00ffff);
+				}
+			}
+		}
+		Entity ent = brain.getEntityOwner();
+		if(ent != null) {
+			DebugDraw.fillRectRelative(ent.getBounds().x, ent.getBounds().y, ent.getBounds().width, ent.getBounds().height, 0xffff0000);
+		}
 		
 	}
 	
@@ -163,7 +180,7 @@ public class Locomotion implements Debugable {
 	 * @param timeStep
 	 */
 	public void update(TimeStep timeStep) {
-		//debugDraw();
+//		debugDraw();
 		
 		if(!destinationGoal.isFinished(brain)) {
 			destinationGoal.update(brain, timeStep);
@@ -195,14 +212,14 @@ public class Locomotion implements Debugable {
 	private void moveEntity() {
 
 		moveDelta.zeroOut();
-		if(pathFeeder.hasPath()) {
-			if (!pathFeeder.atDestination()) {
+		if(pathPlanner.hasPath()) {
+			if (!pathPlanner.atDestination()) {
 //				Vector2f nextDest = pathFeeder.nextDestination(me.getPos());
-				Vector2f nextDest = pathFeeder.nextDestination(me);
+				Vector2f nextDest = pathPlanner.nextDestination(me);
 				moveDelta.set(nextDest);
 			}
 			else {
-				Vector2f nextDest = pathFeeder.getDestination();
+				Vector2f nextDest = pathPlanner.getDestination();
 				Vector2f.Vector2fSubtract(nextDest, me.getPos(), moveDelta);	
 				if(moveDelta.lengthSquared() < 26) {
 					moveDelta.zeroOut();
@@ -316,8 +333,8 @@ public class Locomotion implements Debugable {
 	 * destination
 	 */
 	public Vector2f getDestination() {
-		if(this.pathFeeder != null) {
-			return pathFeeder.getDestination();
+		if(this.pathPlanner != null) {
+			return pathPlanner.getDestination();
 		}
 		return null;
 	}

@@ -5,8 +5,8 @@
 package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.PathPlanner;
 import seventh.game.PlayerEntity;
-import seventh.map.PathFeeder;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -59,7 +59,7 @@ public class HeadScanAction extends AdapterAction {
 		 */
 		this.sampleTime -= timeStep.getDeltaTime();
 		if(this.sampleTime < 0) {
-			PathFeeder<?> feeder = brain.getMotion().getPathFeeder();
+			PathPlanner<?> feeder = brain.getMotion().getPathPlanner();
 			
 			Vector2f dest = null;
 			if(feeder.hasPath()) {

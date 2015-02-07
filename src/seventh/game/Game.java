@@ -565,7 +565,8 @@ public class Game implements GameInfo, Debugable {
 	public Vector2f findFreeSpot(PlayerEntity player) {				
 		Vector2f freeSpot = player.getPos();
 		
-		while(map.rectCollides(player.getBounds())) {
+		int safety = 100000;
+		while((map.rectCollides(player.getBounds()) || map.hasWorldCollidableTile((int)player.getCenterPos().x, (int)player.getCenterPos().y)) && safety>0) {
 			int w = (player.getBounds().width + 5);
 			int h = (player.getBounds().height + 5);
 			
@@ -582,6 +583,8 @@ public class Game implements GameInfo, Debugable {
 			
 			freeSpot.set(x, y);
 			player.moveTo(freeSpot);
+			
+			safety--;
 		} 
 		
 		return freeSpot;

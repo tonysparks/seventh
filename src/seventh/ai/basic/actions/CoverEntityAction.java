@@ -6,9 +6,9 @@ package seventh.ai.basic.actions;
 import java.util.List;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.PathPlanner;
 import seventh.game.Entity;
 import seventh.game.PlayerEntity;
-import seventh.map.PathFeeder;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -74,7 +74,7 @@ public class CoverEntityAction extends AdapterAction {
 			this.lastVisibleTime = 0;
 		}
 		
-		PathFeeder<?> feeder = brain.getMotion().getPathFeeder();
+		PathPlanner<?> feeder = brain.getMotion().getPathPlanner();
 		if(!feeder.hasPath() || !feeder.onFirstNode()) {
 			Vector2f newPosition = this.followMe.getPos();
 			Vector2f start = brain.getEntityOwner().getPos();

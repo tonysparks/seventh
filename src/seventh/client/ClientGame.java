@@ -434,7 +434,7 @@ public class ClientGame {
 		
 		lightSystem.render(canvas, camera, 0);
 		
-		DebugDraw.enable(false);
+		DebugDraw.enable(true);
 		DebugDraw.render(canvas, camera);
 		
 		canvas.setShader(null);

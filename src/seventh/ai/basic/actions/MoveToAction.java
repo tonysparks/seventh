@@ -5,7 +5,7 @@ package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Locomotion;
-import seventh.map.PathFeeder;
+import seventh.ai.basic.PathPlanner;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -71,7 +71,7 @@ public class MoveToAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		PathFeeder<?> path = brain.getMotion().getPathFeeder();		
+		PathPlanner<?> path = brain.getMotion().getPathPlanner();		
 		return path.atDestination();		
 	}
 

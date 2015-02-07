@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.PathPlanner;
 import seventh.ai.basic.Zone;
-import seventh.map.PathFeeder;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -80,9 +80,9 @@ public class MoveAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {
-		Vector2f position = brain.getEntityOwner().getPos();
-				
-		PathFeeder<?> feeder = brain.getMotion().getPathFeeder(); 
+		Vector2f position = brain.getEntityOwner().getCenterPos();
+		
+		PathPlanner<?> feeder = brain.getMotion().getPathPlanner(); 
 				
 		if(this.zonesToAvoid.isEmpty()) { 
 			feeder.findFuzzyPath(position, this.destination, this.fuzzyNess);
@@ -114,7 +114,7 @@ public class MoveAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {				
-		PathFeeder<?> path = brain.getMotion().getPathFeeder();
+		PathPlanner<?> path = brain.getMotion().getPathPlanner();
 		return !path.hasPath() || path.atDestination();
 	}
 

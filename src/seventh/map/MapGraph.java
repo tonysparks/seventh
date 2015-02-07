@@ -23,7 +23,7 @@ import seventh.math.Vector2f;
 @SuppressWarnings("all")
 public class MapGraph<T> {
 
-	private GraphNode[][] graph;
+	public GraphNode[][] graph;
 	private seventh.map.Map map;
 	private Random random;
 	private int width, height;

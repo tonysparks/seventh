@@ -10,7 +10,6 @@ import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.graph.GraphNode;
-import seventh.map.PathFeeder;
 import seventh.map.Tile;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
@@ -134,7 +133,7 @@ public class Brain implements Debugable {
 	
 	@SuppressWarnings("unused")
 	private void debugDrawPathPlanner() {
-		PathFeeder<?> pathPlanner = motion.getPathFeeder();
+		PathPlanner<?> pathPlanner = motion.getPathPlanner();
 		if(pathPlanner != null) {
 			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
 				Tile tile = node.getValue();

@@ -2,7 +2,7 @@
  *	leola-live 
  *  see license.txt
  */
-package seventh.map;
+package seventh.ai.basic;
 
 import static seventh.math.Vector2f.Vector2fCopy;
 
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import seventh.ai.basic.Zone;
 import seventh.game.PlayerEntity;
 import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
-import seventh.math.Rectangle;
+import seventh.map.MapGraph;
+import seventh.map.Tile;
 import seventh.math.Vector2f;
 
 
@@ -25,7 +25,7 @@ import seventh.math.Vector2f;
  * @author Tony
  *
  */
-public class PathFeeder<E> {
+public class PathPlanner<E> {
 	
 	private MapGraph<E> graph;
 	private List<GraphNode<Tile, E>> path;
@@ -91,7 +91,7 @@ public class PathFeeder<E> {
 	/**
 	 * @param path
 	 */
-	public PathFeeder(MapGraph<E> graph) {
+	public PathPlanner(MapGraph<E> graph) {
 		this.graph = graph;
 		this.finalDestination = new Vector2f();
 		this.destination = new Vector2f();
@@ -204,39 +204,48 @@ public class PathFeeder<E> {
 	}
 
 	public Vector2f nextDestination(PlayerEntity ent) {
-//		destination.x = bounds.x;
-//		destination.y = bounds.y;
-		Rectangle bounds = ent.getBounds();
+		
+//		Rectangle bounds = ent.getBounds();
+		Vector2f cPos = ent.getCenterPos();
+		int x = (int)cPos.x;
+		int y = (int)cPos.y;
 		
 		destination.zeroOut();
+//		destination.x = bounds.x;
+//		destination.y = bounds.y;
+		
+		
 		
 		if(! path.isEmpty() && currentNode < path.size() ) {
 			GraphNode<Tile, E> node = path.get(currentNode);
 			Tile tile = node.getValue();
+		
+			int centerX = tile.getX() + tile.getWidth()/2;
+			int centerY = tile.getY() + tile.getHeight()/2;
+			if( Math.abs(centerX - x) < 6 
+				&& Math.abs(centerY - y) < 6
+				/*tile.getBounds().contains(currentPosition)*/) {
+				currentNode++;
 			
-//			if( Math.abs(tile.getX() - (int)currentPosition.x) < 6 
-//				&& Math.abs(tile.getY() - (int)currentPosition.y) < 6
-//				/*tile.getBounds().contains(currentPosition)*/) {
-//				currentNode++;				
-//			}
-//			destination.x = (tile.getX() - (int)currentPosition.x);
-//			destination.y = (tile.getY() - (int)currentPosition.y);
-			
-//			int centerX = tile.getX() + tile.getWidth()/2;
-//			int centerY = tile.getY() + tile.getHeight()/2;
-//						
-			if(tile.getBounds().intersects(bounds)) {
-				currentNode++;			
-				
 				if(ent.isSprinting()) {
 					if(currentNode < path.size()) {
 						tile = path.get(currentNode).getValue();
 					}
-				}
+				}			
 			}
+						
+//			if(tile.getBounds().intersects(bounds)) {
+//				currentNode++;			
+//				
+//				if(ent.isSprinting()) {
+//					if(currentNode < path.size()) {
+//						tile = path.get(currentNode).getValue();
+//					}
+//				}
+//			}
 			
-			destination.x = (tile.getX() - bounds.x);
-			destination.y = (tile.getY() - bounds.y);
+			destination.x = (centerX - x);
+			destination.y = (centerY - y);
 		}
 		
 		return destination;
