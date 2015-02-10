@@ -66,13 +66,15 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		
 		if(defenderTeamId == Team.ALLIED_TEAM_ID) {
 			this.attacker = getAxisTeam();
-			this.defender = getAlliedTeam();
+			this.defender = getAlliedTeam();			
 		}
 		else {
 			this.defender = getAxisTeam();
-			this.attacker = getAlliedTeam();
+			this.attacker = getAlliedTeam();						
 		}
 		
+		this.attacker.setAttacker(true);
+		this.defender.setDefender(true);
 	}
 	
 	/**

@@ -55,6 +55,7 @@ public class Hud implements Renderable {
 	private ProgressBarView bombProgressBarView;
 	private long bombTime, completionTime;
 	private boolean isAtBomb, useButtonReleased;
+	private boolean isHoveringOverBomb;
 	/**
 	 * 
 	 */
@@ -205,7 +206,9 @@ public class Hud implements Renderable {
 		miniMap.update(timeStep);		
 		miniMap.setMapAlpha( scoreboard.isVisible() ? 0x3f : 0x8f);
 		
-		updateProgressBar(timeStep);		
+		updateProgressBar(timeStep);
+		
+		isHoveringOverBomb = game.isHoveringOverBomb();
 	}
 	
 	/* (non-Javadoc)
@@ -249,6 +252,20 @@ public class Hud implements Renderable {
 		drawClock(canvas);
 		
 		drawSpectating(canvas);
+		
+		if(isHoveringOverBomb) {
+			ClientTeam attackingTeam = game.getAttackingTeam();
+			if(attackingTeam != null) {
+				if(this.localPlayer.getTeam().equals(attackingTeam)) {
+					drawPlantBombNotification(canvas);		
+				}
+				else {
+					drawDefuseBombNotification(canvas);
+				}
+			}
+			
+		}
+		
 		
 		drawBombProgressBar(canvas, camera);
 			
@@ -450,5 +467,24 @@ public class Hud implements Renderable {
 		canvas.drawString("D: " + client.getNumberOfDroppedPackets(), x, y - 60, 0xff00CC00);
 		canvas.drawString("UR: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, 0xff00CC00);
 		canvas.drawString("US: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, 0xff00CC00);
+	}
+	
+	
+	private void drawDefuseBombNotification(Canvas canvas) {
+		drawBombNotification(canvas, false);
+	}
+	
+	private void drawPlantBombNotification(Canvas canvas) {
+		drawBombNotification(canvas, true);
+	}
+	
+	private void drawBombNotification(Canvas canvas, boolean isAttacking) {
+		KeyMap keyMap = app.getKeyMap();
+		String action = isAttacking ? "plant" : "defuse";
+		String text = "Hold the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to " + action + " the bomb.";
+		
+		canvas.setFont("Consola", 18);
+		int width = canvas.getWidth(text);
+		RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);
 	}
 }

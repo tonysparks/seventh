@@ -87,6 +87,8 @@ public class Team implements Debugable {
 	private NetTeam netTeam;
 	
 	private int score;
+	private boolean isAttacker;
+	private boolean isDefender;
 	
 	
 	
@@ -99,6 +101,36 @@ public class Team implements Debugable {
 		netTeam.id = id;		
 		
 		this.players = new ArrayList<Player>();
+	}
+	
+	/**
+	 * @param isAttacker the isAttacker to set
+	 */
+	public void setAttacker(boolean isAttacker) {
+		this.isAttacker = isAttacker;
+		this.isDefender = false;
+	}
+	
+	/**
+	 * @param isDefender the isDefender to set
+	 */
+	public void setDefender(boolean isDefender) {
+		this.isDefender = isDefender;
+		this.isAttacker = false;
+	}
+	
+	/**
+	 * @return the isAttacker
+	 */
+	public boolean isAttacker() {
+		return isAttacker;
+	}
+	
+	/**
+	 * @return the isDefender
+	 */
+	public boolean isDefender() {
+		return isDefender;
 	}
 	
 	/**
@@ -410,6 +442,8 @@ public class Team implements Debugable {
 		for(int i = 0; i < this.players.size(); i++) {
 			netTeam.playerIds[i] = this.players.get(i).getId();
 		}
+		netTeam.isDefender = this.isDefender;
+		netTeam.isAttacker = this.isAttacker;
 		return netTeam;
 	}
 	

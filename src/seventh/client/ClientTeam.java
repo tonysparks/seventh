@@ -18,6 +18,8 @@ public enum ClientTeam {
 	private int id;
 	private int color;
 	private String name;
+	
+	
 	/**
 	 * 
 	 */

@@ -114,6 +114,7 @@ public class ClientGame {
 	private Random random;
 	
 	private GameType.Type gameType;
+	private ClientTeam attackingTeam, defendingTeam;
 		
 	private long rconToken;
 	
@@ -187,6 +188,20 @@ public class ClientGame {
 		this.bulletPool = new ClientBulletPool(this, SeventhConstants.MAX_ENTITIES);
 	}	
 	
+	/**
+	 * @return the attackingTeam
+	 */
+	public ClientTeam getAttackingTeam() {
+		return attackingTeam;
+	}
+	
+	/**
+	 * @return the defendingTeam
+	 */
+	public ClientTeam getDefendingTeam() {
+		return defendingTeam;
+	}
+		
 	/**
 	 * @return the map
 	 */
@@ -631,6 +646,38 @@ public class ClientGame {
 	}
 	
 	/**
+	 * Determines if the player is hovering over a bomb target and if they can take
+	 * a valid action with it.  That is, if they are an attacker and the bomb has not 
+	 * been planted, or if they are a defender and the bomb is planted.
+	 * 
+	 * @return true if hovering over a bomb target
+	 */
+	public boolean isHoveringOverBomb() {
+		
+		
+		if(this.localPlayer != null && this.localPlayer.isAlive()) {
+			boolean isAttacker = this.localPlayer.getTeam().equals(getAttackingTeam());
+			
+			Rectangle bounds = this.localPlayer.getEntity().getBounds(); 
+			for(int i = 0; i < bombTargets.size(); i++) {
+				ClientBombTarget target = bombTargets.get(i);					
+				if(target.isAlive()) {
+					if(bounds.intersects(target.getBounds())) {
+						if(target.isBombPlanted()) {																			
+							return !isAttacker;
+						}
+						else {
+							return isAttacker;
+						}												
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Calculates the local players orientation relative to the supplied point
 	 * @param mx
 	 * @param my
@@ -814,7 +861,19 @@ public class ClientGame {
 		NetGameTypeInfo gameType = gs.gameType;
 		if(gameType!=null) {
 			this.gameType = GameType.Type.fromNet(gameType.type);
+			
+			for(int i = 0; i < gameType.teams.length; i++) {
+//				this.scoreboard.setScore(ClientTeam.fromId(gameType.teams[i].id), .score);
+				if(gameType.teams[i].isAttacker) {
+					this.attackingTeam = ClientTeam.fromId(gameType.teams[i].id);
+				}
+				
+				if(gameType.teams[i].isDefender) {
+					this.defendingTeam = ClientTeam.fromId(gameType.teams[i].id);
+				}
+			}
 		}
+		
 	}
 	
 	public void applyGameUpdate(GameUpdateMessage msg) {

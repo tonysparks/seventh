@@ -32,12 +32,14 @@ public interface GameType extends Debugable {
 			return (byte)ordinal();
 		}
 		
+		private static final Type[] values = values();
+		
 		public static Type fromNet(byte value) {
-			if(value<0 || value >= values().length) {
+			if(value<0 || value >= values.length) {
 				return TDM;
 			}
 			
-			return values()[value];
+			return values[value];
 		}
 		
 		public static Type toType(String gameType) {
