@@ -4,15 +4,12 @@
 package seventh.ai.basic;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import seventh.game.Bomb;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.PlayerEntity;
-import seventh.game.SoundType;
-import seventh.game.Team;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.math.Vector2f;
 import seventh.shared.Debugable;
@@ -111,14 +108,6 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 		void onEndThink(TimeStep timeStep, Brain brain);
 	}
 	
-	/**
-	 * Less important sounds
-	 */
-	private static final EnumSet<SoundType> lessImportant 
-		= EnumSet.of(SoundType.IMPACT_DEFAULT
-				   , SoundType.IMPACT_FOLIAGE
-				   , SoundType.IMPACT_METAL
-				   , SoundType.IMPACT_WOOD);
 	
 	/**
 	 * Properties for checking if the bot
@@ -171,7 +160,7 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 	 * @return the {@link Entity} who is attacking the agent.  Null if nothing is touching the agent.
 	 */
 	protected Entity checkIfAttacked(Brain brain) {				
-		Entity damager = brain.getSensors().getFeelSensor().getDamager();
+		Entity damager = brain.getSensors().getFeelSensor().getMostRecentAttacker();
 		return damager;
 	}
 	
@@ -183,26 +172,9 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 	 * @return the list of attackable entities if something is attackable.  The list
 	 * returned is cached, so future calls to this method will alter this List.
 	 */
-	protected List<PlayerEntity> checkSight(Brain brain) {
-		PlayerEntity bot = brain.getEntityOwner();		
-		Team myTeam = bot.getTeam();
-			
-		this.attackableEntities.clear();
-		
-		List<PlayerEntity> entitiesInView = brain.getSensors().getSightSensor().getEntitiesInView();
-		int size = entitiesInView.size();
-		for(int i = 0; i < size; i++) {
-			PlayerEntity otherPlayer = entitiesInView.get(i);
-			
-			Team otherTeam = otherPlayer.getTeam();
-			if(otherTeam==null || myTeam==null || otherTeam.getId() != myTeam.getId()) {
-				this.attackableEntities.add(otherPlayer);
-				break;
-			}
-		
-		}
-				
-		return this.attackableEntities;
+	protected List<PlayerEntity> checkSight(Brain brain) {			
+		this.attackableEntities.clear();		
+		return brain.getSensors().getSightSensor().getEnemies(attackableEntities);
 	}
 	
 	
@@ -213,53 +185,7 @@ public class SimpleThoughtProcess implements ThoughtProcess {
 	 * @return the {@link SoundEmittedEvent} of the closest non-friendly sound
 	 */
 	protected SoundEmittedEvent checkSounds(Brain brain) {				
-		PlayerEntity bot = brain.getEntityOwner();
-		Team myTeam = bot.getTeam();
-		
-		List<SoundEmittedEvent> sounds = brain.getSensors().getSoundSensor().getSounds();
-		int size = sounds.size();
-		
-		SoundEmittedEvent closestSound = null;
-		for(int i = 0; i < size; i++) {
-			SoundEmittedEvent sound = sounds.get(i);
-			long id = sound.getId();
-			
-			/* ignore your own sounds */
-			if( bot.getId() == id) {
-				continue;
-			}
-			
-			/* ignore your friendly sounds (this is a cheat, but what'evs) */
-			PlayerEntity personMakingSound = brain.getWorld().getPlayerById(id);
-			if(personMakingSound != null && personMakingSound.getTeam().equals(myTeam)) {
-				continue;
-			}
-			
-			
-			
-			Vector2f soundPos = sound.getPos();
-			
-			/* make the first sound the closest */
-			if(closestSound == null) {
-				closestSound = sound;
-			}
-			else {
-				
-				/* now lets check and see if there is a higher priority sound (such as foot steps, gun fire, etc.) */
-				if(lessImportant.contains(closestSound.getSoundType()) && !lessImportant.contains(sound.getSoundType())) {
-					closestSound = sound;
-				}
-				else {
-					
-					/* short of there being a higher priority sound, check the distance */
-					if(closestSound.getPos().lengthSquared() > soundPos.lengthSquared()) {					
-						closestSound = sound;
-					}		
-				}						
-			}
-		}
-		
-		return closestSound;
+		return brain.getSensors().getSoundSensor().getClosestSound();
 	}
 	
 	

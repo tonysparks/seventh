@@ -88,6 +88,12 @@ public class Goals {
 		return action;
 	}
 	
+	public Action attack(Entity enemy) {
+		Action action = getScriptedAction("attack");
+		action.getActionResult().setValue(enemy);
+		return action;
+	}
+	
 //	public Action scanArea() {
 //		Action action = getScriptedAction("scanArea");
 //		return action;

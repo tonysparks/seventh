@@ -34,7 +34,7 @@ public class SoundEmittedEvent extends Event {
 	/**
 	 * @param id the id to set
 	 */
-	protected void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -43,7 +43,7 @@ public class SoundEmittedEvent extends Event {
 	/**
 	 * @param soundType the soundType to set
 	 */
-	protected void setSoundType(SoundType soundType) {
+	public void setSoundType(SoundType soundType) {
 		this.soundType = soundType;
 	}
 
@@ -52,7 +52,7 @@ public class SoundEmittedEvent extends Event {
 	/**
 	 * @param pos the pos to set
 	 */
-	protected void setPos(Vector2f pos) {
+	public void setPos(Vector2f pos) {
 		this.pos.set(pos);
 	}
 

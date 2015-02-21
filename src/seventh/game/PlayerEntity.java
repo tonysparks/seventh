@@ -1242,7 +1242,7 @@ public class PlayerEntity extends Entity implements Controllable {
 		int size = soundEvents.numberOfSounds();		
 		for(int i = 0; i < size; i++) {
 			SoundEmittedEvent event = soundEvents.getSound(i);
-			if(this.hearingBounds.contains(event.getPos())) {
+			if(this.hearingBounds.contains(event.getPos()) && event.getId() != this.id) {
 				soundsHeard.add(event);
 			}
 		}

@@ -3,8 +3,6 @@
  */
 package seventh.ai.basic.actions;
 
-import java.util.List;
-
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.PathPlanner;
 import seventh.game.Entity;
@@ -24,7 +22,6 @@ public class FollowEntityAction extends AdapterAction {
 	private Entity followMe;	
 	private Vector2f previousPosition;
 	
-	private long lastVisibleTime;
 	private final long timeSinceLastSeenExpireMSec;
 	
 	/**
@@ -58,7 +55,7 @@ public class FollowEntityAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {		
-		return !this.followMe.isAlive() || this.lastVisibleTime > timeSinceLastSeenExpireMSec;
+		return !this.followMe.isAlive() || brain.getSensors().getSightSensor().timeSeenAgo(followMe) > timeSinceLastSeenExpireMSec;
 	}
 	
 	/**
@@ -80,15 +77,7 @@ public class FollowEntityAction extends AdapterAction {
 	 */
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
-		
-		List<PlayerEntity> entitiesInView = brain.getSensors().getSightSensor().getEntitiesInView();
-		if(!entitiesInView.contains(this.followMe)) {		
-			this.lastVisibleTime += timeStep.getDeltaTime();
-		}
-		else {
-			this.lastVisibleTime = 0;
-		}
-		
+						
 		PathPlanner<?> feeder = brain.getMotion().getPathPlanner();
 		if(!feeder.hasPath() || !feeder.onFirstNode()) {
 			Vector2f newPosition = this.followMe.getPos();

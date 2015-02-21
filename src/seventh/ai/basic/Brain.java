@@ -35,6 +35,8 @@ public class Brain implements Debugable {
 	private PlayerInfo player;
 	private PlayerEntity entityOwner;			
 	
+	private TargetingSystem targetingSystem;
+	
 	/**
 	 * @param runtime
 	 * @param world
@@ -45,12 +47,14 @@ public class Brain implements Debugable {
 		
 		this.entityOwner = player.getEntity();
 		
-		this.memory = new Memory();
+		this.memory = new Memory(this);
 		
 		this.motion = new Locomotion(this);
 		this.sensors = new Sensors(this);
 		this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);
 		this.communicator = new Communicator(world);
+		
+		this.targetingSystem = new TargetingSystem(this);
 	}
 	
 	/**
@@ -60,6 +64,7 @@ public class Brain implements Debugable {
 	public void spawned(TeamStrategy strategy) {
 		this.entityOwner = player.getEntity();
 		
+		this.targetingSystem.reset(this);
 		this.communicator.reset(this);
 		this.sensors.reset(this);
 		this.motion.reset(this);				
@@ -81,6 +86,13 @@ public class Brain implements Debugable {
 	 */
 	public void killed() {
 		this.thoughtProcess.onKilled(this);
+	}
+	
+	/**
+	 * @return the config
+	 */
+	public AIConfig getConfig() {
+		return this.world.getConfig();
 	}
 	
 	/**
@@ -106,10 +118,12 @@ public class Brain implements Debugable {
 	 */
 	public void update(TimeStep timeStep) {
 		if(player.isAlive()) {			
+			this.memory.update(timeStep);
 			this.sensors.update(timeStep);		
 			this.motion.update(timeStep);
 			this.thoughtProcess.think(timeStep, this);
 			
+			this.targetingSystem.update(timeStep);
 			
 			//debugDraw();
 			//debugDrawPathPlanner();
@@ -144,6 +158,13 @@ public class Brain implements Debugable {
 		}		
 	}
 
+	/**
+	 * @return the targetingSystem
+	 */
+	public TargetingSystem getTargetingSystem() {
+		return targetingSystem;
+	}
+	
 	/**
 	 * @return the motion
 	 */

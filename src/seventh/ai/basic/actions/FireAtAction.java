@@ -3,10 +3,11 @@
  */
 package seventh.ai.basic.actions;
 
-import java.util.List;
+import java.util.Random;
 
 import seventh.ai.basic.Brain;
 import seventh.game.Entity;
+import seventh.game.Entity.State;
 import seventh.game.PlayerEntity;
 import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
@@ -18,8 +19,8 @@ import seventh.shared.TimeStep;
  */
 public class FireAtAction extends AdapterAction {
 
-	private Entity fireAtMe;
-	private long lastContactTime;
+	private Entity fireAtMe;		
+	private long firingTime;
 	
 	/**
 	 * @param fireAtMe 
@@ -32,8 +33,8 @@ public class FireAtAction extends AdapterAction {
 	 * @param fireAtMe the fireAtMe to set
 	 */
 	public void reset(Entity fireAtMe) {
-		this.fireAtMe = fireAtMe;
-		this.lastContactTime = 0;
+		this.fireAtMe = fireAtMe;		
+		this.firingTime = 0;
 		this.getActionResult().setFailure();
 	}
 	
@@ -42,7 +43,7 @@ public class FireAtAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		return !this.fireAtMe.isAlive() || this.lastContactTime > 15000;
+		return !this.fireAtMe.isAlive() || brain.getSensors().getSightSensor().timeSeenAgo(fireAtMe) > 15000;
 	}
 
 	/* (non-Javadoc)
@@ -52,17 +53,49 @@ public class FireAtAction extends AdapterAction {
 	public void update(Brain brain, TimeStep timeStep) {
 		PlayerEntity player = brain.getEntityOwner();
 		
-		List<PlayerEntity> entitiesInView = brain.getSensors().getSightSensor().getEntitiesInView();
-		if(entitiesInView.contains(this.fireAtMe)) {
+		if( brain.getSensors().getSightSensor().inView(this.fireAtMe) ) {
+			this.firingTime += timeStep.getDeltaTime();
+			
 			float dist = Vector2f.Vector2fDistanceSq(this.fireAtMe.getPos(), player.getPos());
 			Weapon weapon = player.getInventory().currentItem();
 			if(weapon!=null) {				
-				if(dist<1200) {						
+				if(dist<1500) {						
 					weapon.meleeAttack();						
 				}
 				else if(weapon.canFire()) {
-					player.beginFire();
-					player.endFire();						
+					
+					/* if we've been firing at this guy for
+					 * over X amount of time, switch
+					 * our strategy
+					 */					
+					Random random = brain.getWorld().getRandom();
+					if(this.firingTime > random.nextInt(1_000) + 1_000) {
+						
+						/* if the enemy if crouching behind something, try throwing a grenade at 
+						 * them
+						 */
+						if(this.fireAtMe.getCurrentState()==State.CROUCHING) {			
+							Vector2f dest = this.fireAtMe.getCenterPos().createClone();
+							int x = random.nextBoolean() ? -1 : 1;
+							int y = random.nextBoolean() ? -1 : 1;
+							Vector2f.Vector2fAdd(dest, new Vector2f(random.nextInt(128) * x, random.nextInt(128) * y), dest);
+							brain.getMotion().throwGrenade(dest);
+							this.firingTime = 0;
+						
+						}
+						
+						/*
+						 * Otherwise, we'll need to figure out something else
+						 */
+						else {					
+							player.beginFire();
+							player.endFire();
+						}
+					}
+					else {					
+						player.beginFire();
+						player.endFire();
+					}
 				}
 				else if (!weapon.isLoaded()) {
 					player.reload();
@@ -70,7 +103,7 @@ public class FireAtAction extends AdapterAction {
 			}
 		}
 		else {
-			this.lastContactTime += timeStep.getDeltaTime();	
+			this.firingTime = 0;				
 		}		
 		
 		if(!this.fireAtMe.isAlive()) {

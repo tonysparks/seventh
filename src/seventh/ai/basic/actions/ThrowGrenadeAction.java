@@ -24,16 +24,16 @@ public class ThrowGrenadeAction extends AdapterAction {
 	public ThrowGrenadeAction(PlayerEntity me, Vector2f pos) {
 		float distance = Vector2f.Vector2fDistance(me.getCenterPos(), pos);
 		if(distance < 100) {
-			timeToHold = 500;
+			timeToHold = 200;
 		}
 		else if (distance < 200) {
-			timeToHold = 1500;
+			timeToHold = 800;
 		}
 		else if (distance < 300) {
-			timeToHold = 2500;
+			timeToHold = 1200;
 		}
 		else {
-			timeToHold = 3500;
+			timeToHold = 2000;
 		}
 		
 		this.belt=me.getInventory().getGrenades();
@@ -55,7 +55,7 @@ public class ThrowGrenadeAction extends AdapterAction {
 	 */
 	@Override
 	public void resume(Brain brain) {
-		resume(brain);
+		start(brain);
 	}
 
 	
@@ -83,6 +83,7 @@ public class ThrowGrenadeAction extends AdapterAction {
 		this.timeHeld += timeStep.getDeltaTime();
 		if(this.timeHeld >= this.timeToHold) {
 			belt.endFire();
+			System.out.println("End throwing: " + this.timeToHold);
 		}
 	}
 

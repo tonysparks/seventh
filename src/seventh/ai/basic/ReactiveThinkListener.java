@@ -230,8 +230,9 @@ public class ReactiveThinkListener implements ThinkListener {
 		/* reaffirm our attacking strategy */
 		Entity enemy = brain.getEntityOwner().getClosest(enemies);
 		if(enemy != null) {
-			interrupt(brain);
-			motion.attack(enemy);
+			interrupt(brain);			
+			this.reactiveGoal.replace(goals.attack(enemy));
+//			motion.attack(enemy);
 			attacking = true;
 		}
 		

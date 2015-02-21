@@ -3,11 +3,8 @@
  */
 package seventh.ai.basic.actions;
 
-import java.util.List;
-
 import seventh.ai.basic.Brain;
 import seventh.game.Entity;
-import seventh.game.PlayerEntity;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -22,8 +19,7 @@ public class StareAtEntityAction extends AdapterAction {
 	 */
 	private static final float MAX_SLOP = (float)(Math.PI/8);
 	
-	private Entity stareAtMe;
-	private long lastVisibleTime;
+	private Entity stareAtMe;	
 	private final long timeSinceLastSeenExpireMSec;
 	
 	public StareAtEntityAction(Entity stareAtMe) {
@@ -35,8 +31,7 @@ public class StareAtEntityAction extends AdapterAction {
 	 * @param stareAtMe the stareAtMe to set
 	 */
 	public void reset(Entity stareAtMe) {
-		this.stareAtMe = stareAtMe;		
-		this.lastVisibleTime = 0;
+		this.stareAtMe = stareAtMe;				
 	}
 
 	/* (non-Javadoc)
@@ -44,7 +39,7 @@ public class StareAtEntityAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		return !this.stareAtMe.isAlive() || this.lastVisibleTime > timeSinceLastSeenExpireMSec;
+		return !this.stareAtMe.isAlive() || brain.getSensors().getSightSensor().timeSeenAgo(stareAtMe) > timeSinceLastSeenExpireMSec;
 	}
 
 	/* (non-Javadoc)
@@ -54,19 +49,12 @@ public class StareAtEntityAction extends AdapterAction {
 	public void update(Brain brain, TimeStep timeStep) {
 		Entity me = brain.getEntityOwner();
 		Vector2f entityPos = stareAtMe.getPos();				
-		List<PlayerEntity> entitiesInView = brain.getSensors().getSightSensor().getEntitiesInView();
-		if(entitiesInView.contains(this.stareAtMe)) {
-			this.lastVisibleTime = 0;
-			
+		if( brain.getSensors().getSightSensor().inView(this.stareAtMe)) {					
 			/* add some slop value so that the Agent isn't too accurate */
 			float slop = brain.getWorld().getRandom().nextFloat() * (MAX_SLOP/3f);
 			
 			me.setOrientation(Entity.getAngleBetween(entityPos, me.getPos()) + slop );		
-		}
-		else {
-			this.lastVisibleTime += timeStep.getDeltaTime();
-		}
-				
+		}				
 	}
 
 	@Override

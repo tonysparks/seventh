@@ -458,7 +458,7 @@ public class Locomotion implements Debugable {
 	
 	public boolean throwGrenade(Vector2f pos) {
 		GrenadeBelt belt=this.me.getInventory().getGrenades();
-		if( belt.getNumberOfGrenades() > 0 && !handsInUse()) {
+		if( belt.getNumberOfGrenades() > 0 /*&& !handsInUse()*/ ) {
 			this.handsGoal.setAction(new ThrowGrenadeAction(me, pos));
 			return true;
 		}

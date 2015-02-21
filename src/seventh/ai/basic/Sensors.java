@@ -17,9 +17,11 @@ public class Sensors {
 	private SoundSensor soundSensor;
 	private FeelSensor feelSensor;
 	
+	
+	
 	public Sensors(Brain brain) {
-		this.sightSensor = new SightSensor(brain, 200, 400);
-		this.soundSensor = new SoundSensor(brain, 900, 900);
+		this.sightSensor = new SightSensor(brain);
+		this.soundSensor = new SoundSensor(brain);
 		this.feelSensor = new FeelSensor(brain);
 	}
 	
@@ -65,4 +67,5 @@ public class Sensors {
 		this.soundSensor.update(timeStep);
 		this.feelSensor.update(timeStep);		
 	}
+		
 }

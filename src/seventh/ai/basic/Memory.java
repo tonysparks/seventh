@@ -3,8 +3,11 @@
  */
 package seventh.ai.basic;
 
-import java.util.HashMap;
-import java.util.Map;
+import seventh.ai.basic.memory.FeelMemory;
+import seventh.ai.basic.memory.SightMemory;
+import seventh.ai.basic.memory.SoundMemory;
+import seventh.shared.TimeStep;
+import seventh.shared.Updatable;
 
 /**
  * The {@link Brain}s memory, store and retrieve information.
@@ -12,65 +15,59 @@ import java.util.Map;
  * @author Tony
  *
  */
-public class Memory {
+public class Memory implements Updatable {
 
-	private Map<String, Object> memory;
 	
+	private SightMemory sightMemory;
+	private SoundMemory soundMemory;
+	private FeelMemory feelMemory;
 	
-	public Memory() {
-		this.memory = new HashMap<String, Object>();
+	public Memory(Brain brain) {
+		AIConfig config = brain.getConfig();
+		this.sightMemory = new SightMemory(config.getSightExpireTime());
+		this.soundMemory = new SoundMemory(config.getSoundExpireTime());
+		this.feelMemory = new FeelMemory(config.getFeelExpireTime());
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Updatable#update(seventh.shared.TimeStep)
+	 */
+	@Override
+	public void update(TimeStep timeStep) {
+		this.sightMemory.update(timeStep);
+		this.soundMemory.update(timeStep);
+		this.feelMemory.update(timeStep);
+	}
+	
+	/**
+	 * @return the soundMemory
+	 */
+	public SoundMemory getSoundMemory() {
+		return soundMemory;
+	}
+	
+	/**
+	 * @return the sightMemory
+	 */
+	public SightMemory getSightMemory() {
+		return sightMemory;
+	}
+	
+	/**
+	 * @return the feelMemory
+	 */
+	public FeelMemory getFeelMemory() {
+		return feelMemory;
 	}
 	
 	/**
 	 * Clear the memory
 	 */
 	public void clear() {
-		this.memory.clear();
-	}
+		this.sightMemory.clear();
+		this.soundMemory.clear();
+		this.feelMemory.clear();
+	}	
 	
-	/**
-	 * Stores the memory object
-	 * 
-	 * @param key
-	 * @param data
-	 */
-	public void store(String key, Object data) {
-		this.memory.put(key, data);
-	}
-	
-	/**
-	 * 
-	 * @param key
-	 * @param type
-	 * @return
-	 */
-	public <T> boolean has(String key, Class<T> type) {
-		if(this.memory.containsKey(key)) {
-			Object value = this.memory.get(key);
-			return value != null && type.isAssignableFrom(value.getClass());
-		}
-		return false;
-	}
-	
-	/**
-	 * @param key
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T getType(String key) {
-		Object obj = this.memory.get(key);
-		return (T)obj;
-	}
-	
-	/**
-	 * Gets the data from the memory bank.
-	 * 
-	 * @param type
-	 * @param key
-	 * @return the object, or null if not found 
-	 */	
-	public Object get(String key) {
-		Object obj = this.memory.get(key);
-		return obj;
-	}
 }

@@ -3,6 +3,8 @@
  */
 package seventh.ai.basic;
 
+import seventh.ai.basic.memory.FeelMemory;
+import seventh.ai.basic.memory.FeelMemory.FeelMemoryRecord;
 import seventh.game.Entity;
 import seventh.game.Entity.OnDamageListener;
 import seventh.game.PlayerEntity;
@@ -16,17 +18,14 @@ import seventh.shared.TimeStep;
  */
 public class FeelSensor implements Sensor, OnDamageListener {
 
-	public static final String FEEL = "feelSensor";
-	private static final long FEEL_MEMORY = 1; /* remember being shot for 5 seconds -- thug life */
-	private Entity damager;
-	private Memory memory;
-	private long timeToFeel;
+	private FeelMemory memory;
+	private TimeStep timeStep;
 	
 	/**
 	 * @param brain
 	 */
 	public FeelSensor(Brain brain) {
-		memory = brain.getMemory();
+		memory = brain.getMemory().getFeelMemory();
 		PlayerEntity ent = brain.getEntityOwner();
 		if(ent != null) {
 			ent.onDamage = this;
@@ -34,42 +33,46 @@ public class FeelSensor implements Sensor, OnDamageListener {
 	}
 	
 	/**
-	 * @return the damager
+	 * Retrieves the most recent attacker
+	 * 
+	 * @return Retrieves the most recent attacker
 	 */
-	public Entity getDamager() {
-		return damager;
+	public Entity getMostRecentAttacker() {
+		FeelMemoryRecord[] records = memory.getFeelRecords();
+		Entity recentAttacker = null;
+		long mostRecentTime = Long.MAX_VALUE;
+		for(int i = 0; i < records.length; i++) {
+			if(records[i].isValid()) {
+				
+				if (recentAttacker == null ||
+				    mostRecentTime > records[i].getTimeFeltAgo()) {
+					
+					mostRecentTime = records[i].getTimeFeltAgo();
+					recentAttacker = records[i].getDamager();
+				}
+			}
+		}
+		
+		return recentAttacker;
 	}
-	
+		
 	/* (non-Javadoc)
 	 * @see seventh.ai.Sensor#reset(seventh.ai.Brain)
 	 */
 	@Override
 	public void reset(Brain brain) {
-		this.damager = null;
+		this.memory.clear();
 		brain.getEntityOwner().onDamage = this;				
 	}
 	
-	/**
-	 * Test for anything touching this entity.
-	 */
-	private void feel() {
-		this.memory.store(FEEL, this.damager);
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see palisma.ai.Sensor#update(leola.live.TimeStep)
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
-		if(this.timeToFeel > 0) {
-			this.timeToFeel -= timeStep.getDeltaTime();
-		}
-		else {
-			this.damager = null;
-		}
-		
-		feel();
-		
+		this.timeStep  = timeStep;
 	}
 	
 	/**
@@ -79,7 +82,6 @@ public class FeelSensor implements Sensor, OnDamageListener {
 	 */
 	@Override
 	public void onDamage(Entity damager, int amount) {
-		this.damager = damager;
-		this.timeToFeel = FEEL_MEMORY;
+		this.memory.feel(this.timeStep, damager);
 	}
 }

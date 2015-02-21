@@ -90,7 +90,7 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		this.zoneToAttack = calculateZoneToAttack();	
 		this.currentState = DefensiveState.RANDOM;		
 		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(60_000);		
-		this.world = new World(game, zones, goals);
+		this.world = new World(aiSystem.getConfig(), game, zones, goals);
 	}
 	
 	

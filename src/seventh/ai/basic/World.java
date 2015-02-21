@@ -53,14 +53,17 @@ public class World {
 	
 	private Goals goals;
 	
+	private AIConfig config;
+	
 	/**
 	 * @param entities
 	 * @param map
 	 * @param graph
 	 */
-	public World(GameInfo game, Zones zones, Goals goals) {
+	public World(AIConfig config, GameInfo game, Zones zones, Goals goals) {
 		super();
 				
+		this.config = config;
 		this.game = game;
 		this.zones = zones;
 		this.goals = goals;
@@ -83,6 +86,12 @@ public class World {
 		this.activeBombs = new ArrayList<BombTarget>();
 	}
 	
+	/**
+	 * @return the config
+	 */
+	public AIConfig getConfig() {
+		return config;
+	}
 	
 	/**
 	 * @return the goals

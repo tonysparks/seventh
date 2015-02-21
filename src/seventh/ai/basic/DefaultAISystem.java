@@ -61,6 +61,8 @@ public class DefaultAISystem implements AISystem {
 	
 	private AssetWatcher watcher;
 	
+	private AIConfig config;
+	
 	/**
 	 * 
 	 */
@@ -109,6 +111,7 @@ public class DefaultAISystem implements AISystem {
 	public void init(final GameInfo game) {
 		this.game = game;
 		this.random = game.getRandom();
+		this.config = new AIConfig(game.getConfig().getConfig());
 		
 		this.zones = new Zones(game);
 		this.stats = new Stats(game, this.zones);
@@ -132,7 +135,7 @@ public class DefaultAISystem implements AISystem {
 			@Override
 			public void onPlayerInfo(PlayerInfo player) {
 				if(player.isBot()) {					
-					brains[player.getId()] = new Brain(getStrategyFor(player), new World(game, zones, goals), player);
+					brains[player.getId()] = new Brain(getStrategyFor(player), new World(config, game, zones, goals), player);
 				}	
 			}
 		});
@@ -154,6 +157,13 @@ public class DefaultAISystem implements AISystem {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @return the config
+	 */
+	public AIConfig getConfig() {
+		return config;
 	}
 	
 	/**
@@ -216,7 +226,7 @@ public class DefaultAISystem implements AISystem {
 	@Override
 	public void playerJoined(PlayerInfo player) {
 		if(player.isBot()) {
-			this.brains[player.getId()] = new Brain(getStrategyFor(player), new World(game, zones, goals), player);
+			this.brains[player.getId()] = new Brain(getStrategyFor(player), new World(config, game, zones, goals), player);
 		}
 	}
 	

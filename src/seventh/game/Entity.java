@@ -245,6 +245,7 @@ public abstract class Entity implements Debugable {
 	private boolean canTakeDamage;
 	private boolean isAlive;
 	private int health;
+	private int maxHealth;
 	
 	protected Game game;
 	
@@ -294,7 +295,8 @@ public abstract class Entity implements Debugable {
 		this.vel = new Vector2f();
 		this.isAlive = true;
 		this.canTakeDamage = true;
-		this.health = 100;
+		this.maxHealth = 100;
+		this.health = this.maxHealth;
 		
 		this.movementDir = new Vector2f();
 		
@@ -415,6 +417,20 @@ public abstract class Entity implements Debugable {
 	 */
 	public Vector2f getFacing() {
 		return facing;
+	}
+	
+	/**
+	 * @return the maxHealth
+	 */
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+	
+	/**
+	 * @param maxHealth the maxHealth to set
+	 */
+	public void setMaxHealth(int maxHealth) {
+		this.maxHealth = maxHealth;
 	}
 	
 	/**
