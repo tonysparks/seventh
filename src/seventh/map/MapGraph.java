@@ -55,12 +55,50 @@ public class MapGraph<T> {
 	 * @return the graph node at a world coordinate
 	 */
 	public GraphNode<Tile, T> getNodeByWorld(int wx, int wy) {
-		int tileOffset_x = 0;//(wx % map.getTileWidth());
+		int tileOffset_x = 0;// (wx % map.getTileWidth());
 		int x = (tileOffset_x + wx) / map.getTileWidth();
 
-		int tileOffset_y = 0;//(wy % map.getTileHeight());
+		int tileOffset_y = 0; //(wy % map.getTileHeight());
 		int y = (tileOffset_y + wy) / map.getTileHeight();
 		return x<width && y<height ? (GraphNode<Tile, T>)graph[y][x] : null;
+	}
+	
+	public GraphNode<Tile, T> getNearestNodeByWorld(int wx, int wy) {
+		GraphNode<Tile, T> node = getNodeByWorld(wx, wy);
+		
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx+map.getTileHeight(), wy);
+				
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx-map.getTileHeight(), wy);
+		
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx, wy + map.getTileWidth());
+		
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx, wy - map.getTileWidth());
+		
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx + map.getTileHeight(), wy + map.getTileWidth());
+		
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx - map.getTileHeight(), wy - map.getTileWidth());
+		
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx - map.getTileHeight(), wy + map.getTileWidth());
+	
+		if(node != null) return node;
+		
+		node = getNodeByWorld(wx + map.getTileHeight(), wy - map.getTileWidth());
+		
+		return node;
 	}
 	
 	/**
@@ -73,8 +111,8 @@ public class MapGraph<T> {
 	 * @return the list of node to travel to reach the destination
 	 */
 	public List<GraphNode<Tile, T>> findPathAvoidZones(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination, final List<Zone> zonesToAvoid) {						
-		GraphNode<Tile, T> startNode = getNodeByWorld((int)start.x, (int)start.y);
-		GraphNode<Tile, T> destNode = getNodeByWorld((int)destination.x, (int)destination.y);
+		GraphNode<Tile, T> startNode = getNearestNodeByWorld((int)start.x, (int)start.y);
+		GraphNode<Tile, T> destNode = getNearestNodeByWorld((int)destination.x, (int)destination.y);
 		List<GraphNode<Tile, T>> resultPath = searchPath.search(startNode, destNode);
 		return resultPath; 
 	}
@@ -88,8 +126,8 @@ public class MapGraph<T> {
 	 * @return the list of node to travel to reach the destination
 	 */
 	public List<GraphNode<Tile, T>> findFuzzyPath(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination, final int fuzzyNess) {							
-		GraphNode<Tile, T> startNode = getNodeByWorld((int)start.x, (int)start.y);
-		GraphNode<Tile, T> destNode = getNodeByWorld((int)destination.x, (int)destination.y);
+		GraphNode<Tile, T> startNode = getNearestNodeByWorld((int)start.x, (int)start.y);		
+		GraphNode<Tile, T> destNode = getNearestNodeByWorld((int)destination.x, (int)destination.y);
 		List<GraphNode<Tile, T>> resultPath = searchPath.search(startNode, destNode);
 		return resultPath; 
 	}

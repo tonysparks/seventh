@@ -44,9 +44,8 @@ public class Communicator {
 	/**
 	 * Receives any pending {@link Action}s.
 	 * 
-	 * @param brain
 	 */
-	public Action receiveAction(Brain brain) {
+	public Action poll() {
 		Action cmd = commands.poll();
 		return cmd;
 	}

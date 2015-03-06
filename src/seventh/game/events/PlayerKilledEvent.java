@@ -39,7 +39,7 @@ public class PlayerKilledEvent extends Event {
 				
 		this.player = player;
 		this.killedBy = killedBy;
-		this.pos = pos;
+		this.pos = new Vector2f(pos);
 		
 		this.mod = calculateMeansOfDeath();
 	}

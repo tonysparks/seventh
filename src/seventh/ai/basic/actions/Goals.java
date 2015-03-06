@@ -67,7 +67,7 @@ public class Goals {
 		return action;
 	}
 	
-	public Action goToRandomSpot(Brain brain) {
+	public Action goToRandomSpot(Brain brain) {		
 		return new MoveAction(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
 	}
 	

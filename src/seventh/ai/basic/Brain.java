@@ -10,6 +10,7 @@ import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.graph.GraphNode;
+import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
@@ -51,7 +52,8 @@ public class Brain implements Debugable {
 		
 		this.motion = new Locomotion(this);
 		this.sensors = new Sensors(this);
-		this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);
+		this.thoughtProcess = new WeightedThoughtProcess(this); 
+//				new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);
 		this.communicator = new Communicator(world);
 		
 		this.targetingSystem = new TargetingSystem(this);
@@ -74,7 +76,8 @@ public class Brain implements Debugable {
 			this.thoughtProcess = DummyThoughtProcess.getInstance();
 		}
 		else {
-			this.thoughtProcess = new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);			
+			this.thoughtProcess = new WeightedThoughtProcess(this); 
+					//new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);			
 		}
 		
 		this.thoughtProcess.onSpawn(this);		
@@ -126,7 +129,7 @@ public class Brain implements Debugable {
 			this.targetingSystem.update(timeStep);
 			
 			//debugDraw();
-			//debugDrawPathPlanner();
+			debugDrawPathPlanner();
 		}		
 	}
 	
@@ -147,12 +150,36 @@ public class Brain implements Debugable {
 	
 	@SuppressWarnings("unused")
 	private void debugDrawPathPlanner() {
+		int x = (int) entityOwner.getCenterPos().x;
+		int y = (int) entityOwner.getCenterPos().y;
+		GraphNode<Tile, ?> snode = world.getGraph().getNodeByWorld(x,y);
+		if(snode != null) {
+			DebugDraw.fillRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0x8f00ff00);
+		}
+		
+		Tile t = world.getMap().getWorldTile(0, x, y);
+		if(t!=null) {
+			DebugDraw.fillRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0x8f0000ff);
+		}
+		
+		MapGraph<?> tt = world.getGraph();
+		for(int yy = 0; yy < tt.graph.length; yy++) {
+			for(int xx = 0; xx < tt.graph[0].length; xx++) {
+				snode =  (GraphNode<Tile, ?>) tt.graph[yy][xx];
+				if(snode != null) {
+					DebugDraw.fillRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0x1fffff00);
+					DebugDraw.drawRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0xffffffff);
+				}
+			}
+		}
+		
+		
 		PathPlanner<?> pathPlanner = motion.getPathPlanner();
 		if(pathPlanner != null) {
 			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
 				Tile tile = node.getValue();
 				if(tile != null) {
-					DebugDraw.drawRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0xff00ff00);
+					DebugDraw.fillRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0xff00ff00);
 				}
 			}
 		}		

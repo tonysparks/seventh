@@ -51,4 +51,6 @@ public abstract class ActionEvaluator {
 	 * @return
 	 */
 	public abstract Action getAction(Brain brain);
+	
+	
 }

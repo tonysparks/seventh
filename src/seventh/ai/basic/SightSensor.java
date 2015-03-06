@@ -162,7 +162,7 @@ public class SightSensor implements Sensor {
 	public long timeSeenAgo(Entity entity) {
 		SightMemoryRecord[] records = getSightMemoryRecords();
 		if(entity != null) {
-			return records[entity.getId()].getTimeSeen();
+			return records[entity.getId()].getTimeSeenAgo();
 		}
 		return -1;
 	}

@@ -107,7 +107,7 @@ public class ReactiveThinkListener implements ThinkListener {
 	public void onEndThink(TimeStep timeStep, Brain brain) {
 				
 		/* are we receiving orders? if so make these highest priority */
-		Action command = brain.getCommunicator().receiveAction(brain);
+		Action command = brain.getCommunicator().poll();
 		if(command != null) {			
 			this.longTermGoal.end(brain);
 			this.longTermGoal.addFirstAction(command);

@@ -45,4 +45,8 @@ public class AIConfig {
 	public long getTriggeringSystemPollTime() {
 		return this.config.getInt(200, "ai", "triggeringSystemPollTime");
 	}
+	
+	public long getEvaluationPollTime() {
+		return this.config.getInt(300, "ai", "evaluationPollTime");
+	}
 }

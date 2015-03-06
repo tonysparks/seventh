@@ -144,6 +144,14 @@ public class SightMemory implements Updatable {
 			return seenDelta;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {		
+			return isValid + "";
+		}
+		
 	}
 	
 	private SightMemoryRecord[] entityRecords;

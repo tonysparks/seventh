@@ -313,7 +313,7 @@ public class World {
 			temp.setLocation(pos);
 			
 			// this bounds doesn't have a free spot
-			if(loopChecker++ > 100000) {
+			if(loopChecker++ > 500_000) {
 				return null;
 			}
 		}

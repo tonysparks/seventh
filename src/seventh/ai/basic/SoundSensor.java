@@ -72,6 +72,10 @@ public class SoundSensor implements Sensor {
 				SoundEmittedEvent sound = sounds[i].getSound();
 				long id = sound.getId();
 				
+				/* ignore your own sounds */
+				if(entity.getId() == id) {
+					continue;
+				}
 				
 				/* ignore your friendly sounds (this is a cheat, but what'evs) */
 				PlayerEntity personMakingSound = world.getPlayerById(id);

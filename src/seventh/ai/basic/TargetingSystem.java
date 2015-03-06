@@ -53,6 +53,8 @@ public class TargetingSystem implements Updatable {
 			PlayerEntity closestEnemyInSight = sensors.getSightSensor().getClosestEntity();
 	//		SoundEmittedEvent closestSound = sensors.getSoundSensor().getClosestSound();
 			
+			this.currentTarget = null;
+			
 			/* if we are being attacked, this is fairly high priority */
 			if(recentAttacker != null && recentAttacker.getType().equals(Type.PLAYER)) {
 				

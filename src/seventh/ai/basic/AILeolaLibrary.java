@@ -20,6 +20,7 @@ import seventh.ai.basic.actions.DefuseBombAction;
 import seventh.ai.basic.actions.EvaluateAttackDirectionsAction;
 import seventh.ai.basic.actions.FindClosestBombTarget;
 import seventh.ai.basic.actions.FindSafeDistanceFromActiveBombAction;
+import seventh.ai.basic.actions.FireAtAction;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.MoveToAction;
 import seventh.ai.basic.actions.MoveToBombAction;
@@ -27,6 +28,7 @@ import seventh.ai.basic.actions.PlantBombAction;
 import seventh.ai.basic.actions.SecureZoneAction;
 import seventh.ai.basic.actions.WaitAction;
 import seventh.game.BombTarget;
+import seventh.game.Entity;
 import seventh.math.Vector2f;
 
 /**
@@ -81,6 +83,10 @@ public class AILeolaLibrary implements LeolaLibrary {
 		}
 		return new AvoidMoveToAction(destination, zones);
 	}	
+	
+	public FireAtAction fireAtAction(Entity enemy) {
+		return new FireAtAction(enemy);
+	}
 	
 	public SecureZoneAction secureZoneAction(Zone zone) {
 		return new SecureZoneAction(zone);
