@@ -29,6 +29,10 @@ public class FollowEntityAction extends AdapterAction {
 	 */
 	public FollowEntityAction(Entity followMe) {
 		this.followMe = followMe;
+		if(followMe == null) {
+			throw new NullPointerException("The followMe entity is NULL!");
+		}
+		
 		this.previousPosition = new Vector2f();
 		
 		timeSinceLastSeenExpireMSec = 2_000;

@@ -209,6 +209,17 @@ public class Team implements Debugable {
 		return this.players.contains(p);
 	}
 	
+	public boolean onTeam(int playerId) {
+		int size = this.players.size();
+		for(int i = 0; i < size; i++) {
+			if(this.players.get(i).getId() == playerId) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	
 	/**
 	 * @return the number of players on this team

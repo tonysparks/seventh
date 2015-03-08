@@ -308,6 +308,28 @@ public class PlayerEntity extends Entity implements Controllable {
 	}
 	
 	/**
+	 * @return the current held weapons distance
+	 */
+	public int getCurrentWeaponDistance() {
+		Weapon weapon = inventory.currentItem();
+		if(weapon != null) {
+			return weapon.getBulletRange();
+		}
+		return 0;
+	}
+	
+	/**
+	 * @return the current held weapons distance squared
+	 */
+	public int getCurrentWeaponDistanceSq() {
+		Weapon weapon = inventory.currentItem();
+		if(weapon != null) {
+			return weapon.getBulletRange() * weapon.getBulletRange();
+		}
+		return 0;
+	}
+	
+	/**
 	 * @return the stamina
 	 */
 	public byte getStamina() {
@@ -1107,6 +1129,15 @@ public class PlayerEntity extends Entity implements Controllable {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Determines if this entity is currently throwing a grenade (the pin has been
+	 * pulled)
+	 * @return true if pin is pulled on the grenade
+	 */
+	public boolean isThrowingGrenade() {
+		return this.inventory.getGrenades().isPinPulled();
 	}
 	
 	/**

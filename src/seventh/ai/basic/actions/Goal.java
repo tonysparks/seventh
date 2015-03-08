@@ -32,6 +32,7 @@ public class Goal extends AdapterAction implements Debugable {
 	/**
 	 * Cancels all the actions
 	 */
+	@Override
 	public void cancel() {		
 		this.actions.clear();
 	}

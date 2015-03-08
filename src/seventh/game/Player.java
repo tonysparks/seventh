@@ -306,6 +306,14 @@ public class Player implements PlayerInfo, Debugable {
 		return id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.game.PlayerInfo#isTeammateWith(int)
+	 */
+	@Override
+	public boolean isTeammateWith(int playerId) {	
+		return getTeam().onTeam(spectating);
+	}
+	
 	/**
 	 * Kills themselves
 	 */

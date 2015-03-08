@@ -20,12 +20,15 @@ public class FeelSensor implements Sensor, OnDamageListener {
 
 	private FeelMemory memory;
 	private TimeStep timeStep;
+	private Brain brain;
 	
 	/**
 	 * @param brain
 	 */
 	public FeelSensor(Brain brain) {
-		memory = brain.getMemory().getFeelMemory();
+		this.brain = brain;
+		this.memory = brain.getMemory().getFeelMemory();
+		
 		PlayerEntity ent = brain.getEntityOwner();
 		if(ent != null) {
 			ent.onDamage = this;
@@ -82,6 +85,8 @@ public class FeelSensor implements Sensor, OnDamageListener {
 	 */
 	@Override
 	public void onDamage(Entity damager, int amount) {
-		this.memory.feel(this.timeStep, damager);
+		if( damager != null && !this.brain.getPlayer().isTeammateWith(damager.getId())) {		
+			this.memory.feel(this.timeStep, damager);
+		}
 	}
 }

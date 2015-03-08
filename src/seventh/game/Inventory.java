@@ -117,4 +117,19 @@ public class Inventory {
 		
 		return currentItem();
 	}
+	
+	/**
+	 * Number of weapons currently held
+	 * @return Number of weapons currently held
+	 */
+	public int numberOfItems() {
+		return this.weapons.size();
+	}
+	
+	/**
+	 * @return the weapons
+	 */
+	public List<Weapon> getItems() {
+		return weapons;
+	}
 }

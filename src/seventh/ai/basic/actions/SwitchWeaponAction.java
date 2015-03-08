@@ -25,6 +25,11 @@ public class SwitchWeaponAction extends AdapterAction {
 		this.weapon = weapon;
 		this.isDone = false;
 	}
+	
+	public void reset(Type weapon) {
+		this.weapon = weapon;
+		this.isDone = false;
+	}
 
 	/* (non-Javadoc)
 	 * @see palisma.ai.Action#isFinished()

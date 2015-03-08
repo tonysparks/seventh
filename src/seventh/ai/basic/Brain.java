@@ -10,7 +10,6 @@ import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.graph.GraphNode;
-import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
@@ -105,6 +104,19 @@ public class Brain implements Debugable {
 		return player;
 	}
 	
+	public double getRandomRange(double min, double max) {
+		return min * world.getRandom().nextDouble() * (max - min);
+	}
+	
+	
+	public double getRandomRangeMin(double min) {
+		return getRandomRange(min, 1.0);
+	}
+	
+	public double getRandomRangeMax(double max) {
+		return getRandomRange(0.0, max);
+	}		
+	
 	/**
 	 * Broadcasts a command
 	 * 
@@ -162,16 +174,16 @@ public class Brain implements Debugable {
 			DebugDraw.fillRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0x8f0000ff);
 		}
 		
-		MapGraph<?> tt = world.getGraph();
-		for(int yy = 0; yy < tt.graph.length; yy++) {
-			for(int xx = 0; xx < tt.graph[0].length; xx++) {
-				snode =  (GraphNode<Tile, ?>) tt.graph[yy][xx];
-				if(snode != null) {
-					DebugDraw.fillRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0x1fffff00);
-					DebugDraw.drawRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0xffffffff);
-				}
-			}
-		}
+//		MapGraph<?> tt = world.getGraph();
+//		for(int yy = 0; yy < tt.graph.length; yy++) {
+//			for(int xx = 0; xx < tt.graph[0].length; xx++) {
+//				snode =  (GraphNode<Tile, ?>) tt.graph[yy][xx];
+//				if(snode != null) {
+//					DebugDraw.fillRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0x1fffff00);
+//					DebugDraw.drawRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0xffffffff);
+//				}
+//			}
+//		}
 		
 		
 		PathPlanner<?> pathPlanner = motion.getPathPlanner();
@@ -179,7 +191,7 @@ public class Brain implements Debugable {
 			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
 				Tile tile = node.getValue();
 				if(tile != null) {
-					DebugDraw.fillRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0xff00ff00);
+					DebugDraw.fillRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0x5f00ff00);
 				}
 			}
 		}		

@@ -346,6 +346,13 @@ public abstract class Weapon {
 	}
 	
 	/**
+	 * @return true if this weapon is ready for a melee attack at this moment.
+	 */
+	public boolean canMelee() {
+		return this.gunSwing.canSwing();
+	}
+	
+	/**
 	 * @return true if any bullets are current in the clip
 	 */
 	public boolean isLoaded() {

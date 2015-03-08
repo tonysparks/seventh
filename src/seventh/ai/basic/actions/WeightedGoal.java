@@ -35,9 +35,18 @@ public class WeightedGoal extends Goal {
 			this.evaluators.add(e);
 		}
 		
-		this.updateEval = new Timer(true, brain.getConfig().getEvaluationPollTime());		
+		this.updateEval = new Timer(true, brain.getConfig().getEvaluationPollTime());	
+		this.updateEval.start();
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.Goal#start(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public void start(Brain brain) {
+		this.currentActiveEvaluator = evaluate(brain);
+		replace(this.currentActiveEvaluator.getAction(brain));
+	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.Goal#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
@@ -50,7 +59,12 @@ public class WeightedGoal extends Goal {
 			
 			if(currentEvaluator != this.currentActiveEvaluator || this.isFinished(brain)) {
 				this.currentActiveEvaluator = currentEvaluator;
-				this.replace(this.currentActiveEvaluator.getAction(brain));
+				Action action = this.currentActiveEvaluator.getAction(brain);
+//				if(!(action instanceof WaitAction)) {
+//					System.out.println(action.getClass().getSimpleName() + " won evaluation.");
+//				}
+						
+				this.replace(action);
 			}
 		}
 		
@@ -70,7 +84,7 @@ public class WeightedGoal extends Goal {
 				highestDesire = desire;
 			}
 		}
-		
+						
 		return bestEval;
 	}
 }

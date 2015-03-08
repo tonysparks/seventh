@@ -3,14 +3,16 @@
  */
 package seventh.ai.basic;
 
-import java.util.Random;
-
-import seventh.ai.basic.actions.Goal;
+import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.ConcurrentGoal;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.WeightedGoal;
 import seventh.ai.basic.actions.evaluators.AttackActionEvaluator;
+import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
 import seventh.ai.basic.actions.evaluators.ExploreActionEvaluator;
-import seventh.shared.DebugDraw;
+import seventh.ai.basic.actions.evaluators.InvestigateActionEvaluator;
+import seventh.ai.basic.actions.evaluators.ReloadWeaponEvaluator;
+import seventh.ai.basic.actions.evaluators.SwitchWeaponEvaluator;
 import seventh.shared.TimeStep;
 
 /**
@@ -19,7 +21,7 @@ import seventh.shared.TimeStep;
  */
 public class WeightedThoughtProcess implements ThoughtProcess {
 	
-	private Goal currentGoal;
+	private Action currentGoal;
 	
 	/**
 	 * 
@@ -27,9 +29,17 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	public WeightedThoughtProcess(Brain brain) {
 		
 		Goals goals = brain.getWorld().getGoals();
-		Random rand = brain.getWorld().getRandom();		
-		this.currentGoal = new WeightedGoal(brain, new AttackActionEvaluator(goals, Math.max(rand.nextDouble(), 0.1)),
-												   new ExploreActionEvaluator(goals, Math.max(rand.nextDouble(), 0.1)));
+		this.currentGoal = new ConcurrentGoal( 				
+				new WeightedGoal(brain, new AttackActionEvaluator(goals, brain.getRandomRangeMin(0.85)),
+										new ExploreActionEvaluator(goals, brain.getRandomRangeMin(0.1)),											
+										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9))
+				),
+				new WeightedGoal(brain, new DoNothingEvaluator(goals, brain.getRandomRange(0.4, 0.9)),
+										new SwitchWeaponEvaluator(goals, brain.getRandomRange(0, 0.9)),
+										new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.1, 0.8))
+				)
+        );
+		
 	}
 
 
@@ -40,6 +50,7 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	@Override
 	public void onSpawn(Brain brain) {
 		this.currentGoal.cancel();
+		this.currentGoal.start(brain);
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +68,7 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	public void think(TimeStep timeStep, Brain brain) {		
 		this.currentGoal.update(brain, timeStep);
 		
-		DebugDraw.drawString("Thinking: " + toString(), 100, 200, 0xffffffff);
+		//DebugDraw.drawString("Thinking: " + toString(), 100, 200, 0xffffffff);
 	}
 		
 	/* (non-Javadoc)

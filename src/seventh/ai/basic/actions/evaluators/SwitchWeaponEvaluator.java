@@ -1,0 +1,108 @@
+/*
+ * see license.txt 
+ */
+package seventh.ai.basic.actions.evaluators;
+
+import java.util.List;
+
+import seventh.ai.basic.Brain;
+import seventh.ai.basic.TargetingSystem;
+import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.SwitchWeaponAction;
+import seventh.game.Entity.Type;
+import seventh.game.Inventory;
+import seventh.game.weapons.Weapon;
+
+/**
+ * @author Tony
+ *
+ */
+public class SwitchWeaponEvaluator extends ActionEvaluator {
+
+	private Type weaponType;
+	private SwitchWeaponAction switchWeaponAction;
+	
+	/**
+	 * @param goals
+	 * @param characterBias
+	 */
+	public SwitchWeaponEvaluator(Goals goals, double characterBias) {
+		super(goals, characterBias);
+		
+		this.switchWeaponAction = new SwitchWeaponAction(weaponType);
+	}
+
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.evaluators.ActionEvaluator#calculateDesirability(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public double calculateDesirability(Brain brain) {
+		double desire = 0.0;
+		Inventory inventory = brain.getEntityOwner().getInventory();
+		if(inventory.numberOfItems() > 1) {
+			Weapon weapon = inventory.currentItem();
+			if (weapon != null) {			
+																		
+				// do we have enough ammo?
+//				double weaponScore = Evaluators.currentWeaponAmmoScore(brain.getEntityOwner());
+				if( weapon.getTotalAmmo() <= 0 ) {
+					desire += brain.getRandomRange(0.3, 0.5);
+				}
+				
+				
+				Weapon bestWeapon = getBestScoreWeapon(inventory);
+				if(bestWeapon != weapon) {
+					desire += brain.getRandomRange(0.1, 0.4);
+				}
+				
+			}
+			else {
+				desire = 1.0;
+			}
+			
+
+			/* if we are currently targeting someone, 
+			 * we should lessen the desire to switch weapons
+			 */
+			TargetingSystem system = brain.getTargetingSystem();
+			if(system.hasTarget()) {
+				desire *= brain.getRandomRange(0.4, 0.7);
+			}
+			
+			desire *= getCharacterBias();
+		}
+		
+		return desire;
+	}
+
+	private Weapon getBestScoreWeapon(Inventory inventory) {
+		int size = inventory.numberOfItems();
+		List<Weapon> weapons = inventory.getItems(); 
+		double score = -1;
+		Weapon bestWeapon = null;
+		for(int i = 0; i < size; i++) {
+			Weapon weapon = weapons.get(i);
+			double weaponScore  = Evaluators.weaponStrengthScore(weapon);
+			       weaponScore *= Evaluators.weaponAmmoScore(weapon);
+			       
+			if(bestWeapon == null || score < weaponScore) {
+				score = weaponScore;
+				bestWeapon = weapon;
+			}
+		}
+		
+		return bestWeapon;
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.evaluators.ActionEvaluator#getAction(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public Action getAction(Brain brain) {
+		this.switchWeaponAction.reset(this.weaponType);
+		return this.switchWeaponAction;
+	}
+
+}

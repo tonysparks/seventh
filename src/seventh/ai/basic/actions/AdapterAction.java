@@ -23,6 +23,13 @@ public class AdapterAction implements Action {
 	}
 
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.Action#cancel()
+	 */
+	@Override
+	public void cancel() {
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.Action#start(seventh.ai.basic.Brain)
 	 */
 	@Override

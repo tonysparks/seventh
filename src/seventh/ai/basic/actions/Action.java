@@ -16,6 +16,11 @@ import seventh.shared.TimeStep;
 public interface Action extends Debugable {
 
 	/**
+	 * Cancels this action
+	 */
+	public void cancel();
+	
+	/**
 	 * Starts the action, only invoked once upon starting the
 	 * action.
 	 * 

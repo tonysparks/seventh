@@ -40,6 +40,13 @@ public class GrenadeBelt extends Weapon {
 		return this.bulletsInClip;
 	}
 	
+	/**
+	 * @return if the pin is pulled
+	 */
+	public boolean isPinPulled() {
+		return this.isPinPulled;
+	}
+	
 	public boolean pullPin() {
 		return beginFire();
 	}

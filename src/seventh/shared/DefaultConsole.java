@@ -125,14 +125,14 @@ public class DefaultConsole implements Console {
 			throw new IllegalArgumentException("The command can not be null!");			
 		}
 		
-		this.commands.put(alias, command);
+		this.commands.put(alias.toLowerCase(), command);
 	}
 
 	/* (non-Javadoc)
 	 * @see shared.Console#removeCommand(java.lang.String)
 	 */
 	public void removeCommand(String commandName) {
-		this.commands.remove(commandName);
+		this.commands.remove(commandName.toLowerCase());
 	}
 
 	/* (non-Javadoc)
@@ -149,7 +149,7 @@ public class DefaultConsole implements Console {
 	 * @see shared.Console#getCommand(java.lang.String)
 	 */
 	public Command getCommand(String commandName) {
-		return this.commands.get(commandName);
+		return this.commands.get(commandName.toLowerCase());
 	}
 
 	/* (non-Javadoc)
@@ -157,11 +157,12 @@ public class DefaultConsole implements Console {
 	 */
 	public List<String> find(String partialName) {
 		List<String> matches = new ArrayList<String>();
-		
+				
 		if(partialName != null) {
+			String partialNameLower = partialName.toLowerCase();
 			Set<String> names = this.commands.keySet();
 			for(String cmdName : names) {
-				if(cmdName.startsWith(partialName)) {
+				if(cmdName.startsWith(partialNameLower)) {
 					matches.add(cmdName);
 				}
 			}

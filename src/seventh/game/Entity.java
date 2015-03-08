@@ -661,6 +661,14 @@ public abstract class Entity implements Debugable {
 	}
 	
 	/**
+	 * @param other
+	 * @return the distance from this entity to the other (squared)
+	 */
+	public float distanceFromSq(Entity other) {
+		return Vector2f.Vector2fDistanceSq(getCenterPos(), other.getCenterPos());
+	}
+	
+	/**
 	 * Does not broadcast that this entity
 	 * is dead. 
 	 */

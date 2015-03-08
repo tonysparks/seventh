@@ -7,8 +7,14 @@ import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Zone;
+import seventh.ai.basic.actions.evaluators.GrenadeEvaluator;
+import seventh.ai.basic.actions.evaluators.MeleeEvaluator;
+import seventh.ai.basic.actions.evaluators.MoveTowardEnemyEvaluator;
+import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
+import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
+import seventh.game.PlayerEntity;
 import seventh.math.Vector2f;
 
 
@@ -98,5 +104,33 @@ public class Goals {
 //		Action action = getScriptedAction("scanArea");
 //		return action;
 //	}
+	
+	
+	public Action chargeEnemy(Goals goals, Brain brain, PlayerEntity enemy) {
+		return new ConcurrentGoal(decideAttackMethod(goals, brain), new FollowEntityAction(enemy));
+	}
+	
+	/**
+	 * Goal which decides which attack method to use
+	 * 
+	 * @param goals
+	 * @param brain
+	 * @return the goal
+	 */
+	public Goal decideAttackMethod(Goals goals, Brain brain) {
+		return new WeightedGoal(brain, 
+				new ShootWeaponEvaluator(goals, brain.getRandomRangeMin(0.8)),
+				new MeleeEvaluator(goals, brain.getRandomRangeMin(0.5)),
+				new GrenadeEvaluator(goals, brain.getRandomRangeMin(0.2))
+		);
+	}
+	
+	
+	public Goal enemyEncountered(Goals goals, Brain brain) {
+		return new WeightedGoal(brain, 
+				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.6)),
+				new TakeCoverEvaluator(goals, brain.getRandomRangeMin(0.3))
+		);
+	}
 	
 }

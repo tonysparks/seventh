@@ -6,23 +6,23 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.MoveAction;
+import seventh.ai.basic.actions.WaitAction;
 
 /**
  * @author Tony
  *
  */
-public class ExploreActionEvaluator extends ActionEvaluator {
+public class DoNothingEvaluator extends ActionEvaluator {
 
-	private MoveAction moveAction;
+	private WaitAction noAction;
 	
 	/**
 	 * @param goals
 	 * @param characterBias
 	 */
-	public ExploreActionEvaluator(Goals goals, double characterBias) {
+	public DoNothingEvaluator(Goals goals, double characterBias) {
 		super(goals, characterBias);
-		this.moveAction = new MoveAction();
+		noAction = new WaitAction(100);
 	}
 
 	/* (non-Javadoc)
@@ -30,11 +30,8 @@ public class ExploreActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public double calculateDesirability(Brain brain) {
-		double desirability = 0.35;
-		
-		desirability *= getCharacterBias();
-		
-		return desirability;
+		double score = brain.getRandomRange(0.4, 0.8);
+		return score * getCharacterBias();
 	}
 
 	/* (non-Javadoc)
@@ -42,9 +39,8 @@ public class ExploreActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		brain.getMotion().scanArea();
-		this.moveAction.setDestination(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
-		return getGoals().goToRandomSpot(brain);
+		noAction.reset();
+		return noAction;
 	}
 
 }

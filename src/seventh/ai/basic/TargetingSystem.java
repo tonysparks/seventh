@@ -50,7 +50,7 @@ public class TargetingSystem implements Updatable {
 			Sensors sensors = brain.getSensors();
 			
 			Entity recentAttacker = sensors.getFeelSensor().getMostRecentAttacker(); 
-			PlayerEntity closestEnemyInSight = sensors.getSightSensor().getClosestEntity();
+			PlayerEntity closestEnemyInSight = sensors.getSightSensor().getClosestEnemy();
 	//		SoundEmittedEvent closestSound = sensors.getSoundSensor().getClosestSound();
 			
 			this.currentTarget = null;
@@ -92,6 +92,14 @@ public class TargetingSystem implements Updatable {
 				
 			}
 		}
+		
+		/*
+		 * If we have a target, look at them
+		 */
+		if(hasTarget()) {
+			brain.getMotion().stareAtEntity(getCurrentTarget());
+		}
+		
 	}
 	
 	/**
@@ -99,9 +107,13 @@ public class TargetingSystem implements Updatable {
 	 * @return
 	 */
 	public boolean hasTarget() {
-		return this.currentTarget != null;
+		return this.currentTarget != null && this.currentTarget.isAlive();
 	}
 	
+	
+	/**
+	 * Clears the target
+	 */
 	public void clearTarget() {
 		this.currentTarget = null;
 	}
@@ -128,5 +140,19 @@ public class TargetingSystem implements Updatable {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @return true if the current target is in the line of fire
+	 */
+	public boolean targetInLineOfFire() {
+		if(hasTarget()) {
+			PlayerEntity bot = brain.getEntityOwner();
+			float distanceSq = bot.distanceFromSq(currentTarget);
+			if(distanceSq <= bot.getCurrentWeaponDistanceSq()) {			
+				return brain.getWorld().inLineOfFire(bot, currentTarget);
+			}
+		}
+		return false;
 	}
 }

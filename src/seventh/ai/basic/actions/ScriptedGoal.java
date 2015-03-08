@@ -73,14 +73,6 @@ public class ScriptedGoal extends AdapterAction {
 				Cons.println("Unable to execute scripted goal: " + e);
 			}
 		}
-		
-//		Action action = goal.currentAction();
-//		if(action != null) {
-//			DebugDraw.drawString("Script Action: " + action.getClass().getSimpleName(), 800, 70, 0xff00ff00);
-//		}
-//		else {
-//			DebugDraw.drawString("Script Action: ", 800, 70, 0xff00ff00);
-//		}
 	}
 	
 	/* (non-Javadoc)

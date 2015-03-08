@@ -24,6 +24,14 @@ public class MoveToAction extends AdapterAction {
 		this.destination = dest;
 	}
 	
+	/**
+	 * @param destination the destination to set
+	 */
+	public void reset(Brain brain, Vector2f destination) {
+		brain.getMotion().stopMoving();
+		this.destination.set(destination);
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
 	 */

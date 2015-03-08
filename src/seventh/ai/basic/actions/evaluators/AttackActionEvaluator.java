@@ -33,7 +33,7 @@ public class AttackActionEvaluator extends ActionEvaluator {
 			
 			desirability = tweaker 
 							* Evaluators.healthScore(brain.getEntityOwner()) 
-							* Evaluators.currentWeaponScore(brain.getEntityOwner());
+							* Evaluators.currentWeaponAmmoScore(brain.getEntityOwner());
 			
 			desirability *= getCharacterBias();
 		}
@@ -46,7 +46,6 @@ public class AttackActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {		
-		//brain.getMotion().attack(brain.getTargetingSystem().getCurrentTarget());		
 		return getGoals().attack(brain.getTargetingSystem().getCurrentTarget());
 	}
 

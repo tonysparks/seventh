@@ -22,6 +22,10 @@ public class WaitAction extends AdapterAction {
 		this.currentWaitTime = 0;
 	}
 	
+	public void reset() {
+		this.currentWaitTime = 0;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
 	 */

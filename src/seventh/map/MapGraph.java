@@ -54,12 +54,17 @@ public class MapGraph<T> {
 	 * @param wy
 	 * @return the graph node at a world coordinate
 	 */
-	public GraphNode<Tile, T> getNodeByWorld(int wx, int wy) {
+	public GraphNode<Tile, T> getNodeByWorld(int wx, int wy) {				
 		int tileOffset_x = 0;// (wx % map.getTileWidth());
 		int x = (tileOffset_x + wx) / map.getTileWidth();
 
 		int tileOffset_y = 0; //(wy % map.getTileHeight());
 		int y = (tileOffset_y + wy) / map.getTileHeight();
+		
+		if(map.checkTileBounds(x, y)) {
+			return null;
+		}
+		
 		return x<width && y<height ? (GraphNode<Tile, T>)graph[y][x] : null;
 	}
 	

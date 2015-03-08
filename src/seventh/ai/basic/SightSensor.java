@@ -89,6 +89,44 @@ public class SightSensor implements Sensor {
 	}
 	
 	/**
+	 * Get the closest enemy to this bot
+	 * @return the closest enemy to this bot
+	 */
+	public PlayerEntity getClosestEnemy() {
+		PlayerEntity result = null;
+		
+		float closestDistance = Float.MAX_VALUE;		
+		Vector2f botPos = this.entity.getCenterPos();
+		Team myTeam = this.entity.getTeam();
+		
+		SightMemoryRecord[] records = getSightMemoryRecords();
+		for(int i = 0; i < records.length; i++) {
+			if( records[i].isValid() ) {
+				PlayerEntity other = records[i].getEntity(); 
+				if(other.getTeam().getId() == myTeam.getId()) {
+					continue;
+				}
+				
+				if(result==null) {
+					result = other;
+				}
+				else {
+					Vector2f pos = other.getCenterPos();
+					
+					
+					float distance = Vector2f.Vector2fDistanceSq(pos, botPos);
+					if(distance < closestDistance) {
+						result = other;
+						closestDistance = distance;
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Get the list of enemies in view
 	 * @param results the resulting list of enemies in the view
 	 * @return the same results object, just convenience

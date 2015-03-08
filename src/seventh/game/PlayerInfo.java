@@ -133,5 +133,13 @@ public interface PlayerInfo {
 	 * @return the teamId (if the stats are reset, this will keep the teamId)
 	 */
 	public abstract byte getTeamId();
+	
+	
+	/**
+	 * If this player is a teammate with the supplied id
+	 * @param playerId
+	 * @return true if they are teammates
+	 */
+	public abstract boolean isTeammateWith(int playerId);
 
 }
