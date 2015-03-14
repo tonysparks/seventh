@@ -22,9 +22,11 @@ public class DebugDraw {
 	static abstract class Drawable {
 		boolean offsetWithCamera;
 		Integer color;
+		int drawCount;
 		Drawable(boolean offsetWithCamera, Integer color) {		
 			this.offsetWithCamera = offsetWithCamera;
 			this.color = color;
+			this.drawCount = 0;
 		}
 
 
@@ -276,15 +278,21 @@ public class DebugDraw {
 		
 			for(Drawable d : drawCalls) {
 				d.draw(canvas, camera);
+				d.drawCount++;
 			}
 			
 			frameCounter++;
 			
-			if(frameCounter >= 0) 
-			{
-				drawCalls.clear();
-				frameCounter = 0;
+			for(Drawable d : drawCalls) {
+				if(d.drawCount > 3) {
+					drawCalls.remove(d);
+				}
 			}
+//			if(frameCounter >= 0) 
+//			{
+//				drawCalls.clear();
+//				frameCounter = 0;
+//			}
 		}
 	}
 	

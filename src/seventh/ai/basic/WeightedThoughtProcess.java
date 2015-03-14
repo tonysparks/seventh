@@ -8,6 +8,7 @@ import seventh.ai.basic.actions.ConcurrentGoal;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.WeightedGoal;
 import seventh.ai.basic.actions.evaluators.AttackActionEvaluator;
+import seventh.ai.basic.actions.evaluators.CommandActionEvaluator;
 import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
 import seventh.ai.basic.actions.evaluators.ExploreActionEvaluator;
 import seventh.ai.basic.actions.evaluators.InvestigateActionEvaluator;
@@ -30,13 +31,17 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 		
 		Goals goals = brain.getWorld().getGoals();
 		this.currentGoal = new ConcurrentGoal( 				
+				// high level goals
 				new WeightedGoal(brain, new AttackActionEvaluator(goals, brain.getRandomRangeMin(0.85)),
-										new ExploreActionEvaluator(goals, brain.getRandomRangeMin(0.1)),											
-										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9))
+										new CommandActionEvaluator(goals, brain.getRandomRangeMin(0.8)),
+										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9)),
+										new ExploreActionEvaluator(goals, brain.getRandomRange(0.1, 0.5))											
 				),
-				new WeightedGoal(brain, new DoNothingEvaluator(goals, brain.getRandomRange(0.4, 0.9)),
-										new SwitchWeaponEvaluator(goals, brain.getRandomRange(0, 0.9)),
-										new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.1, 0.8))
+				
+				// Auxiliary goals, ones that do not impact the high level goals
+				new WeightedGoal(brain, new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8)),
+										new SwitchWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8)),
+										new DoNothingEvaluator(goals, brain.getRandomRange(0.4, 0.9))
 				)
         );
 		

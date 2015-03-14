@@ -27,6 +27,7 @@ public class MapGraph<T> {
 	private seventh.map.Map map;
 	private Random random;
 	private int width, height;
+	private GraphSearchPath<Tile, T> defaultSearchPath;
 	/**
 	 * 
 	 */
@@ -38,6 +39,8 @@ public class MapGraph<T> {
 		this.width = graph[0].length;
 		
 		this.random = new Random();
+		
+		this.defaultSearchPath = new AStarGraphSearch<>();
 	}
 	
 	/**
@@ -104,6 +107,20 @@ public class MapGraph<T> {
 		node = getNodeByWorld(wx + map.getTileHeight(), wy - map.getTileWidth());
 		
 		return node;
+	}
+
+	
+	/**
+	 * Calculate the estimated cost of the path from the start to destination
+	 * 
+	 * @param start
+	 * @param destination
+	 * @return the estimated cost of moving from start to destination
+	 */
+	public int pathCost(Vector2f start, Vector2f destination) {
+		List<GraphNode<Tile, T>> newPath = this.findPath(this.defaultSearchPath, start, destination);
+		int cost = newPath.size() * 32;
+		return cost;
 	}
 	
 	/**

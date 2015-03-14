@@ -6,6 +6,7 @@ package seventh.ai.basic.actions;
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.Cover;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.actions.evaluators.GrenadeEvaluator;
 import seventh.ai.basic.actions.evaluators.MeleeEvaluator;
@@ -83,6 +84,12 @@ public class Goals {
 		return action;
 	}
 	
+	public Action moveToCover(Cover cover) {
+		Action action = getScriptedAction("moveToCover");
+		action.getActionResult().setValue(cover);
+		return action;
+	}
+	
 	public Action moveToRandomSpot() {
 		Action action = getScriptedAction("moveToRandomSpot");
 		return action;
@@ -128,7 +135,7 @@ public class Goals {
 	
 	public Goal enemyEncountered(Goals goals, Brain brain) {
 		return new WeightedGoal(brain, 
-				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.6)),
+				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.4)),
 				new TakeCoverEvaluator(goals, brain.getRandomRangeMin(0.3))
 		);
 	}

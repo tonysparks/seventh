@@ -4,10 +4,12 @@
 package seventh.ai.basic.actions.evaluators;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.Cover;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Goals;
 import seventh.game.PlayerEntity;
+import seventh.math.Vector2f;
 
 /**
  * @author Tony
@@ -15,12 +17,14 @@ import seventh.game.PlayerEntity;
  */
 public class TakeCoverEvaluator extends ActionEvaluator {
 
+	private Cover cover;
 	/**
 	 * @param goals
 	 * @param characterBias
 	 */
 	public TakeCoverEvaluator(Goals goals, double characterBias) {
 		super(goals, characterBias);
+		this.cover = new Cover(new Vector2f(), new Vector2f());
 	}
 
 	/* (non-Javadoc)
@@ -40,6 +44,23 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 					* 1.0 - Evaluators.currentWeaponAmmoScore(bot)
 					* 1.0 - Evaluators.weaponDistanceScore(bot, system.getCurrentTarget())
 					;
+			Vector2f lastSeenAt = system.getLastRemeberedPosition();
+			if(lastSeenAt != null) {
+//				Vector2f coverPosition = brain.getWorld().getClosestCoverPosition(bot, system.getLastRemeberedPosition());
+//				this.cover.setCoverPos(coverPosition);
+//				
+//				DebugDraw.drawRectRelative( (int)coverPosition.x, (int)coverPosition.y, 10, 10, 0xff00ff00);
+//				float distanceToCoverSq = Vector2f.Vector2fDistanceSq(bot.getCenterPos(), coverPosition);
+//				final float MaxCoverDistance = (32*4) * (32*4);
+//				
+//				if(distanceToCoverSq < MaxCoverDistance) {
+//					score *= 1.0 - distanceToCoverSq / MaxCoverDistance;
+//				}
+//				else {
+//					score = 0;
+//				}
+			}
+			
 			
 			if(!system.targetInLineOfFire()) {
 				score *= 0.9;
@@ -57,7 +78,17 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		return getGoals().takeCover(brain.getTargetingSystem().getLastRemeberedPosition());
+		
+		TargetingSystem system = brain.getTargetingSystem();
+		Vector2f attackDir = system.getLastRemeberedPosition() != null ? system.getLastRemeberedPosition() : 
+							 system.hasTarget() ? system.getCurrentTarget().getCenterPos() : brain.getEntityOwner().getFacing();
+							 
+		Vector2f coverPosition = brain.getWorld().getClosestCoverPosition(brain.getEntityOwner(), attackDir);
+		
+		this.cover.setCoverPos(coverPosition);
+		this.cover.setAttackDir(attackDir);
+		System.out.println("Getting cover action: " + this.cover.getCoverPos());
+		return getGoals().moveToCover(this.cover);
 	}
 
 }

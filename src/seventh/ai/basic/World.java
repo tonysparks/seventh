@@ -475,7 +475,8 @@ public class World {
 	 * @return the best hiding position or the ZERO vector if non could be found
 	 */
 	public Vector2f findBestHidingPosition(List<Tile> obstacles, Vector2f myPos, Vector2f targetPos) {
-		float distToClosest=0f;
+//		int bestCost = -1;
+		float distToClosest = 0f;
 		Vector2f bestHidingSpot = new Vector2f();
 		Vector2f nextHidingSpot = new Vector2f();
 		Vector2f tilePos = new Vector2f();
@@ -487,10 +488,28 @@ public class World {
 			nextHidingSpot = getHidingPosition(tilePos, tile.getWidth(), targetPos, nextHidingSpot);
 			
 			/* skip if this is an invalid spot */
-			if(map.pointCollides((int)nextHidingSpot.x, (int)nextHidingSpot.y)) {
+//			if(map.pointCollides((int)nextHidingSpot.x, (int)nextHidingSpot.y)) {
+//				continue;
+//			}
+			Tile collidableTile = map.getWorldCollidableTile((int)nextHidingSpot.x, (int)nextHidingSpot.y);
+			if(collidableTile != null) {
 				continue;
 			}
 			
+			Tile wTile = map.getWorldTile(0, (int)nextHidingSpot.x, (int)nextHidingSpot.y);
+			if(wTile == null) {
+				continue;
+			}
+			
+			nextHidingSpot.x = wTile.getX() + wTile.getWidth()/2;
+			nextHidingSpot.y = wTile.getY() + wTile.getHeight()/2;
+						
+			
+//			int cost = this.graph.pathCost(myPos, nextHidingSpot);
+//			if(cost > bestCost) {
+//				bestCost = cost;
+//				bestHidingSpot.set(nextHidingSpot);
+//			}
 			
 			/* if this hiding spot is closer to the agent, use it */
 			float dist = Vector2f.Vector2fDistanceSq(nextHidingSpot, myPos);

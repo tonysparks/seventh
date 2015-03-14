@@ -123,6 +123,21 @@ public class PathPlanner<E> {
 	}
 	
 	/**
+	 * Calculate the estimated cost of the path from the start to destination
+	 * 
+	 * @param start
+	 * @param destination
+	 * @return the estimated cost of moving from start to destination
+	 */
+	public int pathCost(Vector2f start, Vector2f destination) {
+		this.fuzzySearchPath.actualFuzzy = 1;
+		this.finalDestination.set(destination);
+		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
+		int cost = newPath.size() * 32;
+		return cost;
+	}
+	
+	/**
 	 * Finds the optimal path between the start and end point
 	 * 
 	 * @param start

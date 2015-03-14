@@ -37,8 +37,20 @@ public class Communicator {
 		this.broadcastBounds = new Rectangle(1000, 1000);
 	}
 	
+	/**
+	 * Resets this {@link Communicator}
+	 * 
+	 * @param brain
+	 */
 	public void reset(Brain brain) {
 		this.commands.clear();
+	}
+	
+	/**
+	 * @return true if there are pending {@link Action}s to be processed
+	 */
+	public boolean hasPendingCommands() {
+		return !this.commands.isEmpty();
 	}
 	
 	/**
