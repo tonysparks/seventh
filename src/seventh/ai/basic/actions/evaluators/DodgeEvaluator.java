@@ -7,20 +7,25 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.StrafeAction;
 import seventh.game.PlayerEntity;
 
 /**
  * @author Tony
  *
  */
-public class MoveTowardEnemyEvaluator extends ActionEvaluator {
+public class DodgeEvaluator extends ActionEvaluator {
 
+	
+	private StrafeAction strafeAction;
+	
 	/**
 	 * @param goals
 	 * @param characterBias
 	 */
-	public MoveTowardEnemyEvaluator(Goals goals, double characterBias, double keepBias) {
+	public DodgeEvaluator(Goals goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
+		this.strafeAction = new StrafeAction();
 	}
 
 	/* (non-Javadoc)
@@ -31,19 +36,12 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 		double score = 0;
 		TargetingSystem system = brain.getTargetingSystem();
 		if(system.hasTarget()) {
-			PlayerEntity bot = brain.getEntityOwner();
 			
-			final double tweaker = 1.0;
-			
-			score = tweaker 
-					* Evaluators.healthScore(bot) 
-					* Evaluators.currentWeaponAmmoScore(bot)
-					* Evaluators.weaponDistanceScore(bot, system.getCurrentTarget())
-					;
-			
-			if(!system.targetInLineOfFire()) {
-				score *= 0.9;
+			PlayerEntity enemy = system.getCurrentTarget();
+			if(enemy.isFiring()) {
+				score += brain.getRandomRange(0.4, 0.6);
 			}
+			
 			
 			score *= getCharacterBias();
 		}
@@ -57,7 +55,9 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		return getGoals().chargeEnemy(getGoals(), brain, brain.getTargetingSystem().getCurrentTarget());
+//		return getGoals().chargeEnemy(getGoals(), brain, brain.getTargetingSystem().getCurrentTarget());
+		this.strafeAction.reset(brain);
+		return this.strafeAction; 
 	}
 
 }

@@ -8,6 +8,7 @@ import leola.vm.types.LeoObject;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Cover;
 import seventh.ai.basic.Zone;
+import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
 import seventh.ai.basic.actions.evaluators.GrenadeEvaluator;
 import seventh.ai.basic.actions.evaluators.MeleeEvaluator;
 import seventh.ai.basic.actions.evaluators.MoveTowardEnemyEvaluator;
@@ -42,7 +43,7 @@ public class Goals {
 		LeoObject actionFunction  = runtime.get(action);
 		if(LeoObject.isTrue(actionFunction)) {
 			LeoObject gen = this.runtime.execute(actionFunction);			
-			ScriptedGoal goal = new ScriptedGoal(runtime, gen);
+			ScriptedGoal goal = new ScriptedGoal(runtime, action, gen );
 			return goal;
 		}				
 		return new WaitAction(1_000);
@@ -84,10 +85,16 @@ public class Goals {
 		return action;
 	}
 	
-	public Action moveToCover(Cover cover) {
+	public Action moveToCover(Cover cover, Brain brain) {
 		Action action = getScriptedAction("moveToCover");
 		action.getActionResult().setValue(cover);
-		return action;
+		
+		return new ConcurrentGoal(action, new WeightedGoal(brain, 
+										   	new ShootWeaponEvaluator(this, brain.getRandomRangeMin(0.8), 0.8),
+										   	new MeleeEvaluator(this, brain.getRandomRange(0.2, 0.4), 0),
+										   	new DoNothingEvaluator(this, brain.getRandomRangeMin(0.6), 0),
+											new GrenadeEvaluator(this, brain.getRandomRangeMin(0.5), 0)
+		));
 	}
 	
 	public Action moveToRandomSpot() {
@@ -114,7 +121,11 @@ public class Goals {
 	
 	
 	public Action chargeEnemy(Goals goals, Brain brain, PlayerEntity enemy) {
-		return new ConcurrentGoal(decideAttackMethod(goals, brain), new FollowEntityAction(enemy));
+		return new ConcurrentGoal(decideAttackMethod(goals, brain), new FollowEntityAction(enemy)
+			/*, new WeightedGoal(brain, new DodgeEvaluator(goals, brain.getRandomRange(0.4, 0.8)),
+			                            new DoNothingEvaluator(goals, brain.getRandomRange(0, 0)) )
+			 */
+	   );
 	}
 	
 	/**
@@ -126,17 +137,17 @@ public class Goals {
 	 */
 	public Goal decideAttackMethod(Goals goals, Brain brain) {
 		return new WeightedGoal(brain, 
-				new ShootWeaponEvaluator(goals, brain.getRandomRangeMin(0.8)),
-				new MeleeEvaluator(goals, brain.getRandomRangeMin(0.5)),
-				new GrenadeEvaluator(goals, brain.getRandomRangeMin(0.2))
+				new ShootWeaponEvaluator(goals, brain.getRandomRangeMin(0.8), 0.8),
+				new MeleeEvaluator(goals, brain.getRandomRangeMin(0.5), 0),
+				new GrenadeEvaluator(goals, brain.getRandomRangeMin(0.2), 0.2)
 		);
 	}
-	
+		
 	
 	public Goal enemyEncountered(Goals goals, Brain brain) {
 		return new WeightedGoal(brain, 
-				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.4)),
-				new TakeCoverEvaluator(goals, brain.getRandomRangeMin(0.3))
+				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.4), 0.8),
+				new TakeCoverEvaluator(goals, brain.getRandomRangeMin(0.3), 0.9)
 		);
 	}
 	

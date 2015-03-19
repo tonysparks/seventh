@@ -124,8 +124,8 @@ public class AILeolaLibrary implements LeolaLibrary {
 		return new EvaluateAttackDirectionsAction();
 	}
 	
-	public DefendAttackDirectionsAction defendAttackDirectionsAction(List<AttackDirection> attackDirs) {
-		return new DefendAttackDirectionsAction(attackDirs);
+	public DefendAttackDirectionsAction defendAttackDirectionsAction(List<AttackDirection> attackDirs, long timeToDefend) {
+		return new DefendAttackDirectionsAction(attackDirs, timeToDefend);
 	}
 
 	public WaitAction waitAction(long timeToWaitMSec) {

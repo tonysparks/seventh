@@ -11,6 +11,7 @@ import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.graph.GraphNode;
 import seventh.map.Tile;
+import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
@@ -51,7 +52,7 @@ public class Brain implements Debugable {
 		
 		this.motion = new Locomotion(this);
 		this.sensors = new Sensors(this);
-		this.thoughtProcess = new WeightedThoughtProcess(this); 
+		this.thoughtProcess = new WeightedThoughtProcess(strategy, this); 
 //				new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);
 		this.communicator = new Communicator(world);
 		
@@ -75,7 +76,7 @@ public class Brain implements Debugable {
 			this.thoughtProcess = DummyThoughtProcess.getInstance();
 		}
 		else {
-			this.thoughtProcess = new WeightedThoughtProcess(this); 
+			this.thoughtProcess = new WeightedThoughtProcess(strategy, this); 
 					//new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);			
 		}
 		
@@ -105,7 +106,7 @@ public class Brain implements Debugable {
 	}
 	
 	public double getRandomRange(double min, double max) {
-		return min * world.getRandom().nextDouble() * (max - min);
+		return min + (world.getRandom().nextDouble() * (max - min));
 	}
 	
 	
@@ -140,7 +141,7 @@ public class Brain implements Debugable {
 			
 			this.targetingSystem.update(timeStep);
 			
-			//debugDraw();
+			debugDraw();
 			debugDrawPathPlanner();
 		}		
 	}
@@ -156,7 +157,7 @@ public class Brain implements Debugable {
 			DebugDraw.drawLineRelative(entityOwner.getPos(), dir.getDirection(), 0xff00ff00);
 		}
 		
-		
+		DebugDraw.drawString(this.thoughtProcess.toString(), new Vector2f(20, 700), 0xff00ffff);
 
 	}
 	
@@ -191,7 +192,7 @@ public class Brain implements Debugable {
 			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
 				Tile tile = node.getValue();
 				if(tile != null) {
-					DebugDraw.fillRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0x5f00ff00);
+					DebugDraw.fillRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0x1f00ff00);
 				}
 			}
 		}		

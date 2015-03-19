@@ -5,6 +5,8 @@ package seventh.ai.basic.teamstrategy;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
+import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.WaitAction;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
@@ -32,6 +34,17 @@ public class ObjectiveTeamStrategy implements TeamStrategy {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public Action getGoal(Brain brain) {
+		if(strategy!=null) {
+			return strategy.getGoal(brain);
+		}
+		return new WaitAction(1000);
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getTeam()
 	 */
 	@Override
@@ -39,6 +52,7 @@ public class ObjectiveTeamStrategy implements TeamStrategy {
 		return this.team;
 	}
 
+	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
 	 */

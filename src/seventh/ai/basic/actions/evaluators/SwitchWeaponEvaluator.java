@@ -27,8 +27,8 @@ public class SwitchWeaponEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public SwitchWeaponEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public SwitchWeaponEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 		
 		this.switchWeaponAction = new SwitchWeaponAction(weaponType);
 	}

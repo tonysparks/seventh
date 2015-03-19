@@ -24,8 +24,8 @@ public class MeleeEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public MeleeEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public MeleeEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 		this.meleeAction = new MeleeAction();
 	}
 

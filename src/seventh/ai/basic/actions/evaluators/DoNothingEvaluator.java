@@ -20,8 +20,8 @@ public class DoNothingEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public DoNothingEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public DoNothingEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 		noAction = new WaitAction(100);
 	}
 

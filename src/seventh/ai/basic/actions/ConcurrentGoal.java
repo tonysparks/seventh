@@ -132,6 +132,7 @@ public class ConcurrentGoal implements Action {
 	@Override
 	public DebugInformation getDebugInformation() {
 		DebugInformation info = new DebugInformation();
+		info.add("goals", this.concurrentActions);
 		return info;
 	}
 

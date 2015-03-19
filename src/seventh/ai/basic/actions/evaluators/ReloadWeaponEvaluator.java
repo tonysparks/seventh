@@ -22,8 +22,8 @@ public class ReloadWeaponEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public ReloadWeaponEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public ReloadWeaponEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 		this.reloadAction = new ReloadAction();
 	}
 

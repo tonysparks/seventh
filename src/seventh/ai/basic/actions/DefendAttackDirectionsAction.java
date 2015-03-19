@@ -20,15 +20,21 @@ public class DefendAttackDirectionsAction extends AdapterAction {
 
 	private List<AttackDirection> attackDirs;
 	private long lookTime;
+	private long timeToDefend, originalTimeToDefend;
 	private int currentDirection;
 	private Vector2f dir;
 	private boolean interrupted;
 	
+	
+	
 	/**
 	 * 
 	 */
-	public DefendAttackDirectionsAction(List<AttackDirection> attackDirs) {
+	public DefendAttackDirectionsAction(List<AttackDirection> attackDirs, long timeToDefend) {
 		this.attackDirs = attackDirs;
+		this.timeToDefend = timeToDefend;
+		this.originalTimeToDefend  = timeToDefend;
+		
 		this.dir = new Vector2f();
 		if(this.attackDirs.isEmpty()) {
 			this.interrupted = true;
@@ -40,6 +46,8 @@ public class DefendAttackDirectionsAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {
+		this.timeToDefend = this.originalTimeToDefend;
+		
 		if(!this.interrupted) {
 			this.currentDirection = (currentDirection+1) % this.attackDirs.size();
 			this.dir.set(this.attackDirs.get(currentDirection).getDirection());
@@ -50,7 +58,13 @@ public class DefendAttackDirectionsAction extends AdapterAction {
 	 * @see seventh.ai.basic.actions.AdapterAction#resume(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public void resume(Brain brain) {		
+	public void resume(Brain brain) {
+		if(this.attackDirs.isEmpty()) {
+			this.interrupted = true;
+		}
+		else {
+			this.interrupted = false;
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -67,6 +81,7 @@ public class DefendAttackDirectionsAction extends AdapterAction {
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
 		lookTime += timeStep.getDeltaTime();
+		timeToDefend -= timeStep.getDeltaTime();
 		
 		PlayerEntity ent = brain.getEntityOwner();
 		
@@ -106,6 +121,6 @@ public class DefendAttackDirectionsAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		return interrupted;
+		return interrupted || timeToDefend <= 0;
 	}
 }

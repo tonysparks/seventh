@@ -6,23 +6,23 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.MoveAction;
+import seventh.ai.basic.teamstrategy.TeamStrategy;
 
 /**
  * @author Tony
  *
  */
-public class ExploreActionEvaluator extends ActionEvaluator {
+public class StrategyEvaluator extends ActionEvaluator {
 
-	private MoveAction moveAction;
+	private TeamStrategy teamStrategy;
 	
 	/**
 	 * @param goals
 	 * @param characterBias
 	 */
-	public ExploreActionEvaluator(Goals goals, double characterBias, double keepBias) {
+	public StrategyEvaluator(TeamStrategy teamStrategy, Goals goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
-		this.moveAction = new MoveAction();
+		this.teamStrategy = teamStrategy;
 	}
 
 	/* (non-Javadoc)
@@ -30,11 +30,9 @@ public class ExploreActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public double calculateDesirability(Brain brain) {
-		double desirability = 0.35;
-		
-		desirability *= getCharacterBias();
-		
-		return desirability;
+		double score = 0.35;
+		score *= getCharacterBias();
+		return score;
 	}
 
 	/* (non-Javadoc)
@@ -42,10 +40,7 @@ public class ExploreActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		brain.getMotion().scanArea();
-		this.moveAction.setDestination(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
-		return this.moveAction;
-//		return getGoals().goToRandomSpot(brain);
+		return teamStrategy.getGoal(brain);
 	}
 
 }

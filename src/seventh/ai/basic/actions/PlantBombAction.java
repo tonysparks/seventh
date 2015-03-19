@@ -6,7 +6,6 @@ package seventh.ai.basic.actions;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Locomotion;
 import seventh.game.BombTarget;
-import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 /**
@@ -70,13 +69,16 @@ public class PlantBombAction extends AdapterAction {
 		}
 		else {
 			Locomotion motion = brain.getMotion();
-			if(!bomb.isTouching(brain.getEntityOwner())) {
-				Vector2f dest = motion.getDestination();
-				if(dest == null || !dest.equals(bomb.getCenterPos())) {
-					motion.moveTo(bomb.getCenterPos());
-				}
-			}
-			else if(!bomb.bombPlanting() || !motion.isPlanting()) {
+//			if(!bomb.isTouching(brain.getEntityOwner())) {
+//				Vector2f dest = motion.getDestination();
+//				if(dest == null || !dest.equals(bomb.getCenterPos())) {
+//					if(!motion.isMoving()) {
+//						motion.moveTo(bomb.getCenterPos());
+//					}
+//				}
+//			}
+//			else 
+				if(!bomb.bombPlanting() || !motion.isPlanting()) {
 				motion.plantBomb(bomb);
 			}
 			

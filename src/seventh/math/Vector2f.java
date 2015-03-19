@@ -565,7 +565,7 @@ public /*strictfp*/ final class Vector2f {
 	}
 
 	/**
-	 * Mormalizes the vector.
+	 * Normalizes the vector.
 	 *
 	 * @param a
 	 * @param dest
@@ -580,7 +580,7 @@ public /*strictfp*/ final class Vector2f {
 	}
 
 	/**
-	 * Mormalizes the vector.
+	 * Perpendicular {@link Vector2f} of 'a'
 	 *
 	 * @param a
 	 * @param dest

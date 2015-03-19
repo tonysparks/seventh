@@ -23,8 +23,8 @@ public class ShootWeaponEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public ShootWeaponEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public ShootWeaponEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 		
 		this.shootAction = new ShootAtAction();
 	}

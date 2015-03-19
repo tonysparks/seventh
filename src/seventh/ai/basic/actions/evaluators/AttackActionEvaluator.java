@@ -17,8 +17,8 @@ public class AttackActionEvaluator extends ActionEvaluator {
 	/**
 	 * @param characterBias
 	 */
-	public AttackActionEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public AttackActionEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 	}
 
 	/* (non-Javadoc)

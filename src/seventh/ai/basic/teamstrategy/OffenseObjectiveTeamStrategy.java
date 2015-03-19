@@ -68,6 +68,14 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public Action getGoal(Brain brain) {	
+		return getCurrentAction(brain);
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getTeam()
 	 */
 	@Override
@@ -82,7 +90,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	public void startOfRound(GameInfo game) {		
 		this.zoneToAttack = calculateZoneToAttack();	
 		this.currentState = OffensiveState.RANDOM;		
-		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(30_000);				
+		this.timeUntilOrganizedAttack = 0; //30_000 + random.nextInt(30_000);				
 	}
 	
 	
@@ -247,6 +255,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				Player player = players.get(i);
 				if(player.isBot() && player.isAlive()) {
 					Brain brain = aiSystem.getBrain(player);
+					System.out.println("Orders posted: " + currentState);
 					brain.getCommunicator().post(getCurrentAction(brain));		
 				}
 			}
@@ -258,6 +267,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void update(TimeStep timeStep, GameInfo game) {
+				
 		
 		/* lets do some random stuff for a while, this
 		 * helps keep things dynamic
@@ -305,7 +315,20 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				giveOrders(OffensiveState.INFILTRATE);
 			}
 		}
-	
+		
+		
+		List<Player> players = team.getPlayers();
+		for(int i = 0; i < players.size(); i++) {
+			Player player = players.get(i);
+			if(player.isBot() && player.isAlive()) {
+				Brain brain = aiSystem.getBrain(player);
+				
+				if(!brain.getCommunicator().hasPendingCommands()) {
+					System.out.println("Orders posted: " + currentState);
+					brain.getCommunicator().post(getCurrentAction(brain));
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)

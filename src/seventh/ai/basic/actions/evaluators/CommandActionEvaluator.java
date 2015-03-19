@@ -19,8 +19,8 @@ public class CommandActionEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public CommandActionEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public CommandActionEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 	}
 
 	/* (non-Javadoc)
@@ -36,7 +36,7 @@ public class CommandActionEvaluator extends ActionEvaluator {
 		}
 		
 		desirability *= getCharacterBias();
-		
+				
 		return desirability;
 	}
 

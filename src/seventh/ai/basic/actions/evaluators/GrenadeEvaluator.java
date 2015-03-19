@@ -21,8 +21,8 @@ public class GrenadeEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public GrenadeEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public GrenadeEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 	}
 
 	/* (non-Javadoc)

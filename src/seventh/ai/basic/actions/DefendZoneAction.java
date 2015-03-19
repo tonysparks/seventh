@@ -17,7 +17,7 @@ public class DefendZoneAction extends AdapterAction {
 	
 	private Zone zone;
 	
-	private final long timeToDefend;
+	private long timeToDefend;
 	private long timeSpentDefending;
 	
 	/**
@@ -41,6 +41,9 @@ public class DefendZoneAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {
+		timeToDefend = 5_000; /* time spent before we ask what to do next */
+		timeSpentDefending = 0;
+		
 		if(zone==null) {
 			zone = brain.getWorld().getZone(brain.getEntityOwner().getCenterPos());
 		}		

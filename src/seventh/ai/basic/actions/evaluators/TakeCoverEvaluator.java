@@ -22,8 +22,8 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public TakeCoverEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public TakeCoverEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 		this.cover = new Cover(new Vector2f(), new Vector2f());
 	}
 
@@ -88,7 +88,7 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 		this.cover.setCoverPos(coverPosition);
 		this.cover.setAttackDir(attackDir);
 		System.out.println("Getting cover action: " + this.cover.getCoverPos());
-		return getGoals().moveToCover(this.cover);
+		return getGoals().moveToCover(this.cover, brain);
 	}
 
 }

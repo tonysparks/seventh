@@ -4,6 +4,7 @@
 package seventh.ai.basic.teamstrategy;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.actions.Action;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
@@ -23,6 +24,14 @@ public class TDMTeamStrategy implements TeamStrategy {
 	 */
 	public TDMTeamStrategy(Team team) {
 		this.team = team;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public Action getGoal(Brain brain) {	
+		return brain.getWorld().getGoals().moveToRandomSpot();
 	}
 	
 	/* (non-Javadoc)

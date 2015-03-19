@@ -75,6 +75,14 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public Action getGoal(Brain brain) {
+		return getCurrentAction(brain);
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getTeam()
 	 */
 	@Override

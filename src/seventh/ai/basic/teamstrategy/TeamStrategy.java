@@ -4,6 +4,7 @@
 package seventh.ai.basic.teamstrategy;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.actions.Action;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
@@ -23,6 +24,13 @@ public interface TeamStrategy extends Debugable {
 	 * @return the Team this strategy is for
 	 */
 	public Team getTeam();
+	
+	/**
+	 * Retrieves an {@link Action} for a bot to take
+	 * @param brain
+	 * @return the goal for the bot
+	 */
+	public Action getGoal(Brain brain);
 	
 	/**
 	 * The agent has no immeidate goals, free to take

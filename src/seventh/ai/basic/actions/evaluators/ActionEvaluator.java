@@ -13,14 +13,16 @@ import seventh.ai.basic.actions.Goals;
  */
 public abstract class ActionEvaluator {
 
-	private double characterBias;
+	private double characterBias, keepBias;
 	private Goals goals;
 	/**
 	 * @param characterBias 
+	 * @param keepBias
 	 */
-	public ActionEvaluator(Goals goals, double characterBias) {
+	public ActionEvaluator(Goals goals, double characterBias, double keepBias) {
 		this.goals = goals;
 		this.characterBias = characterBias;
+		this.keepBias = keepBias;
 	}
 	
 	/**
@@ -37,6 +39,13 @@ public abstract class ActionEvaluator {
 		return characterBias;
 	}
 
+	/**
+	 * @return the bias to keep doing this action
+	 */
+	public double getKeepBias() {
+		return keepBias;
+	}
+	
 	/**
 	 * Calculates the desirability
 	 * 

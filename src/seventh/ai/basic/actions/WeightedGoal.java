@@ -25,6 +25,8 @@ public class WeightedGoal extends Goal {
 	
 	
 	private ActionEvaluator currentActiveEvaluator;
+	private double currentScore;
+	private double bestEvalScore;
 	
 	/**
 	 * 
@@ -57,15 +59,31 @@ public class WeightedGoal extends Goal {
 		if(this.updateEval.isTime()) {
 			ActionEvaluator currentEvaluator = evaluate(brain);
 			
-			if(currentEvaluator != this.currentActiveEvaluator || this.isFinished(brain)) {
-				this.currentActiveEvaluator = currentEvaluator;
-				Action action = this.currentActiveEvaluator.getAction(brain);
-//				if(!(action instanceof WaitAction)) {
-//					System.out.println(action.getClass().getSimpleName() + " won evaluation.");
-//				}
-						
-				this.replace(action);
+			if( this.currentActiveEvaluator == null ||
+				this.isFinished(brain) ) {								
+				
+				boolean shouldChangeAction = false;
+				if(this.bestEvalScore > this.currentScore) {
+					double delta = this.bestEvalScore - this.currentScore;
+					if (delta > 0.05) {
+						shouldChangeAction = true;
+					}
+				}
+				
+				if( ((currentEvaluator.getKeepBias() > this.currentActiveEvaluator.getKeepBias() || shouldChangeAction) &&
+				    (currentEvaluator != this.currentActiveEvaluator)) ) { 
+				
+					this.currentActiveEvaluator = currentEvaluator;
+					this.currentScore = this.bestEvalScore;
+					Action action = this.currentActiveEvaluator.getAction(brain);
+	//					
+					if(!(action instanceof WaitAction))
+						System.out.println(action.getClass().getSimpleName());
+					this.replace(action);
+				}
 			}
+			
+			//System.out.println("Best: " + this.bestEvalScore + " vs. " + "Current: " + this.currentScore);
 		}
 		
 		super.update(brain, timeStep);
@@ -84,6 +102,8 @@ public class WeightedGoal extends Goal {
 				highestDesire = desire;
 			}
 		}
+		
+		this.bestEvalScore = highestDesire;
 						
 		return bestEval;
 	}

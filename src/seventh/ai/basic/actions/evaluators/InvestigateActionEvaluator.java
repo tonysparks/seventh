@@ -23,8 +23,8 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public InvestigateActionEvaluator(Goals goals, double characterBias) {
-		super(goals, characterBias);
+	public InvestigateActionEvaluator(Goals goals, double characterBias, double keepBias) {
+		super(goals, characterBias, keepBias);
 		this.moveToAction = new MoveToAction(new Vector2f());
 	}
 
@@ -103,7 +103,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 		
 		Entity attacker = brain.getSensors().getFeelSensor().getMostRecentAttacker();
 		if(attacker != null) {
-			desirability += brain.getRandomRange(0.2, 0.3);
+			desirability += brain.getRandomRange(0.4, 0.5);
 		}
 		
 		desirability *= getCharacterBias();
@@ -116,17 +116,16 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {		
-		SoundEmittedEvent sound = brain.getSensors().getSoundSensor().getClosestSound();
-		brain.getMotion().scanArea();
-		if(sound != null) {
+		SoundEmittedEvent sound = brain.getSensors().getSoundSensor().getClosestSound();				
+		Entity attacker = brain.getSensors().getFeelSensor().getMostRecentAttacker();
+		if(attacker != null) {
+			this.moveToAction.reset(brain, attacker.getCenterPos());
+			brain.getMotion().lookAt(this.moveToAction.getDestination());
+		}
+		else if(sound != null) {
 			this.moveToAction.reset(brain, sound.getPos());
-		}
-		else {
-			Entity attacker = brain.getSensors().getFeelSensor().getMostRecentAttacker();
-			if(attacker != null) {
-				this.moveToAction.reset(brain, attacker.getCenterPos());	
-			}
-		}
+			brain.getMotion().lookAt(this.moveToAction.getDestination());
+		}	
 		
 		return this.moveToAction;
 	}

@@ -14,6 +14,7 @@ import seventh.ai.basic.actions.evaluators.ExploreActionEvaluator;
 import seventh.ai.basic.actions.evaluators.InvestigateActionEvaluator;
 import seventh.ai.basic.actions.evaluators.ReloadWeaponEvaluator;
 import seventh.ai.basic.actions.evaluators.SwitchWeaponEvaluator;
+import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.shared.TimeStep;
 
 /**
@@ -27,21 +28,22 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	/**
 	 * 
 	 */
-	public WeightedThoughtProcess(Brain brain) {
+	public WeightedThoughtProcess(TeamStrategy teamStrategy, Brain brain) {
 		
 		Goals goals = brain.getWorld().getGoals();
 		this.currentGoal = new ConcurrentGoal( 				
 				// high level goals
-				new WeightedGoal(brain, new AttackActionEvaluator(goals, brain.getRandomRangeMin(0.85)),
-										new CommandActionEvaluator(goals, brain.getRandomRangeMin(0.8)),
-										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9)),
-										new ExploreActionEvaluator(goals, brain.getRandomRange(0.1, 0.5))											
+				new WeightedGoal(brain, new AttackActionEvaluator(goals, brain.getRandomRangeMin(0.85), 0.7),
+										new CommandActionEvaluator(goals, brain.getRandomRangeMin(0.8), 0.8),
+										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9), 0.6),
+//										new StrategyEvaluator(teamStrategy, goals, brain.getRandomRange(0.1, ), 0)
+										new ExploreActionEvaluator(goals, brain.getRandomRange(0.1, 0.5), 0.5)											
 				),
 				
 				// Auxiliary goals, ones that do not impact the high level goals
-				new WeightedGoal(brain, new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8)),
-										new SwitchWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8)),
-										new DoNothingEvaluator(goals, brain.getRandomRange(0.4, 0.9))
+				new WeightedGoal(brain, new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8), 0),
+										new SwitchWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8), 0),
+										new DoNothingEvaluator(goals, brain.getRandomRange(0.4, 0.9), 0)
 				)
         );
 		

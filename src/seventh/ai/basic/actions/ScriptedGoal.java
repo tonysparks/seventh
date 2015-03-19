@@ -21,12 +21,16 @@ public class ScriptedGoal extends AdapterAction {
 	private Leola runtime;
 	private LeoObject goalFunction;
 	private boolean isFunctionDone;
+	
+	private String name;
+	
 	/**
 	 * 
 	 */
-	public ScriptedGoal(Leola runtime, LeoObject goalFunction) {
+	public ScriptedGoal(Leola runtime, String name, LeoObject goalFunction) {
 		this.runtime = runtime;
 		this.goalFunction = goalFunction;
+		this.name = name;
 		this.goal = new Goal();
 		
 		this.isFunctionDone = false;
@@ -97,8 +101,8 @@ public class ScriptedGoal extends AdapterAction {
 	@Override
 	public DebugInformation getDebugInformation() {	
 		DebugInformation me = new DebugInformation();
-		me.add("type", getClass().getSimpleName());
-		me.add("goal", goal);
+		me.add("type", this.name);
+		me.add("goal", this.goal);
 		return me;
 	}
 }

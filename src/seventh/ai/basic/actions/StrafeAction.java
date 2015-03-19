@@ -5,39 +5,43 @@ package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Locomotion;
-import seventh.ai.basic.PathPlanner;
+import seventh.game.PlayerEntity;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 
 /**
  * @author Tony
  *
  */
-public class MoveToAction extends AdapterAction {
+public class StrafeAction extends AdapterAction {
 
-	private Vector2f destination;
-	
+	private Timer strafeTimer;
+	private Vector2f dest;
+	private int direction;
 	/**
 	 * 
 	 */
-	public MoveToAction( Vector2f dest) {		
-		this.destination = dest;
+	public StrafeAction() {		
+		this.strafeTimer = new Timer(true, 1000);
+		this.dest = new Vector2f();
+		this.direction = 1;
 	}
 	
 	/**
 	 * @param destination the destination to set
 	 */
-	public void reset(Brain brain, Vector2f destination) {
-		brain.getMotion().stopMoving();
-		this.destination.set(destination);
+	public void reset(Brain brain) {
+		this.strafeTimer.stop();
+		this.strafeTimer.start();
 	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public void start(Brain brain) {		
-		brain.getMotion().moveTo(destination);
+	public void start(Brain brain) {
+		this.strafeTimer.start();
 	}
 	
 	/* (non-Javadoc)
@@ -45,7 +49,7 @@ public class MoveToAction extends AdapterAction {
 	 */
 	@Override
 	public void interrupt(Brain brain) {
-		brain.getMotion().stopMoving();
+		this.strafeTimer.stop();
 	}
 	
 	/* (non-Javadoc)
@@ -57,28 +61,28 @@ public class MoveToAction extends AdapterAction {
 	}
 	
 	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#end(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void end(Brain brain) {
-		brain.getMotion().stopMoving();
-	}
-	
-	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
 	 */
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
 		Locomotion motion = brain.getMotion();
-		if(!motion.isMoving()) {
-			resume(brain);
-		}
-		
-		if( isFinished(brain) ) {
+		if(motion.isMoving()) {
 			getActionResult().setSuccess();
-		}
-		else {
-			getActionResult().setFailure();
+		}		
+		
+		PlayerEntity bot = brain.getEntityOwner();
+		Vector2f vel = bot.getFacing();
+		Vector2f.Vector2fPerpendicular(vel, dest);
+		Vector2f.Vector2fMult(dest, direction, dest);
+		bot.getVel().set(dest);
+		
+		System.out.println(dest);
+		
+		this.strafeTimer.update(timeStep);
+		if(this.strafeTimer.isTime()) {
+			this.strafeTimer.setEndTime(brain.getWorld().getRandom().nextInt(1000) + 500);
+			this.strafeTimer.start();
+			this.direction *= -1;
 		}
 	}
 	
@@ -87,22 +91,6 @@ public class MoveToAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		PathPlanner<?> path = brain.getMotion().getPathPlanner();		
-		return path.atDestination();		
-	}
-
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#getDebugInformation()
-	 */
-	@Override
-	public DebugInformation getDebugInformation() {	
-		return super.getDebugInformation().add("destination", this.destination);
-	}
-	
-	/**
-	 * @return the destination
-	 */
-	public Vector2f getDestination() {
-		return destination;
+		return !brain.getMotion().isMoving();	
 	}
 }
