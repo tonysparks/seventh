@@ -38,7 +38,7 @@ public class ShootAtAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		return false;
+		return !this.inLOF;
 	}
 	
 	/* (non-Javadoc)
@@ -46,7 +46,7 @@ public class ShootAtAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {
-		
+		this.inLOF = brain.getTargetingSystem().targetInLineOfFire();
 	}
 
 	/* (non-Javadoc)

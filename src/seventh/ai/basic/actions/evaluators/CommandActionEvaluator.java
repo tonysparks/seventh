@@ -32,7 +32,7 @@ public class CommandActionEvaluator extends ActionEvaluator {
 		
 		Communicator comms = brain.getCommunicator();
 		if(comms.hasPendingCommands()) {
-			desirability += brain.getRandomRange(0.8, 0.9);
+			desirability += brain.getRandomRange(0.6, 0.8);
 		}
 		
 		desirability *= getCharacterBias();

@@ -5,6 +5,8 @@ package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.PathPlanner;
+import seventh.ai.basic.SightSensor;
+import seventh.ai.basic.memory.SightMemory.SightMemoryRecord;
 import seventh.game.Entity;
 import seventh.game.PlayerEntity;
 import seventh.game.weapons.Weapon;
@@ -22,7 +24,7 @@ public class FollowEntityAction extends AdapterAction {
 	private Entity followMe;	
 	private Vector2f previousPosition;
 	
-	private final long timeSinceLastSeenExpireMSec;
+	private long timeSinceLastSeenExpireMSec;
 	
 	/**
 	 * @param feeder
@@ -36,6 +38,15 @@ public class FollowEntityAction extends AdapterAction {
 		this.previousPosition = new Vector2f();
 		
 		timeSinceLastSeenExpireMSec = 2_000;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public void start(Brain brain) {
+		this.timeSinceLastSeenExpireMSec = 2_000;
+		this.timeSinceLastSeenExpireMSec += brain.getWorld().getRandom().nextInt(3) * 1000;
 	}
 	
 	/* (non-Javadoc)
@@ -59,7 +70,19 @@ public class FollowEntityAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {		
-		return !this.followMe.isAlive() || brain.getSensors().getSightSensor().timeSeenAgo(followMe) > timeSinceLastSeenExpireMSec;
+		SightSensor sight = brain.getSensors().getSightSensor();
+		SightMemoryRecord mem = sight.getMemoryRecordFor(followMe);
+		
+		
+		boolean isFinished = true;
+		if(mem != null && mem.isValid()) {
+			isFinished = mem.getTimeSeenAgo() > timeSinceLastSeenExpireMSec;
+		}
+		
+		/* if the entity is out of our sensory memory or is Dead,
+		 * expire this action
+		 */
+		return !this.followMe.isAlive() || isFinished;
 	}
 	
 	/**
@@ -83,27 +106,32 @@ public class FollowEntityAction extends AdapterAction {
 	public void update(Brain brain, TimeStep timeStep) {
 						
 		PathPlanner<?> feeder = brain.getMotion().getPathPlanner();
+		SightSensor sight = brain.getSensors().getSightSensor();
 		if(!feeder.hasPath() || !feeder.onFirstNode()) {
-			Vector2f newPosition = this.followMe.getPos();
-			Vector2f start = brain.getEntityOwner().getPos();
-			
-			if(shouldMelee(brain.getEntityOwner(), followMe)) {
-				if(Vector2f.Vector2fDistanceSq(start, newPosition) > 1_000) {
-					feeder.findPath(start, newPosition);								
+
+			SightMemoryRecord mem = sight.getMemoryRecordFor(followMe);
+			if(mem != null && mem.isValid()) {
+				Vector2f newPosition = mem.getLastSeenAt();
+				Vector2f start = brain.getEntityOwner().getPos();
+				
+				if(shouldMelee(brain.getEntityOwner(), followMe)) {
+					if(Vector2f.Vector2fDistanceSq(start, newPosition) > 1_000) {
+						feeder.findPath(start, newPosition);								
+					}
 				}
-			}
-			else if(Vector2f.Vector2fDistanceSq(start, newPosition) > 10_000) {
-				//if ( Vector2f.Vector2fDistanceSq(newPosition, previousPosition) > 1500 ) 
-				{					
-					feeder.findPath(start, newPosition);								
+				else if(Vector2f.Vector2fDistanceSq(start, newPosition) > 10_000) {
+					//if ( Vector2f.Vector2fDistanceSq(newPosition, previousPosition) > 1500 ) 
+					{					
+						feeder.findPath(start, newPosition);								
+					}
 				}
+				else {
+					/* stop the agent */				
+					feeder.clearPath();				
+				}
+				
+				previousPosition.set(newPosition);
 			}
-			else {
-				/* stop the agent */				
-				feeder.clearPath();				
-			}
-			
-			previousPosition.set(newPosition);
 		}		
 	}
 

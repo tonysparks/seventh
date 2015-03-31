@@ -83,7 +83,7 @@ public class ThrowGrenadeAction extends AdapterAction {
 		this.timeHeld += timeStep.getDeltaTime();
 		if(this.timeHeld >= this.timeToHold) {
 			belt.endFire();
-			System.out.println("End throwing: " + this.timeToHold);
+//			System.out.println("End throwing: " + this.timeToHold);
 		}
 	}
 

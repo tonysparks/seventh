@@ -228,7 +228,7 @@ public class World {
 	 * @return determines if the enemy is in line of fire
 	 */
 	public boolean inLineOfFire(PlayerEntity entity, PlayerEntity target) {
-		return !map.lineCollides(entity.getCenterPos(), target.getCenterPos());
+		return !map.lineCollides(entity.getCenterPos(), target.getCenterPos(), entity.getHeightMask());
 	}
 	
 	/**

@@ -32,8 +32,8 @@ public class AttackActionEvaluator extends ActionEvaluator {
 			final double tweaker = 1.0;
 			
 			desirability = tweaker 
-							* Evaluators.healthScore(brain.getEntityOwner()) 
-							* Evaluators.currentWeaponAmmoScore(brain.getEntityOwner());
+							* Math.max(Evaluators.healthScore(brain.getEntityOwner()), 0.7) 
+							* Math.max(Evaluators.currentWeaponAmmoScore(brain.getEntityOwner()), 0.8);
 			
 			desirability *= getCharacterBias();
 		}
