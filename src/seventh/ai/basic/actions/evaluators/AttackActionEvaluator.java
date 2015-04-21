@@ -46,7 +46,7 @@ public class AttackActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {		
-		return getGoals().attack(brain.getTargetingSystem().getCurrentTarget());
+		return getGoals().enemyEncountered(getGoals(), brain);		
 	}
 
 }

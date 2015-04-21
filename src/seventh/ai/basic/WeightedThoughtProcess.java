@@ -56,6 +56,8 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	 */
 	@Override
 	public void onSpawn(Brain brain) {
+		brain.getMotion().pickWeapon();
+		
 		this.currentGoal.cancel();
 		this.currentGoal.start(brain);
 	}
