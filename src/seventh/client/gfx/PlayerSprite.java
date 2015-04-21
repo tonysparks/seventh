@@ -320,6 +320,13 @@ public class PlayerSprite implements Renderable {
 			this.flashTime = 90;
 		}
 		
+		if( entity.isAlive() && (entity.getLastUpdate()+500) > timeStep.getGameClock()) {
+			entity.getMussleFlash().setOn(showFlash);
+		}
+		else {
+			entity.getMussleFlash().setOn(false);
+		}
+				
 		activeLegsAnimation.update(timeStep);
 		activeBodyPosition.update(timeStep);		
 	}
@@ -565,9 +572,6 @@ public class PlayerSprite implements Renderable {
 		double angle = Math.toDegrees(entity.getOrientation()) + 90.0;
 		float rot = (float)(angle + bobCycle);		
 				
-		entity.getMussleFlash().setOn(showFlash);
-		
-		
 		renderBody(canvas, rx, ry, rot, color);
 		
 		ClientWeapon weapon = this.entity.getWeapon();

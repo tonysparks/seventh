@@ -18,4 +18,9 @@ public interface FrameBufferRenderable extends Renderable {
 	 * @param camera
 	 */
 	public void frameBufferRender(Canvas canvas, Camera camera);
+	
+	/**
+	 * @return true if expired
+	 */
+	public boolean isExpired();
 }

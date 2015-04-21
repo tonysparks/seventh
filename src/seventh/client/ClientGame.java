@@ -14,6 +14,8 @@ import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.ExplosionEffect;
+import seventh.client.gfx.ExplosionEffectShader;
 import seventh.client.gfx.FrameBufferRenderable;
 import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
@@ -30,6 +32,7 @@ import seventh.game.Entity;
 import seventh.game.Entity.Type;
 import seventh.game.PlayerEntity.Keys;
 import seventh.game.net.NetEntity;
+import seventh.game.net.NetExplosion;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
@@ -66,6 +69,8 @@ import seventh.shared.TimeStep;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * The {@link ClientGame} is responsible for rendering the client's view of the game world.  The view
@@ -122,6 +127,8 @@ public class ClientGame {
 	private LightSystem lightSystem;
 	
 	private ClientEntityListener entityListener;
+	
+	private ExplosionEffect explosions;
 	
 	/**
 	 * Listens for {@link ClientEntity} life cycle
@@ -186,6 +193,10 @@ public class ClientGame {
 		this.entityListener = lightSystem.getClientEntityListener();		
 		
 		this.bulletPool = new ClientBulletPool(this, SeventhConstants.MAX_ENTITIES);
+		
+		
+		this.explosions = new ExplosionEffect(15, 800, 0.6f);
+//		fullScreenQuad = new Sprite(TextureUtil.createImage(getApp().getScreenWidth(), getApp().getScreenHeight()));
 	}	
 	
 	/**
@@ -302,6 +313,7 @@ public class ClientGame {
 		
 		backgroundEffects.update(timeStep);
 		foregroundEffects.update(timeStep);
+		explosions.update(timeStep);
 		
 		size = frameBufferRenderables.size();
 		for(int i = 0; i < size; i++) {
@@ -386,13 +398,130 @@ public class ClientGame {
 			canvas.setDefaultTransforms();
 			canvas.setShader(null);
 			
-			for(int i = 0; i < size; i++) {
+			for(int i = 0; i < this.frameBufferRenderables.size(); ) {
 				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-				r.render(canvas, camera, 0);
+				if(r.isExpired()) {
+					this.frameBufferRenderables.remove(i);
+				}
+				else {
+					r.render(canvas, camera, 0);
+					i++;
+				}
 			}
 		}
 	}
 		
+	public void render2(Canvas canvas) {
+		
+		canvas.fboBegin();
+		canvas.setDefaultTransforms();
+		canvas.setShader(null);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	
+		canvas.begin();
+		int size = this.frameBufferRenderables.size();
+		for(int i = 0; i < size; i++) {
+			FrameBufferRenderable r = this.frameBufferRenderables.get(i);
+			r.frameBufferRender(canvas, camera);
+		}
+		canvas.end();
+		
+		for(int i = 0; i < this.frameBufferRenderables.size(); ) {
+			FrameBufferRenderable r = this.frameBufferRenderables.get(i);
+			if(r.isExpired()) {
+				this.frameBufferRenderables.remove(i);
+			}
+			else {
+				r.render(canvas, camera, 0);
+				i++;
+			}
+		}
+		
+		renderWorld(canvas);
+		
+		canvas.fboEnd();
+		
+		
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		canvas.setDefaultTransforms();
+		//canvas.setShader(null);
+
+		Sprite s = new Sprite(canvas.getFrameBuffer());
+		
+		//canvas.begin();
+		//canvas.drawSprite(s);
+		//canvas.end();
+		
+		canvas.begin();
+		
+		canvas.getFrameBuffer().bind();
+		{
+			ShaderProgram shader = ExplosionEffectShader.getInstance().getShader();
+			
+			canvas.setShader(shader);
+			canvas.drawImage(s, 0, 0, 0xfffff00f);
+			//canvas.drawRawSprite(s);
+		}
+		
+		canvas.end();
+
+//		DebugDraw.enable(true);
+//		DebugDraw.render(canvas, camera);
+
+		canvas.setShader(null);
+		hud.render(canvas, camera, 0);
+	}
+	
+	private void renderWorld(Canvas canvas) {
+		canvas.begin();		
+		map.render(canvas, camera, 0);
+		canvas.end();
+		
+		backgroundEffects.render(canvas, camera, 0);
+		
+				
+		ClientEntity[] entityList = entities.getEntities();
+		int size = entityList.length;
+		
+		
+		/* first render the background entities */
+		for(int i = 0; i < size; i++) {
+			/* clear out the foreground entities */
+			renderingOrderEntities[i] = null;
+			
+			ClientEntity entity = entityList[i];			
+			if(entity != null) {
+				
+				if(entity.isBackgroundObject()) {
+					entity.render(canvas, camera, 0);
+				}
+				else {
+					renderingOrderEntities[i] = entity;
+				}				
+			}
+		}						
+		
+		/* now render the foreground entities */
+		for(int i = 0; i < size; i++) {			
+			ClientEntity entity = renderingOrderEntities[i];			
+			if(entity != null) {								
+				entity.render(canvas, camera, 0);				
+			}
+			
+			renderingOrderEntities[i] = null;
+		}						
+		
+		//this.lightSystem.render(canvas, camera, 0);
+		
+		foregroundEffects.render(canvas, camera, 0);
+		map.renderForeground(canvas, camera, 0);
+		
+		canvas.setColor(0, 45);
+		map.renderSolid(canvas, camera, 0);
+		
+		lightSystem.render(canvas, camera, 0);		
+	}
+	
 	/**
 	 * Renders the game
 	 * 
@@ -734,7 +863,7 @@ public class ClientGame {
 		
 //		System.out.println("Creating: " + type.name() + " id " + ent.id);
 		 
-		Vector2f pos = new Vector2f(ent.posX, ent.posY);
+		final Vector2f pos = new Vector2f(ent.posX, ent.posY);
 		switch(type) {
 			case PLAYER_PARTIAL: {
 				ClientPlayer player = players.getPlayer(ent.id);
@@ -777,7 +906,17 @@ public class ClientGame {
 			case FIRE: 			
 			case EXPLOSION: {
 				if(type==Type.EXPLOSION) {
-					entity = new ClientExplosion(this, pos);								
+					entity = new ClientExplosion(this, pos);
+					
+					/* create the explosion effect */
+					NetExplosion explosion = (NetExplosion)ent;
+					
+					/* convert to UV coordinates */
+					pos.x = (pos.x - camera.getPosition().x) / app.getScreenWidth();
+					pos.y = 1f - (pos.y - camera.getPosition().y) / app.getScreenHeight();
+					
+					/* limit the explosion per player */
+					this.explosions.activate(explosion.ownerId, pos);
 				}
 				else {
 					entity = new ClientFire(this, pos);	
@@ -793,6 +932,7 @@ public class ClientGame {
 						camera.shake(300, Math.max(900 - force/100, 100));						
 					}
 				}
+				
 				break;
 			}
 			case TANK: {

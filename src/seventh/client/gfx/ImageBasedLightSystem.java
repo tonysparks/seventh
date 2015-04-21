@@ -52,6 +52,14 @@ public class ImageBasedLightSystem implements LightSystem {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.client.gfx.FrameBufferRenderable#isExpired()
+	 */
+	@Override
+	public boolean isExpired() {
+		return false;
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.client.gfx.LightSystem#getClientEntityListener()
 	 */
 	@Override

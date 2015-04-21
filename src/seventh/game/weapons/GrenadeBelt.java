@@ -31,7 +31,7 @@ public class GrenadeBelt extends Weapon {
 		this.nextShotTime = 600;
 		this.damage = 100;
 				
-		this.bulletsInClip = 3;
+		this.bulletsInClip = 3000;
 		this.totalAmmo = 0;
 		this.clipSize = 0;		
 	}
