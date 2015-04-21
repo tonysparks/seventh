@@ -12,7 +12,6 @@ import seventh.game.Entity.Type;
  *
  */
 public class NetExplosion extends NetEntity {	
-//	public byte damage; /* currently not used */
 	public int ownerId;
 	
 	/**
@@ -28,7 +27,6 @@ public class NetExplosion extends NetEntity {
 	@Override
 	public void read(IOBuffer buffer) {	
 		super.read(buffer);
-//		damage = buffer.get();
 		ownerId = buffer.getUnsignedByte();
 	}
 	
@@ -38,7 +36,6 @@ public class NetExplosion extends NetEntity {
 	@Override
 	public void write(IOBuffer buffer) {	
 		super.write(buffer);
-//		buffer.put(damage);
 		buffer.putUnsignedByte(ownerId);
 	}
 }
