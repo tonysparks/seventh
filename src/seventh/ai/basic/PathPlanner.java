@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import seventh.game.Player;
 import seventh.game.PlayerEntity;
+import seventh.game.PlayerInfo;
 import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.map.MapGraph;
@@ -34,6 +36,28 @@ public class PathPlanner<E> {
 	private Vector2f finalDestination;	
 	private Random random;
 	
+	private World world;
+	private Brain brain;
+	
+	
+	private boolean isEntityOnTile(Tile tile) {
+	    List<Player> teammates = world.getTeammates(brain);
+	    PlayerInfo bot = brain.getPlayer();
+	    int size = teammates.size();
+	    for(int i = 0; i < size; i++) {
+	        if(bot.getId() != i) {
+    	        Player p = teammates.get(i);
+    	        if(p.isAlive()) {
+    	            if(tile.getBounds().contains(p.getEntity().getCenterPos())) {
+    	                return true;
+    	            }
+    	        }
+	        }
+	    }
+	    
+	    return false;
+	}
+	
 	private class FuzzySearchPath extends AStarGraphSearch<Tile, E> {
 		public int actualFuzzy;
 		
@@ -49,7 +73,16 @@ public class PathPlanner<E> {
 						   ((goalTile.getY() - currentTile.getY()) *
 						    (goalTile.getY() - currentTile.getY()));
 			
+//			if(isEntityOnTile(goalTile)) {
+//			    return Integer.MAX_VALUE;
+//			}
+			
 			return distance + random.nextInt(actualFuzzy);
+		}
+		
+		@Override
+		protected boolean shouldIgnore(GraphNode<Tile, E> node) {
+		    return false;//return isEntityOnTile(node.getValue());
 		}
 	}
 	
@@ -68,6 +101,11 @@ public class PathPlanner<E> {
 						   ((goalTile.getY() - currentTile.getY()) *
 						    (goalTile.getY() - currentTile.getY()));
 			
+			
+//			if(isEntityOnTile(goalTile)) {
+//                return Integer.MAX_VALUE;
+//            }
+            
 			return distance;
 		}
 		
@@ -81,7 +119,7 @@ public class PathPlanner<E> {
 				}
 			}
 			
-			return false;
+			return false;// isEntityOnTile(tile);
 		}
 	}
 	
@@ -91,7 +129,9 @@ public class PathPlanner<E> {
 	/**
 	 * @param path
 	 */
-	public PathPlanner(MapGraph<E> graph) {
+	public PathPlanner(Brain brain, MapGraph<E> graph) {
+	    this.brain = brain;
+	    this.world = brain.getWorld();
 		this.graph = graph;
 		this.finalDestination = new Vector2f();
 		this.destination = new Vector2f();

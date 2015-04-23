@@ -463,7 +463,7 @@ public class Player implements PlayerInfo, Debugable {
 	 * @return the network player statistics
 	 */
 	public NetPlayerStat getNetPlayerStat() {
-		
+		this.stats.isBot = this.isBot;
 		this.stats.joinTime = (int)this.joinTime;
 		this.stats.kills = (short)this.kills;
 		this.stats.deaths = (short)this.deaths;

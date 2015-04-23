@@ -3,7 +3,15 @@
  */
 package seventh.client.screens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import seventh.ai.AICommand;
+import seventh.client.AIShortcut;
+import seventh.client.AIShortcuts;
+import seventh.client.AIShortcuts.FollowMeAIShortcut;
+import seventh.client.AIShortcuts.SurpressFireAIShortcut;
+import seventh.client.AIShortcutsMenu;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientTeam;
@@ -13,6 +21,7 @@ import seventh.client.KeyMap;
 import seventh.client.Network;
 import seventh.client.Screen;
 import seventh.client.SeventhGame;
+import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.InGameOptionsDialog;
@@ -107,7 +116,9 @@ public class InGameScreen implements Screen {
 	private TextBoxView teamSayTxtBxView;
 	
 	private KeyMap keyMap;
-		
+	private AIShortcuts aiShortcuts;
+	private AIShortcutsMenu aiShortcutsMenu;
+	
 	private ControllerInput controllerInput;	
 	private Inputs inputs = new Inputs() {		
 		public boolean keyUp(int key) {
@@ -131,6 +142,12 @@ public class InGameScreen implements Screen {
 				return true;
 				
 			}
+			else if(key == Keys.Q) {
+			    if(!getDialog().isOpen()) {
+			        aiShortcutsMenu.toggle();
+			    }
+			}
+			
 			return super.keyUp(key);
 		}
 	
@@ -185,6 +202,12 @@ public class InGameScreen implements Screen {
 		this.debugEffects = new Effects();
 		
 		this.cursor = app.getUiManager().getCursor();
+		
+		List<AIShortcut> commands = new ArrayList<AIShortcut>();
+		commands.add(new FollowMeAIShortcut(Keys.P));
+		commands.add(new SurpressFireAIShortcut(Keys.O));
+		this.aiShortcuts = new AIShortcuts(commands);
+		this.aiShortcutsMenu = new AIShortcutsMenu(keyMap, aiShortcuts);
 		
 		createUI();
 				
@@ -242,6 +265,8 @@ public class InGameScreen implements Screen {
 		if(this.dialog!=null) {
 			this.dialog.destroy();
 		}
+		
+		this.aiShortcutsMenu.hide();
 		
 		this.dialog = new InGameOptionsDialog(app.getConsole(), network, app.getTheme());		
 		ClientPlayer player = game.getLocalPlayer();
@@ -654,6 +679,15 @@ public class InGameScreen implements Screen {
 			if(inputs.isButtonDown(keyMap.getThrowGrenadeKey()) || inputs.isKeyDown(keyMap.getThrowGrenadeKey())) {
 				inputKeys |= Actions.THROW_GRENADE.getMask();
 			}
+			
+			
+			/* AI command shortcuts, the player can issue AI commands to nearby
+			 * Bots */
+			if(this.aiShortcutsMenu.isShowing()) {
+			    if( this.aiShortcuts.checkShortcuts(inputs, app.getConsole(), game) ) {
+			        this.aiShortcutsMenu.hide();
+			    }
+			}
 		}
 				
 		inputMessage.keys = inputKeys;
@@ -691,15 +725,18 @@ public class InGameScreen implements Screen {
 						
 		game.render(canvas);
 						
+		Camera camera = game.getCamera();
 		if( isDebugMode ) {			
-			debugEffects.render(canvas, game.getCamera(), 0);
+			debugEffects.render(canvas, camera, 0);
 		}
 		
 		
-		this.dialogView.render(canvas, game.getCamera(), 0);
+		this.dialogView.render(canvas, camera, 0);
 		
-		this.sayTxtBxView.render(canvas, game.getCamera(), 0);
-		this.teamSayTxtBxView.render(canvas, game.getCamera(), 0);
+		this.sayTxtBxView.render(canvas, camera, 0);
+		this.teamSayTxtBxView.render(canvas, camera, 0);
+		
+		this.aiShortcutsMenu.render(canvas, camera, 0);
 		
 		this.cursor.render(canvas);	
 		

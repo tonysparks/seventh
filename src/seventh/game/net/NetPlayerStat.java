@@ -12,6 +12,8 @@ import seventh.network.messages.BufferIO;
  *
  */
 public class NetPlayerStat implements NetMessage {
+    private static final byte IS_BOT = (1<<0);
+    
 	public int playerId;
 	public String name;
 	public short kills;
@@ -19,6 +21,8 @@ public class NetPlayerStat implements NetMessage {
 	public short ping;
 	public int joinTime;
 	public byte teamId;
+	public byte flags;
+	public boolean isBot;
 	
 	/* (non-Javadoc)
 	 * @see seventh.network.messages.NetMessage#read(java.nio.ByteBuffer)
@@ -32,6 +36,8 @@ public class NetPlayerStat implements NetMessage {
 		ping = buffer.getShort();
 		joinTime = buffer.getInt();
 		teamId = buffer.get();
+		flags = buffer.get();
+		isBot = ((flags & IS_BOT) != 0);
 	}
 	
 	/* (non-Javadoc)
@@ -46,5 +52,10 @@ public class NetPlayerStat implements NetMessage {
 		buffer.putShort(ping);
 		buffer.putInt(joinTime);
 		buffer.put(teamId);
+		
+		if(isBot) {
+		    flags |= IS_BOT;
+		}
+		buffer.put(flags);
 	}
 }

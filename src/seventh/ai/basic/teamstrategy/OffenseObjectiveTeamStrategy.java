@@ -63,8 +63,6 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		this.random = aiSystem.getRandom();
 		
 		this.goals = aiSystem.getGoals(); 
-				//new Goals(aiSystem.getRuntime());
-		
 	}
 	
 	/* (non-Javadoc)
@@ -90,7 +88,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	public void startOfRound(GameInfo game) {		
 		this.zoneToAttack = calculateZoneToAttack();	
 		this.currentState = OffensiveState.RANDOM;		
-		this.timeUntilOrganizedAttack = 0; //30_000 + random.nextInt(30_000);				
+		this.timeUntilOrganizedAttack = 0; //30_000 + (random.nextInt(15) * 1000);				
 	}
 	
 	

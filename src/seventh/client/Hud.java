@@ -45,7 +45,7 @@ public class Hud implements Renderable {
 	private KillLog killLog;
 	private MessageLog messageLog, centerLog, objectiveLog;
 	private Scoreboard scoreboard;
-	
+
 	private MiniMap miniMap;
 	
 	private ClientPlayer localPlayer;

@@ -539,6 +539,7 @@ public class ClientGame {
 		return null;
 	}
 	
+	
 	/**
 	 * @return the players
 	 */

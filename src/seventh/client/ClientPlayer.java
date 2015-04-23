@@ -105,6 +105,13 @@ public class ClientPlayer {
 	}
 	
 	/**
+	 * @return if this player is a bot 
+	 */
+	public boolean isBot() {
+	    return this.stats.isBot;
+	}
+	
+	/**
 	 * @return if this player is Alive
 	 */
 	public boolean isAlive() {

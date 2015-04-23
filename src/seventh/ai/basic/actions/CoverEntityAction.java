@@ -53,8 +53,12 @@ public class CoverEntityAction extends AdapterAction {
 	 * @see palisma.ai.Action#isFinished()
 	 */
 	@Override
-	public boolean isFinished(Brain brain) {		
-		return !this.followMe.isAlive() || this.lastVisibleTime > timeSinceLastSeenExpireMSec;
+	public boolean isFinished(Brain brain) {	
+	    boolean isfinished = !this.followMe.isAlive() || this.lastVisibleTime > timeSinceLastSeenExpireMSec;
+	    if(isfinished) {
+	        System.out.println("Finished covering entity");
+	    }
+		return isfinished;
 	}
 	
 	/* (non-Javadoc)
@@ -78,7 +82,7 @@ public class CoverEntityAction extends AdapterAction {
 			float distance = Vector2f.Vector2fDistanceSq(start, newPosition);
 			
 			
-			if(distance > 1_000) {
+			if(distance > 15_000) {
 				feeder.findPath(start, newPosition);						
 			}			
 			else {

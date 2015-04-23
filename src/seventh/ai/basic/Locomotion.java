@@ -86,7 +86,7 @@ public class Locomotion implements Debugable {
 	public Locomotion(Brain brain) {
 		this.brain = brain;
 		
-		this.pathPlanner = new PathPlanner<>(brain.getWorld().getGraph());
+		this.pathPlanner = new PathPlanner<>(brain, brain.getWorld().getGraph());
 		
 		this.random = brain.getWorld().getRandom();
 		this.destinationGoal = new DecoratorAction(brain);
