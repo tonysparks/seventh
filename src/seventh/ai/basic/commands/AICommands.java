@@ -11,6 +11,7 @@ import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.CoverEntityAction;
 import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.MoveToAction;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.math.Vector2f;
@@ -91,6 +92,22 @@ public class AICommands {
 				return action;
 			}
 		});
+		
+		this.aiCommands.put("moveTo", new Command() {
+            
+            @Override
+            public Action parse(String... args) {
+                Vector2f dest = new Vector2f();
+                if(args.length > 1) {
+                    float x = Float.parseFloat(args[0]);
+                    float y = Float.parseFloat(args[1]);
+                    dest.set(x, y);
+                }
+                
+                Action action = new MoveToAction(dest);
+                return action;
+            }
+        });
 		
 		this.aiCommands.put("action", new Command() {
 			

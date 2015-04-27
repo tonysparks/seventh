@@ -10,6 +10,7 @@ import seventh.ai.AICommand;
 import seventh.client.AIShortcut;
 import seventh.client.AIShortcuts;
 import seventh.client.AIShortcuts.FollowMeAIShortcut;
+import seventh.client.AIShortcuts.MoveToAIShortcut;
 import seventh.client.AIShortcuts.SurpressFireAIShortcut;
 import seventh.client.AIShortcutsMenu;
 import seventh.client.ClientGame;
@@ -206,6 +207,7 @@ public class InGameScreen implements Screen {
 		List<AIShortcut> commands = new ArrayList<AIShortcut>();
 		commands.add(new FollowMeAIShortcut(Keys.P));
 		commands.add(new SurpressFireAIShortcut(Keys.O));
+		commands.add(new MoveToAIShortcut(Keys.I));
 		this.aiShortcuts = new AIShortcuts(commands);
 		this.aiShortcutsMenu = new AIShortcutsMenu(keyMap, aiShortcuts);
 		

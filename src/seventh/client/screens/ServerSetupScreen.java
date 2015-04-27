@@ -485,9 +485,16 @@ public class ServerSetupScreen implements Screen {
 		
 		int i = 0;
 		for(String name : gameSettings.alliedTeam) {
-			i++;
-						
-			TextBox box = setupTextBox(pos, name);
+			final int nameIndex = i++;
+			final TextBox box = setupTextBox(pos, name);
+			box.addInputListenerToFront(new Inputs() {
+			    
+			    @Override
+			    public boolean keyUp(int key) {
+			        gameSettings.alliedTeam.set(nameIndex, box.getText());
+			        return false;
+			    }
+			});
 
 			this.optionsPanel.addWidget(box);
 			this.panelView.addElement(new TextBoxView(box));
@@ -507,10 +514,17 @@ public class ServerSetupScreen implements Screen {
 		
 		i = 0;
 		for(String name : gameSettings.axisTeam) {
-			i++;
-			
-			TextBox box = setupTextBox(pos, name);
-			
+            final int nameIndex = i++;
+            final TextBox box = setupTextBox(pos, name);
+            box.addInputListenerToFront(new Inputs() {
+                
+                @Override
+                public boolean keyUp(int key) {
+                    gameSettings.axisTeam.set(nameIndex, box.getText());
+                    return false;
+                }
+            });
+            
 			this.optionsPanel.addWidget(box);
 			this.panelView.addElement(new TextBoxView(box));
 			

@@ -125,4 +125,37 @@ public class AIShortcuts {
             }    
         }
     }
+    
+    public static class MoveToAIShortcut extends AIShortcut {
+
+        /**
+         * @param shortcutKey
+         * @param description
+         */
+        public MoveToAIShortcut(int shortcutKey) {
+            super(shortcutKey, "Move to here");
+        }
+        
+        /* (non-Javadoc)
+         * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
+         */
+        @Override
+        public void execute(Console console, ClientGame game) {
+            ClientPlayer localPlayer = game.getLocalPlayer();
+            
+            if(!localPlayer.isAlive()) {
+                return;
+            }
+            
+            int closestBot = findClosestBot(game);
+            if(closestBot > -1) {
+                ClientPlayers players = game.getPlayers();
+                Vector2f mouse = game.getApp().getUiManager().getCursor().getCursorPos();
+                Vector2f worldPosition = game.screenToWorldCoordinates( (int) mouse.x, (int) mouse.y);
+                Vector2f.Vector2fSnap(worldPosition, worldPosition);
+                console.execute("ai " + closestBot + " moveTo " + worldPosition.x + " " + worldPosition.y);
+                console.execute("team_say " + players.getPlayer(closestBot).getName() + " take cover here!" );
+            }    
+        }
+    }
 }
