@@ -411,7 +411,7 @@ public class ClientGame {
 		}
 	}
 		
-	public void render2(Canvas canvas) {
+	public void render(Canvas canvas) {
 		
 		canvas.fboBegin();
 		canvas.setDefaultTransforms();
@@ -437,6 +437,7 @@ public class ClientGame {
 			}
 		}
 		
+		//canvas.setShader(null);
 		renderWorld(canvas);
 		
 		canvas.fboEnd();
@@ -510,9 +511,7 @@ public class ClientGame {
 			
 			renderingOrderEntities[i] = null;
 		}						
-		
-		//this.lightSystem.render(canvas, camera, 0);
-		
+				
 		foregroundEffects.render(canvas, camera, 0);
 		map.renderForeground(canvas, camera, 0);
 		
@@ -527,7 +526,7 @@ public class ClientGame {
 	 * 
 	 * @param canvas
 	 */
-	public void render(Canvas canvas) {				
+	public void render2(Canvas canvas) {				
 		renderFrameBuffer(canvas);
 						
 		canvas.begin();		
