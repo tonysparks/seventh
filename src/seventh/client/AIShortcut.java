@@ -85,4 +85,17 @@ public abstract class AIShortcut {
         
         return closestBot;
     }
+    
+    /**
+     * Get the mouse position in world coordinates
+     * 
+     * @param game
+     * @return the mouse position in world coordinates
+     */
+    protected Vector2f getMouseWorldPosition(ClientGame game) {
+    	Vector2f mouse = game.getApp().getUiManager().getCursor().getCursorPos();
+        Vector2f worldPosition = game.screenToWorldCoordinates( (int) mouse.x, (int) mouse.y);
+        Vector2f.Vector2fSnap(worldPosition, worldPosition);
+        return worldPosition;
+    }
 }

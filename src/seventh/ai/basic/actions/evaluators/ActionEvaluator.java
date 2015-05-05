@@ -46,6 +46,16 @@ public abstract class ActionEvaluator {
 		return keepBias;
 	}
 	
+	
+	/**
+	 * If this Evaluator repeats different actions that should be considered 'new' after
+	 * each calculation
+	 * @return true if to be considered 'new' after an evaluation
+	 */
+	public boolean isRepeatable() {
+		return false;
+	}
+	
 	/**
 	 * Calculates the desirability
 	 * 

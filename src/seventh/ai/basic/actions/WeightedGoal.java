@@ -59,15 +59,21 @@ public class WeightedGoal extends Goal {
 			
 			if( this.currentActiveEvaluator == null ||
 				this.isFinished(brain) || 
+				newEvaluator.isRepeatable() ||
 				((newEvaluator.getKeepBias() > this.currentActiveEvaluator.getKeepBias() ) &&
 				    (newEvaluator != this.currentActiveEvaluator)) ) { 
 				
 				this.currentActiveEvaluator = newEvaluator;
 				Action action = this.currentActiveEvaluator.getAction(brain);
 
+				// TODO : Figure out how to overridde the the current evaluator
+				// if it is a CommandActionEvaluator (override the command)
 //					if(!(action instanceof WaitAction))
 //						System.out.println(action.getClass().getSimpleName());
 				this.replace(action);
+				if(newEvaluator.isRepeatable()) {
+					action.start(brain);
+				}
 			}
 		}
 		

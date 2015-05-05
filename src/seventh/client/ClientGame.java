@@ -414,32 +414,33 @@ public class ClientGame {
 	public void render(Canvas canvas) {
 		
 		canvas.fboBegin();
-		canvas.setDefaultTransforms();
-		canvas.setShader(null);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	
-		canvas.begin();
-		int size = this.frameBufferRenderables.size();
-		for(int i = 0; i < size; i++) {
-			FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-			r.frameBufferRender(canvas, camera);
-		}
-		canvas.end();
+		{
+			canvas.setDefaultTransforms();
+			canvas.setShader(null);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		for(int i = 0; i < this.frameBufferRenderables.size(); ) {
-			FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-			if(r.isExpired()) {
-				this.frameBufferRenderables.remove(i);
+			canvas.begin();
+			int size = this.frameBufferRenderables.size();
+			for(int i = 0; i < size; i++) {
+				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
+				r.frameBufferRender(canvas, camera);
 			}
-			else {
-				r.render(canvas, camera, 0);
-				i++;
+			canvas.end();
+			
+			for(int i = 0; i < this.frameBufferRenderables.size(); ) {
+				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
+				if(r.isExpired()) {
+					this.frameBufferRenderables.remove(i);
+				}
+				else {
+					r.render(canvas, camera, 0);
+					i++;
+				}
 			}
+			
+			canvas.setShader(null);
+			renderWorld(canvas);
 		}
-		
-		//canvas.setShader(null);
-		renderWorld(canvas);
-		
 		canvas.fboEnd();
 		
 		
@@ -449,21 +450,16 @@ public class ClientGame {
 
 		Sprite s = new Sprite(canvas.getFrameBuffer());
 		
-		//canvas.begin();
-		//canvas.drawSprite(s);
-		//canvas.end();
-		
 		canvas.begin();
-		
-		canvas.getFrameBuffer().bind();
 		{
-			ShaderProgram shader = ExplosionEffectShader.getInstance().getShader();
-			
-			canvas.setShader(shader);
-			canvas.drawImage(s, 0, 0, 0xfffff00f);
-			//canvas.drawRawSprite(s);
+			canvas.getFrameBuffer().bind();
+			{
+				ShaderProgram shader = ExplosionEffectShader.getInstance().getShader();
+				
+				canvas.setShader(shader);
+				canvas.drawImage(s, 0, 0, 0x0);
+			}
 		}
-		
 		canvas.end();
 
 //		DebugDraw.enable(true);

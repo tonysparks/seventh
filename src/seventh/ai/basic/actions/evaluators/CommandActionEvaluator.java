@@ -24,6 +24,14 @@ public class CommandActionEvaluator extends ActionEvaluator {
 	}
 
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.evaluators.ActionEvaluator#isRepeatable()
+	 */
+	@Override
+	public boolean isRepeatable() {
+		return true;
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.evaluators.ActionEvaluator#calculateDesirability(seventh.ai.basic.Brain)
 	 */
 	@Override

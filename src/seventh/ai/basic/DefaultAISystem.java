@@ -402,7 +402,7 @@ public class DefaultAISystem implements AISystem {
 		if(forBot.isBot() && forBot.isAlive()) {
 			Brain brain = getBrain(forBot);
 			if(brain != null) {
-				Action action = this.aiCommands.compile(command);
+				Action action = this.aiCommands.compile(brain, command);
 				if(action != null) {
 					brain.getCommunicator().post(action);
 				}

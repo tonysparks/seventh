@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import seventh.ai.AICommand;
+import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.CoverEntityAction;
@@ -26,7 +27,7 @@ import seventh.shared.Cons;
  */
 public class AICommands {
 	interface Command {
-		Action parse(String ... args);
+		Action parse(Brain brain, String ... args);
 	}
 	
 	private Goals goals;
@@ -45,7 +46,7 @@ public class AICommands {
 		this.aiCommands.put("plant", new Command() {
 
 			@Override
-			public Action parse(String... args) {
+			public Action parse(Brain brain, String... args) {
 				return goals.plantBomb();
 			}
 			
@@ -54,7 +55,7 @@ public class AICommands {
 		this.aiCommands.put("defuse", new Command() {
 
 			@Override
-			public Action parse(String... args) {
+			public Action parse(Brain brain, String... args) {
 				return goals.defuseBomb();
 			}
 			
@@ -63,7 +64,7 @@ public class AICommands {
 		this.aiCommands.put("followMe", new Command() {
 
 			@Override
-			public Action parse(String... args) {
+			public Action parse(Brain brain, String... args) {
 				if(args.length > 0) {
 					String pid = args[0];					
 					PlayerInfo player = game.getPlayerById(Integer.parseInt(pid));
@@ -80,7 +81,7 @@ public class AICommands {
 		this.aiCommands.put("takeCover", new Command() {
 			
 			@Override
-			public Action parse(String... args) {
+			public Action parse(Brain brain, String... args) {
 				Vector2f attackDir = new Vector2f();
 				if(args.length > 1) {
 					int x = Integer.parseInt(args[0]);
@@ -96,7 +97,7 @@ public class AICommands {
 		this.aiCommands.put("moveTo", new Command() {
             
             @Override
-            public Action parse(String... args) {
+            public Action parse(Brain brain, String... args) {
                 Vector2f dest = new Vector2f();
                 if(args.length > 1) {
                     float x = Float.parseFloat(args[0]);
@@ -108,11 +109,26 @@ public class AICommands {
                 return action;
             }
         });
+		this.aiCommands.put("surpressFire", new Command() {
+            
+            @Override
+            public Action parse(Brain brain, String... args) {
+                Vector2f dest = new Vector2f();
+                if(args.length > 1) {
+                    float x = Float.parseFloat(args[0]);
+                    float y = Float.parseFloat(args[1]);
+                    dest.set(x, y);
+                }
+                
+                
+                return goals.surpressFire(goals, brain, dest);
+            }
+        });		
 		
 		this.aiCommands.put("action", new Command() {
 			
 			@Override
-			public Action parse(String... args) {
+			public Action parse(Brain brain, String... args) {
 				if(args.length > 0) {
 					Action action = goals.getScriptedAction(args[0]);
 					return action;
@@ -127,7 +143,7 @@ public class AICommands {
 	 * @param cmd
 	 * @return the {@link Action} is parsed successfully, otherwise false
 	 */
-	public Action compile(AICommand cmd) {
+	public Action compile(Brain brain, AICommand cmd) {
 		Action result = null;
 		String message = cmd.getMessage();
 		if(message != null && !"".equals(message)) {
@@ -137,7 +153,7 @@ public class AICommands {
 				if(command != null) {
 					String[] args = new String[msgs.length -1];
 					System.arraycopy(msgs, 1, args, 0, args.length);
-					result = command.parse(args);
+					result = command.parse(brain, args);
 				}
 			}
 			catch(Exception e) {

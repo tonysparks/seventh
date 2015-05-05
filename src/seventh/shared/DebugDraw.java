@@ -124,7 +124,6 @@ public class DebugDraw {
 	
 	private static Queue<Drawable> drawCalls = new ConcurrentLinkedQueue<>();
 	private static AtomicBoolean enabled = new AtomicBoolean(false);
-	private static int frameCounter = 0;
 	
 	/**
 	 * Enable draw calls.
@@ -281,7 +280,7 @@ public class DebugDraw {
 				d.drawCount++;
 			}
 			
-			frameCounter++;
+//			frameCounter++;
 			
 			for(Drawable d : drawCalls) {
 				if(d.drawCount > 3) {

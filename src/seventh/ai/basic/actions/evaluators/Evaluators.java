@@ -5,6 +5,7 @@ package seventh.ai.basic.actions.evaluators;
 
 import seventh.game.PlayerEntity;
 import seventh.game.weapons.Weapon;
+import seventh.math.Vector2f;
 
 /**
  * @author Tony
@@ -96,10 +97,14 @@ public class Evaluators {
 	
 	
 	public static double weaponDistanceScore(PlayerEntity ent, PlayerEntity enemy) {
+		return weaponDistanceScore(ent, enemy.getCenterPos());
+	}
+	
+	public static double weaponDistanceScore(PlayerEntity ent, Vector2f target) {
 		double score = 0;
 		Weapon weapon = ent.getInventory().currentItem();
 		if(weapon != null) {
-			float distanceAwaySq = ent.distanceFromSq(enemy);
+			float distanceAwaySq = Vector2f.Vector2fDistanceSq(ent.getCenterPos(), target);
 			double bulletRangeSq = ent.getCurrentWeaponDistanceSq();
 			if(bulletRangeSq > 0 && distanceAwaySq < bulletRangeSq) {
 				score = 0.75;
