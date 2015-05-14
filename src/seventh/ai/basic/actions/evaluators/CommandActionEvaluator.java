@@ -14,6 +14,7 @@ import seventh.ai.basic.actions.Goals;
  */
 public class CommandActionEvaluator extends ActionEvaluator {
 
+	private Action commandAction;
 	
 	/**
 	 * @param goals
@@ -53,7 +54,12 @@ public class CommandActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		return brain.getCommunicator().poll();
+		this.commandAction = brain.getCommunicator().peek();
+		if(this.commandAction != null && this.commandAction.isFinished(brain)) {
+			brain.getCommunicator().poll();
+		}
+		
+		return this.commandAction;
 	}
 
 }

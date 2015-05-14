@@ -43,7 +43,7 @@ public class AICommands {
 		this.goals = aiSystem.getGoals();
 		this.game = aiSystem.getGame();
 		this.aiCommands = new HashMap<String, Command>();
-		this.aiCommands.put("plant", new Command() {
+		this.aiCommands.put("plantBomb", new Command() {
 
 			@Override
 			public Action parse(Brain brain, String... args) {
@@ -52,7 +52,7 @@ public class AICommands {
 			
 		});
 		
-		this.aiCommands.put("defuse", new Command() {
+		this.aiCommands.put("defuseBomb", new Command() {
 
 			@Override
 			public Action parse(Brain brain, String... args) {

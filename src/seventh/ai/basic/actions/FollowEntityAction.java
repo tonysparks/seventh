@@ -127,7 +127,8 @@ public class FollowEntityAction extends AdapterAction {
 				}
 				else {
 					/* stop the agent */				
-					feeder.clearPath();				
+					feeder.clearPath();	
+					brain.getMotion().scanArea();
 				}
 				
 				previousPosition.set(newPosition);

@@ -40,20 +40,26 @@ public class SwitchWeaponEvaluator extends ActionEvaluator {
 	public double calculateDesirability(Brain brain) {
 		double desire = 0.0;
 		Inventory inventory = brain.getEntityOwner().getInventory();
-		if(inventory.numberOfItems() > 1) {
+		if(inventory.numberOfItems() > 1 ) {
 			Weapon weapon = inventory.currentItem();
 			if (weapon != null) {			
 																		
 				// do we have enough ammo?
 //				double weaponScore = Evaluators.currentWeaponAmmoScore(brain.getEntityOwner());
-				if( weapon.getTotalAmmo() <= 0 ) {
-					desire += brain.getRandomRange(0.3, 0.5);
-				}
 				
-				
-				Weapon bestWeapon = getBestScoreWeapon(inventory);
-				if(bestWeapon != weapon) {
-					desire += brain.getRandomRange(0.1, 0.4);
+				/* ensure we are not currently firing/reloading/switching
+				 * the weapon
+				 */
+				if(weapon.isReady()) {
+					if( weapon.getTotalAmmo() <= 0 ) {
+						desire += brain.getRandomRange(0.3, 0.5);
+					}
+					
+					
+					Weapon bestWeapon = getBestScoreWeapon(inventory);
+					if(bestWeapon != weapon) {
+						desire += brain.getRandomRange(0.1, 0.4);
+					}
 				}
 				
 			}

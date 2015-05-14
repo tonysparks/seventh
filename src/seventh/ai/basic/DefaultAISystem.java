@@ -404,7 +404,7 @@ public class DefaultAISystem implements AISystem {
 			if(brain != null) {
 				Action action = this.aiCommands.compile(brain, command);
 				if(action != null) {
-					brain.getCommunicator().post(action);
+					brain.getCommunicator().makeTopPriority(action);
 				}
 			}
 		}

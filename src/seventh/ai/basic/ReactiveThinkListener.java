@@ -52,8 +52,8 @@ public class ReactiveThinkListener implements ThinkListener {
 		this.strategy = strategy;
 		this.goals = goals;
 		
-		this.longTermGoal = new Goal();	
-		this.reactiveGoal = new Goal();
+		this.longTermGoal = new Goal("longTermGoal");	
+		this.reactiveGoal = new Goal("reactiveGoal");
 	}
 	
 	

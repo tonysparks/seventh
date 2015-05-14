@@ -55,9 +55,6 @@ public class CoverEntityAction extends AdapterAction {
 	@Override
 	public boolean isFinished(Brain brain) {	
 	    boolean isfinished = !this.followMe.isAlive() || this.lastVisibleTime > timeSinceLastSeenExpireMSec;
-	    if(isfinished) {
-	        System.out.println("Finished covering entity");
-	    }
 		return isfinished;
 	}
 	
@@ -89,6 +86,7 @@ public class CoverEntityAction extends AdapterAction {
 				/* stop the agent */
 				if(feeder != null) {
 					feeder.clearPath();
+					brain.getMotion().scanArea();
 				}
 			}
 			

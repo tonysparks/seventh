@@ -105,7 +105,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		
 		switch(this.currentState) {
 		case DEFEND:
-			if(zoneToAttack != null) {
+			/*if(zoneToAttack != null) {
 				BombTarget target = getPlantedBombTarget(zoneToAttack);
 				if(target!=null) {
 					action = goals.defendPlantedBomb(target);
@@ -113,12 +113,14 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				else {
 					action = goals.defend(zoneToAttack);
 				}
-			}
+			}*/
+			action = goals.goToRandomSpot(brain);
 			break;		
 		case INFILTRATE:
-			if(zoneToAttack != null) {
+			/*if(zoneToAttack != null) {
 				action = goals.infiltrate(zoneToAttack);
-			}
+			}*/
+			action = goals.goToRandomSpot(brain);
 			break;
 		case PLANT_BOMB:			
 			action = goals.plantBomb();			
@@ -128,9 +130,10 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 			break;
 		case DONE:			
 		default:
-			if(zoneToAttack != null) {
+			/*if(zoneToAttack != null) {
 				action = goals.infiltrate(zoneToAttack);
-			}
+			}*/
+			action = goals.goToRandomSpot(brain);
 			break;		
 		}
 		
@@ -321,6 +324,8 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 			if(player.isBot() && player.isAlive()) {
 				Brain brain = aiSystem.getBrain(player);
 				
+				// TODO: Let the brain tell us when we are ready
+				// to accept new orders
 				if(!brain.getCommunicator().hasPendingCommands()) {
 					System.out.println("Orders posted: " + currentState);
 					brain.getCommunicator().post(getCurrentAction(brain));

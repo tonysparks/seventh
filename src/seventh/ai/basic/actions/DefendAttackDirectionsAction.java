@@ -48,7 +48,7 @@ public class DefendAttackDirectionsAction extends AdapterAction {
 	public void start(Brain brain) {
 		this.timeToDefend = this.originalTimeToDefend;
 		
-		if(!this.interrupted) {
+		if(!this.interrupted && this.attackDirs.size() > 0) {
 			this.currentDirection = (currentDirection+1) % this.attackDirs.size();
 			this.dir.set(this.attackDirs.get(currentDirection).getDirection());
 		}
@@ -85,7 +85,7 @@ public class DefendAttackDirectionsAction extends AdapterAction {
 		
 		PlayerEntity ent = brain.getEntityOwner();
 		
-		if(lookTime > 2_000 && !this.interrupted) {
+		if(lookTime > 2_000 && !this.interrupted && this.attackDirs.size() > 0) {
 			this.currentDirection = (currentDirection+1) % this.attackDirs.size();
 			this.dir.set(this.attackDirs.get(currentDirection).getDirection());
 			lookTime = 0;

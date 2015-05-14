@@ -21,12 +21,15 @@ public class Goal extends AdapterAction implements Debugable {
 	private Deque<Action> actions;
 	private boolean isFirstAction;
 	
+	private String name;
+	
 	/**
 	 * 
 	 */
-	public Goal() {		
+	public Goal(String name) {		
 		this.actions = new ConcurrentLinkedDeque<>();
 		this.isFirstAction = true;
+		this.name = name;
 	}
 	
 	/**
@@ -181,7 +184,8 @@ public class Goal extends AdapterAction implements Debugable {
 	@Override
 	public DebugInformation getDebugInformation() {
 		DebugInformation me = new DebugInformation();
-		me.add("actions", this.actions);
+		me.add("name", this.name);
+		me.add("actions", this.actions.peek());
 		return me;
 	}
 	

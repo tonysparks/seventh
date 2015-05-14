@@ -5,6 +5,7 @@ package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
 import seventh.game.PlayerEntity;
+import seventh.game.weapons.Weapon;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -38,7 +39,8 @@ public class ShootAtAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
-		return !this.inLOF;
+		Weapon weapon = brain.getEntityOwner().getInventory().currentItem();
+		return !this.inLOF || (weapon==null || weapon.getBulletsInClip()==0);
 	}
 	
 	/* (non-Javadoc)

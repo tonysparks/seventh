@@ -142,7 +142,7 @@ public class Brain implements Debugable {
 			this.targetingSystem.update(timeStep);
 			
 			debugDraw();
-			debugDrawPathPlanner();
+			//debugDrawPathPlanner();
 		}		
 	}
 	
@@ -157,8 +157,20 @@ public class Brain implements Debugable {
 			DebugDraw.drawLineRelative(entityOwner.getPos(), dir.getDirection(), 0xff00ff00);
 		}
 		
-		DebugDraw.drawString(this.thoughtProcess.toString(), new Vector2f(20, 700), 0xff00ffff);
-
+		//DebugDraw.drawString(this.thoughtProcess.toString(), new Vector2f(-120, 700), 0xff00ffff);
+		
+		Vector2f p = new Vector2f(entityOwner.getPos().x-50, entityOwner.getPos().y + 40);
+		String str = this.thoughtProcess.toString();
+		String[] sections = str.split("\\{");
+		for(String section : sections) {
+			String[] attributes = section.split(":");
+			for(String att : attributes) {
+				
+				DebugDraw.drawStringRelative(att, p, 0xff00ffff);
+				p.y += 12;
+			}
+			p.x += 10;
+		}
 	}
 	
 	@SuppressWarnings("unused")

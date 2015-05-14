@@ -909,6 +909,17 @@ public class PlayerEntity extends Entity implements Controllable {
 	}
 	
 	/**
+	 * @return true if we are currently switching weapons
+	 */
+	public boolean isSwitchingWeapon() {
+		Weapon weapon = this.inventory.currentItem();
+		if(weapon!=null) {
+			return weapon.isSwitchingWeapon();
+		}
+		return false;
+	}
+	
+	/**
 	 * @return true if we are currently melee attacking
 	 */
 	public boolean isMeleeAttacking() {

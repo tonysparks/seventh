@@ -106,8 +106,8 @@ public class ExplosionEffect implements Updatable {
 		 * is active
 		 */
 		for(int i = 0; i < this.instances.length; i++) {
-			this.shaderData[i  ] = 0;
-			this.shaderData[i+1] = 0;
+			this.shaderData[i  ] = -0.1f;
+			this.shaderData[i+1] = -0.1f;
 			this.shaderData[i+2] = 0;
 		}
 		

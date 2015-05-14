@@ -156,4 +156,60 @@ public class AIShortcuts {
             }    
         }
     }
+    
+    public static class DefuseBombAIShortcut extends AIShortcut {
+        /**
+         * @param shortcutKey
+         */
+        public DefuseBombAIShortcut(int shortcutKey) {
+            super(shortcutKey, "Defuse bomb");
+        }
+        
+        /* (non-Javadoc)
+         * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
+         */
+        @Override
+        public void execute(Console console, ClientGame game) {
+            ClientPlayer localPlayer = game.getLocalPlayer();
+            
+            if(!localPlayer.isAlive()) {
+                return;
+            }
+            
+            int closestBot = findClosestBot(game);
+            if(closestBot > -1) {
+                ClientPlayers players = game.getPlayers();
+                console.execute("ai " + closestBot + " defuseBomb");
+                console.execute("team_say " + players.getPlayer(closestBot).getName() + " defuse the bomb!" );
+            }    
+        }
+    }
+    
+    public static class PlantBombAIShortcut extends AIShortcut {
+        /**
+         * @param shortcutKey
+         */
+        public PlantBombAIShortcut(int shortcutKey) {
+            super(shortcutKey, "Plant bomb");
+        }
+        
+        /* (non-Javadoc)
+         * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
+         */
+        @Override
+        public void execute(Console console, ClientGame game) {
+            ClientPlayer localPlayer = game.getLocalPlayer();
+            
+            if(!localPlayer.isAlive()) {
+                return;
+            }
+            
+            int closestBot = findClosestBot(game);
+            if(closestBot > -1) {
+                ClientPlayers players = game.getPlayers();
+                console.execute("ai " + closestBot + " plantBomb");
+                console.execute("team_say " + players.getPlayer(closestBot).getName() + " plant the bomb!" );
+            }    
+        }
+    }
 }

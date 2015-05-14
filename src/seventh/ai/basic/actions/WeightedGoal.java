@@ -29,7 +29,9 @@ public class WeightedGoal extends Goal {
 	/**
 	 * 
 	 */
-	public WeightedGoal(Brain brain, ActionEvaluator ... evaluators) {
+	public WeightedGoal(Brain brain, String name, ActionEvaluator ... evaluators) {
+		super(name);
+		
 		this.evaluators = new ArrayList<ActionEvaluator>();
 		for(ActionEvaluator e : evaluators) {
 			this.evaluators.add(e);
@@ -67,6 +69,10 @@ public class WeightedGoal extends Goal {
 				Action action = this.currentActiveEvaluator.getAction(brain);
 
 				// TODO : Figure out how to overridde the the current evaluator
+				
+				// TODO: -- BUG with taking command overriding shooting player
+				
+				
 				// if it is a CommandActionEvaluator (override the command)
 //					if(!(action instanceof WaitAction))
 //						System.out.println(action.getClass().getSimpleName());

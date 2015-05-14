@@ -245,6 +245,13 @@ public abstract class Weapon {
 	}
 	
 	/**
+	 * @return true if this weapon is switching
+	 */
+	public boolean isSwitchingWeapon() {
+		return state == State.SWITCHING;
+	}
+	
+	/**
 	 * @return true if this weapon is currently firing
 	 */
 	public boolean isFiring() {

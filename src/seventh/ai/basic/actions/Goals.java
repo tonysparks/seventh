@@ -90,7 +90,7 @@ public class Goals {
 		Action action = getScriptedAction("moveToCover");
 		action.getActionResult().setValue(cover);
 		
-		return new ConcurrentGoal(action, new WeightedGoal(brain, 
+		return new ConcurrentGoal(action, new WeightedGoal(brain, "moveToCover",
 										   	new ShootWeaponEvaluator(this, brain.getRandomRangeMin(0.8), 0.8),
 										   	new MeleeEvaluator(this, brain.getRandomRange(0.2, 0.4), 0),
 										   	new DoNothingEvaluator(this, brain.getRandomRangeMin(0.6), 0),
@@ -137,7 +137,7 @@ public class Goals {
 	 * @return the goal
 	 */
 	public Goal decideAttackMethod(Goals goals, Brain brain) {
-		return new WeightedGoal(brain, 
+		return new WeightedGoal(brain, "decideAttackMethod",
 				new ShootWeaponEvaluator(goals, brain.getRandomRangeMin(0.8), 0.8),
 				new MeleeEvaluator(goals, brain.getRandomRangeMin(0.5), 0),
 				new GrenadeEvaluator(goals, brain.getRandomRangeMin(0.2), 0.2)
@@ -146,14 +146,14 @@ public class Goals {
 		
 	
 	public Goal enemyEncountered(Goals goals, Brain brain) {
-		return new WeightedGoal(brain, 
+		return new WeightedGoal(brain, "enemyEncountered",
 				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.48), 0.8),
 				new TakeCoverEvaluator(goals, brain.getRandomRangeMin(0.3), 0.9)
 		);
 	}
 	
 	public Action surpressFire(Goals goals, Brain brain, Vector2f position) {
-		return new WeightedGoal(brain, 
+		return new WeightedGoal(brain, "surpressFire",
 //				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.4), 0.8),
 				new SurpressFireEvaluator(goals, brain.getRandomRangeMin(0.3), 0.9, position)
 		);

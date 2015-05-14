@@ -462,10 +462,11 @@ public class ClientGame {
 		}
 		canvas.end();
 
-//		DebugDraw.enable(true);
-//		DebugDraw.render(canvas, camera);
-
 		canvas.setShader(null);
+		DebugDraw.enable(false);
+		DebugDraw.render(canvas, camera);
+
+		
 		hud.render(canvas, camera, 0);
 	}
 	
@@ -907,11 +908,12 @@ public class ClientGame {
 					NetExplosion explosion = (NetExplosion)ent;
 					
 					/* convert to UV coordinates */
-					pos.x = (pos.x - camera.getPosition().x) / app.getScreenWidth();
-					pos.y = 1f - (pos.y - camera.getPosition().y) / app.getScreenHeight();
+					Vector2f uvPos = new Vector2f(pos);
+					uvPos.x = (pos.x - camera.getPosition().x) / app.getScreenWidth();
+					uvPos.y = 1f - (pos.y - camera.getPosition().y) / app.getScreenHeight();
 					
 					/* limit the explosion per player */
-					this.explosions.activate(explosion.ownerId, pos);
+					this.explosions.activate(explosion.ownerId, uvPos);
 				}
 				else {
 					entity = new ClientFire(this, pos);	

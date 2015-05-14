@@ -3,12 +3,12 @@
  */
 package seventh.ai.basic;
 
-import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.ConcurrentGoal;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.WeightedGoal;
 import seventh.ai.basic.actions.evaluators.AttackActionEvaluator;
 import seventh.ai.basic.actions.evaluators.CommandActionEvaluator;
+import seventh.ai.basic.actions.evaluators.DefendSelfActionEvaluator;
 import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
 import seventh.ai.basic.actions.evaluators.ExploreActionEvaluator;
 import seventh.ai.basic.actions.evaluators.InvestigateActionEvaluator;
@@ -18,12 +18,15 @@ import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.shared.TimeStep;
 
 /**
+ * Weighted thought process means it attempts to make fuzzy decisions based on the surrounding environment and
+ * circumstances.
+ * 
  * @author Tony
  *
  */
 public class WeightedThoughtProcess implements ThoughtProcess {
 	
-	private Action currentGoal;
+	private ConcurrentGoal currentGoal;
 	
 	/**
 	 * 
@@ -33,15 +36,19 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 		Goals goals = brain.getWorld().getGoals();
 		this.currentGoal = new ConcurrentGoal( 				
 				// high level goals
-				new WeightedGoal(brain, new AttackActionEvaluator(goals, brain.getRandomRangeMin(0.85), 0.82),
-										new CommandActionEvaluator(goals, brain.getRandomRangeMin(0.8), 0.8),
+				new WeightedGoal(brain, "highLevelGoal",
+										new AttackActionEvaluator(goals, brain.getRandomRangeMin(0.85), 0.82),
+										new DefendSelfActionEvaluator(goals, brain.getRandomRangeMin(0.85), 0.81),
+										new CommandActionEvaluator(goals, brain.getRandomRange(0.7, 0.8), 0.8),
 										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9), 0.6),
+										
 //										new StrategyEvaluator(teamStrategy, goals, brain.getRandomRange(0.1, ), 0)
 										new ExploreActionEvaluator(goals, brain.getRandomRange(0.1, 0.5), 0.5)											
 				),
 				
 				// Auxiliary goals, ones that do not impact the high level goals
-				new WeightedGoal(brain, new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8), 0),
+				new WeightedGoal(brain, "auxiliaryGoal",
+										new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8), 0),
 										new SwitchWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8), 0),
 										new DoNothingEvaluator(goals, brain.getRandomRange(0.4, 0.9), 0)
 				)
@@ -76,8 +83,6 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	@Override
 	public void think(TimeStep timeStep, Brain brain) {		
 		this.currentGoal.update(brain, timeStep);
-		
-		//DebugDraw.drawString("Thinking: " + toString(), 100, 200, 0xffffffff);
 	}
 		
 	/* (non-Javadoc)
@@ -86,7 +91,8 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	@Override
 	public DebugInformation getDebugInformation() {
 		DebugInformation info = new DebugInformation();
-		info.add("goal", this.currentGoal);
+		//info.add("goal", this.currentGoal);
+		info.add("goal", this.currentGoal.getAction(0));
 		return info;
 	}
 	

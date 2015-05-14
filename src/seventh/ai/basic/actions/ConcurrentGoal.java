@@ -31,6 +31,14 @@ public class ConcurrentGoal implements Action {
 	}
 	
 	/**
+	 * @param index
+	 * @return the Action
+	 */
+	public Action getAction(int index) {
+		return this.concurrentActions.get(index);
+	}
+	
+	/**
 	 * Adds a concurrent action
 	 * @param action
 	 */

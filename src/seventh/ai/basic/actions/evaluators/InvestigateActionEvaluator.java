@@ -7,7 +7,6 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.MoveToAction;
-import seventh.game.Entity;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.math.Vector2f;
 
@@ -101,11 +100,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 			}
 		}
 		
-		Entity attacker = brain.getSensors().getFeelSensor().getMostRecentAttacker();
-		if(attacker != null) {
-			desirability += brain.getRandomRange(0.4, 0.5);
-		}
-		
+		desirability = Math.min(desirability, 1f);
 		desirability *= getCharacterBias();
 		
 		return desirability;
@@ -117,12 +112,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 	@Override
 	public Action getAction(Brain brain) {		
 		SoundEmittedEvent sound = brain.getSensors().getSoundSensor().getClosestSound();				
-		Entity attacker = brain.getSensors().getFeelSensor().getMostRecentAttacker();
-		if(attacker != null) {
-			this.moveToAction.reset(brain, attacker.getCenterPos());
-			brain.getMotion().lookAt(this.moveToAction.getDestination());
-		}
-		else if(sound != null) {
+		if(sound != null) {
 			this.moveToAction.reset(brain, sound.getPos());
 			brain.getMotion().lookAt(this.moveToAction.getDestination());
 		}	

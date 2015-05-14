@@ -53,6 +53,15 @@ public class Communicator {
 		return !this.commands.isEmpty();
 	}
 	
+	
+	/**
+	 * @return peeks at the next action
+	 */
+	public Action peek() {
+		Action cmd = commands.peek();
+		return cmd;
+	}
+	
 	/**
 	 * Receives any pending {@link Action}s.
 	 * 
@@ -70,6 +79,15 @@ public class Communicator {
 		this.commands.add(cmd);
 	}
 	
+	/**
+	 * Removes all previous posted {@link Action}s and makes the supplied
+	 * Action the only {@link Action}
+	 * @param cmd
+	 */
+	public void makeTopPriority(Action cmd) {
+		this.commands.clear();
+		this.commands.add(cmd);
+	}
 	
 	/**
 	 * Broadcasts an action for another entity to pick up

@@ -11,7 +11,6 @@ import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Colors;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
-import seventh.client.gfx.ShaderTest;
 import seventh.client.gfx.Theme;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
@@ -50,7 +49,7 @@ public class MenuScreen implements Screen {
 	
 	private Panel menuPanel;
 	private PanelView<Renderable> panelView;
-	private ShaderTest test;
+//	private ShaderTest test;
 	/**
 	 * 
 	 */
@@ -205,7 +204,7 @@ public class MenuScreen implements Screen {
 	 */
 	@Override
 	public void enter() {	
-		test = new ShaderTest();
+//		test = new ShaderTest();
 		menuPanel.show();
 		Sounds.playGlobalSound(Sounds.uiNavigate);
 	}
@@ -226,7 +225,7 @@ public class MenuScreen implements Screen {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {	
-		test.update(timeStep);
+//		test.update(timeStep);
 	}
 
 
@@ -263,7 +262,7 @@ public class MenuScreen implements Screen {
 		
 		canvas.end();
 		
-		test.render(canvas, null, center);
+//		test.render(canvas, null, center);
 	}
 	
 	/**

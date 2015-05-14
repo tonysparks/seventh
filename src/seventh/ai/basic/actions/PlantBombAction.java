@@ -14,25 +14,41 @@ import seventh.shared.TimeStep;
  */
 public class PlantBombAction extends AdapterAction {
 
-	private BombTarget bomb;	
+	private BombTarget target;	
 	
 	/**
-	 * 
 	 */
-	public PlantBombAction(BombTarget bomb) {
-		this.bomb = bomb;
+	public PlantBombAction() {
+		this(null);
+	}
+	
+	/**
+	 * @param target 
+	 */
+	public PlantBombAction(BombTarget target) {
+		this.target = target;
+	}
+	
+	/**
+	 * Resets the action
+	 * @param target
+	 */
+	public void reset(BombTarget target) {
+		this.target = target;
+		getActionResult().setFailure();
 	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public void start(Brain brain) {				
-//		if(!bomb.isTouching(brain.getEntityOwner())) {								
-//			brain.getMotion().moveTo(bomb.getCenterPos());
-//		}
-//		
-//		brain.getMotion().plantBomb(bomb);
+	public void start(Brain brain) {	
+		if(target != null && target.bombActive()) {
+			getActionResult().setSuccess();
+		}
+		else {
+			getActionResult().setFailure();
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -64,25 +80,19 @@ public class PlantBombAction extends AdapterAction {
 	 */
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
-		if(bomb.bombActive()) {
-			getActionResult().setSuccess();
-		}
-		else {
-			Locomotion motion = brain.getMotion();
-//			if(!bomb.isTouching(brain.getEntityOwner())) {
-//				Vector2f dest = motion.getDestination();
-//				if(dest == null || !dest.equals(bomb.getCenterPos())) {
-//					if(!motion.isMoving()) {
-//						motion.moveTo(bomb.getCenterPos());
-//					}
-//				}
-//			}
-//			else 
-				if(!bomb.bombPlanting() || !motion.isPlanting()) {
-				motion.plantBomb(bomb);
+		if(target != null) {
+			if(target.bombActive()) {
+				getActionResult().setSuccess();
 			}
-			
-			getActionResult().setFailure();
+			else {
+				Locomotion motion = brain.getMotion();
+	 
+				if(!target.bombPlanting() || !motion.isPlanting()) {
+					motion.plantBomb(target);
+				}
+				
+				getActionResult().setFailure();
+			}
 		}
 	}
 
@@ -91,13 +101,18 @@ public class PlantBombAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {
+		
 		/* error cases, we must finish then */
-		if(!bomb.isAlive()) {
+		if(target == null || !target.isAlive()) {
 			return true;
 		}
 		
 		/* check and see if we planted the bomb */
-		if(bomb.bombActive()) {
+		if(target.bombActive()) {
+			return true;
+		}
+		
+		if(!brain.getEntityOwner().isTouching(target)) {
 			return true;
 		}
 		
@@ -107,6 +122,6 @@ public class PlantBombAction extends AdapterAction {
 	
 	@Override
 	public DebugInformation getDebugInformation() {	
-		return super.getDebugInformation().add("target", this.bomb.getId());
+		return super.getDebugInformation().add("target", this.target.getId());
 	}
 }

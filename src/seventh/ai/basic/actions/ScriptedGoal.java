@@ -31,7 +31,7 @@ public class ScriptedGoal extends AdapterAction {
 		this.runtime = runtime;
 		this.goalFunction = goalFunction;
 		this.name = name;
-		this.goal = new Goal();
+		this.goal = new Goal(name);
 		
 		this.isFunctionDone = false;
 	}
