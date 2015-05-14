@@ -9,8 +9,10 @@ import java.util.List;
 import seventh.ai.AICommand;
 import seventh.client.AIShortcut;
 import seventh.client.AIShortcuts;
+import seventh.client.AIShortcuts.DefuseBombAIShortcut;
 import seventh.client.AIShortcuts.FollowMeAIShortcut;
 import seventh.client.AIShortcuts.MoveToAIShortcut;
+import seventh.client.AIShortcuts.PlantBombAIShortcut;
 import seventh.client.AIShortcuts.SurpressFireAIShortcut;
 import seventh.client.AIShortcutsMenu;
 import seventh.client.ClientGame;
@@ -208,6 +210,8 @@ public class InGameScreen implements Screen {
 		commands.add(new FollowMeAIShortcut(Keys.P));
 		commands.add(new SurpressFireAIShortcut(Keys.O));
 		commands.add(new MoveToAIShortcut(Keys.I));
+		commands.add(new PlantBombAIShortcut(Keys.J));
+		commands.add(new DefuseBombAIShortcut(Keys.K));
 		this.aiShortcuts = new AIShortcuts(commands);
 		this.aiShortcutsMenu = new AIShortcutsMenu(keyMap, aiShortcuts);
 		
