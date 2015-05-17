@@ -153,7 +153,7 @@ public class Brain implements Debugable {
 	@SuppressWarnings("unused")
 	private void debugDraw() {
 		Cover cover = world.getCover(entityOwner, entityOwner.getPos());
-		DebugDraw.fillRectRelative( (int)cover.getCoverPos().x, (int)cover.getCoverPos().y, 5, 5, 0xff00ff00);
+		//DebugDraw.fillRectRelative( (int)cover.getCoverPos().x, (int)cover.getCoverPos().y, 5, 5, 0xff00ff00);
 		
 		List<AttackDirection> attackDirections = world.getAttackDirections(entityOwner);
 		for(AttackDirection dir : attackDirections) {

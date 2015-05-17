@@ -463,7 +463,7 @@ public class ClientGame {
 		canvas.end();
 
 		canvas.setShader(null);
-		DebugDraw.enable(true);
+		DebugDraw.enable(false);
 		DebugDraw.render(canvas, camera);
 
 		

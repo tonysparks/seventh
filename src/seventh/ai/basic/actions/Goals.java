@@ -79,10 +79,17 @@ public class Goals {
 		return new MoveAction(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
 	}
 	
-	public Action takeCover(Vector2f attackDir) {
+	public Action takeCover(Vector2f attackDir, Brain brain) {
 		Action action = getScriptedAction("takeCover");
 		action.getActionResult().setValue(attackDir);
-		return action;
+		//return action;
+		return new ConcurrentGoal(action, new WeightedGoal(brain, "moveToCover",
+					   	new ShootWeaponEvaluator(this, brain.getRandomRangeMin(0.8), 0.8),
+					   	new MeleeEvaluator(this, brain.getRandomRange(0.2, 0.4), 0),
+					   	new DoNothingEvaluator(this, brain.getRandomRangeMin(0.6), 0),
+						new GrenadeEvaluator(this, brain.getRandomRangeMin(0.5), 0)
+		));		
+		
 	}
 	
 	public Action moveToCover(Cover cover, Brain brain) {

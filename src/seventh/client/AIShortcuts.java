@@ -70,7 +70,7 @@ public class AIShortcuts {
          * @param shortcutKey
          */
         public FollowMeAIShortcut(int shortcutKey) {
-            super(shortcutKey, "To call for cover");
+            super(shortcutKey, "Call for a partner");
         }
 
         /* (non-Javadoc)
@@ -89,7 +89,7 @@ public class AIShortcuts {
                 ClientPlayers players = game.getPlayers();
                 int playerId = localPlayer.getId();
                 console.execute("ai " + closestBot + " followMe " + playerId);
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " cover me!" );
+                console.execute("team_say " + players.getPlayer(closestBot).getName() + " follow me!" );
             }
         }
         
@@ -120,7 +120,7 @@ public class AIShortcuts {
             if(closestBot > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
-                console.execute("ai " + closestBot + " surpressFire " + worldPosition.x + " " + worldPosition.y);
+                console.execute("ai " + closestBot + " surpressFire " + (int)worldPosition.x + " " + (int)worldPosition.y);
                 console.execute("team_say " + players.getPlayer(closestBot).getName() + " surpress fire!" );
             }    
         }
@@ -151,7 +151,7 @@ public class AIShortcuts {
             if(closestBot > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
-                console.execute("ai " + closestBot + " moveTo " + worldPosition.x + " " + worldPosition.y);
+                console.execute("ai " + closestBot + " moveTo " + (int)worldPosition.x + " " + (int)worldPosition.y);
                 console.execute("team_say " + players.getPlayer(closestBot).getName() + " take cover here!" );
             }    
         }
@@ -238,6 +238,37 @@ public class AIShortcuts {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + closestBot + " defendBomb");
                 console.execute("team_say " + players.getPlayer(closestBot).getName() + " defend the bomb!" );
+            }    
+        }
+    }
+    
+    public static class TakeCoverAIShortcut extends AIShortcut {
+
+        /**
+         * @param shortcutKey
+         * @param description
+         */
+        public TakeCoverAIShortcut(int shortcutKey) {
+            super(shortcutKey, "Take Cover");
+        }
+        
+        /* (non-Javadoc)
+         * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
+         */
+        @Override
+        public void execute(Console console, ClientGame game) {
+            ClientPlayer localPlayer = game.getLocalPlayer();
+            
+            if(!localPlayer.isAlive()) {
+                return;
+            }
+            
+            int closestBot = findClosestBot(game);
+            if(closestBot > -1) {
+                ClientPlayers players = game.getPlayers();
+                Vector2f worldPosition = getMouseWorldPosition(game);
+                console.execute("ai " + closestBot + " takeCover " + (int)worldPosition.x + " " + (int)worldPosition.y);
+                console.execute("team_say " + players.getPlayer(closestBot).getName() + " take cover!" );
             }    
         }
     }

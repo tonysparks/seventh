@@ -8,6 +8,7 @@ import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.MoveToAction;
 import seventh.game.Entity;
+import seventh.game.weapons.Bullet;
 import seventh.math.Vector2f;
 
 /**
@@ -53,8 +54,17 @@ public class DefendSelfActionEvaluator extends ActionEvaluator {
 	public Action getAction(Brain brain) {		
 		Entity attacker = brain.getSensors().getFeelSensor().getMostRecentAttacker();
 		if(attacker != null) {
-			this.moveToAction.reset(brain, attacker.getCenterPos());
-			brain.getMotion().lookAt(this.moveToAction.getDestination());
+			if(attacker instanceof Bullet) {
+				Bullet bullet = (Bullet)attacker;
+				Entity owner = bullet.getOwner();
+				this.moveToAction.reset(brain, owner.getCenterPos());
+				brain.getMotion().lookAt(this.moveToAction.getDestination());
+			}
+			else {
+				
+				this.moveToAction.reset(brain, attacker.getCenterPos());
+				brain.getMotion().lookAt(this.moveToAction.getDestination());
+			}
 		}		
 		return this.moveToAction;
 	}

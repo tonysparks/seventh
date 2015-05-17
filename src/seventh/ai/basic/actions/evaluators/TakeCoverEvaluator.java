@@ -87,7 +87,6 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 		
 		this.cover.setCoverPos(coverPosition);
 		this.cover.setAttackDir(attackDir);
-		System.out.println("Getting cover action: " + this.cover.getCoverPos());
 		return getGoals().moveToCover(this.cover, brain);
 	}
 

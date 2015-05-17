@@ -123,6 +123,7 @@ public class SoundSensor implements Sensor {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		this.updateEar.update(timeStep);
 		if(this.updateEar.isTime()) {		
 			listen(timeStep);
 		}

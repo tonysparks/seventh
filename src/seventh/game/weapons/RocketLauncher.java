@@ -16,6 +16,8 @@ import seventh.shared.WeaponConstants;
  */
 public class RocketLauncher extends Weapon {
 	
+	private boolean endFire;
+	
 	/**
 	 * @param game
 	 * @param owner
@@ -35,12 +37,13 @@ public class RocketLauncher extends Weapon {
 		
 		applyScriptAttributes("rocket_launcher");
 	}
-	
-	/* (non-Javadoc)
-	 * @see palisma.game.Weapon#endFire()
+
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.weapons.Weapon#beginFire()
 	 */
 	@Override
-	public boolean endFire() {
+	public boolean beginFire() {
 		if(canFire()) {
 			newRocket();
 			game.emitSound(getOwnerId(), SoundType.RPG_FIRE, getPos());
@@ -58,6 +61,24 @@ public class RocketLauncher extends Weapon {
 //			setWaitingState();
 //		}
 		return false;
+	}
+	
+	/* (non-Javadoc)
+	 * @see palisma.game.Weapon#endFire()
+	 */
+	@Override
+	public boolean endFire() {	
+		this.endFire = true;
+		return false;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.game.weapons.Weapon#canFire()
+	 */
+	@Override
+	public boolean canFire() {	
+		return super.canFire() && this.endFire;
 	}
 	
 	/* (non-Javadoc)

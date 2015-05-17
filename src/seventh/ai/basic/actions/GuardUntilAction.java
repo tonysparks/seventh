@@ -16,6 +16,8 @@ public class GuardUntilAction extends AdapterAction {
 	
 	private Leola runtime;
 	private LeoObject isFinished;
+	private LeoObject result;
+	
 	/**
 	 * 
 	 */
@@ -44,7 +46,8 @@ public class GuardUntilAction extends AdapterAction {
 	 * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
 	 */
 	@Override
-	public void update(Brain brain, TimeStep timeStep) {		
+	public void update(Brain brain, TimeStep timeStep) {
+		result = this.runtime.execute(isFinished, Leola.toLeoObject(timeStep));		
 	}
 	
 	/* (non-Javadoc)
@@ -56,7 +59,6 @@ public class GuardUntilAction extends AdapterAction {
 			return true;
 		}
 		
-		LeoObject result = this.runtime.execute(isFinished);
 		return LeoObject.isTrue(result);
 	}
 }

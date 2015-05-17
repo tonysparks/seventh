@@ -88,7 +88,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	public void startOfRound(GameInfo game) {		
 		this.zoneToAttack = calculateZoneToAttack();	
 		this.currentState = OffensiveState.RANDOM;		
-		this.timeUntilOrganizedAttack = 0; //30_000 + (random.nextInt(15) * 1000);				
+		this.timeUntilOrganizedAttack = 15_000 + (random.nextInt(25) * 1000);				
 	}
 	
 	
@@ -105,7 +105,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		
 		switch(this.currentState) {
 		case DEFEND:
-			/*if(zoneToAttack != null) {
+			if(zoneToAttack != null) {
 				BombTarget target = getPlantedBombTarget(zoneToAttack);
 				if(target!=null) {
 					action = goals.defendPlantedBomb(target);
@@ -113,13 +113,12 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				else {
 					action = goals.defend(zoneToAttack);
 				}
-			}*/
-			action = goals.goToRandomSpot(brain);
+			}
 			break;		
 		case INFILTRATE:
-			/*if(zoneToAttack != null) {
+			if(zoneToAttack != null) {
 				action = goals.infiltrate(zoneToAttack);
-			}*/
+			}
 			action = goals.goToRandomSpot(brain);
 			break;
 		case PLANT_BOMB:			
@@ -130,10 +129,9 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 			break;
 		case DONE:			
 		default:
-			/*if(zoneToAttack != null) {
+			if(zoneToAttack != null) {
 				action = goals.infiltrate(zoneToAttack);
-			}*/
-			action = goals.goToRandomSpot(brain);
+			}
 			break;		
 		}
 		

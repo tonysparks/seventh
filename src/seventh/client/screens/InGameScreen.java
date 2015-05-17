@@ -15,6 +15,7 @@ import seventh.client.AIShortcuts.FollowMeAIShortcut;
 import seventh.client.AIShortcuts.MoveToAIShortcut;
 import seventh.client.AIShortcuts.PlantBombAIShortcut;
 import seventh.client.AIShortcuts.SurpressFireAIShortcut;
+import seventh.client.AIShortcuts.TakeCoverAIShortcut;
 import seventh.client.AIShortcutsMenu;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
@@ -214,6 +215,7 @@ public class InGameScreen implements Screen {
 		commands.add(new PlantBombAIShortcut(Keys.J));
 		commands.add(new DefuseBombAIShortcut(Keys.K));
 		commands.add(new DefendPlantedBombAIShortcut(Keys.L));
+		commands.add(new TakeCoverAIShortcut(Keys.U));
 		this.aiShortcuts = new AIShortcuts(commands);
 		this.aiShortcutsMenu = new AIShortcutsMenu(keyMap, aiShortcuts);
 		

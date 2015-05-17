@@ -105,7 +105,7 @@ public class AICommands {
 					attackDir.set(x, y);
 				}
 				
-				Action action = goals.takeCover(attackDir);
+				Action action = goals.takeCover(attackDir, brain);
 				return action;
 			}
 		});

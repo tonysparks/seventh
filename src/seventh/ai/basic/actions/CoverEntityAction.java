@@ -30,7 +30,7 @@ public class CoverEntityAction extends AdapterAction {
 		this.followMe = followMe;
 		this.previousPosition = new Vector2f();
 		
-		timeSinceLastSeenExpireMSec = 5_000;
+		timeSinceLastSeenExpireMSec = 7_000;
 	}
 	
 	/* (non-Javadoc)

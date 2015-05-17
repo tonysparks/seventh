@@ -87,7 +87,8 @@ public class SoundMemory implements Updatable {
 		 * Expire this record
 		 */
 		public void expire() {
-			this.sound = null;						
+			this.sound.setId(-1);
+			this.sound.setSoundType(SoundType.MUTE);
 			this.isValid = false;
 		}
 		
