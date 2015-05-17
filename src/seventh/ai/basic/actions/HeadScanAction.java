@@ -4,6 +4,9 @@
  */
 package seventh.ai.basic.actions;
 
+import java.util.List;
+
+import seventh.ai.basic.AttackDirection;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.PathPlanner;
 import seventh.game.PlayerEntity;
@@ -19,15 +22,21 @@ public class HeadScanAction extends AdapterAction {
 	/**
 	 * Full circle
 	 */
-	private static final float fullCircle = (float)Math.toRadians(360);
+	private static final float fullCircle = (float)Math.PI * 2f;
 	
 	private long sampleTime;	
+	private long pickAttackDirectionTime;
+	private int attackDirectionIndex;
+	private int direction;
 	private Vector2f destination;
+	private Vector2f attackDir;
 	
 	/**
 	 */
 	public HeadScanAction() {		
 		this.destination = new Vector2f();
+		this.attackDir = new Vector2f();
+		this.direction = 1;
 	}
 
 
@@ -37,6 +46,9 @@ public class HeadScanAction extends AdapterAction {
 	public void reset() {
 		this.sampleTime = 0;
 		this.destination.zeroOut();
+		
+		this.pickAttackDirectionTime = 0;
+		this.attackDirectionIndex = -1;
 	}
 	
 	/* (non-Javadoc)
@@ -58,15 +70,46 @@ public class HeadScanAction extends AdapterAction {
 		 * avoid the jitters				
 		 */
 		this.sampleTime -= timeStep.getDeltaTime();
+		this.pickAttackDirectionTime += timeStep.getDeltaTime();
+		
 		if(this.sampleTime < 0) {
 			PathPlanner<?> feeder = brain.getMotion().getPathPlanner();
 			
 			Vector2f dest = null;
 			if(feeder.hasPath()) {
 				dest = feeder.nextDestination(ent);			
+				
+				this.pickAttackDirectionTime = 0;
+				this.attackDirectionIndex = -1;
 			}
 			else {
-				dest = ent.getMovementDir();
+				
+				// If the bot is standing still, have them look at the directions in which they could
+				// be attacked.
+				
+				List<AttackDirection> attackDirections = brain.getWorld().getAttackDirections(ent);
+				if(!attackDirections.isEmpty()) {
+
+					int numberOfAttackDirs = attackDirections.size();
+					if(this.attackDirectionIndex < 0 || this.pickAttackDirectionTime > 2_000) {
+
+						int index = this.attackDirectionIndex + this.direction;
+						if(index < 0 || index >= numberOfAttackDirs) {
+							this.direction = -this.direction;
+						}
+						
+						this.attackDirectionIndex = (this.attackDirectionIndex + this.direction) % numberOfAttackDirs;
+						this.pickAttackDirectionTime = 0;
+					}
+					
+					Vector2f.Vector2fSubtract(attackDirections.get(this.attackDirectionIndex).getDirection(), ent.getCenterPos(), attackDir);
+					dest = attackDir;
+				}
+
+				
+				if(dest==null) {
+					dest = ent.getMovementDir();
+				}
 			}
 			
 			Vector2f.Vector2fNormalize(dest, dest);
@@ -83,16 +126,17 @@ public class HeadScanAction extends AdapterAction {
 		float deltaOrientation = (destinationOrientation - currentOrientation);
 		float deltaOrientationAbs = Math.abs(deltaOrientation);
 		if(deltaOrientationAbs > Math.PI) {
-			deltaOrientation = deltaOrientationAbs - fullCircle;
+			deltaOrientation = fullCircle - deltaOrientationAbs;
+			//deltaOrientation = deltaOrientationAbs - fullCircle;
 		}
 		
 		final double movementSpeed = Math.toRadians(15.0f);
 		
 		if(deltaOrientation != 0) {
 			float direction = deltaOrientation / deltaOrientationAbs;
-			currentOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));
-			currentOrientation %= fullCircle;
+			currentOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));			
 		}
+		currentOrientation %= fullCircle;
 		
 		ent.setOrientation( currentOrientation );										
 	}

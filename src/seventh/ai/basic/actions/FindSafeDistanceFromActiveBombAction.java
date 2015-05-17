@@ -5,9 +5,11 @@ package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.World;
-import seventh.ai.basic.Zone;
 import seventh.game.Bomb;
 import seventh.game.BombTarget;
+import seventh.game.PlayerEntity;
+import seventh.math.Rectangle;
+import seventh.math.Vector2f;
 
 /**
  * @author Tony
@@ -38,20 +40,13 @@ public class FindSafeDistanceFromActiveBombAction extends AdapterAction {
 		}
 		
 		World world = brain.getWorld();
-				
-		Zone bombZone = world.getZone(target.getCenterPos());
-		Zone adjacentZone = world.findAdjacentZone(bombZone, bomb.getBlastRadius().width);
-
-		/* if we found a safer zone, move to it */
-		if (adjacentZone != null) {
-			getActionResult().setSuccess(world.getRandomSpot(brain.getEntityOwner(), adjacentZone.getBounds()));
-		} else {
-			/*
-			 * if there isn't a close zone, just move to a random spot --
-			 * shouldn't happen
-			 */
-			getActionResult().setSuccess(world.getRandomSpot(brain.getEntityOwner()));
-		}
+		
+		PlayerEntity bot = brain.getEntityOwner(); 
+		Rectangle coverBounds = new Rectangle(300, 300);
+		coverBounds.centerAround(bot.getCenterPos());
+		
+		Vector2f moveTo = world.getRandomSpotNotIn(bot, coverBounds.x, coverBounds.y, coverBounds.width, coverBounds.height, bomb.getBlastRadius());
+		getActionResult().setSuccess(moveTo);
 	}
 	
 	/* (non-Javadoc)

@@ -23,6 +23,7 @@ import seventh.game.PlayerInfos.PlayerInfoIterator;
 import seventh.game.Team;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;
+import seventh.math.Vector2f;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.AssetLoader;
 import seventh.shared.AssetWatcher;
@@ -312,7 +313,21 @@ public class DefaultAISystem implements AISystem {
 			Brain brain = brains[i];
 			if(brain != null) {
 				if(brain.getPlayer().isAlive()) {
-					Zone[] adjacent = zones.getAdjacentZones(zones.getZone(brain.getEntityOwner().getCenterPos()));
+					World world = brain.getWorld();
+					
+					Zone currentZone = zones.getZone(brain.getEntityOwner().getCenterPos());
+					final int range = 88;
+					Zone[] adjacent = world.findAdjacentZones(currentZone, range);
+					
+					int cx = currentZone.getBounds().x + currentZone.getBounds().width / 2;
+					int cy = currentZone.getBounds().y + currentZone.getBounds().height / 2;
+					
+					DebugDraw.drawLineRelative(new Vector2f(cx, cy), new Vector2f(cx      , cy+range), 0x5ffff0ff);
+					DebugDraw.drawLineRelative(new Vector2f(cx, cy), new Vector2f(cx      , cy-range), 0x5ffff0ff);
+					DebugDraw.drawLineRelative(new Vector2f(cx, cy), new Vector2f(cx+range, cy   ), 0x5ffff0ff);
+					DebugDraw.drawLineRelative(new Vector2f(cx, cy), new Vector2f(cx-range, cy   ), 0x5ffff0ff);
+					
+					//Zone[] adjacent = zones.getAdjacentZones(zones.getZone(brain.getEntityOwner().getCenterPos()));
 					for(Zone zone : adjacent) {
 						if(zone != null) {
 							Rectangle bounds = zone.getBounds();

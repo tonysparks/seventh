@@ -175,8 +175,11 @@ public class Zones {
 			return null;
 		}
 		
-		int xIndex = x / zoneWidth;
-		int yIndex = y / zoneHeight;
+		int offsetX = 0;//(x % zoneWidth);
+		int offsetY = 0;//(y % zoneHeight);
+		
+		int xIndex = (x + offsetX) / zoneWidth;
+		int yIndex = (y + offsetY) / zoneHeight;
 		
 		if (xIndex > zones[0].length-1 || yIndex > zones.length-1) {
 			return null;

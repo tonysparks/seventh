@@ -39,6 +39,17 @@ public class BombTarget extends Entity {
 	}
 
 	/* (non-Javadoc)
+	 * @see seventh.game.Entity#canTakeDamage()
+	 */
+	@Override
+	public boolean canTakeDamage() {
+		/* don't allow bullets and such to 
+		 * hurt this
+		 */
+		return false;
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.game.Entity#getNetEntity()
 	 */
 	@Override

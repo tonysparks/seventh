@@ -7,10 +7,13 @@ import java.util.List;
 
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
+import seventh.game.Bomb;
+import seventh.game.BombTarget;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.graph.GraphNode;
 import seventh.map.Tile;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
@@ -170,6 +173,14 @@ public class Brain implements Debugable {
 				p.y += 12;
 			}
 			p.x += 10;
+		}
+		
+		for(BombTarget target : world.getBombTargetsWithActiveBombs()) {
+			if( target.getBomb() != null ) {
+				Bomb bomb = target.getBomb();
+				Rectangle b = bomb.getBlastRadius();
+				DebugDraw.fillRectRelative(b.x, b.y, b.width, b.height, 0xaf00ffff);
+			}
 		}
 	}
 	

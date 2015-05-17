@@ -22,6 +22,8 @@ import seventh.ai.basic.actions.FindClosestBombTarget;
 import seventh.ai.basic.actions.FindSafeDistanceFromActiveBombAction;
 import seventh.ai.basic.actions.FireAtAction;
 import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.GuardAction;
+import seventh.ai.basic.actions.GuardUntilAction;
 import seventh.ai.basic.actions.MoveToAction;
 import seventh.ai.basic.actions.MoveToBombAction;
 import seventh.ai.basic.actions.PlantBombAction;
@@ -116,8 +118,8 @@ public class AILeolaLibrary implements LeolaLibrary {
 		return new FindClosestBombTarget(true);
 	}
 	
-	public FindSafeDistanceFromActiveBombAction findSafeDistanceFromActiveBombAction(BombTarget bomb) {
-		return new FindSafeDistanceFromActiveBombAction(bomb);
+	public FindSafeDistanceFromActiveBombAction findSafeDistanceFromActiveBombAction(BombTarget target) {
+		return new FindSafeDistanceFromActiveBombAction(target);
 	}
 	
 	public EvaluateAttackDirectionsAction evaluateAttackDirectionsAction() {
@@ -130,6 +132,14 @@ public class AILeolaLibrary implements LeolaLibrary {
 
 	public WaitAction waitAction(long timeToWaitMSec) {
 		return new WaitAction(timeToWaitMSec);
+	}
+	
+	public GuardAction guardAction() {
+		return new GuardAction();
+	}
+	
+	public GuardUntilAction guardUntilAction(LeoObject isFinished) {
+		return new GuardUntilAction(this.runtime, isFinished);
 	}
 	
 	/**

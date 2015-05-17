@@ -4,6 +4,7 @@
 package seventh.ai.basic.commands;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import seventh.ai.AICommand;
@@ -13,6 +14,7 @@ import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.CoverEntityAction;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.MoveToAction;
+import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.math.Vector2f;
@@ -60,6 +62,20 @@ public class AICommands {
 			}
 			
 		});
+		
+		this.aiCommands.put("defendBomb", new Command() {
+            
+            @Override
+            public Action parse(Brain brain, String... args) {
+                List<BombTarget> plantedBombs = brain.getWorld().getBombTargetsWithActiveBombs();
+                if(!plantedBombs.isEmpty()) {
+	                BombTarget target = (BombTarget)brain.getEntityOwner().getClosest(plantedBombs);
+	                return goals.defendPlantedBomb(target);
+                }
+                
+                return null;
+            }
+        });
 		
 		this.aiCommands.put("followMe", new Command() {
 

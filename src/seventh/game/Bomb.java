@@ -112,7 +112,8 @@ public class Bomb extends Entity {
 		 * kill the bomb
 		 */
 		if(this.blowingupTimer.isTime()) {
-
+			this.timer.stop();
+			
 			// ka-bom
 			if(this.bombTarget!=null) {
 				this.bombTarget.kill(this);
@@ -157,7 +158,7 @@ public class Bomb extends Entity {
 		/* the max spread of the blast could contain a splash width at either end,
 		 * so therefore we add the splashWidth twice
 		 */
-		int maxWidth = this.splashWidth + this.maxSpread + this.splashWidth;
+		int maxWidth = (this.splashWidth + this.maxSpread) * 2;
 		
 		this.blastRadius.setSize(maxWidth, maxWidth);
 		this.blastRadius.centerAround(getCenterPos());
@@ -259,6 +260,14 @@ public class Bomb extends Entity {
 	public void stopDisarming() {
 		this.disarmer=null;
 		this.disarmTimer.stop();
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#canTakeDamage()
+	 */
+	@Override
+	public boolean canTakeDamage() {
+		return false;
 	}
 
 	/* (non-Javadoc)

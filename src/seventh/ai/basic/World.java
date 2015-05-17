@@ -345,7 +345,7 @@ public class World {
 		Rectangle temp = new Rectangle(entity.getBounds());
 		temp.setLocation(pos);
 		
-		while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || notIn.contains(temp)) {
+		while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || notIn.intersects(temp)) {
 			pos.x = x + random.nextInt(width);
 			pos.y = y + random.nextInt(height);
 			temp.setLocation(pos);
@@ -374,6 +374,23 @@ public class World {
 		return this.zones.getZone(x, y);
 	}
 	
+	public Zone[] findAdjacentZones(Zone zone, int minDistance) {
+		Rectangle bounds = zone.getBounds();
+		int fuzzy = 5;
+		
+		Zone[] adjacentZones = new Zone[8];
+		
+		adjacentZones[0] = getNorthZone(bounds, fuzzy, minDistance);
+		adjacentZones[1] = getNorthEastZone(bounds, fuzzy, minDistance);
+		adjacentZones[2] = getEastZone(bounds, fuzzy, minDistance);
+		adjacentZones[3] = getSouthEastZone(bounds, fuzzy, minDistance);
+		adjacentZones[4] = getSouthZone(bounds, fuzzy, minDistance);
+		adjacentZones[5] = getSouthWestZone(bounds, fuzzy, minDistance);
+		adjacentZones[6] = getWestZone(bounds, fuzzy, minDistance);
+		adjacentZones[7] = getNorthWestZone(bounds, fuzzy, minDistance);
+		
+		return adjacentZones;
+	}
 	
 	/**
 	 * Attempts to find an adjacent {@link Zone} given the minimum distance
@@ -387,7 +404,7 @@ public class World {
 		
 		Zone adjacentZone = null;
 		
-		final int numberOfDirections = 4;
+		final int numberOfDirections = 8;
 		int adjacentIndex = random.nextInt(numberOfDirections);
 		for(int i = 0; i < numberOfDirections && adjacentZone==null; i++) {
 			switch(adjacentIndex) {
@@ -395,13 +412,25 @@ public class World {
 					adjacentZone = getNorthZone(bounds, fuzzy, minDistance);
 					break;
 				case 1:
-					adjacentZone = getEastZone(bounds, fuzzy, minDistance);
+					adjacentZone = getNorthEastZone(bounds, fuzzy, minDistance);
 					break;
 				case 2:
-					adjacentZone = getSouthZone(bounds, fuzzy, minDistance);
+					adjacentZone = getEastZone(bounds, fuzzy, minDistance);
 					break;
 				case 3:
+					adjacentZone = getSouthEastZone(bounds, fuzzy, minDistance);
+					break;
+				case 4:
+					adjacentZone = getSouthZone(bounds, fuzzy, minDistance);
+					break;
+				case 5: 
+					adjacentZone = getSouthWestZone(bounds, fuzzy, minDistance);
+					break;
+				case 6:
 					adjacentZone = getWestZone(bounds, fuzzy, minDistance);
+					break;
+				case 7:
+					adjacentZone = getNorthWestZone(bounds, fuzzy, minDistance);
 					break;
 				default:
 					return null;
@@ -416,23 +445,55 @@ public class World {
 	private Zone getNorthZone(Rectangle bounds, int fuzzy, int minDistance) {
 		
 		int adjacentZoneX = bounds.x;
-		int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);;
+		int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		return adjacentZone;
+	}
+	
+	private Zone getNorthWestZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
+		int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		return adjacentZone;
+	}
+	
+	private Zone getNorthEastZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
+		int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);
 		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
 		return adjacentZone;
 	}
 	
 	private Zone getEastZone(Rectangle bounds, int fuzzy, int minDistance) {
 		
-		int adjacentZoneX = bounds.x + bounds.width + fuzzy + minDistance;
-		int adjacentZoneY = bounds.y + minDistance;
-		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		int adjacentZoneX = bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
+		int adjacentZoneY = bounds.y;
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);		
 		return adjacentZone;
 	}
 	
 	private Zone getSouthZone(Rectangle bounds, int fuzzy, int minDistance) {
 		
 		int adjacentZoneX = bounds.x;
-		int adjacentZoneY = bounds.y + (bounds.height + fuzzy + minDistance);;
+		int adjacentZoneY = bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		return adjacentZone;
+	}
+	
+	private Zone getSouthWestZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
+		int adjacentZoneY = bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
+		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+		return adjacentZone;
+	}
+	
+	private Zone getSouthEastZone(Rectangle bounds, int fuzzy, int minDistance) {
+		
+		int adjacentZoneX = bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
+		int adjacentZoneY = bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
 		Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
 		return adjacentZone;
 	}
@@ -584,7 +645,7 @@ public class World {
 			Vector2f.Vector2fRotate(attackDir, Math.toRadians(currentAngle), attackDir);
 			Vector2f.Vector2fMA(pos, attackDir, distanceToCheck, attackDir);
 			
-			if(!map.lineCollides(pos, attackDir)) {
+			if(!map.lineCollides(pos, attackDir, entity.getHeightMask())) {
 				this.attackDirections.add(new AttackDirection(attackDir.createClone()));
 			}
 			

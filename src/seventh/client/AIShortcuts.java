@@ -212,4 +212,33 @@ public class AIShortcuts {
             }    
         }
     }
+    
+    
+    public static class DefendPlantedBombAIShortcut extends AIShortcut {
+        /**
+         * @param shortcutKey
+         */
+        public DefendPlantedBombAIShortcut(int shortcutKey) {
+            super(shortcutKey, "Defend Bomb");
+        }
+        
+        /* (non-Javadoc)
+         * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
+         */
+        @Override
+        public void execute(Console console, ClientGame game) {
+            ClientPlayer localPlayer = game.getLocalPlayer();
+            
+            if(!localPlayer.isAlive()) {
+                return;
+            }
+            
+            int closestBot = findClosestBot(game);
+            if(closestBot > -1) {
+                ClientPlayers players = game.getPlayers();
+                console.execute("ai " + closestBot + " defendBomb");
+                console.execute("team_say " + players.getPlayer(closestBot).getName() + " defend the bomb!" );
+            }    
+        }
+    }
 }

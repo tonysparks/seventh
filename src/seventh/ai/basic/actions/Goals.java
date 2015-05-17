@@ -16,7 +16,6 @@ import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
 import seventh.ai.basic.actions.evaluators.SurpressFireEvaluator;
 import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
 import seventh.game.BombTarget;
-import seventh.game.Entity;
 import seventh.game.PlayerEntity;
 import seventh.math.Vector2f;
 
@@ -102,23 +101,6 @@ public class Goals {
 		Action action = getScriptedAction("moveToRandomSpot");
 		return action;
 	}
-	
-	public Action onTouched(Entity attacker) {
-		Action action = getScriptedAction("onTouched");
-		action.getActionResult().setValue(attacker);
-		return action;
-	}
-	
-	public Action attack(Entity enemy) {
-		Action action = getScriptedAction("attack");
-		action.getActionResult().setValue(enemy);
-		return action;
-	}
-	
-//	public Action scanArea() {
-//		Action action = getScriptedAction("scanArea");
-//		return action;
-//	}
 	
 	
 	public Action chargeEnemy(Goals goals, Brain brain, PlayerEntity enemy) {

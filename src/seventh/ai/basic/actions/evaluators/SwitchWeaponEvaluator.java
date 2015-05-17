@@ -107,7 +107,8 @@ public class SwitchWeaponEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		this.switchWeaponAction.reset(this.weaponType);
+		Weapon bestWeapon = getBestScoreWeapon(brain.getEntityOwner().getInventory());
+		this.switchWeaponAction.reset(bestWeapon.getType());
 		return this.switchWeaponAction;
 	}
 
