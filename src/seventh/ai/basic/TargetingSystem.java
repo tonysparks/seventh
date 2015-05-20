@@ -143,9 +143,22 @@ public class TargetingSystem implements Updatable {
 	}
 	
 	/**
+	 * @param target
+	 * @return true if the current target position is in the line of fire
+	 */
+	public boolean targetInLineOfFire(Vector2f target) {
+		PlayerEntity bot = brain.getEntityOwner();
+		float distanceSq = bot.distanceFromSq(target);
+		if(distanceSq <= bot.getCurrentWeaponDistanceSq()) {			
+			return brain.getWorld().inLineOfFire(bot, target);
+		}
+		return false;
+	}
+	
+	/**
 	 * @return true if the current target is in the line of fire
 	 */
-	public boolean targetInLineOfFire() {
+	public boolean currentTargetInLineOfFire() {
 		if(hasTarget()) {
 			PlayerEntity bot = brain.getEntityOwner();
 			float distanceSq = bot.distanceFromSq(currentTarget);

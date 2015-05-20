@@ -64,8 +64,7 @@ public class LookAtAction extends AdapterAction {
 		double destDegree = Math.toDegrees(destinationOrientation);
 		
 		// TODO: Work out Looking at something (being shot while takingCover)
-		return Math.abs(currentDegree - destDegree) < 2;
-		//return true;
+		return Math.abs(currentDegree - destDegree) < 5;
 	}
 	
 	/* (non-Javadoc)

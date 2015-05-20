@@ -13,7 +13,6 @@ import seventh.ai.basic.actions.evaluators.GrenadeEvaluator;
 import seventh.ai.basic.actions.evaluators.MeleeEvaluator;
 import seventh.ai.basic.actions.evaluators.MoveTowardEnemyEvaluator;
 import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
-import seventh.ai.basic.actions.evaluators.SurpressFireEvaluator;
 import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
 import seventh.game.BombTarget;
 import seventh.game.PlayerEntity;
@@ -142,10 +141,14 @@ public class Goals {
 	}
 	
 	public Action surpressFire(Goals goals, Brain brain, Vector2f position) {
-		return new WeightedGoal(brain, "surpressFire",
-//				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.4), 0.8),
-				new SurpressFireEvaluator(goals, brain.getRandomRangeMin(0.3), 0.9, position)
-		);
+//		return new WeightedGoal(brain, "surpressFire",
+////				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.4), 0.8),
+//				new SurpressFireEvaluator(goals, brain.getRandomRangeMin(0.3), 0.9, position)
+//		);
+		
+		Action action = getScriptedAction("surpressFire");
+		action.getActionResult().setValue(position);
+		return action;
 	}
 	
 }

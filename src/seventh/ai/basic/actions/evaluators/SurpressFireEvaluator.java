@@ -4,6 +4,7 @@
 package seventh.ai.basic.actions.evaluators;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.Locomotion;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Goals;
 import seventh.ai.basic.actions.TimedAction;
@@ -29,11 +30,23 @@ public class SurpressFireEvaluator extends ActionEvaluator {
 		this.target = target;
 		
 		// TODO: Make time variable/fuzzy
-		this.surpressAction = new TimedAction(1500) {
+		this.surpressAction = new TimedAction(3500) {
+			
+			/* (non-Javadoc)
+			 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+			 */
+			@Override
+			public void start(Brain brain) {
+				super.start(brain);
+				Locomotion motion = brain.getMotion();
+				
+				
+				motion.lookAt(target);
+				motion.shoot();
+			}
 			
 			protected void doAction(Brain brain, seventh.shared.TimeStep timeStep) {
-				brain.getMotion().lookAt(target);
-				brain.getMotion().shoot();
+				
 			}
 			
 			/* (non-Javadoc)

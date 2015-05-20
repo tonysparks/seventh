@@ -669,6 +669,24 @@ public abstract class Entity implements Debugable {
 	}
 	
 	/**
+	 * @param position
+	 * @return the distance from this entity to the position (squared)
+	 */
+	public float distanceFromSq(Vector2f position) {
+		return Vector2f.Vector2fDistanceSq(getCenterPos(), position);
+	}
+	
+	/**
+	 * 
+	 * @param target
+	 * @return true if this {@link Entity} is facing at the target {@link Vector2f}
+	 */
+	public boolean isFacing(Vector2f target) {
+		double angle = Vector2f.Vector2fAngle(getFacing(), target);
+		return Math.abs(angle) < Math.PI/4d;
+	}
+	
+	/**
 	 * Does not broadcast that this entity
 	 * is dead. 
 	 */

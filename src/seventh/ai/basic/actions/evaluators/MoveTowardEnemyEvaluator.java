@@ -41,7 +41,7 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 					* Evaluators.weaponDistanceScore(bot, system.getCurrentTarget())
 					;
 			
-			if(!system.targetInLineOfFire()) {
+			if(!system.currentTargetInLineOfFire()) {
 				score *= 0.9;
 			}
 			

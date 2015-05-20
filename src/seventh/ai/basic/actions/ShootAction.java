@@ -5,10 +5,11 @@ package seventh.ai.basic.actions;
 
 import seventh.ai.basic.Brain;
 import seventh.game.PlayerEntity;
+import seventh.game.weapons.Weapon;
 import seventh.shared.TimeStep;
 
 /**
- * Sprint action
+ * Shoot action
  * 
  * @author Tony
  *
@@ -25,7 +26,17 @@ public class ShootAction extends AdapterAction {
 	 */
 	@Override
 	public boolean isFinished(Brain brain) {	
-		return !brain.getEntityOwner().isFiring();
+		PlayerEntity ent = brain.getEntityOwner();
+		Weapon weapon = ent.getInventory().currentItem();
+		if(weapon == null) {
+			return true;
+		}
+		
+		if(!weapon.isLoaded()) {
+			return true;
+		}
+		
+		return !weapon.isFiring();
 	}
 	
 	/* (non-Javadoc)
@@ -43,13 +54,15 @@ public class ShootAction extends AdapterAction {
 	@Override
 	public void start(Brain brain) {
 		PlayerEntity entity = brain.getEntityOwner();
-		entity.beginFire();
 		
-		if(!entity.beginFire()) {			
-			this.getActionResult().setFailure();
-		}
-		else {
-			getActionResult().setSuccess();
+		if(entity.canFire()) {
+			if(!entity.beginFire()) {
+				entity.endFire();
+				this.getActionResult().setFailure();
+			}
+			else {
+				getActionResult().setSuccess();
+			}
 		}
 	}
 	
@@ -59,6 +72,11 @@ public class ShootAction extends AdapterAction {
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
 		PlayerEntity entity = brain.getEntityOwner();
-		entity.beginFire();		
+		
+		if(entity.canFire()) {
+			if(!entity.beginFire()) {
+				entity.endFire();
+			}
+		}
 	}
 }

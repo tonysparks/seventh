@@ -62,7 +62,7 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 			}
 			
 			
-			if(!system.targetInLineOfFire()) {
+			if(!system.currentTargetInLineOfFire()) {
 				score *= 0.9;
 			}
 			

@@ -28,6 +28,7 @@ import seventh.ai.basic.actions.MoveToAction;
 import seventh.ai.basic.actions.MoveToBombAction;
 import seventh.ai.basic.actions.PlantBombAction;
 import seventh.ai.basic.actions.SecureZoneAction;
+import seventh.ai.basic.actions.SupressFireUntilAction;
 import seventh.ai.basic.actions.WaitAction;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
@@ -140,6 +141,10 @@ public class AILeolaLibrary implements LeolaLibrary {
 	
 	public GuardUntilAction guardUntilAction(LeoObject isFinished) {
 		return new GuardUntilAction(this.runtime, isFinished);
+	}
+	
+	public SupressFireUntilAction supressFireUntilAction(Vector2f target, LeoObject isFinished) {
+		return new SupressFireUntilAction(this.runtime, isFinished, target);
 	}
 	
 	/**

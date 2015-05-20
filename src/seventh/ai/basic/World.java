@@ -232,6 +232,15 @@ public class World {
 	}
 	
 	/**
+	 * @param entity
+	 * @param target
+	 * @return determines if the enemy is in line of fire
+	 */
+	public boolean inLineOfFire(PlayerEntity entity, Vector2f target) {
+		return !map.lineCollides(entity.getCenterPos(), target, entity.getHeightMask());
+	}
+	
+	/**
 	 * 
 	 * @param players
 	 * @param entity

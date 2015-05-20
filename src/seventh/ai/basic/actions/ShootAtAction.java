@@ -48,7 +48,7 @@ public class ShootAtAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {
-		this.inLOF = brain.getTargetingSystem().targetInLineOfFire();
+		this.inLOF = brain.getTargetingSystem().currentTargetInLineOfFire();
 	}
 
 	/* (non-Javadoc)
@@ -60,7 +60,7 @@ public class ShootAtAction extends AdapterAction {
 		
 		this.shouldCheckLOF.update(timeStep);
 		if(this.shouldCheckLOF.isTime()) {
-			this.inLOF = brain.getTargetingSystem().targetInLineOfFire();
+			this.inLOF = brain.getTargetingSystem().currentTargetInLineOfFire();
 		}
 		
 		if(this.inLOF) {
