@@ -17,8 +17,10 @@ import seventh.ai.basic.actions.Goals;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
+import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 /**
@@ -100,7 +102,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		Action action = null;
 		
 		if(this.zoneToAttack==null) {
-			this.zoneToAttack = calculateZoneToAttack();
+			this.zoneToAttack = calculateZoneToAttack(brain);
 		}
 		
 		switch(this.currentState) {
@@ -138,25 +140,70 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		return action;
 	}
 	
-	
 	/**
 	 * @return determine which {@link Zone} to attack
 	 */
-	private Zone calculateZoneToAttack() {
-		Zone zoneToAttack = null;
+	private List<Zone> calculateZonesOfInterest() {
+		List<Zone> validZones = new ArrayList<>();
 		List<Zone> zonesWithBombs = this.zones.getBombTargetZones();
 		if(!zonesWithBombs.isEmpty()) {
-			List<Zone> validZones = new ArrayList<>();
+	
 			for(Zone zone : zonesWithBombs) {
 				if(zone.isTargetsStillActive()) {
 					validZones.add(zone);
 				}
 			}
 			
-			if(!validZones.isEmpty()) {				
-				zoneToAttack = validZones.get(random.nextInt(validZones.size()));
-			}
 		}
+		else {
+			validZones.add(stats.getDeadliesZone());
+		}
+		
+		return validZones;
+	}
+	
+	/**
+	 * @return determine which {@link Zone} to attack
+	 */
+	private Zone calculateZoneToAttack(Brain brain) {
+		Zone zoneToAttack = null;
+		
+		List<Zone> validZones = calculateZonesOfInterest();
+		if(!validZones.isEmpty()) {
+			PlayerEntity ent = brain.getEntityOwner();
+			
+			float distance = Float.MAX_VALUE;
+			Vector2f closest = new Vector2f();
+			for(int i = 0; i < validZones.size(); i++) {
+				Zone zone = validZones.get(i);
+				closest.set(zone.getBounds().x, zone.getBounds().y);
+				
+				float otherDistance = ent.distanceFromSq(closest);
+				if(zoneToAttack==null || otherDistance < distance) {
+					zoneToAttack = zone;
+					distance = otherDistance;
+				}
+			}
+			
+			//zoneToAttack = validZones.get(random.nextInt(validZones.size()));
+		}		
+		else {
+			zoneToAttack = stats.getDeadliesZone();
+		}
+		
+		return zoneToAttack;
+	}
+	
+	/**
+	 * @return determine which {@link Zone} to attack
+	 */
+	private Zone calculateZoneToAttack() {
+		Zone zoneToAttack = null;
+		
+		List<Zone> validZones = calculateZonesOfInterest();
+		if(!validZones.isEmpty()) {				
+			zoneToAttack = validZones.get(random.nextInt(validZones.size()));
+		}		
 		else {
 			zoneToAttack = stats.getDeadliesZone();
 		}
@@ -254,6 +301,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				Player player = players.get(i);
 				if(player.isBot() && player.isAlive()) {
 					Brain brain = aiSystem.getBrain(player);
+					// TODO
 					System.out.println("Orders posted: " + currentState);
 					brain.getCommunicator().post(getCurrentAction(brain));		
 				}
@@ -325,6 +373,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				// TODO: Let the brain tell us when we are ready
 				// to accept new orders
 				if(!brain.getCommunicator().hasPendingCommands()) {
+					// TODO
 					System.out.println("Orders posted: " + currentState);
 					brain.getCommunicator().post(getCurrentAction(brain));
 				}

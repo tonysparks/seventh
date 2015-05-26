@@ -26,6 +26,7 @@ import seventh.ai.basic.actions.GuardAction;
 import seventh.ai.basic.actions.GuardUntilAction;
 import seventh.ai.basic.actions.MoveToAction;
 import seventh.ai.basic.actions.MoveToBombAction;
+import seventh.ai.basic.actions.MoveToBombTargetToPlantAction;
 import seventh.ai.basic.actions.PlantBombAction;
 import seventh.ai.basic.actions.SecureZoneAction;
 import seventh.ai.basic.actions.SupressFireUntilAction;
@@ -102,6 +103,11 @@ public class AILeolaLibrary implements LeolaLibrary {
 	public MoveToBombAction moveToBombAction(BombTarget bomb) {
 		return new MoveToBombAction(bomb);
 	}
+	
+	public MoveToBombTargetToPlantAction moveToBombTargetToPlantAction(BombTarget bomb) {
+		return new MoveToBombTargetToPlantAction(bomb);
+	}
+	
 	
 	public PlantBombAction plantBombAction(BombTarget bomb) {
 		return new PlantBombAction(bomb);

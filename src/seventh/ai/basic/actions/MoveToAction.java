@@ -88,7 +88,12 @@ public class MoveToAction extends AdapterAction {
 	@Override
 	public boolean isFinished(Brain brain) {
 		PathPlanner<?> path = brain.getMotion().getPathPlanner();		
-		return path.atDestination();		
+		boolean isFinished = path.atDestination();
+		if(isFinished) {
+			getActionResult().setSuccess();
+		}
+		
+		return isFinished;
 	}
 
 	/* (non-Javadoc)

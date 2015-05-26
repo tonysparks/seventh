@@ -158,7 +158,7 @@ public class Bomb extends Entity {
 		/* the max spread of the blast could contain a splash width at either end,
 		 * so therefore we add the splashWidth twice
 		 */
-		int maxWidth = (this.splashWidth + this.maxSpread) * 2;
+		int maxWidth = (this.splashWidth + this.maxSpread) * 4;
 		
 		this.blastRadius.setSize(maxWidth, maxWidth);
 		this.blastRadius.centerAround(getCenterPos());

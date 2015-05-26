@@ -9,11 +9,12 @@ import seventh.game.BombTarget;
  * @author Tony
  *
  */
-public class MoveToBombAction extends MoveToAction {	
+public class MoveToBombAction extends MoveToAction {
+	
 	/**
-	 * 
+	 * @param target 
 	 */
-	public MoveToBombAction(BombTarget bomb) {
-		super(bomb.getCenterPos());
+	public MoveToBombAction(BombTarget target) {
+		super(target.getCenterPos());		
 	}	
 }
