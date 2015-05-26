@@ -29,6 +29,16 @@ public class Geom {
 	public static final Vector2f RIGHT_VECTOR = new Vector2f(1, 0);
 	
 	/**
+	 * Clears the visibility masks
+	 * 
+	 * @param tiles
+	 * @param map
+	 */
+	public static void clearMask(List<Tile> tiles, Map map) {
+		map.setMask(tiles, 0);
+	}
+	
+	/**
 	 * Utility function for calculating entity line of sight
 	 * 
 	 * @param tiles

@@ -43,7 +43,6 @@ import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.type.GameType;
 import seventh.map.Map;
-import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.BombDisarmedMessage;
@@ -63,7 +62,6 @@ import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
-import seventh.shared.Geom;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 
@@ -81,54 +79,52 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
  */
 public class ClientGame {	
 	
+	private final SeventhGame app;	
+	private final Map map;
 	
-	private SeventhGame app;	
-	private Map map;
+	private final ClientPlayer localPlayer;
 	
-	private ClientPlayer localPlayer;
+	private final ClientEntities entities;
+	private final ClientPlayers players;
 	
-	private ClientEntities entities;
-	private ClientPlayers players;
+	private final ClientBulletPool bulletPool;
 	
-	private ClientBulletPool bulletPool;
+	private final ClientEntity[] renderingOrderEntities;
 	
-	private ClientEntity[] renderingOrderEntities;
+	private final List<ClientBombTarget> bombTargets;
+	private final List<ClientVehicle> vehicles;
 	
-	private List<ClientBombTarget> bombTargets;
-	private List<ClientVehicle> vehicles;
-	
-	private List<FrameBufferRenderable> frameBufferRenderables;
-	
-	private long nextFOWUpdate;
-	private List<Tile> fowTiles;
-	
-	private long gameClock;
-				
-	private Camera camera;
-	private Vector2f cameraCenterAround;
-	
-	private Scoreboard scoreboard;
-	private Effects backgroundEffects, foregroundEffects;
-	
-	
-	private boolean gameEnded, roundEnded;
-	private Hud hud;
-	
-	private Rectangle cameraShakeBounds;
-	private Rectangle cacheRect;
-	private Random random;
+	private final ClientEntityListener entityListener;
 	
 	private GameType.Type gameType;
 	private ClientTeam attackingTeam, defendingTeam;
-		
-	private long rconToken;
+
 	
-	private Vector2f playerVelocity;
-	private LightSystem lightSystem;
+	private long gameClock;
+	private boolean gameEnded, roundEnded;
 	
-	private ClientEntityListener entityListener;
 	
-	private ExplosionEffect explosions;
+
+	private       Camera camera;
+	private final CameraController cameraController;
+	
+	private final Scoreboard scoreboard;
+	private Hud hud;
+	
+	
+	private final Effects backgroundEffects, foregroundEffects;
+	private final LightSystem lightSystem;
+	private final ExplosionEffect explosions;
+
+	private final List<FrameBufferRenderable> frameBufferRenderables;
+	private final Sprite frameBufferSprite;
+	
+	private final Rectangle cacheRect;
+	private final Random random;
+	
+
+	private long rconToken;	
+	
 	
 	/**
 	 * Listens for {@link ClientEntity} life cycle
@@ -171,15 +167,12 @@ public class ClientGame {
 		
 		this.frameBufferRenderables = new ArrayList<>();
 		
-		this.fowTiles = new ArrayList<Tile>();		
-		this.cameraCenterAround = new Vector2f();
 		this.backgroundEffects = new Effects();
 		this.foregroundEffects = new Effects();
 				
 		this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
-		this.cameraShakeBounds = new Rectangle(600, 600);
+		this.cameraController = new CameraController(this);
 		
-		this.playerVelocity = new Vector2f();
 		
 		this.hud = new Hud(this);
 		this.random = new Random();
@@ -196,6 +189,7 @@ public class ClientGame {
 		
 		
 		this.explosions = new ExplosionEffect(15, 800, 0.6f);
+		this.frameBufferSprite = new Sprite();
 //		fullScreenQuad = new Sprite(TextureUtil.createImage(getApp().getScreenWidth(), getApp().getScreenHeight()));
 	}	
 	
@@ -239,6 +233,7 @@ public class ClientGame {
 	 */
 	public void onReloadVideo() {
 		this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
+		this.cameraController.onVideoReload(camera);
 	}
 	
 	/**
@@ -321,58 +316,14 @@ public class ClientGame {
 			r.update(timeStep);
 		}
 		
-		updateFow(timeStep);
+		cameraController.update(timeStep);
 		
 		map.update(timeStep);		
 		camera.update(timeStep);
 		hud.update(timeStep);			
 	}
 	
-	
-	/**
-	 * Handles calculating the local players Fog Of War
-	 * @param timeStep
-	 */
-	private void updateFow(TimeStep timeStep) {
-		if(this.localPlayer.isAlive()||this.localPlayer.isSpectating()) {						
-			ClientControllableEntity entity = null;
-			if(this.localPlayer.isAlive()) {				
-				entity = this.localPlayer.getEntity();				
-			}
-			else if(players.containsPlayer(this.localPlayer.getSpectatingPlayerId())) { 
-				entity = players.getPlayer(this.localPlayer.getSpectatingPlayerId()).getEntity();
-			}
-			
-																								
-			if(entity!=null) {
-				if( entity.isOperatingVehicle() ) {
-					entity = entity.getVehicle();
-				}
-				
-				entity.movementPrediction(map, timeStep, playerVelocity);
-				
-				cameraCenterAround.set(entity.getPos());
-				Vector2f.Vector2fRound(cameraCenterAround, cameraCenterAround);;
-				camera.centerAround(cameraCenterAround);
 		
-				Sounds.setPosition(cameraCenterAround);
-				
-				/* Calculates the Fog Of War
-				 */
-				nextFOWUpdate -= timeStep.getDeltaTime();
-				if(nextFOWUpdate <= 0) {
-					fowTiles = Geom.calculateLineOfSight(fowTiles, entity.getCenterPos(), entity.getFacing(), entity.getLineOfSight(), map, entity.getHeightMask());
-					Geom.addFadeEffect(map, fowTiles);
-					
-					/* only calculate every 100 ms */
-					nextFOWUpdate = 100;					
-				}			
-				
-				
-			}
-		}
-	}
-	
 	/**
 	 * Renders to the frame buffer
 	 * @param canvas
@@ -448,7 +399,7 @@ public class ClientGame {
 		canvas.setDefaultTransforms();
 		//canvas.setShader(null);
 
-		Sprite s = new Sprite(canvas.getFrameBuffer());
+		frameBufferSprite.setRegion(canvas.getFrameBuffer());
 		
 		canvas.begin();
 		{
@@ -457,13 +408,13 @@ public class ClientGame {
 				ShaderProgram shader = ExplosionEffectShader.getInstance().getShader();
 				
 				canvas.setShader(shader);
-				canvas.drawImage(s, 0, 0, 0x0);
+				canvas.drawImage(frameBufferSprite, 0, 0, 0x0);
 			}
 		}
 		canvas.end();
 
 		canvas.setShader(null);
-		DebugDraw.enable(true);
+		DebugDraw.enable(false);
 		DebugDraw.render(canvas, camera);
 
 		
@@ -712,6 +663,12 @@ public class ClientGame {
 		}
 	}
 	
+	/**
+	 * @return true if the camera is roaming
+	 */
+	public boolean isFreeformCamera() {
+		return this.cameraController.isCameraRoaming();
+	}
 	
 	/**
 	 * Applies the players input.  This is used for
@@ -720,26 +677,8 @@ public class ClientGame {
 	 * @param keys
 	 */
 	public void applyPlayerInput(int keys) {
-		if(Keys.UP.isDown(keys)) {
-			playerVelocity.y = -1;			 
-		}
-		else if(Keys.DOWN.isDown(keys)) {
-			playerVelocity.y = 1;
-		}
-		else {
-			playerVelocity.y = 0;
-		}
+		this.cameraController.applyPlayerInput(keys);
 		
-		if(Keys.LEFT.isDown(keys)) {
-			playerVelocity.x = -1;
-		}
-		else if (Keys.RIGHT.isDown(keys)) {
-			playerVelocity.x = 1;
-		}
-		else {
-			playerVelocity.x = 0;
-		}
-				
 		/* Check to see if the user is planting or disarming
 		 * a bomb
 		 */
@@ -921,14 +860,7 @@ public class ClientGame {
 				
 				// if an explosion happens,
 				// shake the camera
-				if(this.localPlayer.isAlive()) {
-					Vector2f centerPos = this.localPlayer.getEntity().getCenterPos();
-					cameraShakeBounds.centerAround(centerPos);
-					if(cameraShakeBounds.contains(pos)) {
-						float force = Vector2f.Vector2fDistanceSq(centerPos, pos);
-						camera.shake(300, Math.max(900 - force/100, 100));						
-					}
-				}
+				cameraController.shakeCamera(pos);
 				
 				break;
 			}
@@ -1065,7 +997,7 @@ public class ClientGame {
 			}
 		}
 		
-		if(netUpdate.spectatingPlayerId > -1) {
+		if(netUpdate.spectatingPlayerId > -1 && !cameraController.isCameraRoaming()) {
 			int previousSpec = localPlayer.getSpectatingPlayerId();
 			localPlayer.setSpectatingPlayerId(netUpdate.spectatingPlayerId);
 			if(previousSpec != netUpdate.spectatingPlayerId) {

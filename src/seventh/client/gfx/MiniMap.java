@@ -26,6 +26,8 @@ import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
+ * Draws a mini map of the current map
+ * 
  * @author Tony
  *
  */
@@ -193,6 +195,15 @@ public class MiniMap implements Renderable {
 //				canvas.fillCircle(3.0f, x, y, 0xfaFF3300);
 //			}
 		}
+		
+		Vector2f cameraPos = camera.getPosition();
+		
+
+		int x = (int)Math.ceil(xr * cameraPos.x + 5);
+		int y = (int)Math.ceil(yr * cameraPos.y + 5);
+		int width = (int)Math.ceil(camera.getViewPort().width * xr);
+		int height = (int)Math.ceil(camera.getViewPort().height * yr);
+		canvas.drawRect(x, y, width, height, 0x01fffffff);
 	}
 
 }

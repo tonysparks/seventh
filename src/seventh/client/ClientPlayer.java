@@ -126,10 +126,21 @@ public class ClientPlayer {
 	}
 	
 	/**
+	 * @return if this player is only a spectator (doesn't belong to a team)
+	 */
+	public boolean isPureSpectator() {
+		return isSpectating() && this.team == ClientTeam.NONE;
+	}
+	
+	/**
 	 * @param spectatingPlayerId the spectatingPlayerId to set
 	 */
 	public void setSpectatingPlayerId(int spectatingPlayerId) {
 		this.spectatingPlayerId = spectatingPlayerId;
+	}
+	
+	public void stopSpectatingPlayer() {
+		setSpectatingPlayerId(Entity.INVALID_ENTITY_ID);
 	}
 	
 	/**

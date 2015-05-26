@@ -699,8 +699,13 @@ public class InGameScreen implements Screen {
 			    }
 			}
 		}
-				
-		inputMessage.keys = inputKeys;
+			
+		/* capture the inputs for moving the camera if
+		 * we are in freeform mode
+		 */
+		if(!game.isFreeformCamera()) {
+			inputMessage.keys = inputKeys;
+		}
 		
 		Vector2f mousePos = cursor.getCursorPos();
 		inputMessage.orientation = game.calcPlayerOrientation(mousePos.x, mousePos.y); 		
