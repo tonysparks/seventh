@@ -834,7 +834,7 @@ public class Game implements GameInfo, Debugable {
 			}
 			else if (player.isSpectating()) {
 				if(Keys.LEFT.isDown(this.previousKeys) && !Keys.LEFT.isDown(msg.keys)) {
-					Player spectateMe = gameType.getNextPlayerToSpectate(getPlayers(), player);
+					Player spectateMe = gameType.getPrevPlayerToSpectate(getPlayers(), player);
 					player.setSpectating(spectateMe);
 				}
 				else if(Keys.RIGHT.isDown(this.previousKeys) && !Keys.RIGHT.isDown(msg.keys)) {
@@ -842,6 +842,8 @@ public class Game implements GameInfo, Debugable {
 					player.setSpectating(spectateMe);
 				}
 				this.previousKeys = msg.keys;
+				
+				
 			}
 		}
 	}

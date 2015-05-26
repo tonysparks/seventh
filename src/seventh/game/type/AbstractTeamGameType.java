@@ -124,10 +124,22 @@ public abstract class AbstractTeamGameType implements GameType {
 	@Override
 	public Player getNextPlayerToSpectate(Players players, Player spectator) {
 		if(spectator.isPureSpectator()) {
-			return players.getRandomAlivePlayer();
+			return players.getNextAlivePlayerFrom(spectator.getSpectating());
 		}
 		Player player = spectator.getSpectating();
 		return player!=null ? spectator.getTeam().getNextAlivePlayerFrom(player) : spectator.getTeam().getAlivePlayer();
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.type.GameType#getPrevPlayerToSpectate(seventh.game.Players, seventh.game.Player)
+	 */
+	@Override
+	public Player getPrevPlayerToSpectate(Players players, Player spectator) {
+		if(spectator.isPureSpectator()) {
+			return players.getPrevAlivePlayerFrom(spectator.getSpectating());
+		}
+		Player player = spectator.getSpectating();
+		return player!=null ? spectator.getTeam().getPrevAlivePlayerFrom(player) : spectator.getTeam().getAlivePlayer();
 	}
 	
 	/**

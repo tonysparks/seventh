@@ -337,44 +337,65 @@ public class Team implements Debugable {
 		return closest;
 	}
 	
-	
 	/**
-	 * The next alive player from the supplied Player slot
-	 * @param old
-	 * @return the next alive player, or null if no player is alive
+	 * The next available alive player on this team from the 'oldPlayer'
+	 * @param oldPlayer
+	 * @return the next {@link Player} or null if none
 	 */
-	public Player getNextAlivePlayerFrom(Player old) {
+	public Player getNextAlivePlayerFrom(Player oldPlayer) {
+		if(oldPlayer == null ) return getAlivePlayer();
 		
-		boolean found = false;
-		boolean firstIteration = true;
+		int nextPlayerIndex = players.indexOf(oldPlayer);
+		if(nextPlayerIndex < 0) {
+			nextPlayerIndex = 0;
+		}
 		
 		for(int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			if(firstIteration) {
-				if(old.getId() == player.getId()) {
-					found = true;
-				}
-				else if(found) {
-				
-					if(player.isAlive()) {
-						return player;
-					}
-				}
-				
-				if(i>=this.players.size()-1) {
-					i = 0;
-					firstIteration = false;
-				}
-			}
-			else {
-				if(player.isAlive()) {
+			Player player = this.players.get(nextPlayerIndex);
+			if(player != null) {
+				if(player.isAlive() && player != oldPlayer) {
 					return player;
 				}
 			}
+			
+			nextPlayerIndex = (nextPlayerIndex + 1) % players.size();
 		}
+		
+		
 		return null;
 	}
 	
+	/**
+	 * The previous available alive player on this team from the 'oldPlayer'
+	 * @param oldPlayer
+	 * @return the previous {@link Player} or null if none
+	 */
+	public Player getPrevAlivePlayerFrom(Player oldPlayer) {
+		if(oldPlayer == null ) return getAlivePlayer();
+		
+		int nextPlayerIndex = players.indexOf(oldPlayer);
+		if(nextPlayerIndex < 0) {
+			nextPlayerIndex = Math.max(players.size() - 1, 0);
+		}
+		
+		for(int i = 0; i < this.players.size(); i++) {
+			Player player = this.players.get(nextPlayerIndex);
+			if(player != null) {
+				if(player.isAlive() && player != oldPlayer) {
+					return player;
+				}
+			}
+			
+			nextPlayerIndex = (nextPlayerIndex - 1) % players.size();
+			if(nextPlayerIndex < 0) {
+				nextPlayerIndex = Math.max(players.size() - 1, 0);
+			}
+		}
+		
+		
+		return null;
+	}
+		
 	
 	/**
 	 * The next alive bot from the supplied Player slot

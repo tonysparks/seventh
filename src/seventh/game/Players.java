@@ -186,8 +186,30 @@ public class Players implements PlayerInfos {
 	 */
 	@Override
 	public Player getPrevAlivePlayerFrom(Player oldPlayer) {
-		// TODO
-		return getNextAlivePlayerFrom(oldPlayer);
+		if(oldPlayer == null ) return getRandomAlivePlayer();
+		
+		int nextPlayerIndex = (oldPlayer.getId() - 1) % players.length;
+		if(nextPlayerIndex < 0) {
+			nextPlayerIndex = Math.max(players.length - 1, 0);
+		}
+		
+		for(int i = 0; i < this.players.length; i++) {
+			Player player = this.players[nextPlayerIndex];
+			if(player != null) {
+				if(player.isAlive() && player != oldPlayer) {
+					return player;
+				}
+			}
+			
+			nextPlayerIndex = (nextPlayerIndex - 1) % players.length;
+			if(nextPlayerIndex < 0) {
+				nextPlayerIndex = Math.max(players.length - 1, 0);
+			}
+		}
+		
+		
+		return null;
+	
 	}
 	
 	/* (non-Javadoc)
@@ -197,26 +219,20 @@ public class Players implements PlayerInfos {
 	public Player getNextAlivePlayerFrom(Player oldPlayer) {
 		if(oldPlayer == null ) return getRandomAlivePlayer();
 		
-		boolean found = false;
+		int nextPlayerIndex = (oldPlayer.getId() + 1) % players.length;
+		
 		for(int i = 0; i < this.players.length; i++) {
-			Player player = this.players[i];
-			if(player == null) {
-				continue;
-			}
-			
-			if(oldPlayer.getId() == player.getId()) {
-				found = true;
-			}
-			else if(found) {
-				if(player.isAlive()) {
+			Player player = this.players[nextPlayerIndex];
+			if(player != null) {
+						
+				if(player.isAlive() && player != oldPlayer) {
 					return player;
 				}
-			}
+			}	
+			
+			nextPlayerIndex = (nextPlayerIndex + 1) % players.length;
 		}
 		
-		if(!found) {
-			return getRandomAlivePlayer();
-		}
 		
 		return null;
 	}

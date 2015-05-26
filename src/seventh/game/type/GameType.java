@@ -85,6 +85,7 @@ public interface GameType extends Debugable {
 	public Type getType();
 		
 	public Player getNextPlayerToSpectate(Players players, Player spectator);
+	public Player getPrevPlayerToSpectate(Players players, Player spectator);
 		
 	public NetGameTypeInfo getNetGameTypeInfo();
 	public NetTeamStat[] getNetTeamStats();
