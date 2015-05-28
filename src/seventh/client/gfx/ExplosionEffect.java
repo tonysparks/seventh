@@ -43,6 +43,11 @@ public class ExplosionEffect implements Updatable {
 			this.ttlCountDown = timeToLive;
 		}
 		
+		public void deactive() {
+			this.ttlCountDown = 0;
+			this.position.zeroOut();
+		}
+		
 		/**
 		 * @return If this is active
 		 */
@@ -92,6 +97,15 @@ public class ExplosionEffect implements Updatable {
 			if(!this.instances[index].isActive()) {
 				this.instances[index].activate(pos);
 			}
+		}
+	}
+	
+	/**
+	 * Deactivates all of the explosions
+	 */
+	public void deactiveAll() {
+		for(int i = 0; i < this.instances.length; i++) {
+			this.instances[i].deactive();
 		}
 	}
 	

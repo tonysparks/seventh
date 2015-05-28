@@ -14,15 +14,10 @@ import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.ExplosionEffect;
-import seventh.client.gfx.ExplosionEffectShader;
-import seventh.client.gfx.FrameBufferRenderable;
-import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.particle.AnimationEffect;
 import seventh.client.gfx.particle.BloodEmitter;
 import seventh.client.gfx.particle.Effect;
-import seventh.client.gfx.particle.Effects;
 import seventh.client.gfx.particle.Emitter;
 import seventh.client.gfx.particle.GibEmitter;
 import seventh.client.gfx.particle.RocketTrailEmitter;
@@ -65,11 +60,6 @@ import seventh.shared.DebugDraw;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-
 /**
  * The {@link ClientGame} is responsible for rendering the client's view of the game world.  The view
  * is generated from messages from the server.
@@ -110,14 +100,8 @@ public class ClientGame {
 	
 	private final Scoreboard scoreboard;
 	private Hud hud;
-	
-	
-	private final Effects backgroundEffects, foregroundEffects;
-	private final LightSystem lightSystem;
-	private final ExplosionEffect explosions;
-
-	private final List<FrameBufferRenderable> frameBufferRenderables;
-	private final Sprite frameBufferSprite;
+		
+	private final ClientGameEffects gameEffects;
 	
 	private final Rectangle cacheRect;
 	private final Random random;
@@ -165,10 +149,6 @@ public class ClientGame {
 		this.bombTargets = new ArrayList<ClientBombTarget>();
 		this.vehicles = new ArrayList<ClientVehicle>();
 		
-		this.frameBufferRenderables = new ArrayList<>();
-		
-		this.backgroundEffects = new Effects();
-		this.foregroundEffects = new Effects();
 				
 		this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
 		this.cameraController = new CameraController(this);
@@ -179,18 +159,12 @@ public class ClientGame {
 		this.gameType = GameType.Type.TDM;
 
 		this.cacheRect = new Rectangle();
-	
-		this.lightSystem = new ImageBasedLightSystem();		
-		this.frameBufferRenderables.add(lightSystem);
-		
-		this.entityListener = lightSystem.getClientEntityListener();		
+
+		this.gameEffects = new ClientGameEffects();
+		this.entityListener = this.gameEffects.getLightSystem().getClientEntityListener();		
 		
 		this.bulletPool = new ClientBulletPool(this, SeventhConstants.MAX_ENTITIES);
 		
-		
-		this.explosions = new ExplosionEffect(15, 800, 0.6f);
-		this.frameBufferSprite = new Sprite();
-//		fullScreenQuad = new Sprite(TextureUtil.createImage(getApp().getScreenWidth(), getApp().getScreenHeight()));
 	}	
 	
 	/**
@@ -268,7 +242,7 @@ public class ClientGame {
 	 * @param effect
 	 */
 	public void addBackgroundEffect(Effect effect) {
-		this.backgroundEffects.addEffect(effect);
+		this.gameEffects.addBackgroundEffect(effect);
 	}
 	
 	/**
@@ -277,7 +251,7 @@ public class ClientGame {
 	 * @param effect
 	 */
 	public void addForegroundEffect(Effect effect) {
-		this.foregroundEffects.addEffect(effect);
+		this.gameEffects.addForegroundEffect(effect);
 	}
 	
 	/**
@@ -286,7 +260,7 @@ public class ClientGame {
 	 * @param timeStep
 	 */
 	public void update(TimeStep timeStep) {
-		this.lightSystem.update(timeStep);
+		this.gameEffects.update(timeStep);
 		
 		long gameClock = timeStep.getGameClock();
 				
@@ -301,19 +275,6 @@ public class ClientGame {
 					removeEntity(ent.getId());	
 				}
 			}
-			
-			
-		}
-
-		
-		backgroundEffects.update(timeStep);
-		foregroundEffects.update(timeStep);
-		explosions.update(timeStep);
-		
-		size = frameBufferRenderables.size();
-		for(int i = 0; i < size; i++) {
-			FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-			r.update(timeStep);
 		}
 		
 		cameraController.update(timeStep);
@@ -323,110 +284,65 @@ public class ClientGame {
 		hud.update(timeStep);			
 	}
 	
-		
+	
 	/**
-	 * Renders to the frame buffer
+	 * Renders the game world
+	 * 
 	 * @param canvas
 	 */
-	public void renderFrameBuffer(Canvas canvas) {
-		int size = this.frameBufferRenderables.size();
-		if(size>0) 
-		{
+	public void render(Canvas canvas) {
+		boolean renderMethod1 = true;
+		
+		// TODO The lighting system is now broke :(
+		if(renderMethod1) {
 			canvas.fboBegin();
-			canvas.setDefaultTransforms();
-			canvas.setShader(null);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			canvas.begin();
-			for(int i = 0; i < size; i++) {
-				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-				r.frameBufferRender(canvas, camera);
+			{
+				gameEffects.preRenderFrameBuffer(canvas, camera);
+				gameEffects.postRenderFrameBuffer(canvas, camera);
+	
+				renderWorld(canvas, camera);
 			}
-			canvas.end();
 			canvas.fboEnd();
 			
-		
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			canvas.setDefaultTransforms();
-			canvas.setShader(null);
 			
-			for(int i = 0; i < this.frameBufferRenderables.size(); ) {
-				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-				if(r.isExpired()) {
-					this.frameBufferRenderables.remove(i);
-				}
-				else {
-					r.render(canvas, camera, 0);
-					i++;
-				}
-			}
+			gameEffects.renderFrameBuffer(canvas, camera);
+			
+			canvas.setShader(null);
+			DebugDraw.enable(false);
+			DebugDraw.render(canvas, camera);
+	
+			
+			hud.render(canvas, camera, 0);
 		}
-	}
-		
-	public void render(Canvas canvas) {
-		
-		canvas.fboBegin();
-		{
-			canvas.setDefaultTransforms();
-			canvas.setShader(null);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-			canvas.begin();
-			int size = this.frameBufferRenderables.size();
-			for(int i = 0; i < size; i++) {
-				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-				r.frameBufferRender(canvas, camera);
-			}
-			canvas.end();
-			
-			for(int i = 0; i < this.frameBufferRenderables.size(); ) {
-				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-				if(r.isExpired()) {
-					this.frameBufferRenderables.remove(i);
-				}
-				else {
-					r.render(canvas, camera, 0);
-					i++;
-				}
-			}
-			
-			canvas.setShader(null);
-			renderWorld(canvas);
-		}
-		canvas.fboEnd();
-		
-		
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		canvas.setDefaultTransforms();
-		//canvas.setShader(null);
-
-		frameBufferSprite.setRegion(canvas.getFrameBuffer());
-		
-		canvas.begin();
-		{
-			canvas.getFrameBuffer().bind();
+		else {
+	
+			canvas.fboBegin();
 			{
-				ShaderProgram shader = ExplosionEffectShader.getInstance().getShader();
-				
-				canvas.setShader(shader);
-				canvas.drawImage(frameBufferSprite, 0, 0, 0x0);
+				gameEffects.preRenderFrameBuffer(canvas, camera);
+	
 			}
+			canvas.fboEnd();
+	
+			gameEffects.postRenderFrameBuffer(canvas, camera);
+			
+			renderWorld(canvas, camera);
+			
+			canvas.setShader(null);
+			DebugDraw.enable(false);
+			DebugDraw.render(canvas, camera);
+	
+			
+			hud.render(canvas, camera, 0);
 		}
-		canvas.end();
-
-		canvas.setShader(null);
-		DebugDraw.enable(false);
-		DebugDraw.render(canvas, camera);
-
 		
-		hud.render(canvas, camera, 0);
 	}
 	
-	private void renderWorld(Canvas canvas) {
+	private void renderWorld(Canvas canvas, Camera camera) {				
 		canvas.begin();		
 		map.render(canvas, camera, 0);
 		canvas.end();
 		
-		backgroundEffects.render(canvas, camera, 0);
+		gameEffects.renderBackground(canvas, camera);
 		
 				
 		ClientEntity[] entityList = entities.getEntities();
@@ -460,103 +376,14 @@ public class ClientGame {
 			renderingOrderEntities[i] = null;
 		}						
 				
-		foregroundEffects.render(canvas, camera, 0);
+		gameEffects.renderForeground(canvas, camera);
 		map.renderForeground(canvas, camera, 0);
 		
 		canvas.setColor(0, 45);
 		map.renderSolid(canvas, camera, 0);
-		
-		lightSystem.render(canvas, camera, 0);		
+
+		gameEffects.renderLightSystem(canvas, camera);
 	}
-	
-	/**
-	 * Renders the game
-	 * 
-	 * @param canvas
-	 */
-	public void render2(Canvas canvas) {				
-		renderFrameBuffer(canvas);
-						
-		canvas.begin();		
-		map.render(canvas, camera, 0);
-		canvas.end();
-		
-		backgroundEffects.render(canvas, camera, 0);
-		
-				
-		ClientEntity[] entityList = entities.getEntities();
-		int size = entityList.length;
-		
-		
-		/* first render the background entities */
-		for(int i = 0; i < size; i++) {
-			/* clear out the foreground entities */
-			renderingOrderEntities[i] = null;
-			
-			ClientEntity entity = entityList[i];			
-			if(entity != null) {
-				
-				if(entity.isBackgroundObject()) {
-					entity.render(canvas, camera, 0);
-				}
-				else {
-					renderingOrderEntities[i] = entity;
-				}				
-			}
-		}						
-		
-		/* now render the foreground entities */
-		for(int i = 0; i < size; i++) {			
-			ClientEntity entity = renderingOrderEntities[i];			
-			if(entity != null) {								
-				entity.render(canvas, camera, 0);				
-			}
-			
-			renderingOrderEntities[i] = null;
-		}						
-		
-		//this.lightSystem.render(canvas, camera, 0);
-		
-		foregroundEffects.render(canvas, camera, 0);
-		map.renderForeground(canvas, camera, 0);
-		
-		canvas.setColor(0, 45);
-		map.renderSolid(canvas, camera, 0);
-		
-		lightSystem.render(canvas, camera, 0);
-		
-		DebugDraw.enable(true);
-		DebugDraw.render(canvas, camera);
-		
-		canvas.setShader(null);
-		hud.render(canvas, camera, 0);
-		
-	}
-	
-	/**
-	 * Renders debug information for an entity
-	 * 
-	 * @param canvas
-	 * @param entity
-	 */
-//	private void debugRenderEntity(Canvas canvas, ClientEntity entity) {
-//		Vector2f cameraPos = camera.getPosition();		
-//		int debugColor = 0xa300aa00;
-//		canvas.drawRect( (int)(entity.bounds.x-cameraPos.x), (int)(entity.bounds.y-cameraPos.y)
-//				   ,entity.bounds.width, entity.bounds.height, debugColor);
-//		
-//		Vector2f center = entity.getCenterPos();				
-//		Tile tile = map.getWorldTile(0, (int)center.x, (int)center.y);
-//		if(tile != null) {
-//			canvas.fillRect(tile.getX()-(int)cameraPos.x, tile.getY()-(int)cameraPos.y, tile.getWidth(), tile.getHeight(), debugColor);
-//			canvas.fillRect(tile.getX()-(int)cameraPos.x, tile.getY()-(int)cameraPos.y, 2, 2, 0xff00ff00);
-//			canvas.drawString(center + " : (" + tile.getX() + "," + tile.getY() + ")"
-//					, (int)center.x-(int)cameraPos.x-20, (int)center.y-(int)cameraPos.y+50, debugColor);
-//		}
-//		
-//		canvas.fillRect((int)center.x-(int)cameraPos.x, (int)center.y-(int)cameraPos.y, 2, 2, 0xff00ff00);
-//	}
-	
 	
 	/**
 	 * @return the rconToken
@@ -576,7 +403,7 @@ public class ClientGame {
 	 * @return the lightSystem
 	 */
 	public LightSystem getLightSystem() {
-		return lightSystem;
+		return gameEffects.getLightSystem();
 	}
 	
 	/**
@@ -825,7 +652,7 @@ public class ClientGame {
 				rocketTrail.attachTo(entity);
 				rocketTrail.start();
 				
-				foregroundEffects.addEffect(rocketTrail);
+				gameEffects.addForegroundEffect(rocketTrail);
 				break;
 			}
 			case NAPALM_GRENADE:
@@ -852,7 +679,7 @@ public class ClientGame {
 					uvPos.y = 1f - (pos.y - camera.getPosition().y) / app.getScreenHeight();
 					
 					/* limit the explosion per player */
-					this.explosions.activate(explosion.ownerId, uvPos);
+					gameEffects.addExplosion(explosion.ownerId, uvPos);
 				}
 				else {
 					entity = new ClientFire(this, pos);	
@@ -914,7 +741,9 @@ public class ClientGame {
 		this.entities.clear();		
 		this.bombTargets.clear();
 		this.vehicles.clear();
-		this.lightSystem.removeAllLights();
+		
+		this.gameEffects.removeAllLights();
+		this.gameEffects.clearEffects();
 				
 		applyGameStats(gs.stats);
 		
@@ -1107,7 +936,7 @@ public class ClientGame {
 //				emitter.resetTimeToLive();
 //				backgroundEffects.addEffect(emitter);
 				if(meansOfDeath != Type.FIRE) {
-					backgroundEffects.addEffect(new BloodEmitter(locationOfDeath, 4, 15200, 14000));
+					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 4, 15200, 14000));
 				}
 				
 				switch(meansOfDeath) {
@@ -1116,7 +945,7 @@ public class ClientGame {
 				case ROCKET:
 				case ROCKET_LAUNCHER:					
 //					backgroundEffects.addEffect(new BloodEmitter(locationOfDeath, 7, 5200, 4000));
-					backgroundEffects.addEffect(new GibEmitter(locationOfDeath));
+					gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
 					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					break;
 				default:
@@ -1151,7 +980,7 @@ public class ClientGame {
 					}
 					
 					if(anim!=null) {
-						backgroundEffects.addEffect(new AnimationEffect(anim, pos, entity.getOrientation(), gameType.equals(GameType.Type.OBJ)));					
+						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), gameType.equals(GameType.Type.OBJ)));
 						Sounds.startPlaySound(Sounds.die, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					}
 				}	
@@ -1172,9 +1001,8 @@ public class ClientGame {
 		showScoreBoard(true);				
 	}
 	
-	public void roundStarted(RoundStartedMessage msg) {
-		backgroundEffects.clearEffects();
-		foregroundEffects.clearEffects();
+	public void roundStarted(RoundStartedMessage msg) {		
+		gameEffects.clearEffects();
 						
 		this.roundEnded = false;
 		
@@ -1244,7 +1072,6 @@ public class ClientGame {
 	private boolean removeEntity(int id) {				
 		ClientEntity ent = entities.removeEntity(id);
 		if(ent != null) {	
-//			System.out.println("Removing entity: " + id); 
 			ent.setAlive(false);		
 			ent.destroy();
 			
@@ -1299,10 +1126,7 @@ public class ClientGame {
 		this.bombTargets.clear();
 		this.vehicles.clear();
 		
-		this.lightSystem.destroy();
-		
-		this.backgroundEffects.clearEffects();
-		this.foregroundEffects.clearEffects();
+		this.gameEffects.destroy();
 	}
 
 	/**

@@ -245,9 +245,12 @@ public class ImageBasedLightSystem implements LightSystem {
 		cameraViewport.set( (int)cameraPos.x - extended, (int)cameraPos.y - extended
 								, viewport.width + extended, viewport.height + extended);
 		
+		/*
 		canvas.setShader(this.shader.getShader());
 		canvas.bindFrameBuffer(1);
 		framebufferTexture.getTexture().bind(0);
+		*/
+		
 		for(int i = 0; i < this.lights.size(); i++) {
 			ImageLight light = this.lights.get(i);		
 			if(light.isOn()) {
@@ -277,14 +280,14 @@ public class ImageBasedLightSystem implements LightSystem {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {		
-//		canvas.begin();		
-//		canvas.setShader(this.shader.getShader());
-//		canvas.bindFrameBuffer(1);
-//		Texture tex = framebufferTexture.getTexture();
-//		if(tex!=null) {
-//			tex.bind(0);	
-//		}
-//		canvas.end();	
+		canvas.begin();		
+		canvas.setShader(this.shader.getShader());
+		canvas.bindFrameBuffer(1);
+		Texture tex = framebufferTexture.getTexture();
+		if(tex!=null) {
+			tex.bind(0);	
+		}
+		canvas.end();	
 	}
 
 }
