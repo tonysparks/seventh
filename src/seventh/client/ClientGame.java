@@ -300,11 +300,12 @@ public class ClientGame {
 				gameEffects.preRenderFrameBuffer(canvas, camera);
 				gameEffects.postRenderFrameBuffer(canvas, camera);
 	
+				canvas.setShader(null);
 				renderWorld(canvas, camera);
 			}
 			canvas.fboEnd();
 			
-			
+			canvas.setShader(null);
 			gameEffects.renderFrameBuffer(canvas, camera);
 			
 			canvas.setShader(null);

@@ -192,8 +192,8 @@ public class PlayerSprite implements Renderable {
 		xOffset = yOffset = 0;
 		
 		activeBodyPosition = idleBody; 
-		activeLegsAnimation = idleLegsAnimation;		
-						
+		activeLegsAnimation = idleLegsAnimation;
+		
 		State currentState = entity.getCurrentState();
 		switch(currentState) {
 		case IDLE:
@@ -238,10 +238,8 @@ public class PlayerSprite implements Renderable {
 			resetLegMovements();
 			break;
 		default:
-			resetLegMovements();
-				
+			resetLegMovements();				
 		}
-		
 		walkingCycle.update(timeStep);
 
 //		if(walkingCycle.isTime()) {
@@ -260,7 +258,7 @@ public class PlayerSprite implements Renderable {
 		}
 		
 		
-		ClientWeapon weapon = entity.getWeapon();
+		ClientWeapon weapon = entity.getWeapon();		
 		if(weapon != null) {
 			
 			this.isReloading = weapon.getState() == seventh.game.weapons.Weapon.State.RELOADING;
@@ -279,6 +277,11 @@ public class PlayerSprite implements Renderable {
 			}
 			else if (this.isSwitching) {
 				this.activeBodyPosition = switchWeaponBody;
+			}
+			
+			
+			if(weapon instanceof ClientRocketLauncher && !this.isMelee) {
+				activeBodyPosition = crouchBody;
 			}
 			
 //			if(weapon.isFirstFire()) {
@@ -349,7 +352,9 @@ public class PlayerSprite implements Renderable {
 			setTextureRegion(sprite, gun);
 			
 			sprite.setScale(1.0f);					
-									
+			
+			boolean isRocketLauncher = weapon instanceof ClientRocketLauncher;
+			
 			switch(this.entity.getCurrentState()) {
 				case SPRINTING: {
 					// original
@@ -395,11 +400,13 @@ public class PlayerSprite implements Renderable {
 //				sprite.setOrigin(adjustments.x, adjustments.y);				
 			}
 			
-			if(weapon instanceof ClientRocketLauncher) {
-//				sprite.setRotation(rot - 60.0f);			
+			if(isRocketLauncher) {
 				// TODO: Crouching
-				sprite.setPosition(rx+3f, ry-31f);
-				sprite.setOrigin(-2f, 33f);
+				sprite.setRotation(rot - 7);
+				//sprite.setPosition(rx+3f, ry-31f);
+				//sprite.setOrigin(-2f, 33f);
+				sprite.setPosition(rx+0f, ry-28f);
+				sprite.setOrigin(-0f, 28f);
 				
 //				sprite.setPosition(rx-adjustments.xOffset, ry-adjustments.yOffset);
 //				sprite.setOrigin(adjustments.x, adjustments.y);
