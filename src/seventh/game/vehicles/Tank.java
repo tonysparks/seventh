@@ -3,6 +3,9 @@
  */
 package seventh.game.vehicles;
 
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.collision.BoundingBox;
+
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.PlayerEntity.Keys;
@@ -52,6 +55,10 @@ public class Tank extends Vehicle {
 	private Vector2f turretFacing;
 	
 	private int armor;
+	
+	private BoundingBox tankBB;
+	private BoundingBox otherBB;
+	
 	
 	/**
 	 * @param position
@@ -204,6 +211,16 @@ public class Tank extends Vehicle {
 		return false;
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#isTouching(seventh.game.Entity)
+	 */
+	@Override
+	public boolean isTouching(Entity other) {
+		
+//		this.otherBB.max.se
+		return false; // TODO
+	}
+	
 	protected void updateOrientation(TimeStep timeStep) {
 		
 		float deltaMove = 0.25f * (float)timeStep.asFraction();
@@ -217,6 +234,7 @@ public class Tank extends Vehicle {
 
 		this.facing.set(1, 0); // make right vector
 		Vector2f.Vector2fRotate(this.facing, orientation, this.facing);
+		
 	}
 	
 	protected void updateTurretOrientation(TimeStep timeStep) {

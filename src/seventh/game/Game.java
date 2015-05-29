@@ -1101,7 +1101,7 @@ public class Game implements GameInfo, Debugable {
 		for(int i = 0; i < this.entities.length; i++) {
 			Entity other = this.entities[i];
 			if(other != null) {
-				if(other != ent && other.bounds.intersects(ent.bounds)) {
+				if(other != ent && /*other.bounds.intersects(ent.bounds)*/ ent.isTouching(other)) {
 					if(ent.onTouch != null) {
 						ent.onTouch.onTouch(ent, other);
 						return true;
@@ -1121,7 +1121,7 @@ public class Game implements GameInfo, Debugable {
 		for(int i = 0; i < this.playerEntities.length; i++) {
 			Entity other = this.playerEntities[i];
 			if(other != null) {
-				if(other != ent && other.bounds.intersects(ent.bounds)) {
+				if(other != ent && /*other.bounds.intersects(ent.bounds)*/ ent.isTouching(other)) {
 					if(ent.onTouch != null) {
 						ent.onTouch.onTouch(ent, other);
 						return true;
@@ -1142,7 +1142,7 @@ public class Game implements GameInfo, Debugable {
 		for(int i = 0; i < this.vehicles.size(); i++) {
 			Entity other = this.vehicles.get(i);
 			if(other != null) {
-				if(other != ent && other.bounds.intersects(ent.bounds)) {
+				if(other != ent && other.isTouching(ent)) {
 					if(ent.onTouch != null) {
 						ent.onTouch.onTouch(ent, other);
 						return true;
@@ -1163,7 +1163,7 @@ public class Game implements GameInfo, Debugable {
 			for(int i = 0; i < this.playerEntities.length; i++) {
 				Entity other = this.playerEntities[i];
 				if(other != null) {
-					if(other != ent && other.canTakeDamage() && other.bounds.intersects(ent.bounds)) {								
+					if(other != ent && other.canTakeDamage() && /*other.bounds.intersects(ent.bounds)*/ ent.isTouching(other)) {								
 						if(isEntityReachable(other, origin, dir)) {
 							ent.onTouch.onTouch(ent, other);
 							return true;										
