@@ -9,6 +9,7 @@ import seventh.client.ClientTank;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
+import seventh.shared.WeaponConstants;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -41,6 +42,8 @@ public class TankSprite implements Renderable {
 //		this.mechLegs = Art.newAnimatedImage(new int[] {580, 580 }, new TextureRegion[] { Art.mechLegs[0], Art.mechLegs[1] });
 		this.tankTracks = Art.newTankTracks();
 		this.tankTurret = new Sprite(Art.tankTurret);
+		this.tankTurret.flip(true, true);
+		
 		this.tankTrack = new Sprite(this.tankTracks.getCurrentImage());
 //		this.mechTorso.flip(false, true);
 		this.bobDir = 1.0f;
@@ -116,28 +119,49 @@ public class TankSprite implements Renderable {
 		Vector2f cameraPos = camera.getPosition();
 
 		
-		float rx = Math.round((pos.x - cameraPos.x) - (bounds.width/1.0f));
-		float ry = Math.round((pos.y - cameraPos.y) - (bounds.height/1.0f));
-
+		float rx = Math.round((pos.x - cameraPos.x) - (bounds.width/2.0f) + WeaponConstants.TANK_WIDTH/2f);
+		float ry = Math.round((pos.y - cameraPos.y) - (bounds.height/2.0f) + WeaponConstants.TANK_HEIGHT/2f);
+		
 		TextureRegion tex = tankTracks.getCurrentImage();		
 		tankTrack.setRegion(tex);
 		float trackAngle = (float) (Math.toDegrees(tank.getOrientation())) - 90f;
 		
-		tankTrack.setRotation(trackAngle);
-		tankTrack.setPosition(rx, ry);
+		
+		rx = Math.round((pos.x + WeaponConstants.TANK_AABB_WIDTH/4f)  - cameraPos.x);
+		ry = Math.round((pos.y + WeaponConstants.TANK_AABB_HEIGHT/4f) - cameraPos.y);
+		
+		rx -= 5;
+		ry -= 25;
+		
+//		rx = Math.round((pos.x + WeaponConstants.TANK_WIDTH/2f)  - cameraPos.x);
+//		ry = Math.round((pos.y + WeaponConstants.TANK_HEIGHT/2f) - cameraPos.y);
+		
+		
+		tankTrack.setRotation(trackAngle);	
 		tankTrack.setOrigin(tex.getRegionWidth()/2f,tex.getRegionHeight()/2f);
-		tankTrack.translate(-20, -25);
+		tankTrack.setPosition(rx, ry);
+						
 		canvas.drawSprite(tankTrack);
-
+//		canvas.fillRect( (int)(rx+tex.getRegionWidth()/2f), (int)(ry+tex.getRegionHeight()/2f), 5, 5, 0xff00ff00);
+		
 		
 		float turretAngle = (float)Math.toDegrees(tank.getTurretOrientation()) + 90.0f;		
 		
-		tankTurret.setRotation(turretAngle);		
-		tankTurret.setPosition(rx-10f,ry-10f);
-		tankTurret.translate(-10f, -15f);
-		tankTurret.setOrigin(tankTurret.getWidth()/2f,tankTurret.getHeight()/2f);		
+		rx += 0f;
+		ry -= 40f;
+		
+		float originX = 55;
+		float originY = 114;
+		
+		tankTurret.setRotation(turretAngle);
+		tankTurret.setOrigin(originX, originY);
+		tankTurret.setPosition(rx,ry);
+		
+	//	canvas.fillRect( (int)rx, (int)ry, (int)tankTurret.getRegionWidth(), (int)tankTurret.getRegionHeight(), 0xffff0000);
 		canvas.drawSprite(tankTurret);
-
+		
+	//	canvas.fillRect( (int)rx, (int)ry, 5, 5, 0xff00ff00);
+//		canvas.fillRect( (int)(rx+originX), (int)(ry+originY), 5, 5, 0xff00ff00);
 
 		if(tank.isSecondaryWeaponFiring()) {
 			TextureRegion tx = railgunFlash.getCurrentImage();
@@ -165,7 +189,9 @@ public class TankSprite implements Renderable {
 			canvas.boldFont();
 			ClientPlayerEntity ent = tank.getOperator();
 			ClientPlayer player = ent.getPlayer();
-			RenderFont.drawShadedString(canvas, player.getName(), (int)rx + (bounds.width), (int)ry + (bounds.height) + 100, player.getTeam().getColor() );			
+			int strln = canvas.getWidth(player.getName());
+			RenderFont.drawShadedString(canvas, player.getName(), (int)(rx+WeaponConstants.TANK_AABB_WIDTH/2)-strln*2, 
+								(int)ry+WeaponConstants.TANK_AABB_HEIGHT+30, player.getTeam().getColor() );			
 		}
 	}
 

@@ -10,6 +10,7 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
 import seventh.map.Tile.SurfaceType;
+import seventh.math.OOB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Debugable;
@@ -311,6 +312,13 @@ public abstract interface Map extends Renderable, Debugable {
 	 */
 	public abstract boolean rectCollides( Rectangle rect );
 	
+	/**
+	 * Check for a collision given a {@link OOB}
+	 * 
+	 * @param oob
+	 * @return true if a collision occurs, false otherwise
+	 */
+	public abstract boolean rectCollides( OOB oob );
 	
 	/**
 	 * Check for a collision given a {@link Rectangle}

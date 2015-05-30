@@ -349,6 +349,18 @@ public class Rectangle {
 	}
 	
 	/**
+	 * If this {@link Rectangle} contains the {@link OOB}
+	 * @param oob
+	 * @return true if it contains it
+	 */
+	public boolean contains(OOB oob) {
+		return RectangleContains(this, oob.topLeft) &&
+			   RectangleContains(this, oob.topRight) &&
+			   RectangleContains(this, oob.bottomRight) &&
+			   RectangleContains(this, oob.bottomLeft);
+	}
+	
+	/**
 	 * Adds b to this.
 	 * @param b
 	 */

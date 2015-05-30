@@ -50,9 +50,8 @@ public class Line {
 	 */
 	public static boolean lineIntersectLine( Vector2f v1, Vector2f v2, Vector2f v3, Vector2f v4 )
 	{
-		Line2D line1 = new Line2D.Float(v1.x, v1.y, v2.x, v2.y);
-		Line2D line2 = new Line2D.Float(v3.x, v3.y, v4.x, v4.y);
-		return line1.intersectsLine(line2);
+		return Line2D.linesIntersect(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, v4.x, v4.y);
+		
 		
 //	    float denom = ((v4.y - v3.y) * (v2.x - v1.x)) - ((v4.x - v3.x) * (v2.y - v1.y));
 //	    float numerator = ((v4.x - v3.x) * (v1.y - v3.y)) - ((v4.y - v3.y) * (v1.x - v3.x));
@@ -66,6 +65,23 @@ public class Line {
 //
 //	    return (ua >= 0.0f && ua <= 1.0f && ub >= 0.0f && ub <= 1.0f);
 
+	}
+	
+	/**
+	 * Line Line intersection.  You've crossed the line, line! (maybe, we'll see).
+	 * 
+	 * @param v1x
+	 * @param v1y
+	 * @param v2x
+	 * @param v2y
+	 * @param v3x
+	 * @param v3y
+	 * @param v4x
+	 * @param v4y
+	 * @return true if the lines cross
+	 */
+	public static boolean lineIntersectLine( float v1x, float v1y, float v2x, float v2y, float v3x, float v3y, float v4x, float v4y ) {
+		return Line2D.linesIntersect(v1x, v1y, v2x, v2y, v3x, v3y, v4x, v4y);
 	}
 	
 //	public static boolean lineIntersectsRect(float x0, float y0, float x1, float y1, Rectangle rect) {

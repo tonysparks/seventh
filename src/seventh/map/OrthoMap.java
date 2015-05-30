@@ -14,6 +14,7 @@ import seventh.client.gfx.ShadeTiles;
 import seventh.graph.Edge;
 import seventh.graph.GraphNode;
 import seventh.map.Tile.SurfaceType;
+import seventh.math.OOB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -242,6 +243,26 @@ public class OrthoMap implements Map {
 	@Override
 	public boolean rectCollides(Rectangle rect) {
 		return rectCollides(rect, 1);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#rectCollides(seventh.math.OOB)
+	 */
+	@Override
+	public boolean rectCollides(OOB oob) {
+		if(!worldBounds.contains(oob)) {
+			return true;
+		}
+		
+		return lineCollides(oob.topLeft, oob.topRight, 0) ||
+				   lineCollides(oob.topRight, oob.bottomRight, 0) ||
+				   lineCollides(oob.bottomRight, oob.bottomLeft, 0) ||
+				   lineCollides(oob.bottomLeft, oob.topLeft, 0);
+		
+//		return lineCollides(oob.center, oob.topLeft) ||
+//			   lineCollides(oob.center, oob.topRight) ||
+//			   lineCollides(oob.center, oob.bottomRight) ||
+//			   lineCollides(oob.center, oob.bottomLeft);
 	}
 	
 	/* (non-Javadoc)

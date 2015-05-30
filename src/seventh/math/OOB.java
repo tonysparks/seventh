@@ -87,13 +87,23 @@ public class OOB {
 	}
 	
 	/**
+	 * Updates the {@link OOB}
+	 * 
+	 * @param newOrientation
+	 * @param center
+	 */
+	public void update(float newOrientation, Vector2f center) {
+		update(newOrientation, center.x, center.y);
+	}
+	
+	/**
 	 * Updates the OOB internal state
 	 * 
 	 * @param newOrientation
 	 * @param px
 	 * @param py
 	 */
-	private void update(float newOrientation, float px, float py) {
+	public void update(float newOrientation, float px, float py) {
 	    
 	    // first translate to center coordinate space
         this.center.set(0,0);
@@ -256,15 +266,20 @@ public class OOB {
      * @return true if the {@link Rectangle} intersects with this {@link OOB}
      */
     public boolean intersects(Rectangle b) {
-        return b.contains(topLeft) ||
-               b.contains(topRight) ||
-               b.contains(bottomLeft) ||
-               b.contains(bottomRight) ||
-               // now check if the Rectangle is in this OOB
-               contains(b.x        , b.y) ||
-               contains(b.x+b.width, b.y) ||
-               contains(b.x+b.width, b.y+b.height) ||
-               contains(b.x        , b.y-b.height);
+    	return checkLineAgainstOOB(topLeft, topRight, b) ||
+    		   checkLineAgainstOOB(topRight, bottomRight, b) ||
+    		   checkLineAgainstOOB(bottomRight, bottomLeft, b) ||
+    		   checkLineAgainstOOB(bottomLeft, topLeft, b);
+    	
+//        return b.contains(topLeft) ||
+//               b.contains(topRight) ||
+//               b.contains(bottomLeft) ||
+//               b.contains(bottomRight) ||
+//               // now check if the Rectangle is in this OOB
+//               contains(b.x        , b.y) ||
+//               contains(b.x+b.width, b.y) ||
+//               contains(b.x+b.width, b.y+b.height) ||
+//               contains(b.x        , b.y-b.height);
     }
     
     /**
@@ -274,23 +289,35 @@ public class OOB {
      * @return true if the two {@link OOB}'s overlap
      */
 	public boolean intersects(OOB other) {
-	    return hasCornersInside(other) || other.hasCornersInside(this);
+		return checkLineAgainstOOB(topLeft, topRight, other) ||
+			   checkLineAgainstOOB(topRight, bottomRight, other) ||
+			   checkLineAgainstOOB(bottomRight, bottomLeft, other) ||
+			   checkLineAgainstOOB(bottomLeft, topLeft, other);
+	}
+
+	/**
+	 * Not very efficient means of testing, but tests the supplied line with all of the other lines
+	 * that make up the other {@link OOB}
+	 * 
+	 * @param a
+	 * @param b
+	 * @param other
+	 * @return true if the supplied line intersects with one of the lines that make up the {@link OOB}
+	 */
+	private boolean checkLineAgainstOOB(Vector2f a, Vector2f b, OOB other) {
+		return Line.lineIntersectLine(a, b, other.topLeft, other.topRight) ||
+			   Line.lineIntersectLine(a, b, other.topRight, other.bottomRight) ||
+			   Line.lineIntersectLine(a, b, other.bottomRight, other.bottomLeft) ||
+               Line.lineIntersectLine(a, b, other.bottomLeft, other.topLeft);
 	}
 	
-	/**
-	 * Probably a more efficient way of doing this, but in general the algorithm
-	 * determines if any of the four corners of either {@link OOB} is contained in the
-	 * other {@link OOB} (and checks the reverse)
-	 * 
-	 * @param other
-	 * @return true if any of the supplied {@link OOB} corners are contained in this {@link OOB}
-	 */
-	private boolean hasCornersInside(OOB other) {
-	    return contains(other.topLeft) ||
-	           contains(other.topRight) ||
-	           contains(other.bottomLeft) ||
-	           contains(other.bottomRight);
+	private boolean checkLineAgainstOOB(Vector2f a, Vector2f b, Rectangle other) {
+		return Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x            , other.y             , other.x+other.width, other.y) ||
+			   Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x+other.width, other.y             , other.x+other.width, other.y+other.height) ||
+			   Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x+other.width, other.y+other.height, other.x            , other.y+other.height) ||
+               Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x            , other.y+other.height, other.x            , other.y);
 	}
+	
 	
     @Override
     public String toString() {

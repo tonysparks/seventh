@@ -619,6 +619,10 @@ public abstract class Entity implements Debugable {
 	 * @return true if we collide with a vehicle
 	 */
 	protected boolean collidesAgainstVehicle(Rectangle bounds) {
+		if(!getType().isPlayer()) {
+			return false;
+		}
+		
 		boolean collides = false;
 		List<Vehicle> vehicles = game.getVehicles();
 		for(int i = 0; i < vehicles.size(); i++) {
@@ -635,11 +639,15 @@ public abstract class Entity implements Debugable {
 				 */
 				if(collides) {
 					
-					if(getType().isPlayer() && vehicle.isMoving() && vehicle.getBounds().contains(bounds)) {
-						kill(vehicle);
-					}
+					// do a more expensive collision detection
+					if(vehicle.isTouching(this)) {
 					
-					break;
+						if(vehicle.isMoving() /*&& vehicle.getBounds().contains(bounds)*/) {
+							kill(vehicle);
+						}
+						
+						break;
+					}					
 				}
 			}
 			

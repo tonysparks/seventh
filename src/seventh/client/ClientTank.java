@@ -36,8 +36,8 @@ public class ClientTank extends ClientVehicle {
 	public ClientTank(ClientGame game, Vector2f pos) {
 		super(game, pos);	
 		
-		this.bounds.width = WeaponConstants.TANK_WIDTH;
-		this.bounds.height = WeaponConstants.TANK_HEIGHT;
+		this.bounds.width = WeaponConstants.TANK_AABB_WIDTH;
+		this.bounds.height = WeaponConstants.TANK_AABB_HEIGHT;
 		
 		this.lineOfSight = WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT;
 			
@@ -161,7 +161,7 @@ public class ClientTank extends ClientVehicle {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
-		this.tankSprite.render(canvas, camera, alpha);
+		this.tankSprite.render(canvas, camera, alpha);		
 	}
 
 }

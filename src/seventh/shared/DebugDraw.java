@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.math.OOB;
 import seventh.math.Vector2f;
 
 /**
@@ -203,6 +204,24 @@ public class DebugDraw {
 	public static void drawLineRelative(Vector2f a, Vector2f b, Integer color) {
 		if(enabled.get()) {
 			drawCalls.add(new LineDrawable(true, color, a, b));
+		}
+	}
+	
+	public static void drawOOB(OOB oob, Integer color) {
+		if(enabled.get()) {
+			drawCalls.add(new LineDrawable(false, color, oob.topLeft, oob.topRight));
+			drawCalls.add(new LineDrawable(false, color, oob.topRight, oob.bottomRight));
+			drawCalls.add(new LineDrawable(false, color, oob.bottomRight, oob.bottomLeft));
+			drawCalls.add(new LineDrawable(false, color, oob.bottomLeft, oob.topLeft));
+		}
+	}
+	
+	public static void drawOOBRelative(OOB oob, Integer color) {
+		if(enabled.get()) {
+			drawCalls.add(new LineDrawable(true, color, oob.topLeft, oob.topRight));
+			drawCalls.add(new LineDrawable(true, color, oob.topRight, oob.bottomRight));
+			drawCalls.add(new LineDrawable(true, color, oob.bottomRight, oob.bottomLeft));
+			drawCalls.add(new LineDrawable(true, color, oob.bottomLeft, oob.topLeft));
 		}
 	}
 	

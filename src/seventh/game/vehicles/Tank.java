@@ -3,8 +3,7 @@
  */
 package seventh.game.vehicles;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.collision.BoundingBox;
+import java.util.List;
 
 import seventh.game.Entity;
 import seventh.game.Game;
@@ -18,7 +17,11 @@ import seventh.game.weapons.Railgun;
 import seventh.game.weapons.Rocket;
 import seventh.game.weapons.RocketLauncher;
 import seventh.game.weapons.Weapon;
+import seventh.map.Map;
+import seventh.math.OOB;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.DebugDraw;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 
@@ -56,8 +59,7 @@ public class Tank extends Vehicle {
 	
 	private int armor;
 	
-	private BoundingBox tankBB;
-	private BoundingBox otherBB;
+	private OOB tankBB;
 	
 	
 	/**
@@ -143,12 +145,16 @@ public class Tank extends Vehicle {
 			
 		};
 
-
-		bounds.width = WeaponConstants.TANK_WIDTH;
-		bounds.height = WeaponConstants.TANK_HEIGHT;
+		bounds.width = WeaponConstants.TANK_AABB_WIDTH;
+		bounds.height = WeaponConstants.TANK_AABB_HEIGHT;
 		operateHitBox.width = bounds.width + WeaponConstants.VEHICLE_HITBOX_THRESHOLD;
 		operateHitBox.height = bounds.height + WeaponConstants.VEHICLE_HITBOX_THRESHOLD;
 
+		Vector2f center = new Vector2f(position);
+		center.x -= WeaponConstants.TANK_WIDTH/2f;
+		center.y -= WeaponConstants.TANK_HEIGHT/2f;
+		tankBB = new OOB( getOrientation(), center, WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);
+		
 		onTouch = new OnTouchListener() {
 
 			@Override
@@ -199,7 +205,99 @@ public class Tank extends Vehicle {
 		Vector2f.Vector2fMult(vel, this.throttle, vel);
 		Vector2f.Vector2fNormalize(vel, vel);
 		
-		boolean isBlocked = super.update(timeStep);		
+		boolean isBlocked = //super.update(timeStep);
+				movementUpdate(timeStep);
+		
+		updateOperateHitBox();
+		
+		Vector2f center = new Vector2f(pos);
+		center.x += WeaponConstants.TANK_AABB_WIDTH/2f;
+		center.y += WeaponConstants.TANK_AABB_HEIGHT/2f;
+		this.tankBB.update(orientation, center);
+		
+		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
+		DebugDraw.drawOOBRelative(tankBB, 0xff00ff00);
+		DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
+		
+		return isBlocked;
+	}
+	
+	/**
+	 * @param dt
+	 * @return true if blocked
+	 */
+	private boolean movementUpdate(TimeStep timeStep) {
+		boolean isBlocked = false;
+		
+		if(isAlive() && !this.vel.isZero()) {
+			if(currentState != State.WALKING && currentState != State.SPRINTING) {
+				currentState = State.RUNNING;
+			}
+								
+			int movementSpeed = calculateMovementSpeed();
+						
+			
+			double dt = timeStep.asFraction();
+			int newX = (int)Math.round(pos.x + vel.x * movementSpeed * dt);
+			int newY = (int)Math.round(pos.y + vel.y * movementSpeed * dt);					
+			
+			Map map = game.getMap();
+			
+			bounds.x = newX;
+			if( map.rectCollides(bounds) ) {
+				tankBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, tankBB.center.y);
+				isBlocked = map.rectCollides(tankBB);
+				if(isBlocked) { 
+					bounds.x = (int)pos.x;
+				}
+								
+			}
+			else if(collidesAgainstVehicle(bounds)) {
+				bounds.x = (int)pos.x;				
+				isBlocked = true;
+			}
+			
+			
+			bounds.y = newY;
+			if( map.rectCollides(bounds)) {
+				tankBB.setLocation(tankBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
+				isBlocked = map.rectCollides(tankBB);
+				if(isBlocked) {
+					bounds.y = (int)pos.y;
+				}
+			}
+			else if(collidesAgainstVehicle(bounds)) {				
+				bounds.y = (int)pos.y;
+				isBlocked = true;
+			}
+			
+
+			/* some things want to stop dead it their tracks
+			 * if a component is blocked
+			 */
+			if(isBlocked && !continueIfBlock()) {
+				bounds.x = (int)pos.x;
+				bounds.y = (int)pos.y;
+			}
+						
+			pos.x = bounds.x;
+			pos.y = bounds.y;
+					
+			vel.zeroOut();
+			
+//			this.walkingTime = WALK_TIME;
+		}
+		else {						
+//			if(this.walkingTime<=0 && currentState!=State.CROUCHING) {
+//				currentState = State.IDLE;
+//			}
+//			
+//			this.walkingTime -= timeStep.getDeltaTime();
+		
+		}
+		
+		
+		
 		return isBlocked;
 	}
 	
@@ -212,13 +310,58 @@ public class Tank extends Vehicle {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.game.Entity#collidesAgainstVehicle(seventh.math.Rectangle)
+	 */
+	@Override
+	protected boolean collidesAgainstVehicle(Rectangle bounds) {
+		boolean collides = false;
+		List<Vehicle> vehicles = game.getVehicles();
+		for(int i = 0; i < vehicles.size(); i++) {
+			Vehicle vehicle = vehicles.get(i);
+			if(vehicle.isAlive() && this != vehicle) {
+				
+				/* determine if moving to this bounds we would touch
+				 * the vehicle
+				 */
+				collides = bounds.intersects(vehicle.getBounds());
+				
+				/* if we touched, determine if we would be inside
+				 * the vehicle, if so, kill us
+				 */
+				if(collides) {
+					
+					// do a more expensive collision detection
+					if(vehicle.isTouching(this)) {					
+						return true;
+					}					
+				}
+			}
+			
+			
+		}
+		
+		return collides;
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.game.Entity#isTouching(seventh.game.Entity)
 	 */
 	@Override
 	public boolean isTouching(Entity other) {
 		
-//		this.otherBB.max.se
-		return false; // TODO
+		// first check the cheap AABB
+		if(bounds.intersects(other.getBounds())) {
+		
+			if(other instanceof Tank) {
+				Tank otherTank = (Tank)other;
+				return this.tankBB.intersects(otherTank.tankBB);
+			}
+			else {
+				return this.tankBB.intersects(other.getBounds());
+			}
+		}
+		
+		return false; 
 	}
 	
 	protected void updateOrientation(TimeStep timeStep) {
@@ -234,6 +377,7 @@ public class Tank extends Vehicle {
 
 		this.facing.set(1, 0); // make right vector
 		Vector2f.Vector2fRotate(this.facing, orientation, this.facing);
+		this.tankBB.rotateTo(orientation);
 		
 	}
 	

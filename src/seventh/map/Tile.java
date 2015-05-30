@@ -8,6 +8,7 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
 import seventh.math.Circle;
+import seventh.math.OOB;
 import seventh.math.Rectangle;
 import seventh.math.Triangle;
 import seventh.shared.TimeStep;
@@ -75,6 +76,11 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {			
+				return false;
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {			
 				return false;
 			}
@@ -83,6 +89,11 @@ public class Tile implements Renderable {
 			
 			@Override
 			public boolean pointCollide(Rectangle a, int x, int y) {
+				return true;
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {			
 				return true;
 			}
 			
@@ -101,6 +112,12 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				a.width /= 2;
+				return oob.intersects(a);
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {
 				a.width /= 2;
 				return a.intersects(b);
@@ -112,6 +129,13 @@ public class Tile implements Renderable {
 				a.x += (a.width/2);
 				a.width /= 2;
 				return a.contains(x, y);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				a.x += (a.width/2);
+				a.width /= 2;
+				return oob.intersects(a);
 			}
 			
 			@Override
@@ -131,6 +155,12 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				a.height /= 2;
+				return oob.intersects(a);
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {
 				a.height /= 2;
 				return a.intersects(b);
@@ -144,6 +174,14 @@ public class Tile implements Renderable {
 				a.height /= 2;
 				return a.contains(x, y);
 			}
+			
+
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				a.y += (a.height/2);
+				a.height /= 2;
+				return oob.intersects(a);
+			}		
 			
 			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {
@@ -166,6 +204,22 @@ public class Tile implements Renderable {
 					a.width /= 2;
 					
 					return a.contains(x,y);
+				}
+				return true;
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				int height = a.height;
+								
+				a.height /= 2;
+				boolean north = oob.intersects(a);
+				if(!north) {
+					
+					a.height = height;
+					a.width /= 2;
+					
+					return oob.intersects(a);
 				}
 				return true;
 			}
@@ -206,6 +260,24 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				int width = a.width;
+				int height = a.height;
+								
+				a.height /= 2;
+				boolean north = oob.intersects(a);
+				if(!north) {
+					
+					a.height = height;
+					a.x += (width/2);
+					a.width /= 2;
+					
+					return oob.intersects(a);
+				}
+				return true;
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {
 				int width = a.width;
 				int height = a.height;
@@ -238,6 +310,24 @@ public class Tile implements Renderable {
 					a.width /= 2;
 					
 					return a.contains(x,y);
+				}
+				return true;
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				int height = a.height;
+								
+				a.height /= 2;
+				a.y += a.height;
+				
+				boolean south = oob.intersects(a);
+				if(!south) {
+					
+					a.height = height;					
+					a.width /= 2;
+					
+					return oob.intersects(a);
 				}
 				return true;
 			}
@@ -281,6 +371,26 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB b) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
+				
+				if(SOUTH_HALF_SOLID.rectCollide(a, b)) {
+					return true;
+				}
+				
+				a.set(ax, ay, width, height);
+				if(EAST_HALF_SOLID.rectCollide(a, b)) {
+					return true;
+				}
+				
+				return false;
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
 				int ay = a.y;
@@ -310,6 +420,13 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {						
+				a.height = 5;				
+				return oob.intersects(a);
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {						
 				a.height = 5;				
 				return a.intersects(b);
@@ -322,6 +439,14 @@ public class Tile implements Renderable {
 				a.y += a.height - 5;
 				a.height = 5;					
 				return a.contains(x, y);				
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {						
+				a.y += a.height - 5;
+				a.height = 5;					
+				return oob.intersects(a);
+				
 			}
 			
 			@Override
@@ -340,6 +465,13 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				a.width = 5;					
+				return oob.intersects(a);
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				a.width = 5;					
 				return a.intersects(b);
@@ -352,6 +484,14 @@ public class Tile implements Renderable {
 				a.x += a.width - 5;
 				a.width = 5;					
 				return a.contains(x, y);				
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				a.x += a.width - 5;
+				a.width = 5;					
+				return oob.intersects(a);
+				
 			}
 			
 			@Override
@@ -381,6 +521,26 @@ public class Tile implements Renderable {
 				}
 				
 				return false;				
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
+				
+				if(NORTH_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				a.set(ax, ay, width, height);
+				if(EAST_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				return false;
+				
 			}
 			
 			@Override
@@ -424,6 +584,26 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
+				
+				if(NORTH_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				a.set(ax, ay, width, height);
+				if(WEST_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				return false;
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
 				int ay = a.y;
@@ -464,6 +644,26 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
+				
+				if(SOUTH_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				a.set(ax, ay, width, height);
+				if(WEST_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				return false;
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
 				int ay = a.y;
@@ -501,6 +701,26 @@ public class Tile implements Renderable {
 				}
 				
 				return false;				
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
+				
+				if(SOUTH_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				a.set(ax, ay, width, height);
+				if(EAST_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				return false;
+				
 			}
 			
 			@Override
@@ -545,6 +765,26 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
+				
+				if(NORTH_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				a.set(ax, ay, width, height);
+				if(SOUTH_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				return false;
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
 				int ay = a.y;
@@ -585,6 +825,26 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
+				
+				if(WEST_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				a.set(ax, ay, width, height);
+				if(EAST_SLICE_SOLID.rectCollide(a, oob)) {
+					return true;
+				}
+				
+				return false;
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
 				int ay = a.y;
@@ -616,7 +876,18 @@ public class Tile implements Renderable {
 				a.set(ax+width/2, ay+height/2, width/2, height/2);					
 				return a.contains(x,y);				
 			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
 				
+				a.set(ax+width/2, ay+height/2, width/2, height/2);					
+				return oob.intersects(a);								
+			}
+			
 			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
@@ -641,7 +912,18 @@ public class Tile implements Renderable {
 				a.set(ax, ay, width/2, height/2);					
 				return a.contains(x,y);				
 			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
 				
+				a.set(ax, ay, width/2, height/2);					
+				return oob.intersects(a);								
+			}
+			
 			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
@@ -666,7 +948,18 @@ public class Tile implements Renderable {
 				a.set(ax+width/2, ay, width/2, height/2);					
 				return a.contains(x,y);				
 			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
 				
+				a.set(ax+width/2, ay, width/2, height/2);					
+				return oob.intersects(a);								
+			}
+			
 			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
@@ -691,7 +984,18 @@ public class Tile implements Renderable {
 				a.set(ax, ay+height/2, width/2, height/2);					
 				return a.contains(x,y);				
 			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				int ax = a.x;
+				int ay = a.y;
+				int width = a.width;
+				int height = a.height;
 				
+				a.set(ax, ay+height/2, width/2, height/2);					
+				return oob.intersects(a);								
+			}
+			
 			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				int ax = a.x;
@@ -714,6 +1018,14 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {										
+				a.x += a.width/2;
+				a.width = 5;						
+				return oob.intersects(a);
+				
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {										
 				a.x += a.width/2;
 				a.width = 5;						
@@ -728,6 +1040,13 @@ public class Tile implements Renderable {
 				a.y += a.height/2;
 				a.height = 5;					
 				return a.contains(x, y);				
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				a.y += a.height/2;
+				a.height = 5;						
+				return oob.intersects(a);
 			}
 			
 			@Override
@@ -751,6 +1070,11 @@ public class Tile implements Renderable {
 				float y2 = a.y + a.height;
 								
 				return Triangle.pointIntersectsTriangle(x, y, x0, y0, x1, y1, x2, y2);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				return true;
 			}
 			
 			@Override
@@ -781,6 +1105,11 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				return true;
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {
 				float x0 = a.x;
 				float y0 = a.y;
@@ -805,6 +1134,11 @@ public class Tile implements Renderable {
 				float y2 = a.y + a.height;
 								
 				return Triangle.pointIntersectsTriangle(x, y, x0, y0, x1, y1, x2, y2);
+			}
+			
+			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				return true;
 			}
 			
 			@Override
@@ -835,6 +1169,11 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				return true;
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {
 				float x0 = a.x + a.width;
 				float y0 = a.y;
@@ -859,6 +1198,11 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
+			public boolean rectCollide(Rectangle a, OOB oob) {
+				return true;
+			}
+			
+			@Override
 			public boolean rectCollide(Rectangle a, Rectangle b) {
 				float circleX = a.x + a.width/2;
 				float circleY = a.y + a.height/2;
@@ -879,6 +1223,7 @@ public class Tile implements Renderable {
 //		public abstract void setBounds(Rectangle rect);
 		
 		public abstract boolean rectCollide(Rectangle a, Rectangle b);
+		public abstract boolean rectCollide(Rectangle a, OOB oob);
 		public abstract boolean pointCollide(Rectangle a, int x, int y);
 		
 		

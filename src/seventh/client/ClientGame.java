@@ -309,7 +309,7 @@ public class ClientGame {
 			gameEffects.renderFrameBuffer(canvas, camera);
 			
 			canvas.setShader(null);
-			DebugDraw.enable(false);
+			DebugDraw.enable(true);
 			DebugDraw.render(canvas, camera);
 	
 			
