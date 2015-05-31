@@ -7,6 +7,7 @@ import java.util.List;
 
 import seventh.game.Entity;
 import seventh.game.Game;
+import seventh.game.PlayerEntity;
 import seventh.game.PlayerEntity.Keys;
 import seventh.game.SoundType;
 import seventh.game.net.NetEntity;
@@ -18,7 +19,7 @@ import seventh.game.weapons.Rocket;
 import seventh.game.weapons.RocketLauncher;
 import seventh.game.weapons.Weapon;
 import seventh.map.Map;
-import seventh.math.OOB;
+import seventh.math.FastMath;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
@@ -48,6 +49,9 @@ public class Tank extends Vehicle {
 	private float turretOrientation;
 	private float desiredTurretOrientation;		
 	
+	private long throttleStartTime;
+	private long throttleWarmupTime;
+	
 //	private float movementTime;
 //	private float movementRate;	
 	private float desiredOrientation;
@@ -58,8 +62,6 @@ public class Tank extends Vehicle {
 	private Vector2f turretFacing;
 	
 	private int armor;
-	
-	private OOB tankBB;
 	
 	
 	/**
@@ -147,13 +149,15 @@ public class Tank extends Vehicle {
 
 		bounds.width = WeaponConstants.TANK_AABB_WIDTH;
 		bounds.height = WeaponConstants.TANK_AABB_HEIGHT;
+		
+		aabbWidth = bounds.width;
+		aabbHeight = bounds.height;
+		
+		vehicleBB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);		
+		syncOOB(getOrientation(), position);
+		
 		operateHitBox.width = bounds.width + WeaponConstants.VEHICLE_HITBOX_THRESHOLD;
 		operateHitBox.height = bounds.height + WeaponConstants.VEHICLE_HITBOX_THRESHOLD;
-
-		Vector2f center = new Vector2f(position);
-		center.x -= WeaponConstants.TANK_WIDTH/2f;
-		center.y -= WeaponConstants.TANK_HEIGHT/2f;
-		tankBB = new OOB( getOrientation(), center, WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);
 		
 		onTouch = new OnTouchListener() {
 
@@ -176,7 +180,7 @@ public class Tank extends Vehicle {
 	 */
 	@Override
 	protected boolean collideX(int newX, int oldX) {	
-		return false;//game.getMap().hasHeightMask(newX, bounds.y);
+		return false;
 	}
 	
 	/* (non-Javadoc)
@@ -184,7 +188,7 @@ public class Tank extends Vehicle {
 	 */
 	@Override
 	protected boolean collideY(int newY, int oldY) {
-		return false;//game.getMap().hasHeightMask(bounds.x, newY);
+		return false;
 	}
 	
 	/*
@@ -209,14 +213,11 @@ public class Tank extends Vehicle {
 				movementUpdate(timeStep);
 		
 		updateOperateHitBox();
-		
-		Vector2f center = new Vector2f(pos);
-		center.x += WeaponConstants.TANK_AABB_WIDTH/2f;
-		center.y += WeaponConstants.TANK_AABB_HEIGHT/2f;
-		this.tankBB.update(orientation, center);
+
+		syncOOB(orientation, pos);
 		
 		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
-		DebugDraw.drawOOBRelative(tankBB, 0xff00ff00);
+		DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
 		DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
 		
 		return isBlocked;
@@ -233,59 +234,77 @@ public class Tank extends Vehicle {
 			if(currentState != State.WALKING && currentState != State.SPRINTING) {
 				currentState = State.RUNNING;
 			}
-								
-			int movementSpeed = calculateMovementSpeed();
-						
 			
-			double dt = timeStep.asFraction();
-			int newX = (int)Math.round(pos.x + vel.x * movementSpeed * dt);
-			int newY = (int)Math.round(pos.y + vel.y * movementSpeed * dt);					
-			
-			Map map = game.getMap();
-			
-			bounds.x = newX;
-			if( map.rectCollides(bounds) ) {
-				tankBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, tankBB.center.y);
-				isBlocked = map.rectCollides(tankBB);
-				if(isBlocked) { 
+			if(this.throttleWarmupTime < 600) {
+				this.throttleWarmupTime += timeStep.getDeltaTime();
+			}
+			else {
+				
+				this.throttleStartTime -= timeStep.getDeltaTime();
+				
+				//int movementSpeed = calculateMovementSpeed();
+				final float movementSpeed = 
+							this.throttleStartTime > 0 ? 160f : 90f;
+							
+				float dt = (float)timeStep.asFraction();
+				float newX = pos.x + vel.x * movementSpeed * dt;
+				float newY = pos.y + vel.y * movementSpeed * dt;					
+				
+				Map map = game.getMap();
+				
+				boolean isXBlocked = false;
+				boolean isYBlocked = false;
+							
+				bounds.x = (int)newX;
+				if( map.rectCollides(bounds) ) {
+					vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
+					isBlocked = map.rectCollides(vehicleBB);
+					if(isBlocked) { 
+						bounds.x = (int)pos.x;
+						isXBlocked = true;
+					}
+									
+				}
+	//			else if(collidesAgainstVehicle(bounds)) {
+	//				bounds.x = (int)pos.x;				
+	//				isBlocked = true;
+	//			}
+				
+				
+				bounds.y = (int)newY;
+				if( map.rectCollides(bounds)) {
+					vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
+					isBlocked = map.rectCollides(vehicleBB);
+					if(isBlocked) {
+						bounds.y = (int)pos.y;
+						isYBlocked = true;
+					}
+				}
+	//			else if(collidesAgainstVehicle(bounds)) {				
+	//				bounds.y = (int)pos.y;
+	//				isBlocked = true;
+	//			}
+				
+	
+				/* some things want to stop dead it their tracks
+				 * if a component is blocked
+				 */
+				if(isBlocked && !continueIfBlock()) {
 					bounds.x = (int)pos.x;
-				}
-								
-			}
-			else if(collidesAgainstVehicle(bounds)) {
-				bounds.x = (int)pos.x;				
-				isBlocked = true;
-			}
-			
-			
-			bounds.y = newY;
-			if( map.rectCollides(bounds)) {
-				tankBB.setLocation(tankBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
-				isBlocked = map.rectCollides(tankBB);
-				if(isBlocked) {
 					bounds.y = (int)pos.y;
+					isXBlocked = isYBlocked = true;
 				}
+							
+	//			pos.x = bounds.x;
+	//			pos.y = bounds.y;
+				
+				pos.x = isXBlocked ? pos.x : newX;
+				pos.y = isYBlocked ? pos.y : newY;
+									
+				vel.zeroOut();
+				
+	//			this.walkingTime = WALK_TIME;
 			}
-			else if(collidesAgainstVehicle(bounds)) {				
-				bounds.y = (int)pos.y;
-				isBlocked = true;
-			}
-			
-
-			/* some things want to stop dead it their tracks
-			 * if a component is blocked
-			 */
-			if(isBlocked && !continueIfBlock()) {
-				bounds.x = (int)pos.x;
-				bounds.y = (int)pos.y;
-			}
-						
-			pos.x = bounds.x;
-			pos.y = bounds.y;
-					
-			vel.zeroOut();
-			
-//			this.walkingTime = WALK_TIME;
 		}
 		else {						
 //			if(this.walkingTime<=0 && currentState!=State.CROUCHING) {
@@ -294,6 +313,8 @@ public class Tank extends Vehicle {
 //			
 //			this.walkingTime -= timeStep.getDeltaTime();
 		
+			this.throttleWarmupTime = 0;
+			this.throttleStartTime = 200;
 		}
 		
 		
@@ -343,49 +364,72 @@ public class Tank extends Vehicle {
 		return collides;
 	}
 	
-	/* (non-Javadoc)
-	 * @see seventh.game.Entity#isTouching(seventh.game.Entity)
-	 */
-	@Override
-	public boolean isTouching(Entity other) {
-		
-		// first check the cheap AABB
-		if(bounds.intersects(other.getBounds())) {
-		
-			if(other instanceof Tank) {
-				Tank otherTank = (Tank)other;
-				return this.tankBB.intersects(otherTank.tankBB);
-			}
-			else {
-				return this.tankBB.intersects(other.getBounds());
-			}
-		}
-		
-		return false; 
-	}
-	
 	protected void updateOrientation(TimeStep timeStep) {
 		
-		float deltaMove = 0.25f * (float)timeStep.asFraction();
-		if(this.vel.x > 0) {
+		if(this.vel.x > 0 || this.vel.x < 0) {
+			float deltaMove = 0.25f * (float)timeStep.asFraction();
+			if(this.vel.x < 0) {
+				deltaMove *= -1;
+			}
+			
 			this.desiredOrientation += deltaMove;
+			float newOrientation = this.desiredOrientation;
+			
+			Map map = game.getMap();
+			if(map.rectCollides(bounds)) {
+				
+				this.vehicleBB.rotateTo(newOrientation);
+				
+				if(map.rectCollides(vehicleBB)) {
+					newOrientation = orientation;
+					
+					desiredOrientation = orientation;
+					float adjustAmount = 0.001f * ((this.vel.x < 0) ? 1f : -1f);
+					float totalAmountAdjusted = 0f;
+					do {
+						newOrientation += adjustAmount;
+						totalAmountAdjusted += adjustAmount;
+						this.vehicleBB.rotateTo(newOrientation);						
+					}
+					while(map.rectCollides(vehicleBB) && (Math.abs(totalAmountAdjusted) < Math.abs(deltaMove)));
+				}
+			}
+			
+			this.orientation = newOrientation;
+	
+			this.facing.set(1, 0); // make right vector
+			Vector2f.Vector2fRotate(this.facing, orientation, this.facing);
 		}
-		else if(this.vel.x < 0) {
-			this.desiredOrientation -= deltaMove;
-		}
-		this.orientation = this.desiredOrientation;
-
-		this.facing.set(1, 0); // make right vector
-		Vector2f.Vector2fRotate(this.facing, orientation, this.facing);
-		this.tankBB.rotateTo(orientation);
-		
 	}
 	
 	protected void updateTurretOrientation(TimeStep timeStep) {
-		this.turretOrientation = this.desiredTurretOrientation;
-
-		this.turretFacing.set(1, 0); // make right vector
-		Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
+		final float fullCircle = FastMath.fullCircle;
+		float deltaOrientation = (this.desiredTurretOrientation-this.turretOrientation);
+		float deltaOrientationAbs = Math.abs(deltaOrientation);
+		
+		if(deltaOrientationAbs > 0.001f) {
+			final double movementSpeed = Math.toRadians(1.5f);
+			
+			if(deltaOrientationAbs > (fullCircle/2) ) {
+				deltaOrientation *= -1;
+			}
+			
+			if(deltaOrientation != 0) {
+				float direction = deltaOrientation / deltaOrientationAbs;
+				
+				this.turretOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));
+				if(this.turretOrientation < 0) {
+					this.turretOrientation = fullCircle + this.turretOrientation;
+				}
+				this.turretOrientation %= fullCircle;
+			}
+		
+			this.turretFacing.set(1, 0); // make right vector
+			Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
+		}
+		
+		DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.turretOrientation), Math.toDegrees(desiredTurretOrientation)), 
+				getPos(), 0xffff0000);
 	}
 		
 	/**
@@ -508,6 +552,7 @@ public class Tank extends Vehicle {
 		else {
 			stopThrottle();
 		}
+		
 				
 		if(previousOrientation != orientation) {
 			setTurretOrientation(orientation);
@@ -600,6 +645,10 @@ public class Tank extends Vehicle {
 	 * @param desiredOrientation the desired orientation in Radians
 	 */
 	public void setTurretOrientation(float desiredOrientation) {
+		final float fullCircle = FastMath.fullCircle;
+		if(desiredOrientation < 0) {
+			desiredOrientation += fullCircle;
+		}
 		this.desiredTurretOrientation = desiredOrientation;
 	}
 	

@@ -41,7 +41,7 @@ public class ExplosionEmitter extends Emitter {
 		setDieInstantly(false);
 		
 		shrapnelVel = new Vector2f();
-//		emitter = new RocketTrailEmitter(pos.createClone(), 200, 0);
+//		emitter = new RocketTrailEmitter(pos.createClone(), 200, 0, 10, 10);
 		
 		this.delayTime = 90;
 		
@@ -92,33 +92,7 @@ public class ExplosionEmitter extends Emitter {
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
 //		emitter.render(canvas, camera, alpha);
-/*		Vector2f pos = getPos();
-		Vector2f c = camera.getPosition();
-		int rx = (int)(pos.x - c.x);
-		int ry = (int)(pos.y - c.y);
-		
-		time+=Gdx.graphics.getDeltaTime();
-		if(tex==null) {
-			tex = ScreenUtils.getFrameBufferTexture();
-					//getFrameBufferTexture(rx-128, ry-128, 256,256);
-			//tex.flip(true, false);
-		}
-		//tex.flip(true, false);	
-		
-	//	canvas.begin();
-		
-		canvas.pushShader(RippleEffectShader.getInstance()
-				.setParam("time", time)
-				.setParam("resolution", canvas.getWidth(), canvas.getHeight()).getShader());
-		
-//		canvas.drawImage(tex, rx-128, ry-128, null);
-		canvas.drawImage(tex, 0, 0, null);
-		canvas.popShader();
-	//	canvas.end();
-*/
-		
 		super.render(canvas, camera, alpha);
-		//emitter.render(canvas, camera, alpha);
 	}
 	
 	

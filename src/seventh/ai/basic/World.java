@@ -296,7 +296,7 @@ public class World {
 	 * @return a random position anywhere in the game world
 	 */
 	public Vector2f getRandomSpot(Entity entity) {
-		return getRandomSpot(entity, 0, 0, map.getMapWidth()-20, map.getMapHeight()-20);
+		return game.findFreeRandomSpot(entity);
 	}
 	
 	
@@ -306,7 +306,7 @@ public class World {
 	 * @return a random position anywhere in the supplied bounds
 	 */
 	public Vector2f getRandomSpot(Entity entity, Rectangle bounds) {
-		return getRandomSpot(entity, bounds.x, bounds.y, bounds.width, bounds.height);
+		return game.findFreeRandomSpot(entity, bounds);
 	}
 	
 	/**
@@ -319,24 +319,7 @@ public class World {
 	 * @return a random position anywhere in the supplied bounds
 	 */
 	public Vector2f getRandomSpot(Entity entity, int x, int y, int width, int height) {
-		Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
-		Rectangle temp = new Rectangle(entity.getBounds());
-		temp.setLocation(pos);
-		
-		int loopChecker = 0;
-		
-		while (map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y) ) {
-			pos.x = x + random.nextInt(width);
-			pos.y = y + random.nextInt(height);
-			temp.setLocation(pos);
-			
-			// this bounds doesn't have a free spot
-			if(loopChecker++ > 500_000) {
-				return null;
-			}
-		}
-		
-		return pos;
+		return game.findFreeRandomSpot(entity, x, y, width, height);
 	}
 	
 	/**
@@ -350,17 +333,7 @@ public class World {
 	 * @return a random position anywhere in the supplied bounds and not in the supplied {@link Rectangle}
 	 */
 	public Vector2f getRandomSpotNotIn(Entity entity, int x, int y, int width, int height, Rectangle notIn) {
-		Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
-		Rectangle temp = new Rectangle(entity.getBounds());
-		temp.setLocation(pos);
-		
-		while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || notIn.intersects(temp)) {
-			pos.x = x + random.nextInt(width);
-			pos.y = y + random.nextInt(height);
-			temp.setLocation(pos);
-		}
-		
-		return pos;
+		return game.findFreeRandomSpotNotIn(entity, x, y, width, height, notIn);
 	}
 	
 	/**

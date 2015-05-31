@@ -135,6 +135,8 @@ public class PlayerEntity extends Entity implements Controllable {
 	private boolean isFlashlightOn;
 	private long vehicleTime;
 	
+	private boolean inUse;
+	
 	/**
 	 * @param position
 	 * @param speed
@@ -157,6 +159,8 @@ public class PlayerEntity extends Entity implements Controllable {
 		this.hearingBounds = new Rectangle();
 		
 		this.stamina = MAX_STAMINA;
+		
+		this.inUse = false;
 		
 		this.visualBounds = new Rectangle(5000, 5000);
 		
@@ -417,6 +421,27 @@ public class PlayerEntity extends Entity implements Controllable {
 			if(currentState == State.ENTERING_VEHICLE) {
 				currentState = State.OPERATING_VEHICLE;					
 			}
+			if(currentState == State.EXITING_VEHICLE) {
+				
+				Vehicle vehicle = getVehicle();
+				Vector2f newPos = game.findFreeRandomSpotNotIn(this, vehicle.getBounds(), vehicle.getOBB());
+				
+				/* we can't find an area around the tank to exit it,
+				 * so lets just keep inside the tank
+				 */
+				if(newPos == null) {
+					currentState = State.OPERATING_VEHICLE;
+				}
+				else {
+					
+					this.operating.stopOperating(this);
+					this.operating = null;		
+					setCanTakeDamage(true);
+					
+					currentState = State.IDLE;
+					moveTo(newPos);
+				}
+			}
 		}
 	}
 	
@@ -633,7 +658,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			 * the vehicles
 			 */
 			if(Keys.USE.isDown(keys)) {
-				use();
+				leaveVehicle();
 			}
 			else {
 			
@@ -1157,7 +1182,10 @@ public class PlayerEntity extends Entity implements Controllable {
 	public void use() {
 		if(isOperatingVehicle()) {	
 			if(vehicleTime <= 0) {
-				leaveVehicle();
+				if(true) {
+					leaveVehicle();				
+					this.inUse = true;
+				}
 			}
 		}
 		else {
@@ -1170,7 +1198,10 @@ public class PlayerEntity extends Entity implements Controllable {
 				Vehicle vehicle = game.getCloseOperableVehicle(this);
 				if(vehicle != null) {
 					if(vehicleTime <= 0) {
-						operateVehicle(vehicle);
+						if(true) {
+							operateVehicle(vehicle);
+							this.inUse = true;
+						}
 					}
 				}
 			}
@@ -1183,6 +1214,7 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @see seventh.game.Controllable#unuse()
 	 */	
 	public void unuse() {
+		this.inUse = false;
 		if(this.bombTarget != null) {
 			Bomb bomb = this.bombTarget.getBomb();
 			if(bomb != null) {
@@ -1237,15 +1269,16 @@ public class PlayerEntity extends Entity implements Controllable {
 		return this.operating != null && this.operating.isAlive();
 	}
 	
+	private void beginLeaveVehicle() {
+		this.vehicleTime = EXITING_VEHICLE_TIME;
+		this.currentState = State.EXITING_VEHICLE;
+	}
+	
 	/**
 	 * Leaves the {@link Vehicle}
 	 */
 	public void leaveVehicle() {
-		this.operating.stopOperating(this);
-		this.operating = null;
-		this.vehicleTime = EXITING_VEHICLE_TIME;
-		this.currentState = State.EXITING_VEHICLE;
-		setCanTakeDamage(true);
+		beginLeaveVehicle();
 	}
 	
 	/**

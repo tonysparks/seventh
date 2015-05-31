@@ -51,6 +51,8 @@ import seventh.map.GraphNodeFactory;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
+import seventh.math.OOB;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.UserInputMessage;
 import seventh.shared.Cons;
@@ -566,7 +568,10 @@ public class Game implements GameInfo, Debugable {
 		Vector2f freeSpot = player.getPos();
 		
 		int safety = 100000;
-		while((map.rectCollides(player.getBounds()) || map.hasWorldCollidableTile((int)player.getCenterPos().x, (int)player.getCenterPos().y)) && safety>0) {
+		while((map.rectCollides(player.getBounds()) || 
+			   map.hasWorldCollidableTile((int)player.getCenterPos().x, (int)player.getCenterPos().y)) && 
+			   safety>0) {
+			
 			int w = (player.getBounds().width + 5);
 			int h = (player.getBounds().height + 5);
 			
@@ -588,6 +593,101 @@ public class Game implements GameInfo, Debugable {
 		} 
 		
 		return freeSpot;
+	}
+	
+	
+	/**
+	 * @param entity
+	 * @return a random position anywhere in the game world
+	 */
+	public Vector2f findFreeRandomSpot(Entity entity) {
+		return findFreeRandomSpot(entity, 0, 0, map.getMapWidth()-20, map.getMapHeight()-20);
+	}
+	
+	
+	/**
+	 * @param entity
+	 * @param bounds
+	 * @return a random position anywhere in the supplied bounds
+	 */
+	public Vector2f findFreeRandomSpot(Entity entity, Rectangle bounds) {
+		return findFreeRandomSpot(entity, bounds.x, bounds.y, bounds.width, bounds.height);
+	}
+	
+	/**
+	 * 
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return a random position anywhere in the supplied bounds
+	 */
+	public Vector2f findFreeRandomSpot(Entity entity, int x, int y, int width, int height) {
+		Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
+		Rectangle temp = new Rectangle(entity.getBounds());
+		temp.setLocation(pos);
+		
+		int loopChecker = 0;
+		
+		while (map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y) ) {
+			pos.x = x + random.nextInt(width);
+			pos.y = y + random.nextInt(height);
+			temp.setLocation(pos);
+			
+			// this bounds doesn't have a free spot
+			if(loopChecker++ > 500_000) {
+				return null;
+			}
+		}
+		
+		return pos;
+	}
+	
+	/**
+	 * 
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param notIn
+	 * @return a random position anywhere in the supplied bounds and not in the supplied {@link Rectangle}
+	 */
+	public Vector2f findFreeRandomSpotNotIn(Entity entity, int x, int y, int width, int height, Rectangle notIn) {
+		Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
+		Rectangle temp = new Rectangle(entity.getBounds());
+		temp.setLocation(pos);
+		
+		while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || notIn.intersects(temp)) {
+			pos.x = x + random.nextInt(width);
+			pos.y = y + random.nextInt(height);
+			temp.setLocation(pos);
+		}
+		
+		return pos;
+	}
+	
+	public Vector2f findFreeRandomSpotNotIn(Entity entity, Rectangle bounds, OOB notIn) {
+		Vector2f pos = new Vector2f(bounds.x+random.nextInt(bounds.width), bounds.y+random.nextInt(bounds.height));
+		Rectangle temp = new Rectangle(entity.getBounds());
+		temp.setLocation(pos);
+		
+		int numberOfAttempts = 0;
+		
+		while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || 
+				notIn.intersects(temp)) {
+			
+			pos.x = bounds.x + random.nextInt(bounds.width);
+			pos.y = bounds.y + random.nextInt(bounds.height);
+			temp.setLocation(pos);
+			
+			if(numberOfAttempts++ > 100_00) {
+				return null;
+			}
+		}
+		
+		return pos;
 	}
 	
 	/**

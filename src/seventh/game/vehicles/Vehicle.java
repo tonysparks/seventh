@@ -7,6 +7,7 @@ import seventh.game.Controllable;
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.PlayerEntity;
+import seventh.math.OOB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -21,7 +22,10 @@ import seventh.shared.WeaponConstants;
 public abstract class Vehicle extends Entity implements Controllable {
 	
 	protected final Rectangle operateHitBox;
+	protected final OOB vehicleBB;
 	
+	private final Vector2f center;
+	protected int aabbWidth, aabbHeight;
 	private PlayerEntity operator;
 	
 	/**
@@ -32,7 +36,10 @@ public abstract class Vehicle extends Entity implements Controllable {
 	 */
 	public Vehicle(Vector2f position, int speed, Game game, Type type) {
 		super(game.getNextPersistantId(), position, speed, game, type);				
+		
 		this.operateHitBox = new Rectangle();
+		this.vehicleBB = new OOB();
+		this.center = new Vector2f();
 	}
 
 	/* (non-Javadoc)
@@ -44,6 +51,28 @@ public abstract class Vehicle extends Entity implements Controllable {
 		updateOperateHitBox();
 		
 		return blocked;
+	}
+
+	/**
+	 * @return the vehicleBB
+	 */
+	public OOB getOBB() {
+		return vehicleBB;
+	}
+	
+	/**
+	 * Synchronize the {@link OOB} with the current orientation and position
+	 * of the vehicle
+	 * 
+	 * @param orientation
+	 * @param pos
+	 */
+	protected void syncOOB(float orientation, Vector2f pos) {
+		center.set(pos);
+		center.x += aabbWidth/2f;
+		center.y += aabbHeight/2f;
+
+		vehicleBB.update(orientation, center);
 	}
 	
 	/**
@@ -100,4 +129,25 @@ public abstract class Vehicle extends Entity implements Controllable {
 	public void stopOperating(PlayerEntity operator) {
 		this.operator = null;
 	}	
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#isTouching(seventh.game.Entity)
+	 */
+	@Override
+	public boolean isTouching(Entity other) {
+		
+		// first check the cheap AABB
+		if(bounds.intersects(other.getBounds())) {
+		
+			if(other instanceof Tank) {
+				Tank otherTank = (Tank)other;
+				return this.vehicleBB.intersects(otherTank.vehicleBB);
+			}
+			else {
+				return this.vehicleBB.intersects(other.getBounds());
+			}
+		}
+		
+		return false; 
+	}
 }

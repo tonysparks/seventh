@@ -29,12 +29,20 @@ public class RocketTrailEmitter extends Emitter {
 	 * @param timeToNextSpawn
 	 */
 	public RocketTrailEmitter(Vector2f pos, int timeToLive, int timeToNextSpawn) {
+		this(pos, timeToLive, timeToNextSpawn, Art.smokeImage.getRegionWidth(), Art.smokeImage.getRegionHeight());
+	}
+	
+	/**
+	 * @param pos
+	 * @param timeToLive
+	 * @param timeToNextSpawn
+	 */
+	public RocketTrailEmitter(Vector2f pos, int timeToLive, int timeToNextSpawn, int width, int height) {
 		super(pos, timeToLive, timeToNextSpawn);
 		setDieInstantly(false);
 		
-
-		width = Art.smokeImage.getRegionWidth();
-		height = Art.smokeImage.getRegionHeight();
+		this.width = width;
+		this.height = height;
 	}
 
 	/* (non-Javadoc)

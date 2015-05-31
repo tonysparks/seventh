@@ -179,8 +179,11 @@ public class AnimationEditorScreen implements Screen {
 					}
 					
 					
-					tex = TextureUtil.subImage(tex, subX, subY, subWidth, subHeight);					
+					tex = TextureUtil.subImage(tex, subX, subY, subWidth, subHeight);
 					animation = Art.newAnimatedSplitImage(frames, tex, rows, cols);
+					for(TextureRegion r : animation.getImages()) {
+						r.flip(false, true);
+					}
 				
 				}
 				catch(Exception e) {
@@ -460,9 +463,10 @@ public class AnimationEditorScreen implements Screen {
 		if(animation != null) {
 			int fontColor = theme.getForegroundColor();	
 			TextureRegion frame = animation.getCurrentImage();
+			
 			int x = canvas.getWidth()/2 - frame.getRegionWidth()/2;
 			int y = canvas.getHeight()/2 - frame.getRegionWidth();
-			canvas.drawRect(x,y, frame.getRegionWidth(), frame.getRegionHeight(), 0xff00ff00);
+		//	canvas.drawRect(x,y, frame.getRegionWidth(), frame.getRegionHeight(), 0xff00ff00);
 			canvas.drawImage(frame, x, y, null);
 			
 			canvas.setFont("Courier New", 14);

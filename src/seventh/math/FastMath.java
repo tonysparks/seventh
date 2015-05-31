@@ -23,7 +23,8 @@ import java.lang.reflect.Method;
 public class FastMath {
 
 	static public final float PI = 3.1415926535897932384626433832795028841971f;
-
+	static public final float fullCircle = PI * 2;
+	
 	static private final int SIN_BITS = 12; // Adjust for accuracy.
 	static private final int SIN_MASK = ~(-1 << SIN_BITS);
 	static private final int SIN_COUNT = SIN_MASK + 1;

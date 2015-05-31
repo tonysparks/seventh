@@ -183,6 +183,7 @@ public class Art {
 		riskerImage = loadImage("./seventh/gfx/weapons/risker.bmp", 0xff00ff);
 		
 		bombImage = loadImage("./seventh/gfx/weapons/bomb.bmp", 0xff00ff);
+		bombImage.flip(false, true);
 		computerImage = loadImage("./seventh/gfx/computer.bmp");
 
 //		legsImage = loadImage("./seventh/gfx/player/legs.bmp", 0xff00ff);

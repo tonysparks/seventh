@@ -277,6 +277,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 				}
 			}
 			else {
+				this.vehicle = null;
+				
 				updateWeaponState(ps.weapon, time);
 			}
 		}

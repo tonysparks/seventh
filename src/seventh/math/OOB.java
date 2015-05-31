@@ -266,20 +266,25 @@ public class OOB {
      * @return true if the {@link Rectangle} intersects with this {@link OOB}
      */
     public boolean intersects(Rectangle b) {
-    	return checkLineAgainstOOB(topLeft, topRight, b) ||
+    	return // check to see if the OOB corners are within the rectangle
+    		   b.contains(topLeft) ||
+               b.contains(topRight) ||
+               b.contains(bottomLeft) ||
+               b.contains(bottomRight) ||
+    
+               
+               // now check the lines
+               checkLineAgainstOOB(topLeft, topRight, b) ||
     		   checkLineAgainstOOB(topRight, bottomRight, b) ||
     		   checkLineAgainstOOB(bottomRight, bottomLeft, b) ||
-    		   checkLineAgainstOOB(bottomLeft, topLeft, b);
-    	
-//        return b.contains(topLeft) ||
-//               b.contains(topRight) ||
-//               b.contains(bottomLeft) ||
-//               b.contains(bottomRight) ||
-//               // now check if the Rectangle is in this OOB
-//               contains(b.x        , b.y) ||
-//               contains(b.x+b.width, b.y) ||
-//               contains(b.x+b.width, b.y+b.height) ||
-//               contains(b.x        , b.y-b.height);
+    		   checkLineAgainstOOB(bottomLeft, topLeft, b) ||               
+               
+               // now check if the Rectangle is in this OOB
+               contains(b.x        , b.y) ||
+               contains(b.x+b.width, b.y) ||
+               contains(b.x+b.width, b.y+b.height) ||
+               contains(b.x        , b.y-b.height);
+
     }
     
     /**
@@ -289,10 +294,31 @@ public class OOB {
      * @return true if the two {@link OOB}'s overlap
      */
 	public boolean intersects(OOB other) {
-		return checkLineAgainstOOB(topLeft, topRight, other) ||
+		return // check the for line intersections
+			   checkLineAgainstOOB(topLeft, topRight, other) ||
 			   checkLineAgainstOOB(topRight, bottomRight, other) ||
 			   checkLineAgainstOOB(bottomRight, bottomLeft, other) ||
-			   checkLineAgainstOOB(bottomLeft, topLeft, other);
+			   checkLineAgainstOOB(bottomLeft, topLeft, other) ||
+			   
+			   // now check to see if they are inside eachother
+			   hasCornersInside(other) || 
+			   other.hasCornersInside(this);
+		
+	}
+		
+	/**
+	 * Probably a more efficient way of doing this, but in general the algorithm
+	 * determines if any of the four corners of either {@link OOB} is contained in the
+	 * other {@link OOB} (and checks the reverse)
+	 * 
+	 * @param other
+	 * @return true if any of the supplied {@link OOB} corners are contained in this {@link OOB}
+	 */
+	private boolean hasCornersInside(OOB other) {
+	    return contains(other.topLeft) ||
+	           contains(other.topRight) ||
+	           contains(other.bottomLeft) ||
+	           contains(other.bottomRight);
 	}
 
 	/**

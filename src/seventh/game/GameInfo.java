@@ -13,6 +13,7 @@ import seventh.game.type.GameType;
 import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.map.MapGraph;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConfig;
 
@@ -24,6 +25,44 @@ import seventh.shared.SeventhConfig;
  */
 public interface GameInfo {
 
+	
+	/**
+	 * @param entity
+	 * @return a random position anywhere in the game world
+	 */
+	public Vector2f findFreeRandomSpot(Entity entity);
+	
+	
+	/**
+	 * @param entity
+	 * @param bounds
+	 * @return a random position anywhere in the supplied bounds
+	 */
+	public Vector2f findFreeRandomSpot(Entity entity, Rectangle bounds);
+	
+	/**
+	 * 
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return a random position anywhere in the supplied bounds
+	 */
+	public Vector2f findFreeRandomSpot(Entity entity, int x, int y, int width, int height);
+	
+	/**
+	 * 
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param notIn
+	 * @return a random position anywhere in the supplied bounds and not in the supplied {@link Rectangle}
+	 */
+	public Vector2f findFreeRandomSpotNotIn(Entity entity, int x, int y, int width, int height, Rectangle notIn);
+	
 	/**
 	 * @return the aiSystem
 	 */
