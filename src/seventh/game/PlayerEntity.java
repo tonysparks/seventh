@@ -28,6 +28,7 @@ import seventh.map.Tile;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.DebugDraw;
 import seventh.shared.Geom;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
@@ -135,7 +136,6 @@ public class PlayerEntity extends Entity implements Controllable {
 	private boolean isFlashlightOn;
 	private long vehicleTime;
 	
-	private boolean inUse;
 	
 	/**
 	 * @param position
@@ -159,8 +159,6 @@ public class PlayerEntity extends Entity implements Controllable {
 		this.hearingBounds = new Rectangle();
 		
 		this.stamina = MAX_STAMINA;
-		
-		this.inUse = false;
 		
 		this.visualBounds = new Rectangle(5000, 5000);
 		
@@ -386,6 +384,8 @@ public class PlayerEntity extends Entity implements Controllable {
 		else {
 			moveTo(this.operating.getCenterPos());
 		}
+		
+		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff00);
 		
 		return blocked;
 	}
@@ -657,8 +657,10 @@ public class PlayerEntity extends Entity implements Controllable {
 			/* The USE key is the one that enters/exit
 			 * the vehicles
 			 */
-			if(Keys.USE.isDown(keys)) {
-				leaveVehicle();
+			if(Keys.USE.isDown(previousKeys) && !Keys.USE.isDown(keys)) {
+				if(currentState==State.OPERATING_VEHICLE) {
+					leaveVehicle();
+				}
 			}
 			else {
 			
@@ -670,6 +672,8 @@ public class PlayerEntity extends Entity implements Controllable {
 					this.operating.handleUserCommand(keys, orientation);
 				}
 			}
+			
+			previousKeys = keys;
 		}
 		else {
 					
@@ -1182,10 +1186,7 @@ public class PlayerEntity extends Entity implements Controllable {
 	public void use() {
 		if(isOperatingVehicle()) {	
 			if(vehicleTime <= 0) {
-				if(true) {
-					leaveVehicle();				
-					this.inUse = true;
-				}
+				leaveVehicle();				
 			}
 		}
 		else {
@@ -1198,10 +1199,7 @@ public class PlayerEntity extends Entity implements Controllable {
 				Vehicle vehicle = game.getCloseOperableVehicle(this);
 				if(vehicle != null) {
 					if(vehicleTime <= 0) {
-						if(true) {
-							operateVehicle(vehicle);
-							this.inUse = true;
-						}
+						operateVehicle(vehicle);
 					}
 				}
 			}
@@ -1214,7 +1212,6 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @see seventh.game.Controllable#unuse()
 	 */	
 	public void unuse() {
-		this.inUse = false;
 		if(this.bombTarget != null) {
 			Bomb bomb = this.bombTarget.getBomb();
 			if(bomb != null) {

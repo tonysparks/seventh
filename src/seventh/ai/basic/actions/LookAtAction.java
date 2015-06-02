@@ -6,6 +6,7 @@ package seventh.ai.basic.actions;
 import seventh.ai.basic.Brain;
 import seventh.game.Entity;
 import seventh.game.PlayerEntity;
+import seventh.math.FastMath;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -15,12 +16,6 @@ import seventh.shared.TimeStep;
  *
  */
 public class LookAtAction extends AdapterAction {
-
-
-	/**
-	 * Full circle
-	 */
-	private static final float fullCircle = (float)Math.PI * 2f;
 	
 	private float destinationOrientation;
 	
@@ -76,21 +71,26 @@ public class LookAtAction extends AdapterAction {
 		
 		float currentOrientation = ent.getOrientation();
 		
+		final float fullCircle = FastMath.fullCircle;
+		
 		// Thank you: http://dev.bennage.com/blog/2013/03/05/game-dev-03/
 		float deltaOrientation = (destinationOrientation - currentOrientation);
 		float deltaOrientationAbs = Math.abs(deltaOrientation);
 		if(deltaOrientationAbs > Math.PI) {
-			deltaOrientation = fullCircle - deltaOrientationAbs;
-			//deltaOrientation = deltaOrientationAbs - fullCircle;
+			deltaOrientation *= -1;
 		}
 		
 		final double movementSpeed = Math.toRadians(15.0f);
 		
-		if(deltaOrientation != 0) {
+		if(deltaOrientationAbs != 0) {
 			float direction = deltaOrientation / deltaOrientationAbs;
-			currentOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));			
+			currentOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));
+			
+			if(currentOrientation < 0) {
+				currentOrientation = fullCircle + currentOrientation;
+			}
+			currentOrientation %= fullCircle;
 		}
-		currentOrientation %= fullCircle;
 		
 		ent.setOrientation( currentOrientation );	
 	}

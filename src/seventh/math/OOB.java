@@ -277,13 +277,13 @@ public class OOB {
                checkLineAgainstOOB(topLeft, topRight, b) ||
     		   checkLineAgainstOOB(topRight, bottomRight, b) ||
     		   checkLineAgainstOOB(bottomRight, bottomLeft, b) ||
-    		   checkLineAgainstOOB(bottomLeft, topLeft, b) ||               
+    		   checkLineAgainstOOB(bottomLeft, topLeft, b);// ||               
                
                // now check if the Rectangle is in this OOB
-               contains(b.x        , b.y) ||
-               contains(b.x+b.width, b.y) ||
-               contains(b.x+b.width, b.y+b.height) ||
-               contains(b.x        , b.y-b.height);
+               //contains(b.x        , b.y) ||
+               //contains(b.x+b.width, b.y) ||
+               //contains(b.x+b.width, b.y+b.height) ||
+               //contains(b.x        , b.y+b.height);
 
     }
     

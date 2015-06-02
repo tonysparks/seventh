@@ -89,7 +89,10 @@ public class Evaluators {
 		
 		double score = 0;
 		if(weapon != null) {			
-			return (double)weapon.getBulletsInClip() / (double)weapon.getClipSize();			
+			double clipSize = (double)weapon.getClipSize();
+			if(clipSize != 0) {
+				return (double)weapon.getBulletsInClip() / clipSize;
+			}
 		}
 		
 		return score;

@@ -132,7 +132,7 @@ public class HeadScanAction extends AdapterAction {
 		
 		final double movementSpeed = Math.toRadians(15.0f);
 		
-		if(deltaOrientation != 0) {
+		if(deltaOrientationAbs != 0) {
 			float direction = deltaOrientation / deltaOrientationAbs;
 			currentOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));
 			

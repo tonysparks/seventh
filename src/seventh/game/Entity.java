@@ -647,7 +647,11 @@ public abstract class Entity implements Debugable {
 						}
 						
 						break;
-					}					
+					}	
+					else {
+						collides = false;
+						break;
+					}
 				}
 			}
 			

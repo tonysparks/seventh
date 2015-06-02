@@ -675,7 +675,7 @@ public class Game implements GameInfo, Debugable {
 		
 		int numberOfAttempts = 0;
 		
-		while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || 
+		while ((map.rectCollides(temp) && map.hasWorldCollidableTile(temp.x, temp.y)) || 
 				notIn.intersects(temp)) {
 			
 			pos.x = bounds.x + random.nextInt(bounds.width);

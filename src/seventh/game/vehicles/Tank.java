@@ -128,7 +128,7 @@ public class Tank extends Vehicle {
 				float x = ownerDir.y * 1.0f;
 				float y = -ownerDir.x * 1.0f;
 
-				Vector2f.Vector2fMA(ownerPos, ownerDir, 55.0f, pos);
+				Vector2f.Vector2fMA(ownerPos, ownerDir, 95.0f, pos);
 
 				pos.x += x;
 				pos.y += y;
@@ -313,6 +313,8 @@ public class Tank extends Vehicle {
 //			
 //			this.walkingTime -= timeStep.getDeltaTime();
 		
+			currentState = State.IDLE;
+			
 			this.throttleWarmupTime = 0;
 			this.throttleStartTime = 200;
 		}
