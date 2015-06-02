@@ -28,7 +28,6 @@ import seventh.map.Tile;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
 import seventh.shared.Geom;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
@@ -384,8 +383,6 @@ public class PlayerEntity extends Entity implements Controllable {
 		else {
 			moveTo(this.operating.getCenterPos());
 		}
-		
-		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff00);
 		
 		return blocked;
 	}
