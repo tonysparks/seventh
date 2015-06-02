@@ -7,6 +7,7 @@ import harenet.api.Server;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -671,6 +672,7 @@ public class GameServer {
 		}
 		catch(Exception e) {
 			Cons.println("*** An error occured in the main server game loop: " + e);
+			Cons.println("*** Stack trace: " + Arrays.toString(e.getStackTrace()));
 		}
 		finally {
 			Cons.println("Shutting down the server...");
