@@ -103,7 +103,7 @@ public class ClientGameEffects {
 	 * @param pos
 	 */
 	public void addExplosion(int index, Vector2f pos) {
-		explosions.activate(index, pos);
+		//explosions.activate(index, pos);
 	}
 
 	/**

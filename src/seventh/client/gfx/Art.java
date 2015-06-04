@@ -87,7 +87,7 @@ public class Art {
 	private static TextureRegion[] explosionImage = null;
 	private static TextureRegion[] fireImage = null;
 	private static TextureRegion[] rocketImage = null;
-	
+		
 	public static  TextureRegion deathsImage = null;
 	private static TextureRegion[] alliedBackDeathImage = null;		
 	private static TextureRegion[] alliedFrontDeathImage = null;	
@@ -136,6 +136,7 @@ public class Art {
 	public static  TextureRegion flashLight = null;
 	
 	public static  TextureRegion bullet = null;
+	public static  TextureRegion bulletImage = null;
 	
 	
 	public static  TextureRegion[] tankTracks = null;
@@ -185,6 +186,7 @@ public class Art {
 		bombImage = loadImage("./seventh/gfx/weapons/bomb.bmp", 0xff00ff);
 		bombImage.flip(false, true);
 		computerImage = loadImage("./seventh/gfx/computer.bmp");
+		
 
 //		legsImage = loadImage("./seventh/gfx/player/legs.bmp", 0xff00ff);
 //		legsModel = new Model(legsImage, 128, 64, 2, 4);
@@ -291,6 +293,7 @@ public class Art {
 		flashLight = loadImage("./seventh/gfx/lightmap_flashlight.png");
 		
 		bullet = loadImage("./seventh/gfx/bullet.png");
+		bulletImage = loadImage("./seventh/gfx/weapons/bullet.png");
 		
 		tankTracks = TextureUtil.splitImage(
 							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);

@@ -24,6 +24,8 @@ public class ClientBullet extends ClientEntity {
 	private int count;
 	private int trailSize;
 	
+	private Vector2f renderPosStart, renderPosEnd;
+	
 	static class BulletOnRemove implements OnRemove {
 		private Vector2f vel = new Vector2f();
 		
@@ -57,6 +59,9 @@ public class ClientBullet extends ClientEntity {
 		super(game, pos);
 		origin = new Vector2f(pos);
 		oldPos = new Vector2f(pos);
+		
+		renderPosEnd = new Vector2f();
+		renderPosStart = new Vector2f();
 				
 		Random random = game.getRandom();
 		trailSize = random.nextInt(2) + 1;
@@ -141,23 +146,25 @@ public class ClientBullet extends ClientEntity {
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
 		if(!oldPos.isZero()) {
-		
 			
 			Vector2f cameraPos = camera.getPosition();
-			int ox = (int)(oldPos.x-cameraPos.x);
-			int oy = (int)(oldPos.y-cameraPos.y);
+
+			renderPosStart.x = (oldPos.x-cameraPos.x);
+			renderPosStart.y = (oldPos.y-cameraPos.y);
 					
-			int x = (int)(pos.x-cameraPos.x);
-			int y = (int)(pos.y-cameraPos.y);
-								
-//			float oldLen = Vector2f.Vector2fLength(oldPos);
-//			float posLen = Vector2f.Vector2fLength(pos);			
+			renderPosEnd.x = (pos.x-cameraPos.x);
+			renderPosEnd.y = (pos.y-cameraPos.y);
+				
+			canvas.drawLine( (int)renderPosStart.x, (int)renderPosStart.y, (int)renderPosEnd.x, (int)renderPosEnd.y, 0x6fEE9A00);
 			
-//			if(Math.abs(posLen-oldLen) > 100.0f ) 
-			{												
-				//canvas.drawScaledImage(Art.bullet, x, y, 16, 16, null);
-				canvas.drawLine( ox, oy, x, y, 0x6fEE9A00);
-			}
+			Vector2f.Vector2fSubtract(renderPosStart, 1.0f, renderPosStart);
+			Vector2f.Vector2fSubtract(renderPosEnd, 1.0f, renderPosEnd);
+			canvas.drawLine( (int)renderPosStart.x, (int)renderPosStart.y, (int)renderPosEnd.x, (int)renderPosEnd.y, 0x51ffff00);
+			
+			Vector2f.Vector2fSubtract(renderPosStart, -1.0f, renderPosStart);
+			Vector2f.Vector2fSubtract(renderPosEnd, -1.0f, renderPosEnd);
+			canvas.drawLine( (int)renderPosStart.x, (int)renderPosStart.y, (int)renderPosEnd.x, (int)renderPosEnd.y, 0x51ffff00);
+				
 		}
 	}
 

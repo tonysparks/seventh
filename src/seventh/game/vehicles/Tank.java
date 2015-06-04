@@ -24,6 +24,7 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -63,6 +64,9 @@ public class Tank extends Vehicle {
 	
 	private int armor;
 	
+	private Timer blowupTimer, explosionTimer;
+	private boolean isDying;
+	private Entity killer;
 	
 	/**
 	 * @param position
@@ -70,12 +74,16 @@ public class Tank extends Vehicle {
 	 * @param game
 	 * @param type
 	 */
-	public Tank(Vector2f position, Game game) {
+	public Tank(Vector2f position, final Game game) {
 		super(position, WeaponConstants.TANK_MOVEMENT_SPEED, game, Type.TANK);
 
 		this.turretFacing = new Vector2f();
 		this.netTank = new NetTank();
 		this.netTank.id = getId();
+		
+		this.blowupTimer = new Timer(false, 3_000);
+		this.explosionTimer = new Timer(true, 500);
+		this.isDying = false;
 		
 		this.primaryWeapon = new RocketLauncher(game, this) {
 
@@ -199,6 +207,10 @@ public class Tank extends Vehicle {
 	@Override
 	public boolean update(TimeStep timeStep) {
 
+		if( checkIfDying(timeStep) ) {
+			return false;
+		}
+		
 		updateOrientation(timeStep);
 		updateTurretOrientation(timeStep);
 
@@ -221,6 +233,23 @@ public class Tank extends Vehicle {
 		DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
 		
 		return isBlocked;
+	}
+	
+	private boolean checkIfDying(TimeStep timeStep) {
+		if(this.isDying) {
+			this.blowupTimer.update(timeStep);
+			this.explosionTimer.update(timeStep);
+			
+			if(this.explosionTimer.isTime()) {
+				game.newBigExplosion(getCenterPos(), this, 20, 50, 100);
+			}
+			
+			if(this.blowupTimer.isTime()) {
+				super.kill(killer);
+			}
+		}
+		
+		return this.isDying;
 	}
 	
 	/**
@@ -479,13 +508,13 @@ public class Tank extends Vehicle {
 		armor -= amount;
 		
 		if(armor < 0) {		
-			if (damager instanceof Bullet) {
-				amount = 1;
-			} else if (damager instanceof Explosion) {
+			if (damager instanceof Explosion) {
 				amount = 1;
 			} 
 			else if(damager instanceof Rocket) {
 				amount /= 2;
+			} else if (damager instanceof Bullet) {
+				amount = 1;
 			}
 			else {
 				amount /= 10;
@@ -493,8 +522,25 @@ public class Tank extends Vehicle {
 	
 			super.damage(damager, amount);
 		}
+		
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#kill(seventh.game.Entity)
+	 */
+	@Override
+	public void kill(Entity killer) {
+		this.killer = killer;
+		this.isDying = true;
+		this.explosionTimer.start();
+		this.blowupTimer.start();
+		
+		if(hasOperator()) {
+			getOperator().kill(killer);
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
