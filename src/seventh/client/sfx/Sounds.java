@@ -118,6 +118,8 @@ public class Sounds {
 	public static final int[] breadthLite = {109,110,111};
 	public static final int[] breadthHeavy = {112,113,114};
 	
+	public static final int[] bulletZing = {115,116,117};
+	
 	private static Sound[][] channels = new Sound[32][];
 	private static float volume = 0.1f;
 	private static ClientSeventhConfig config;
@@ -274,6 +276,10 @@ public class Sounds {
 			loadSound("./seventh/sfx/player/breathing_heavy01.wav") ,   // 112
 			loadSound("./seventh/sfx/player/breathing_heavy02.wav") ,   // 113
 			loadSound("./seventh/sfx/player/breathing_heavy03.wav") ,   // 114
+			
+			loadSound("./seventh/sfx/bullet_zing01.wav") ,   // 115
+            loadSound("./seventh/sfx/bullet_zing02.wav") ,   // 116
+            loadSound("./seventh/sfx/bullet_zing03.wav") ,   // 117
 		};
 	};
 

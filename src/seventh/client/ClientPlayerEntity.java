@@ -63,7 +63,6 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		
 	private Light mussleFlash;
 	
-	
 	/**
 	 * 
 	 */
@@ -83,6 +82,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.bounds.width = 24;//16;
 		this.bounds.height = 24;
 		
+				
 		LightSystem lightSystem = game.getLightSystem();				
 		this.mussleFlash = lightSystem.newPointLight();
 		this.mussleFlash.setTexture(Art.fireWeaponLight);
@@ -388,6 +388,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		}
 	}
 	
+
+	
 	/* (non-Javadoc)
 	 * @see palisma.client.ClientEntity#update(leola.live.TimeStep)
 	 */
@@ -430,7 +432,14 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		mussleFlash.setLuminacity((fadeAlphaColor-150)/255.0f);
 		mussleFlash.setColor(0.7f,.7f,0.5f);
 		
-		if(this.damageDelta < 0 && (lastUpdate+400) >= clockTime) {
+		hearingBounds.centerAround(pos);
+		
+		/* Make sure the player was actually hit before we display any blood 
+		 * effects.  We do this by making sure our last update was recent, and
+		 * this wasn't just an entity we are seeing again after a while (which
+		 * would cause damageDelta to be < 0)
+		 */
+		if(this.damageDelta < 0 && (previousLastUpdate+400) >= clockTime) {
 			onDamage();
 		}		
 		

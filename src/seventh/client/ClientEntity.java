@@ -13,6 +13,10 @@ import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 /**
+ * Base entity class for the client representation.  This will receive updates from the
+ * server.  There are various variables that do the book keeping of the state of the entity
+ * and when it was last updated from the server.
+ * 
  * @author Tony
  *
  */
@@ -25,7 +29,7 @@ public abstract class ClientEntity implements Renderable {
 	protected float orientation;
 		
 	protected long lastUpdate;
-//	protected int events;
+	protected long previousLastUpdate;
 	
 	protected Type type;
 	
@@ -66,7 +70,7 @@ public abstract class ClientEntity implements Renderable {
 	public ClientEntity(ClientGame game, Vector2f pos) {
 		this.game = game;
 		this.pos = pos;
-//		this.pos = new Vector2f();		
+
 		this.facing = new Vector2f();
 		this.centerPos = new Vector2f();
 		this.movementDir = new Vector2f();
@@ -74,7 +78,6 @@ public abstract class ClientEntity implements Renderable {
 		this.bounds = new Rectangle();
 		
 		this.isAlive = true;
-//		this.pos.set(pos);
 	}
 	
 	/**
@@ -124,15 +127,10 @@ public abstract class ClientEntity implements Renderable {
 		this.id = state.id;
 		this.type = Type.fromNet(state.type);
 				
-		//this.pos.set(state.posX, state.posY);
 		this.bounds.setLocation(pos);
-//		this.bounds.setSize(state.width, state.height);
-		
 		this.orientation = (float)Math.toRadians(state.orientation);
 		this.facing.set(1,0);
 		Vector2f.Vector2fRotate(facing, orientation, facing);
-		
-//		this.events = state.events;
 		
 		this.updateReceived = true;
 	}
@@ -142,12 +140,12 @@ public abstract class ClientEntity implements Renderable {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
-//		checkEvents(events);
 		
 		if(this.updateReceived) {
+		    previousLastUpdate = lastUpdate;
 			lastUpdate = timeStep.getGameClock();
-//			events = 0;
-			this.updateReceived = false;
+
+			updateReceived = false;
 		}		
 		
 		interpolate(timeStep);
@@ -156,9 +154,7 @@ public abstract class ClientEntity implements Renderable {
 			onUpdate.onUpdate(timeStep, this);
 		}
 	}
-	
-//	protected void checkEvents(int events) {		
-//	}
+
 	
 	/**
 	 * @return the onRemove
@@ -299,6 +295,9 @@ public abstract class ClientEntity implements Renderable {
 		return pos;
 	}
 	
+	/**
+	 * @return the center position of this entity
+	 */
 	public Vector2f getCenterPos() {
 		centerPos.set(pos.x + bounds.width/2, pos.y + bounds.height/2);
 		return centerPos;
@@ -332,14 +331,6 @@ public abstract class ClientEntity implements Renderable {
 		return lastUpdate;
 	}
 	
-
-	/**
-	 * @return the events
-	 */
-//	public int getEvents() {
-//		return events;
-//	}
-
 	/**
 	 * @return the type
 	 */

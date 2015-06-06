@@ -19,6 +19,13 @@ public class ClientEntities {
 	}
 	
 	/**
+	 * @return maximum number of entities
+	 */
+	public int getMaxNumberOfEntities() {
+	    return this.entities.length;
+	}
+	
+	/**
 	 * @return the entities
 	 */
 	public ClientEntity[] getEntities() {

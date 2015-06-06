@@ -102,6 +102,7 @@ public class ClientGame {
 	private Hud hud;
 		
 	private final ClientGameEffects gameEffects;
+	private final Zings zings;
 	
 	private final Rectangle cacheRect;
 	private final Random random;
@@ -164,7 +165,7 @@ public class ClientGame {
 		this.entityListener = this.gameEffects.getLightSystem().getClientEntityListener();		
 		
 		this.bulletPool = new ClientBulletPool(this, SeventhConstants.MAX_ENTITIES);
-		
+		this.zings = new Zings(this);
 	}	
 	
 	/**
@@ -276,6 +277,8 @@ public class ClientGame {
 				}
 			}
 		}
+		
+		zings.checkForBulletZings(timeStep);
 		
 		cameraController.update(timeStep);
 		
@@ -429,6 +432,13 @@ public class ClientGame {
 	}
 	
 	/**
+     * @return the entities
+     */
+    public ClientEntities getEntities() {
+        return entities;
+    }
+	
+	/**
 	 * @param id
 	 * @return the {@link ClientVehicle} that has the supplied ID, or null
 	 * if not found
@@ -456,6 +466,24 @@ public class ClientGame {
 	 */
 	public ClientPlayer getLocalPlayer() {
 		return localPlayer;
+	}
+	
+	/**
+	 * Get the entity the local player is controlling.  This can either be the player's entity
+	 * or a spectating entity.
+	 * 
+	 * @return the entity the local player is controlling
+	 */
+	public ClientControllableEntity getLocalPlayerFollowingEntity() {
+	    ClientControllableEntity entity = null;
+        if(this.localPlayer.isAlive()) {                
+            entity = this.localPlayer.getEntity();              
+        }
+        else if(players.containsPlayer(this.localPlayer.getSpectatingPlayerId())) { 
+            entity = players.getPlayer(this.localPlayer.getSpectatingPlayerId()).getEntity();
+        }
+        
+        return entity;
 	}
 	
 	/**

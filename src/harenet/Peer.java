@@ -516,6 +516,8 @@ public class Peer {
 		this.host.disconnect(this);
 		this.inboundMessages.clear();
 		this.outgoingMessages.clear();
+		this.receivedReliableMessages.clear();
+		this.reliableOutgoingMessages.clear();
 	}
 	
 	/**

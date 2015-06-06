@@ -31,7 +31,6 @@ public class CameraController implements Updatable {
 	private Vector2f cameraDest;
 	
 	private ClientPlayer localPlayer;
-	private ClientPlayers players;
 	
 	private Vector2f playerVelocity;
 	
@@ -44,15 +43,17 @@ public class CameraController implements Updatable {
 	private boolean isCameraRoaming;
 	private int previousKeys;
 	
+	private ClientGame game;
+	
 	/**
 	 * @param game
 	 */
 	public CameraController(ClientGame game) {
+	    this.game = game;
 		this.camera = game.getCamera();
 		this.map = game.getMap();
 		this.localPlayer = game.getLocalPlayer();
-		this.players = game.getPlayers();
-		
+
 		this.fowTiles = new ArrayList<Tile>();
 		
 		this.cameraCenterAround = new Vector2f();
@@ -232,15 +233,8 @@ public class CameraController implements Updatable {
 	 */
 	private void updateCameraForPlayerMovements(TimeStep timeStep) {
 		if(this.localPlayer.isAlive()||this.localPlayer.isSpectating()) {
-			ClientControllableEntity entity = null;
-			if(this.localPlayer.isAlive()) {				
-				entity = this.localPlayer.getEntity();				
-			}
-			else if(players.containsPlayer(this.localPlayer.getSpectatingPlayerId())) { 
-				entity = players.getPlayer(this.localPlayer.getSpectatingPlayerId()).getEntity();
-			}
-			
-																								
+			ClientControllableEntity entity = game.getLocalPlayerFollowingEntity();
+																											
 			if(entity!=null) {
 				if( entity.isOperatingVehicle() ) {
 					entity = entity.getVehicle();

@@ -6,6 +6,7 @@ package seventh.client;
 import seventh.game.Entity;
 import seventh.game.Entity.State;
 import seventh.map.Map;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -26,6 +27,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
 	protected long lastMoveTime;	
 	private boolean isControlledByLocalPlayer;
 	
+	protected Rectangle hearingBounds;
 	
 	/**
 	 * @param game
@@ -37,6 +39,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
 		this.predictedPos = new Vector2f();
 		this.renderPos = new Vector2f();
 		this.isControlledByLocalPlayer = false;
+		
+
+        this.hearingBounds = new Rectangle(200, 200);
+        this.hearingBounds.centerAround(pos);
 	}
 
 	/**
@@ -130,6 +136,16 @@ public abstract class ClientControllableEntity extends ClientEntity {
 		}
 		return Entity.STANDING_HEIGHT_MASK;
 	}
+	
+	/**
+     * Determines if this entity would be able to hear the other {@link ClientEntity}
+     * 
+     * @param ent
+     * @return true if in ear shot distance of the other {@link ClientEntity}
+     */
+    public boolean inEarShot(ClientEntity ent) {
+        return hearingBounds.intersects(ent.getBounds());
+    }
 	
 	/**
 	 * Does client side movement prediction
