@@ -7,7 +7,6 @@ import java.util.List;
 
 import seventh.game.Entity;
 import seventh.game.Game;
-import seventh.game.PlayerEntity;
 import seventh.game.PlayerEntity.Keys;
 import seventh.game.SoundType;
 import seventh.game.net.NetEntity;
@@ -23,6 +22,7 @@ import seventh.math.FastMath;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
+import seventh.shared.EaseInInterpolation;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
@@ -66,7 +66,12 @@ public class Tank extends Vehicle {
 	
 	private Timer blowupTimer, explosionTimer;
 	private boolean isDying;
+	private boolean isStopping;
+	private boolean isStopped;
 	private Entity killer;
+	
+	private EaseInInterpolation stopEase;
+	private Vector2f previousVel;
 	
 	/**
 	 * @param position
@@ -84,6 +89,9 @@ public class Tank extends Vehicle {
 		this.blowupTimer = new Timer(false, 3_000);
 		this.explosionTimer = new Timer(true, 500);
 		this.isDying = false;
+		
+		this.stopEase = new EaseInInterpolation(WeaponConstants.TANK_MOVEMENT_SPEED, 0f, 800);
+		this.previousVel = new Vector2f();
 		
 		this.primaryWeapon = new RocketLauncher(game, this) {
 
@@ -211,23 +219,28 @@ public class Tank extends Vehicle {
 			return false;
 		}
 		
-		updateOrientation(timeStep);
-		updateTurretOrientation(timeStep);
+		boolean isBlocked = false;
+		if(hasOperator()) {
+			makeMovementSounds(timeStep);
+		}
+		
+		{
+			updateOrientation(timeStep);
+			updateTurretOrientation(timeStep);
 
-		updateWeapons(timeStep);
+			updateWeapons(timeStep);
 		
 		
-		this.vel.set(this.facing);
-		Vector2f.Vector2fMult(vel, this.throttle, vel);
-		Vector2f.Vector2fNormalize(vel, vel);
-		
-		boolean isBlocked = //super.update(timeStep);
-				movementUpdate(timeStep);
-		
+			this.vel.set(this.facing);
+			Vector2f.Vector2fMult(vel, this.throttle, vel);
+			Vector2f.Vector2fNormalize(vel, vel);
+			
+			isBlocked = movementUpdate(timeStep);
+		}			
 		updateOperateHitBox();
-
+	
 		syncOOB(orientation, pos);
-		
+
 		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
 		DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
 		DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
@@ -259,25 +272,55 @@ public class Tank extends Vehicle {
 	private boolean movementUpdate(TimeStep timeStep) {
 		boolean isBlocked = false;
 		
-		if(isAlive() && !this.vel.isZero()) {
+		boolean hasThrottle = ! this.vel.isZero();
+		
+		if(!hasThrottle && !this.isStopped) {
+			this.isStopping = true;
+		}
+		
+		if(isAlive() && (hasThrottle || this.isStopping) ) {
 			if(currentState != State.WALKING && currentState != State.SPRINTING) {
 				currentState = State.RUNNING;
 			}
 			
 			if(this.throttleWarmupTime < 600) {
 				this.throttleWarmupTime += timeStep.getDeltaTime();
+				
+				if(hasOperator() && this.throttleWarmupTime > 590) {
+					game.emitSound(getOperator().getId(), SoundType.TANK_START_MOVE, getCenterPos());
+				}
 			}
 			else {
 				
 				this.throttleStartTime -= timeStep.getDeltaTime();
 				
-				//int movementSpeed = calculateMovementSpeed();
+				if(this.isStopping) {
+					this.vel.set(this.previousVel);
+					this.stopEase.update(timeStep);
+					if(this.stopEase.isExpired()) {
+						this.isStopping = false;
+						this.isStopped = true;
+						return isBlocked;
+					}
+				}
+				else {
+					this.stopEase.reset(90f, 0f, 800);
+					this.isStopped = false;
+					this.previousVel.set(this.vel);
+					
+					if(hasOperator()) {
+				//		game.emitSound(getOperator().getId(), SoundType.TANK_MOVE1, getCenterPos());
+					}
+				}
+				
+				float normalSpeed = this.isStopping ? this.stopEase.getValue() : 90f;								
 				final float movementSpeed = 
-							this.throttleStartTime > 0 ? 160f : 90f;
+							this.throttleStartTime > 0 ? 160f : normalSpeed;
 							
 				float dt = (float)timeStep.asFraction();
 				float newX = pos.x + vel.x * movementSpeed * dt;
 				float newY = pos.y + vel.y * movementSpeed * dt;					
+				
 				
 				Map map = game.getMap();
 				
@@ -341,11 +384,11 @@ public class Tank extends Vehicle {
 //			}
 //			
 //			this.walkingTime -= timeStep.getDeltaTime();
-		
-			currentState = State.IDLE;
+
+			this.currentState = State.IDLE;
 			
 			this.throttleWarmupTime = 0;
-			this.throttleStartTime = 200;
+			this.throttleStartTime = 200;	
 		}
 		
 		
@@ -483,18 +526,20 @@ public class Tank extends Vehicle {
 		if (nextMovementSound <= 0) {
 			SoundType snd = SoundType.TANK_MOVE1;
 			if (isRetracting) {
-				snd = SoundType.TANK_MOVE2;
+				snd = SoundType.TANK_START_MOVE;
 			}
 
 			isRetracting = !isRetracting;
 			game.emitSound(getId(), snd, getCenterPos());
 			nextMovementSound = 700;// 1500;
 		} else {
+			nextMovementSound -= timeStep.getDeltaTime();
+			/*
 			if ((currentState == State.RUNNING || currentState == State.SPRINTING)) {
 				nextMovementSound -= timeStep.getDeltaTime();
 			} else {
 				nextMovementSound = 1;
-			}
+			}*/
 		}
 	}
 

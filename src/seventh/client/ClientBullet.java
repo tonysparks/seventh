@@ -66,6 +66,9 @@ public class ClientBullet extends ClientEntity {
 		Random random = game.getRandom();
 		trailSize = random.nextInt(2) + 1;
 		
+		bounds.width = 5;
+		bounds.height = 5;
+		
 		setOnRemove(new BulletOnRemove());
 	}
 	

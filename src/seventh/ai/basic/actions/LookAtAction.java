@@ -36,6 +36,11 @@ public class LookAtAction extends AdapterAction {
 	 */
 	public void reset(Entity me, Vector2f dest) {
 		this.destinationOrientation = Entity.getAngleBetween(dest, me.getPos());
+		
+		final float fullCircle = FastMath.fullCircle;
+		if(this.destinationOrientation < 0) {
+			this.destinationOrientation += fullCircle;
+		}
 	}
 	
 	/* (non-Javadoc)

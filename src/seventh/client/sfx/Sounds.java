@@ -120,6 +120,9 @@ public class Sounds {
 	
 	public static final int[] bulletZing = {115,116,117};
 	
+	public static final int[] tankStart = {118};
+	public static final int[] tankMove = {119};
+	
 	private static Sound[][] channels = new Sound[32][];
 	private static float volume = 0.1f;
 	private static ClientSeventhConfig config;
@@ -280,6 +283,9 @@ public class Sounds {
 			loadSound("./seventh/sfx/bullet_zing01.wav") ,   // 115
             loadSound("./seventh/sfx/bullet_zing02.wav") ,   // 116
             loadSound("./seventh/sfx/bullet_zing03.wav") ,   // 117
+            
+            loadSound("./seventh/sfx/tank/movement_start.wav") ,   // 118
+            loadSound("./seventh/sfx/tank/movement_loop.wav") ,   // 119
 		};
 	};
 
@@ -679,8 +685,12 @@ public class Sounds {
 		case IMPACT_WOOD:
 			playFreeSound(impactWood, x, y);
 			break;
+		case TANK_START_MOVE: 
+			playFreeSound(tankStart, x, y);
+			break;
 		case TANK_MOVE1:
-			playFreeSound(mechForwardFootstep, x, y);
+			playFreeSound(tankMove, x, y);
+			//playFreeSound(mechForwardFootstep, x, y);
 			break;
 		case TANK_MOVE2:
 			playFreeSound(mechRetractFootstep, x, y);
