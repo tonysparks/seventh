@@ -168,6 +168,9 @@ public class Tank extends Vehicle {
 		
 		aabbWidth = bounds.width;
 		aabbHeight = bounds.height;
+
+		this.orientation = (float)Math.PI/2f;
+		this.desiredOrientation = this.orientation;
 		
 		vehicleBB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);		
 		syncOOB(getOrientation(), position);
@@ -221,7 +224,7 @@ public class Tank extends Vehicle {
 		
 		boolean isBlocked = false;
 		if(hasOperator()) {
-			makeMovementSounds(timeStep);
+			//makeMovementSounds(timeStep);
 		}
 		
 		{
@@ -244,6 +247,13 @@ public class Tank extends Vehicle {
 		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
 		DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
 		DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
+		DebugDraw.fillRectRelative((int)vehicleBB.topLeft.x, (int)vehicleBB.topLeft.y, 5, 5, 0xff1f0000);
+		DebugDraw.fillRectRelative((int)vehicleBB.topRight.x, (int)vehicleBB.topRight.y, 5, 5, 0xffff0000);
+		DebugDraw.fillRectRelative((int)vehicleBB.bottomLeft.x, (int)vehicleBB.bottomLeft.y, 5, 5, 0xff001f00);
+		DebugDraw.fillRectRelative((int)vehicleBB.bottomRight.x, (int)vehicleBB.bottomRight.y, 5, 5, 0xff00ff00);
+		
+		DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
+		DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
 		
 		return isBlocked;
 	}
@@ -376,6 +386,8 @@ public class Tank extends Vehicle {
 				vel.zeroOut();
 				
 	//			this.walkingTime = WALK_TIME;
+				
+				game.doesVehicleTouchPlayers(this);
 			}
 		}
 		else {						
@@ -447,6 +459,13 @@ public class Tank extends Vehicle {
 			}
 			
 			this.desiredOrientation += deltaMove;
+			if(this.desiredOrientation<0) {
+				this.desiredOrientation=FastMath.fullCircle;
+			}
+			else if(this.desiredOrientation>FastMath.fullCircle) {
+				this.desiredOrientation=0f;
+			}
+			
 			float newOrientation = this.desiredOrientation;
 			
 			Map map = game.getMap();
@@ -501,6 +520,10 @@ public class Tank extends Vehicle {
 			this.turretFacing.set(1, 0); // make right vector
 			Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
 		}
+		
+		
+		DebugDraw.drawStringRelative(String.format(" Tracks: %3.2f : %3.2f", Math.toDegrees(this.orientation), Math.toDegrees(this.desiredOrientation)), 
+				(int)getPos().x, (int)getPos().y-20, 0xffff0000);
 		
 		DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.turretOrientation), Math.toDegrees(desiredTurretOrientation)), 
 				getPos(), 0xffff0000);
@@ -593,6 +616,10 @@ public class Tank extends Vehicle {
 	 */
 	@Override
 	public void setOrientation(float orientation) {
+		final float fullCircle = FastMath.fullCircle;
+		if(desiredOrientation < 0) {
+			desiredOrientation += fullCircle;
+		}
 		this.desiredOrientation = orientation;
 	}
 

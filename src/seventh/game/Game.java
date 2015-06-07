@@ -1193,6 +1193,25 @@ public class Game implements GameInfo, Debugable {
 		return rideMe;
 	}
 	
+	public boolean doesVehicleTouchPlayers(Vehicle vehicle) {
+		if(vehicle.hasOperator()) {
+			PlayerEntity operator = vehicle.getOperator();
+			for(int i = 0; i < this.playerEntities.length; i++) {
+				Entity other = this.playerEntities[i];
+				if(other != null) {
+					if(other != operator && vehicle.isTouching(other)) {
+						if(vehicle.onTouch != null) {
+							vehicle.onTouch.onTouch(vehicle, other);
+							return true;
+						}
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.GameInfo#doesTouchOthers(seventh.game.Entity)
 	 */

@@ -141,6 +141,7 @@ public class Art {
 	
 	public static  TextureRegion[] tankTracks = null;
 	public static  TextureRegion tankTurret = null;
+	public static  TextureRegion tankTrackMarks = null;
 	
 	public static  TextureRegion rippleImg = null;
 	/**
@@ -299,6 +300,8 @@ public class Art {
 							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
 		tankTurret = TextureUtil.splitImage( 
 							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_turret.png"), 0, 0, 108, 175), 1, 1)[0];
+		
+		tankTrackMarks = loadImage("./seventh/gfx/vehicles/tank_track_mark.png");
 		
 		rippleImg = loadImage("./seventh/gfx/ripple.png");
 	}

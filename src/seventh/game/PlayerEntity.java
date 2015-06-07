@@ -10,6 +10,7 @@ import seventh.game.events.SoundEventPool;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
+import seventh.game.vehicles.Tank;
 import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Kar98;
@@ -1330,11 +1331,19 @@ public class PlayerEntity extends Entity implements Controllable {
 		 */
 		Map map = game.getMap();
 		Entity[] entities = game.getEntities();
-		List<Entity> entitiesInView = game.aEntitiesInView;				
+		List<Entity> entitiesInView = game.aEntitiesInView;
 		
-		Vector2f centerPos = getCenterPos();				
-		Geom.calculateLineOfSight(game.aTiles, centerPos, getFacing(), getLineOfSight(), map, getHeightMask());						
-		
+		Vector2f centerPos = getCenterPos();
+		if(isOperatingVehicle()) {
+			// TODO clean up
+			Tank vehicle = (Tank)getVehicle();
+			// TODO vehicle line of sight
+			Geom.calculateLineOfSight(game.aTiles, vehicle.getCenterPos(), vehicle.getTurretFacing(), WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT, map, getHeightMask());
+		}
+		else {
+							
+			Geom.calculateLineOfSight(game.aTiles, centerPos, getFacing(), getLineOfSight(), map, getHeightMask());						
+		}
 		this.visualBounds.centerAround(centerPos);
 		
 		for(int i = 0; i < entities.length; i++) {

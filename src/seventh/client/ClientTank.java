@@ -7,11 +7,13 @@ package seventh.client;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.TankSprite;
+import seventh.client.gfx.TankTrackMarks;
 import seventh.game.Entity.State;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Weapon;
 import seventh.map.Map;
+import seventh.math.OOB;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
@@ -26,9 +28,15 @@ public class ClientTank extends ClientVehicle {
 
 	private TankSprite tankSprite;	
 	private float turretOrientation;
+	private Vector2f turretFacing;
 	
 	private Weapon.State primaryWeaponState;
 	private Weapon.State secondaryWeaponState;
+	
+	private TankTrackMarks marks;
+	private Vector2f previousTrackMark;
+	private Vector2f trackMarkOffset;
+	private OOB vehicleOOB;
 	
 	/**
 	 * @param pos
@@ -42,7 +50,14 @@ public class ClientTank extends ClientVehicle {
 		this.lineOfSight = WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT;
 			
 		this.tankSprite = new TankSprite(this);
+		this.marks = new TankTrackMarks(256*2);
 		
+		this.turretFacing = new Vector2f();
+		
+		this.previousTrackMark = new Vector2f();
+		this.trackMarkOffset = new Vector2f();
+		this.vehicleOOB = new OOB();
+		this.vehicleOOB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);
 	}
 	
 	/* (non-Javadoc)
@@ -58,8 +73,42 @@ public class ClientTank extends ClientVehicle {
 		this.orientation = (float)Math.toRadians(netTank.orientation);
 		this.turretOrientation = (float)Math.toRadians(netTank.turretOrientation);
 		
+		this.turretFacing.set(1,0);
+		Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
+		this.facing.set(this.turretFacing); // TODO - should we be overiding this like this?
+		
 		this.primaryWeaponState = Weapon.State.fromNet(netTank.primaryWeaponState);
 		this.secondaryWeaponState = Weapon.State.fromNet(netTank.secondaryWeaponState);
+
+		Vector2f center = new Vector2f(getPos());
+		center.x += WeaponConstants.TANK_AABB_WIDTH/2f;
+		center.y += WeaponConstants.TANK_AABB_HEIGHT/2f;
+		this.vehicleOOB.update(orientation, center);
+		
+		if(prevState != null && nextState != null) {
+			if (prevState.posX != nextState.posX ||
+				prevState.posY != nextState.posY) {
+				
+				float distanceSq = (nextState.posX - previousTrackMark.x) * (nextState.posX - previousTrackMark.x) + 
+					               (nextState.posY - previousTrackMark.y) * (nextState.posY - previousTrackMark.y);
+				
+				if(distanceSq > 12*12) {
+					previousTrackMark.set(nextState.posX, nextState.posY);
+					
+					// left track
+					trackMarkOffset.set(10, -15);
+					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
+					Vector2f.Vector2fAdd(vehicleOOB.topLeft, trackMarkOffset, trackMarkOffset);
+					this.marks.add(this.trackMarkOffset, this.orientation);
+
+					// right track mark
+					trackMarkOffset.set(10, 15);
+					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
+					Vector2f.Vector2fAdd(vehicleOOB.bottomLeft, trackMarkOffset, trackMarkOffset);
+					this.marks.add(trackMarkOffset, this.orientation);					
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -111,6 +160,13 @@ public class ClientTank extends ClientVehicle {
 	}
 
 	/**
+	 * @return the turretFacing
+	 */
+	public Vector2f getTurretFacing() {
+		return turretFacing;
+	}
+	
+	/**
 	 * @return the turretOrientation
 	 */
 	public float getTurretOrientation() {
@@ -154,6 +210,7 @@ public class ClientTank extends ClientVehicle {
 		super.update(timeStep);
 		
 		this.tankSprite.update(timeStep);
+		this.marks.update(timeStep);
 	}
 
 	/* (non-Javadoc)
@@ -161,7 +218,8 @@ public class ClientTank extends ClientVehicle {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
-		this.tankSprite.render(canvas, camera, alpha);		
+		this.marks.render(canvas, camera, alpha);
+		this.tankSprite.render(canvas, camera, alpha);			
 	}
 
 }
