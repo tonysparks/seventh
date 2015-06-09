@@ -95,8 +95,14 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 					desirability += brain.getRandomRange(0.2, 0.5);
 					break;
 					
+				case TANK_MOVE1:
+				case TANK_MOVE2:
+				case TANK_START_MOVE:
+				case TANK_TURRET_MOVE:
+					desirability = 0f; // get the hell out of dodge
+					break;
 				default:
-					// add nothing				
+					desirability = 0.1f;
 			}
 		}
 		

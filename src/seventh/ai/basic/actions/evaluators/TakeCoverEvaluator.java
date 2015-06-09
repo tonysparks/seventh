@@ -39,11 +39,18 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 			
 			final double tweaker = 1.0;
 			
-			score = tweaker 
-					* 1.0 - Evaluators.healthScore(bot) 
-					* 1.0 - Evaluators.currentWeaponAmmoScore(bot)
-					* 1.0 - Evaluators.weaponDistanceScore(bot, system.getCurrentTarget())
-					;
+			final PlayerEntity enemy = system.getCurrentTarget();
+			
+			if(enemy.isOperatingVehicle()) {
+				score = 1.0;
+			}
+			else {
+				score = tweaker 
+						* 1.0 - Evaluators.healthScore(bot) 
+						* 1.0 - Evaluators.currentWeaponAmmoScore(bot)
+						* 1.0 - Evaluators.weaponDistanceScore(bot, enemy)
+						;
+			}
 			Vector2f lastSeenAt = system.getLastRemeberedPosition();
 			if(lastSeenAt != null) {
 //				Vector2f coverPosition = brain.getWorld().getClosestCoverPosition(bot, system.getLastRemeberedPosition());

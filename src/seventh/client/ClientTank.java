@@ -7,7 +7,6 @@ package seventh.client;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.TankSprite;
-import seventh.client.gfx.TankTrackMarks;
 import seventh.game.Entity.State;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
@@ -33,7 +32,7 @@ public class ClientTank extends ClientVehicle {
 	private Weapon.State primaryWeaponState;
 	private Weapon.State secondaryWeaponState;
 	
-	private TankTrackMarks marks;
+	private ClientGameEffects effects;
 	private Vector2f previousTrackMark;
 	private Vector2f trackMarkOffset;
 	private OOB vehicleOOB;
@@ -44,14 +43,15 @@ public class ClientTank extends ClientVehicle {
 	public ClientTank(ClientGame game, Vector2f pos) {
 		super(game, pos);	
 		
+		this.effects = game.getGameEffects();
+		
 		this.bounds.width = WeaponConstants.TANK_AABB_WIDTH;
 		this.bounds.height = WeaponConstants.TANK_AABB_HEIGHT;
 		
 		this.lineOfSight = WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT;
 			
 		this.tankSprite = new TankSprite(this);
-		this.marks = new TankTrackMarks(256*2);
-		
+				
 		this.turretFacing = new Vector2f();
 		
 		this.previousTrackMark = new Vector2f();
@@ -99,13 +99,13 @@ public class ClientTank extends ClientVehicle {
 					trackMarkOffset.set(10, -15);
 					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
 					Vector2f.Vector2fAdd(vehicleOOB.topLeft, trackMarkOffset, trackMarkOffset);
-					this.marks.add(this.trackMarkOffset, this.orientation);
+					this.effects.addTankTrackMark(getId(), this.trackMarkOffset, this.orientation);
 
 					// right track mark
 					trackMarkOffset.set(10, 15);
 					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
 					Vector2f.Vector2fAdd(vehicleOOB.bottomLeft, trackMarkOffset, trackMarkOffset);
-					this.marks.add(trackMarkOffset, this.orientation);					
+					this.effects.addTankTrackMark(getId(), trackMarkOffset, this.orientation);					
 				}
 			}
 		}
@@ -210,7 +210,6 @@ public class ClientTank extends ClientVehicle {
 		super.update(timeStep);
 		
 		this.tankSprite.update(timeStep);
-		this.marks.update(timeStep);
 	}
 
 	/* (non-Javadoc)
@@ -218,7 +217,6 @@ public class ClientTank extends ClientVehicle {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
-		this.marks.render(canvas, camera, alpha);
 		this.tankSprite.render(canvas, camera, alpha);			
 	}
 

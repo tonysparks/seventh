@@ -492,7 +492,13 @@ public class ClientGame {
 	public SeventhGame getApp() {
 		return app;
 	}
-
+	
+	/**
+	 * @return the gameEffects
+	 */
+	public ClientGameEffects getGameEffects() {
+		return gameEffects;
+	}
 	
 	/**
 	 * @return the gameClock

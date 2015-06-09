@@ -169,8 +169,10 @@ public class Tank extends Vehicle {
 		aabbWidth = bounds.width;
 		aabbHeight = bounds.height;
 
-		this.orientation = (float)Math.PI/2f;
+		this.orientation = 0;
 		this.desiredOrientation = this.orientation;
+		
+		this.armor = 200;
 		
 		vehicleBB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);		
 		syncOOB(getOrientation(), position);
@@ -186,7 +188,7 @@ public class Tank extends Vehicle {
 				if(hasOperator()) {
 					if(other != getOperator()) {
 						if (other.getType().isPlayer()) {
-							other.kill(me);
+							other.kill(getOperator());
 						}
 					}
 				}
@@ -224,7 +226,7 @@ public class Tank extends Vehicle {
 		
 		boolean isBlocked = false;
 		if(hasOperator()) {
-			//makeMovementSounds(timeStep);
+			makeMovementSounds(timeStep);
 		}
 		
 		{
@@ -573,21 +575,22 @@ public class Tank extends Vehicle {
 	 */
 	@Override
 	public void damage(Entity damager, int amount) {
+		
+		if (damager instanceof Explosion) {
+			amount = 1;
+		} 
+		else if(damager instanceof Rocket) {
+			amount /= 2;
+		} else if (damager instanceof Bullet) {
+			amount = 1;
+		}
+		else {
+			amount /= 10;
+		}
+		
 		armor -= amount;
 		
-		if(armor < 0) {		
-			if (damager instanceof Explosion) {
-				amount = 1;
-			} 
-			else if(damager instanceof Rocket) {
-				amount /= 2;
-			} else if (damager instanceof Bullet) {
-				amount = 1;
-			}
-			else {
-				amount /= 10;
-			}
-	
+		if(armor < 0) {				
 			super.damage(damager, amount);
 		}
 		

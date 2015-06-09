@@ -89,7 +89,7 @@ public class TankTrackMarks implements Renderable {
 			trackMarkSprite.setRotation( (float)Math.toDegrees(track.orientation)-90f);			
 			trackMarkSprite.setOrigin(16, 8);
 			trackMarkSprite.setPosition(rx-16, ry-16);
-			trackMarkSprite.setColor(0.86f, .2f, 0.6f, track.alpha);
+			trackMarkSprite.setColor(73f/255f, 49f/255f, 28f/255f, track.alpha);
 			canvas.drawRawSprite(trackMarkSprite);
 	
 		}

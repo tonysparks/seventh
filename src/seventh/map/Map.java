@@ -452,6 +452,26 @@ public abstract interface Map extends Renderable, Debugable {
 	 */
 	public abstract List<Tile> getTilesInCircle(int centerX, int centerY, int radius, List<Tile> tiles);
 
+
+	/**
+	 * Get the tiles inside the {@link Rectangle}
+	 * 
+	 * @param bounds
+	 * @param tiles
+	 * @return  a list of tiles within the {@link Rectangle}
+	 */
+	public abstract List<Tile> getTilesInRect(Rectangle bounds, List<Tile> tiles);
+	
+	/**
+	 * Get the tiles inside the {@link Rectangle}
+	 * 
+	 * @param layer
+	 * @param bounds
+	 * @param tiles
+	 * @return  a list of tiles within the {@link Rectangle}
+	 */
+	public abstract List<Tile> getTilesInRect(int layer, Rectangle bounds, List<Tile> tiles);
+	
 	/**
 	 * Gets the Collision tiles that match up against the supplied 'checkAgainst' tiles
 	 * @param checkAgainst the tiles to match up against

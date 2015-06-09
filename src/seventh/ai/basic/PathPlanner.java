@@ -4,15 +4,15 @@
  */
 package seventh.ai.basic;
 
-import static seventh.math.Vector2f.Vector2fCopy;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import seventh.game.Entity;
 import seventh.game.Player;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
+import seventh.game.vehicles.Vehicle;
 import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.map.MapGraph;
@@ -39,23 +39,51 @@ public class PathPlanner<E> {
 	private World world;
 	private Brain brain;
 	
+	private List<Tile> tilesToAvoid;
 	
-	private boolean isEntityOnTile(Tile tile) {
+	private Entity isEntityOnTile(Tile tile) {
+		Entity ent = isVehicleOnTile(tile);
+		if(ent==null) {
+			ent = isTeammateOnTile(tile);
+		}
+		return ent;
+	}
+	
+	private Entity isTeammateOnTile(Tile tile) {
 	    List<Player> teammates = world.getTeammates(brain);
 	    PlayerInfo bot = brain.getPlayer();
 	    int size = teammates.size();
 	    for(int i = 0; i < size; i++) {
 	        if(bot.getId() != i) {
     	        Player p = teammates.get(i);
+    	        PlayerEntity ent = p.getEntity();
     	        if(p.isAlive()) {
-    	            if(tile.getBounds().contains(p.getEntity().getCenterPos())) {
-    	                return true;
+    	            if(tile.getBounds().contains(ent.getCenterPos())) {
+    	                return ent;
     	            }
     	        }
 	        }
 	    }
 	    
-	    return false;
+	    return null;
+	}
+	
+	private Entity isVehicleOnTile(Tile tile) {
+	    List<Vehicle> vehicles = world.getVehicles();
+	    int size = vehicles.size();
+	    for(int i = 0; i < size; i++) {
+	        
+	        Vehicle v = vehicles.get(i);	        
+            if(tile.getBounds().intersects(v.getBounds())) {
+                return v;
+            }	        	        
+	    }
+	    
+	    return null;
+	}
+	
+	private boolean shouldIgnoreTile(Tile tile) {
+		return this.tilesToAvoid.contains(tile);
 	}
 	
 	private class FuzzySearchPath extends AStarGraphSearch<Tile, E> {
@@ -82,7 +110,8 @@ public class PathPlanner<E> {
 		
 		@Override
 		protected boolean shouldIgnore(GraphNode<Tile, E> node) {
-		    return false;//return isEntityOnTile(node.getValue());
+//		    return false;//return isEntityOnTile(node.getValue());
+			return shouldIgnoreTile(node.getValue());
 		}
 	}
 	
@@ -119,7 +148,7 @@ public class PathPlanner<E> {
 				}
 			}
 			
-			return false;// isEntityOnTile(tile);
+			return shouldIgnoreTile(node.getValue());
 		}
 	}
 	
@@ -138,6 +167,7 @@ public class PathPlanner<E> {
 		this.random = new Random();
 		
 		this.path = new ArrayList<GraphNode<Tile, E>>();
+		this.tilesToAvoid = new ArrayList<Tile>();
 		this.currentNode = 0;
 		
 		this.fuzzySearchPath = new FuzzySearchPath();
@@ -160,6 +190,7 @@ public class PathPlanner<E> {
 		this.currentNode = 0;
 		this.finalDestination.zeroOut();
 		this.path.clear();
+		this.tilesToAvoid.clear();
 	}
 	
 	/**
@@ -171,7 +202,7 @@ public class PathPlanner<E> {
 	 */
 	public int pathCost(Vector2f start, Vector2f destination) {
 		this.fuzzySearchPath.actualFuzzy = 1;
-		this.finalDestination.set(destination);
+		//this.finalDestination.set(destination);
 		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
 		int cost = newPath.size() * 32;
 		return cost;
@@ -185,9 +216,11 @@ public class PathPlanner<E> {
 	 */
 	public void findPath(Vector2f start, Vector2f destination) {				
 		this.fuzzySearchPath.actualFuzzy = 1;
-		this.finalDestination.set(destination);
+		
 		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
 		setPath(newPath);
+		
+		this.finalDestination.set(destination);
 	}
 	
 	
@@ -200,9 +233,11 @@ public class PathPlanner<E> {
 	 */
 	public void findFuzzyPath(Vector2f start, Vector2f destination, final int fuzzyness) {
 		this.fuzzySearchPath.actualFuzzy = Math.max(1, fuzzyness);
-		this.finalDestination.set(destination);
+		
 		List<GraphNode<Tile, E>> newPath = this.graph.findFuzzyPath(this.fuzzySearchPath, start, destination, fuzzyness);
-		setPath(newPath);
+		setPath(newPath);		
+		
+		this.finalDestination.set(destination);
 	}
 	
 	/**
@@ -215,9 +250,11 @@ public class PathPlanner<E> {
 	 */
 	public void findAvoidancePath(Vector2f start, Vector2f destination, List<Zone> zonesToAvoid) {
 		this.avoidSearchPath.zonesToAvoid = zonesToAvoid;
-		this.finalDestination.set(destination);
+
 		List<GraphNode<Tile, E>> newPath = this.graph.findPathAvoidZones(this.avoidSearchPath, start, destination, zonesToAvoid);
 		setPath(newPath);
+		
+		this.finalDestination.set(destination);		
 	}
 	
 	/**
@@ -259,17 +296,11 @@ public class PathPlanner<E> {
 	}
 
 	public Vector2f nextDestination(PlayerEntity ent) {
-		
-//		Rectangle bounds = ent.getBounds();
 		Vector2f cPos = ent.getCenterPos();
 		int x = (int)cPos.x;
 		int y = (int)cPos.y;
 		
 		destination.zeroOut();
-//		destination.x = bounds.x;
-//		destination.y = bounds.y;
-		
-		
 		
 		if(! path.isEmpty() && currentNode < path.size() ) {
 			GraphNode<Tile, E> node = path.get(currentNode);
@@ -279,14 +310,27 @@ public class PathPlanner<E> {
 			int centerY = tile.getY() + tile.getHeight()/2;
 			if( Math.abs(centerX - x) < 6 
 				&& Math.abs(centerY - y) < 6
-				/*tile.getBounds().contains(currentPosition)*/) {
+				//tile.getBounds().contains(currentPosition)
+				) {
 				currentNode++;
 			
-				if(ent.isSprinting()) {
-					if(currentNode < path.size()) {
-						tile = path.get(currentNode).getValue();
+//				if(ent.isSprinting()) {
+//					if(currentNode < path.size()) {
+//						tile = path.get(currentNode).getValue();
+//					}
+//				}			
+
+				if(currentNode < path.size()) {
+					tile = path.get(currentNode).getValue();
+				
+					Entity entOnTile = isEntityOnTile(tile);
+					if(entOnTile != null) {						
+						world.getMap().getTilesInRect(entOnTile.getBounds(), tilesToAvoid);
+						tilesToAvoid.add(tile);
+						findPath(cPos, this.finalDestination);
+						return nextDestination(ent);
 					}
-				}			
+				}
 			}
 						
 //			if(tile.getBounds().intersects(bounds)) {
@@ -306,42 +350,6 @@ public class PathPlanner<E> {
 		return destination;
 	}
 	
-	/**
-	 * Gets the next destination vector
-	 * @param currentPosition
-	 * @return the next destination
-	 */
-	public Vector2f nextDestination(Vector2f currentPosition) {
-		
-		Vector2fCopy(currentPosition, destination);
-		if(! path.isEmpty() && currentNode < path.size() ) {
-			GraphNode<Tile, E> node = path.get(currentNode);
-			Tile tile = node.getValue();
-			
-//			if( Math.abs(tile.getX() - (int)currentPosition.x) < 6 
-//				&& Math.abs(tile.getY() - (int)currentPosition.y) < 6
-//				/*tile.getBounds().contains(currentPosition)*/) {
-//				currentNode++;				
-//			}
-//			destination.x = (tile.getX() - (int)currentPosition.x);
-//			destination.y = (tile.getY() - (int)currentPosition.y);
-			
-			int centerX = tile.getX();// + tile.getWidth()/2;
-			int centerY = tile.getY();// + tile.getHeight()/2;
-			
-			if(Math.abs(centerX - (int)currentPosition.x) < 6 
-			&& Math.abs(centerY - (int)currentPosition.y) < 6) {
-				currentNode++;				
-			}
-			
-			destination.x = (int)((tile.getX() - (int)currentPosition.x));
-			destination.y = (int)((tile.getY() - (int)currentPosition.y));
-//			System.out.println(destination);
-		}
-		
-		return destination;
-	}
-
 	/**
 	 * @return true if the current position is about the end of the path
 	 */

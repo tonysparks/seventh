@@ -34,12 +34,19 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 			PlayerEntity bot = brain.getEntityOwner();
 			
 			final double tweaker = 1.0;
+			final PlayerEntity enemy = system.getCurrentTarget();
 			
-			score = tweaker 
-					* Evaluators.healthScore(bot) 
-					* Evaluators.currentWeaponAmmoScore(bot)
-					* Evaluators.weaponDistanceScore(bot, system.getCurrentTarget())
-					;
+			if(enemy.isOperatingVehicle()) {				
+				score = 0;
+			}
+			else {
+				score = tweaker 
+						* Evaluators.healthScore(bot) 
+						* Evaluators.currentWeaponAmmoScore(bot)
+						* Evaluators.weaponDistanceScore(bot, enemy)
+						;
+			}
+			
 			
 			if(!system.currentTargetInLineOfFire()) {
 				score *= 0.9;

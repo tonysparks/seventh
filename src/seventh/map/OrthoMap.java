@@ -161,6 +161,45 @@ public class OrthoMap implements Map {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.map.Map#getTilesInRect(seventh.math.Rectangle, java.util.List)
+	 */
+	@Override
+	public List<Tile> getTilesInRect(Rectangle bounds, List<Tile> tiles) {
+		return getTilesInRect(0, bounds, tiles);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see seventh.map.Map#getTilesInRect(int, seventh.math.Rectangle, java.util.List)
+	 */
+	@Override
+	public List<Tile> getTilesInRect(int layer, Rectangle bounds, List<Tile> tiles) {
+		List<Tile> result = (tiles == null) ? new ArrayList<Tile>() : tiles;
+		result.clear();
+		
+		
+		
+		for(int y = bounds.y; 
+			    y <= (bounds.y + bounds.height); 
+			    y+=tileHeight) {
+			
+			for(int x = bounds.x;
+				x <= (bounds.x + bounds.width);
+				x+=tileWidth ) {
+				
+				if(!checkBounds(x, y)) {
+					Tile tile = getWorldTile(layer, x, y); 
+					if(tile!=null) {
+						result.add(tile);
+					}
+				}
+			}
+		}
+				
+		return result;
+	}
+	
+	/* (non-Javadoc)
 	 * @see leola.live.game.Map#getTilesInCircle(int, int, float, java.util.List)
 	 */
 	@Override

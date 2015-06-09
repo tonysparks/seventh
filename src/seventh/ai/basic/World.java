@@ -17,6 +17,7 @@ import seventh.game.Team;
 import seventh.game.events.SoundEventPool;
 import seventh.game.type.GameType;
 import seventh.game.type.ObjectiveGameType;
+import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
@@ -165,6 +166,13 @@ public class World {
 	 */
 	public MapGraph<?> getGraph() {
 		return graph;
+	}
+	
+	/**
+	 * @return the vehicles
+	 */
+	public List<Vehicle> getVehicles() {
+		return game.getVehicles();
 	}
 	
 	/**

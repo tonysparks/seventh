@@ -13,9 +13,11 @@ import seventh.client.gfx.ExplosionEffectShader;
 import seventh.client.gfx.FrameBufferRenderable;
 import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
+import seventh.client.gfx.TankTrackMarks;
 import seventh.client.gfx.particle.Effect;
 import seventh.client.gfx.particle.Effects;
 import seventh.math.Vector2f;
+import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 
 import com.badlogic.gdx.Gdx;
@@ -37,6 +39,7 @@ public class ClientGameEffects {
 	private final List<FrameBufferRenderable> frameBufferRenderables;
 	private final Sprite frameBufferSprite;
 	
+	private final TankTrackMarks[] trackMarks;
 	/**
 	 * 
 	 */
@@ -52,6 +55,8 @@ public class ClientGameEffects {
 		
 		this.explosions = new ExplosionEffect(15, 800, 0.6f);
 		this.frameBufferSprite = new Sprite();
+		
+		this.trackMarks = new TankTrackMarks[SeventhConstants.MAX_ENTITIES];
 	}
 	
 	/**
@@ -82,6 +87,13 @@ public class ClientGameEffects {
 		explosions.deactiveAll();
 		backgroundEffects.clearEffects();
 		foregroundEffects.clearEffects();
+		
+		for(int i =0; i < trackMarks.length; i++) {
+			if(trackMarks[i] != null) {
+				trackMarks[i].clear();
+				trackMarks[i] = null;
+			}
+		}
 	}
 	
 	
@@ -124,6 +136,18 @@ public class ClientGameEffects {
 		this.foregroundEffects.addEffect(effect);
 	}
 
+	public void allocateTrackMark(int id) {
+		this.trackMarks[id] = new TankTrackMarks(256);
+	}
+	
+	public void addTankTrackMark(int id, Vector2f pos, float orientation) {
+		if(this.trackMarks[id]==null) {
+			this.trackMarks[id] = new TankTrackMarks(256);
+		}
+		
+		this.trackMarks[id].add(pos, orientation);
+	}
+	
 	/**
 	 * Updates the special effects, etc.
 	 * 
@@ -135,11 +159,18 @@ public class ClientGameEffects {
 		backgroundEffects.update(timeStep);
 		foregroundEffects.update(timeStep);
 		explosions.update(timeStep);
+				
 		
 		int size = frameBufferRenderables.size();
 		for(int i = 0; i < size; i++) {
 			FrameBufferRenderable r = this.frameBufferRenderables.get(i);
 			r.update(timeStep);
+		}
+		
+		for(int i =0; i < trackMarks.length; i++) {
+			if(trackMarks[i] != null) {
+				trackMarks[i].update(timeStep);
+			}
 		}
 	}
 	
@@ -206,6 +237,12 @@ public class ClientGameEffects {
 		
 	public void renderBackground(Canvas canvas, Camera camera) {
 		backgroundEffects.render(canvas, camera, 0);
+		
+		for(int i =0; i < trackMarks.length; i++) {
+			if(trackMarks[i] != null) {
+				trackMarks[i].render(canvas, camera, 0);
+			}
+		}
 	}
 	
 	public void renderForeground(Canvas canvas, Camera camera) {
