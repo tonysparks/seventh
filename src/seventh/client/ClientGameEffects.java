@@ -142,7 +142,7 @@ public class ClientGameEffects {
 	
 	public void addTankTrackMark(int id, Vector2f pos, float orientation) {
 		if(this.trackMarks[id]==null) {
-			this.trackMarks[id] = new TankTrackMarks(256);
+			this.trackMarks[id] = new TankTrackMarks(256*2);
 		}
 		
 		this.trackMarks[id].add(pos, orientation);
