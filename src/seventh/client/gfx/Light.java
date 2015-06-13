@@ -17,6 +17,9 @@ public interface Light {
 
 	public abstract TextureRegion getTexture();
 	public abstract void setTexture(TextureRegion tex);
+	
+	public abstract void destroy();
+	
 	/**
 	 * @return the on
 	 */

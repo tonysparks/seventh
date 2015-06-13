@@ -7,6 +7,7 @@ import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Light;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -20,6 +21,9 @@ public class ClientRocket extends ClientEntity {
 
 	private AnimatedImage anim;
 	private Sprite sprite;
+	
+	private Light light;
+	
 	/**
 	 * 
 	 */
@@ -28,9 +32,21 @@ public class ClientRocket extends ClientEntity {
 		anim = Art.newMissileAnim();
 		sprite = new Sprite(anim.getCurrentImage());
 		sprite.flip(false, true);
-		
+		//sprite.setScale(0.5f);
 		bounds.width = 8;
 		bounds.height = 10;
+		
+		this.light = game.getLightSystem().newPointLight(new Vector2f(pos));
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientEntity#destroy()
+	 */
+	@Override
+	public void destroy() {	
+		super.destroy();
+		light.destroy();
 	}
 	
 	/* (non-Javadoc)
@@ -40,6 +56,7 @@ public class ClientRocket extends ClientEntity {
 	public void update(TimeStep timeStep) {	
 		super.update(timeStep);
 		anim.update(timeStep);
+		light.setPos(getCenterPos());
 	}
 
 	/* (non-Javadoc)
@@ -62,8 +79,10 @@ public class ClientRocket extends ClientEntity {
 //		canvas.drawImage(anim.getCurrentImage(), x-hw, y-hh, null);
 //		canvas.rotate(-d, x, y);
 		
+		
 		sprite.setRotation( (float)d );
 		sprite.setPosition(x, y);
+				
 		canvas.drawSprite(sprite);
 		
 	}

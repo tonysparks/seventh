@@ -6,7 +6,9 @@ package seventh.client.gfx;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * @author Tony
@@ -39,6 +41,9 @@ public class TankTrackMarks implements Renderable {
 	private Sprite trackMarkSprite;
 	private TankTrack[] tracks;
 	private int index;
+	
+	private ShaderProgram shader;
+	
 	/**
 	 * 
 	 */
@@ -54,7 +59,16 @@ public class TankTrackMarks implements Renderable {
 		
 		
 		this.trackMarkSprite = new Sprite(Art.tankTrackMarks);
+		this.shader = MarkEffectShader.getInstance().getShader();
+		
+		shader.begin();
+		{				
+			//shader.setUniformi("u_texture", 0);
+			shader.setUniformi("mark", 1);
+			shader.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+		}
+		shader.end();
 	}
 	
 	public void add(Vector2f p, float orientation) {
@@ -90,8 +104,13 @@ public class TankTrackMarks implements Renderable {
 			trackMarkSprite.setOrigin(16, 8);
 			trackMarkSprite.setPosition(rx-16, ry-16);
 			trackMarkSprite.setColor(73f/255f, 49f/255f, 28f/255f, track.alpha);
+			//canvas.setShader(shader);
+			//canvas.getFrameBuffer().bind(0);
+			//trackMarkSprite.getTexture().bind(1);
 			canvas.drawRawSprite(trackMarkSprite);
-	
+			//canvas.flush();
+			//trackMarkSprite.getTexture().bind(0);
+			//canvas.setShader(null);
 		}
 	}
 	

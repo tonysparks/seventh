@@ -127,6 +127,10 @@ public class ClientGameEffects {
 		this.backgroundEffects.addEffect(effect);
 	}
 	
+	public void addLightSource(Vector2f pos) {
+		this.lightSystem.newConeLight(pos);
+	}
+	
 	/**
 	 * Adds a foreground effect
 	 * 

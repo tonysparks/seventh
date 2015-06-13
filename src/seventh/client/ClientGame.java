@@ -294,7 +294,7 @@ public class ClientGame {
 	 * @param canvas
 	 */
 	public void render(Canvas canvas) {
-		boolean renderMethod1 = true;
+		boolean renderMethod1 = false;
 		
 		// TODO The lighting system is now broke :(
 		if(renderMethod1) {

@@ -49,7 +49,7 @@ public class MenuScreen implements Screen {
 	
 	private Panel menuPanel;
 	private PanelView<Renderable> panelView;
-//	private ShaderTest test;
+
 	/**
 	 * 
 	 */
@@ -204,7 +204,6 @@ public class MenuScreen implements Screen {
 	 */
 	@Override
 	public void enter() {	
-//		test = new ShaderTest();
 		menuPanel.show();
 		Sounds.playGlobalSound(Sounds.uiNavigate);
 	}
@@ -225,9 +224,7 @@ public class MenuScreen implements Screen {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {	
-//		test.update(timeStep);
 	}
-
 
 
 	/* (non-Javadoc)
@@ -259,10 +256,8 @@ public class MenuScreen implements Screen {
 		RenderFont.drawShadedString(canvas, SeventhGame.getVersion(), 5, canvas.getHeight()-5, Colors.setAlpha(fontColor, 150));
 		
 		this.uiManager.render(canvas);
-		
-		canvas.end();
-		
-//		test.render(canvas, null, center);
+				
+		canvas.end();		
 	}
 	
 	/**

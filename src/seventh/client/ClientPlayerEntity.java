@@ -88,18 +88,21 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.mussleFlash.setTexture(Art.fireWeaponLight);
 		this.mussleFlash.setColor(0.5f,0.5f,0.5f);
 								
-		setPlayer(player);
-				
-		setOnRemove(new OnRemove() {
-			
-			@Override
-			public void onRemove(ClientEntity me, ClientGame game) {
-				LightSystem lightSystem = game.getLightSystem();				
-				lightSystem.removeLight(mussleFlash);
-			}
-		});
+		setPlayer(player);			
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientEntity#destroy()
+	 */
+	@Override
+	public void destroy() {
+		super.destroy();
+		mussleFlash.destroy();
+	}
+	
+	/**
+	 * The player just spawned, so set them up accordingly
+	 */
 	public void spawned() {
 		this.invinceableTime = 2000;
 	}

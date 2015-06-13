@@ -33,14 +33,17 @@ public class ImageLight implements Updatable, Light {
 	private long flickerTime;
 	private long timeToNextFlicker;
 	
-	public ImageLight() {
-		this(new Vector2f());
+	private LightSystem lightSystem;
+	
+	public ImageLight(LightSystem lightSystem) {
+		this(lightSystem, new Vector2f());
 	}
 	
 	/**
 	 * @param pos
 	 */
-	public ImageLight(Vector2f pos) {
+	public ImageLight(LightSystem lightSystem, Vector2f pos) {
+		this.lightSystem = lightSystem;
 		this.pos = pos;
 		this.orientation = 0;
 		
@@ -54,6 +57,14 @@ public class ImageLight implements Updatable, Light {
 		setTexture(Art.lightMap);
 		
 		lightSize = 512;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Light#destroy()
+	 */
+	@Override
+	public void destroy() {
+		this.lightSystem.removeLight(this);
 	}
 	
 	/* (non-Javadoc)

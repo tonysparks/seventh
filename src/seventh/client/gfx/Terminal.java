@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import seventh.client.ClientSeventhConfig;
 import seventh.client.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
@@ -270,9 +271,10 @@ public class Terminal implements Updatable, Logger {
 	};
 	
 	/**
-	 * 
+	 * @param console
+	 * @param config
 	 */
-	public Terminal(Console console) {
+	public Terminal(Console console, ClientSeventhConfig config) {
 		this.console = console;
 		this.console.addLogger(this);
 		
@@ -282,8 +284,8 @@ public class Terminal implements Updatable, Logger {
 		this.showCursor = true;	
 		
 		this.background = new Rectangle();
-		this.backgroundColor = 0x8f0000FF;
-		this.foregroundColor = 0xffFFFF00;
+		this.backgroundColor = config.getConsoleBackgroundColor();
+		this.foregroundColor = config.getConsoleForegroundColor();
 		
 		this.textBuffer = new LinkedList<String>();
 		this.inputBuffer = new StringBuilder();

@@ -99,7 +99,7 @@ public class ImageBasedLightSystem implements LightSystem {
 	 */
 	@Override
 	public Light newConeLight(Vector2f pos) {
-		ImageLight light = new ImageLight(pos);
+		ImageLight light = new ImageLight(this, pos);
 		light.setTexture(Art.flashLight);
 		addLight(light);
 		return light;
@@ -118,7 +118,7 @@ public class ImageBasedLightSystem implements LightSystem {
 	 */
 	@Override
 	public Light newPointLight(Vector2f pos) {
-		ImageLight light = new ImageLight(pos);
+		ImageLight light = new ImageLight(this, pos);
 		light.setTexture(Art.lightMap);
 		addLight(light);
 		

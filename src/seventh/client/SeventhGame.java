@@ -26,6 +26,7 @@ import seventh.client.gfx.Theme;
 import seventh.client.screens.AnimationEditorScreen;
 import seventh.client.screens.LoadingScreen;
 import seventh.client.screens.MenuScreen;
+import seventh.client.screens.ShaderEditorScreen;
 import seventh.client.sfx.Sounds;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.shared.Command;
@@ -100,7 +101,7 @@ public class SeventhGame implements ApplicationListener {
 	public SeventhGame(ClientSeventhConfig config) throws Exception {
 		this.console = Cons.getImpl();
 		this.timeStep = new TimeStep();
-		this.terminal = new Terminal(console);
+		this.terminal = new Terminal(console, config);
 						
 		this.inputs = new InputMultiplexer();
 		
@@ -223,6 +224,14 @@ public class SeventhGame implements ApplicationListener {
 				pushScreen(new AnimationEditorScreen(SeventhGame.this));
 			}
 		});
+		
+		console.addCommand(new Command("shader_editor"){			
+			@Override
+			public void execute(Console console, String... args) {
+				pushScreen(new ShaderEditorScreen(SeventhGame.this));
+			}
+		});		
+		
 		
 		console.addCommand(new Command("mouse_sensitivity") {
 			
