@@ -545,6 +545,69 @@ public class GameServer {
 				}
 			}
 		});
+		
+		console.addCommand(new Command("new_tank") {			
+			@Override
+			public void execute(Console console, String... args) {
+				if(getServerContext().hasGameSession()) {
+					GameSession session = getServerContext().getGameSession();
+					Game game = session.getGame();
+					if (game != null) {
+						switch(args.length) {						
+							case 2:
+								try {
+									int x = Integer.parseInt(args[0]);
+									int y = Integer.parseInt(args[1]);
+									game.newTank(x, y);
+								}
+								catch(Exception e) {
+									console.println("Unable to create tank: " + e);
+								}
+								break;
+							default: {
+								console.println("<usage> new_tank [x coordinate] [y coordinate]");
+							}
+						}
+						
+					}
+				}
+			}
+		});
+		
+		console.addCommand(new Command("gametype") {
+			
+			@Override
+			public void execute(Console console, String... args) {
+				if(getServerContext().hasGameSession()) {
+					GameSession session = getServerContext().getGameSession();
+					
+					Game game = session.getGame();
+					if (game != null) {
+						switch(args.length) {	
+							case 0:
+								console.println("<usage> gametype [obj|tdm] [max score] [time]");
+								break;
+							case 1:
+								console.execute("set sv_gametype " + args[0]);
+								break;
+							case 2:
+								console.execute("set sv_gametype " + args[0]);
+								console.execute("set sv_maxscore " + args[1]);
+								break;
+							case 3:
+								console.execute("set sv_gametype " + args[0]);
+								console.execute("seti sv_maxscore " + args[1]);
+								console.execute("seti sv_matchtime " + args[2]);
+								break;								
+							default: {
+								console.println("<usage> new_tank [x coordinate] [y coordinate]");
+							}
+						}
+						
+					}
+				}				
+			}
+		});
 	}
 	
 	/**

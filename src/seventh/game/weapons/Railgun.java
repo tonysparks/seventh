@@ -36,7 +36,7 @@ public class Railgun extends Weapon {
 		super(game, owner, Type.RAILGUN);
 		
 		this.roundsPerSecond = 15;
-		this.damage = 10;
+		this.damage = 40;
 		this.reloadTime = 1600;
 		this.clipSize = 30;
 		this.totalAmmo = 180;

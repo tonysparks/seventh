@@ -3,9 +3,9 @@
  */
 package seventh.client.gfx;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 
 import seventh.client.ClientSeventhConfig;
 import seventh.client.Inputs;
@@ -38,7 +38,7 @@ public class Terminal implements Updatable, Logger {
 	private boolean showCursor;
 	
 	private List<String> textBuffer;
-	private Stack<String> cmdHistory;
+	private List<String> cmdHistory;
 	private StringBuilder inputBuffer;
 	private int cursorIndex;
 	private int scrollY, scrollPosition;	
@@ -87,23 +87,24 @@ public class Terminal implements Updatable, Logger {
 			
 			switch(key) {
 				case Keys.UP: {
-					if(!cmdHistory.isEmpty()) {
-						cmdHistoryIndex++;
-						if(cmdHistoryIndex >= cmdHistory.size()) {
-							cmdHistoryIndex = 0;
-						}						
+					if(!cmdHistory.isEmpty()) {											
 						setInputText(cmdHistory.get(cmdHistoryIndex));
+						cmdHistoryIndex--;
+						if(cmdHistoryIndex < 0) {
+							cmdHistoryIndex = cmdHistory.size()-1;
+						}
 					}
 					
 					break;
 				}
 				case Keys.DOWN: {
 					if(!cmdHistory.isEmpty()) {
-						cmdHistoryIndex--;
-						if(cmdHistoryIndex < 0) {
-							cmdHistoryIndex = cmdHistory.size()-1;
-						}
+						
 						setInputText(cmdHistory.get(cmdHistoryIndex));
+						cmdHistoryIndex++;
+						if(cmdHistoryIndex >= cmdHistory.size()) {
+							cmdHistoryIndex = 0;
+						}
 					}
 					
 					break;
@@ -248,11 +249,10 @@ public class Terminal implements Updatable, Logger {
 				case '\r':
 				case '\n': {
 					String command = inputBuffer.toString();									
-					//textBuffer.add(command);
+										
 					cmdHistory.add(command);
-//					
-//					inputBuffer.delete(0, inputBuffer.length());
-//					cursorIndex = 0;	
+					cmdHistoryIndex = cmdHistory.size()-1;
+					
 					setInputText("");
 					
 					console.execute(command);					
@@ -289,7 +289,7 @@ public class Terminal implements Updatable, Logger {
 		
 		this.textBuffer = new LinkedList<String>();
 		this.inputBuffer = new StringBuilder();
-		this.cmdHistory = new Stack<String>();
+		this.cmdHistory = new ArrayList<String>();
 	}
 
 	/**

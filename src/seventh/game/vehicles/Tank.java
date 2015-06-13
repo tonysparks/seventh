@@ -226,6 +226,9 @@ public class Tank extends Vehicle {
 		
 		boolean isBlocked = false;
 		if(hasOperator()) {
+//			this.primaryWeapon.setOwner(getOperator());
+//			this.secondaryWeapon.setOwner(getOperator());
+			
 			makeMovementSounds(timeStep);
 		}
 		
@@ -582,7 +585,7 @@ public class Tank extends Vehicle {
 		else if(damager instanceof Rocket) {
 			amount /= 2;
 		} else if (damager instanceof Bullet) {
-			amount = 1;
+			amount = 0;
 		}
 		else {
 			amount /= 10;

@@ -301,9 +301,17 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				gameSettings.maxScore--;		
-				if(gameSettings.maxScore < 1) {
-					gameSettings.maxScore = 1;
+				if(gameSettings.gameType.equals(GameType.Type.OBJ)) {
+					gameSettings.maxScore--;		
+					if(gameSettings.maxScore < 1) {
+						gameSettings.maxScore = 1;
+					}
+				}
+				else {
+					gameSettings.maxScore -= 10;		
+					if(gameSettings.maxScore < 1) {
+						gameSettings.maxScore = 0;
+					}
 				}
 				maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
 			}
@@ -314,7 +322,12 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				gameSettings.maxScore++;				
+				if(gameSettings.gameType.equals(GameType.Type.OBJ)) {
+					gameSettings.maxScore++;							
+				}
+				else {
+					gameSettings.maxScore += 10;							
+				}			
 				maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
 			}
 		}); 

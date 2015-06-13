@@ -97,7 +97,10 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 		if(GameState.IN_PROGRESS == getGameState()) {
 			List<Team> leaders = getTeamsWithHighScore();
 			
-			if(this.getRemainingTime() <= 0 || leaders.get(0).getScore() >= getMaxScore() ) {
+			boolean isUnlimitedScore = getMaxScore() <= 0;
+			
+			if(this.getRemainingTime() <= 0 || (leaders.get(0).getScore() >= getMaxScore() && !isUnlimitedScore) ) {
+				
 				if(leaders.size() > 1) {
 					setGameState(GameState.TIE);
 				}
