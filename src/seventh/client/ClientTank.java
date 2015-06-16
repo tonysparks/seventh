@@ -85,6 +85,14 @@ public class ClientTank extends ClientVehicle {
 		center.y += WeaponConstants.TANK_AABB_HEIGHT/2f;
 		this.vehicleOOB.update(orientation, center);
 		
+		if(netTank.operatorId > 0) {
+			ClientPlayer clientPlayer = game.getPlayers().getPlayer(netTank.operatorId);
+			setOperator(clientPlayer.getEntity());
+		}
+		else {
+			setOperator(null);
+		}
+		
 		if(prevState != null && nextState != null) {
 			if (prevState.posX != nextState.posX ||
 				prevState.posY != nextState.posY) {

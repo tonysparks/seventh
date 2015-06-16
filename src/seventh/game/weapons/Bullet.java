@@ -148,6 +148,13 @@ public class Bullet extends Entity {
 	}
 	
 	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(Entity owner) {
+		this.owner = owner;
+	}
+	
+	/**
 	 * Emits an impact sound depending on the collision tile
 	 * @param x
 	 * @param y

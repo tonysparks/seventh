@@ -298,6 +298,10 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 				}
 			}
 			else {
+				if(this.vehicle != null) {
+					this.vehicle.setOperator(null);
+				}
+				
 				updateWeaponState(ps.weapon, time);
 			}
 		}

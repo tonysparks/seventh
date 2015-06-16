@@ -114,21 +114,17 @@ public class Tank extends Vehicle {
 				return pos;
 			}
 			
-			/* (non-Javadoc)
-			 * @see seventh.game.weapons.Railgun#calculateVelocity(seventh.math.Vector2f)
-			 */
 			@Override
 			protected Vector2f calculateVelocity(Vector2f facing) {
 				return super.calculateVelocity(getTurretFacing());
 			}
 			
-			/* (non-Javadoc)
-			 * @see seventh.game.weapons.Weapon#newRocket()
-			 */
 			@Override
-			protected Entity newRocket() {
-				Entity rocket = super.newRocket();
+			protected Rocket newRocket() {
+				Rocket rocket = super.newRocket();
 				rocket.setOrientation(turretOrientation);
+				rocket.setOwner(getOperator());
+				
 				return rocket;
 			}
 		};
@@ -152,9 +148,13 @@ public class Tank extends Vehicle {
 				return pos;
 			}
 			
-			/* (non-Javadoc)
-			 * @see seventh.game.weapons.Railgun#calculateVelocity(seventh.math.Vector2f)
-			 */
+			@Override
+			protected Bullet newBullet() {			
+				Bullet bullet = super.newBullet();
+				bullet.setOwner(getOperator());
+				return bullet;
+			}
+			
 			@Override
 			protected Vector2f calculateVelocity(Vector2f facing) {
 				return super.calculateVelocity(getTurretFacing());

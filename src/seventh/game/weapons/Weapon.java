@@ -424,7 +424,7 @@ public abstract class Weapon {
 	/**
 	 * @return creates a new {@link Bullet} that is not piercing
 	 */
-	protected Entity newBullet() {
+	protected Bullet newBullet() {
 		return newBullet(false);
 	}
 	
@@ -433,7 +433,7 @@ public abstract class Weapon {
 	 * @param isPiercing
 	 * @return the {@link Bullet}
 	 */
-	protected Entity newBullet(boolean isPiercing) {
+	protected Bullet newBullet(boolean isPiercing) {
 		Vector2f pos = newBulletPosition();
 		Vector2f vel = calculateVelocity(owner.getFacing());
 		
@@ -475,14 +475,14 @@ public abstract class Weapon {
 	 * Spawns a new {@link Rocket}
 	 * @return the {@link Rocket}
 	 */
-	protected Entity newRocket() {		
+	protected Rocket newRocket() {		
 		Vector2f pos = newRocketPosition();
 		Vector2f vel = calculateVelocity(owner.getFacing());
 		
 		final int speed = 650;
 		final int splashDamage = 80;
 		
-		Entity bullet = new Rocket(pos, speed, game, owner, vel, damage, splashDamage);
+		Rocket bullet = new Rocket(pos, speed, game, owner, vel, damage, splashDamage);
 				
 		game.addEntity(bullet);		
 		return bullet;

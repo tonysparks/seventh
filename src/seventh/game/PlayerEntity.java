@@ -382,6 +382,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			updateBombTargetUse(timeStep);
 		}
 		else {
+			this.operating.operate(this);
 			moveTo(this.operating.getCenterPos());
 		}
 		
@@ -419,7 +420,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			if(currentState == State.ENTERING_VEHICLE) {
 				currentState = State.OPERATING_VEHICLE;					
 			}
-			if(currentState == State.EXITING_VEHICLE) {
+			else if(currentState == State.EXITING_VEHICLE) {
 				
 				Vehicle vehicle = getVehicle();
 				Vector2f newPos = game.findFreeRandomSpotNotIn(this, vehicle.getBounds(), vehicle.getOBB());
@@ -438,6 +439,11 @@ public class PlayerEntity extends Entity implements Controllable {
 					
 					currentState = State.IDLE;
 					moveTo(newPos);
+				}
+			}
+			else {
+				if(isOperatingVehicle()) {
+					currentState = State.OPERATING_VEHICLE;
 				}
 			}
 		}
@@ -656,7 +662,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			 * the vehicles
 			 */
 			if(Keys.USE.isDown(previousKeys) && !Keys.USE.isDown(keys)) {
-				if(currentState==State.OPERATING_VEHICLE) {
+				if(currentState==State.OPERATING_VEHICLE&&!this.operating.isMoving()) {
 					leaveVehicle();
 				}
 			}
@@ -860,6 +866,7 @@ public class PlayerEntity extends Entity implements Controllable {
 		 * 3) you are not firing your weapon
 		 * 4) you are not currently using a Rocket Launcher
 		 * 5) recovery time has been met
+		 * 6) you are not reloading
 		 */
 		
 		if(currentState!=State.DEAD &&				
@@ -869,7 +876,8 @@ public class PlayerEntity extends Entity implements Controllable {
 		   recoveryTime <= 0) {		
 		
 			Weapon weapon = this.inventory.currentItem();
-			if(weapon == null || !weapon.getType().equals(Type.ROCKET_LAUNCHER)) {			
+			boolean isReady = weapon != null ? weapon.isReady() : true;
+			if(weapon == null || !weapon.getType().equals(Type.ROCKET_LAUNCHER) && isReady) {			
 				if(currentState!=State.SPRINTING) {
 					game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());
 				}
