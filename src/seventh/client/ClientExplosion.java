@@ -36,7 +36,7 @@ public class ClientExplosion extends ClientEntity {
 		anim.loop(false);
 		this.soundPlayed = false;	
 		
-		game.addForegroundEffect(new ExplosionEmitter(pos, 800, 0));
+		game.addForegroundEffect(new ExplosionEmitter(pos, 4000, 0));
 		light = game.getLightSystem().newPointLight();
 		light.setColor(0.7f, 0.6f, 0.3f);
 		light.setPos(pos);
@@ -91,12 +91,14 @@ public class ClientExplosion extends ClientEntity {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
-//		Vector2f cameraPos = camera.getPosition();
-//		int x = (int)(pos.x - cameraPos.x);
-//		int y = (int)(pos.y - cameraPos.y);
+		Vector2f cameraPos = camera.getPosition();
+		int x = (int)(pos.x - cameraPos.x);
+		int y = (int)(pos.y - cameraPos.y);
 //		
 //		canvas.drawImage(anim.getCurrentImage(), x-bounds.width/4, y-bounds.height/4, 0x3fffffff);
-		//canvas.fillRect(x-bounds.width/2, y-bounds.height/2, this.bounds.width, this.bounds.height, 0x1fff0000);		
+		//canvas.fillRect(x-bounds.width/2, y-bounds.height/2, this.bounds.width, this.bounds.height, 0x1fff0000);
+		
+		//canvas.drawImage(anim.getCurrentImage(), x-bounds.width/4, y-bounds.height/4, null);
 	}
 
 }

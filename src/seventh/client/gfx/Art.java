@@ -217,7 +217,7 @@ public class Art {
 		pistolIcon = loadImage("./seventh/gfx/weapons/pistol_icon.png");
 		riskerIcon = loadImage("./seventh/gfx/weapons/risker_icon.png");
 		
-		explosionImage = TextureUtil.splitImage(loadImage("./seventh/gfx/explosion.png"), 2, 2);
+		explosionImage = TextureUtil.splitImage(loadImage("./seventh/gfx/explosion.png"), 4, 4);
 		TextureRegion tmp = loadImage("./seventh/gfx/fire.png");
 		tmp.flip(false, false);
 		fireImage = TextureUtil.splitImage(tmp, 1, 5);
@@ -296,8 +296,10 @@ public class Art {
 		bullet = loadImage("./seventh/gfx/bullet.png");
 		bulletImage = loadImage("./seventh/gfx/weapons/bullet.png");
 		
+//		tankTracks = TextureUtil.splitImage(
+//							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
 		tankTracks = TextureUtil.splitImage(
-							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
+				TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 7,18,100,204), 1, 1);		
 		tankTurret = TextureUtil.splitImage( 
 							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_turret.png"), 0, 0, 108, 175), 1, 1)[0];
 		
@@ -492,8 +494,12 @@ public class Art {
 	
 	public static AnimatedImage newExplosionAnim() {
 		Animation animation = newAnimation(new int[]{
-			100, 80, 0, 0
+			90, 90, 90, 90,
+			90, 90, 90, 90,
+			90, 90, 90, 90,
+			90, 90, 90, 190
 		});						
+		animation.loop(false);
 		return new AnimatedImage(explosionImage, animation);
 	}
 	

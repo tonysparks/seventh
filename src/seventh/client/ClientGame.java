@@ -714,7 +714,8 @@ public class ClientGame {
 					uvPos.y = 1f - (pos.y - camera.getPosition().y) / app.getScreenHeight();
 					
 					/* limit the explosion per player */
-					gameEffects.addExplosion(explosion.ownerId, uvPos);
+//					gameEffects.addExplosion(explosion.ownerId, uvPos);
+					gameEffects.addExplosion(this, explosion.ownerId, pos);
 				}
 				else {
 					entity = new ClientFire(this, pos);	

@@ -11,6 +11,7 @@ import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.math.Vector2f;
+import seventh.shared.EaseInInterpolation;
 import seventh.shared.TimeStep;
 
 /**
@@ -138,6 +139,8 @@ public class ExplosionEmitter extends Emitter {
 		private int speed;
 		private final int maxSpeed;
 		private int color;
+		
+		EaseInInterpolation ease;
 		/**
 		 * @param pos
 		 * @param vel
@@ -150,6 +153,8 @@ public class ExplosionEmitter extends Emitter {
 			speed = maxSpeed;
 			
 			this.color = color;
+			
+			ease = new EaseInInterpolation(45, 0, timeToLive);
 		}
 		
 		/* (non-Javadoc)
@@ -159,6 +164,7 @@ public class ExplosionEmitter extends Emitter {
 		public void update(TimeStep timeStep) {		
 			super.update(timeStep);
 			alpha.update(timeStep);
+			ease.update(timeStep);
 			
 			double dt = timeStep.asFraction();
 			int newX = (int)Math.round(pos.x + vel.x * speed * dt);
@@ -176,9 +182,11 @@ public class ExplosionEmitter extends Emitter {
 		@Override
 		protected void doRender(Canvas canvas, Camera camera, float renderX,
 				float renderY) {
-			
-			int colorS = (alpha.getCurrentValue() << 24) | color;			
-			canvas.setCompositeAlpha(alpha.getCurrentValue()/255.0f);
+			float acolor = ease.getValue();
+//			int colorS = (alpha.getCurrentValue() << 24) | color;
+			int colorS = ( (int)acolor << 24) | color;
+//			canvas.setCompositeAlpha(alpha.getCurrentValue()/255.0f);
+			canvas.setCompositeAlpha(acolor/255f);
 			canvas.drawImage(Art.smokeImage, renderX, renderY, colorS);
 			canvas.setCompositeAlpha(1.0f);			
 		}

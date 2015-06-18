@@ -8,6 +8,7 @@ import java.util.List;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Explosion;
 import seventh.client.gfx.ExplosionEffect;
 import seventh.client.gfx.ExplosionEffectShader;
 import seventh.client.gfx.FrameBufferRenderable;
@@ -114,8 +115,9 @@ public class ClientGameEffects {
 	 * @param index
 	 * @param pos
 	 */
-	public void addExplosion(int index, Vector2f pos) {
+	public void addExplosion(ClientGame game, int index, Vector2f pos) {
 		//explosions.activate(index, pos);
+		this.foregroundEffects.addEffect(new Explosion(game, pos));
 	}
 
 	/**
