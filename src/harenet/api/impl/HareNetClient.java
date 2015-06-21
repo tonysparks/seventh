@@ -4,15 +4,14 @@
 package harenet.api.impl;
 
 import harenet.Host;
+import harenet.Host.MessageListener;
 import harenet.NetConfig;
 import harenet.Peer;
-import harenet.Host.MessageListener;
 import harenet.api.Client;
 import harenet.messages.Message;
 import harenet.messages.NetMessage;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 /**
@@ -165,15 +164,16 @@ public class HareNetClient extends HareNetEndpoint implements Client {
 		return (this.peer !=null) ? this.peer.getAddress() : null;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.jenet.api.Client#connect(int, java.net.InetAddress, int)
+	/*
+	 * (non-Javadoc)
+	 * @see harenet.api.Client#connect(int, java.net.InetSocketAddress)
 	 */
 	@Override
-	public boolean connect(int timeout, InetAddress remote, int port)
+	public boolean connect(int timeout, InetSocketAddress address)
 			throws IOException {
 			
 		host = new Host(getNetConfig(), null);			
-		peer=host.connect(new InetSocketAddress(remote, port));
+		peer=host.connect(address);
 		this.connectionId = peer.getId();
 		
 		update(timeout);

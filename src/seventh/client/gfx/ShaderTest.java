@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
@@ -38,14 +39,13 @@ public class ShaderTest implements Renderable {
 	Vector2f position=new Vector2f(0.1f,0.23f);
 	float time;
 	
-	/**
-	 * 
-	 */
-	public ShaderTest() {		
-		ShaderProgram.pedantic = false;
-		
-		shader = new ShaderProgram(Gdx.files.internal("./seventh/gfx/shaders/base.vert")
-								 , Gdx.files.internal("./seventh/gfx/shaders/inprint.frag"));
+	private FrameBuffer fboPing, fboPong;
+	private ShaderProgram vertBlur, horBlur, light;
+	
+	
+	private ShaderProgram loadShader(String fragFile) {
+		ShaderProgram shader = new ShaderProgram(Gdx.files.internal("./seventh/gfx/shaders/base.vert")
+				 							   , Gdx.files.internal("./seventh/gfx/shaders/" + fragFile));
 		if(!shader.isCompiled()) {
 			System.out.println("Not compiled!");
 		}
@@ -54,22 +54,42 @@ public class ShaderTest implements Renderable {
 		if (shader.getLog().length()!=0) {
 			System.out.println(shader.getLog());
 		}
-				
+		
+		return shader;
+	}
+	
+	/**
+	 * 
+	 */
+	public ShaderTest() {		
+		ShaderProgram.pedantic = false;
+		
+		vertBlur = loadShader("blurv.frag");
+		horBlur = loadShader("blurh.frag");
+		light = loadShader("light.frag");
+		
+		shader = loadShader("inprint.frag");
+		
 		this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 //		camera.setToOrtho(false);
 		transform = new Matrix4();
 		camera.update();
 		batch = new SpriteBatch();//1024, shader);
-		batch.setShader(shader);
+		batch.setShader(null);
 		batch.setProjectionMatrix(camera.combined);
 		batch.setTransformMatrix(transform);
 		
-		this.buffer = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);		
+		this.buffer = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);	
+		
+		this.fboPing = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		this.fboPong = new FrameBuffer(Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 	}
 
 	public void destroy() {
 		this.shader.dispose();
+		this.vertBlur.dispose();
+		this.horBlur.dispose();
 	}
 	
 	/**
@@ -104,6 +124,19 @@ public class ShaderTest implements Renderable {
 
 		}
 		shader.end();	
+		
+		light.begin();
+		light.setUniformf("ambientColor", 0.8f, 0.8f, 0.51f, 0.4f);
+		light.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		light.end();
+		
+		horBlur.begin();
+		horBlur.setUniformf("blurRadius", 0.125f);
+		horBlur.end();
+		
+		vertBlur.begin();
+		vertBlur.setUniformf("blurRadius", 0.1264f);
+		vertBlur.end();
 	}
 
 	/* (non-Javadoc)
@@ -111,26 +144,6 @@ public class ShaderTest implements Renderable {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
-//		texture.bind();
-//		shader.begin();
-//		shader.setUniformMatrix("u_worldView", matrix);
-//		shader.setUniformi("u_texture", 0);
-//		mesh.render(shader, GL10.GL_TRIANGLES);
-//		shader.end();
-//		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);		
-		
-//		buffer.begin();
-//		{
-//			batch.setProjectionMatrix(this.camera.combined);
-//			batch.setShader(null);
-//			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-//			
-//			batch.begin();
-//			batch.draw(Art.tankTrackMarks, 150, 300);		
-//			batch.end();
-//		}
-//		buffer.end();
-		
 		batch.setShader(null);
 		
 		this.camera.update();
@@ -141,11 +154,52 @@ public class ShaderTest implements Renderable {
 //		batch.setBlendFunction(Gdx.gl10.GL_NEAREST, Gdx.gl10.GL_LINEAR);		
 		//batch.setBlendFunction(Gdx.gl10.GL_SRC_ALPHA, Gdx.gl10.GL_ONE_MINUS_SRC_ALPHA);
 		
+
+		batch.begin();
+		fboPing.begin();				
+			batch.draw(Art.lightMap, -30, -20);
+		fboPing.end();
+		batch.end();
 		
 		batch.begin();
-		{
+		batch.setShader(light);
+		fboPing.getColorBufferTexture().bind(1);
+		Art.lightMap.getTexture().bind(0);
+		batch.end();
+		
+		batch.begin();
+		{						
+			fboPing.begin();	
+				batch.setShader(null);
+				batch.draw(Art.alliedBodyModel.getFrame(0), 120, 200);
+				
+				batch.setShader(horBlur);
+				batch.draw(Art.bulletImage, 200, 200);
+			fboPing.end();
 			
-			Sprite tracks = new Sprite(Art.tankTrackMarks);
+			
+			//batch.flush();
+			//batch.enableBlending();
+			//batch.setBlendFunction(Gdx.gl10.GL_NEAREST, Gdx.gl10.GL_LINEAR);
+			
+			fboPong.begin();
+			//Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			//Gdx.gl.glColorMask(true, true, true, true);
+			batch.setShader(vertBlur);
+			batch.draw(Art.bulletImage, 200, 200);
+			fboPong.end();
+			
+		}
+		batch.end();
+		
+		batch.setShader(null);
+		batch.begin();		
+		batch.draw(fboPing.getColorBufferTexture(), 0, 0);
+		batch.end();
+	}
+
+	/*
+	 * 	Sprite tracks = new Sprite(Art.tankTrackMarks);
 			tracks.setColor(0.82f, 0.83f, 0.82f, 0.5f);
 			
 			//buffer.getColorBufferTexture().bind(1);
@@ -166,13 +220,6 @@ public class ShaderTest implements Renderable {
 			
 			//Art.tankTurret.getTexture().bind(1);
 			Art.tankTrackMarks.getTexture().bind(0);
-			
-		}
-		batch.end();
-		batch.setShader(null);
-//		batch.begin();		
-//		batch.draw(buffer.getColorBufferTexture(), 0, 0);
-//		batch.end();
-	}
-
+		
+	 */
 }

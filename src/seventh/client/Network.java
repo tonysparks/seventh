@@ -111,7 +111,7 @@ public class Network {
 //		client.addConnectionListener(new LagConnectionListener(50, 100, listener));
 				
 		InetSocketAddress address = new InetSocketAddress(host, port);
-		if(client.connect(12000, address.getAddress(), address.getPort())) {
+		if(client.connect(12000, address)) {
 			client.start();
 		}
 		else {

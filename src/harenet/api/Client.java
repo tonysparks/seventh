@@ -4,7 +4,7 @@
 package harenet.api;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 /**
  * Represents a network connection to a server.
@@ -19,11 +19,10 @@ public interface Client extends Connection {
 	 * 
 	 * @param timeout
 	 * @param host
-	 * @param port
 	 * @throws IOException
 	 * @return true if connected
 	 */
-	public boolean connect(int timeout, InetAddress host, int port) throws IOException;
+	public boolean connect(int timeout, InetSocketAddress host) throws IOException;
 	
 	/**
 	 * Sets the keep alive time
