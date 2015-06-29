@@ -68,7 +68,9 @@ public class Hud implements Renderable {
 		
 		this.killLog = new KillLog(screenWidth-260, 30, 5000);
 		this.messageLog = new MessageLog(10, 60, 15000, 6);		
-		this.objectiveLog = new MessageLog(10, 20, 0, 10);
+		this.objectiveLog = new SlowDisplayMessageLog(10, 120, 8000, 3);
+		this.objectiveLog.setFont(app.getTheme().getSecondaryFontName());
+		this.objectiveLog.setFontSize(14);
 		
 		this.centerLog = new MessageLog(screenWidth/2, 90, 3000, 2) {
 			@Override
@@ -223,7 +225,7 @@ public class Hud implements Renderable {
 		killLog.render(canvas, camera, 0);
 		messageLog.render(canvas, camera, 0);
 		centerLog.render(canvas, camera, 0);
-		messageLog.render(canvas, camera, 0);
+		objectiveLog.render(canvas, camera, 0);
 				
 		
 		if(localPlayer.isAlive()) {

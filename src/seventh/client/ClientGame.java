@@ -1060,6 +1060,33 @@ public class ClientGame {
 	
 	public void gameReady(GameReadyMessage msg) {
 		this.gameEnded = false; 
+		hud.getObjectiveLog().log("Objective: ");
+		switch(this.gameType) {
+        case OBJ:
+            if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
+                hud.getObjectiveLog().log(this.defendingTeam.getName() + " must defend the objectives.");
+            }
+            else {
+                if(this.localPlayer.getTeam().equals(this.defendingTeam)) {
+                    hud.getObjectiveLog().log("You must defend the bomb targets from the " + this.attackingTeam.getName());
+                }
+                else {
+                    hud.getObjectiveLog().log("You must plant bombs on the " + this.defendingTeam.getName() + " protected targets.");
+                }
+            }
+            break;
+        case TDM:
+            if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
+                hud.getObjectiveLog().log("The team with the most kills, wins.");
+            }
+            else {
+                hud.getObjectiveLog().log("You must kill as many " + localPlayer.getTeam().opposingTeam().getName() + " as possible.");
+            }
+            break;
+        default:
+            break;
+		
+		}
 	}
 
 	public void teamTextMessage(TeamTextMessage msg) {

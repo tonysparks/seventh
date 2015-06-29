@@ -24,7 +24,13 @@ import seventh.shared.Updatable;
  *
  */
 public class CameraController implements Updatable {
-	
+
+    private static final Vector2f GAME_SPEED = new Vector2f(130, 130);
+    private static final Vector2f FREEFORM_SPEED = new Vector2f(330, 330);
+    private static final Vector2f FAST_FREEFORM_SPEED = new Vector2f(630, 630);
+    
+    private static final int freeformSpeed=120, fastFreeformSpeed=250;
+    
 	private Map map;
 	private Camera camera;
 	private Vector2f cameraCenterAround;
@@ -69,15 +75,22 @@ public class CameraController implements Updatable {
 	 * Sets the camera speed to game mode
 	 */
 	private void setGameCameraSpeed() {
-		camera.setMovementSpeed(new Vector2f(130, 130));
+		camera.setMovementSpeed(GAME_SPEED);
 	}
 	
 	/**
 	 * Sets the camera speed to free form mode
 	 */
 	private void setFreeformCameraSpeed() {
-		camera.setMovementSpeed(new Vector2f(330, 330));
+		camera.setMovementSpeed(FREEFORM_SPEED);
 	}
+
+	/**
+     * Sets the camera speed to fast free form mode
+     */
+    private void setFastFreeformCameraSpeed() {
+        camera.setMovementSpeed(FAST_FREEFORM_SPEED);
+    }
 	
 	/**
 	 * Shake the camera relative to the force of 'sourcePosition'.
@@ -146,6 +159,17 @@ public class CameraController implements Updatable {
 		else {
 			playerVelocity.x = 0;
 		}
+
+		if(Keys.SPRINT.isDown(keys)) {
+		    if(isCameraRoaming()) {
+		        setFastFreeformCameraSpeed();
+		    }
+		}
+		else {
+		    if(isCameraRoaming()) {
+		        setFreeformCameraSpeed();
+		    }
+		}
 		
 		if(this.localPlayer.isPureSpectator()) {
 			if(Keys.FIRE.isDown(previousKeys) && !Keys.FIRE.isDown(keys)) {
@@ -187,7 +211,7 @@ public class CameraController implements Updatable {
 	 * @param timeStep
 	 */
 	private void updateCameraForRoamingMovements(TimeStep timeStep) {
-		final int movementSpeed = 120;
+		final int movementSpeed = freeformSpeed;
 		if(playerVelocity.lengthSquared() > 0) {
 			Vector2f pos = cameraDest;		
 			Rectangle bounds = new Rectangle(camera.getViewPort());

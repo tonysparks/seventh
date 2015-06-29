@@ -57,4 +57,20 @@ public enum ClientTeam {
 		}
 		return NONE;
 	}
+	
+	public static ClientTeam opposingTeam(ClientTeam team) {
+	    if(team!=null) {
+    	    switch(team) {
+        	    case AXIS: return ALLIES;
+        	    case ALLIES: return AXIS;
+        	    default: return NONE;
+    	    }
+	    }
+	    
+	    return ClientTeam.NONE;
+	}
+	
+	public ClientTeam opposingTeam() {
+	    return opposingTeam(this);
+	}
 }

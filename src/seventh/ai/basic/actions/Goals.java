@@ -16,6 +16,7 @@ import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
 import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
 import seventh.game.BombTarget;
 import seventh.game.PlayerEntity;
+import seventh.game.vehicles.Vehicle;
 import seventh.math.Vector2f;
 
 
@@ -101,6 +102,13 @@ public class Goals {
 										   	new DoNothingEvaluator(this, brain.getRandomRangeMin(0.6), 0),
 											new GrenadeEvaluator(this, brain.getRandomRangeMin(0.5), 0)
 		));
+	}
+	
+	public Action operateVehicle(Brain brain, Vehicle vehicle) {
+	    Goal goal = new SequencedGoal("operateVehicle");
+	    goal.addLastAction(new MoveToVehicleAction(vehicle));
+	    goal.addLastAction(new EnterVehicleAction(vehicle));
+	    return goal;
 	}
 	
 	public Action moveToRandomSpot() {

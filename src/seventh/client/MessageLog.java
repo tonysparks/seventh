@@ -26,6 +26,7 @@ public class MessageLog  implements Renderable {
 	private final int maxLogEntries;
 	private final int startX, startY;
 	private int fontSize;
+	private String font;
 	
 	/**
 	 * @param x
@@ -40,7 +41,8 @@ public class MessageLog  implements Renderable {
 		this.maxLogEntries = maxLogEntries;
 		
 		this.fontSize = 12;
-					
+		this.font = "Consola";
+		
 		this.timeToShow = new Timer(true, bleedOffTime);
 		this.logs = new ArrayList<String>();
 	}
@@ -68,6 +70,13 @@ public class MessageLog  implements Renderable {
 	}
 	
 	/**
+     * @param font the font to set
+     */
+    public void setFont(String font) {
+        this.font = font;
+    }
+	
+	/**
 	 * @param message
 	 * @param color
 	 */
@@ -76,7 +85,7 @@ public class MessageLog  implements Renderable {
 			timeToShow.reset();
 		}
 		else if (logs.size() > maxLogEntries) {
-			logs.remove(0);
+		    expireEntry();
 		}
 		
 		this.logs.add(message);		
@@ -85,6 +94,11 @@ public class MessageLog  implements Renderable {
 	public void clearLogs() {
 		logs.clear();
 	}
+	
+	protected void expireEntry() {
+	    logs.remove(0);
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see leola.live.gfx.Renderable#update(leola.live.TimeStep)
@@ -95,7 +109,7 @@ public class MessageLog  implements Renderable {
 		
 		if(timeToShow.isTime()) {
 			if(!logs.isEmpty()) {
-				logs.remove(0);				
+				expireEntry();			
 			}
 		}
 		
@@ -120,7 +134,7 @@ public class MessageLog  implements Renderable {
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
 		//canvas.resizeFont(this.fontSize);
-		canvas.setFont("Consola", fontSize);
+		canvas.setFont(font, fontSize);
 		canvas.boldFont();
 		
 		int height = canvas.getHeight("W") + 5;

@@ -493,11 +493,17 @@ public class Art {
 	}
 	
 	public static AnimatedImage newExplosionAnim() {
+	    int v = 50;
 		Animation animation = newAnimation(new int[]{
+			/*90, 90, 90, 90,
 			90, 90, 90, 90,
 			90, 90, 90, 90,
-			90, 90, 90, 90,
-			90, 90, 90, 190
+			90, 90, 90, 10
+			*/
+			v, v, v, v,
+            v, v, v, v,
+            v, v, v, v,
+            10, 10, 10, 0			
 		});						
 		animation.loop(false);
 		return new AnimatedImage(explosionImage, animation);

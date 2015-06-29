@@ -286,6 +286,28 @@ public class OOB {
                //contains(b.x        , b.y+b.height);
 
     }
+
+    public boolean expensiveIntersects(Rectangle b) {
+        return // check to see if the OOB corners are within the rectangle
+               b.contains(topLeft) ||
+               b.contains(topRight) ||
+               b.contains(bottomLeft) ||
+               b.contains(bottomRight) ||
+    
+               
+               // now check the lines
+               checkLineAgainstOOB(topLeft, topRight, b) ||
+               checkLineAgainstOOB(topRight, bottomRight, b) ||
+               checkLineAgainstOOB(bottomRight, bottomLeft, b) ||
+               checkLineAgainstOOB(bottomLeft, topLeft, b) ||               
+               
+               // now check if the Rectangle is in this OOB
+               contains(b.x        , b.y) ||
+               contains(b.x+b.width, b.y) ||
+               contains(b.x+b.width, b.y+b.height) ||
+               contains(b.x        , b.y+b.height);
+
+    }
     
     /**
      * Determines if the supplied {@link OOB} intersects this {@link OOB}

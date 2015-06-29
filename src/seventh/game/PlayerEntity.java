@@ -899,6 +899,21 @@ public class PlayerEntity extends Entity implements Controllable {
 		}	
 	}
 	
+	
+	/**
+	 * @return true if we are entering a vehicle
+	 */
+	public boolean isEnteringVehicle() {
+	    return this.currentState == State.ENTERING_VEHICLE;
+	}
+	
+	/**
+	 * @return true if we are exiting the vehicle
+	 */
+	public boolean isExitingVehicle() {
+	    return this.currentState == State.EXITING_VEHICLE;
+	}
+	
 	/**
 	 * @return true if we are walking
 	 */

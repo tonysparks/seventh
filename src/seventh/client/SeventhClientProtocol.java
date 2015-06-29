@@ -229,6 +229,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 		NetGameState gs = msg.gameState;
 		applyGameState(gs, localPlayerId, false);
 		app.setScreen(new InGameScreen(app, network, game));
+		game.gameReady(msg);
 	}
 
 	/* (non-Javadoc)

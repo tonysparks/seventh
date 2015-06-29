@@ -21,7 +21,7 @@ public class AIConfig {
 	}
 	
 	public long getSightExpireTime() {
-		return this.config.getInt(2_000, "ai", "sightExpireTime");
+		return this.config.getInt(8_000, "ai", "sightExpireTime");
 	}
 	
 	public long getSightPollTime() {

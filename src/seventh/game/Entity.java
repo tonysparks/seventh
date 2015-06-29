@@ -769,7 +769,7 @@ public abstract class Entity implements Debugable {
 	 * @param entities
 	 * @return the closest entity to this one, null if the list is empty
 	 */
-	public Entity getClosest(List<? extends Entity> entities) {
+	public <T extends Entity> T getClosest(List<T> entities) {
 		if(entities==null || entities.isEmpty()) {
 			return null;
 		}
@@ -779,11 +779,11 @@ public abstract class Entity implements Debugable {
 		}
 		
 		Vector2f myPos = getPos();
-		Entity closest = null;
+		T closest = null;
 		float closestDist = 0.0f;
 		
 		for(int i = 0; i < entities.size(); i++) {
-			Entity other = entities.get(i);
+			T other = entities.get(i);
 			
 			float dist = Vector2f.Vector2fDistanceSq(myPos, other.getPos());
 			

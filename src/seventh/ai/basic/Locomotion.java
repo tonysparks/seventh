@@ -30,6 +30,8 @@ import seventh.game.Entity.Type;
 import seventh.game.Game;
 import seventh.game.PlayerEntity;
 import seventh.game.Team;
+import seventh.game.vehicles.Tank;
+import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
@@ -507,24 +509,48 @@ public class Locomotion implements Debugable {
 	public void directMove(float x, float y) {
 		final float threshold = 0f; // was 0
 		
-		if (x < -threshold ) {
-			me.moveLeft(); 
-		}
-		else if (x > threshold ) {
-			me.moveRight();
+		if(me.isOperatingVehicle()) {
+		    Vehicle vehicle = me.getVehicle();
+		    Tank tank = (Tank)vehicle; // TODO - handle this generically
+		    
+		    float fx = x - tank.getFacing().x;
+		    float fy = y - tank.getFacing().y;
+		    if(fx < -threshold) {
+		        tank.maneuverLeft();
+		    }
+		    else if(fx > threshold) {
+		        tank.maneuverRight();
+		        
+		    }
+		    if(fy < -threshold) {
+		        
+		    }
+		    else if(fy > threshold) {
+		        
+		    }
+		    tank.backwardThrottle();
+		    //tank.forwardThrottle();
 		}
 		else {
-			me.noMoveX();
-		}
-		
-		if(y < -threshold ) {
-			me.moveUp();
-		}
-		else if(y > threshold) {
-			me.moveDown();
-		}
-		else {
-			me.noMoveY();
+    		if (x < -threshold ) {
+    			me.moveLeft(); 
+    		}
+    		else if (x > threshold ) {
+    			me.moveRight();
+    		}
+    		else {
+    			me.noMoveX();
+    		}
+    		
+    		if(y < -threshold ) {
+    			me.moveUp();
+    		}
+    		else if(y > threshold) {
+    			me.moveDown();
+    		}
+    		else {
+    			me.noMoveY();
+    		}
 		}
 
 	}

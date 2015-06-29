@@ -131,11 +131,11 @@ public class ShaderTest implements Renderable {
 		light.end();
 		
 		horBlur.begin();
-		horBlur.setUniformf("blurRadius", 0.125f);
+		horBlur.setUniformf("blurRadius", 0.0315125f);
 		horBlur.end();
 		
 		vertBlur.begin();
-		vertBlur.setUniformf("blurRadius", 0.1264f);
+		vertBlur.setUniformf("blurRadius", 0.0181264f);
 		vertBlur.end();
 	}
 
@@ -147,14 +147,16 @@ public class ShaderTest implements Renderable {
 		batch.setShader(null);
 		
 		this.camera.update();
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
 		batch.setProjectionMatrix(this.camera.combined);
 		batch.setTransformMatrix(transform);
 		//batch.enableBlending();
 //		batch.setBlendFunction(Gdx.gl10.GL_NEAREST, Gdx.gl10.GL_LINEAR);		
 		//batch.setBlendFunction(Gdx.gl10.GL_SRC_ALPHA, Gdx.gl10.GL_ONE_MINUS_SRC_ALPHA);
 		
-
+/*
 		batch.begin();
 		fboPing.begin();				
 			batch.draw(Art.lightMap, -30, -20);
@@ -166,35 +168,72 @@ public class ShaderTest implements Renderable {
 		fboPing.getColorBufferTexture().bind(1);
 		Art.lightMap.getTexture().bind(0);
 		batch.end();
-		
-		batch.begin();
+		*/
+		batch.enableBlending();
+        
+		//batch.begin();
 		{						
-			fboPing.begin();	
+			fboPing.begin();
+			batch.begin();
+			    Gdx.gl.glClearColor(0, 0.5f, 0, 1);
+			    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 				batch.setShader(null);
 				batch.draw(Art.alliedBodyModel.getFrame(0), 120, 200);
 				
 				batch.setShader(horBlur);
 				batch.draw(Art.bulletImage, 200, 200);
+			batch.end();
 			fboPing.end();
+			
+			//batch.end();
+			batch.flush();
+	//		batch.disableBlending();
+			batch.enableBlending();
 			
 			
 			//batch.flush();
 			//batch.enableBlending();
 			//batch.setBlendFunction(Gdx.gl10.GL_NEAREST, Gdx.gl10.GL_LINEAR);
+			//batch.setBlendFunction(Gdx.gl10.GL_SRC_ALPHA, Gdx.gl10.GL_ONE_MINUS_SRC_ALPHA);
 			
 			fboPong.begin();
-			//Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-			//Gdx.gl.glColorMask(true, true, true, true);
-			batch.setShader(vertBlur);
-			batch.draw(Art.bulletImage, 200, 200);
+			batch.begin();
+    			//Gdx.gl.glClearColor(0,0.5f,0, 0);
+                //Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+                
+                batch.enableBlending();
+    			//Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+    			//Gdx.gl.glColorMask(true, true, true, true);
+    //			fboPing.getColorBufferTexture().bind(1);
+    			batch.setShader(null);
+    			//batch.setColor(1, 1, 1, 1f);
+    			batch.draw(fboPing.getColorBufferTexture(), 0, 0);
+    			batch.draw(Art.bulletImage, 300, 200);
+    			batch.setShader(vertBlur);
+    			//batch.enableBlending();
+    			batch.disableBlending();
+    			//batch.draw(Art.bulletImage, 200, 200);
+    			int y = fboPing.getHeight()-(200+Art.bulletImage.getRegionHeight());
+    			batch.draw(fboPing.getColorBufferTexture(), 200, 300, 200, y, Art.bulletImage.getRegionWidth(), Art.bulletImage.getRegionHeight());
+    
+    			//batch.draw(fboPing.getColorBufferTexture(), 0, 0);
+    			batch.setShader(null);
+    			batch.end();
 			fboPong.end();
 			
+			batch.flush();
+			
 		}
-		batch.end();
+		
+
+        //batch.setShader(null);
+        //batch.draw(fboPong.getColorBufferTexture(), 0, 0);
+		//batch.end();
+		
 		
 		batch.setShader(null);
 		batch.begin();		
-		batch.draw(fboPing.getColorBufferTexture(), 0, 0);
+		batch.draw(fboPong.getColorBufferTexture(), 0, 0);
 		batch.end();
 	}
 

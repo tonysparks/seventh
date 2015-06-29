@@ -36,7 +36,7 @@ public class ClientExplosion extends ClientEntity {
 		anim.loop(false);
 		this.soundPlayed = false;	
 		
-		game.addForegroundEffect(new ExplosionEmitter(pos, 4000, 0));
+		game.addForegroundEffect(new ExplosionEmitter(pos, 4000, 0,10));
 		light = game.getLightSystem().newPointLight();
 		light.setColor(0.7f, 0.6f, 0.3f);
 		light.setPos(pos);
