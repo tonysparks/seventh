@@ -292,7 +292,7 @@ public class InGameScreen implements Screen {
 				network.disconnect();
 				app.getConsole().execute("kill_local_server");
 
-				app.setScreen(new MenuScreen(app));
+				app.goToMenuScreen();
 			}
 		});
 		this.dialog.getOptions().addOnButtonClickedListener(new OnButtonClickedListener() {
@@ -421,7 +421,7 @@ public class InGameScreen implements Screen {
 			@Override
 			public void execute(Console console, String... args) {
 				network.disconnect();
-				app.setScreen(new MenuScreen(app));
+				app.goToMenuScreen();
 			}
 		});
 		

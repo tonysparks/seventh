@@ -3,6 +3,8 @@
  */
 package seventh.client.screens;
 
+import com.badlogic.gdx.Input.Keys;
+
 import seventh.client.Inputs;
 import seventh.client.Screen;
 import seventh.client.SeventhGame;
@@ -22,7 +24,16 @@ public class ShaderEditorScreen implements Screen {
 	private ShaderTest test;
 	
 	private Inputs inputs = new Inputs() {
-		
+
+	    @Override
+	    public boolean keyUp(int key) {
+	        if(key==Keys.ESCAPE) {
+	            app.goToMenuScreen();
+	            return true;
+	        }
+	        return super.keyUp(key);
+	    }
+	    
 		@Override
 		public boolean keyTyped(char key) {
 			if(key=='r') {

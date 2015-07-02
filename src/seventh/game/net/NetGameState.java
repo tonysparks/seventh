@@ -10,23 +10,30 @@ import seventh.shared.BitArray;
 import seventh.shared.SeventhConstants;
 
 /**
+ * Full game state
+ * 
  * @author Tony
  *
  */
 public class NetGameState  implements NetMessage {
-	
+	private static final int FL_GAMETYPE = (1<<0);
+	private static final int FL_ENTITIES = (1<<1);
+	private static final int FL_GAMEMAP  = (1<<2);
+	private static final int FL_GAMESTATS= (1<<3);
+	private static final int FL_DESTRUCTABLES = (1<<4);
+    
 	public NetGameTypeInfo gameType;
 	public NetEntity[] entities;	
 	public NetMap map;
 	public NetGameStats stats;
+	public NetMapDestructables mapDestructables;
 	
 	protected byte bits;
 	
 	private BitArray bitArray;
 	private int numberOfInts;
-	/**
-	 * 
-	 */
+	
+	
 	public NetGameState() {
 		bitArray = new BitArray(SeventhConstants.MAX_ENTITIES - 1);
 		entities = new NetEntity[SeventhConstants.MAX_ENTITIES];
@@ -40,12 +47,12 @@ public class NetGameState  implements NetMessage {
 	@Override
 	public void read(IOBuffer buffer) {
 		bits = buffer.get();
-		if( (bits & 1) != 0) {
+		if( (bits & FL_GAMETYPE) != 0) {
 			gameType = new NetGameTypeInfo();
 			gameType.read(buffer);
 		}
 		
-		if( (bits & 2) != 0) {
+		if( (bits & FL_ENTITIES) != 0) {
 			
 			for(int i = 0; i < numberOfInts; i++) {
 				bitArray.setDataElement(i, buffer.getInt());
@@ -60,14 +67,19 @@ public class NetGameState  implements NetMessage {
 
 		}
 		
-		if ( (bits & 4) != 0) {
+		if ( (bits & FL_GAMEMAP) != 0) {
 			map = new NetMap();
 			map.read(buffer);
 		}
 		
-		if( (bits & 8) != 0) {
+		if( (bits & FL_GAMESTATS) != 0) {
 			stats = new NetGameStats();
 			stats.read(buffer);
+		}
+		
+		if( (bits & FL_DESTRUCTABLES) != 0) {
+		    mapDestructables = new NetMapDestructables();
+		    mapDestructables.read(buffer);
 		}
 	}
 	
@@ -78,16 +90,19 @@ public class NetGameState  implements NetMessage {
 	public void write(IOBuffer buffer) {
 		bits = 0;
 		if(gameType != null) {
-			bits |= 1;
+			bits |= FL_GAMETYPE;
 		}
 		if(entities != null && entities.length > 0) {
-			bits |= 2;
+			bits |= FL_ENTITIES;
 		}
 		if(map != null) {
-			bits |= 4;
+			bits |= FL_GAMEMAP;
 		}
 		if(stats != null) {
-			bits |= 8;
+			bits |= FL_GAMESTATS;
+		}
+		if(mapDestructables != null && mapDestructables.length > 0) {
+		    bits |= FL_DESTRUCTABLES;
 		}
 		
 		buffer.put(bits);
@@ -121,6 +136,9 @@ public class NetGameState  implements NetMessage {
 		}
 		if(stats != null) {
 			stats.write(buffer);
+		}
+		if(mapDestructables != null) {
+		    mapDestructables.write(buffer);
 		}
 	}
 }

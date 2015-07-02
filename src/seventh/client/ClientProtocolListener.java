@@ -30,6 +30,8 @@ import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
 import seventh.shared.NetworkProtocol;
 
@@ -122,6 +124,9 @@ public class ClientProtocolListener extends NetworkProtocol {
 	@Override
 	public void onDisconnected(Connection conn) {			
 		Cons.println("Client disconnected");
+		if(this.handler != null) {
+		    this.handler.onDisconnect(conn);
+		}
 	}
 	
 	/*
@@ -171,6 +176,12 @@ public class ClientProtocolListener extends NetworkProtocol {
 		}
 		else if(message instanceof BombDisarmedMessage) {
 			this.handler.bombDisarmed(conn, (BombDisarmedMessage)message);
+		}
+		else if(message instanceof TileRemovedMessage) {
+		    this.handler.tileRemoved(conn, (TileRemovedMessage)message);
+		}
+		else if(message instanceof TilesRemovedMessage) {
+		    this.handler.tilesRemoved(conn, (TilesRemovedMessage)message);
 		}
 		/* None game messages */
 		

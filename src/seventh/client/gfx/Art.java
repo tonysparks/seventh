@@ -296,10 +296,10 @@ public class Art {
 		bullet = loadImage("./seventh/gfx/bullet.png");
 		bulletImage = loadImage("./seventh/gfx/weapons/bullet.png");
 		
-//		tankTracks = TextureUtil.splitImage(
-//							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
 		tankTracks = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 7,18,100,204), 1, 1);		
+							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
+//		tankTracks = TextureUtil.splitImage(
+//				TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 7,18,100,204), 1, 1);		
 		tankTurret = TextureUtil.splitImage( 
 							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_turret.png"), 0, 0, 108, 175), 1, 1)[0];
 		

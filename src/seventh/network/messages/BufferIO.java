@@ -64,6 +64,9 @@ public class BufferIO {
 	
 	public static final byte AI_COMMAND = 28;
 	
+	public static final byte TILE_REMOVED = 29;
+	public static final byte TILES_REMOVED= 30;
+	
 	/**
 	 * The Seventh {@link NetMessageFactory} implementation
 	 * 
@@ -136,8 +139,11 @@ public class BufferIO {
 				case RCON_TOKEN_MESSAGE: message = new RconTokenMessage();
 					break;
 				case AI_COMMAND: message = new AICommandMessage();
-					break;
-					
+					break;				
+				case TILE_REMOVED: message = new TileRemovedMessage();
+				    break;
+				case TILES_REMOVED: message = new TilesRemovedMessage();
+				    break;
 				default: throw new IllegalArgumentException("Unknown type: " + type);
 			}
 			

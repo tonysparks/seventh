@@ -422,6 +422,8 @@ public abstract interface Map extends Renderable, Debugable {
 	 * @return
 	 */
 	public abstract Vector2f worldToTile( int x, int y);
+	public abstract int worldToTileX(int x);
+	public abstract int worldToTileY(int y);
 	
 	/**
 	 * Convert tile coordinates to world coordinates
@@ -486,5 +488,29 @@ public abstract interface Map extends Renderable, Debugable {
 	 * @param mask
 	 */
 	public abstract void setMask(List<Tile> tiles, int mask);
+	
+	/**
+	 * Removes a destructable tile at the supplied tile index.
+	 * 
+	 * @param tileX
+	 * @param tileY
+	 */
+	public abstract boolean removeDestructableTileAt(int tileX, int tileY);
+	
+	/**
+	 * Removes a destructable tile at the supplied world coordinates
+	 * 
+	 * @param worldX
+	 * @param worldY
+	 */
+	public abstract boolean removeDestructableTileAtWorld(int worldX, int worldY);
+	
+	
+	/**
+	 * Returns a list of tile indexes that have been removed.
+	 * @return Returns a list of tile indexes that have been removed.
+	 */
+	public abstract List<Tile> getRemovedTiles();
+	public abstract boolean removeDestructableTilesAt(int[] tilePositions);
 }
 

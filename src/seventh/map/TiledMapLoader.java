@@ -114,12 +114,14 @@ public class TiledMapLoader implements MapLoader {
 			boolean isForeground = false;
 			boolean isProperty = false;
 			boolean isSurfaceTypes = false;
+			boolean isDestructable = false;
 			
 			int heightMask = 0;
 			if ( layer.has(LeoString.valueOf("properties"))) {
 				LeoMap properties = layer.getByString("properties").as();			
 				isCollidable = properties.getString("collidable").equals("true");
 				isForeground = properties.getString("foreground").equals("true");
+				isDestructable = properties.getString("destructable").equals("true");
 				
 				if(properties.containsKeyByString("heightMask")) {
 					String strMask = properties.getString("heightMask");
@@ -141,7 +143,7 @@ public class TiledMapLoader implements MapLoader {
 				continue;
 			}
 			
-			Layer mapLayer = new Layer(isCollidable, isForeground, isProperty, index, heightMask);
+			Layer mapLayer = new Layer(isCollidable, isForeground, isDestructable, isProperty, index, heightMask);
 			mapLayers.add(mapLayer);
 			
 			if(!isForeground) {

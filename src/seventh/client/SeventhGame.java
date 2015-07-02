@@ -91,6 +91,7 @@ public class SeventhGame implements ApplicationListener {
 	private Stack<Screen> screenStack;
 	
 	private UserInterfaceManager uiManager;
+	private MenuScreen menuScreen;
 	
 	private static final float TICK_RATE = 1.0f / 30.0f;
 	private static final long DELTA_TIME = 1000 / 30;
@@ -119,7 +120,11 @@ public class SeventhGame implements ApplicationListener {
 		this.sm = new StateMachine<Screen>();										
 		this.theme = new Theme();
 				
-		setupCommand(Cons.getImpl());		
+		setupCommand(Cons.getImpl());
+		
+		// Can't set this up here because the 
+		// Gdx context hasn't been created yet
+//		this.menuScreen = new MenuScreen(this);
 	}
 	
 	private void setupCommand(Console console) {
@@ -315,9 +320,26 @@ public class SeventhGame implements ApplicationListener {
 		
 		initControllers();		
 		videoReload();		
-		setScreen(new MenuScreen(this));
+		
+		this.menuScreen = new MenuScreen(this);
+		goToMenuScreen();
 	}
 
+	/**
+     * @return the menuScreen
+     */
+    public MenuScreen getMenuScreen() {
+        return menuScreen;
+    }
+    
+    
+    /**
+     * Navigates to the {@link MenuScreen}
+     */
+    public void goToMenuScreen() {
+        setScreen(menuScreen);
+    }
+	
 	private void initControllers() {
 		Cons.println("Detecting controllers...");
 		for(Controller control : Controllers.getControllers()) {

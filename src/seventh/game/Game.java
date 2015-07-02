@@ -31,11 +31,13 @@ import seventh.game.events.RoundStartedListener;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
 import seventh.game.events.SoundEventPool;
+import seventh.game.events.TileRemovedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameUpdate;
+import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
@@ -968,6 +970,13 @@ public class Game implements GameInfo, Debugable {
 		this.vehicles.clear();
 	}
 	
+	public void removeTileAtWorld(int x, int y) {
+	    if(map.removeDestructableTileAtWorld(x, y)) {
+	        int tileX = map.worldToTileX(x);
+	        int tileY = map.worldToTileY(y);
+	        this.dispatcher.queueEvent(new TileRemovedEvent(this, tileX, tileY));
+	    }
+	}
 	
 	/**
 	 * Spawns a new {@link Tank}
@@ -1360,7 +1369,25 @@ public class Game implements GameInfo, Debugable {
 		gameState.gameType = this.gameType.getNetGameTypeInfo();
 		gameState.map = this.gameMap.getNetMap();
 						
-		gameState.stats = getNetGameStats();						
+		gameState.stats = getNetGameStats();	
+		
+		List<Tile> removedTiles = this.map.getRemovedTiles();
+		if(!removedTiles.isEmpty()) {
+		    int[] tiles = new int[removedTiles.size() * 2];
+		    if(gameState.mapDestructables==null) {
+		        gameState.mapDestructables = new NetMapDestructables();
+		    }
+		    
+		    int tileIndex = 0;
+		    for(int i = 0; i < removedTiles.size(); i++, tileIndex += 2) {
+		        Tile tile = removedTiles.get(i);
+		        tiles[tileIndex + 0] = tile.getXIndex();
+		        tiles[tileIndex + 1] = tile.getYIndex();
+		    }
+		    
+		    gameState.mapDestructables.length = tiles.length;
+		    gameState.mapDestructables.tiles = tiles;
+		}
 		return gameState;
 	}
 	
