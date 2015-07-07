@@ -27,7 +27,6 @@ public class CameraController implements Updatable {
 
     private static final Vector2f GAME_SPEED = new Vector2f(130, 130);
     private static final Vector2f FREEFORM_SPEED = new Vector2f(330, 330);
-    private static final Vector2f FAST_FREEFORM_SPEED = new Vector2f(630, 630);
     
     private static final int freeformSpeed=120, fastFreeformSpeed=250;
     
@@ -46,7 +45,7 @@ public class CameraController implements Updatable {
 	
 	private Rectangle cameraShakeBounds;
 	
-	private boolean isCameraRoaming;
+	private boolean isCameraRoaming, isFastCamera;
 	private int previousKeys;
 	
 	private ClientGame game;
@@ -85,12 +84,6 @@ public class CameraController implements Updatable {
 		camera.setMovementSpeed(FREEFORM_SPEED);
 	}
 
-	/**
-     * Sets the camera speed to fast free form mode
-     */
-    private void setFastFreeformCameraSpeed() {
-        camera.setMovementSpeed(FAST_FREEFORM_SPEED);
-    }
 	
 	/**
 	 * Shake the camera relative to the force of 'sourcePosition'.
@@ -162,12 +155,13 @@ public class CameraController implements Updatable {
 
 		if(Keys.SPRINT.isDown(keys)) {
 		    if(isCameraRoaming()) {
-		        setFastFreeformCameraSpeed();
+//		        setFastFreeformCameraSpeed();
+		    	isFastCamera = true;
 		    }
 		}
 		else {
 		    if(isCameraRoaming()) {
-		        setFreeformCameraSpeed();
+		        isFastCamera = false;
 		    }
 		}
 		
@@ -211,7 +205,7 @@ public class CameraController implements Updatable {
 	 * @param timeStep
 	 */
 	private void updateCameraForRoamingMovements(TimeStep timeStep) {
-		final int movementSpeed = freeformSpeed;
+		final int movementSpeed = isFastCamera ? fastFreeformSpeed : freeformSpeed;
 		if(playerVelocity.lengthSquared() > 0) {
 			Vector2f pos = cameraDest;		
 			Rectangle bounds = new Rectangle(camera.getViewPort());

@@ -87,7 +87,9 @@ public class ClientTank extends ClientVehicle {
 		
 		if(netTank.operatorId > 0) {
 			ClientPlayer clientPlayer = game.getPlayers().getPlayer(netTank.operatorId);
-			setOperator(clientPlayer.getEntity());
+			if(clientPlayer!=null) {
+				setOperator(clientPlayer.getEntity());
+			}
 		}
 		else {
 			setOperator(null);

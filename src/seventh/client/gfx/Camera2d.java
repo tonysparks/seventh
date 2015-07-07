@@ -17,6 +17,8 @@ import java.util.Stack;
 
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.DebugDraw;
+import seventh.shared.EaseInInterpolation;
 import seventh.shared.TimeStep;
 
 /**
@@ -41,10 +43,10 @@ public class Camera2d implements Camera {
 	private float shakeIntensity;
 	private float zoom;
 	
-	private Vector2f vShakeVelocity = new Vector2f();
-	private Vector2f renderPosition = new Vector2f();
+	private Vector2f vShakeVelocity;
+	private Vector2f renderPosition;
 	
-	private Random rand = new Random();		
+	private Random rand;
 	private Stack<Vector2f> pathToFollow;
 	
 	/*
@@ -57,6 +59,8 @@ public class Camera2d implements Camera {
 	private Vector2f vMovementSpeed;
 	
 	private Vector2f worldBounds;	
+	
+	private EaseInInterpolation xEaseIn, yEaseIn;
 	
 	/**
 	 * Constructs a new {@link Camera}
@@ -87,6 +91,14 @@ public class Camera2d implements Camera {
 		this.originalViewport = new Rectangle();
 		this.viewport 		  = new Rectangle();		
 				
+		this.vShakeVelocity = new Vector2f();
+		this.renderPosition = new Vector2f();
+		
+		this.rand = new Random();		
+		
+		this.xEaseIn = new EaseInInterpolation();
+		this.yEaseIn = new EaseInInterpolation();
+		
 		load();
 	}	
 
@@ -212,6 +224,9 @@ public class Camera2d implements Camera {
 	public void moveTo(Vector2f dest) {
 		this.destination.x = Math.abs( dest.x - this.screenCoord.x );
 		this.destination.y = Math.abs( dest.y - this.screenCoord.y );
+		
+		this.xEaseIn.reset(this.position.x, this.destination.x, (long)(this.vMovementSpeed.x * Math.abs(this.position.x-this.destination.x)));
+		this.yEaseIn.reset(this.position.y, this.destination.y, (long)(this.vMovementSpeed.y * Math.abs(this.position.y-this.destination.y)));
 	}
 
 	/* (non-Javadoc)
@@ -313,35 +328,53 @@ public class Camera2d implements Camera {
 			/* Else move to our destination (if there is one) */
 			vNextPosition = this.destination;
 		}
-										
-		this.vDelta.zeroOut();
-		Vector2fSubtract(vNextPosition, vPosition, this.vDelta);
-		if(Vector2f.Vector2fLengthSq(vDelta) > 0.5f) {	
-			this.vVelocity.zeroOut();
-			Vector2fCopy(this.vDelta, this.vVelocity);
-			Vector2fNormalize(this.vVelocity, this.vVelocity);
-									
-			float friction = 1.0f;
-			if(isShaking()) {
-				Vector2fCopy(SHAKE_SPEED, this.vSpeed );
-			}
-			else {
-				Vector2fCopy(this.vMovementSpeed, this.vSpeed );	
-			}
-			Vector2fMult(this.vSpeed, friction * dt, this.vSpeed);
-			Vector2fMult(this.vVelocity, this.vSpeed, this.vVelocity);
+		
+		boolean useEase = false;
+		
+		if(useEase) {
+			this.xEaseIn.update(timeStep);
+			this.yEaseIn.update(timeStep);
 			
-			/* If the velocity for this frame is greater than our destination, 
-			 * clamp it.
-			 */
-			if ( Vector2fGreaterOrEq(this.vVelocity, this.vDelta) ) {
+			DebugDraw.drawString("[" + xEaseIn.getValue() + "," + yEaseIn.getValue() +"]", 10, 200, 0xff00ff00);
+			
+			this.vDelta.zeroOut();
+			Vector2fSubtract(vNextPosition, vPosition, this.vDelta);
+			if(Vector2f.Vector2fLengthSq(vDelta) > 0.5f) {	
+			
+				this.vVelocity.set(this.xEaseIn.getValue(), this.yEaseIn.getValue());
+				setPosition(this.vVelocity);
+			}
+		}
+		else {							
+			this.vDelta.zeroOut();
+			Vector2fSubtract(vNextPosition, vPosition, this.vDelta);
+			if(Vector2f.Vector2fLengthSq(vDelta) > 0.5f) {	
+				this.vVelocity.zeroOut();
 				Vector2fCopy(this.vDelta, this.vVelocity);
+				Vector2fNormalize(this.vVelocity, this.vVelocity);
+										
+				float friction = 1.0f;
+				if(isShaking()) {
+					Vector2fCopy(SHAKE_SPEED, this.vSpeed );
+				}
+				else {
+					Vector2fCopy(this.vMovementSpeed, this.vSpeed );	
+				}
+				Vector2fMult(this.vSpeed, friction * dt, this.vSpeed);
+				Vector2fMult(this.vVelocity, this.vSpeed, this.vVelocity);
+				
+				/* If the velocity for this frame is greater than our destination, 
+				 * clamp it.
+				 */
+				if ( Vector2fGreaterOrEq(this.vVelocity, this.vDelta) ) {
+					Vector2fCopy(this.vDelta, this.vVelocity);
+				}
+				
+				// Store the updated position 
+				Vector2fAdd(vPosition, this.vVelocity, this.vVelocity);
+							
+				setPosition(this.vVelocity);
 			}
-			
-			// Store the updated position 
-			Vector2fAdd(vPosition, this.vVelocity, this.vVelocity);
-						
-			setPosition(this.vVelocity);
 		}
 		// shake camera if needed
 		checkShake(timeStep);

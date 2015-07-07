@@ -15,8 +15,14 @@ public class EaseInInterpolation implements Updatable {
 	
 	private long totalTime;
 	private long remainingTime;
+
+	public EaseInInterpolation() {		
+	}
+	
 	/**
-	 * 
+	 * @param from
+	 * @param to
+	 * @param time
 	 */
 	public EaseInInterpolation(float from, float to, long time) {
 		reset(from, to, time);
@@ -30,7 +36,7 @@ public class EaseInInterpolation implements Updatable {
 	 * @param time
 	 */
 	public void reset(float from, float to, long time) {
-		if(time > 0) {
+		if(time > 0) {						
 			this.value = from;
 			this.target = to;
 			this.speed = 0f;
@@ -47,14 +53,16 @@ public class EaseInInterpolation implements Updatable {
 	@Override
 	public void update(TimeStep timeStep) {
 		this.remainingTime -= timeStep.getDeltaTime();
-		if(this.remainingTime < this.totalTime/2) {
-			this.speed -= this.acceleration * timeStep.asFraction();
+		if(this.remainingTime > 0) {
+			if(this.remainingTime < this.totalTime/2) {
+				this.speed -= this.acceleration * timeStep.asFraction();
+			}
+			else {
+				this.speed += this.acceleration * timeStep.asFraction();
+			}
+			
+			this.value += this.speed * timeStep.asFraction();
 		}
-		else {
-			this.speed += this.acceleration * timeStep.asFraction();
-		}
-		
-		this.value += this.speed * timeStep.asFraction();
 	}
 	
 	/**
