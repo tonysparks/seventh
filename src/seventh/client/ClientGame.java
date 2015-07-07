@@ -33,6 +33,7 @@ import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetGameUpdate;
+import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
@@ -55,6 +56,8 @@ import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
 import seventh.shared.SeventhConstants;
@@ -809,6 +812,10 @@ public class ClientGame {
 			}
 		}
 		
+		NetMapDestructables destructables = gs.mapDestructables;
+		if(destructables != null) {
+	        this.map.removeDestructableTilesAt(destructables.tiles);
+		}
 	}
 	
 	public void applyGameUpdate(GameUpdateMessage msg) {
@@ -1245,4 +1252,13 @@ public class ClientGame {
 	public void bombExploded(BombExplodedMessage msg) {		
 		hud.postMessage("A bomb has been destroyed!");
 	}
+	
+	public void removeTile(TileRemovedMessage msg) {
+	    map.removeDestructableTileAt(msg.x, msg.y);
+	}
+	
+	public void removeTiles(TilesRemovedMessage msg) {
+	    map.removeDestructableTilesAt(msg.tiles);
+	}
 }
+ 
