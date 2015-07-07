@@ -18,6 +18,7 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.server.GameServer.GameServerSettings;
 import seventh.shared.MapList;
+import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.Checkbox;
@@ -99,7 +100,7 @@ public class ServerSetupScreen implements Screen {
 		
 		this.gameSettings = new GameServerSettings();
 		this.gameSettings.currentMap = mapListings.isEmpty() ? null : this.mapListings.get(0);
-		this.gameSettings.maxPlayers = 8;
+		this.gameSettings.maxPlayers = SeventhConstants.MAX_PLAYERS;
 		this.gameSettings.gameType = GameType.Type.TDM;
 		
 		this.gameSettings.maxScore = 50;

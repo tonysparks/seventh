@@ -8,13 +8,11 @@ import seventh.ai.basic.PathPlanner;
 import seventh.ai.basic.SightSensor;
 import seventh.ai.basic.memory.SightMemory.SightMemoryRecord;
 import seventh.game.Entity;
-import seventh.game.PlayerEntity;
-import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 /**
- * Gives the entity a path to move about
+ * Follows the supplied {@link Entity}.
  * 
  * @author Tony
  *
@@ -85,19 +83,6 @@ public class FollowEntityAction extends AdapterAction {
 		return !this.followMe.isAlive() || isFinished;
 	}
 	
-	/**
-	 * Determine if we should melee the enemy
-	 * @param ent
-	 * @return
-	 */
-	protected boolean shouldMelee(PlayerEntity bot, Entity followed) {
-		Weapon weapon = bot.getInventory().currentItem();
-		if(weapon != null) {
-			return weapon.getBulletsInClip() == 0;
-		}
-		
-		return false;
-	}
 
 	/* (non-Javadoc)
 	 * @see palisma.ai.Action#update(palisma.ai.Brain, leola.live.TimeStep)
@@ -114,21 +99,13 @@ public class FollowEntityAction extends AdapterAction {
 				Vector2f newPosition = mem.getLastSeenAt();
 				Vector2f start = brain.getEntityOwner().getPos();
 				
-				if(shouldMelee(brain.getEntityOwner(), followMe)) {
-					if(Vector2f.Vector2fDistanceSq(start, newPosition) > 1_000) {
-						feeder.findPath(start, newPosition);								
-					}
-				}
-				else if(Vector2f.Vector2fDistanceSq(start, newPosition) > 10_000) {
-					//if ( Vector2f.Vector2fDistanceSq(newPosition, previousPosition) > 1500 ) 
-					{					
-						feeder.findPath(start, newPosition);								
-					}
+				// if the entity we are following is a certain distance away,
+				// recalculate the path to it
+			    if(Vector2f.Vector2fDistanceSq(start, newPosition) > 10_000) {
+					feeder.findPath(start, newPosition);								
 				}
 				else {
-					/* stop the agent */				
 					feeder.clearPath();	
-					brain.getMotion().scanArea();
 				}
 				
 				previousPosition.set(newPosition);

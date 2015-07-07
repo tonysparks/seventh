@@ -48,7 +48,7 @@ public class Grenade extends Bullet {
 			
 			@Override
 			public void onKill(Entity entity, Entity killer) {								
-				game.newBigExplosion(getCenterPos(), owner, splashWidth, maxSpread, damage);
+			    game.newBigExplosion(getCenterPos(), owner, splashWidth, maxSpread, damage);
 			}
 		};
 		

@@ -144,8 +144,8 @@ public class Brain implements Debugable {
 			
 			this.targetingSystem.update(timeStep);
 			
-			debugDraw();
-			debugDrawPathPlanner();
+			//debugDraw();
+			//debugDrawPathPlanner();
 		}		
 	}
 	
