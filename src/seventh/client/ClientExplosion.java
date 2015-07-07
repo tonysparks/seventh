@@ -91,9 +91,9 @@ public class ClientExplosion extends ClientEntity {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {
-		Vector2f cameraPos = camera.getPosition();
-		int x = (int)(pos.x - cameraPos.x);
-		int y = (int)(pos.y - cameraPos.y);
+//		Vector2f cameraPos = camera.getPosition();
+//		int x = (int)(pos.x - cameraPos.x);
+//		int y = (int)(pos.y - cameraPos.y);
 //		
 //		canvas.drawImage(anim.getCurrentImage(), x-bounds.width/4, y-bounds.height/4, 0x3fffffff);
 		//canvas.fillRect(x-bounds.width/2, y-bounds.height/2, this.bounds.width, this.bounds.height, 0x1fff0000);

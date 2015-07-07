@@ -42,16 +42,23 @@ public class Layer {
 	private boolean isPropertyLayer;
 	
 	
+	/**
+	 * If this layer can be destroyed
+	 */
+	private boolean isDestructable;
+	
+	
 	private int index;
 	private int heightMask;
 	
 	/**
 	 * Constructs a {@link Layer}.
 	 */
-	public Layer(boolean collidable, boolean isForeground, boolean isLightLayer, int index, int heightMask) {
+	public Layer(boolean collidable, boolean isForeground, boolean isDestructable, boolean isLightLayer, int index, int heightMask) {
 		this.layer = new ArrayList<List<Tile>>();
 		this.canCollide = collidable;
 		this.isForeground = isForeground;
+		this.isDestructable = isDestructable;
 		this.isLightLayer = isLightLayer;
 		this.isPropertyLayer = isLightLayer || collidable;
 		this.index = index;
@@ -102,6 +109,13 @@ public class Layer {
 	public boolean isForeground() {
 		return isForeground;
 	}
+	
+	/**
+     * @return the isDestructable
+     */
+    public boolean isDestructable() {
+        return isDestructable;
+    }
 	
 	/**
 	 * @return the isLightLayer

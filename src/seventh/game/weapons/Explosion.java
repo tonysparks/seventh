@@ -23,6 +23,7 @@ public class Explosion extends Entity {
 	private long explositionTime;
 	
 	private Rectangle center;
+	private boolean checkedDestructableTiles;
 	
 	/**
 	 * @param position
@@ -46,6 +47,7 @@ public class Explosion extends Entity {
 		this.owner = owner;
 		
 		this.explositionTime = 550;
+		this.checkedDestructableTiles = false;
 		
 		this.netEntity = new NetExplosion();
 				
@@ -92,7 +94,13 @@ public class Explosion extends Entity {
 	@Override
 	public boolean update(TimeStep timeStep) {
 		super.update(timeStep);
-				
+		
+		if(!this.checkedDestructableTiles) {
+		    Vector2f center = getPos();
+		    game.removeTileAtWorld((int)center.x, (int)center.y);
+		    this.checkedDestructableTiles = true;
+		}
+		
 		game.doesTouchPlayers(this);
 		
 		explositionTime -= timeStep.getDeltaTime();

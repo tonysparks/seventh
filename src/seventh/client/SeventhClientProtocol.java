@@ -12,7 +12,6 @@ import java.io.RandomAccessFile;
 import leola.vm.Leola;
 import leola.vm.types.LeoMap;
 import seventh.client.screens.InGameScreen;
-import seventh.client.screens.MenuScreen;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetMap;
 import seventh.map.Map;
@@ -38,6 +37,8 @@ import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesRemovedMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Cons;
 import seventh.shared.Scripting;
@@ -143,7 +144,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 				
 			} catch (Exception e) {
 				Cons.println("*** Unable load the game state: " + e);
-				app.setScreen(new MenuScreen(app));
+				app.goToMenuScreen();
 			}
 		}
 	}
@@ -168,6 +169,18 @@ public class SeventhClientProtocol implements ClientProtocol {
 				Cons.println("*** ERROR -> Loading " + propertiesFile.getName() + ":" + e);
 			}
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientProtocol#onDisconnect(harenet.api.Connection)
+	 */
+	@Override
+	public void onDisconnect(Connection conn) {
+	    if(game!=null) {
+	        game.destroy();
+	    }
+	    
+	    app.goToMenuScreen();
 	}
 	
 	/* (non-Javadoc)
@@ -353,6 +366,27 @@ public class SeventhClientProtocol implements ClientProtocol {
 		if(game!=null) {
 			game.bombExploded(msg);
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientProtocol#tileRemoved(harenet.api.Connection, seventh.network.messages.TileRemovedMessage)
+	 */
+	@Override
+	public void tileRemoved(Connection conn, TileRemovedMessage msg) {
+	    if(game!=null) {
+	        game.removeTile(msg);
+	    }
+	    
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientProtocol#tilesRemoved(harenet.api.Connection, seventh.network.messages.TilesRemovedMessage)
+	 */
+	@Override
+	public void tilesRemoved(Connection conn, TilesRemovedMessage msg) {
+	    if(game!=null) {
+            game.removeTiles(msg);
+        }
 	}
 	
 	/* (non-Javadoc)

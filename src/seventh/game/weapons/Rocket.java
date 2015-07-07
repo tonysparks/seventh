@@ -59,6 +59,11 @@ public class Rocket extends Bullet {
 	 */
 	@Override
 	protected void emitImpactSound(int x, int y) {
+	    // Hack, piggie back off of this code to destroy
+	    // any destructable terrain at these coordinates.
+	    // we only emit an impact sound when we hit terrain,
+	    // so this is safe to put here
+	    game.removeTileAtWorld(x, y);
 	}
 		
 	/* (non-Javadoc)

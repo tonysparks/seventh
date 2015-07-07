@@ -24,6 +24,8 @@ import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesRemovedMessage;
 
 
 
@@ -35,6 +37,13 @@ import seventh.network.messages.TextMessage;
  */
 public interface ClientProtocol {
 
+    /**
+     * The client has been disconnected from the server
+     * 
+     * @param conn
+     */
+    public void onDisconnect(Connection conn);
+    
 	/**
 	 * The server has accepted our connection request.
 	 * 
@@ -176,6 +185,22 @@ public interface ClientProtocol {
 	 * @param msg
 	 */
 	public void bombExploded(Connection conn, BombExplodedMessage msg);
+	
+	/**
+	 * A tile has been removed from the world
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void tileRemoved(Connection conn, TileRemovedMessage msg);
+	
+	/**
+	 * A set of tiles have been removed from the world
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void tilesRemoved(Connection conn, TilesRemovedMessage msg);
 	
 	/**
 	 * A remote control message (response) from the server

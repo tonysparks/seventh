@@ -62,8 +62,14 @@ public class OrthoMap implements Map {
 	/**
 	 * Layers
 	 */
-	private Layer[] backgroundLayers, foregroundLayers, collidableLayers;
-
+	private Layer[] backgroundLayers, foregroundLayers, collidableLayers, destructableLayer;
+	
+	/**
+	 * original destructable layer; used for comparison to get delta
+	 */
+	private boolean[][] originalLayer;
+	private List<Tile> destroyedTiles;
+	
 	/**
 	 * The current frames viewport
 	 */
@@ -87,6 +93,7 @@ public class OrthoMap implements Map {
 	 */
 	public OrthoMap(boolean loadAssets) {
 		this.currentFrameViewport = new Rectangle();
+		this.destroyedTiles = new ArrayList<Tile>();
 		if(loadAssets) {
 			this.shadeTilesLookup = new HashMap<Integer, TextureRegion>();
 		}
@@ -502,7 +509,10 @@ public class OrthoMap implements Map {
 		this.maxY = 0;
 		
 		this.tileHeight = 0;
-		this.tileWidth = 0;						
+		this.tileWidth = 0;
+		
+		this.destroyedTiles.clear();
+		this.destructableLayer = null;
 	}
 
 	/* (non-Javadoc)
@@ -648,6 +658,7 @@ public class OrthoMap implements Map {
 		destroy();
 
 		List<Layer> collidableLayers = new ArrayList<Layer>();
+		List<Layer> destructableLayers = new ArrayList<Layer>();
 		
 		int bgSize = info.getBackgroundLayers().length;
 		this.backgroundLayers = new Layer[bgSize];	
@@ -656,6 +667,10 @@ public class OrthoMap implements Map {
 			if(this.backgroundLayers[i].collidable()) {
 				collidableLayers.add(this.backgroundLayers[i]);
 			}
+
+            if(this.backgroundLayers[i].isDestructable()) {
+                destructableLayers.add(this.backgroundLayers[i]);
+            }
 		}
 		
 		int fgSize = info.getForegroundLayers().length;
@@ -665,11 +680,18 @@ public class OrthoMap implements Map {
 //			if(this.foregroundLayers[i].collidable()) {
 //				collidableLayers.add(this.foregroundLayers[i]);
 //			}
+			
+			if(this.foregroundLayers[i].isDestructable()) {
+                destructableLayers.add(this.foregroundLayers[i]);
+            }
 		}
 		
 		this.collidableLayers = new Layer[collidableLayers.size()];
 		this.collidableLayers = collidableLayers.toArray(this.collidableLayers);
 
+		this.destructableLayer = new Layer[destructableLayers.size()];
+		this.destructableLayer = destructableLayers.toArray(this.destructableLayer);
+		
 		this.backgroundImage = info.getBackgroundImage();
 		
 		this.maxX = info.getDimensionX();
@@ -683,6 +705,24 @@ public class OrthoMap implements Map {
 		this.mapHeight = (int) worldCoordinates.y;	
 		
 		this.worldBounds = new Rectangle(0, 0, this.mapWidth, this.mapHeight);
+		
+
+        this.originalLayer = new boolean[this.maxY][this.maxX];
+//        this.calculatedLayer = new boolean[this.maxY][this.maxX];
+        
+        for(int i = 0; i < this.destructableLayer.length; i++) {
+            Layer layer = this.destructableLayer[i];
+            for(int y = 0; y < layer.numberOfRows(); y++) {
+                List<Tile> row = layer.getRow(y);
+                for(int x = 0; x < row.size(); x++) {
+                    Tile tile = row.get(x);
+                    if(tile != null) {
+                        this.originalLayer[y][x] = true;
+//                        this.calculatedLayer[y][x] = true;
+                    }
+                }
+            }
+        }
 //		
 //		List<Tile> tiles = getTilesInCircle(200, 400, 250, null);
 //		for(Tile t : tiles) {
@@ -865,7 +905,23 @@ public class OrthoMap implements Map {
 		return (w);
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#worldToTileX(int)
+	 */
+	@Override
+	public int worldToTileX(int x) {
+        int tileOffset_x = 0;//(x % this.tileWidth);
+        return (tileOffset_x + x) / this.tileWidth;
+	}
 
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#worldToTileY(int)
+	 */
+	@Override
+	public int worldToTileY(int y) {
+        int tileOffset_y = 0;//(y % this.tileHeight);
+        return (tileOffset_y + y) / this.tileHeight;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1210,6 +1266,74 @@ public class OrthoMap implements Map {
 		int wy = (tileOffset_y + y) / this.tileHeight;
 		return this.surfaces[wy][wx];
 	}
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#getRemovedTiles()
+	 */
+	@Override
+	public List<Tile> getRemovedTiles() {
+	    return this.destroyedTiles;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#removeDestructableTilesAt(int[])
+	 */
+	@Override
+	public boolean removeDestructableTilesAt(int[] tilePositions) {
+	    if(tilePositions != null) {
+	        for(int i = 0; i < tilePositions.length; i+=2) {
+	            removeDestructableTileAt(tilePositions[i + 0], tilePositions[i + 1]);
+	        }
+	    }
+	    
+	    return true; // TODO
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#removeDestructableTileAt(float, float)
+	 */
+	@Override
+	public boolean removeDestructableTileAtWorld(int worldX, int worldY) {
+	    if(checkBounds(worldX, worldY)) {
+            return false;
+        }
+        
+        int tileOffset_x = 0;
+        int wx = (tileOffset_x + worldX) / this.tileWidth;
+
+        int tileOffset_y = 0;
+        int wy = (tileOffset_y + worldY) / this.tileHeight;
+        return removeDestructableTileAt(wx, wy);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#removeDestructableTileAt(int, int)
+	 */
+	@Override
+	public boolean removeDestructableTileAt(int tileX, int tileY) {
+	    if(checkTileBounds(tileX, tileY)) {
+	        return false;
+	    }
+	    
+	    boolean wasRemoved = false;
+	    for(int i = 0; i < this.destructableLayer.length; i++) {
+            Layer layer = this.destructableLayer[i];
+            Tile tile = layer.getRow(tileY).get(tileX);
+            if(tile!=null) {
+                if(!tile.isDestroyed()) {
+                    this.destroyedTiles.add(tile);
+                    tile.setDestroyed(true);
+                    layer.getRow(tileY).set(tileX, null);
+                    wasRemoved = true;
+                }
+            }
+        }
+	    
+	    return wasRemoved;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see seventh.shared.Debugable#getDebugInformation()

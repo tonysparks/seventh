@@ -122,7 +122,7 @@ public class LoadingScreen implements Screen {
 						}
 						catch(Exception e) {
 							Cons.println("*** Unable to connect to the server :: \n" + e);
-							app.setScreen(new MenuScreen(app));
+							app.goToMenuScreen();
 						}
 					}
 				});

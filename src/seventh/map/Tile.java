@@ -1250,6 +1250,7 @@ public class Tile implements Renderable {
 	
 	private SurfaceType surfaceType;	
 	
+	private boolean isDestroyed;
 	/**
 	 * 
 	 */
@@ -1260,6 +1261,7 @@ public class Tile implements Renderable {
 		this.bounds = new Rectangle();
 		this.collisionMask = CollisionMask.NO_COLLISION;
 		this.surfaceType = SurfaceType.CEMENT;
+		this.isDestroyed = false;
 	}
 	
 	/* (non-Javadoc)
@@ -1397,6 +1399,20 @@ public class Tile implements Renderable {
 	}
 	
 	/**
+     * @return the isDestroyed
+     */
+    public boolean isDestroyed() {
+        return isDestroyed;
+    }
+    
+    /**
+     * @param isDestroyed the isDestroyed to set
+     */
+    public void setDestroyed(boolean isDestroyed) {
+        this.isDestroyed = isDestroyed;
+    }
+    
+	/**
 	 * Sets the index position
 	 * @param x
 	 * @param y
@@ -1481,7 +1497,9 @@ public class Tile implements Renderable {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, long alpha) {		
-		canvas.drawScaledImage(image, renderX, renderY, width, height, 0xFFFFFFFF);
+	    if(!this.isDestroyed) {
+	        canvas.drawScaledImage(image, renderX, renderY, width, height, 0xFFFFFFFF);
+	    }
 	}
 
 }

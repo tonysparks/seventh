@@ -37,6 +37,8 @@ import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
+import seventh.game.events.TileRemovedEvent;
+import seventh.game.events.TileRemovedListener;
 import seventh.game.net.NetGameUpdate;
 import seventh.map.Layer;
 import seventh.map.Map;
@@ -53,6 +55,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
+import seventh.network.messages.TileRemovedMessage;
 import seventh.server.RemoteClients.RemoteClientIterator;
 import seventh.shared.Command;
 import seventh.shared.Cons;
@@ -250,6 +253,17 @@ public class InGameState implements State {
 				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombExplodedMessage());
 			}
 		});
+		
+		this.dispatcher.addEventListener(TileRemovedEvent.class, new TileRemovedListener() {
+            
+            @Override
+            public void onTileRemoved(TileRemovedEvent event) {
+                TileRemovedMessage msg = new TileRemovedMessage();
+                msg.x = event.getTileX();
+                msg.y = event.getTileY();
+                listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+            }
+        });
 	}
 		
 	/**
