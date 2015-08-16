@@ -94,6 +94,6 @@ public class TilesetAtlas {
 			return bestmatch.getTileId(id);
 		}
 		
-		return null;
+		return -1;
 	}
 }

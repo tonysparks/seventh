@@ -49,12 +49,14 @@ public class Tile implements Renderable {
 		WATER,		
 		;
 		
+		private static SurfaceType[] values = values();
+		
 		public static SurfaceType fromId(int id) {
 			if(id < 0 || id >= values().length) {
 				return UNKNOWN;
 			}
 			
-			return values()[id];
+			return values[id];
 		}
 		
 		public static SurfaceType fromString(String type) {
