@@ -1064,6 +1064,30 @@ public class Game implements GameInfo, Debugable {
 		return bombTargets;
 	}
 	
+	
+	/**
+	 * Creates a new {@link HealthPack}
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the {@link HealthPack}
+	 */
+	public HealthPack newHealthPack(float x, float y) {
+	    return newHealthPack(new Vector2f(x,y));
+	}
+	
+	
+	/**
+	 * Creates a new {@link HealthPack}
+	 * 
+	 * @param pos
+	 * @return the {@link HealthPack}
+	 */
+	public HealthPack newHealthPack(Vector2f pos) {
+	    HealthPack pack = new HealthPack(pos, this);
+	    return pack;
+	}
+	
 	/**
 	 * Adds a new {@link LightBulb} to the game
 	 * @param pos
