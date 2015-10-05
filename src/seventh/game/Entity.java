@@ -133,7 +133,8 @@ public abstract class Entity implements Debugable {
 		
 		LIGHT_BULB,		
 		DROPPED_ITEM,
-								
+		HEALTH_PACK,					
+		
 		/* Vehicles */
 		TANK,
 		

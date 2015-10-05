@@ -70,6 +70,7 @@ public enum SoundType {
 	WEAPON_PICKUP,
 	WEAPON_DROPPED,
 	AMMO_PICKUP,
+	HEALTH_PACK_PICKUP,
 	RUFFLE,
 	
 	BOMB_TICK,
@@ -95,12 +96,14 @@ public enum SoundType {
 	MUTE,
 	;
 	
+	private static final SoundType[] values = values();
+	
 	public byte netValue() {
 		return (byte)this.ordinal();
 	}
 	
 	public static SoundType fromNet(byte value) {
-		if(value >= values().length) {
+		if(value >= values.length) {
 			return MUTE;
 		}
 		
@@ -108,7 +111,7 @@ public enum SoundType {
 			return MUTE;
 		}
 		
-		return values()[value];
+		return values[value];
 		
 	}
 }

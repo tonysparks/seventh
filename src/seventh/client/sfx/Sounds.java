@@ -122,6 +122,7 @@ public class Sounds {
 	
 	public static final int[] tankStart = {118};
 	public static final int[] tankMove = {119};
+	public static final int[] healthPackPickup = {120};
 	
 	private static Sound[][] channels = new Sound[32][];
 	private static float volume = 0.1f;
@@ -286,6 +287,7 @@ public class Sounds {
             
             loadSound("./seventh/sfx/tank/movement_start.wav") ,   // 118
             loadSound("./seventh/sfx/tank/movement_loop.wav") ,   // 119
+            loadSound("./seventh/sfx/ammo_pickup.wav") ,   // 120
 		};
 	};
 
@@ -704,6 +706,9 @@ public class Sounds {
 		case BREATH_LITE:
 			playFreeSound(breadthLite, x, y);
 			break;
+		case HEALTH_PACK_PICKUP:
+		    playFreeSound(healthPackPickup, x, y);
+		    break;
 		case MUTE:
 			
 		default:
