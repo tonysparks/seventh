@@ -14,15 +14,13 @@ import seventh.shared.TimeStep;
  */
 public class GuardUntilAction extends AdapterAction {
 	
-	private Leola runtime;
 	private LeoObject isFinished;
 	private LeoObject result;
 	
 	/**
-	 * 
+	 * @param isFinished 
 	 */
-	public GuardUntilAction(Leola runtime, LeoObject isFinished) {
-		this.runtime = runtime;
+	public GuardUntilAction(LeoObject isFinished) {
 		this.isFinished = isFinished;
 	}
 	
@@ -47,7 +45,7 @@ public class GuardUntilAction extends AdapterAction {
 	 */
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
-		result = this.runtime.execute(isFinished, Leola.toLeoObject(timeStep));		
+		result = isFinished.xcall(Leola.toLeoObject(timeStep));		
 	}
 	
 	/* (non-Javadoc)

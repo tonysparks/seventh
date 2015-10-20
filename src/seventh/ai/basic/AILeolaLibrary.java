@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import leola.vm.Leola;
+import leola.vm.exceptions.LeolaRuntimeException;
 import leola.vm.lib.LeolaIgnore;
 import leola.vm.lib.LeolaLibrary;
 import leola.vm.types.LeoArray;
@@ -57,7 +58,7 @@ public class AILeolaLibrary implements LeolaLibrary {
 	 */
 	@LeolaIgnore
 	@Override
-	public void init(Leola leola, LeoNamespace namespace) throws Exception {
+	public void init(Leola leola, LeoNamespace namespace) throws LeolaRuntimeException {
 		this.runtime = leola;
 		this.runtime.putIntoNamespace(this, namespace);
 		
@@ -146,11 +147,11 @@ public class AILeolaLibrary implements LeolaLibrary {
 	}
 	
 	public GuardUntilAction guardUntilAction(LeoObject isFinished) {
-		return new GuardUntilAction(this.runtime, isFinished);
+		return new GuardUntilAction(isFinished);
 	}
 	
 	public SupressFireUntilAction supressFireUntilAction(Vector2f target, LeoObject isFinished) {
-		return new SupressFireUntilAction(this.runtime, isFinished, target);
+		return new SupressFireUntilAction(isFinished, target);
 	}
 	
 	/**

@@ -162,7 +162,7 @@ public class SeventhClientProtocol implements ClientProtocol {
 				Leola runtime = Scripting.newSandboxedRuntime();
 				
 				runtime.loadStatics(SeventhScriptingCommonLibrary.class);
-				runtime.putGlobal("game", game);
+				runtime.put("game", game);
 				runtime.eval(propertiesFile);
 			}
 			catch(Exception e) {

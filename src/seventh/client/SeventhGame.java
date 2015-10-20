@@ -14,6 +14,17 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 
+import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.GL10;
+
+import seventh.ClientMain;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.BlurEffectShader;
 import seventh.client.gfx.Canvas;
@@ -36,16 +47,6 @@ import seventh.shared.Console;
 import seventh.shared.StateMachine;
 import seventh.shared.TimeStep;
 import seventh.ui.UserInterfaceManager;
-
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.GL10;
 
 /**
  * @author Tony
@@ -303,7 +304,10 @@ public class SeventhGame implements ApplicationListener {
 	 * @see com.badlogic.gdx.ApplicationListener#create()
 	 */
 	@Override
-	public void create() {			
+	public void create() {		
+		ClientMain.logSystemSpecs(console);
+		ClientMain.logVideoSpecs(console);
+		
 		Art.load();
 		Sounds.init(config);
 				

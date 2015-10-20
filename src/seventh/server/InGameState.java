@@ -279,7 +279,7 @@ public class InGameState implements State {
 				Leola runtime = Scripting.newSandboxedRuntime();
 					
 				runtime.loadStatics(SeventhScriptingCommonLibrary.class);
-				runtime.putGlobal("game", game);
+				runtime.put("game", game);
 				runtime.eval(propertiesFile);
 				
 				Map map = game.getMap();

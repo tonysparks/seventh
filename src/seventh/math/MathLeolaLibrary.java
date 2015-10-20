@@ -5,6 +5,7 @@
 package seventh.math;
 
 import leola.vm.Leola;
+import leola.vm.exceptions.LeolaRuntimeException;
 import leola.vm.lib.LeolaIgnore;
 import leola.vm.lib.LeolaLibrary;
 import leola.vm.types.LeoNamespace;
@@ -22,7 +23,7 @@ public class MathLeolaLibrary implements LeolaLibrary {
 	 */
 	@Override
 	@LeolaIgnore
-	public void init(Leola leola, LeoNamespace namespace) throws Exception {
+	public void init(Leola leola, LeoNamespace namespace) throws LeolaRuntimeException {
 		this.runtime = leola;
 		this.runtime.putIntoNamespace(this, namespace);
 //		

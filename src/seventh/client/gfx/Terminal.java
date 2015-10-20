@@ -370,7 +370,7 @@ public class Terminal implements Updatable, Logger {
 			String message = msg.toString();
 			String[] split = message.split("\n");
 			for(String n : split) {
-				this.textBuffer.add(n);
+				this.textBuffer.add(n.replace("\t", "   "));
 			}
 		}	
 	}
@@ -394,7 +394,7 @@ public class Terminal implements Updatable, Logger {
 			String[] split = message.split("\n");
 			if(split.length> 0) {
 				for(String n : split) {
-					this.textBuffer.add(n);
+					this.textBuffer.add(n.replace("\t", "   "));
 				}
 			}
 			else {

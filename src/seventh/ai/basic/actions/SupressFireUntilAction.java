@@ -16,7 +16,6 @@ import seventh.shared.TimeStep;
  */
 public class SupressFireUntilAction extends AdapterAction {
 	
-	private Leola runtime;
 	private LeoObject isFinished;
 	private LeoObject result;
 	
@@ -25,8 +24,7 @@ public class SupressFireUntilAction extends AdapterAction {
 	/**
 	 * 
 	 */
-	public SupressFireUntilAction(Leola runtime, LeoObject isFinished, Vector2f target) {
-		this.runtime = runtime;
+	public SupressFireUntilAction(LeoObject isFinished, Vector2f target) {
 		this.isFinished = isFinished;
 		this.target = target;
 	}
@@ -54,7 +52,7 @@ public class SupressFireUntilAction extends AdapterAction {
 	 */
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
-		result = this.runtime.execute(isFinished, Leola.toLeoObject(timeStep));		
+		result = this.isFinished.xcall(Leola.toLeoObject(timeStep));		
 		
 		Locomotion motion = brain.getMotion();
 		if (brain.getEntityOwner().isFacing(target)) {

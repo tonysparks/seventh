@@ -7,14 +7,20 @@ import java.io.File;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import org.lwjgl.opengl.GL11;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.GL10;
+
 import seventh.client.ClientSeventhConfig;
 import seventh.client.SeventhGame;
 import seventh.client.VideoConfig;
 import seventh.shared.Config;
-
-import com.badlogic.gdx.Graphics.DisplayMode;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import seventh.shared.Logger;
+import seventh.shared.PrintStreamLogger;
 
 /**
  * Main entry point for the client game
@@ -73,6 +79,10 @@ public class ClientMain {
 		try {
 			PrintStream out = new PrintStream(new File("./seventh_error.log"));
 			try {
+				Logger logger = new PrintStreamLogger(out);
+				logSystemSpecs(logger);
+				logVideoSpecs(logger);
+				
 				e.printStackTrace(out);
 			}
 			finally {
@@ -108,7 +118,7 @@ public class ClientMain {
 					}
 				}
 			});
-			
+		
 			config = loadConfig();
 			VideoConfig vConfig = config.getVideo();
 			DisplayMode displayMode = findBestDimensions(vConfig);
@@ -142,5 +152,69 @@ public class ClientMain {
 			}
 		}
 	}
+	
+	public static void logVideoSpecs(Logger console) {
+		try {
+			if(Gdx.graphics!=null) {
+				console.println("GL11: " + Gdx.graphics.isGL11Available());
+				console.println("GL20: " + Gdx.graphics.isGL20Available());
+				console.println("OpenGL Version: " + Gdx.gl.glGetString(GL10.GL_VERSION));
+				console.println("OpenGL Vendor: " + Gdx.gl.glGetString(GL10.GL_VENDOR));
+				console.println("Renderer: " + Gdx.gl.glGetString(GL10.GL_RENDERER));
+				console.println("Gdx Version: " + Gdx.app.getVersion());
+				console.println("Is Fullscreen: " + Gdx.graphics.isFullscreen());
+			}
+			else {
+				console.println("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION));
+				console.println("OpenGL Vendor: " + GL11.glGetString(GL11.GL_VENDOR));
+				console.println("Renderer: " + GL11.glGetString(GL11.GL_RENDERER));				
+			}
+		}
+		catch(Throwable t) {
+			console.println("Error retrieving video specifications: " + t);
+		}
+	}
 
+	/**
+	 * Prints out system specifications
+	 * 
+	 * @param console
+	 */
+	public static void logSystemSpecs(Logger console) {
+		Runtime runtime = Runtime.getRuntime();
+		final long MB = 1024 * 1024;
+		console.println("");
+		console.println("Seventh: " + SeventhGame.getVersion());
+		console.println("Available processors (cores): " + runtime.availableProcessors());
+		console.println("Free memory (MiB): " + runtime.freeMemory()/MB);
+		console.println("Max memory (MiB): " + (runtime.maxMemory()==Long.MAX_VALUE ? "no limit" : Long.toString(runtime.maxMemory()/MB)) );
+		console.println("Available for JVM (MiB): " + runtime.totalMemory() / MB);
+		
+		/* Get a list of all filesystem roots on this system */
+	    File[] roots = File.listRoots();
+
+	    /* For each filesystem root, print some info */
+	    for (File root : roots) {
+	      console.println("File system root: " + root.getAbsolutePath());
+	      console.println("\tTotal space (MiB): " + root.getTotalSpace()/MB);
+	      console.println("\tFree space (MiB): " + root.getFreeSpace()/MB);
+	      console.println("\tUsable space (MiB): " + root.getUsableSpace()/MB);
+	    }
+		
+	    
+	    console.println("Java Version: " + System.getProperty("java.version"));
+	    console.println("Java Vendor: " + System.getProperty("java.vendor"));
+	    console.println("Java VM Version: " + System.getProperty("java.vm.version"));
+	    console.println("Java VM Name: " + System.getProperty("java.vm.name"));
+	    console.println("Java Class Version: " + System.getProperty("java.class.version"));
+	    console.println("Java VM Spec. Version: " + System.getProperty("java.vm.specification.version"));
+	    console.println("Java VM Spec. Vendor: " + System.getProperty("java.vm.specification.vendor"));
+	    console.println("Java VM Spec. Name: " + System.getProperty("java.vm.specification.name"));
+	    
+	    console.println("OS: " + System.getProperty("os.name"));
+	    console.println("OS Arch: " + System.getProperty("os.arch"));
+	    console.println("OS Version: " + System.getProperty("os.version"));
+	    console.println("");
+	}
 }
+

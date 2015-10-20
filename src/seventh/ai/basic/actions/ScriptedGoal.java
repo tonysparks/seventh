@@ -18,17 +18,16 @@ import seventh.shared.TimeStep;
 public class ScriptedGoal extends AdapterAction {
 
 	private Goal goal;
-	private Leola runtime;
 	private LeoObject goalFunction;
 	private boolean isFunctionDone;
 	
 	private String name;
 	
 	/**
-	 * 
+	 * @param name
+	 * @param goalFunction
 	 */
-	public ScriptedGoal(Leola runtime, String name, LeoObject goalFunction) {
-		this.runtime = runtime;
+	public ScriptedGoal(String name, LeoObject goalFunction) {
 		this.goalFunction = goalFunction;
 		this.name = name;
 		this.goal = new Goal(name);
@@ -61,7 +60,7 @@ public class ScriptedGoal extends AdapterAction {
 		
 		if(goal.isFinished(brain)) {
 			try {
-				LeoObject result = runtime.execute(goalFunction, Leola.toLeoObject(brain), Leola.toLeoObject(goal), Leola.toLeoObject(goal.getActionResult()));
+				LeoObject result = goalFunction.xcall(Leola.toLeoObject(brain), Leola.toLeoObject(goal), Leola.toLeoObject(goal.getActionResult()));
 				if(!LeoObject.isTrue(result)) {
 					this.isFunctionDone = true;
 				}

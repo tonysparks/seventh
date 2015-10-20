@@ -42,8 +42,8 @@ public class Goals {
 	public Action getScriptedAction(String action) {
 		LeoObject actionFunction  = runtime.get(action);
 		if(LeoObject.isTrue(actionFunction)) {
-			LeoObject gen = this.runtime.execute(actionFunction);			
-			ScriptedGoal goal = new ScriptedGoal(runtime, action, gen );
+			LeoObject gen = actionFunction.call();			
+			ScriptedGoal goal = new ScriptedGoal(action, gen );
 			return goal;
 		}				
 		return new WaitAction(1_000);
