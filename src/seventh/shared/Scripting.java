@@ -23,7 +23,7 @@ public class Scripting {
 	public static Leola newSandboxedRuntime() {		
 		Leola runtime = Args.builder()
 							.setAllowThreadLocals(false)
-							
+							.setIsDebugMode(true)
 							.setBarebones(true)
 							.setSandboxed(true)
 							.newRuntime();
@@ -37,7 +37,10 @@ public class Scripting {
 	 * @return the runtime
 	 */
 	public static Leola newRuntime() {				
-		Leola runtime = Args.builder().setAllowThreadLocals(false).newRuntime();		
+		Leola runtime = Args.builder()
+							.setIsDebugMode(true)
+							.setAllowThreadLocals(false)
+							.newRuntime();		
 		return runtime;
 	}
 

@@ -15,13 +15,14 @@ import seventh.shared.TimeStep;
  */
 public class HealthPack extends Entity {
 
+	private NetEntity netEntity;
+	
     /**
      * @param position
      * @param game
      */
     public HealthPack(Vector2f position, Game game) {
-        super(position, 0, game, Type.HEALTH_PACK);
-        init(game);
+        this(game.getNextPersistantId(), position, game);        
     }
 
     /**
@@ -46,13 +47,20 @@ public class HealthPack extends Entity {
                 }
             }
         };
+        this.bounds.width = 16;
+        this.bounds.height = 16;
+        
+        this.netEntity = new NetEntity();
+        this.netEntity.type = Type.HEALTH_PACK.netValue();      
+        
     }
     /* (non-Javadoc)
      * @see seventh.game.Entity#getNetEntity()
      */
     @Override
     public NetEntity getNetEntity() {
-        return null;
+    	setNetEntity(this.netEntity);
+        return this.netEntity;
     }
 
     /* (non-Javadoc)
@@ -67,7 +75,8 @@ public class HealthPack extends Entity {
      * @see seventh.game.Entity#update(seventh.shared.TimeStep)
      */
     @Override
-    public boolean update(TimeStep timeStep) {
+    public boolean update(TimeStep timeStep) {    	
+    	game.doesTouchPlayers(this);    	
         return true;
     }
 }

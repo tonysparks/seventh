@@ -6,6 +6,7 @@ package seventh.game;
 import static seventh.shared.SeventhConstants.MAX_ENTITIES;
 import static seventh.shared.SeventhConstants.MAX_PERSISTANT_ENTITIES;
 import static seventh.shared.SeventhConstants.MAX_PLAYERS;
+import static seventh.shared.SeventhConstants.MAX_TIMERS;
 import static seventh.shared.SeventhConstants.SPAWN_INVINCEABLILITY_TIME;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Random;
 
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
+import leola.vm.types.LeoObject;
 import seventh.ai.AISystem;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.game.Entity.KilledListener;
@@ -62,6 +64,7 @@ import seventh.shared.Debugable;
 import seventh.shared.SeventhConfig;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 
 /**
  * Represents the current Game Session
@@ -147,6 +150,8 @@ public class Game implements GameInfo, Debugable {
 	private NetGameStats gameStats;
 	private NetGamePartialStats gamePartialStats;
 	
+	private Timers gameTimers;
+	
 	private final float DISTANCE_CHECK;
 	private final int TILE_WIDTH, TILE_HEIGHT;
 	
@@ -180,6 +185,7 @@ public class Game implements GameInfo, Debugable {
 		this.map = gameMap.getMap();
 		
 		this.graph = map.createMapGraph(new NodeData());
+		this.gameTimers = new Timers(MAX_TIMERS);
 		
 		this.entities = new Entity[MAX_ENTITIES];
 		this.playerEntities = new PlayerEntity[MAX_PLAYERS];
@@ -406,6 +412,39 @@ public class Game implements GameInfo, Debugable {
 		return dispatcher;
 	}
 	
+	/**
+	 * @return the gameTimers
+	 */
+	public Timers getGameTimers() {
+		return gameTimers;
+	}
+	
+	/**
+	 * Adds a {@link Timer}
+	 * 
+	 * @param timer
+	 * @return true if the timer was added;false otherwise
+	 */
+	public boolean addGameTimer(Timer timer) {
+		return this.gameTimers.addTimer(timer);
+	}
+	
+	/**
+	 * Adds the {@link LeoObject} callback as the timer function
+	 * @param loop
+	 * @param endTime
+	 * @param function
+	 * @return true if the timer was added;false otherwise
+	 */
+	public boolean addGameTimer(boolean loop, long endTime, final LeoObject function) {
+		return addGameTimer(new Timer(loop, endTime) {			
+			@Override
+			public void onFinish(Timer timer) {
+				function.xcall();
+			}
+		});
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.GameInfo#getLastFramesSoundEvents()
 	 */
@@ -499,7 +538,8 @@ public class Game implements GameInfo, Debugable {
 		}			
 		
 		this.aiSystem.update(timeStep);
-								
+		this.gameTimers.update(timeStep);		
+		
 		GameState gameState = this.gameType.update(this, timeStep);
 		this.time = this.gameType.getRemainingTime();
 		
@@ -1085,6 +1125,7 @@ public class Game implements GameInfo, Debugable {
 	 */
 	public HealthPack newHealthPack(Vector2f pos) {
 	    HealthPack pack = new HealthPack(pos, this);
+	    addEntity(pack);
 	    return pack;
 	}
 	

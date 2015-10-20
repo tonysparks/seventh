@@ -19,6 +19,7 @@ import leola.vm.types.LeoMap;
 import leola.vm.types.LeoNull;
 import leola.vm.types.LeoObject;
 import leola.vm.types.LeoObject.LeoType;
+import leola.vm.types.LeoString;
 import seventh.network.messages.BufferIO.SeventhNetMessageFactory;
 
 /**
@@ -121,7 +122,7 @@ public class Config {
 		
 		LeoObject obj = config;
 		for(int i = 0; i < len; i++) {
-			LeoObject nextObj = obj.getObject(keys[i]);
+			LeoObject nextObj = obj.$index(LeoString.valueOf(keys[i]));			
 			if(LeoObject.isTrue(nextObj)) {
 				obj = nextObj;
 			}
@@ -188,14 +189,14 @@ public class Config {
 		
 		LeoObject obj = config;
 		for(int i = 0; i < len; i++) {
-			LeoObject nextObj = obj.getObject(keys[i]);
+			LeoObject nextObj = obj.$index(LeoString.valueOf(keys[i])); 
 			if(LeoObject.isTrue(nextObj)) {
 				obj = nextObj;
 			}
 			else return false;
 		}
-		
-		obj.setObject(keys[keys.length-1], Leola.toLeoObject(value));
+		obj.$sindex(LeoString.valueOf(keys[keys.length-1]), LeoObject.valueOf(value));
+		//obj.setObject(keys[keys.length-1], Leola.toLeoObject(value));
 		return true;
 	}
 	

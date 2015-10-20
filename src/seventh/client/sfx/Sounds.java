@@ -156,7 +156,7 @@ public class Sounds {
 			loadSound("./seventh/sfx/explosion2.wav") ,   // 18		
 			loadSound("./seventh/sfx/explosion3.wav") ,   // 19		
 			loadSound("./seventh/sfx/empty_fire.wav") ,   // 20
-			loadSound("./seventh/sfx/ammo_pickup.wav") ,   // 21									
+			loadSound("./seventh/sfx/player/ammo_pickup.wav") ,   // 21									
 			loadSound("./seventh/sfx/respawn.wav") ,   // 22
 			loadSound("./seventh/sfx/weapon_switch.wav") ,   // 23
 			loadSound("./seventh/sfx/player/ruffle1.wav"), // 24
@@ -287,7 +287,7 @@ public class Sounds {
             
             loadSound("./seventh/sfx/tank/movement_start.wav") ,   // 118
             loadSound("./seventh/sfx/tank/movement_loop.wav") ,   // 119
-            loadSound("./seventh/sfx/ammo_pickup.wav") ,   // 120
+            loadSound("./seventh/sfx/player/healthpack_pickup.wav") ,   // 120
 		};
 	};
 

@@ -96,7 +96,7 @@ public class Art {
 	
 	public static  TextureRegion[] bloodImages = null;
 	public static  TextureRegion[] gibImages = null;
-	
+		
 	public static  TextureRegion smokeImage = null;
 	
 //	public static  TextureRegion tankImage = loadImage("./seventh/gfx/tank.png");
@@ -126,6 +126,7 @@ public class Art {
 	public static  TextureRegion[] rocketMuzzleFlash = null;
 	public static  TextureRegion[] riskerMuzzleFlash = null;
 	
+	public static  Sprite healthPack = null;
 	public static  Sprite healthIcon = null;
 	public static  Sprite staminaIcon = null;
 	public static  Sprite upArrow = null;
@@ -280,7 +281,7 @@ public class Art {
 		rocketMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/rpg_muzzle_flash.png"), 2, 2);
 		riskerMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/risker_muzzle_flash.png"), 2, 2);
 		
-		
+		healthPack = TextureUtil.resizeImage(loadImage("./seventh/gfx/healthpack.png"), 16, 16);
 		healthIcon = TextureUtil.resizeImage(loadImage("./seventh/gfx/health.bmp"), 12, 12);
 		staminaIcon = TextureUtil.resizeImage(loadImage("./seventh/gfx/stamina.png"), 12, 12);
 		

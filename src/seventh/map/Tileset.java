@@ -6,6 +6,7 @@ package seventh.map;
 
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
+import leola.vm.types.LeoString;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.TextureUtil;
@@ -63,7 +64,9 @@ public class Tileset {
 			String id = Integer.toString(toIndex(tileid));
 			LeoObject p = props.getByString(id);
 			if(LeoObject.isTrue(p)) {
-				LeoObject animation = p.getObject("animation");
+				LeoObject animation = // TODO
+						p.$index(LeoString.valueOf("animation"));
+						// p.getObject("animation");
 				if(LeoObject.isTrue(animation)) {
 					return true;
 				}
@@ -81,7 +84,9 @@ public class Tileset {
 			String id = Integer.toString(toIndex(tileid));
 			LeoObject p = props.getByString(id);
 			if(LeoObject.isTrue(p)) {
-				LeoObject animation = p.getObject("animation");
+				LeoObject animation = //TODO
+						p.$index(LeoString.valueOf("animation"));
+						//p.getObject("animation");
 				if(LeoObject.isTrue(animation)) {
 					TextureRegion tex = Art.loadImage(animation.toString());
 					int rowNum = tex.getRegionHeight() / 32;

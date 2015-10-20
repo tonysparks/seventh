@@ -749,6 +749,10 @@ public class ClientGame {
 				entity = new ClientLightBulb(this, pos);
 				break;
 			}
+			case HEALTH_PACK: {
+				entity = new ClientHealthPack(this, pos);
+				break;
+			}
 			default: {
 				Cons.println("Unknown type of entity: " + type.name());
 			}

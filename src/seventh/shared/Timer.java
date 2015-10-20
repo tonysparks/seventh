@@ -88,6 +88,10 @@ public class Timer implements Updatable {
 		this.update = false;
 	}
 
+	public boolean isExpired() {
+		return isTime && !isLooping();
+	}
+	
 	/**
 	 * @return the isTime
 	 */
