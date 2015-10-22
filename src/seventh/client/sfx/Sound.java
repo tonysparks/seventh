@@ -30,11 +30,13 @@ public class Sound {
 	}
 
 	public void play(float x, float y) {
+		play(x, y, false);
+	}
+	
+	public void play(float x, float y, boolean loop) {
 		SoundSystemConfig.setDefaultFadeDistance(10000f);
-		this.soundSystem.quickPlay(true, soundFile, false, x, y, 0, 
+		this.soundSystem.quickPlay(true, soundFile, loop, x, y, 0, 
 				SoundSystemConfig.ATTENUATION_NONE, 10.0f);				
-                //,0.005f);//SoundSystemConfig.getDefaultRolloff());	
-		// 0.01f
 	}
 	
 	public void stop() {

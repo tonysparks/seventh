@@ -9,7 +9,6 @@ import java.util.List;
 import leola.vm.Leola;
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoObject;
-import leola.vm.types.LeoString;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
 
@@ -46,7 +45,7 @@ public abstract class AbstractGameTypeScript {
 	protected List<Vector2f> loadSpawnPoint(LeoObject config, String teamSpawnPoints) {
 		List<Vector2f> spawnPoints = new ArrayList<Vector2f>();
 		
-		LeoObject scriptSpawns = config.$index(LeoString.valueOf(teamSpawnPoints));
+		LeoObject scriptSpawns = config.getObject(teamSpawnPoints);
 		if(LeoObject.isTrue(scriptSpawns)) {
 			if(!scriptSpawns.isArray()) {
 				Cons.println(teamSpawnPoints + " must be an array");

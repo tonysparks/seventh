@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import leola.vm.types.LeoObject;
 import seventh.client.ClientEntity.OnRemove;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
@@ -21,11 +22,14 @@ import seventh.client.gfx.particle.Effect;
 import seventh.client.gfx.particle.Emitter;
 import seventh.client.gfx.particle.GibEmitter;
 import seventh.client.gfx.particle.RocketTrailEmitter;
+import seventh.client.sfx.Sound;
 import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientBomb;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
 import seventh.game.PlayerEntity.Keys;
+import seventh.game.SoundType;
+import seventh.game.Timers;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
 import seventh.game.net.NetGamePartialStats;
@@ -62,6 +66,7 @@ import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 
 /**
  * The {@link ClientGame} is responsible for rendering the client's view of the game world.  The view
@@ -110,6 +115,7 @@ public class ClientGame {
 	private final Rectangle cacheRect;
 	private final Random random;
 	
+	private final Timers gameTimers;
 
 	private long rconToken;	
 	
@@ -157,6 +163,7 @@ public class ClientGame {
 		this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
 		this.cameraController = new CameraController(this);
 		
+		this.gameTimers = new Timers(SeventhConstants.MAX_TIMERS);
 		
 		this.hud = new Hud(this);
 		this.random = new Random();
@@ -284,6 +291,8 @@ public class ClientGame {
 		zings.checkForBulletZings(timeStep);
 		
 		cameraController.update(timeStep);
+		
+		gameTimers.update(timeStep);
 		
 		map.update(timeStep);		
 		camera.update(timeStep);
@@ -441,6 +450,57 @@ public class ClientGame {
         return entities;
     }
 	
+    /**
+     * Adds a Timer to the client game world.
+     * 
+     * @param timer
+     * @return true if it was added
+     */
+    public boolean addGameTimer(Timer timer) {
+    	return this.gameTimers.addTimer(timer);
+    }
+    
+    /**
+     * Adds a {@link Timer} which will execute the supplied {@link LeoObject}.
+     * 
+     * @param loop
+     * @param endTime
+     * @param function
+     * @return true if it was added
+     */
+    public boolean addGameTimer(boolean loop, long endTime, final LeoObject function) {
+    	return addGameTimer(new Timer(loop, endTime) {
+    		
+    		@Override
+    		public void onFinish(Timer timer) {
+    			function.xcall();
+    		}
+    	});
+    }
+    
+    
+    /**
+     * API for playing a sound
+     * 
+     * @param soundType
+     * @param x
+     * @param y
+     * @return the {@link Sound}
+     */
+    public Sound playSound(SoundType soundType, float x, float y) {
+    	return Sounds.playSound(soundType, x, y);
+    }
+    
+    /**
+     * API for loading a sound
+     * 
+     * @param path
+     * @return the {@link Sound} 
+     */
+    public Sound loadSound(String path) {
+    	return Sounds.loadSound(path);
+    }
+    
 	/**
 	 * @param id
 	 * @return the {@link ClientVehicle} that has the supplied ID, or null

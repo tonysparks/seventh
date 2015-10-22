@@ -122,7 +122,7 @@ public class Config {
 		
 		LeoObject obj = config;
 		for(int i = 0; i < len; i++) {
-			LeoObject nextObj = obj.$index(LeoString.valueOf(keys[i]));			
+			LeoObject nextObj = obj.getObject(LeoString.valueOf(keys[i]));			
 			if(LeoObject.isTrue(nextObj)) {
 				obj = nextObj;
 			}
@@ -189,7 +189,7 @@ public class Config {
 		
 		LeoObject obj = config;
 		for(int i = 0; i < len; i++) {
-			LeoObject nextObj = obj.$index(LeoString.valueOf(keys[i])); 
+			LeoObject nextObj = obj.getObject(keys[i]); 
 			if(LeoObject.isTrue(nextObj)) {
 				obj = nextObj;
 			}

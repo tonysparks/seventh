@@ -64,9 +64,7 @@ public class Tileset {
 			String id = Integer.toString(toIndex(tileid));
 			LeoObject p = props.getByString(id);
 			if(LeoObject.isTrue(p)) {
-				LeoObject animation = // TODO
-						p.$index(LeoString.valueOf("animation"));
-						// p.getObject("animation");
+				LeoObject animation = p.getObject("animation");
 				if(LeoObject.isTrue(animation)) {
 					return true;
 				}
@@ -84,9 +82,7 @@ public class Tileset {
 			String id = Integer.toString(toIndex(tileid));
 			LeoObject p = props.getByString(id);
 			if(LeoObject.isTrue(p)) {
-				LeoObject animation = //TODO
-						p.$index(LeoString.valueOf("animation"));
-						//p.getObject("animation");
+				LeoObject animation = p.getObject("animation");
 				if(LeoObject.isTrue(animation)) {
 					TextureRegion tex = Art.loadImage(animation.toString());
 					int rowNum = tex.getRegionHeight() / 32;
