@@ -4,15 +4,14 @@
  */
 package seventh.map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
-import leola.vm.types.LeoString;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.TextureUtil;
 import seventh.map.Tile.SurfaceType;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * @author Tony
