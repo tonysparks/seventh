@@ -42,6 +42,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		List<Vector2f> alliedSpawnPoints = new ArrayList<>();
 		List<Vector2f> axisSpawnPoints = new ArrayList<Vector2f>();
 		byte defenders = Team.AXIS_TEAM_ID;
+		int minimumObjectivesToComplete = 1;
 		
 		File scriptFile = new File(mapFile + ".obj.leola");
 		if(!scriptFile.exists()) {
@@ -108,11 +109,19 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 				
 				alliedSpawnPoints = loadSpawnPoint(config, "alliedSpawnPoints");
 				axisSpawnPoints = loadSpawnPoint(config, "axisSpawnPoints");
+				if(config.hasObject("minimumObjectivesToComplete")) {
+					minimumObjectivesToComplete = config.getObject("minimumObjectivesToComplete").asInt();
+				}
+				else {
+					minimumObjectivesToComplete = objectives.size();
+				}
 			}
 		}
 		
-		long timeBetweenRounds = 10_000L;
-		GameType gameType = new ObjectiveGameType(objectives, alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime, timeBetweenRounds, defenders);
+		final long timeBetweenRounds = 10_000L;
+		
+		GameType gameType = new ObjectiveGameType(objectives, alliedSpawnPoints, axisSpawnPoints, 
+				minimumObjectivesToComplete, maxScore, matchTime, timeBetweenRounds, defenders);
 		return gameType;
 	}
 }

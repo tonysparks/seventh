@@ -25,7 +25,8 @@ import seventh.shared.TimeStep;
  */
 public class ObjectiveGameType extends AbstractTeamGameType {
 	
-	private int currentRound;		
+	private int currentRound;
+	private int minimumObjectivesToComplete;
 	private List<Objective> outstandingObjectives;
 	private List<Objective> completedObjectives;
 	private long roundDelayTime;
@@ -44,6 +45,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 	public ObjectiveGameType(List<Objective> objectives, 	
 							 List<Vector2f> alliedSpawnPoints,
 							 List<Vector2f> axisSpawnPoints,
+							 int minimumObjectivesToComplete,
 							 int maxScore, 
 							 long roundTime, 
 							 long roundDelayTime,
@@ -55,7 +57,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		this.axisSpawnPoints = axisSpawnPoints;
 		
 		this.outstandingObjectives = objectives;		
-				
+		this.minimumObjectivesToComplete = minimumObjectivesToComplete;		
 		this.currentRound = 0;
 		this.roundDelayTime = roundDelayTime;
 		
@@ -154,7 +156,10 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 			this.outstandingObjectives.removeAll(this.completedObjectives);
 			
 			
-			if(this.outstandingObjectives.isEmpty() && this.completedObjectives.size() > 0) {
+			if(this.completedObjectives.size() >= this.minimumObjectivesToComplete) {
+				endRound(attacker, game);
+			}
+			else if(this.outstandingObjectives.isEmpty() && this.completedObjectives.size() > 0) {
 				endRound(attacker, game);
 			}
 			else if( defender.isTeamDead() && defender.teamSize() > 0) {
