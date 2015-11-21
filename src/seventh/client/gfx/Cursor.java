@@ -9,6 +9,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
+ * Represents the mouse pointer during menu screens, but more importantly acts as the players cursor/reticle in game. 
+ * 
  * @author Tony
  *
  */
@@ -65,6 +67,29 @@ public class Cursor {
 		Gdx.input.setCursorPosition(x,y);
 	}
 	
+	
+	/**
+	 * Clamp the cursor position so that it doesn't
+	 * move outside of the screen
+	 */
+	private void clamp() {
+		if(this.cursorPos.x < 0)  {
+			this.cursorPos.x = 0f;
+		}
+		
+		if(this.cursorPos.y < 0)  {
+			this.cursorPos.y = 0f;
+		}
+		
+		if(this.cursorPos.x > Gdx.graphics.getWidth()) {
+			this.cursorPos.x = Gdx.graphics.getWidth();
+		}
+		
+		if(this.cursorPos.y > Gdx.graphics.getHeight()) {
+			this.cursorPos.y = Gdx.graphics.getHeight();
+		}
+	}
+	
 	/**
 	 * @return the mouseSensitivity
 	 */
@@ -96,12 +121,14 @@ public class Cursor {
 		if(isVisible()) {			
 			float deltaX = this.mouseSensitivity * (this.prevX - x);
 			float deltaY = this.mouseSensitivity * (this.prevY - y);
-			
-			this.cursorPos.x -= deltaX;
+						
+			this.cursorPos.x -= deltaX;			
 			this.cursorPos.y -= deltaY;
-			
+				
 			this.prevX = x;
-			this.prevY = y;						
+			this.prevY = y;			
+			
+			clamp();
 		}
 	}
 	
@@ -117,8 +144,11 @@ public class Cursor {
 		this.prevX = (int)cursorPos.x;
 		this.prevY = (int)cursorPos.y;
 		
+				
 		this.cursorPos.x += deltaX;
 		this.cursorPos.y += deltaY;		
+		
+		clamp();
 	}
 	
 	/**
