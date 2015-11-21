@@ -14,6 +14,8 @@ import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
+import seventh.game.events.RoundEndedEvent;
+import seventh.game.events.RoundStartedEvent;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -25,6 +27,8 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	
 	private List<Vector2f> axisSpawns;
 	private List<Vector2f> alliedSpawns;
+	private EventDispatcher dispatcher;
+	
 	/**
 	 * @param maxKills
 	 * @param matchTime
@@ -40,7 +44,8 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	 */
 	@Override
 	public void registerListeners(final GameInfo game, EventDispatcher dispatcher) {
-		dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
+		this.dispatcher = dispatcher;
+		this.dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
 			
 			@Override
 			@EventMethod
@@ -85,7 +90,9 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	 * @see seventh.game.type.GameType#start(seventh.game.Game)
 	 */
 	@Override
-	public void start(Game game) {	
+	public void start(Game game) {
+		this.dispatcher.queueEvent(new RoundStartedEvent(this));
+		//this.dispatcher.queueEvent(new RoundEndedEvent(this, winner, game.getNetGameStats()));
 	}
 	
 	/*
@@ -103,9 +110,11 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 				
 				if(leaders.size() > 1) {
 					setGameState(GameState.TIE);
+					this.dispatcher.queueEvent(new RoundEndedEvent(this, null, game.getNetGameStats()));
 				}
 				else {
 					setGameState(GameState.WINNER);
+					this.dispatcher.queueEvent(new RoundEndedEvent(this, leaders.get(0), game.getNetGameStats()));
 				}
 			}
 		}
