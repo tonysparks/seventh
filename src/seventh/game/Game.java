@@ -358,7 +358,23 @@ public class Game implements GameInfo, Debugable {
 	}
 	
 	/**
+	 * Attempts to add a bot to the world
+	 * @param name
+	 * @return the ID slot which the bot occupies.  
+	 */
+	public int addBot(String name) {
+		for(int i = 0; i < this.players.maxNumberOfPlayers(); i++) {
+			if(!this.players.hasPlayer(i)) {
+				return addBot(i, name);
+			}
+		}
+		return -1;
+	}
+	
+	/**
 	 * Adds a bot
+	 * 
+	 * @param id the bot id
 	 * @param name
 	 * @return the id of the added bot
 	 */
