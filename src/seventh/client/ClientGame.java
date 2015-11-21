@@ -265,6 +265,15 @@ public class ClientGame {
 		this.gameEffects.addForegroundEffect(effect);
 	}
 	
+	
+	/**
+	 * Post a message to the client
+	 * @param message
+	 */
+	public void postMessage(String message) {
+		this.hud.postMessage(message);
+	}
+	
 	/**
 	 * Updates the special effects, etc.
 	 * 
