@@ -41,6 +41,22 @@ public class Players implements PlayerInfos {
 
 	/**
 	 * @param id
+	 * @return true if the supplied ID is valid and if there is currently a player associated
+	 * with the ID
+	 */
+	public boolean hasPlayer(int id) {
+		return isValidId(id) && this.players[id] != null;
+	}
+	
+	/**
+	 * @return the max number of players allowed
+	 */
+	public int maxNumberOfPlayers() {
+		return this.players.length;
+	}
+	
+	/**
+	 * @param id
 	 * @return the {@link Player}
 	 */
 	public Player getPlayer(int id) {
