@@ -26,7 +26,7 @@ public class NetPlayerPartial extends NetEntity {
 	public NetWeapon weapon;
 	
 	public boolean isOperatingVehicle;
-	public byte vehicleId;
+	public int vehicleId;
 	
 	/* (non-Javadoc)
 	 * @see seventh.game.net.NetEntity#read(java.nio.ByteBuffer)
@@ -46,7 +46,7 @@ public class NetPlayerPartial extends NetEntity {
 		State aState = State.fromNetValue(state);
 		if(aState.isVehicleState()) {
 			isOperatingVehicle = true;
-			vehicleId = buffer.get();
+			vehicleId = buffer.getUnsignedByte();
 		}
 		else {			
 			readWeapon(buffer);
@@ -81,7 +81,7 @@ public class NetPlayerPartial extends NetEntity {
 		 */
 		State aState = State.fromNetValue(state);
 		if(aState.isVehicleState()) {
-			buffer.put(vehicleId);
+			buffer.putUnsignedByte(vehicleId);
 		}
 		else {			
 			writeWeapon(buffer);
