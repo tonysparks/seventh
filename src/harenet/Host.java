@@ -204,28 +204,25 @@ public class Host {
 	 * @throws IOException
 	 */
 	protected Peer allocatePeer(InetSocketAddress address) throws IOException {
-							
-		if (this.numberOfConnections >= this.maxConnections) {
-			throw new IOException("Max number of connections has been met.");
-		}
-		Peer peer = isClientAlreadyConnected(address);
-		
-		if(peer==null) {
-			synchronized (this) {		
-				byte id = findOpenId();
-				if (id == INVALID_PEER_ID) {
-					throw new IOException("Unable to allocate a valid id.");
-				}
-		
-				this.numberOfConnections++;
-		
-				peer = new Peer(this, address, id);
-				peer.setState(State.CONNECTED);			
-				peers[id] = peer;
+		synchronized (this) {	
+			if (this.numberOfConnections >= this.maxConnections) {
+				throw new IOException("Max number of connections has been met.");
 			}
-		}
-		return peer;
-		
+			Peer peer = isClientAlreadyConnected(address);
+			if(peer==null) {
+					byte id = findOpenId();
+					if (id == INVALID_PEER_ID) {
+						throw new IOException("Unable to allocate a valid id.");
+					}
+			
+					this.numberOfConnections++;
+			
+					peer = new Peer(this, address, id);
+					peer.setState(State.CONNECTED);			
+					peers[id] = peer;
+			}
+			return peer;
+		}		
 	}
 
 	private Peer isClientAlreadyConnected(InetSocketAddress address) {		
