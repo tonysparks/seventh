@@ -33,9 +33,11 @@ public class GrenadeBelt extends Weapon {
 				
 		this.bulletsInClip = 3;
 		this.totalAmmo = 0;
-		this.clipSize = 0;		
+		this.clipSize = 0;
+		
+		applyScriptAttributes("grenade_belt");
 	}
-	
+		
 	public int getNumberOfGrenades() {
 		return this.bulletsInClip;
 	}

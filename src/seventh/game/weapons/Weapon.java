@@ -5,6 +5,7 @@ package seventh.game.weapons;
 
 import java.util.Random;
 
+import leola.vm.exceptions.LeolaRuntimeException;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
 import seventh.game.Entity;
@@ -14,6 +15,7 @@ import seventh.game.SoundType;
 import seventh.game.net.NetWeapon;
 import seventh.math.Vector2f;
 import seventh.shared.Config;
+import seventh.shared.Cons;
 import seventh.shared.TimeStep;
 
 /**
@@ -114,19 +116,24 @@ public abstract class Weapon {
 	protected LeoMap applyScriptAttributes(String weaponName) {	
 		Config config = game.getConfig().getConfig();
 				
-		LeoObject values = config.get("weapons", weaponName);
-		if(values!=null&&values.isMap()) {
-			LeoMap attributes = values.as();
-		
-			this.damage = attributes.getInt("damage");
-			this.reloadTime = attributes.getInt("reload_time");
-			this.clipSize = attributes.getInt("clip_size");
-			this.totalAmmo = attributes.getInt("total_ammo");
-			this.bulletsInClip = this.clipSize;
-					
-			this.spread = attributes.getInt("spread");
-			this.bulletRange = attributes.getInt("bullet_range");
-			return attributes;
+		try {
+			LeoObject values = config.get("weapons", weaponName);
+			if(values!=null&&values.isMap()) {
+				LeoMap attributes = values.as();
+			
+				this.damage = attributes.getInt("damage");
+				this.reloadTime = attributes.getInt("reload_time");
+				this.clipSize = attributes.getInt("clip_size");
+				this.totalAmmo = attributes.getInt("total_ammo");
+				this.bulletsInClip = this.clipSize;
+						
+				this.spread = attributes.getInt("spread");
+				this.bulletRange = attributes.getInt("bullet_range");
+				return attributes;
+			}
+		}
+		catch(LeolaRuntimeException e) {
+			Cons.print("*** Error reading the weapons configuration: " + e);
 		}
 		
 		return null;
