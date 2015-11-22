@@ -1139,7 +1139,9 @@ public class ClientGame {
 	}
 	
 	public void gameReady(GameReadyMessage msg) {
-		this.gameEnded = false; 
+		this.gameEnded = false;
+		this.gameType = GameType.Type.fromNet(msg.gameState.gameType.type);
+		
 		hud.getObjectiveLog().log("Objective: ");
 		switch(this.gameType) {
         case OBJ:
