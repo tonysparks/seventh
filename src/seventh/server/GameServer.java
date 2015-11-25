@@ -30,6 +30,7 @@ import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.Debugable.DebugableListener;
+import seventh.shared.LANServerRegistration;
 import seventh.shared.State;
 import seventh.shared.StateMachine;
 import seventh.shared.StateMachine.StateMachineListener;
@@ -60,6 +61,7 @@ public class GameServer {
 	private ServerContext serverContext;
 	
 	private MasterServerRegistration registration;
+	private LANServerRegistration lanRegistration;
 	private OnServerReadyListener serverListener;
 	private DebugableListener debugListener;
 	
@@ -95,7 +97,8 @@ public class GameServer {
 		
 		public List<String> alliedTeam;
 		public List<String> axisTeam;
-		public boolean isDedicatedServer;					
+		public boolean isDedicatedServer;		
+		public boolean isLAN;
 	}
 	
 	
@@ -128,6 +131,7 @@ public class GameServer {
 			settings.maxPlayers = config.getMaxPlayers();
 			
 			settings.isDedicatedServer = true;
+			settings.isLAN = false;
 		}
 		
 		
@@ -194,6 +198,10 @@ public class GameServer {
 			this.registration.start();
 		}
 		
+		this.lanRegistration = new LANServerRegistration(this.serverContext);
+		if(settings.isLAN) {
+			this.lanRegistration.start();
+		}
 
 		/* attempt to attach a debugger */
 		if(config.isDebuggerEnabled()) {
@@ -259,17 +267,7 @@ public class GameServer {
 		mapCycle.setCurrentMap(settings.currentMap);
 		
 		/* load up the map */
-		serverContext.spawnGameSession(settings.currentMap);
-		
-		
-		/* little hack to wait until we are done loading the 
-		 * game
-		 */
-//		long timeout = 10_000;
-//		while(!isReady.get() && timeout > 0) {
-//			Thread.sleep(500);
-//			timeout -= 500;
-//		}		
+		serverContext.spawnGameSession(settings.currentMap);	
 	}
 	
 	
@@ -742,6 +740,7 @@ public class GameServer {
 			server.stop();
 			server.close();
 			this.registration.shutdown();
+			this.lanRegistration.shutdown();
 			
 			if(this.debugListener != null) {
 				this.debugListener.shutdown();

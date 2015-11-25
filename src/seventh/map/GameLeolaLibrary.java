@@ -17,6 +17,7 @@ import leola.vm.types.LeoNamespace;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.math.Vector2f;
+import seventh.shared.JSON;
 
 /**
  * Game components 
@@ -50,12 +51,10 @@ public class GameLeolaLibrary implements LeolaLibrary {
 	public Map loadMap(String mapFile, boolean loadAssets) throws Exception {
 		File file = new File(mapFile);
 		String contents = loadFileContents(file);
-		contents = "return " + contents.replace(":", "->"); /* converts to leola map format */
 		
-		LeoMap mapData = runtime.eval(contents).as();
+		LeoMap mapData = JSON.parseJson(runtime, contents).as();
 		MapLoader mapLoader = new TiledMapLoader();
 		Map map = mapLoader.loadMap(mapData, loadAssets);
-		
 		return map;
 	}
 	

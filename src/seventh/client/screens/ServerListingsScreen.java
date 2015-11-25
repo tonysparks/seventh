@@ -3,9 +3,12 @@
  */
 package seventh.client.screens;
 
+import java.net.DatagramPacket;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.badlogic.gdx.Input.Keys;
 
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoObject;
@@ -21,8 +24,14 @@ import seventh.client.sfx.Sounds;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.BroadcastListener;
+import seventh.shared.BroadcastListener.OnMessageReceivedListener;
+import seventh.shared.Broadcaster;
 import seventh.shared.Cons;
+import seventh.shared.JSON;
+import seventh.shared.LANServerConfig;
 import seventh.shared.MasterServerClient;
+import seventh.shared.ServerInfo;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.Label;
@@ -37,8 +46,6 @@ import seventh.ui.view.ImageButtonView;
 import seventh.ui.view.LabelView;
 import seventh.ui.view.ListBoxView;
 import seventh.ui.view.PanelView;
-
-import com.badlogic.gdx.Input.Keys;
 
 /**
  * Displays the players options
@@ -64,6 +71,7 @@ public class ServerListingsScreen implements Screen {
 	private Label noServersFoundLbl;
 	private Queue<LeoArray> servers;
 	private AtomicBoolean update;
+	private AtomicBoolean queryingLan;
 	private ListBox serverListings;
 	
 	private AtomicBoolean showServersLabel;
@@ -84,6 +92,7 @@ public class ServerListingsScreen implements Screen {
 		
 		this.servers = new ConcurrentLinkedQueue<>();
 		this.update = new AtomicBoolean();
+		this.queryingLan = new AtomicBoolean();
 		
 		createUI();
 		queryInternetServers();
@@ -105,7 +114,12 @@ public class ServerListingsScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				queryInternetServers();
+				if(isServerInternetOptionsDisplayed) {
+					queryInternetServers();
+				}
+				else {
+					queryLANServer();
+				}
 			}
 		});
 		
@@ -245,11 +259,11 @@ public class ServerListingsScreen implements Screen {
 	private String[] parseEntry(LeoObject object) {		
 		String[] result = {"Error", ""};
 		try {
-			LeoArray axis = object.getObject("axis").as();
-			LeoArray allies = object.getObject("allies").as();
-			
-			result = new String[] { String.format("%-50s %-10s %d/%d", object.getObject("server_name"), object.getObject("game_type")
-					, axis.size() + allies.size(), 12), object.getObject("address") +":"+ object.getObject("port") };
+			ServerInfo info = new ServerInfo(object);						
+			result = new String[] { 
+					String.format("%-50s %-10s %d/%d", info.getServerName(), info.getGameType(), info.getAxis().size() + info.getAllies().size(), 12), 
+					info.getAddress() +":"+ info.getPort() 
+			};
 		}
 		catch(Exception e) {			
 		}
@@ -274,15 +288,7 @@ public class ServerListingsScreen implements Screen {
 						showServersLabel.set(false);
 						if(result.isArray()) {
 							LeoArray array = result.as();
-//							if(!array.isEmpty()) {
-//								
-//								LeoObject m = array.get(0);
-//								for(int i = 0; i < 12; i++) {
-//									LeoMap clone = m.clone().as();
-//									clone.setObject("server_name", Leola.toLeoObject("Something Something" +i));
-//									array.add(clone);
-//								}
-//							}
+
 							servers.add(array);
 						}												
 					}
@@ -299,6 +305,94 @@ public class ServerListingsScreen implements Screen {
 		});
 		
 		thread.start();
+	}
+	
+	private synchronized void queryLANServer() {
+		if(this.queryingLan.get()) {
+			return;
+		}
+		
+		this.queryingLan.set(true);
+		
+		LANServerConfig config = app.getConfig().getLANServerConfig();
+		try {
+			final BroadcastListener listener = new BroadcastListener(config.getMtu(), config.getBroadcastAddress(), config.getPort());
+		
+			listener.addOnMessageReceivedListener(new OnMessageReceivedListener() {
+				
+				@Override
+				public void onMessage(DatagramPacket packet) {
+					String msg = new String(packet.getData(), packet.getOffset(), packet.getLength()).trim();
+					try {
+						if(!msg.equalsIgnoreCase("ping")) {
+							LeoObject object = JSON.parseJson(msg);
+							servers.add(LeoArray.newLeoArray(object));
+						}
+					} 
+					catch (Exception e) {
+						Cons.println("*** ERROR: Problem parsing response message from LAN server: " + e);								
+					}														
+				}
+			});
+			
+			
+			Thread serverThread = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						listener.start();
+					}					
+					catch(Exception e) {
+						if(!e.toString().contains("socket closed")) {
+							Cons.println("*** ERROR: Problem with listening for broadcast messages from LAN server: " + e);
+						}
+					}
+					finally {
+						queryingLan.set(false);
+					}
+				}
+			}, "client-lan-response-listener");
+			serverThread.setDaemon(true);
+			serverThread.start();
+			
+			
+			
+			Thread pingThread = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					
+					
+					try {					
+						LANServerConfig config = app.getConfig().getLANServerConfig();
+						try(Broadcaster caster = new Broadcaster(config.getMtu(), config.getBroadcastAddress(), config.getPort())) {
+							caster.broadcastMessage("ping");
+							Thread.sleep(1_000);
+							
+							int attempts = 0;
+							while(servers.isEmpty()&&attempts<4) {
+								caster.broadcastMessage("ping");
+								Thread.sleep(1_000);	
+								attempts++;
+							}
+						}
+						
+						listener.close();
+						showServersLabel.set(servers.isEmpty());
+						update.set(true);
+					} 
+					catch (Exception e) {
+						Cons.println("*** ERROR: Unable to retrieve LAN data: " + e);
+					}
+				}
+			}, "client-lan-request");
+			pingThread.setDaemon(true);
+			pingThread.start();
+		}
+		catch(Exception e) {
+			Cons.println("*** ERROR: Unable to retrieve LAN data: " + e);
+		}
 	}
 	
 	private Button setupServerEntryButton(Vector2f pos, final String[] settings) {

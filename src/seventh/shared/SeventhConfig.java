@@ -49,6 +49,12 @@ public class SeventhConfig {
 		return masterServerConfig;
 	}
 	
+	/**
+	 * @return the {@link LANServerConfig}
+	 */
+	public LANServerConfig getLANServerConfig() {
+		return new LANServerConfig(this.config);
+	}
 
 	/**
 	 * @return the networking configuration

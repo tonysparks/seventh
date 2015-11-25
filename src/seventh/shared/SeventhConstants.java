@@ -23,5 +23,5 @@ public interface SeventhConstants {
 	
 	public static final int MAX_SOUNDS = 32;
 	
-	public static final int SPAWN_INVINCEABLILITY_TIME = 2_000;
+	public static final int SPAWN_INVINCEABLILITY_TIME = 2_000;	
 }

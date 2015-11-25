@@ -126,7 +126,7 @@ public class Config {
 			if(LeoObject.isTrue(nextObj)) {
 				obj = nextObj;
 			}
-			else return LeoNull.LEONULL;
+			else return null;
 		}
 		
 		return obj;

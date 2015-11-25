@@ -108,6 +108,8 @@ public class ServerSetupScreen implements Screen {
 		
 		this.gameSettings.alliedTeam = new ArrayList<String>();
 		this.gameSettings.axisTeam = new ArrayList<String>();
+		this.gameSettings.isDedicatedServer = false;
+		this.gameSettings.isLAN = true;
 		
 	//	this.gameSettings.alliedTeam.add(app.getConfig().getString("name"));
 		
@@ -407,12 +409,31 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onCheckboxClicked(CheckboxEvent event) {
-				gameSettings.isDedicatedServer = event.getCheckbox().isChecked();
+				gameSettings.isDedicatedServer = event.getCheckbox().isChecked();				
 			}
 		});
 		
 		this.optionsPanel.addWidget(isDedicatedServer);
 		this.panelView.addElement(new CheckboxView(isDedicatedServer));
+		
+		
+		uiPos.x = toggleX - xInc; 		
+		
+		Checkbox isLAN = new Checkbox(!gameSettings.isDedicatedServer);
+		isLAN.setTheme(theme);				
+		isLAN.setLabelText("LAN");
+		isLAN.getBounds().setLocation(uiPos);
+		isLAN.addCheckboxClickedListener(new OnCheckboxClickedListener() {
+			
+			@Override
+			public void onCheckboxClicked(CheckboxEvent event) {
+				gameSettings.isLAN = event.getCheckbox().isChecked();
+			}
+		});
+		
+		this.optionsPanel.addWidget(isLAN);
+		this.panelView.addElement(new CheckboxView(isLAN));
+		
 		
 		uiPos.x = 10;
 		uiPos.y += yInc * 2;

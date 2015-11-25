@@ -3,6 +3,8 @@
  */
 package seventh.server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import leola.vm.types.LeoObject;
 import leola.vm.types.LeoString;
 import seventh.game.type.GameType;
 import seventh.shared.Config;
+import seventh.shared.Cons;
 import seventh.shared.MapList;
 import seventh.shared.SeventhConfig;
 import seventh.shared.SeventhConstants;
@@ -67,6 +70,18 @@ public class ServerSeventhConfig extends SeventhConfig {
 	 */
 	public int getPort() {
 		return this.config.getInt(SeventhConstants.DEFAULT_PORT, "net", "port");
+	}
+	
+	/**
+	 * @return the local host name
+	 */
+	public String getAddress() {
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			Cons.println("*** ERROR: Unable to obtain local host name: " + e);
+			return "0.0.0.0";
+		}
 	}
 	
 	/**
