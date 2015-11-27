@@ -69,7 +69,7 @@ public class ServerListingsScreen implements Screen {
 	private int gameTypeIndex;
 	
 	private Label noServersFoundLbl;
-	private Queue<LeoArray> servers;
+	private Queue<ServerInfo> servers;
 	private AtomicBoolean update;
 	private AtomicBoolean queryingLan;
 	private ListBox serverListings;
@@ -95,7 +95,7 @@ public class ServerListingsScreen implements Screen {
 		this.queryingLan = new AtomicBoolean();
 		
 		createUI();
-		queryInternetServers();
+		queryMultiplayerServers();
 	}
 	
 	
@@ -114,12 +114,7 @@ public class ServerListingsScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				if(isServerInternetOptionsDisplayed) {
-					queryInternetServers();
-				}
-				else {
-					queryLANServer();
-				}
+				queryMultiplayerServers();
 			}
 		});
 		
@@ -144,6 +139,7 @@ public class ServerListingsScreen implements Screen {
 				}
 				
 				refreshConfigUI();
+				queryMultiplayerServers();
 			}
 		});
 		
@@ -169,7 +165,7 @@ public class ServerListingsScreen implements Screen {
 				}
 				
 				refreshConfigUI();
-				queryInternetServers();
+				queryMultiplayerServers();
 			}
 		});
 		
@@ -184,10 +180,10 @@ public class ServerListingsScreen implements Screen {
 		uiPos.x = 140;
 		uiPos.y = 40;
 		
-		LeoArray entries = servers.poll();
-		if(entries!=null) {
-			for(LeoObject entry : entries) {
-				serverListings.addItem(setupServerEntryButton(uiPos, parseEntry(entry)));
+		while(!servers.isEmpty()) {
+			ServerInfo info = servers.poll();
+			if(info!=null) {
+				serverListings.addItem(setupServerEntryButton(uiPos, parseEntry(info)));
 				uiPos.y += yInc;			
 			}
 		}
@@ -256,10 +252,9 @@ public class ServerListingsScreen implements Screen {
 	 * @param entry
 	 * @return
 	 */
-	private String[] parseEntry(LeoObject object) {		
+	private String[] parseEntry(ServerInfo info) {		
 		String[] result = {"Error", ""};
 		try {
-			ServerInfo info = new ServerInfo(object);						
 			result = new String[] { 
 					String.format("%-50s %-10s %d/%d", info.getServerName(), info.getGameType(), info.getAxis().size() + info.getAllies().size(), 12), 
 					info.getAddress() +":"+ info.getPort() 
@@ -276,20 +271,34 @@ public class ServerListingsScreen implements Screen {
 		createUI();
 	}
 	
+	private void queryMultiplayerServers() {
+		if(isServerInternetOptionsDisplayed) {
+			queryInternetServers();
+		}
+		else {
+			queryLANServer();
+		}
+	}
+	
 	private void queryInternetServers() {
 		Thread thread = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
+				servers.clear();
+				
 				MasterServerClient api = new MasterServerClient(app.getConfig().getMasterServerConfig());
 				try {
-					LeoObject result = api.getServerListings(null);					
+					String gameType = gameTypeIndex>=0 && gameTypeIndex < GameType.Type.values().length ? GameType.Type.values()[gameTypeIndex].name() : null; 
+					LeoObject result = api.getServerListings(gameType);					
 					if(LeoObject.isTrue(result)) {
 						showServersLabel.set(false);
 						if(result.isArray()) {
 							LeoArray array = result.as();
-
-							servers.add(array);
+							for(LeoObject obj : array) {
+								ServerInfo info = new ServerInfo(obj);
+								servers.add(info);
+							}
 						}												
 					}
 					else {
@@ -313,6 +322,7 @@ public class ServerListingsScreen implements Screen {
 		}
 		
 		this.queryingLan.set(true);
+		this.servers.clear();
 		
 		LANServerConfig config = app.getConfig().getLANServerConfig();
 		try {
@@ -326,7 +336,23 @@ public class ServerListingsScreen implements Screen {
 					try {
 						if(!msg.equalsIgnoreCase("ping")) {
 							LeoObject object = JSON.parseJson(msg);
-							servers.add(LeoArray.newLeoArray(object));
+							ServerInfo info = new ServerInfo(object);
+							boolean filter = false;
+							String gameType = gameTypeIndex>=0 && gameTypeIndex < GameType.Type.values().length ? 
+												GameType.Type.values()[gameTypeIndex].name() : null;
+												
+							if(gameType != null) {
+								String type = info.getGameType();
+								if(!type.equalsIgnoreCase(gameType)) {
+									filter = true;
+								}
+							}
+							
+							if(!filter) {
+								if(!servers.contains(info)) {									
+									servers.add(info);
+								}
+							}
 						}
 					} 
 					catch (Exception e) {
@@ -371,7 +397,7 @@ public class ServerListingsScreen implements Screen {
 							Thread.sleep(1_000);
 							
 							int attempts = 0;
-							while(servers.isEmpty()&&attempts<4) {
+							while(/*servers.isEmpty()&&*/attempts<2) {
 								caster.broadcastMessage("ping");
 								Thread.sleep(1_000);	
 								attempts++;
