@@ -110,6 +110,8 @@ public class ServerSetupScreen implements Screen {
 		this.gameSettings.axisTeam = new ArrayList<String>();
 		this.gameSettings.isDedicatedServer = false;
 		this.gameSettings.isLAN = true;
+		this.gameSettings.serverName = app.getConfig().getPlayerName() + "'s Server";
+		this.gameSettings.port = SeventhConstants.DEFAULT_PORT; // TODO: Make random within range?
 		
 	//	this.gameSettings.alliedTeam.add(app.getConfig().getString("name"));
 		
@@ -205,7 +207,7 @@ public class ServerSetupScreen implements Screen {
 		headerLbl.setBounds(new Rectangle(0,50, app.getScreenWidth(), 80));
 		headerLbl.setTextAlignment(TextAlignment.CENTER);
 		headerLbl.setFont(theme.getPrimaryFontName());
-		headerLbl.setTextSize(54);
+		headerLbl.setTextSize(45);
 				
 
 		uiPos.x = 10;
@@ -221,6 +223,27 @@ public class ServerSetupScreen implements Screen {
 		
 		uiPos.x = startX;
 		uiPos.y = startY;		
+		
+		setupLabel(uiPos, "Server Name: ", false);
+		
+		uiPos.x = toggleX+95;
+		uiPos.y += yInc;
+		
+		final TextBox serverNameTxtBox = setupTextBox(uiPos, this.gameSettings.serverName);
+		serverNameTxtBox.setBounds(new Rectangle(240, 30));
+		serverNameTxtBox.getBounds().centerAround(uiPos);
+		serverNameTxtBox.setMaxSize(26);
+		serverNameTxtBox.addInputListenerToFront(new Inputs() {
+		    
+		    @Override
+		    public boolean keyUp(int key) {
+		        gameSettings.serverName = serverNameTxtBox.getText(); 
+		        return false;
+		    }
+		});
+		
+		uiPos.x = startX;
+		uiPos.y += yInc;
 		
 		setupLabel(uiPos, "GameType: ", false);
 		
@@ -530,9 +553,6 @@ public class ServerSetupScreen implements Screen {
 			        return false;
 			    }
 			});
-
-			this.optionsPanel.addWidget(box);
-			this.panelView.addElement(new TextBoxView(box));
 			
 			if(i%2==0) {
 				pos.x -= 170;
@@ -559,10 +579,7 @@ public class ServerSetupScreen implements Screen {
                     return false;
                 }
             });
-            
-			this.optionsPanel.addWidget(box);
-			this.panelView.addElement(new TextBoxView(box));
-			
+            			
 			if(i%2==0) {
 				pos.x -= 170;
 				pos.y += 40;
@@ -633,6 +650,9 @@ public class ServerSetupScreen implements Screen {
 		box.setMaxSize(16);
 		box.setTextSize(14);		
 		box.setFocus(false);
+		
+		this.optionsPanel.addWidget(box);
+		this.panelView.addElement(new TextBoxView(box));
 		
 		return box;
 	}
