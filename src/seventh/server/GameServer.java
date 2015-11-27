@@ -89,6 +89,7 @@ public class GameServer {
 	 *
 	 */
 	public static class GameServerSettings {
+		public String serverName;
 		public String currentMap;
 		public int maxScore;		
 		public int maxPlayers;
@@ -99,6 +100,7 @@ public class GameServer {
 		public List<String> axisTeam;
 		public boolean isDedicatedServer;		
 		public boolean isLAN;
+		public int port;
 	}
 	
 	
@@ -125,10 +127,12 @@ public class GameServer {
 		 */
 		if(settings == null) {
 			settings = new GameServerSettings();
+			settings.serverName = config.getServerName();
 			settings.gameType = config.getGameType();
 			settings.matchTime = config.getMatchTime();
 			settings.maxScore = config.getMaxScore();
 			settings.maxPlayers = config.getMaxPlayers();
+			settings.port = config.getPort();
 			
 			settings.isDedicatedServer = true;
 			settings.isLAN = false;
@@ -256,6 +260,7 @@ public class GameServer {
 				
 		setupServerCommands(console);		
 		
+		config.setServerName(settings.serverName);
 		config.setGameType(settings.gameType);
 		config.setMatchTime(settings.matchTime);
 		config.setMaxScore(settings.maxScore);

@@ -60,7 +60,7 @@ public class ServerInfo {
 		
 		ServerSeventhConfig config = context.getConfig();
 		this.address = config.getAddress();
-		this.port = config.getPort();
+		this.port = context.getPort();
 		this.serverName = config.getServerName();
 		if(context.hasGameSession()) {
 			GameSession session = context.getGameSession();
@@ -186,4 +186,42 @@ public class ServerInfo {
 		map.putByString("allies", leoAllies);
 		return map.toString();
 	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + port;
+		return result;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ServerInfo other = (ServerInfo) obj;
+		if (address == null) {
+			if (other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (port != other.port)
+			return false;
+		return true;
+	}
+	
+	
 }
