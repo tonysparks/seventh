@@ -21,7 +21,6 @@ import seventh.server.GameServer.OnServerReadyListener;
 import seventh.shared.Command;
 import seventh.shared.Console;
 import seventh.shared.Scripting;
-import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.Panel;
@@ -160,7 +159,7 @@ public class MenuScreen implements Screen {
 	 */
 	public void startLocalServer(final GameServerSettings settings) {
 		final Console console = app.getConsole();
-		final int port = SeventhConstants.DEFAULT_PORT;
+		final int port = settings.port;
 		final LoadingScreen loadingScreen = new LoadingScreen(app, "localhost", port, false);
 		
 		final Thread gameThread = new Thread(new Runnable() {
