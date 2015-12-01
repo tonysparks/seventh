@@ -4,6 +4,11 @@
 package seventh.client.gfx;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.particle.Effects;
@@ -14,12 +19,7 @@ import seventh.game.weapons.Weapon;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
-import seventh.shared.Timer;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import seventh.shared.Updatable;
 
 /**
  * Renders the Player
@@ -29,6 +29,40 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class PlayerSprite implements Renderable {
 
+	private static class Motion implements Updatable {
+		public double value;
+		public double velocity;
+		public double max;
+		
+		public int direction;
+		
+		@Override
+		public void update(TimeStep timeStep) {
+			value += direction*velocity;		
+			
+			if(value>max) {
+				value=max;
+				direction *= -1;
+			}
+			else if(value<-max) {
+				value=-max;
+				direction *= -1;
+			}
+		}
+
+		
+		public void set(int maxValue, double velocity) {
+			this.max = maxValue;
+			this.velocity = velocity;
+		}
+		
+		public void clear() {
+			this.value = 0;
+			this.direction = 1;
+		}
+		
+	}
+	
 	private ClientPlayerEntity entity;
 	
 	private final AnimatedImage idleBody, 
@@ -51,9 +85,8 @@ public class PlayerSprite implements Renderable {
 	private AnimatedImage activeBodyPosition;
 	private AnimatedImage activeLegsAnimation;
 	
-	private Timer walkingCycle;
-	private double bobCycle;
-	private int direction;
+		
+	private Motion swayMotion, bobMotion;
 	private float xOffset, yOffset;
 	
 	private boolean isReloading, 
@@ -64,7 +97,7 @@ public class PlayerSprite implements Renderable {
 	
 	private Effects effects;	
 	private Sprite sprite;
-	
+		
 	private long flashTime;
 	private boolean showFlash, toggleFlash;
 	
@@ -148,11 +181,11 @@ public class PlayerSprite implements Renderable {
 		
 		activeBodyPosition = idleBody; 
 		activeLegsAnimation = idleLegsAnimation;
-		
-		this.walkingCycle = new Timer(true, 300); // 300
-		this.direction = 1;
 				
-		this.sprite = new Sprite();
+		bobMotion = new Motion();
+		swayMotion = new Motion();
+		
+		sprite = new Sprite();
 	}
 		
 	private AnimatedImage newAnimation(int frameTime, TextureRegion ... frames) {
@@ -169,10 +202,9 @@ public class PlayerSprite implements Renderable {
 		walkLegsAnimation.reset();
 		runLegsAnimation.reset();
 		sprintLegsAnimation.reset();
-		
-		bobCycle = 0;
-		direction = 1;
-		walkingCycle.pause();
+				
+		bobMotion.clear();
+		swayMotion.clear();
 	}
 
 	/* (non-Javadoc)
@@ -184,11 +216,8 @@ public class PlayerSprite implements Renderable {
 		// TODO: delete
 		adjustments.poll();
 		
-		this.effects.update(timeStep);
+		effects.update(timeStep);
 		
-		/* bob cycling */
-		int max = 5;				
-		double swingSpeed = 2.0;
 		xOffset = yOffset = 0;
 		
 		activeBodyPosition = idleBody; 
@@ -206,33 +235,41 @@ public class PlayerSprite implements Renderable {
 			activeLegsAnimation = crouchingLegsAnimation;
 			resetLegMovements();
 			break;
-		case WALKING:						
+		case WALKING: {						
 			activeBodyPosition = walkBody;
 			activeLegsAnimation = walkLegsAnimation;
 			
-			max = 5;
-			swingSpeed = 0.6f;
-			walkingCycle.start();
-			break;
-		case RUNNING:
+			bobMotion.set(5, 0.6);
+			swayMotion.set(0, 0);
+			
+			swayMotion.set(4, 1.55);
+			
+			Vector2f dir = entity.getFacing();
+			xOffset += (dir.y * swayMotion.direction) * 1.15f;
+			yOffset += (dir.x * swayMotion.direction) * 1.15f;
+			
+		} break;
+		case RUNNING: {
 			activeBodyPosition = runBody;
 			activeLegsAnimation = runLegsAnimation;
 			
-			max = 8;
-			swingSpeed = 1.4f;
-			walkingCycle.start();
-			break;
+			bobMotion.set(8, 1.4);
+			swayMotion.set(4, 2.5);
+			
+			Vector2f dir = entity.getFacing();
+			xOffset += (dir.y * swayMotion.direction) * 1.55f;
+			yOffset += (dir.x * swayMotion.direction) * 1.55f;
+		} break;
 		case SPRINTING:
 			activeBodyPosition = sprintBody;
 			activeLegsAnimation = sprintLegsAnimation;
+
+			bobMotion.set(0, 0);
+			swayMotion.set(4, 3.25);
 			
-			max = 10;
-			swingSpeed = 2.0f;				
-			
-			//Vector2f dir = entity.getFacing();
-			//xOffset += (dir.y * direction) * 1.12f;
-			//yOffset += (dir.x * direction) * 1.12f;			
-			walkingCycle.start();
+			Vector2f dir = entity.getFacing();
+			xOffset += (dir.y * swayMotion.direction) * 2.25f;
+			yOffset += (dir.x * swayMotion.direction) * 2.25f;
 			break;
 		case DEAD:
 			resetLegMovements();
@@ -240,23 +277,9 @@ public class PlayerSprite implements Renderable {
 		default:
 			resetLegMovements();				
 		}
-		walkingCycle.update(timeStep);
 
-//		if(walkingCycle.isTime()) {
-//			direction *= -1;			
-//		}
-					
-		bobCycle += direction*swingSpeed;//*0.8;		
-				
-		if(bobCycle>max) {
-			bobCycle=max;
-			direction *= -1;
-		}
-		else if(bobCycle<-max) {
-			bobCycle=-max;
-			direction *= -1;
-		}
-		
+		bobMotion.update(timeStep);
+		swayMotion.update(timeStep);
 		
 		ClientWeapon weapon = entity.getWeapon();		
 		if(weapon != null) {
@@ -265,9 +288,6 @@ public class PlayerSprite implements Renderable {
 			this.isSwitching = weapon.getState() == seventh.game.weapons.Weapon.State.SWITCHING;
 			this.isMelee = weapon.getState() == seventh.game.weapons.Weapon.State.MELEE_ATTACK;
 			this.isFiring = weapon.getState() == seventh.game.weapons.Weapon.State.FIRING;
-						
-			// TODO
-//			this.isMelee = true;
 			
 			if( this.isReloading ) {
 				this.activeBodyPosition = reloadBody;
@@ -298,7 +318,7 @@ public class PlayerSprite implements Renderable {
 		}
 		
 		if(this.isFiring) {
-			this.flashTime -= timeStep.getDeltaTime();
+			this.flashTime -= timeStep.getDeltaTime();		
 			if(this.flashTime <= 0) {
 				boolean cycleFlash = weapon != null && weapon.isAutomatic();
 				if(cycleFlash) {
@@ -320,7 +340,7 @@ public class PlayerSprite implements Renderable {
 		else {
 			this.showFlash = false;
 			this.toggleFlash = true;
-			this.flashTime = 90;
+			this.flashTime = 90;			
 		}
 		
 		if( entity.isAlive() && (entity.getLastUpdate()+500) > timeStep.getGameClock()) {
@@ -577,7 +597,7 @@ public class PlayerSprite implements Renderable {
 		float ry = (pos.y - cameraPos.y) + (bounds.height/2.0f) + yOffset;
 				
 		double angle = Math.toDegrees(entity.getOrientation()) + 90.0;
-		float rot = (float)(angle + bobCycle);		
+		float rot = (float)(angle + bobMotion.value);		
 				
 		renderBody(canvas, rx, ry, rot, color);
 		
