@@ -1202,6 +1202,31 @@ public class PlayerEntity extends Entity implements Controllable {
 	}
 	
 	/**
+	 * Handles a {@link BombTarget}, meaning this will either plant or disarm
+	 * the {@link BombTarget}.
+	 * 
+	 * @param target
+	 */
+	protected void handleBombTarget(BombTarget target) {
+		if(target!=null) {
+			if(target.bombActive()) {
+				Bomb bomb = target.getBomb();
+				bomb.disarm(this);						
+										
+				game.emitSound(getId(), SoundType.BOMB_DISARM, getPos());						
+			}
+			else {
+				if(!target.isBombAttached()) {							
+					Bomb bomb = game.newBomb(target); 
+					bomb.plant(this, target);
+					target.attachBomb(bomb);
+					game.emitSound(getId(), SoundType.BOMB_PLANT, getPos());
+				}												
+			}	
+		}
+	}
+	
+	/**
 	 * Use can be used for either planting a bomb, or disarming it.
 	 */	
 	public void use() {
@@ -1213,11 +1238,12 @@ public class PlayerEntity extends Entity implements Controllable {
 		else {
 		
 			if(this.bombTarget == null) {		
-				this.bombTarget = game.getCloseBombTarget(this);
+				this.bombTarget = game.getArmsReachBombTarget(this);
+				handleBombTarget(this.bombTarget);
 			}
 			
 			if(this.bombTarget == null) {
-				Vehicle vehicle = game.getCloseOperableVehicle(this);
+				Vehicle vehicle = game.getArmsReachOperableVehicle(this);
 				if(vehicle != null) {
 					if(vehicleTime <= 0) {
 						operateVehicle(vehicle);

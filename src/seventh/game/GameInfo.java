@@ -82,6 +82,11 @@ public interface GameInfo {
 	 * @return the dispatcher
 	 */
 	public abstract EventDispatcher getDispatcher();
+	
+	/**
+	 * @return the game {@link Timers}
+	 */
+	public abstract Timers getGameTimers();
 
 	/**
 	 * @return the lastFramesSoundEvents
@@ -145,7 +150,7 @@ public interface GameInfo {
 	 * @param entity
 	 * @return the {@link BombTarget} that is touching the {@link PlayerEntity}, null otherwise
 	 */
-	public abstract BombTarget getCloseBombTarget(PlayerEntity entity);
+	public abstract BombTarget getArmsReachBombTarget(PlayerEntity entity);
 
 	/**
 	 * Determines if the supplied Entity is close enough to a {@link Vehicle}
@@ -153,7 +158,7 @@ public interface GameInfo {
 	 * @param operator
 	 * @return the {@link Vehicle} to be operated on
 	 */
-	public abstract Vehicle getCloseOperableVehicle(Entity operator);
+	public abstract Vehicle getArmsReachOperableVehicle(Entity operator);
 	
 	/**
 	 * Determines if the supplied entity touches another
@@ -196,6 +201,13 @@ public interface GameInfo {
 	 */
 	public abstract boolean doesTouchPlayers(Entity ent, Vector2f origin, Vector2f dir);
 
+	
+	/**
+	 * @param vehicle
+	 * @return true if the supplied {@link Vehicle} touches a {@link PlayerEntity}
+	 */
+	public abstract boolean doesVehicleTouchPlayers(Vehicle vehicle);
+	
 	/**
 	 * Determines if the supplied entity is reachable given the origin and direction.
 	 * 

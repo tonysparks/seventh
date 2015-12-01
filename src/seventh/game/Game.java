@@ -65,6 +65,7 @@ import seventh.shared.SeventhConfig;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
+import seventh.shared.Updatable;
 
 /**
  * Represents the current Game Session
@@ -72,7 +73,7 @@ import seventh.shared.Timer;
  * @author Tony
  *
  */
-public class Game implements GameInfo, Debugable {
+public class Game implements GameInfo, Debugable, Updatable {
 	
 	
 	/**
@@ -432,6 +433,7 @@ public class Game implements GameInfo, Debugable {
 	/**
 	 * @return the gameTimers
 	 */
+	@Override
 	public Timers getGameTimers() {
 		return gameTimers;
 	}
@@ -494,12 +496,20 @@ public class Game implements GameInfo, Debugable {
 	public PlayerInfo getPlayerById(int playerId) {
 		return this.players.getPlayer(playerId);
 	}
-	
+		
 	/**
 	 * @return the mutable list of {@link Players}
 	 */
 	public Players getPlayers() {
 		return players;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.GameInfo#getBombTargets()
+	 */
+	@Override
+	public List<BombTarget> getBombTargets() {
+		return bombTargets;
 	}
 	
 	/**
@@ -530,14 +540,11 @@ public class Game implements GameInfo, Debugable {
 	 * Updates the game
 	 * @param timeStep
 	 */
+	@Override
 	public void update(TimeStep timeStep) {		
-//		lastValidId = 0;
-		
-//		int numberOfActiveEntities = 0;
 		for(int i = 0; i < entities.length; i++) {
 			Entity ent = entities[i];
 			if(ent!=null) {
-//				numberOfActiveEntities++;
 				if(ent.isAlive()) {
 					deadFrames[i] = 0;
 					ent.update(timeStep);
@@ -565,11 +572,7 @@ public class Game implements GameInfo, Debugable {
 				this.dispatcher.queueEvent(new GameEndEvent(this, this.getNetGameStats()));			
 				this.gameEnded = true;
 			}
-		}
-//		else {			
-//			this.time -= timeStep.getDeltaTime();						
-//		}
-				
+		}				
 	}
 	
 	/**
@@ -619,9 +622,10 @@ public class Game implements GameInfo, Debugable {
 	}
 	
 	/**
-	 * Finds a free location on the map
+	 * Finds a free location on the map, one in which the supplied {@link PlayerEntity} will not collide with.
+	 * 
 	 * @param player
-	 * @return
+	 * @return the {@link Vector2f} that is suitable for the {@link PlayerEntity}
 	 */
 	public Vector2f findFreeSpot(PlayerEntity player) {				
 		Vector2f freeSpot = player.getPos();
@@ -1027,6 +1031,12 @@ public class Game implements GameInfo, Debugable {
 		this.vehicles.clear();
 	}
 	
+	/**
+	 * Removes a destructable tile at the supplied world coordinate
+	 * 
+	 * @param x
+	 * @param y
+	 */
 	public void removeTileAtWorld(int x, int y) {
 	    if(map.removeDestructableTileAtWorld(x, y)) {
 	        int tileX = map.worldToTileX(x);
@@ -1111,14 +1121,6 @@ public class Game implements GameInfo, Debugable {
 		this.bombTargets.add(target);
 		addEntity(target);
 		return target;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.game.GameInfo#getBombTargets()
-	 */
-	@Override
-	public List<BombTarget> getBombTargets() {
-		return bombTargets;
 	}
 	
 	
@@ -1231,31 +1233,16 @@ public class Game implements GameInfo, Debugable {
 	
 	/*
 	 * (non-Javadoc)
-	 * @see seventh.game.GameInfo#getCloseBombTarget(seventh.game.PlayerEntity)
+	 * @see seventh.game.GameInfo#getArmsReachBombTarget(seventh.game.PlayerEntity)
 	 */
 	@Override
-	public BombTarget getCloseBombTarget(PlayerEntity entity) {
+	public BombTarget getArmsReachBombTarget(PlayerEntity entity) {
 		BombTarget handleMe = null;
 		
 		int size = this.bombTargets.size();
 		for(int i = 0; i < size; i++) {
 			BombTarget target = this.bombTargets.get(i);
-			if(target.canHandle(entity)) {
-									
-				if(target.bombActive()) {
-					Bomb bomb = target.getBomb();
-					bomb.disarm(entity);						
-											
-					emitSound(entity.getId(), SoundType.BOMB_DISARM, entity.getPos());						
-				}
-				else {
-					if(!target.isBombAttached()) {							
-						Bomb bomb = newBomb(target); 
-						bomb.plant(entity, target);
-						target.attachBomb(bomb);
-						emitSound(entity.getId(), SoundType.BOMB_PLANT, entity.getPos());
-					}												
-				}								
+			if(target.canHandle(entity)) {											
 				handleMe = target;
 				break;
 			}
@@ -1269,7 +1256,7 @@ public class Game implements GameInfo, Debugable {
 	 * @see seventh.game.GameInfo#getCloseOperableVehicle(seventh.game.Entity)
 	 */
 	@Override
-	public Vehicle getCloseOperableVehicle(Entity operator) {
+	public Vehicle getArmsReachOperableVehicle(Entity operator) {
 		Vehicle rideMe = null;
 		for(int i = 0; i < this.vehicles.size(); i++) {
 			Vehicle vehicle = this.vehicles.get(i);
@@ -1284,6 +1271,12 @@ public class Game implements GameInfo, Debugable {
 		return rideMe;
 	}
 	
+	
+	/**
+	 * @param vehicle
+	 * @return true if the supplied {@link Vehicle} touches a {@link PlayerEntity}
+	 */
+	@Override
 	public boolean doesVehicleTouchPlayers(Vehicle vehicle) {
 		if(vehicle.hasOperator()) {
 			PlayerEntity operator = vehicle.getOperator();
