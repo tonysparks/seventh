@@ -80,7 +80,6 @@ public class Brain implements Debugable {
 		}
 		else {
 			this.thoughtProcess = new WeightedThoughtProcess(strategy, this); 
-					//new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);			
 		}
 		
 		this.thoughtProcess.onSpawn(this);		
@@ -136,7 +135,13 @@ public class Brain implements Debugable {
 	 * @param timeStep
 	 */
 	public void update(TimeStep timeStep) {
-		if(player.isAlive()) {			
+		/* We can't rely on the player's isAlive method because
+		 * we might have respawned with a new entity, in which 
+		 * case the Brain.spawned method will be invoked, but
+		 * for now we must rely on the entity that is currently
+		 * bound to this Brain
+		 */
+		if(entityOwner!=null&&entityOwner.isAlive()) {			
 			this.memory.update(timeStep);
 			this.sensors.update(timeStep);		
 			this.motion.update(timeStep);
