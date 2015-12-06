@@ -51,4 +51,13 @@ public class Timers implements Updatable {
 		}
 		return false;
 	}
+	
+	/**
+	 * Removes all of the timers
+	 */
+	public void removeTimers() {
+		for(int i = 0; i < timers.length; i++) {
+			timers[i] = null;
+		}
+	}
 }
