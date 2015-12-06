@@ -41,7 +41,7 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 										new DefendSelfActionEvaluator(goals, brain.getRandomRangeMin(0.85), 0.81),
 										new CommandActionEvaluator(goals, brain.getRandomRange(0.7, 0.8), 0.8),
 										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9), 0.6),
-										// TODO new RideVehicleEvaluator(goals, brain.getRandomRange(0.5, 0.7), 0.51),
+//										new RideVehicleEvaluator(goals, 1.0f,1f),//brain.getRandomRange(0.5, 0.7), 0.51),
 //										new StrategyEvaluator(teamStrategy, goals, brain.getRandomRange(0.1, ), 0)
 										new ExploreActionEvaluator(goals, brain.getRandomRange(0.1, 0.5), 0.5)											
 				),

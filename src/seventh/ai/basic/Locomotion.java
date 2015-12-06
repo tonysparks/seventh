@@ -30,8 +30,6 @@ import seventh.game.Entity.Type;
 import seventh.game.Game;
 import seventh.game.PlayerEntity;
 import seventh.game.Team;
-import seventh.game.vehicles.Tank;
-import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
@@ -510,26 +508,36 @@ public class Locomotion implements Debugable {
 		final float threshold = 0f; // was 0
 		
 		if(me.isOperatingVehicle()) {
-		    Vehicle vehicle = me.getVehicle();
-		    Tank tank = (Tank)vehicle; // TODO - handle this generically
+//		    Vehicle vehicle = me.getVehicle();
+//		    Tank tank = (Tank)vehicle; // TODO - handle this generically
 		    
-		    float fx = x - tank.getFacing().x;
-		    float fy = y - tank.getFacing().y;
-		    if(fx < -threshold) {
-		        tank.maneuverLeft();
-		    }
-		    else if(fx > threshold) {
-		        tank.maneuverRight();
-		        
-		    }
-		    if(fy < -threshold) {
-		        
-		    }
-		    else if(fy > threshold) {
-		        
-		    }
-		    tank.backwardThrottle();
-		    //tank.forwardThrottle();
+		    // TODO make movement of tank work!!
+//		    float fx = x - tank.getFacing().x;
+//		    float fy = y - tank.getFacing().y;
+//		    double angle = Vector2f.Vector2fAngle(new Vector2f(x, y), tank.getFacing());
+//		    System.out.println(angle + " vs " + tank.getOrientation());
+//		    double deltaAngle = angle - tank.getOrientation();
+//		    if(deltaAngle < -threshold) {
+//		        tank.maneuverLeft();
+//		    }
+//		    else if(deltaAngle > threshold) {
+//		        tank.maneuverRight();
+//		        
+//		    }
+//		    else {
+//		    	tank.stopManeuvering();
+//		    }
+//		    
+//		    if(fy < -threshold) {
+//		    	//tank.forwardThrottle();  
+//		    }
+//		    else if(fy > threshold) {
+//		    	//tank.backwardThrottle();    
+//		    }
+//		    //tank.backwardThrottle();
+//		    //tank.forwardThrottle();
+//		    //tank.stopManeuvering();
+//		    tank.stopThrottle();
 		}
 		else {
     		if (x < -threshold ) {
