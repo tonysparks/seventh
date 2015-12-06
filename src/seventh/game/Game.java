@@ -284,6 +284,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 
 			@Override
 			public void onRoundEnded(RoundEndedEvent event) {
+				gameTimers.removeTimers();
 				aiSystem.endOfRound(Game.this);
 			}
 		});
