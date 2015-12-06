@@ -9,13 +9,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import leola.frontend.listener.EventDispatcher;
+import leola.vm.Leola;
+import leola.vm.types.LeoObject;
 import seventh.game.Game;
 import seventh.game.Player;
 import seventh.game.Players;
 import seventh.game.Team;
+import seventh.game.events.RoundEndedEvent;
+import seventh.game.events.RoundEndedListener;
+import seventh.game.events.RoundStartedEvent;
+import seventh.game.events.RoundStartedListener;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
+import seventh.shared.Cons;
 import seventh.shared.TimeStep;
 
 /**
@@ -51,13 +59,17 @@ public abstract class AbstractTeamGameType implements GameType {
 	private int numberOfFramesForGameEnd;
 	private Type type;
 	
+	private Leola runtime;
+	
 	/**
 	 * @param type
+	 * @param runtime
 	 * @param maxScore
 	 * @param matchTime
 	 */
-	public AbstractTeamGameType(GameType.Type type, int maxScore, long matchTime) {
+	public AbstractTeamGameType(GameType.Type type, Leola runtime, int maxScore, long matchTime) {
 		this.type = type;
+		this.runtime = runtime;
 		this.matchTime = matchTime;
 		this.maxScore = maxScore;
 		this.timeRemaining = this.matchTime;
@@ -78,6 +90,53 @@ public abstract class AbstractTeamGameType implements GameType {
 		this.gameState = GameState.IN_PROGRESS;
 		this.random = new Random();
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.type.GameType#registerListeners(seventh.game.GameInfo, leola.frontend.listener.EventDispatcher)
+	 */
+	@Override
+	public void registerListeners(final Game game, EventDispatcher dispatcher) {		
+		dispatcher.addEventListener(RoundEndedEvent.class, new RoundEndedListener() {
+			@Override
+			public void onRoundEnded(RoundEndedEvent event) {
+				executeCallbackScript("onRoundEnded", game);
+			}
+		});
+		
+		dispatcher.addEventListener(RoundStartedEvent.class, new RoundStartedListener() {			
+			@Override
+			public void onRoundStarted(RoundStartedEvent event) {
+				executeCallbackScript("onRoundStarted", game);
+			}
+		});
+		
+		doRegisterListeners(game, dispatcher);
+	}
+
+	/**
+	 * Used by the inherited game types to implement.
+	 * 
+	 * @param game
+	 * @param dispatcher
+	 */
+	protected abstract void doRegisterListeners(final Game game, EventDispatcher dispatcher);
+	
+	
+	/**
+	 * Executes the callback function
+	 * 
+	 * @param functionName
+	 * @param game
+	 */
+	private void executeCallbackScript(String functionName, Game game) {
+		LeoObject function = runtime.get(functionName);
+		if(LeoObject.isTrue(function)) {
+			LeoObject result = function.call(LeoObject.valueOf(game));
+			if(result.isError()) {
+				Cons.println("*** ERROR: Calling '" + functionName + "' - " + result.toString());
+			}
+		}
 	}
 	
 	/* (non-Javadoc)

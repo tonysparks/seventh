@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
+import leola.vm.Leola;
 import seventh.game.Game;
-import seventh.game.GameInfo;
 import seventh.game.Player;
 import seventh.game.Team;
 import seventh.game.events.RoundEndedEvent;
@@ -42,7 +42,8 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 	 * @param maxScore
 	 * @param roundTime
 	 */
-	public ObjectiveGameType(List<Objective> objectives, 	
+	public ObjectiveGameType(Leola runtime,
+			                 List<Objective> objectives, 	
 							 List<Vector2f> alliedSpawnPoints,
 							 List<Vector2f> axisSpawnPoints,
 							 int minimumObjectivesToComplete,
@@ -51,7 +52,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 							 long roundDelayTime,
 							 byte defenderTeamId) {
 		
-		super(GameType.Type.OBJ, maxScore, roundTime);
+		super(GameType.Type.OBJ, runtime, maxScore, roundTime);
 		
 		this.alliedSpawnPoints = alliedSpawnPoints;
 		this.axisSpawnPoints = axisSpawnPoints;
@@ -267,7 +268,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 	 * @see seventh.game.type.GameType#registerListeners(seventh.game.Game, leola.frontend.listener.EventDispatcher)
 	 */
 	@Override
-	public void registerListeners(GameInfo game, EventDispatcher dispatcher) {		
+	protected void doRegisterListeners(Game game, EventDispatcher dispatcher) {		
 		this.dispatcher = dispatcher;
 	}
 

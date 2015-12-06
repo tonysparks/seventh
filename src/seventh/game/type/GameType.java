@@ -7,7 +7,6 @@ import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.game.Game;
-import seventh.game.GameInfo;
 import seventh.game.Player;
 import seventh.game.Players;
 import seventh.game.Team;
@@ -67,7 +66,7 @@ public interface GameType extends Debugable {
 	public void start(Game game);
 	public GameState update(Game game, TimeStep timeStep);
 		
-	public void registerListeners(GameInfo game, EventDispatcher dispatcher);
+	public void registerListeners(Game game, EventDispatcher dispatcher);
 	
 	public Team getAlliedTeam();
 	public Team getAxisTeam();

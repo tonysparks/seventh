@@ -53,7 +53,7 @@ public class TeamDeathMatchScript extends AbstractGameTypeScript {
 			}
 		}
 		
-		GameType gameType = new TeamDeathMatchGameType(alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
+		GameType gameType = new TeamDeathMatchGameType(getRuntime(), alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
 		return gameType;
 	}
 }

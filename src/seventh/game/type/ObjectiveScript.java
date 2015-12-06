@@ -120,7 +120,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		
 		final long timeBetweenRounds = 10_000L;
 		
-		GameType gameType = new ObjectiveGameType(objectives, alliedSpawnPoints, axisSpawnPoints, 
+		GameType gameType = new ObjectiveGameType(getRuntime(), objectives, alliedSpawnPoints, axisSpawnPoints, 
 				minimumObjectivesToComplete, maxScore, matchTime, timeBetweenRounds, defenders);
 		return gameType;
 	}

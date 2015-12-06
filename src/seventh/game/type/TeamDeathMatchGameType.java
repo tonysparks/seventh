@@ -7,8 +7,8 @@ import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
+import leola.vm.Leola;
 import seventh.game.Game;
-import seventh.game.GameInfo;
 import seventh.game.Player;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
@@ -33,8 +33,8 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	 * @param maxKills
 	 * @param matchTime
 	 */
-	public TeamDeathMatchGameType(List<Vector2f> alliedSpawns, List<Vector2f> axisSpawns, int maxKills, long matchTime) {
-		super(Type.TDM, maxKills, matchTime);
+	public TeamDeathMatchGameType(Leola runtime, List<Vector2f> alliedSpawns, List<Vector2f> axisSpawns, int maxKills, long matchTime) {
+		super(Type.TDM, runtime, maxKills, matchTime);
 		this.axisSpawns = axisSpawns;
 		this.alliedSpawns = alliedSpawns;
 	}
@@ -43,7 +43,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	 * @see palisma.game.type.GameType#registerListeners(leola.frontend.listener.EventDispatcher)
 	 */
 	@Override
-	public void registerListeners(final GameInfo game, EventDispatcher dispatcher) {
+	protected void doRegisterListeners(final Game game, EventDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
 			
@@ -92,7 +92,6 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	@Override
 	public void start(Game game) {
 		this.dispatcher.queueEvent(new RoundStartedEvent(this));
-		//this.dispatcher.queueEvent(new RoundEndedEvent(this, winner, game.getNetGameStats()));
 	}
 	
 	/*
