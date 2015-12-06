@@ -13,6 +13,7 @@ import java.io.IOException;
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
 import leola.vm.Leola;
+import seventh.ai.basic.AILeolaLibrary;
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.GameMap;
@@ -126,7 +127,7 @@ public class InGameState implements State {
 		this.dispatcher = gameSession.getEventDispatcher();				
 		this.game = gameSession.getGame();
 								
-		loadProperties(gameSession.getMap(), game);
+		//loadProperties(gameSession.getMap(), game);
 		
 		this.nextGameStatUpdate = GAME_STAT_UPDATE;
 		this.nextGamePartialStatUpdate = GAME_PARTIAL_STAT_UPDATE;
@@ -276,9 +277,21 @@ public class InGameState implements State {
 		File propertiesFile = new File(gameMap.getMapFileName() + ".props.leola");
 		if(propertiesFile.exists()) {
 			try {	
+				// TODO:
+				// Clean this up, I don't think we actually need a 'properties'
+				// loading, this can all be done thru the gameType scripts.
+				// The weird thing about this is the lighting entities,
+				// this should probably be moved to a post load
+				// of the Map.
 				Leola runtime = Scripting.newSandboxedRuntime();
 					
 				runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+				
+				GameServerLeolaLibrary gLib = new GameServerLeolaLibrary(game);				
+				runtime.loadLibrary(gLib, "game2");
+				AILeolaLibrary aiLib = new AILeolaLibrary();
+				runtime.loadLibrary(aiLib, "ai");
+				
 				runtime.put("game", game);
 				runtime.eval(propertiesFile);
 				
