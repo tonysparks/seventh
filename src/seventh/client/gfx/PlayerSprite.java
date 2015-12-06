@@ -223,6 +223,7 @@ public class PlayerSprite implements Renderable {
 		activeBodyPosition = idleBody; 
 		activeLegsAnimation = idleLegsAnimation;
 		
+		Vector2f dir = entity.getFacing();
 		State currentState = entity.getCurrentState();
 		switch(currentState) {
 		case IDLE:
@@ -244,7 +245,6 @@ public class PlayerSprite implements Renderable {
 			
 			swayMotion.set(4, 1.55);
 			
-			Vector2f dir = entity.getFacing();
 			xOffset += (dir.y * swayMotion.direction) * 1.15f;
 			yOffset += (dir.x * swayMotion.direction) * 1.15f;
 			
@@ -256,7 +256,6 @@ public class PlayerSprite implements Renderable {
 			bobMotion.set(8, 1.4);
 			swayMotion.set(4, 2.5);
 			
-			Vector2f dir = entity.getFacing();
 			xOffset += (dir.y * swayMotion.direction) * 1.55f;
 			yOffset += (dir.x * swayMotion.direction) * 1.55f;
 		} break;
@@ -267,7 +266,6 @@ public class PlayerSprite implements Renderable {
 			bobMotion.set(0, 0);
 			swayMotion.set(4, 3.25);
 			
-			Vector2f dir = entity.getFacing();
 			xOffset += (dir.y * swayMotion.direction) * 2.25f;
 			yOffset += (dir.x * swayMotion.direction) * 2.25f;
 			break;
@@ -539,17 +537,20 @@ public class PlayerSprite implements Renderable {
 				break;
 			}
 			case SPRINTING: {
+				sprite.setScale(0.87f, 0.87f);
 				sprite.setRotation(rot);
 				sprite.setPosition(x, y);
 				
 				setTextureRegion(sprite, activeLegsAnimation.getCurrentImage());
-						
-				sprite.translate(-6f, -6);
-				canvas.drawSprite(sprite);
-				sprite.translate(6f, 6);
+										
+				Vector2f facing = entity.getFacing();				
+				float fx = (facing.y-9.0f);
+				float fy = -(facing.x+5);
 				
-				sprite.setRotation(rot);
-				sprite.setPosition(x, y);				
+				sprite.translate(fx, fy);
+				canvas.drawSprite(sprite);
+				sprite.translate(-fx, -fy);
+				sprite.setScale(0.8f, 0.8f);
 				break;
 			}
 			default: {
