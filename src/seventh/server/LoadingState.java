@@ -6,11 +6,12 @@ package seventh.server;
 import leola.vm.Leola;
 import seventh.game.GameMap;
 import seventh.game.Players;
+import seventh.game.type.AbstractGameTypeScript;
 import seventh.game.type.GameType;
 import seventh.game.type.ObjectiveScript;
 import seventh.game.type.TeamDeathMatchScript;
-import seventh.map.GameLeolaLibrary;
 import seventh.map.Map;
+import seventh.map.MapLoaderUtil;
 import seventh.shared.Cons;
 import seventh.shared.State;
 import seventh.shared.TimeStep;
@@ -57,34 +58,35 @@ public class LoadingState implements State {
 	private GameMap loadMap(String file) throws Exception {		
 		Cons.println("Loading " + file + " map...");
 		
-		GameLeolaLibrary gameLib = new GameLeolaLibrary();
-		gameLib.init(runtime, runtime.getGlobalNamespace());
-		
-		Map map = gameLib.loadMap(file, false);
+		Map map = MapLoaderUtil.loadMap(this.runtime, file, false);
 		GameMap gameMap = new GameMap(file, "Unknown", map);
 		Cons.println("Successfully loaded!");
 		return gameMap;			
 	}
-	
-	private GameType loadTDMGameType(String mapFile) throws Exception {		
+
+	/**
+	 * Loads a game type
+	 * 
+	 * @param mapFile
+	 * @param script
+	 * @return the {@link GameType}
+	 * @throws Exception
+	 */
+	private GameType loadGameType(String mapFile, AbstractGameTypeScript script) throws Exception {		
 		ServerSeventhConfig config = this.serverContext.getConfig();
 		
 		int maxKills = config.getMaxScore();
 		long matchTime = config.getMatchTime();
 		
-//		Cons.println("Successfully loaded!");
-		TeamDeathMatchScript script = new TeamDeathMatchScript(runtime);
 		return script.loadGameType(mapFile, maxKills, matchTime);
 	}
 	
+	private GameType loadTDMGameType(String mapFile) throws Exception {
+		return loadGameType(mapFile, new TeamDeathMatchScript(runtime));
+	}
+	
 	private GameType loadObjGameType(String mapFile) throws Exception {
-		ServerSeventhConfig config = this.serverContext.getConfig();
-		
-		int maxScore = config.getMaxScore();
-		long matchTime = config.getMatchTime();
-		
-		ObjectiveScript script = new ObjectiveScript(runtime);
-		return script.loadGameType(mapFile, maxScore, matchTime);
+		return loadGameType(mapFile, new ObjectiveScript(runtime));
 	}
 	
 
