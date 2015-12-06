@@ -1114,7 +1114,9 @@ public class ClientGame {
 		applyGameStats(msg.stats);
 		
 		scoreboard.setWinner(ClientTeam.fromId(msg.winnerTeamId));
-		showScoreBoard(true);				
+		showScoreBoard(true);
+		
+		gameTimers.removeTimers();
 	}
 	
 	public void roundStarted(RoundStartedMessage msg) {		
