@@ -649,8 +649,8 @@ public class PlayerSprite implements Renderable {
 	public static void debugRenderSprite(Canvas canvas, Sprite sprite, int color) {		
 //		canvas.drawSprite(sprite, sprite.getX(), sprite.getY(), 0x5f00aa00);				
 //		canvas.drawRect( (int)sprite.getX(), (int)sprite.getY(), sprite.getRegionWidth(), sprite.getRegionHeight(), 0x5fff0000);
-		
-		if(false) 
+		boolean drawDebug=false;
+		if(drawDebug) 
 		{
 			canvas.drawSprite(sprite, sprite.getX(), sprite.getY(), Colors.setAlpha(color, 0x5f));				
 			canvas.drawRect( (int)sprite.getX(), (int)sprite.getY(), sprite.getRegionWidth(), sprite.getRegionHeight(), Colors.setAlpha(color, 0x5f));
