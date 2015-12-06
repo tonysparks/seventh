@@ -146,12 +146,6 @@ public class Player implements PlayerInfo, Debugable {
 	 */
 	public void setWeaponClass(Type weaponClass) {
 		this.weaponClass = weaponClass;
-//		if(this.weaponClass==Type.RISKER) {
-//			this.isMech = true;
-//		}
-//		else {
-//			this.isMech = false;
-//		}
 	}
 	
 	/* (non-Javadoc)
