@@ -10,7 +10,6 @@ import seventh.game.events.SoundEventPool;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
-import seventh.game.vehicles.Tank;
 import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Kar98;
@@ -472,7 +471,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			}			
 		}
 		else {
-			stamina -= STAMINA_DECAY_RATE;
+			//stamina -= STAMINA_DECAY_RATE;
 			if(stamina < 0) {
 				stamina = 0;
 				currentState = State.RUNNING;
@@ -1369,6 +1368,14 @@ public class PlayerEntity extends Entity implements Controllable {
 		return soundsHeard;
 	}
 	
+	@Override
+	protected List<Tile> calculateLineOfSight(List<Tile> tiles) {
+		Map map = game.getMap();
+		Geom.calculateLineOfSight(tiles, getCenterPos(), getFacing(), getLineOfSight(), map, getHeightMask());
+		return tiles;
+	}
+	
+	
 	/**
 	 * Given the game state, retrieve the {@link Entity}'s in the current entities view.
 	 * @param game
@@ -1384,15 +1391,12 @@ public class PlayerEntity extends Entity implements Controllable {
 		
 		Vector2f centerPos = getCenterPos();
 		if(isOperatingVehicle()) {
-			// TODO clean up
-			Tank vehicle = (Tank)getVehicle();
-			// TODO vehicle line of sight
-			Geom.calculateLineOfSight(game.aTiles, vehicle.getCenterPos(), vehicle.getTurretFacing(), WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT, map, getHeightMask());
+			getVehicle().calculateLineOfSight(game.aTiles);
 		}
 		else {
-							
-			Geom.calculateLineOfSight(game.aTiles, centerPos, getFacing(), getLineOfSight(), map, getHeightMask());						
+			calculateLineOfSight(game.aTiles);						
 		}
+		
 		this.visualBounds.centerAround(centerPos);
 		
 		for(int i = 0; i < entities.length; i++) {

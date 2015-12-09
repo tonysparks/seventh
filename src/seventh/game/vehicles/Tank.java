@@ -18,11 +18,13 @@ import seventh.game.weapons.Rocket;
 import seventh.game.weapons.RocketLauncher;
 import seventh.game.weapons.Weapon;
 import seventh.map.Map;
+import seventh.map.Tile;
 import seventh.math.FastMath;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.EaseInInterpolation;
+import seventh.shared.Geom;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
@@ -688,6 +690,15 @@ public class Tank extends Vehicle {
 		this.previousOrientation = orientation;
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#calculateLineOfSight()
+	 */
+	@Override
+	protected List<Tile> calculateLineOfSight(List<Tile> tiles) {
+		Map map = game.getMap();
+		Geom.calculateLineOfSight(tiles, getCenterPos(), getTurretFacing(), WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT, map, getHeightMask());
+		return tiles;
+	}
 		
 	/**
 	 * Begins the primary fire

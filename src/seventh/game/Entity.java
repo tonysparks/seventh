@@ -8,10 +8,13 @@ import java.util.List;
 import seventh.game.net.NetEntity;
 import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
+import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Debugable;
+import seventh.shared.Geom;
 import seventh.shared.TimeStep;
+import seventh.shared.WeaponConstants;
 
 /**
  * Base class for anything that is able to be interacted with in the game world.
@@ -796,6 +799,17 @@ public abstract class Entity implements Debugable {
 		}
 		
 		return closest;
+	}
+	
+	/**
+	 * @param tiles an empty list of tiles that is used as the returned list
+	 * @return calculates the line of sight, which returns a {@link List} of {@link Tile} this entity
+	 * is able to see
+	 */
+	protected List<Tile> calculateLineOfSight(List<Tile> tiles) {
+		Map map = game.getMap();
+		Geom.calculateLineOfSight(tiles, centerPos, getFacing(), WeaponConstants.DEFAULT_LINE_OF_SIGHT, map, getHeightMask());
+		return tiles;
 	}
 	
 	/* (non-Javadoc)
