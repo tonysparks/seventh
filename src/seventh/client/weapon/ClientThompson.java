@@ -5,6 +5,7 @@ package seventh.client.weapon;
 
 import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art;
+import seventh.shared.WeaponConstants;
 
 
 /**
@@ -23,6 +24,7 @@ public class ClientThompson extends ClientWeapon {
 		this.weaponImage = Art.thompsonImage;
 		this.muzzleFlash = Art.newThompsonMuzzleFlash();
 		this.beginFireKick = 180;	
+		this.weaponWeight = WeaponConstants.THOMPSON_WEIGHT;
 	}
 
 	/* (non-Javadoc)

@@ -6,6 +6,7 @@ package seventh.client.weapon;
 
 import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art;
+import seventh.shared.WeaponConstants;
 
 /**
  * @author Tony
@@ -22,6 +23,7 @@ public class ClientKar98 extends ClientWeapon {
 		this.weaponIcon = Art.kar98Icon;
 		this.weaponImage = Art.kar98Image;
 		this.muzzleFlash = Art.newKar98MuzzleFlash();
+		this.weaponWeight = WeaponConstants.KAR98_WEIGHT;
 	}
 
 }

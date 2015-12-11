@@ -23,6 +23,7 @@ public class ClientWeapon {
 	private NetWeapon prevState, nextState;
 	
 	protected int beginFireKick, endFireKick;
+	protected int weaponWeight;
 	private boolean startFiring, startSwitch, startReloading, canFireAgain;
 			
 	private int firstFire;
@@ -39,6 +40,13 @@ public class ClientWeapon {
 		this.owner = owner;
 		this.channelId = this.owner.getPlayerId();
 		this.firstFire = 0;
+	}
+	
+	/**
+	 * @return the weaponWeight
+	 */
+	public int getWeaponWeight() {
+		return weaponWeight;
 	}
 	
 	public int getAmmoInClip() {

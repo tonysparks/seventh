@@ -7,6 +7,7 @@ import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.game.weapons.Weapon.State;
 import seventh.shared.TimeStep;
+import seventh.shared.WeaponConstants;
 
 /**
  * @author Tony
@@ -27,7 +28,8 @@ public class ClientRisker extends ClientWeapon {
 //		this.weaponImage = Art.sniperRifleImage;
 		this.weaponImage = Art.riskerImage;
 		this.muzzleFlash = Art.newRiskerMuzzleFlash();
-		this.endFireKick = 250;			
+		this.endFireKick = 250;
+		this.weaponWeight = WeaponConstants.RISKER_WEIGHT;
 	}
 
 	/* (non-Javadoc)

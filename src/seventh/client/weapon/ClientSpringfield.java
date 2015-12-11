@@ -7,6 +7,7 @@ import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.game.weapons.Weapon.State;
 import seventh.shared.TimeStep;
+import seventh.shared.WeaponConstants;
 
 /**
  * @author Tony
@@ -24,10 +25,10 @@ public class ClientSpringfield extends ClientWeapon {
 		super(owner);
 
 		this.weaponIcon = Art.springfieldIcon;
-//		this.weaponImage = Art.sniperRifleImage;
 		this.weaponImage = Art.springfieldImage;
 		this.muzzleFlash = Art.newSpringfieldMuzzleFlash();
 		this.endFireKick = 250;			
+		this.weaponWeight = WeaponConstants.SPRINGFIELD_WEIGHT;
 	}
 
 	/* (non-Javadoc)
@@ -46,7 +47,6 @@ public class ClientSpringfield extends ClientWeapon {
 		if(getState() == State.FIRING) {
 			if(timer<=0) {
 				timer = weaponTime;
-				//Sounds.startPlaySound(fireSound, channelId);
 			}
 		}
 	}

@@ -6,6 +6,7 @@ package seventh.client.weapon;
 
 import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art;
+import seventh.shared.WeaponConstants;
 
 /**
  * @author Tony
@@ -22,6 +23,7 @@ public class ClientMP44 extends ClientWeapon {
 		this.weaponIcon = Art.mp44Icon;
 		this.weaponImage = Art.mp44Image;
 		this.muzzleFlash = Art.newMP44MuzzleFlash();
+		this.weaponWeight = WeaponConstants.MP44_WEIGHT;
 	}
 
 //	@Override

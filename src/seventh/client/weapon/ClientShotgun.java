@@ -7,6 +7,7 @@ import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.game.weapons.Weapon.State;
 import seventh.shared.TimeStep;
+import seventh.shared.WeaponConstants;
 
 /**
  * @author Tony
@@ -27,6 +28,7 @@ public class ClientShotgun extends ClientWeapon {
 		this.muzzleFlash = Art.newShotgunMuzzleFlash();
 		
 		this.endFireKick = 250;		
+		this.weaponWeight = WeaponConstants.SHOTGUN_WEIGHT;
 	}
 
 	/* (non-Javadoc)
