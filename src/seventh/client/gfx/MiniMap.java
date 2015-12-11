@@ -166,12 +166,12 @@ public class MiniMap implements Renderable {
 				ClientWeapon weapon = ent.getEntity().getWeapon();
 				if(weapon != null) {
 					if(weapon.getState().equals(State.FIRING)) {
-						canvas.fillCircle(4.0f, x-1, y-1, 0xfaffff00);		
+						canvas.fillCircle(3.0f, x-1, y-1, 0xfaffff00);		
 					}
 				}
 				
 				
-				canvas.fillCircle(3.0f, x, y, team.getColor());
+				canvas.fillCircle(2.0f, x, y, team.getColor());
 			}
 		}
 		
