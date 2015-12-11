@@ -111,7 +111,7 @@ public class HeadScanAction extends AdapterAction {
 			Vector2f.Vector2fNormalize(dest, dest);
 			
 			destination.set(dest);
-			this.sampleTime = 200;
+			this.sampleTime = 1100 + (brain.getWorld().getRandom().nextInt(3) * 150);
 		}
 		
 		
