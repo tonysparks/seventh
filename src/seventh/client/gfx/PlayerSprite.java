@@ -51,7 +51,7 @@ public class PlayerSprite implements Renderable {
 		}
 
 		
-		public void set(int maxValue, double velocity) {
+		public void set(double maxValue, double velocity) {
 			this.max = maxValue;
 			this.velocity = velocity;
 		}
@@ -220,11 +220,19 @@ public class PlayerSprite implements Renderable {
 		
 		xOffset = yOffset = 0;
 		
+		float weaponWeight = 1.0f;
+		ClientWeapon weapon = entity.getWeapon();		
+		if(weapon != null) {
+			weaponWeight = 100.0f - weapon.getWeaponWeight();
+			weaponWeight *= 0.01f;
+		}
+		
 		activeBodyPosition = idleBody; 
 		activeLegsAnimation = idleLegsAnimation;
 		
 		Vector2f dir = entity.getFacing();
 		State currentState = entity.getCurrentState();
+		
 		switch(currentState) {
 		case IDLE:
 			activeBodyPosition = idleBody;
@@ -243,31 +251,31 @@ public class PlayerSprite implements Renderable {
 			bobMotion.set(5, 0.6);
 			swayMotion.set(0, 0);
 			
-			swayMotion.set(4, 1.55);
+			swayMotion.set(4, 1.55*weaponWeight);
 			
-			xOffset += (dir.y * swayMotion.direction) * 1.15f;
-			yOffset += (dir.x * swayMotion.direction) * 1.15f;
+			xOffset += (dir.y * swayMotion.direction) * 0.815f;
+			yOffset += (dir.x * swayMotion.direction) * 0.815f;
 			
 		} break;
 		case RUNNING: {
 			activeBodyPosition = runBody;
 			activeLegsAnimation = runLegsAnimation;
+						
+			bobMotion.set(12*weaponWeight,2.4*weaponWeight); //(8, 1.4);
+			swayMotion.set(4, 2.5*weaponWeight);			
+			xOffset += (dir.y * swayMotion.direction) * .755f;
+			yOffset += (dir.x * swayMotion.direction) * .755f;
 			
-			bobMotion.set(8, 1.4);
-			swayMotion.set(4, 2.5);
-			
-			xOffset += (dir.y * swayMotion.direction) * 1.55f;
-			yOffset += (dir.x * swayMotion.direction) * 1.55f;
 		} break;
 		case SPRINTING:
 			activeBodyPosition = sprintBody;
 			activeLegsAnimation = sprintLegsAnimation;
 
 			bobMotion.set(0, 0);
-			swayMotion.set(4, 3.25);
+			swayMotion.set(4, 3.25*weaponWeight);
 			
-			xOffset += (dir.y * swayMotion.direction) * 2.25f;
-			yOffset += (dir.x * swayMotion.direction) * 2.25f;
+			xOffset += (dir.y * swayMotion.direction) * 1.25f;
+			yOffset += (dir.x * swayMotion.direction) * 1.25f;
 			break;
 		case DEAD:
 			resetLegMovements();
@@ -279,7 +287,6 @@ public class PlayerSprite implements Renderable {
 		bobMotion.update(timeStep);
 		swayMotion.update(timeStep);
 		
-		ClientWeapon weapon = entity.getWeapon();		
 		if(weapon != null) {
 			
 			this.isReloading = weapon.getState() == seventh.game.weapons.Weapon.State.RELOADING;
