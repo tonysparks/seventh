@@ -35,6 +35,9 @@ public class PlayerSprite implements Renderable {
 		public double max;
 		
 		public int direction;
+		{
+			clear();
+		}
 		
 		@Override
 		public void update(TimeStep timeStep) {
@@ -249,8 +252,6 @@ public class PlayerSprite implements Renderable {
 			activeLegsAnimation = walkLegsAnimation;
 			
 			bobMotion.set(5, 0.6);
-			swayMotion.set(0, 0);
-			
 			swayMotion.set(4, 1.55*weaponWeight);
 			
 			xOffset += (dir.y * swayMotion.direction) * 0.815f;
@@ -263,9 +264,8 @@ public class PlayerSprite implements Renderable {
 						
 			bobMotion.set(12*weaponWeight,2.4*weaponWeight); //(8, 1.4);
 			swayMotion.set(4, 2.5*weaponWeight);			
-			xOffset += (dir.y * swayMotion.direction) * .755f;
-			yOffset += (dir.x * swayMotion.direction) * .755f;
-			
+			xOffset += (dir.y * swayMotion.direction) * 0.755f;
+			yOffset += (dir.x * swayMotion.direction) * 0.755f;
 		} break;
 		case SPRINTING:
 			activeBodyPosition = sprintBody;
