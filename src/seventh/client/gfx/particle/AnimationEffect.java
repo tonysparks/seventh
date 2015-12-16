@@ -136,4 +136,10 @@ public class AnimationEffect implements Effect {
 		return !persist && anim.isDone() && this.fade.isDone();
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.particle.Effect#destroy()
+	 */
+	@Override
+	public void destroy() {		
+	}
 }

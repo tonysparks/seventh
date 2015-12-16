@@ -93,4 +93,10 @@ public class DebugSpriteEffect implements Effect {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.particle.Effect#destroy()
+	 */
+	@Override
+	public void destroy() {
+	}
 }

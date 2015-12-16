@@ -45,6 +45,10 @@ public class Effects implements Renderable {
 	}
 	
 	public void clearEffects() {
+		for(int i = 0; i < this.effects.size(); i++) {
+			this.effects.get(i).destroy();
+		}
+		
 		this.effects.clear();
 		this.finishedEffects.clear();
 	}
@@ -72,6 +76,7 @@ public class Effects implements Renderable {
 			Effect e = this.effects.get(i);
 			e.update(timeStep);
 			if(e.isDone()) {
+				e.destroy();
 				this.finishedEffects.add(this.effects.get(i));
 			}
 		}

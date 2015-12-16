@@ -9,6 +9,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.particle.Effects;
@@ -152,20 +153,22 @@ public class PlayerSprite implements Renderable {
 		
 		
 	}
-	
+
+	// TEMP Remove this once we have the proper adjustments made
 	Adjustments adjustments=new Adjustments();
 	
 	/**
-	 * 
+	 * @param player
+	 * @param bodyModel
+	 * @param walkLegsModel
+	 * @param crouchLegsModel
+	 * @param sprintLegsModel
 	 */
-	public PlayerSprite(ClientPlayerEntity entity, 
+	public PlayerSprite(ClientPlayer player, 
 						Model bodyModel, 
 						Model walkLegsModel,
 						TextureRegion crouchLegsModel,
 						Model sprintLegsModel) {
-		this.entity = entity;
-		
-		this.effects = new Effects();				
 		
 		idleBody = newAnimation(100, bodyModel.getFrame(0));
 		crouchBody = newAnimation(100, bodyModel.getFrame(3));
@@ -188,7 +191,10 @@ public class PlayerSprite implements Renderable {
 		bobMotion = new Motion();
 		swayMotion = new Motion();
 		
+		effects = new Effects();
 		sprite = new Sprite();
+		
+		reset(player);
 	}
 		
 	private AnimatedImage newAnimation(int frameTime, TextureRegion ... frames) {
@@ -208,6 +214,22 @@ public class PlayerSprite implements Renderable {
 				
 		bobMotion.clear();
 		swayMotion.clear();
+	}
+	
+	/**
+	 * Resets this {@link PlayerSprite} for reuse by another
+	 * {@link ClientPlayerEntity}.  Call this when the player is respawned.
+	 * 
+	 * @param player
+	 */
+	public void reset(ClientPlayer player) {
+		entity = player.getEntity();
+		
+		activeBodyPosition = idleBody; 
+		activeLegsAnimation = idleLegsAnimation;
+		
+		resetLegMovements();
+		effects.clearEffects();
 	}
 
 	/* (non-Javadoc)

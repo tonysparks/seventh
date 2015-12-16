@@ -16,4 +16,5 @@ public interface Effect extends Renderable {
 	 * @return true if this effect is done
 	 */
 	public boolean isDone();
+	public void destroy();
 }

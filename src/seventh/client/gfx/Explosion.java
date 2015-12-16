@@ -19,12 +19,14 @@ public class Explosion implements Effect {
 	private AnimatedImage image;
 	private Vector2f pos;
 	private Sprite sprite;
+	private AnimationPool pool;
 	/**
 	 * 
 	 */
 	public Explosion(ClientGame game, Vector2f pos) {
+		this.pool = game.getAnimationPools().getExplosion();
 		this.pos = pos;
-		this.image = Art.newExplosionAnim();
+		this.image = pool.create();
 		this.sprite = new Sprite(this.image.getCurrentImage());
 		this.sprite.setRotation(game.getRandom().nextInt(360));
 	}
@@ -56,4 +58,11 @@ public class Explosion implements Effect {
 		return this.image.isDone();
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.particle.Effect#destroy()
+	 */
+	@Override
+	public void destroy() {
+		this.pool.free(image);
+	}
 }

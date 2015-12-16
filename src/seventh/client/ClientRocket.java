@@ -3,15 +3,14 @@
  */
 package seventh.client;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import seventh.client.gfx.AnimatedImage;
-import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Light;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
-
-import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * @author Tony
@@ -29,7 +28,7 @@ public class ClientRocket extends ClientEntity {
 	 */
 	public ClientRocket(ClientGame game, Vector2f pos) {
 		super(game, pos);
-		anim = Art.newMissileAnim();
+		anim = game.getAnimationPools().getMissle().create();
 		sprite = new Sprite(anim.getCurrentImage());
 		sprite.flip(false, true);
 		//sprite.setScale(0.5f);
@@ -47,6 +46,7 @@ public class ClientRocket extends ClientEntity {
 	public void destroy() {	
 		super.destroy();
 		light.destroy();
+		game.getAnimationPools().getMissle().free(anim);
 	}
 	
 	/* (non-Javadoc)

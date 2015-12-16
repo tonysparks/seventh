@@ -69,8 +69,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	public ClientPlayerEntity(ClientGame game, ClientPlayer player, Vector2f pos) {
 		super(game, pos);
 		
-		type = Type.PLAYER;
-		changeTeam(ClientTeam.NONE);
+		this.type = Type.PLAYER;
 			
 		this.currentState = State.IDLE;	
 		this.invinceableTime = 0;		
@@ -88,7 +87,9 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.mussleFlash.setTexture(Art.fireWeaponLight);
 		this.mussleFlash.setColor(0.5f,0.5f,0.5f);
 								
-		setPlayer(player);			
+		setPlayer(player);
+		
+		//changeTeam(ClientTeam.NONE);
 	}
 	
 	/* (non-Javadoc)
@@ -206,12 +207,12 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	public void changeTeam(ClientTeam team) {		
 		switch(team) {			
 			case AXIS: {
-				this.sprite = new PlayerSprite(this, Art.axisBodyModel, Art.axisWalkModel, Art.axisCrouchLegs, Art.axisSprintModel);
+				this.sprite = this.player.getAxisSprite();
 				break;
 			}
 			case ALLIES:
 			default: {
-				this.sprite = new PlayerSprite(this, Art.alliedBodyModel, Art.alliedWalkModel, Art.alliedCrouchLegs, Art.alliedSprintModel);				
+				this.sprite = this.player.getAlliedSprite();				
 			}
 		}
 		

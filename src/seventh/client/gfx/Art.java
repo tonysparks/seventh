@@ -4,11 +4,7 @@
 package seventh.client.gfx;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
-import seventh.shared.Cons;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,6 +12,8 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import seventh.shared.Cons;
 
 /**
  * Art assets
@@ -516,28 +514,7 @@ public class Art {
 		});						
 		return new AnimatedImage(fireImage, animation);
 	}
-	
-	public static AnimatedImage newBloodAnim() {
-//		final int frameTime = 150;
-		Animation animation = newAnimation(new int[]{
-			80, 50, 60, 40
-			//frameTime, frameTime,frameTime, frameTime,frameTime, frameTime,
-			//frameTime, frameTime,frameTime, frameTime,
-		});						
-		AnimatedImage anim = new AnimatedImage(explosionImage, animation);
-		anim.loop(false);
-		return anim;
-	}
-	
-	public static AnimatedImage newDeathAnim() {
-		Animation animation = newAnimation(new int[]{
-			2000, 2000
-		});						
-		AnimatedImage anim = new AnimatedImage(new TextureRegion[] { deathsImage, deathsImage }, animation);
-		anim.loop(false);
-		return anim;
-	}
-	
+		
 	public static AnimatedImage newAlliedBackDeathAnim() {
 		int frameTime = 120;
 		Animation animation = newAnimation(new int[] {
@@ -583,35 +560,22 @@ public class Art {
 		anim.loop(false);
 		return anim;
 	}
-	
-	public static AnimatedImage newWalkAnim(Model model) {
-		int frameTime = 80;
-		Animation animation = newAnimation(new int[] {
-			frameTime, frameTime, frameTime, frameTime, frameTime, frameTime,
-		});
-		AnimatedImage anim = new AnimatedImage(model.getFrames(), animation);
-		anim.loop(true);
-		return anim;
-	}
-	
+		
 	/**
 	 * Creates a new {@link Animation}
 	 * @param obj
 	 * @return
 	 */
 	public static Animation newAnimation(int[] frameTimes) {
-		Animation animation = null;
 		
-		List<AnimationFrame> frames = new ArrayList<AnimationFrame>(frameTimes.length);
-
+		AnimationFrame[] frames = new AnimationFrame[frameTimes.length];
+		
 		int frameNumber = 0;
 		for(; frameNumber < frameTimes.length; frameNumber++) {
-			frames.add(new AnimationFrame(frameTimes[frameNumber], frameNumber));
+			frames[frameNumber] = new AnimationFrame(frameTimes[frameNumber], frameNumber);
 		}
 
-		animation = new FramedAnimation(frames);
-	
-
+		Animation animation = new FramedAnimation(frames);
 		return animation;
 	}
 	

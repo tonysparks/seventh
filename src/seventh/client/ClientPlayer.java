@@ -3,6 +3,8 @@
  */
 package seventh.client;
 
+import seventh.client.gfx.Art;
+import seventh.client.gfx.PlayerSprite;
 import seventh.game.Entity;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
@@ -21,6 +23,9 @@ public class ClientPlayer {
 	private String name;
 	private int spectatingPlayerId;
 	
+	private PlayerSprite axisSprite;
+	private PlayerSprite alliedSprite;
+	
 	/**
 	 * 
 	 */
@@ -30,6 +35,9 @@ public class ClientPlayer {
 		this.stats = new NetPlayerStat();
 		this.team = ClientTeam.NONE;
 		this.spectatingPlayerId = Entity.INVALID_ENTITY_ID;
+		
+		this.axisSprite = new PlayerSprite(this, Art.axisBodyModel, Art.axisWalkModel, Art.axisCrouchLegs, Art.axisSprintModel);
+		this.alliedSprite = new PlayerSprite(this, Art.alliedBodyModel, Art.alliedWalkModel, Art.alliedCrouchLegs, Art.alliedSprintModel);
 	}
 
 	public void updateStats(NetPlayerStat state) {
@@ -69,6 +77,19 @@ public class ClientPlayer {
 		return this.stats.ping;
 	}
 	
+	/**
+	 * @return the alliedSprite
+	 */
+	public PlayerSprite getAlliedSprite() {
+		return alliedSprite;
+	}
+	
+	/**
+	 * @return the axisSprite
+	 */
+	public PlayerSprite getAxisSprite() {
+		return axisSprite;
+	}
 	
 	
 	/**
@@ -91,6 +112,10 @@ public class ClientPlayer {
 	public void setEntity(ClientPlayerEntity entity) {
 		if(this.entity!=entity) {
 			this.entity = entity;
+			
+			this.alliedSprite.reset(this);
+			this.axisSprite.reset(this);
+			
 			if(this.entity != null && team!= null) {
 				this.entity.changeTeam(getTeam());
 			}

@@ -11,6 +11,7 @@ import java.util.Random;
 import leola.vm.types.LeoObject;
 import seventh.client.ClientEntity.OnRemove;
 import seventh.client.gfx.AnimatedImage;
+import seventh.client.gfx.AnimationPools;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
@@ -86,6 +87,7 @@ public class ClientGame {
 	private final ClientPlayers players;
 	
 	private final ClientBulletPool bulletPool;
+	private final AnimationPools animationPools;
 	
 	private final ClientEntity[] renderingOrderEntities;
 	
@@ -176,6 +178,8 @@ public class ClientGame {
 		
 		this.bulletPool = new ClientBulletPool(this, SeventhConstants.MAX_ENTITIES);
 		this.zings = new Zings(this);
+		
+		this.animationPools = new AnimationPools();
 	}	
 	
 	/**
@@ -570,6 +574,13 @@ public class ClientGame {
 	 */
 	public ClientGameEffects getGameEffects() {
 		return gameEffects;
+	}
+	
+	/**
+	 * @return the animationPools
+	 */
+	public AnimationPools getAnimationPools() {
+		return animationPools;
 	}
 	
 	/**
@@ -1069,6 +1080,7 @@ public class ClientGame {
 										
 					AnimatedImage anim = null;
 					switch(player.getTeam()) {
+					// TODO use pool
 						case ALLIES: {
 							if(random.nextBoolean()) {
 								anim = Art.newAlliedFrontDeathAnim();

@@ -4,9 +4,8 @@
  */
 package seventh.client.gfx;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 import seventh.shared.TimeStep;
 
@@ -41,36 +40,24 @@ public class FramedAnimation extends Animation {
 	 */
 	private int numberOfFrames;
 
-
 	/**
 	 * Constructs a new {@link FramedAnimation}.
 	 *
-	 * @param animationFrames
+	 * @param frames
 	 */
-	public FramedAnimation(List<AnimationFrame> animationFrames) {
+	public FramedAnimation(final AnimationFrame[] frames) {
 		super();
-
-		this.animationFrames = new AnimationFrame[animationFrames.size()];
-		this.numberOfFrames = this.animationFrames.length;
-
-		/*
-		 * Sort the animation frames
-		 */
-		Collections.sort(animationFrames, new Comparator<AnimationFrame>()
+		
+		this.animationFrames = frames;
+		this.numberOfFrames = frames.length;
+		
+		Arrays.sort(frames, new Comparator<AnimationFrame>()
 		{
 			public int compare(AnimationFrame o1, AnimationFrame o2) {
 				return o1.getFrameNumber() - o2.getFrameNumber();
 			}
 		});
-
-		/*
-		 * Store in the array
-		 */
-		for(int i = 0; i < animationFrames.size(); i++ ) {
-			AnimationFrame frame = animationFrames.get(i);
-			this.animationFrames[i] = frame;
-		}
-
+		
 		setCurrentFrame(0);
 		this.elapsedTime = 0L;
 	}

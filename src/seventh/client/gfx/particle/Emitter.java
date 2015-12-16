@@ -168,6 +168,14 @@ public abstract class Emitter implements Effect {
 		return !isAlive();
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.particle.Effect#destroy()
+	 */
+	@Override
+	public void destroy() {
+		reset();
+	}
+	
 	/**
 	 * Spawns a particle
 	 */
