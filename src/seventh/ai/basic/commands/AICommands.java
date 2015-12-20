@@ -13,7 +13,9 @@ import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.CoverEntityAction;
 import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.GuardAction;
 import seventh.ai.basic.actions.MoveToAction;
+import seventh.ai.basic.actions.SequencedGoal;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
@@ -121,7 +123,9 @@ public class AICommands {
                     dest.set(x, y);
                 }
                 
-                Action action = new MoveToAction(dest);
+                SequencedGoal action = new SequencedGoal("MoveToAndGuard");
+                action.addLastAction(new MoveToAction(dest));
+                action.addLastAction(new GuardAction());
                 return action;
             }
         });
