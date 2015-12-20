@@ -68,6 +68,16 @@ public class AnimationEffect implements Effect {
 		this.offsetY = y;
 	}
 	
+	/**
+	 * Reset the animation effect
+	 */
+	public void reset(Vector2f pos, float rotation) {
+		this.pos.set(pos);
+		this.rotation = (float)(Math.toDegrees(rotation));
+		this.anim.reset();
+		this.fade.reset();
+	}
+	
 	/* (non-Javadoc)
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */

@@ -12,12 +12,13 @@ import seventh.shared.TimeStep;
  */
 public class FadeValue {
 
-	private int currentValue, endValue, delta;
+	private int currentValue, startValue, endValue, delta;
 	/**
 	 * 
 	 */
 	public FadeValue(int start, int end, int time) {		
 		this.currentValue = start;
+		this.startValue = start;
 		this.endValue = end;
 		
 		int numberOfTicks = time / 33;
@@ -30,6 +31,10 @@ public class FadeValue {
 				delta = - (((start - end) / numberOfTicks) + 1);
 			}
 		}
+	}
+	
+	public void reset() {
+		this.currentValue = this.startValue;
 	}
 	
 	public void update(TimeStep timeStep) {		
