@@ -24,7 +24,7 @@ public class Explosion implements Effect {
 	 * 
 	 */
 	public Explosion(ClientGame game, Vector2f pos) {
-		this.pool = game.getAnimationPools().getExplosion();
+		this.pool = game.getPools().getExplosion();
 		this.pos = pos;
 		this.image = pool.create();
 		this.sprite = new Sprite(this.image.getCurrentImage());
