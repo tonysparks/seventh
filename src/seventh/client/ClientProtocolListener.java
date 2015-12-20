@@ -23,6 +23,7 @@ import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
+import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
@@ -200,6 +201,9 @@ public class ClientProtocolListener extends NetworkProtocol {
 		else if(message instanceof TeamTextMessage) {
 			this.handler.teamTextMessage(conn, (TeamTextMessage)message);
 		}	
+		else if(message instanceof PlayerSpeechMessage) {
+			this.handler.playerSpeech(conn, (PlayerSpeechMessage)message);
+		}
 		else if(message instanceof RconMessage) {
 			this.handler.rconMessage(conn, (RconMessage)message);
 		}

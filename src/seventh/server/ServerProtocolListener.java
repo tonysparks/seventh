@@ -3,18 +3,18 @@
  */
 package seventh.server;
 
-import harenet.api.Connection;
-import harenet.api.Endpoint;
-import harenet.api.Server;
-import harenet.messages.NetMessage;
-
 import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import harenet.api.Connection;
+import harenet.api.Endpoint;
+import harenet.api.Server;
+import harenet.messages.NetMessage;
 import seventh.game.Entity.Type;
 import seventh.game.Game;
 import seventh.game.Player;
+import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.net.NetTeam;
@@ -26,6 +26,7 @@ import seventh.network.messages.ConnectRequestMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
+import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -191,6 +192,9 @@ public class ServerProtocolListener extends NetworkProtocol implements GameSessi
 		else if(message instanceof PlayerSwitchTeamMessage) {
 			playerSwitchedTeam(conn, (PlayerSwitchTeamMessage)message);
 		}
+		else if(message instanceof PlayerSpeechMessage) {
+			playerSpeech(conn, (PlayerSpeechMessage)message);
+		}
 		else if(message instanceof ClientDisconnectMessage) {
 			clientDisconnect(conn, (ClientDisconnectMessage)message);
 		}
@@ -311,6 +315,21 @@ public class ServerProtocolListener extends NetworkProtocol implements GameSessi
 	public void playerSwitchedTeam(Connection conn, PlayerSwitchTeamMessage msg) throws IOException {		
 		if ( game.playerSwitchedTeam( (int)msg.playerId, msg.teamId) ) {
 			this.server.sendToAll(Endpoint.FLAG_RELIABLE, msg);
+		}
+	}
+	
+	public void playerSpeech(Connection conn, PlayerSpeechMessage msg) throws IOException {
+		if(conn.getId() == msg.playerId) {
+			PlayerInfo player = game.getPlayerById(msg.playerId);
+			if(player != null) {
+				if(player.isAlive()) {
+					PlayerEntity entity = player.getEntity();
+					// server is authorative of the actual player position
+					msg.posX = (short)entity.getCenterPos().x;
+					msg.posY = (short)entity.getCenterPos().y;
+					this.server.sendToAllExcept(Endpoint.FLAG_RELIABLE, msg, conn.getId());
+				}
+			}
 		}
 	}
 	

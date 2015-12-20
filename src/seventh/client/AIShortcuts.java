@@ -90,6 +90,7 @@ public class AIShortcuts {
                 int playerId = localPlayer.getId();
                 console.execute("ai " + closestBot + " followMe " + playerId);
                 console.execute("team_say " + players.getPlayer(closestBot).getName() + " follow me!" );
+                console.execute("speech " + 2);
             }
         }
         
@@ -153,6 +154,7 @@ public class AIShortcuts {
                 Vector2f worldPosition = getMouseWorldPosition(game);
                 console.execute("ai " + closestBot + " moveTo " + (int)worldPosition.x + " " + (int)worldPosition.y);
                 console.execute("team_say " + players.getPlayer(closestBot).getName() + " take cover here!" );
+                console.execute("speech " + 5);
             }    
         }
     }
@@ -269,6 +271,7 @@ public class AIShortcuts {
                 Vector2f worldPosition = getMouseWorldPosition(game);
                 console.execute("ai " + closestBot + " takeCover " + (int)worldPosition.x + " " + (int)worldPosition.y);
                 console.execute("team_say " + players.getPlayer(closestBot).getName() + " take cover!" );
+                console.execute("speech " + 5);
             }    
         }
     }

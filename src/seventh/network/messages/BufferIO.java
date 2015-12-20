@@ -50,22 +50,23 @@ public class BufferIO {
 	public static final byte PLAYER_SWITCH_TEAM = 17;
 	public static final byte PLAYER_NAME_CHANGE = 18;
 	public static final byte PLAYER_WEAPON_CLASS_CHANGE = 19;
+	public static final byte PLAYER_SPEECH = 20;
 	
 	
-	public static final byte ROUND_ENDED = 20;
-	public static final byte ROUND_STARTED = 21;
-	public static final byte SPECTATING_PLAYER = 22;
-	public static final byte TEAM_TEXT = 23;
-	public static final byte TEXT = 24;
-	public static final byte USER_INPUT = 25;
+	public static final byte ROUND_ENDED = 21;
+	public static final byte ROUND_STARTED = 22;
+	public static final byte SPECTATING_PLAYER = 23;
+	public static final byte TEAM_TEXT = 24;
+	public static final byte TEXT = 25;
+	public static final byte USER_INPUT = 26;
 	
-	public static final byte RCON_MESSAGE = 26;
-	public static final byte RCON_TOKEN_MESSAGE = 27;
+	public static final byte RCON_MESSAGE = 27;
+	public static final byte RCON_TOKEN_MESSAGE = 28;
 	
-	public static final byte AI_COMMAND = 28;
+	public static final byte AI_COMMAND = 29;
 	
-	public static final byte TILE_REMOVED = 29;
-	public static final byte TILES_REMOVED= 30;
+	public static final byte TILE_REMOVED = 30;
+	public static final byte TILES_REMOVED= 31;
 	
 	/**
 	 * The Seventh {@link NetMessageFactory} implementation
@@ -121,6 +122,8 @@ public class BufferIO {
 				case PLAYER_NAME_CHANGE: message = new PlayerNameChangeMessage();
 					break;
 				case PLAYER_WEAPON_CLASS_CHANGE: message = new PlayerSwitchWeaponClassMessage();
+					break;
+				case PLAYER_SPEECH: message = new PlayerSpeechMessage();
 					break;
 				case ROUND_ENDED: message = new RoundEndedMessage();
 					break;

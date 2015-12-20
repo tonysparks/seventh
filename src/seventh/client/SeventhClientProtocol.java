@@ -30,6 +30,7 @@ import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
+import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
@@ -311,10 +312,20 @@ public class SeventhClientProtocol implements ClientProtocol {
 	 * @see seventh.client.ClientProtocol#playerSwitchedTeamMessage(net.Connection, seventh.network.messages.PlayerSwitchTeamMessage)
 	 */
 	@Override
-	public void playerSwitchedTeamMessage(Connection conn,
-			PlayerSwitchTeamMessage msg) {
+	public void playerSwitchedTeamMessage(Connection conn, PlayerSwitchTeamMessage msg) {
 		if(game!=null) {
 			game.playerSwitchedTeam(msg);
+		}
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientProtocol#playerSpeech(harenet.api.Connection, seventh.network.messages.PlayerSpeechMessage)
+	 */
+	@Override
+	public void playerSpeech(Connection conn, PlayerSpeechMessage msg) {
+		if(game!=null) {
+			game.playerSpeech(msg);
 		}
 	}
 	

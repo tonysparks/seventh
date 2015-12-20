@@ -11,7 +11,7 @@ import java.util.Random;
 import leola.vm.types.LeoObject;
 import seventh.client.ClientEntity.OnRemove;
 import seventh.client.gfx.AnimatedImage;
-import seventh.client.gfx.AnimationPools;
+import seventh.client.gfx.AnimationPool;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
@@ -56,6 +56,7 @@ import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
+import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
@@ -86,8 +87,7 @@ public class ClientGame {
 	private final ClientEntities entities;
 	private final ClientPlayers players;
 	
-	private final ClientBulletPool bulletPool;
-	private final AnimationPools animationPools;
+	private final Pools pools;
 	
 	private final ClientEntity[] renderingOrderEntities;
 	
@@ -176,10 +176,8 @@ public class ClientGame {
 		this.gameEffects = new ClientGameEffects();
 		this.entityListener = this.gameEffects.getLightSystem().getClientEntityListener();		
 		
-		this.bulletPool = new ClientBulletPool(this, SeventhConstants.MAX_ENTITIES);
+		this.pools = new Pools(this);
 		this.zings = new Zings(this);
-		
-		this.animationPools = new AnimationPools();
 	}	
 	
 	/**
@@ -577,10 +575,10 @@ public class ClientGame {
 	}
 	
 	/**
-	 * @return the animationPools
+	 * @return the pools
 	 */
-	public AnimationPools getAnimationPools() {
-		return animationPools;
+	public Pools getPools() {
+		return pools;
 	}
 	
 	/**
@@ -760,7 +758,7 @@ public class ClientGame {
 				break;
 			}
 			case BULLET: {
-				entity = this.bulletPool.alloc(ent.id, pos);
+				entity = this.pools.getBulletPool().alloc(ent.id, pos);
 				break;
 			}
 			case ROCKET: {
@@ -1079,6 +1077,7 @@ public class ClientGame {
 					Vector2f pos = new Vector2f(locationOfDeath);
 										
 					AnimatedImage anim = null;
+					AnimationPool pool = null;
 					switch(player.getTeam()) {
 					// TODO use pool
 						case ALLIES: {
@@ -1108,7 +1107,12 @@ public class ClientGame {
 					}
 					
 					if(anim!=null) {
-						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), gameType.equals(GameType.Type.OBJ)));
+						// Objective game type keeps the dead bodies around
+						boolean persist = gameType.equals(GameType.Type.OBJ);
+						
+						// spawn the death animation
+						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));
+						
 						Sounds.startPlaySound(Sounds.die, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					}
 				}	
@@ -1280,7 +1284,7 @@ public class ClientGame {
 	 * Cleans up resources
 	 */
 	public void destroy() {
-		this.bulletPool.clear();
+		this.pools.destroy();
 		this.entities.clear();		
 		this.bombTargets.clear();
 		this.vehicles.clear();
@@ -1305,6 +1309,16 @@ public class ClientGame {
 		}
 	}
 
+	/**
+	 * @param msg
+	 */
+	public void playerSpeech(PlayerSpeechMessage msg) {
+		ClientPlayer player = this.players.getPlayer(msg.playerId);
+		if(player != null) {
+			Sounds.playSpeechSound(player.getTeam().getId(), msg.speechCommand, msg.posX, msg.posY);
+		}
+	}
+	
 	/**
 	 * The bomb has been planted
 	 * 

@@ -13,6 +13,7 @@ import paulscode.sound.SoundSystemLogger;
 import paulscode.sound.codecs.CodecWav;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 import seventh.client.ClientSeventhConfig;
+import seventh.client.ClientTeam;
 import seventh.game.SoundType;
 import seventh.game.net.NetSound;
 import seventh.math.Vector2f;
@@ -123,6 +124,50 @@ public class Sounds {
 	public static final int[] tankStart = {118};
 	public static final int[] tankMove = {119};
 	public static final int[] healthPackPickup = {120};
+
+	public static final int[] alliedSpeechAttack = {121};
+	public static final int[] alliedSpeechCoverMe = {122};
+	public static final int[] alliedSpeechFollowMe = {123};
+	public static final int[] alliedSpeechGetOutOfMyWay = {124};
+	public static final int[] alliedSpeechGetUsKilled = {125};
+	public static final int[] alliedSpeechHoldPosition = {126};
+	public static final int[] alliedSpeechIllCoverYou = {127};
+	public static final int[] alliedSpeechTakingFire = {128};
+	public static final int[] alliedSpeechYouTakeLead = {129};
+
+	public static final int[] axisSpeechAttack = {130};
+	public static final int[] axisSpeechCoverMe = {131};
+	public static final int[] axisSpeechFollowMe = {132};
+	public static final int[] axisSpeechGetOutOfMyWay = {133};
+	public static final int[] axisSpeechGetUsKilled = {134};
+	public static final int[] axisSpeechHoldPosition = {135};
+	public static final int[] axisSpeechIllCoverYou = {136};
+	public static final int[] axisSpeechTakingFire = {137};
+	public static final int[] axisSpeechYouTakeLead = {138};
+	
+	public static final int[][] alliedSpeeches = {
+			alliedSpeechAttack,
+			alliedSpeechCoverMe,
+			alliedSpeechFollowMe,
+			alliedSpeechGetOutOfMyWay,
+			alliedSpeechGetUsKilled,
+			alliedSpeechHoldPosition,
+			alliedSpeechIllCoverYou,
+			alliedSpeechTakingFire,
+			alliedSpeechYouTakeLead,		
+	};
+	
+	public static final int[][] axisSpeeches = {
+			axisSpeechAttack,
+			axisSpeechCoverMe,
+			axisSpeechFollowMe,
+			axisSpeechGetOutOfMyWay,
+			axisSpeechGetUsKilled,
+			axisSpeechHoldPosition,
+			axisSpeechIllCoverYou,
+			axisSpeechTakingFire,
+			axisSpeechYouTakeLead,		
+	};
 	
 	private static Sound[][] channels = new Sound[32][];
 	private static float volume = 0.1f;
@@ -288,6 +333,27 @@ public class Sounds {
             loadSound("./seventh/sfx/tank/movement_start.wav") ,   // 118
             loadSound("./seventh/sfx/tank/movement_loop.wav") ,   // 119
             loadSound("./seventh/sfx/player/healthpack_pickup.wav") ,   // 120
+            
+            loadSound("./seventh/sfx/player/speech/allied/attack.wav") ,   // 121
+            loadSound("./seventh/sfx/player/speech/allied/cover_me.wav") ,   // 122
+            loadSound("./seventh/sfx/player/speech/allied/follow_me.wav") ,   // 123
+            loadSound("./seventh/sfx/player/speech/allied/get_out_of_my_way.wav") ,   // 124
+            loadSound("./seventh/sfx/player/speech/allied/get_us_killed.wav") ,   // 125
+            loadSound("./seventh/sfx/player/speech/allied/hold_position.wav") ,   // 126
+            loadSound("./seventh/sfx/player/speech/allied/ill_cover_you.wav") ,   // 127
+            loadSound("./seventh/sfx/player/speech/allied/taking_fire_help.wav") ,   // 128
+            loadSound("./seventh/sfx/player/speech/allied/you_take_lead.wav") ,   // 129
+            
+            
+            loadSound("./seventh/sfx/player/speech/axis/attack.wav") ,   // 130
+            loadSound("./seventh/sfx/player/speech/axis/cover_me.wav") ,   // 131
+            loadSound("./seventh/sfx/player/speech/axis/follow_me.wav") ,   // 132
+            loadSound("./seventh/sfx/player/speech/axis/get_out_of_my_way.wav") ,   // 133
+            loadSound("./seventh/sfx/player/speech/axis/get_us_killed.wav") ,   // 134
+            loadSound("./seventh/sfx/player/speech/axis/hold_position.wav") ,   // 135
+            loadSound("./seventh/sfx/player/speech/axis/ill_cover_you.wav") ,   // 136
+            loadSound("./seventh/sfx/player/speech/axis/taking_fire_help.wav") ,   // 137
+            loadSound("./seventh/sfx/player/speech/axis/you_take_lead.wav") ,   // 138
 		};
 	};
 
@@ -525,6 +591,21 @@ public class Sounds {
 	public static Sound playSound(NetSound sound, float x, float y) {
 		SoundType type = SoundType.fromNet(sound.type);
 		return playSound(type, x, y);
+	}
+	
+	public static Sound playSpeechSound(int teamId, byte speech, float x, float y) {
+		Sound sound = null;
+		if(speech > -1 && speech < axisSpeeches.length) {
+			
+			if(teamId == ClientTeam.AXIS.getId()) {
+				sound = playFreeSound(axisSpeeches[speech], x, y);
+			}
+			else if(teamId == ClientTeam.ALLIES.getId()) {
+				sound = playFreeSound(alliedSpeeches[speech], x, y);
+			}
+		}
+		
+		return (sound);
 	}
 	
 	public static Sound playSound(SoundType type, float x, float y) {	

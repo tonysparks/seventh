@@ -6,6 +6,11 @@ package seventh.client.screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.controllers.PovDirection;
+
 import seventh.ai.AICommand;
 import seventh.client.AIShortcut;
 import seventh.client.AIShortcuts;
@@ -19,6 +24,7 @@ import seventh.client.AIShortcuts.TakeCoverAIShortcut;
 import seventh.client.AIShortcutsMenu;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
+import seventh.client.ClientPlayerEntity;
 import seventh.client.ClientTeam;
 import seventh.client.ControllerInput;
 import seventh.client.Inputs;
@@ -37,6 +43,7 @@ import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.AICommandMessage;
+import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.TeamTextMessage;
@@ -51,11 +58,6 @@ import seventh.ui.TextBox;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.view.TextBoxView;
-
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
 
 /**
  * Represents when a player is actually playing the game.
@@ -451,6 +453,35 @@ public class InGameScreen implements Screen {
 				msg.playerId = game.getLocalPlayer().getId();
 								
 				network.queueSendReliableMessage(msg);
+			}
+		});
+		
+		console.addCommand(new Command("speech") {
+			/* (non-Javadoc)
+			 * @see seventh.shared.Command#execute(seventh.shared.Console, java.lang.String[])
+			 */
+			@Override
+			public void execute(Console console, String... args) {
+				if(args.length < 1) {
+					console.println("<usage> speech [speech id]");
+				}
+				else {
+					PlayerSpeechMessage msg = new PlayerSpeechMessage();
+					ClientPlayer player = game.getLocalPlayer();
+					if(player.isAlive()) {
+						msg.playerId = player.getId();
+						ClientPlayerEntity entity = player.getEntity();
+						if(entity!=null) {
+							Vector2f pos = entity.getCenterPos();
+							msg.posX = (short)pos.x;
+							msg.posY = (short)pos.y;
+							msg.speechCommand = Byte.parseByte(args[0]);
+							
+							Sounds.playSpeechSound(player.getTeam().getId(), msg.speechCommand, pos.x, pos.y);
+							network.queueSendReliableMessage(msg);
+						}
+					}
+				}
 			}
 		});
 		

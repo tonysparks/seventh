@@ -17,6 +17,7 @@ import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
+import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
@@ -145,6 +146,14 @@ public interface ClientProtocol {
 	 * @param msg
 	 */
 	public void playerKilled(Connection conn, PlayerKilledMessage msg);
+	
+	/**
+	 * A player has spoken
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void playerSpeech(Connection conn, PlayerSpeechMessage msg);
 	
 	/**
 	 * An objective based round has just started.
