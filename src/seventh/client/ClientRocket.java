@@ -28,7 +28,7 @@ public class ClientRocket extends ClientEntity {
 	 */
 	public ClientRocket(ClientGame game, Vector2f pos) {
 		super(game, pos);
-		anim = game.getAnimationPools().getMissle().create();
+		anim = game.getPools().getMissle().create();
 		sprite = new Sprite(anim.getCurrentImage());
 		sprite.flip(false, true);
 		//sprite.setScale(0.5f);
@@ -46,7 +46,7 @@ public class ClientRocket extends ClientEntity {
 	public void destroy() {	
 		super.destroy();
 		light.destroy();
-		game.getAnimationPools().getMissle().free(anim);
+		game.getPools().getMissle().free(anim);
 	}
 	
 	/* (non-Javadoc)

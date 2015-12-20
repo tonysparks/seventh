@@ -4,7 +4,6 @@
 package seventh.client;
 
 import seventh.client.gfx.AnimatedImage;
-import seventh.client.gfx.AnimationPool;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Light;
@@ -32,8 +31,7 @@ public class ClientExplosion extends ClientEntity {
 	public ClientExplosion(ClientGame game, Vector2f pos) {
 		super(game, pos);
 		
-		final AnimationPool pool = game.getAnimationPools().getExplosion();
-		anim = pool.create();
+		anim = game.getPools().getExplosion().create();
 		anim.loop(false);
 		this.soundPlayed = false;	
 		
@@ -48,8 +46,7 @@ public class ClientExplosion extends ClientEntity {
 		setOnRemove(new OnRemove() {
 			
 			@Override
-			public void onRemove(ClientEntity me, ClientGame game) {
-				pool.free(anim);
+			public void onRemove(ClientEntity me, ClientGame game) {				
 				game.getLightSystem().removeLight(light);
 			}
 		});
@@ -101,6 +98,15 @@ public class ClientExplosion extends ClientEntity {
 		//canvas.fillRect(x-bounds.width/2, y-bounds.height/2, this.bounds.width, this.bounds.height, 0x1fff0000);
 		
 		//canvas.drawImage(anim.getCurrentImage(), x-bounds.width/4, y-bounds.height/4, null);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientEntity#destroy()
+	 */
+	@Override
+	public void destroy() {	
+		super.destroy();
+		game.getPools().getExplosion().free(anim);
 	}
 
 }
