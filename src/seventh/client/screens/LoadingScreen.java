@@ -7,13 +7,12 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import seventh.client.ClientConnection;
 import seventh.client.ClientGame;
 import seventh.client.ClientProtocol;
+import seventh.client.ClientProtocol.GameCreationListener;
 import seventh.client.Inputs;
-import seventh.client.Network;
 import seventh.client.Screen;
-import seventh.client.SeventhClientProtocol;
-import seventh.client.SeventhClientProtocol.GameCreationListener;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.RenderFont;
@@ -44,7 +43,7 @@ public class LoadingScreen implements Screen {
 	
 	private Thread thread;
 	private AtomicReference<ClientGame> game;
-	private Network network;
+	private ClientConnection connection;
 	
 	private boolean connectNow;
 	private boolean isConnecting;
@@ -77,7 +76,7 @@ public class LoadingScreen implements Screen {
 		this.connectNow = connectNow;
 		this.isConnecting = false;
 		
-		this.network = app.getNetwork();
+		this.connection = app.getClientConnection();
 		this.game = new AtomicReference<ClientGame>();
 		this.isDone = new AtomicBoolean();
 		this.theme = app.getTheme();
@@ -99,26 +98,27 @@ public class LoadingScreen implements Screen {
 						message += host + ":" + port + "...";
 						try {							
 							Cons.println("Connecting to: " + host + ":" + port);
-							network.connect(host, port);
+							connection.disconnect();
+							connection.connect(host, port);
 							message += "Success!";
-												
-							Cons.println("Successfully connected!");
 							
-							ClientProtocol protocol = new SeventhClientProtocol(app, network, new GameCreationListener() {
-								
-								@Override
-								public void onGameCreated(ClientGame game) {
-									LoadingScreen.this.game.set(game);							
-									network.sendReliableMessage(new ClientReadyMessage());
-									isDone.set(true);							
-								}
-							});
-							network.setProtocolHandler(protocol);
+							final ClientProtocol protocol = connection.getClientProtocol();
+							
+							Cons.println("Successfully connected!");
+							connection.setGameCreationListener(new GameCreationListener() {
+                                
+                                @Override
+                                public void onGameCreated(ClientGame game) {                                   
+                                    LoadingScreen.this.game.set(game);                          
+                                    protocol.sendClientReadyMessage(new ClientReadyMessage());
+                                    isDone.set(true);                                                           
+                                }
+                            });
 							
 							ConnectRequestMessage msg = new ConnectRequestMessage();
 							msg.name = app.getConfig().getPlayerName();
 							
-							network.sendReliableMessage(msg);
+							protocol.sendConnectRequestMessage(msg);
 						}
 						catch(Exception e) {
 							Cons.println("*** Unable to connect to the server :: \n" + e);
@@ -155,11 +155,11 @@ public class LoadingScreen implements Screen {
 		}
 		
 		
-		network.updateNetwork(timeStep);
+		connection.updateNetwork(timeStep);
 		
 		
 		if(isDone.get()) {
-			app.setScreen(new InGameScreen(app, network, game.get()));
+			app.setScreen(new InGameScreen(app, game.get()));
 		}
 	}
 

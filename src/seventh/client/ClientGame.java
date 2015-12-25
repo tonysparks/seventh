@@ -4,10 +4,12 @@
 package seventh.client;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.client.ClientEntity.OnRemove;
 import seventh.client.gfx.AnimatedImage;
@@ -64,8 +66,10 @@ import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileRemovedMessage;
 import seventh.network.messages.TilesRemovedMessage;
+import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
+import seventh.shared.Scripting;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
@@ -83,6 +87,7 @@ public class ClientGame {
 	private final Map map;
 	
 	private final ClientPlayer localPlayer;
+	private final LocalSession localSession;
 	
 	private final ClientEntities entities;
 	private final ClientPlayers players;
@@ -118,9 +123,6 @@ public class ClientGame {
 	private final Random random;
 	
 	private final Timers gameTimers;
-
-	private long rconToken;	
-	
 	
 	/**
 	 * Listens for {@link ClientEntity} life cycle
@@ -143,18 +145,22 @@ public class ClientGame {
 		public void onEntityDestroyed(ClientEntity ent);
 	}
 	
-	
 	/**
-	 * @throws Exception 
+	 * @param app
+	 * @param players
+	 * @param map
+	 * @param session
+	 * @throws Exception
 	 */
-	public ClientGame(SeventhGame app, ClientPlayers players, Map map, int localPlayerId) throws Exception {
+	public ClientGame(SeventhGame app, ClientPlayers players, Map map, LocalSession session) throws Exception {
 		this.app = app;		
 		this.players = players;
 		this.map = map;
+		this.localSession = session;
 														
 		this.scoreboard = new Scoreboard(this);
 		
-		this.localPlayer = players.getPlayer(localPlayerId);		
+		this.localPlayer = players.getPlayer(session.getSessionPlayerId());		
 		this.entities = new ClientEntities(SeventhConstants.MAX_ENTITIES);	
 		this.renderingOrderEntities = new ClientEntity[SeventhConstants.MAX_ENTITIES];		
 		
@@ -413,18 +419,11 @@ public class ClientGame {
 	}
 	
 	/**
-	 * @return the rconToken
-	 */
-	public long getRconToken() {
-		return rconToken;
-	}
-	
-	/**
-	 * @param rconToken the rconToken to set
-	 */
-	public void setRconToken(long rconToken) {
-		this.rconToken = rconToken;
-	}
+     * @return the localSession
+     */
+    public LocalSession getLocalSession() {
+        return localSession;
+    }
 		
 	/**
 	 * @return the lightSystem
@@ -844,6 +843,39 @@ public class ClientGame {
 			entityListener.onEntityCreated(entity);
 		}
 	}
+	
+	/**
+	 * Prepares the game for play
+	 * 
+	 * @param mapFile
+	 * @param gameState
+	 */
+	public void prepareGame(String mapFile, NetGameState gameState) {
+	    applyFullGameState(gameState);
+	    loadMapProperties(mapFile);
+	}
+	
+	/**
+     * Load the client maps properties file
+     * 
+     * @param mapFile
+     * @param game
+     */
+    private void loadMapProperties(String mapFile) {      
+        File propertiesFile = new File(mapFile + ".client.props.leola");
+        if(propertiesFile.exists()) {
+            try {
+                Leola runtime = Scripting.newSandboxedRuntime();
+                
+                runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+                runtime.put("game", this);
+                runtime.eval(propertiesFile);
+            }
+            catch(Exception e) {
+                Cons.println("*** ERROR -> Loading " + propertiesFile.getName() + ":" + e);
+            }
+        }
+    }
 	
 
 	public void applyFullGameState(NetGameState gs) {

@@ -14,16 +14,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.GL10;
-
 import seventh.ClientMain;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.BlurEffectShader;
@@ -47,6 +37,16 @@ import seventh.shared.Console;
 import seventh.shared.StateMachine;
 import seventh.shared.TimeStep;
 import seventh.ui.UserInterfaceManager;
+
+import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.GL10;
 
 /**
  * @author Tony
@@ -86,8 +86,8 @@ public class SeventhGame implements ApplicationListener {
 	private InputMultiplexer inputs;
 	private KeyMap keyMap;
 	
-	private Network network;
-	
+	private final ClientConnection connection;
+		
 	private boolean isVSync;
 	private Stack<Screen> screenStack;
 	
@@ -115,7 +115,7 @@ public class SeventhGame implements ApplicationListener {
 		this.config = config;		
 		this.keyMap = config.getKeyMap();
 						
-		this.network = new Network(this.config, console);
+		this.connection = new ClientConnection(this, config, console);
 		
 		this.screenStack = new Stack<Screen>();
 		this.sm = new StateMachine<Screen>();										
@@ -154,10 +154,10 @@ public class SeventhGame implements ApplicationListener {
 			public void execute(Console console, String... args) {
 				String newName = this.mergeArgsDelim(" ", args);				
 				config.setPlayerName(newName);
-				if(network != null) {
+				if(connection.isConnected()) {
 					PlayerNameChangeMessage msg = new PlayerNameChangeMessage();
 					msg.name = newName;
-					network.queueSendReliableMessage(msg);
+					connection.getClientProtocol().sendPlayerNameChangedMessage(msg);
 				}
 			}
 		});
@@ -495,8 +495,8 @@ public class SeventhGame implements ApplicationListener {
 	/**
 	 * @return the network
 	 */
-	public Network getNetwork() {
-		return network;
+	public ClientConnection getClientConnection() {
+		return connection;
 	}
 		
 	

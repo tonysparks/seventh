@@ -6,11 +6,6 @@ package seventh.client.screens;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
-
 import seventh.ai.AICommand;
 import seventh.client.AIShortcut;
 import seventh.client.AIShortcuts;
@@ -22,14 +17,15 @@ import seventh.client.AIShortcuts.PlantBombAIShortcut;
 import seventh.client.AIShortcuts.SurpressFireAIShortcut;
 import seventh.client.AIShortcuts.TakeCoverAIShortcut;
 import seventh.client.AIShortcutsMenu;
+import seventh.client.ClientConnection;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayerEntity;
+import seventh.client.ClientProtocol;
 import seventh.client.ClientTeam;
 import seventh.client.ControllerInput;
 import seventh.client.Inputs;
 import seventh.client.KeyMap;
-import seventh.client.Network;
 import seventh.client.Screen;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Camera;
@@ -43,12 +39,12 @@ import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.AICommandMessage;
+import seventh.network.messages.PlayerInputMessage;
 import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
-import seventh.network.messages.UserInputMessage;
 import seventh.shared.Command;
 import seventh.shared.Cons;
 import seventh.shared.Console;
@@ -58,6 +54,10 @@ import seventh.ui.TextBox;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.view.TextBoxView;
+
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 
 /**
  * Represents when a player is actually playing the game.
@@ -105,12 +105,12 @@ public class InGameScreen implements Screen {
 	}
 	
 	private SeventhGame app;
-	private Network network;
+	private ClientConnection connection;
 	private ClientGame game;
 	
 	private Cursor cursor;
 	
-	private UserInputMessage inputMessage;
+	private PlayerInputMessage inputMessage;
 	private int inputKeys;
 		
 	private InGameOptionsDialog dialog;
@@ -127,8 +127,10 @@ public class InGameScreen implements Screen {
 	private AIShortcutsMenu aiShortcutsMenu;
 	
 	private ControllerInput controllerInput;	
-	private Inputs inputs = new Inputs() {		
+	private Inputs inputs = new Inputs() {
+	    
 		public boolean keyUp(int key) {
+		    
 			if(key == Keys.ESCAPE) {
 				if(getDialog().isOpen()) {				
 					app.removeInput(app.getUiManager());
@@ -192,17 +194,17 @@ public class InGameScreen implements Screen {
 	private boolean isDebugMode;
 	private Effects debugEffects;
 	
-	private float[] movements;
+	
 	
 	/**
 	 * 
 	 */
-	public InGameScreen(final SeventhGame app, final Network network, final ClientGame game) {
+	public InGameScreen(final SeventhGame app, final ClientGame game) {
 		this.app = app;
-		this.network = network;
+		this.connection = app.getClientConnection();
 		this.game = game;
 				
-		this.inputMessage = new UserInputMessage();
+		this.inputMessage = new PlayerInputMessage();
 		this.keyMap = app.getKeyMap();
 		
 		this.isDebugMode = false;
@@ -218,17 +220,14 @@ public class InGameScreen implements Screen {
 		commands.add(new DefuseBombAIShortcut(Keys.K));
 		commands.add(new DefendPlantedBombAIShortcut(Keys.L));
 		commands.add(new TakeCoverAIShortcut(Keys.U));
+		
 		this.aiShortcuts = new AIShortcuts(commands);
 		this.aiShortcutsMenu = new AIShortcutsMenu(keyMap, aiShortcuts);
 		
 		createUI();
-				
-		this.movements = new float[4];
-		
+								
 		this.controllerInput = new ControllerInput() {
-			/* (non-Javadoc)
-			 * @see seventh.client.ControllerInput#buttonUp(com.badlogic.gdx.controllers.Controller, int)
-			 */
+			
 			@Override
 			public boolean buttonUp(Controller controller, int button) {
 				super.buttonUp(controller, button);
@@ -236,18 +235,9 @@ public class InGameScreen implements Screen {
 					inputKeys |= Actions.WEAPON_SWITCH_UP.getMask();
 				}
 				return true;
-			}
-			
-			@Override
-			public boolean axisMoved(Controller controller, int axisCode, float value) {			
-				super.axisMoved(controller, axisCode, value);			
-				if(axisCode<4) {
-					movements[axisCode] = value;
-				}
-							
-				return true;
-			}
-		};		
+			}			
+		};
+		
 		Controllers.addListener(this.controllerInput);				
 	}
 	
@@ -280,7 +270,7 @@ public class InGameScreen implements Screen {
 		
 		this.aiShortcutsMenu.hide();
 		
-		this.dialog = new InGameOptionsDialog(app.getConsole(), network, app.getTheme());		
+		this.dialog = new InGameOptionsDialog(app.getConsole(), connection, app.getTheme());		
 		ClientPlayer player = game.getLocalPlayer();
 		if(player!=null) {
 			this.dialog.setTeam(player.getTeam());
@@ -291,7 +281,7 @@ public class InGameScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {				
-				network.disconnect();
+				connection.disconnect();
 				app.getConsole().execute("kill_local_server");
 
 				app.goToMenuScreen();
@@ -385,13 +375,6 @@ public class InGameScreen implements Screen {
 		});
 	}
 	
-	/**
-	 * @return the app
-	 */
-	public SeventhGame getApp() {
-		return app;
-	}
-
 	/* (non-Javadoc)
 	 * @see palisma.shared.State#enter()
 	 */
@@ -400,6 +383,7 @@ public class InGameScreen implements Screen {
 		if(this.game != null) {
 			this.game.onReloadVideo();
 		}
+		final ClientProtocol protocol = connection.getClientProtocol();
 		
 		Console console = app.getConsole();
 		console.addCommand(new Command("ai") {
@@ -410,7 +394,7 @@ public class InGameScreen implements Screen {
 					AICommandMessage msg = new AICommandMessage();
 					msg.botId = Integer.parseInt(args[0]);
 					msg.command = new AICommand(this.mergeArgsDelimAt(",", 1, args));
-					network.queueSendReliableMessage(msg);	
+					protocol.sendAICommandMessage(msg);	
 				}
 				else {
 					console.println("<usage> ai [botid] [command] [args]");
@@ -422,44 +406,38 @@ public class InGameScreen implements Screen {
 		console.addCommand(new Command("disconnect") {			
 			@Override
 			public void execute(Console console, String... args) {
-				network.disconnect();
+				connection.disconnect();
 				app.goToMenuScreen();
 			}
 		});
 		
 		console.addCommand(new Command("say"){
-			/* (non-Javadoc)
-			 * @see seventh.shared.Command#execute(seventh.shared.Console, java.lang.String[])
-			 */
+			
 			@Override
 			public void execute(Console console, String... args) {
 				TextMessage msg = new TextMessage();
 				msg.message = mergeArgsDelim(" ", args);
 				msg.playerId = game.getLocalPlayer().getId();
 				
-				network.queueSendReliableMessage(msg);
+				protocol.sendTextMessage(msg);
 			}
 		});
 		
 		
 		console.addCommand(new Command("team_say"){
-			/* (non-Javadoc)
-			 * @see seventh.shared.Command#execute(seventh.shared.Console, java.lang.String[])
-			 */
+			
 			@Override
 			public void execute(Console console, String... args) {
 				TeamTextMessage msg = new TeamTextMessage();
 				msg.message = mergeArgsDelim(" ", args);
 				msg.playerId = game.getLocalPlayer().getId();
 								
-				network.queueSendReliableMessage(msg);
+				protocol.sendTeamTextMessage(msg);
 			}
 		});
 		
 		console.addCommand(new Command("speech") {
-			/* (non-Javadoc)
-			 * @see seventh.shared.Command#execute(seventh.shared.Console, java.lang.String[])
-			 */
+			
 			@Override
 			public void execute(Console console, String... args) {
 				if(args.length < 1) {
@@ -478,7 +456,7 @@ public class InGameScreen implements Screen {
 							msg.speechCommand = Byte.parseByte(args[0]);
 							
 							Sounds.playSpeechSound(player.getTeam().getId(), msg.speechCommand, pos.x, pos.y);
-							network.queueSendReliableMessage(msg);
+							protocol.sendPlayerSpeechMessage(msg);
 						}
 					}
 				}
@@ -486,9 +464,7 @@ public class InGameScreen implements Screen {
 		});
 		
 		console.addCommand(new Command("change_team"){
-			/* (non-Javadoc)
-			 * @see seventh.shared.Command#execute(seventh.shared.Console, java.lang.String[])
-			 */
+			
 			@Override
 			public void execute(Console console, String... args) {
 				
@@ -509,15 +485,13 @@ public class InGameScreen implements Screen {
 						msg.teamId = (byte)ClientTeam.NONE.getId();						
 					}
 					
-					network.queueSendReliableMessage(msg);
+					protocol.sendPlayerSwitchTeamMessage(msg);
 				}
 			}
 		});
 		
 		console.addCommand(new Command("rcon") {
-			/* (non-Javadoc)
-			 * @see seventh.shared.Command#execute(seventh.shared.Console, java.lang.String[])
-			 */
+
 			@Override
 			public void execute(Console console, String... args) {
 				if(args.length > 0) {
@@ -526,7 +500,7 @@ public class InGameScreen implements Screen {
 					if(args[0].equals("password")) {
 						if(args.length > 1) {
 						
-							RconHash hash = new RconHash(game.getRconToken());
+							RconHash hash = new RconHash(game.getLocalSession().getRconToken());
 							msg = "password " + hash.hash(mergeArgsDelimAt(" ", 1, args).trim());
 						}
 						else {
@@ -537,8 +511,8 @@ public class InGameScreen implements Screen {
 						msg = this.mergeArgsDelim(" ", args);
 					}
 												
-					if(msg != null) {
-						network.queueSendReliableMessage(new RconMessage(msg));
+					if(msg != null) {						
+						protocol.sendRconMessage(new RconMessage(msg));
 					}
 				}
 			}
@@ -577,92 +551,13 @@ public class InGameScreen implements Screen {
 		this.sayTxtBxView.update(timeStep);
 		this.teamSayTxtBxView.update(timeStep);
 		
-		// DEBUG
+		// TODO: Remove from final build, this enables
+		// DEBUG mode while LEFT_ALT is pressed
 		isDebugMode = inputs.isKeyDown(Keys.ALT_LEFT);
 		
 		if(!dialog.isOpen() && (sayTxtBx.isDisabled()&&teamSayTxtBx.isDisabled()) ) {
 		
-			if(controllerInput.isConnected()) {
-				float sensitivity = 0.2f;
-				
-				if(movements[0] > sensitivity) {
-					inputKeys |= Actions.DOWN.getMask();
-				}
-				if(movements[0] < -sensitivity) {
-					inputKeys |= Actions.UP.getMask();
-				}
-				
-				if(movements[1] > sensitivity) {
-					inputKeys |= Actions.RIGHT.getMask();
-				}
-				if(movements[1] < -sensitivity) {
-					inputKeys |= Actions.LEFT.getMask();
-				}
-				
-				sensitivity = 0.3f;
-				
-				float dx = movements[3];
-				float dy = movements[2];
-				
-				if( Math.abs(dx) > sensitivity || Math.abs(dy) > sensitivity) {
-					cursor.moveByDelta(dx, dy);
-				}
-				
-//				for(int i = 0; i < movements.length;i++) {
-//					movements[i] = false;
-//				}
-				
-				if(controllerInput.isRightTriggerDown()) {
-					inputKeys |= Actions.FIRE.getMask();
-				}
-				if(controllerInput.isLeftTriggerDown()) {
-					inputKeys |= Actions.THROW_GRENADE.getMask();
-				}
-				if(controllerInput.isButtonDown(2)) {
-					inputKeys |= Actions.RELOAD.getMask();
-				}
-//				if(controllerInput.isButtonDown(3)) {
-//					inputKeys |= Actions.WEAPON_SWITCH_UP.getMask();
-//				}
-				if(controllerInput.isButtonDown(1)||controllerInput.isButtonDown(5)) {
-					inputKeys |= Actions.MELEE_ATTACK.getMask();
-				}
-				if(controllerInput.isButtonDown(4)) {
-					inputKeys |= Actions.CROUCH.getMask();
-				}
-				
-				
-				if(controllerInput.isPovDirectionDown(PovDirection.north)) {
-					inputKeys |= Actions.UP.getMask();
-				}
-				else if(controllerInput.isPovDirectionDown(PovDirection.northEast)) {
-					inputKeys |= Actions.UP.getMask();
-					inputKeys |= Actions.RIGHT.getMask();
-				}
-				
-				else if(controllerInput.isPovDirectionDown(PovDirection.northWest)) {
-					inputKeys |= Actions.UP.getMask();
-					inputKeys |= Actions.LEFT.getMask();
-				}
-				
-				else if(controllerInput.isPovDirectionDown(PovDirection.south)) {
-					inputKeys |= Actions.DOWN.getMask();
-				}
-				else if(controllerInput.isPovDirectionDown(PovDirection.southEast)) {
-					inputKeys |= Actions.DOWN.getMask();
-					inputKeys |= Actions.RIGHT.getMask();
-				}
-				else if(controllerInput.isPovDirectionDown(PovDirection.southWest)) {
-					inputKeys |= Actions.DOWN.getMask();
-					inputKeys |= Actions.LEFT.getMask();
-				}
-				else if(controllerInput.isPovDirectionDown(PovDirection.east)) {					
-					inputKeys |= Actions.RIGHT.getMask();
-				}
-				else if(controllerInput.isPovDirectionDown(PovDirection.west)) {					
-					inputKeys |= Actions.LEFT.getMask();
-				}
-			}
+			inputKeys = controllerInput.pollInput(timeStep, cursor, inputKeys);
 			
 			if(inputs.isKeyDown(keyMap.getSayKey())) {
 				showTextBox(sayTxtBx);
@@ -739,9 +634,9 @@ public class InGameScreen implements Screen {
 		}
 		
 		Vector2f mousePos = cursor.getCursorPos();
-		inputMessage.orientation = game.calcPlayerOrientation(mousePos.x, mousePos.y); 		
-		network.sendUnReliableMessage(inputMessage);		
-		network.updateNetwork(timeStep);
+		inputMessage.orientation = game.calcPlayerOrientation(mousePos.x, mousePos.y); 				
+		connection.getClientProtocol().sendPlayerInputMessage(inputMessage);
+		connection.updateNetwork(timeStep);
 						
 		game.update(timeStep);
 		game.applyPlayerInput(inputKeys);
@@ -760,7 +655,7 @@ public class InGameScreen implements Screen {
 	@Override
 	public void destroy() {
 		Cons.println("Closing down the network connection...");
-		network.disconnect();
+		connection.disconnect();
 	}
 
 	/* (non-Javadoc)

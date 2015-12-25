@@ -463,7 +463,7 @@ public class Hud implements Renderable {
 		int y = canvas.getHeight() - 225;
 				
 		canvas.setFont("Consola", 14);
-		Client client = app.getNetwork().getClient();
+		Client client = app.getClientConnection().getClient();
 		canvas.drawString("R: " + client.getAvgBitsPerSecRecv() + " B/S", x, y - 20, 0xff00CC00);
 		canvas.drawString("S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 40, 0xff00CC00);
 		canvas.drawString("D: " + client.getNumberOfDroppedPackets(), x, y - 60, 0xff00CC00);
