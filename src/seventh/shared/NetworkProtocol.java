@@ -78,6 +78,12 @@ public abstract class NetworkProtocol implements ConnectionListener {
 		try { this.endpoint.close(); } catch(Exception e) {}
 	}
 	
+	
+	/**
+	 * Post any Queued up messages
+	 */
+	public abstract void postQueuedMessages();
+	
 	/**
 	 * Process game specific messages
 	 * 

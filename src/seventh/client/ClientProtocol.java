@@ -4,10 +4,13 @@
 package seventh.client;
 
 import harenet.api.Connection;
+import seventh.network.messages.AICommandMessage;
 import seventh.network.messages.BombDisarmedMessage;
 import seventh.network.messages.BombExplodedMessage;
 import seventh.network.messages.BombPlantedMessage;
+import seventh.network.messages.ClientReadyMessage;
 import seventh.network.messages.ConnectAcceptedMessage;
+import seventh.network.messages.ConnectRequestMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
@@ -15,10 +18,13 @@ import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
+import seventh.network.messages.PlayerInputMessage;
 import seventh.network.messages.PlayerKilledMessage;
+import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
+import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
 import seventh.network.messages.RoundEndedMessage;
@@ -31,7 +37,7 @@ import seventh.network.messages.TilesRemovedMessage;
 
 
 /**
- * Handles Seventh game network messages
+ * The client protocol of network messages that may be received or sent to a Seventh game server.
  * 
  * @author Tony
  *
@@ -39,26 +45,31 @@ import seventh.network.messages.TilesRemovedMessage;
 public interface ClientProtocol {
 
     /**
-     * The client has been disconnected from the server
+     * Listens for when a {@link ClientGame} is created.  This is required
+     * because the game is created asynchronously.
      * 
-     * @param conn
+     * @author Tony
+     *
      */
-    public void onDisconnect(Connection conn);
+    public static interface GameCreationListener {
+        public void onGameCreated(ClientGame game);
+    }
     
+        
 	/**
 	 * The server has accepted our connection request.
 	 * 
 	 * @param conn
 	 * @param msg
 	 */
-	public void connectAccepted(Connection conn, ConnectAcceptedMessage msg);
+	public void receiveConnectAcceptedMessage(Connection conn, ConnectAcceptedMessage msg);
 
 	/**
 	 * A game update (the current state of the world as the server sees it) send from the server.
 	 * @param conn
 	 * @param msg
 	 */
-	public void gameUpdate(Connection conn, GameUpdateMessage msg);
+	public void receiveGameUpdateMessage(Connection conn, GameUpdateMessage msg);
 	
 	/**
 	 * A player and game statistics update.
@@ -66,7 +77,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void gameStats(Connection conn, GameStatsMessage msg);
+	public void receiveGameStatsMessage(Connection conn, GameStatsMessage msg);
 	
 	/**
 	 * A player and game partial statistics update.
@@ -74,14 +85,14 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void gamePartialStats(Connection conn, GamePartialStatsMessage msg);
+	public void receiveGamePartialStatsMessage(Connection conn, GamePartialStatsMessage msg);
 	
 	/**
 	 * The game has ended message
 	 * @param conn
 	 * @param msg
 	 */
-	public void gameEnded(Connection conn, GameEndedMessage msg);
+	public void receiveGameEndedMessage(Connection conn, GameEndedMessage msg);
 	
 	/**
 	 * The game is ready, starting the match.
@@ -89,7 +100,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void gameReady(Connection conn, GameReadyMessage msg);
+	public void receiveGameReadyMessage(Connection conn, GameReadyMessage msg);
 	
 	/**
 	 * A new player has connected.
@@ -97,7 +108,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void playerConnectedMessage(Connection conn, PlayerConnectedMessage msg);
+	public void receivePlayerConnectedMessage(Connection conn, PlayerConnectedMessage msg);
 	
 	/**
 	 * A player has disconnected.
@@ -105,7 +116,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void playerDisconnectedMessage(Connection conn, PlayerDisconnectedMessage msg);
+	public void receivePlayerDisconnectedMessage(Connection conn, PlayerDisconnectedMessage msg);
 	
 	/**
 	 * A Player has switched teams.
@@ -113,7 +124,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void playerSwitchedTeamMessage(Connection conn, PlayerSwitchTeamMessage msg);
+	public void receivePlayerSwitchedTeamMessage(Connection conn, PlayerSwitchTeamMessage msg);
 
 	/**
 	 * A global text message.
@@ -121,7 +132,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void textMessage(Connection conn, TextMessage msg);
+	public void receiveTextMessage(Connection conn, TextMessage msg);
 
 	/**
 	 * A text message for a particular team.
@@ -129,7 +140,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void teamTextMessage(Connection conn, TeamTextMessage msg);
+	public void receiveTeamTextMessage(Connection conn, TeamTextMessage msg);
 
 	/**
 	 * A Player has just spawned.
@@ -137,7 +148,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void playerSpawned(Connection conn, PlayerSpawnedMessage msg);
+	public void receivePlayerSpawnedMessage(Connection conn, PlayerSpawnedMessage msg);
 	
 	/**
 	 * A player has been killed.
@@ -145,7 +156,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void playerKilled(Connection conn, PlayerKilledMessage msg);
+	public void receivePlayerKilledMessage(Connection conn, PlayerKilledMessage msg);
 	
 	/**
 	 * A player has spoken
@@ -153,7 +164,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void playerSpeech(Connection conn, PlayerSpeechMessage msg);
+	public void receivePlayerSpeechMessage(Connection conn, PlayerSpeechMessage msg);
 	
 	/**
 	 * An objective based round has just started.
@@ -161,7 +172,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void roundStarted(Connection conn, RoundStartedMessage msg);
+	public void receiveRoundStartedMessage(Connection conn, RoundStartedMessage msg);
 	
 	/**
 	 * An objective based round has just ended.
@@ -169,7 +180,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void roundEnded(Connection conn, RoundEndedMessage msg);
+	public void receiveRoundEndedMessage(Connection conn, RoundEndedMessage msg);
 	
 	/**
 	 * A bomb has been planted.
@@ -177,7 +188,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void bombPlanted(Connection conn, BombPlantedMessage msg);
+	public void receiveBombPlantedMessage(Connection conn, BombPlantedMessage msg);
 	
 	/**
 	 * A bomb has been disarmed.
@@ -185,7 +196,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void bombDisarmed(Connection conn, BombDisarmedMessage msg);
+	public void receiveBombDisarmedMessage(Connection conn, BombDisarmedMessage msg);
 	
 	/**
 	 * A bomb target has just exploded.
@@ -193,7 +204,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void bombExploded(Connection conn, BombExplodedMessage msg);
+	public void receiveBombExplodedMessage(Connection conn, BombExplodedMessage msg);
 	
 	/**
 	 * A tile has been removed from the world
@@ -201,7 +212,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void tileRemoved(Connection conn, TileRemovedMessage msg);
+	public void receiveTileRemovedMessage(Connection conn, TileRemovedMessage msg);
 	
 	/**
 	 * A set of tiles have been removed from the world
@@ -209,7 +220,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void tilesRemoved(Connection conn, TilesRemovedMessage msg);
+	public void receiveTilesRemovedMessage(Connection conn, TilesRemovedMessage msg);
 	
 	/**
 	 * A remote control message (response) from the server
@@ -217,7 +228,7 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void rconMessage(Connection conn, RconMessage msg);
+	public void receiveRconMessage(Connection conn, RconMessage msg);
 	
 	/**
 	 * A remote control token response from the server.
@@ -225,5 +236,85 @@ public interface ClientProtocol {
 	 * @param conn
 	 * @param msg
 	 */
-	public void rconTokenMessage(Connection conn, RconTokenMessage msg);
+	public void receiveRconTokenMessage(Connection conn, RconTokenMessage msg);
+	
+	/**
+	 * Sends a {@link ClientReadyMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendClientReadyMessage(ClientReadyMessage msg);
+	
+	/**
+	 * Sends a {@link ConnectRequestMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendConnectRequestMessage(ConnectRequestMessage msg);
+	
+	/**
+	 * Sends a {@link PlayerNameChangeMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendPlayerNameChangedMessage(PlayerNameChangeMessage msg);
+	
+	/**
+	 * Sends a {@link PlayerSwitchWeaponClassMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendPlayerSwitchWeaponClassMessage(PlayerSwitchWeaponClassMessage msg);
+	
+	/**
+	 * Sends a {@link PlayerSpeechMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendPlayerSpeechMessage(PlayerSpeechMessage msg);
+	
+	/**
+	 * Sends a {@link PlayerSwitchTeamMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendPlayerSwitchTeamMessage(PlayerSwitchTeamMessage msg);
+	
+	/**
+	 * Sends a {@link PlayerInputMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendPlayerInputMessage(PlayerInputMessage msg);
+	
+	
+	/**
+	 * Sends an {@link AICommandMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendAICommandMessage(AICommandMessage msg);
+	
+	/**
+	 * Sends a {@link TextMessage}
+	 * 
+	 * @param msg
+	 */
+    public void sendTextMessage(TextMessage msg);
+    
+    /**
+     * Sends a {@link TeamTextMessage}
+     * 
+     * @param msg
+     */
+    public void sendTeamTextMessage(TeamTextMessage msg);
+    
+    /**
+     * Sends an {@link RconMessage}
+     * 
+     * @param msg
+     */
+	public void sendRconMessage(RconMessage msg);
+	
+	
 }
