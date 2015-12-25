@@ -580,12 +580,8 @@ public class World {
 	 * @param attackDir
 	 * @return a place to take {@link Cover}
 	 */
-	public Cover getCover(Entity entity, Vector2f attackDir) {
-		Vector2f pos = entity.getCenterPos();
-		map.getTilesInCircle( (int)pos.x, (int)pos.y, 250, tiles);
-		List<Tile> collidableTiles = map.getCollisionTilesAt(tiles, new ArrayList<Tile>());
-		
-		Vector2f bestHidingSpot = findBestHidingPosition(collidableTiles, pos, attackDir);
+	public Cover getCover(Entity entity, Vector2f attackDir) {		
+		Vector2f bestHidingSpot = getClosestCoverPosition(entity, attackDir);
 //		DebugDraw.fillRectRelative( (int)bestHidingSpot.x, (int)bestHidingSpot.y, 10, 10, 0xff00ff00);
 //		
 //		for(Tile tile : collidableTiles) {
