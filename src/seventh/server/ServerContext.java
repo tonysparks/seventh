@@ -33,25 +33,24 @@ public class ServerContext {
 	public static final long INVALID_RCON_TOKEN = -1;
 	
 	
+	private Server server;
 	private GameServer gameServer;
-	private Console console;
 	private RemoteClients clients;
-	
+	private ServerNetworkProtocol protocol;
+
 	private Leola runtime;
+	private Console console;
+	private String rconPassword;
+
+	private MapCycle mapCycle;
 	private ServerSeventhConfig config;
 	
 	private Random random;
+	
 	private StateMachine<State> stateMachine;
-	private Server server;
-	
-	private ServerProtocolListener serverProtocolListener;
-	
-	private MapCycle mapCycle;
-	private String rconPassword;
-
+	private AtomicReference<GameSession> gameSession;
 	private List<GameSessionListener> gameSessionListeners;
 	
-	private AtomicReference<GameSession> gameSession;
 	
 	private GameSessionListener sessionListener = new GameSessionListener() {
 		
@@ -93,11 +92,11 @@ public class ServerContext {
 
 		this.server = new HareNetServer(config.getNetConfig());
 		
-		this.serverProtocolListener = new ServerProtocolListener(this);
-		this.server.addConnectionListener(this.serverProtocolListener);
+		this.protocol = new ServerNetworkProtocol(this);
+		this.server.addConnectionListener(this.protocol);
 		
 		this.gameSessionListeners = new Vector<>();		
-		addGameSessionListener(this.serverProtocolListener);
+		addGameSessionListener(this.protocol);
 		
 		this.gameSession = new AtomicReference<>();
 		this.mapCycle = new MapCycle(config.getMapListings());
@@ -223,8 +222,8 @@ public class ServerContext {
 	/**
 	 * @return the serverProtocolListener
 	 */
-	public ServerProtocolListener getServerProtocolListener() {
-		return serverProtocolListener;
+	public ServerNetworkProtocol getServerProtocol() {
+		return protocol;
 	}
 	
 	/**

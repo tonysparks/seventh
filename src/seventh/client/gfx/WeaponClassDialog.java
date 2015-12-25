@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.ClientTeam;
-import seventh.client.Network;
+import seventh.client.ClientConnection;
 import seventh.game.Entity.Type;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -35,14 +35,14 @@ public class WeaponClassDialog extends Widget {
 	private Button[] weaponClasses;
 	private Button cancel;
 	
-	private Network network;
+	private ClientConnection connection;
 	
 	/**
 	 */
-	public WeaponClassDialog(Network network, Theme theme) {
+	public WeaponClassDialog(ClientConnection network, Theme theme) {
 		super(new EventDispatcher());
 		
-		this.network = network;
+		this.connection = network;
 		
 		this.team = ClientTeam.ALLIES;
 		this.theme = theme;
@@ -162,10 +162,10 @@ public class WeaponClassDialog extends Widget {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				if(network.isConnected()) {
+				if(connection.isConnected()) {
 					PlayerSwitchWeaponClassMessage msg = new PlayerSwitchWeaponClassMessage();
 					msg.weaponType = type.netValue();
-					network.queueSendReliableMessage(msg);
+					connection.getClientProtocol().sendPlayerSwitchWeaponClassMessage(msg);
 				}
 				
 				hide();

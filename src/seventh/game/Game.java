@@ -9,14 +9,17 @@ import static seventh.shared.SeventhConstants.MAX_PLAYERS;
 import static seventh.shared.SeventhConstants.MAX_TIMERS;
 import static seventh.shared.SeventhConstants.SPAWN_INVINCEABLILITY_TIME;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
+import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.ai.AISystem;
+import seventh.ai.basic.AILeolaLibrary;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.game.Entity.KilledListener;
 import seventh.game.Entity.Type;
@@ -52,15 +55,21 @@ import seventh.game.weapons.Fire;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
 import seventh.map.GraphNodeFactory;
+import seventh.map.Layer;
+import seventh.map.Layer.LayerTileIterator;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.math.OOB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.network.messages.UserInputMessage;
+import seventh.network.messages.AICommandMessage;
+import seventh.network.messages.PlayerInputMessage;
+import seventh.server.GameServerLeolaLibrary;
+import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Cons;
 import seventh.shared.Debugable;
+import seventh.shared.Scripting;
 import seventh.shared.SeventhConfig;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
@@ -275,8 +284,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 			
 			@Override
 			public void onRoundStarted(RoundStartedEvent event) {
-				aiSystem.startOfRound(Game.this);
-				
+			    loadMapScripts();
+				aiSystem.startOfRound(Game.this);				
 			}
 		});
 		
@@ -587,6 +596,62 @@ public class Game implements GameInfo, Debugable, Updatable {
 		
 		lastValidId = 0;
 		
+	}
+	
+	/**
+	 * Loads any map scripts and/or special entities associated with the game map.  This should
+	 * be invoked every time a new Round begins  
+	 */
+	private void loadMapScripts() {
+	    File propertiesFile = new File(gameMap.getMapFileName() + ".props.leola");
+        if(propertiesFile.exists()) {
+            try {   
+                // TODO:
+                // Clean this up, I don't think we actually need a 'properties'
+                // loading, this can all be done thru the gameType scripts.
+                // The weird thing about this is the lighting entities,
+                // this should probably be moved to a post load
+                // of the Map.
+                Leola runtime = Scripting.newSandboxedRuntime();                   
+                runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+                
+                GameServerLeolaLibrary gLib = new GameServerLeolaLibrary(this);             
+                runtime.loadLibrary(gLib, "game2");
+                
+                AILeolaLibrary aiLib = new AILeolaLibrary();
+                runtime.loadLibrary(aiLib, "ai");
+                
+                runtime.put("game", this);
+                runtime.eval(propertiesFile);
+                
+                final Map map = getMap();
+                
+                /* Load any layers that have predefined entities
+                 * on them, as or right now this only includes
+                 * lights
+                 */
+                Layer[] layers = map.getBackgroundLayers();
+                for(int i = 0; i < layers.length; i++) {
+                    Layer layer = layers[i];
+                    if(layer != null && layer.isLightLayer()) {                        
+                        layer.foreach(new LayerTileIterator() {                               
+                            @Override
+                            public void onTile(Tile tile, int x, int y) {
+                                if(tile != null) {
+                                    LightBulb light = newLight(map.tileToWorld(x, y));
+                                    light.setColor(0.9f, 0.85f, 0.85f);
+                                    light.setLuminacity(0.95f);
+                                }
+                            }
+                        });                                                    
+                    }
+                }
+            }
+            catch(Exception e) {
+                Cons.println("*** ERROR -> Loading map properties file: " + propertiesFile.getName() + " -> ");
+                Cons.println(e);
+            }
+        }
 	}
 	
 	/* (non-Javadoc)
@@ -984,12 +1049,81 @@ public class Game implements GameInfo, Debugable, Updatable {
 	}
 	
 	/**
-	 * Applies the remote {@link UserInputMessage} to the {@link PlayerEntity}
+	 * A player has requested to switch its weapon class
+	 * 
+	 * @param playerId
+     * @param weaponType
+     */
+    public void playerSwitchWeaponClass(int playerId, Type weaponType) {
+        Player player = players.getPlayer(playerId);
+        if(player!=null) {            
+            Team team = player.getTeam();
+            if(team!=null) {
+                boolean allowed = false;
+                
+                switch(team.getId()) {
+                    case Team.ALLIED_TEAM_ID:
+                        switch(weaponType) {
+                            case THOMPSON:
+                            case M1_GARAND:
+                            case SPRINGFIELD:
+                            case RISKER:
+                            case SHOTGUN:
+                            case ROCKET_LAUNCHER:
+                                allowed = true;
+                                break;
+                            default: allowed = false;
+                        }
+                        break;
+                    case Team.AXIS_TEAM_ID:
+                        switch(weaponType) {
+                            case MP40:
+                            case MP44:
+                            case KAR98:
+                            case RISKER:
+                            case SHOTGUN:
+                            case ROCKET_LAUNCHER:
+                                allowed = true;
+                                break;
+                            default: allowed = false;
+                        }
+                        break;
+                    default:
+                            break;
+                }
+                
+                if(allowed) {
+                    player.setWeaponClass(weaponType);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Receives an AICommand from a player.
+     * 
+     * @param fromPlayerId
+     * @param msg
+     */
+    public void receiveAICommand(int fromPlayerId, AICommandMessage msg) {
+        Player player = players.getPlayer(fromPlayerId);
+        if(player != null) {
+            PlayerInfo botPlayer = getPlayerById(msg.botId);
+            if(botPlayer.isBot()) {
+                if(player.getTeamId() == botPlayer.getTeamId()) {               
+                    aiSystem.receiveAICommand(botPlayer, msg.command);
+                }
+            }
+        }
+    }
+	
+	/**
+	 * Applies the remote {@link PlayerInputMessage} to the {@link PlayerEntity}
 	 * 
 	 * @param playerId
 	 * @param msg
 	 */
-	public void applyPlayerInput(int playerId, UserInputMessage msg) {
+	public void applyPlayerInput(int playerId, PlayerInputMessage msg) {
 		Player player = this.players.getPlayer(playerId);
 		if(player != null) {			
 			if(player.isAlive()) {

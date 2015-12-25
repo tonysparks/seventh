@@ -5,7 +5,7 @@ package seventh.client.gfx;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.ClientTeam;
-import seventh.client.Network;
+import seventh.client.ClientConnection;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Console;
@@ -37,7 +37,7 @@ public class InGameOptionsDialog extends Widget {
 	
 	/**
 	 */
-	public InGameOptionsDialog(Console console, Network network, Theme theme) {
+	public InGameOptionsDialog(Console console, ClientConnection network, Theme theme) {
 		super(new EventDispatcher());
 		this.theme = theme;
 				

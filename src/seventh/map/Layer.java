@@ -15,6 +15,16 @@ import java.util.List;
  */
 public class Layer {
 
+    /**
+     * Iterator callback for iterating over a {@link Layer}s
+     * {@link Tile}s
+     * @author Tony
+     *
+     */
+    public static interface LayerTileIterator {
+        public void onTile(Tile tile, int x, int y);
+    }
+    
 	/**
 	 * Underlying layer
 	 */
@@ -170,5 +180,22 @@ public class Layer {
 				t.setHeightMask(heightMask);
 			}
 		}
+	}
+	
+	/**
+	 * Iterate over each {@link Tile} in this {@link Layer}
+	 * @param it
+	 */
+	public void foreach(LayerTileIterator it) {
+	    int worldHeight = this.layer.size();
+	    for(int y = 0; y < worldHeight; y++) {
+	        
+	        List<Tile> row = getRow(y);
+	        int worldWidth = row.size();
+            for(int x = 0; x < worldWidth; x++) {
+                Tile tile = row.get(x);
+                it.onTile(tile, x, y);
+            }
+        }
 	}
 }

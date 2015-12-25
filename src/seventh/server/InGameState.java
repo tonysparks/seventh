@@ -4,20 +4,13 @@
 package seventh.server;
 
 import harenet.api.Connection;
-import harenet.api.Endpoint;
-import harenet.api.Server;
 
-import java.io.File;
 import java.io.IOException;
 
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
-import leola.vm.Leola;
-import seventh.ai.basic.AILeolaLibrary;
 import seventh.game.Entity;
 import seventh.game.Game;
-import seventh.game.GameMap;
-import seventh.game.LightBulb;
 import seventh.game.Player;
 import seventh.game.Players;
 import seventh.game.Players.PlayerIterator;
@@ -41,9 +34,6 @@ import seventh.game.events.RoundStartedListener;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.events.TileRemovedListener;
 import seventh.game.net.NetGameUpdate;
-import seventh.map.Layer;
-import seventh.map.Map;
-import seventh.map.Tile;
 import seventh.network.messages.BombDisarmedMessage;
 import seventh.network.messages.BombExplodedMessage;
 import seventh.network.messages.BombPlantedMessage;
@@ -61,7 +51,6 @@ import seventh.server.RemoteClients.RemoteClientIterator;
 import seventh.shared.Command;
 import seventh.shared.Cons;
 import seventh.shared.Console;
-import seventh.shared.Scripting;
 import seventh.shared.State;
 import seventh.shared.TimeStep;
 
@@ -86,30 +75,29 @@ public class InGameState implements State {
 	 */
 	private static final long GAME_END_DELAY = 20000;
 	
-	private ServerContext serverContext;
+	private Game game;
 	private GameSession gameSession;
-	
-	private ServerProtocolListener listener;
+	private ServerContext serverContext;
 	
 	private EventDispatcher dispatcher;
 	
-	private long nextGameStatUpdate, nextGamePartialStatUpdate, gameEndTime;
+	private long nextGameStatUpdate;
+	private long nextGamePartialStatUpdate;
+	private long gameEndTime;
+
 	private boolean gameEnded;
-	
-	private Game game;
-	private RemoteClients clients;
-	
+	private boolean calculatePing;
 	
 	private GameStatsMessage statsMessage;
 	private GamePartialStatsMessage partialStatsMessage;
 	
-	private boolean calculatePing;
+	
 	private Players players;
-	
-	private Server network;
-	
+	private RemoteClients clients;
 	private RemoteClientIterator clientIterator;
 	
+	private ServerNetworkProtocol protocol;
+
 	/**
 	 * @param serverContext
 	 * @param gameSession
@@ -120,9 +108,8 @@ public class InGameState implements State {
 		this.gameSession = gameSession;
 		
 		this.players = gameSession.getPlayers();		
-		this.network = serverContext.getServer();
 		this.clients = serverContext.getClients();		
-		this.listener = serverContext.getServerProtocolListener();
+		this.protocol = serverContext.getServerProtocol();
 		
 		this.dispatcher = gameSession.getEventDispatcher();				
 		this.game = gameSession.getGame();
@@ -162,8 +149,8 @@ public class InGameState implements State {
 				msg.playerId = event.getPlayer().getId();
 				msg.posX = (short)event.getPos().x;
 				msg.posY = (short)event.getPos().y;
-								
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+												
+				protocol.sendPlayerKilledMessage(msg);
 			}
 		});
 			
@@ -179,7 +166,7 @@ public class InGameState implements State {
 				msg.posX = (short)event.getSpawnLocation().x;
 				msg.posY = (short)event.getSpawnLocation().y;												
 				
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+				protocol.sendPlayerSpawnedMessage(msg);
 			}
 		});
 		
@@ -190,8 +177,8 @@ public class InGameState implements State {
 			public void onGameEnd(GameEndEvent event) {			
 				if(!gameEnded) {
 					GameEndedMessage msg = new GameEndedMessage();
-					msg.stats = game.getNetGameStats();//event.getStats();
-					listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);			
+					msg.stats = game.getNetGameStats();
+					protocol.sendGameEndedMessage(msg);			
 					gameEnded = true;
 				}
 			}
@@ -210,7 +197,7 @@ public class InGameState implements State {
 					msg.winnerTeamId = winner.getId();
 				}
 				
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+				protocol.sendRoundEndedMessage(msg);
 			}
 		});
 		
@@ -218,12 +205,10 @@ public class InGameState implements State {
 			
 			@Override
 			@EventMethod
-			public void onRoundStarted(RoundStartedEvent event) {
-				loadProperties(gameSession.getMap(), game);
-				
+			public void onRoundStarted(RoundStartedEvent event) {												
 				RoundStartedMessage msg = new RoundStartedMessage();
 				msg.gameState = game.getNetGameState();
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);	
+				protocol.sendRoundStartedMessage(msg);	
 			}
 		});
 		
@@ -234,7 +219,7 @@ public class InGameState implements State {
 			@EventMethod
 			public void onBombPlanted(BombPlantedEvent event) {
 				int bombTargetId = event.getBombTarget() != null ? event.getBombTarget().getId() : Entity.INVALID_ENTITY_ID;
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombPlantedMessage(bombTargetId));
+				protocol.sendBombPlantedMessage(new BombPlantedMessage(bombTargetId));
 			}
 		});
 		
@@ -243,7 +228,7 @@ public class InGameState implements State {
 			@Override
 			public void onBombDisarmedEvent(BombDisarmedEvent event) {
 				int bombTargetId = event.getBombTarget() != null ? event.getBombTarget().getId() : Entity.INVALID_ENTITY_ID;
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombDisarmedMessage(bombTargetId));				
+				protocol.sendBombDisarmedMessage(new BombDisarmedMessage(bombTargetId));				
 			}
 		});
 		
@@ -251,7 +236,7 @@ public class InGameState implements State {
 			@EventMethod
 			@Override
 			public void onBombExplodedEvent(BombExplodedEvent event) {
-				listener.queueSendToAll(Endpoint.FLAG_RELIABLE, new BombExplodedMessage());
+				protocol.sendBombExplodedMessage(new BombExplodedMessage());
 			}
 		});
 		
@@ -262,66 +247,12 @@ public class InGameState implements State {
                 TileRemovedMessage msg = new TileRemovedMessage();
                 msg.x = event.getTileX();
                 msg.y = event.getTileY();
-                listener.queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+                protocol.sendTileRemovedMessage(msg);
             }
         });
 	}
 		
-	/**
-	 * Load the maps properties file
-	 * 
-	 * @param mapFile
-	 * @param game
-	 */
-	private void loadProperties(GameMap gameMap, Game game) {		
-		File propertiesFile = new File(gameMap.getMapFileName() + ".props.leola");
-		if(propertiesFile.exists()) {
-			try {	
-				// TODO:
-				// Clean this up, I don't think we actually need a 'properties'
-				// loading, this can all be done thru the gameType scripts.
-				// The weird thing about this is the lighting entities,
-				// this should probably be moved to a post load
-				// of the Map.
-				Leola runtime = Scripting.newSandboxedRuntime();
-					
-				runtime.loadStatics(SeventhScriptingCommonLibrary.class);
-				
-				GameServerLeolaLibrary gLib = new GameServerLeolaLibrary(game);				
-				runtime.loadLibrary(gLib, "game2");
-				AILeolaLibrary aiLib = new AILeolaLibrary();
-				runtime.loadLibrary(aiLib, "ai");
-				
-				runtime.put("game", game);
-				runtime.eval(propertiesFile);
-				
-				Map map = game.getMap();
-				Layer[] layers = map.getBackgroundLayers();
-				for(int i = 0; i < layers.length; i++) {
-					Layer layer = layers[i];
-					if(layer != null) {
-						if(layer.isLightLayer()) {
-							for(int y = 0; y < map.getTileWorldHeight(); y++) {
-								for(int x = 0; x < map.getTileWorldWidth(); x++) {
-									Tile tile = layer.getRow(y).get(x);
-									if(tile != null) {
-										LightBulb light = game.newLight(map.tileToWorld(x, y));
-										light.setColor(0.9f, 0.85f, 0.85f);
-										light.setLuminacity(0.95f);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			catch(Exception e) {
-				Cons.println("*** ERROR -> Loading map properties file: " + propertiesFile.getName() + " -> ");
-				Cons.println(e);
-			}
-		}
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see palisma.shared.State#enter()
 	 */
@@ -371,11 +302,11 @@ public class InGameState implements State {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {				
-		this.listener.updateNetwork(timeStep);
+		this.protocol.updateNetwork(timeStep);
 		this.game.update(timeStep);
 		
 		this.dispatcher.processQueue();
-		this.listener.postQueuedMessages();
+		this.protocol.postQueuedMessages();
 		
 		/* only send a partial update if we did NOT send
 		 * a full update
@@ -418,7 +349,9 @@ public class InGameState implements State {
 				if(conn != null) {
 					RemoteClient client = clients.getClient(conn.getId());
 					if(client != null && client.isReady()) {
-						conn.send(Endpoint.FLAG_RELIABLE, msg);
+						// TODO is this a correct replacement? 
+					    // conn.send(Endpoint.FLAG_RELIABLE, msg);
+					    protocol.sendGameReadyMessage(msg, client.getId());
 					}
 				}
 			} 
@@ -441,7 +374,7 @@ public class InGameState implements State {
 			updateMessage.netUpdate = netUpdate;
 			
 			try {
-				network.sendTo(Endpoint.FLAG_UNRELIABLE, updateMessage, clientId);
+				protocol.sendGameUpdateMessage(updateMessage, clientId);
 			}
 			catch(Exception e) {
 				Cons.println("*** Error sending game update to client: " + e);
@@ -461,7 +394,7 @@ public class InGameState implements State {
 			nextGamePartialStatUpdate = GAME_PARTIAL_STAT_UPDATE;
 								
 			try {
-				network.sendToAll(Endpoint.FLAG_UNRELIABLE, partialStatsMessage);				
+				protocol.sendGamePartialStatsMessage(partialStatsMessage);
 			}
 			catch(Exception e) {
 				Cons.println("*** Error sending game stats to client: " + e);
@@ -480,13 +413,13 @@ public class InGameState implements State {
 		this.nextGameStatUpdate -= timeStep.getDeltaTime();		
 		if(this.nextGameStatUpdate <= 0) {
 						
-			statsMessage.stats = this.game.getNetGameStats();
+			this.statsMessage.stats = this.game.getNetGameStats();
 			
 			this.nextGameStatUpdate = GAME_STAT_UPDATE;
 			this.nextGamePartialStatUpdate = GAME_PARTIAL_STAT_UPDATE;
 								
 			try {
-				network.sendToAll(Endpoint.FLAG_UNRELIABLE, statsMessage);
+				this.protocol.sendGameStatsMessage(this.statsMessage);
 				this.calculatePing = true;
 			}
 			catch(Exception e) {
@@ -498,7 +431,7 @@ public class InGameState implements State {
 			this.calculatePing = false;
 		}
 
-		return calculatePing;
+		return this.calculatePing;
 	}
 
 }
