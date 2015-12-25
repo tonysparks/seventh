@@ -9,15 +9,15 @@ import harenet.IOBuffer;
  * @author Tony
  *
  */
-public class UserInputMessage extends AbstractNetMessage {
+public class PlayerInputMessage extends AbstractNetMessage {
 	public int keys;
 	public float orientation;
 	
 	/**
 	 * 
 	 */
-	public UserInputMessage() {
-		super(BufferIO.USER_INPUT);
+	public PlayerInputMessage() {
+		super(BufferIO.PLAYER_INPUT);
 	}
 	
 	/* (non-Javadoc)

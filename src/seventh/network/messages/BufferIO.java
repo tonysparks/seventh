@@ -58,7 +58,7 @@ public class BufferIO {
 	public static final byte SPECTATING_PLAYER = 23;
 	public static final byte TEAM_TEXT = 24;
 	public static final byte TEXT = 25;
-	public static final byte USER_INPUT = 26;
+	public static final byte PLAYER_INPUT = 26;
 	
 	public static final byte RCON_MESSAGE = 27;
 	public static final byte RCON_TOKEN_MESSAGE = 28;
@@ -125,6 +125,8 @@ public class BufferIO {
 					break;
 				case PLAYER_SPEECH: message = new PlayerSpeechMessage();
 					break;
+				case PLAYER_INPUT: message = new PlayerInputMessage();
+                    break;					
 				case ROUND_ENDED: message = new RoundEndedMessage();
 					break;
 				case ROUND_STARTED: message = new RoundStartedMessage();
@@ -134,9 +136,7 @@ public class BufferIO {
 				case TEAM_TEXT: message = new TeamTextMessage();
 					break;
 				case TEXT: message = new TextMessage();
-					break;
-				case USER_INPUT: message = new UserInputMessage();
-					break;
+					break;				
 				case RCON_MESSAGE: message = new RconMessage();
 					break;
 				case RCON_TOKEN_MESSAGE: message = new RconTokenMessage();
