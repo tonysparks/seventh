@@ -141,6 +141,7 @@ public class FramedAnimation extends Animation {
 	public void reset() {
 		setCurrentFrame(0);
 		this.elapsedTime = 0L;
+		this.isDone = false;
 	}
 
 }

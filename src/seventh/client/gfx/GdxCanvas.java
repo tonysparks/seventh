@@ -11,16 +11,17 @@ import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -45,7 +46,7 @@ public class GdxCanvas implements Canvas {
 	private Map<String, FreeTypeFontGenerator> generators;
 	private Map<String, BitmapFont> fonts;
 	private BitmapFont font, defaultFont;
-	private TextBounds bounds;
+	private GlyphLayout bounds;
 	
 	private Matrix4 transform;
 	
@@ -73,7 +74,7 @@ public class GdxCanvas implements Canvas {
 				
 		this.generators = new HashMap<String, FreeTypeFontGenerator>();
 		this.fonts = new HashMap<String, BitmapFont>();
-		this.bounds = new TextBounds();
+		this.bounds = new GlyphLayout();
 		
 		this.transform = new Matrix4();
 		//this.batch.setTransformMatrix(transform);
@@ -331,10 +332,15 @@ public class GdxCanvas implements Canvas {
 			font = this.fonts.get(mask);
 		}
 		else if(this.generators.containsKey(alias)) {
-			font = this.generators.get(alias).generateFont(size, FreeTypeFontGenerator.DEFAULT_CHARS, true);			
+			FreeTypeFontParameter params = new FreeTypeFontParameter();
+			params.size = size;
+			params.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+			params.flip = true;
+			
+			this.font = this.generators.get(alias).generateFont(params);
 			this.fonts.put(mask, font);
 		}
-		
+						
 		this.fontSize = size;
 		this.currentFontName = alias;
 	}
@@ -359,7 +365,12 @@ public class GdxCanvas implements Canvas {
 			defaultFont = this.fonts.get(mask);
 		}
 		else if(this.generators.containsKey(alias)) {
-			defaultFont = this.generators.get(alias).generateFont(size, FreeTypeFontGenerator.DEFAULT_CHARS, true);			
+			FreeTypeFontParameter params = new FreeTypeFontParameter();
+			params.size = size;
+			params.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+			params.flip = true;
+			
+			this.defaultFont = this.generators.get(alias).generateFont(params);			
 			this.fonts.put(mask, defaultFont);
 		}
 		
@@ -372,7 +383,9 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public int getWidth(String str) {
-		return (int)font.getBounds(str, bounds).width;
+		this.bounds.setText(font, str);
+		return (int)this.bounds.width + 1;
+//		return (int)font.getBounds(str, bounds).width;
 	}
 
 	/* (non-Javadoc)
@@ -380,7 +393,9 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public int getHeight(String str) {
-		return (int)font.getBounds(str, bounds).height + 8;
+		this.bounds.setText(font, str);
+		return (int)this.bounds.height + 8;
+//		return (int)font.getBounds(str, bounds).height + 8;
 	}
 
 	/* (non-Javadoc)
@@ -485,14 +500,14 @@ public class GdxCanvas implements Canvas {
 	@Override
 	public void drawLine(int x1, int y1, int x2, int y2, Integer color) {
 		Color c=setTempColor(color);
-		Gdx.gl.glEnable(GL10.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		this.shapes.setColor(c);
 		
 		this.shapes.begin(ShapeType.Line);
 		this.shapes.line(x1, y1, x2, y2);
 		this.shapes.end();
-		Gdx.gl.glDisable(GL10.GL_BLEND);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	/* (non-Javadoc)
@@ -501,14 +516,14 @@ public class GdxCanvas implements Canvas {
 	@Override
 	public void drawRect(int x, int y, int width, int height, Integer color) {
 		Color c=setTempColor(color);
-		Gdx.gl.glEnable(GL10.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		this.shapes.setColor(c);
 		
 		this.shapes.begin(ShapeType.Line);
 		this.shapes.rect(x, y, width, height);
 		this.shapes.end();
-		Gdx.gl.glDisable(GL10.GL_BLEND);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	/* (non-Javadoc)
@@ -517,14 +532,14 @@ public class GdxCanvas implements Canvas {
 	@Override
 	public void fillRect(int x, int y, int width, int height, Integer color) {
 		Color c=setTempColor(color);
-		Gdx.gl.glEnable(GL10.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);			    
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);			    
 		
 		this.shapes.begin(ShapeType.Filled);
 		this.shapes.setColor(c);
 		this.shapes.rect(x, y, width, height);
 		this.shapes.end();
-		Gdx.gl.glDisable(GL10.GL_BLEND);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 
 	}
 
@@ -534,14 +549,14 @@ public class GdxCanvas implements Canvas {
 	@Override
 	public void drawCircle(float radius, int x, int y, Integer color) {
 		Color c=setTempColor(color);
-		Gdx.gl.glEnable(GL10.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		this.shapes.setColor(c);
 		
 		this.shapes.begin(ShapeType.Line);
 		this.shapes.circle(x+radius, y+radius, radius);
 		this.shapes.end();
-		Gdx.gl.glDisable(GL10.GL_BLEND);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	/* (non-Javadoc)
@@ -550,14 +565,14 @@ public class GdxCanvas implements Canvas {
 	@Override
 	public void fillCircle(float radius, int x, int y, Integer color) {
 		Color c=setTempColor(color);
-		Gdx.gl.glEnable(GL10.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		this.shapes.setColor(c);
 		
 		this.shapes.begin(ShapeType.Filled);
 		this.shapes.circle(x+radius, y+radius, radius);
 		this.shapes.end();
-		Gdx.gl.glDisable(GL10.GL_BLEND);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	/* (non-Javadoc)

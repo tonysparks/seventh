@@ -14,6 +14,16 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 
+import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.GL20;
+
 import seventh.ClientMain;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.BlurEffectShader;
@@ -37,16 +47,6 @@ import seventh.shared.Console;
 import seventh.shared.StateMachine;
 import seventh.shared.TimeStep;
 import seventh.ui.UserInterfaceManager;
-
-import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.GL10;
 
 /**
  * @author Tony
@@ -412,7 +412,7 @@ public class SeventhGame implements ApplicationListener {
 	@Override
 	public void render() {
 		//Gdx.gl.glClearColor(0, 0, 0, 0); 
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		float dt = Gdx.graphics.getDeltaTime(); 
 		accum += dt;

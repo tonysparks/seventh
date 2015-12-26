@@ -3,22 +3,22 @@
  */
 package seventh.client.gfx;
 
-import seventh.math.Vector2f;
-import seventh.shared.TimeStep;
+import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
+
+import seventh.math.Vector2f;
+import seventh.shared.TimeStep;
 
 /**
  * @author Tony
@@ -148,7 +148,7 @@ public class ShaderTest implements Renderable {
 		
 		this.camera.update();
 		Gdx.gl.glClearColor(0, 0, 0, 0);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(this.camera.combined);
 		batch.setTransformMatrix(transform);
@@ -176,7 +176,7 @@ public class ShaderTest implements Renderable {
 			fboPing.begin();
 			batch.begin();
 			    Gdx.gl.glClearColor(0, 0.5f, 0, 1);
-			    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 				batch.setShader(null);
 				batch.draw(Art.alliedBodyModel.getFrame(0), 120, 200);
 				

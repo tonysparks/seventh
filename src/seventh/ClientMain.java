@@ -7,13 +7,11 @@ import java.io.File;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import org.lwjgl.opengl.GL11;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 
 import seventh.client.ClientSeventhConfig;
 import seventh.client.SeventhGame;
@@ -131,7 +129,7 @@ public class ClientMain {
 			cfg.title = "The Seventh " + SeventhGame.getVersion();
 			cfg.forceExit = true;
 			cfg.resizable = false;
-			cfg.useGL20 = true;			
+			cfg.useGL30 = true;			
 			cfg.vSyncEnabled = vConfig.isVsync();
 						
 			if(!cfg.fullscreen) {
@@ -155,19 +153,18 @@ public class ClientMain {
 	
 	public static void logVideoSpecs(Logger console) {
 		try {
-			if(Gdx.graphics!=null) {
-				console.println("GL11: " + Gdx.graphics.isGL11Available());
-				console.println("GL20: " + Gdx.graphics.isGL20Available());
-				console.println("OpenGL Version: " + Gdx.gl.glGetString(GL10.GL_VERSION));
-				console.println("OpenGL Vendor: " + Gdx.gl.glGetString(GL10.GL_VENDOR));
-				console.println("Renderer: " + Gdx.gl.glGetString(GL10.GL_RENDERER));
+			if(Gdx.graphics!=null) {				
+				console.println("GL30: " + Gdx.graphics.isGL30Available());
+				console.println("OpenGL Version: " + Gdx.gl.glGetString(GL20.GL_VERSION));
+				console.println("OpenGL Vendor: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
+				console.println("Renderer: " + Gdx.gl.glGetString(GL20.GL_RENDERER));
 				console.println("Gdx Version: " + Gdx.app.getVersion());
 				console.println("Is Fullscreen: " + Gdx.graphics.isFullscreen());
 			}
 			else {
-				console.println("OpenGL Version: " + GL11.glGetString(GL11.GL_VERSION));
-				console.println("OpenGL Vendor: " + GL11.glGetString(GL11.GL_VENDOR));
-				console.println("Renderer: " + GL11.glGetString(GL11.GL_RENDERER));				
+				console.println("OpenGL Version: " + Gdx.gl.glGetString(GL20.GL_VERSION));
+				console.println("OpenGL Vendor: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
+				console.println("Renderer: " + Gdx.gl.glGetString(GL20.GL_RENDERER));				
 			}
 		}
 		catch(Throwable t) {
