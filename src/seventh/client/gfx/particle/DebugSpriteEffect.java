@@ -52,7 +52,7 @@ public class DebugSpriteEffect implements Effect {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long a) {
+	public void render(Canvas canvas, Camera camera, float a) {
 			
 		int rx = (int)(pos.x);
 		int ry = (int)(pos.y);

@@ -40,7 +40,7 @@ public class CheckboxView implements Renderable {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		
 		Rectangle bounds = checkbox.getBounds();
 		Label label = checkbox.getLabel();

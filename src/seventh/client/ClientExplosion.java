@@ -3,7 +3,6 @@
  */
 package seventh.client;
 
-import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Light;
@@ -20,7 +19,7 @@ import seventh.shared.TimeStep;
  */
 public class ClientExplosion extends ClientEntity {
 
-	private AnimatedImage anim;
+//	private AnimatedImage anim;
 	private boolean soundPlayed;	
 	private long ownerId;	
 	private long explositionLightTime;
@@ -31,8 +30,8 @@ public class ClientExplosion extends ClientEntity {
 	public ClientExplosion(ClientGame game, Vector2f pos) {
 		super(game, pos);
 		
-		anim = game.getPools().getExplosion().create();
-		anim.loop(false);
+//		anim = game.getPools().getExplosion().create();
+//		anim.loop(false);
 		this.soundPlayed = false;	
 		
 		game.addForegroundEffect(new ExplosionEmitter(pos, 4000, 0,10));
@@ -77,7 +76,7 @@ public class ClientExplosion extends ClientEntity {
 			this.soundPlayed = true;
 		}
 		
-		anim.update(timeStep);	
+//		anim.update(timeStep);	
 		
 		explositionLightTime -= timeStep.getDeltaTime();
 		if(explositionLightTime < 0) {
@@ -89,7 +88,7 @@ public class ClientExplosion extends ClientEntity {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 //		Vector2f cameraPos = camera.getPosition();
 //		int x = (int)(pos.x - cameraPos.x);
 //		int y = (int)(pos.y - cameraPos.y);
@@ -106,7 +105,7 @@ public class ClientExplosion extends ClientEntity {
 	@Override
 	public void destroy() {	
 		super.destroy();
-		game.getPools().getExplosion().free(anim);
+//		game.getPools().getExplosion().free(anim);
 	}
 
 }

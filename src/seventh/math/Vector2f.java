@@ -715,4 +715,18 @@ public /*strictfp*/ final class Vector2f {
 		dest.x = a.x + ((b.x - a.x) * alpha);
 		dest.y = a.y + ((b.y - a.y) * alpha);
 	}
+	
+	/**
+	 * Linear interpolates between a and b vectors
+	 * 
+	 * @param a
+	 * @param b
+	 * @param alpha
+	 * @param dest
+	 */
+	public static /*strictfp*/ void Vector2fLerp(Vector2f a, Vector2f b, float alpha, Vector2f dest ) {
+		final float invAlpha = 1.0f - alpha;
+		dest.x = (a.x * invAlpha) + (b.x * alpha);
+		dest.y = (a.y * invAlpha) + (b.y * alpha);
+	}
 }

@@ -221,12 +221,12 @@ public abstract interface Map extends Renderable, Debugable {
 	 * @param camera
 	 * @param alpha
 	 */
-	public void renderForeground(Canvas canvas, Camera camera, long alpha);
+	public void renderForeground(Canvas canvas, Camera camera, float alpha);
 
 	/**
 	 * Renders a solid layer over the set of viewable tiles (Fog of War)
 	 */
-	public abstract void renderSolid(Canvas canvas, Camera camera, long alpha);
+	public abstract void renderSolid(Canvas canvas, Camera camera, float alpha);
 	
 	/**
 	 * Retrieve a Tile.

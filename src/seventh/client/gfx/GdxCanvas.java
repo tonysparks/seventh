@@ -509,12 +509,44 @@ public class GdxCanvas implements Canvas {
 		this.shapes.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#drawLine(float, float, float, float, java.lang.Integer)
+	 */
+	@Override
+	public void drawLine(float x1, float y1, float x2, float y2, Integer color) {
+		Color c=setTempColor(color);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		this.shapes.setColor(c);
+		
+		this.shapes.begin(ShapeType.Line);
+		this.shapes.line(x1, y1, x2, y2);
+		this.shapes.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
 
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.Canvas#drawRect(int, int, int, int, java.lang.Integer)
 	 */
 	@Override
 	public void drawRect(int x, int y, int width, int height, Integer color) {
+		Color c=setTempColor(color);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		this.shapes.setColor(c);
+		
+		this.shapes.begin(ShapeType.Line);
+		this.shapes.rect(x, y, width, height);
+		this.shapes.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#drawRect(float, float, float, float, java.lang.Integer)
+	 */
+	@Override
+	public void drawRect(float x, float y, float width, float height, Integer color) {
 		Color c=setTempColor(color);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -542,12 +574,44 @@ public class GdxCanvas implements Canvas {
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#fillRect(float, float, float, float, java.lang.Integer)
+	 */
+	@Override
+	public void fillRect(float x, float y, float width, float height, Integer color) {
+		Color c=setTempColor(color);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);			    
+		
+		this.shapes.begin(ShapeType.Filled);
+		this.shapes.setColor(c);
+		this.shapes.rect(x, y, width, height);
+		this.shapes.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
 
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.Canvas#drawCircle(float, int, int, java.lang.Integer)
 	 */
 	@Override
 	public void drawCircle(float radius, int x, int y, Integer color) {
+		Color c=setTempColor(color);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		this.shapes.setColor(c);
+		
+		this.shapes.begin(ShapeType.Line);
+		this.shapes.circle(x+radius, y+radius, radius);
+		this.shapes.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#drawCircle(float, float, float, java.lang.Integer)
+	 */
+	@Override
+	public void drawCircle(float radius, float x, float y, Integer color) {
 		Color c=setTempColor(color);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -574,6 +638,22 @@ public class GdxCanvas implements Canvas {
 		this.shapes.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#fillCircle(float, float, float, java.lang.Integer)
+	 */
+	@Override
+	public void fillCircle(float radius, float x, float y, Integer color) {
+		Color c=setTempColor(color);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		this.shapes.setColor(c);
+		
+		this.shapes.begin(ShapeType.Filled);
+		this.shapes.circle(x+radius, y+radius, radius);
+		this.shapes.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
 
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.Canvas#drawString(java.lang.String, int, int, java.lang.Integer)
@@ -589,6 +669,22 @@ public class GdxCanvas implements Canvas {
 
 			if(!isBegun) batch.end();
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#drawString(java.lang.String, float, float, java.lang.Integer)
+	 */
+	@Override
+	public void drawString(String text, float x, float y, Integer color) {
+		if(font!=null) {
+			Color c=setTempColor(color);
+			
+			if(!isBegun) batch.begin(); 
+			font.setColor(c);					
+			font.draw(batch, text, x, y - font.getCapHeight());
+
+			if(!isBegun) batch.end();
+		}		
 	}
 
 	/* (non-Javadoc)

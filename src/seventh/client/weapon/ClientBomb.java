@@ -73,10 +73,10 @@ public class ClientBomb extends ClientEntity {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
-		Vector2f cameraPos = camera.getPosition();
-		int x = (int)(pos.x - cameraPos.x);
-		int y = (int)(pos.y - cameraPos.y);
+	public void render(Canvas canvas, Camera camera, float alpha) {
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
+		float x = (pos.x - cameraPos.x);
+		float y = (pos.y - cameraPos.y);
 		canvas.drawImage(Art.bombImage, x, y, null);
 	}
 

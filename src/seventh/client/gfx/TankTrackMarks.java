@@ -92,8 +92,8 @@ public class TankTrackMarks implements Renderable {
 	}
 	
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
-		Vector2f cameraPos = camera.getPosition();		
+	public void render(Canvas canvas, Camera camera, float alpha) {
+		Vector2f cameraPos = camera.getRenderPosition(alpha);		
 		for(int i = 0; i < tracks.length;i++) {
 			TankTrack track = tracks[i];
 			

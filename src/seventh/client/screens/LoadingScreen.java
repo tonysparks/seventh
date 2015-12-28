@@ -181,7 +181,7 @@ public class LoadingScreen implements Screen {
 	 * @see palisma.client.Screen#render(leola.live.gfx.Canvas)
 	 */
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, float alpha) {
 		
 		canvas.fillRect(0,0
 					  , canvas.getWidth()+100, canvas.getHeight()+100, theme.getBackgroundColor());

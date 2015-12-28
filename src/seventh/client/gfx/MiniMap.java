@@ -142,7 +142,7 @@ public class MiniMap implements Renderable {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		canvas.drawImage(miniMap, 0, 0, mapColor);
 		
 		Map map = game.getMap();
@@ -196,7 +196,7 @@ public class MiniMap implements Renderable {
 //			}
 		}
 		
-		Vector2f cameraPos = camera.getPosition();
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
 		
 
 		int x = (int)Math.ceil(xr * cameraPos.x + 5);

@@ -43,12 +43,20 @@ public class AnimationPool {
 	}
 	
 	public AnimatedImage create() {
-		for(int i = 0; i < pool.length; i++) {
+		// TODO: Fix bug that doesn't animate the 
+		// animations correctly is collected from the pool,
+		// by commenting this out, it forces the pool to allocate
+		// each call, effectively eliminating the pool
+		
+		/*for(int i = 0; i < pool.length; i++) {
 			if(pool[i] != null) {
-				pool[i].reset();
-				return pool[i];
+				AnimatedImage image = pool[i];
+				image.reset();
+				
+				pool[i] = null;
+				return image;
 			}
-		}		
+		}*/	
 		
 		Cons.println("*** WARNING: The animation pool '" + name + "' has been exhausted!");
 		return factory.newAnimation();

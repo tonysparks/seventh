@@ -598,8 +598,6 @@ public class PlayerSprite implements Renderable {
 			}
 		}
 				
-//		debugRenderSprite(canvas, sprite, 0xff00ff00);
-		
 		/* Renders the body
 		 */
 		{
@@ -640,31 +638,17 @@ public class PlayerSprite implements Renderable {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
-		Vector2f cameraPos = camera.getPosition();
+	public void render(Canvas canvas, Camera camera, float alpha) {
+		Vector2f cameraPos = //camera.getPosition();//
+							 camera.getRenderPosition(alpha);
 		
 		// TODO: delete
 		//canvas.drawString(adjustments.toString(), 350, 100, 0xffffffff);
 		
 		effects.render(canvas,camera, alpha);
-		
-		
-//		Vector2f pos = entity.getPos();		
-//		renderPlayer(canvas, cameraPos, pos, 0);
-		
-//		Vector2f predictedPos = entity.getPredictedPos();
-//		renderPlayer(canvas, cameraPos, predictedPos, 1);
-		
-		Vector2f renderPos = entity.getRenderPos();
-		renderPlayer(canvas, cameraPos, renderPos, 1);
 				
-//		int x1 = (int)(entity.getCenterPos().x - cameraPos.x);
-//		int y1 = (int)(entity.getCenterPos().y - cameraPos.y);
-//		Vector2f dest = new Vector2f();
-//		Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), 100f, dest);
-//		int x2 = (int)(dest.x - cameraPos.x);
-//		int y2 = (int)(dest.y - cameraPos.y);
-//		canvas.drawLine(x1,y1,x2,y2, null);
+		Vector2f renderPos = entity.getRenderPos(alpha);
+		renderPlayer(canvas, cameraPos, renderPos, 1);
 	}
 	
 	private void setTextureRegion(Sprite sprite, TextureRegion region) {

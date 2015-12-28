@@ -57,7 +57,7 @@ public class Effects implements Renderable {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {		
+	public void render(Canvas canvas, Camera camera, float alpha) {		
 		int size = this.effects.size();
 		for(int i = 0; i < size; i++) {
 			Effect e = this.effects.get(i);

@@ -113,10 +113,10 @@ public class TankSprite implements Renderable {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		Rectangle bounds = tank.getBounds();
 		Vector2f pos = tank.getRenderPos(); 
-		Vector2f cameraPos = camera.getPosition();
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
 
 		
 		float rx = Math.round((pos.x - cameraPos.x) - (bounds.width/2.0f) + WeaponConstants.TANK_WIDTH/2f);

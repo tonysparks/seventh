@@ -238,8 +238,8 @@ public class ImageBasedLightSystem implements LightSystem {
 	 * @see seventh.client.gfx.FrameBufferRenderable#frameBufferRender(seventh.client.gfx.Canvas, seventh.client.gfx.Camera)
 	 */
 	@Override
-	public void frameBufferRender(Canvas canvas, Camera camera) {
-		Vector2f cameraPos = camera.getPosition();
+	public void frameBufferRender(Canvas canvas, Camera camera, float alpha) {
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
 		Rectangle viewport = camera.getWorldViewPort();
 		final int extended = 530;
 		cameraViewport.set( (int)cameraPos.x - extended, (int)cameraPos.y - extended
@@ -279,7 +279,7 @@ public class ImageBasedLightSystem implements LightSystem {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {		
+	public void render(Canvas canvas, Camera camera, float alpha) {		
 		canvas.begin();		
 		canvas.setShader(this.shader.getShader());
 		canvas.bindFrameBuffer(1);

@@ -169,6 +169,7 @@ public abstract interface Camera {
 	 * @return
 	 */
 	public abstract Vector2f getPosition();
+	public abstract Vector2f getRenderPosition(float alpha);
 	
 	/**
 	 * Set the world coordinates of the camera.

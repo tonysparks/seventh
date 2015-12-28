@@ -92,7 +92,7 @@ public class FireEmitter extends Emitter {
 	 * @see seventh.client.gfx.particle.Emitter#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {		
+	public void render(Canvas canvas, Camera camera, float alpha) {		
 		super.render(canvas, camera, alpha);
 	}
 	

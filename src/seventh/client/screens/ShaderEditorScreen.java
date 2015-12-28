@@ -79,7 +79,7 @@ public class ShaderEditorScreen implements Screen {
 
 
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, float alpha) {
 		this.test.render(canvas, null, 0);
 	}
 	

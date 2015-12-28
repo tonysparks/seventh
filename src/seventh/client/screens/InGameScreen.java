@@ -662,22 +662,22 @@ public class InGameScreen implements Screen {
 	 * @see palisma.client.Screen#render(leola.live.gfx.Canvas)
 	 */
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, float alpha) {
 						
-		game.render(canvas);
+		game.render(canvas, alpha);
 						
 		Camera camera = game.getCamera();
 		if( isDebugMode ) {			
-			debugEffects.render(canvas, camera, 0);
+			debugEffects.render(canvas, camera, alpha);
 		}
 		
 		
-		this.dialogView.render(canvas, camera, 0);
+		this.dialogView.render(canvas, camera, alpha);
 		
-		this.sayTxtBxView.render(canvas, camera, 0);
-		this.teamSayTxtBxView.render(canvas, camera, 0);
+		this.sayTxtBxView.render(canvas, camera, alpha);
+		this.teamSayTxtBxView.render(canvas, camera, alpha);
 		
-		this.aiShortcutsMenu.render(canvas, camera, 0);
+		this.aiShortcutsMenu.render(canvas, camera, alpha);
 		
 		this.cursor.render(canvas);	
 		

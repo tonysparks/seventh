@@ -60,7 +60,7 @@ public class ButtonView implements Renderable {
 	/* (non-Javadoc)
 	 * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
-	public void render(Canvas renderer, Camera camera, long alpha) {
+	public void render(Canvas renderer, Camera camera, float alpha) {
 		if ( this.button.isVisible() ) {
 			if ( this.button.gradiantEnabled() ) {
 				renderGradiantBackground(this.button, renderer, camera, alpha);
@@ -70,7 +70,7 @@ public class ButtonView implements Renderable {
 		}
 	}
 
-	private void renderGradiantBackground(Widget w, Canvas renderer, Camera camera, long alpha) {
+	private void renderGradiantBackground(Widget w, Canvas renderer, Camera camera, float alpha) {
 		int gradiant = w.getGradiantColor();
 		int bg = w.getBackgroundColor();
 		

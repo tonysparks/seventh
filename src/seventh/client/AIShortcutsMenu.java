@@ -61,7 +61,7 @@ public class AIShortcutsMenu implements Renderable {
      * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
      */
     @Override
-    public void render(Canvas canvas, Camera camera, long alpha) {
+    public void render(Canvas canvas, Camera camera, float alpha) {
         if(isShowing()) {
             int x = 20;
             int y = 200;

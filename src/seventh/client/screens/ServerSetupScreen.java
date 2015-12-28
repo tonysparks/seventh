@@ -710,7 +710,7 @@ public class ServerSetupScreen implements Screen {
 	 * @see seventh.client.Screen#render(seventh.client.gfx.Canvas)
 	 */
 	@Override
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, float alpha) {
 		canvas.fillRect(0, 0, canvas.getWidth() + 100,  canvas.getHeight() + 100, theme.getBackgroundColor());
 		
 		this.panelView.render(canvas, null, 0);

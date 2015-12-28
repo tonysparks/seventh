@@ -24,8 +24,8 @@ public class Explosion implements Effect {
 	 * 
 	 */
 	public Explosion(ClientGame game, Vector2f pos) {
-		this.pool = game.getPools().getExplosion();
 		this.pos = pos;
+		this.pool = game.getPools().getExplosion();		
 		this.image = pool.create();
 		this.sprite = new Sprite(this.image.getCurrentImage());
 		this.sprite.setRotation(game.getRandom().nextInt(360));
@@ -43,8 +43,8 @@ public class Explosion implements Effect {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
-		Vector2f cameraPos = camera.getPosition();
+	public void render(Canvas canvas, Camera camera, float alpha) {
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
 		sprite.setRegion(this.image.getCurrentImage());
 		sprite.setPosition(this.pos.x-cameraPos.x, this.pos.y-cameraPos.y);
 		canvas.drawSprite(sprite);

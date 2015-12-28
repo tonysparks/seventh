@@ -11,6 +11,7 @@ import seventh.math.Circle;
 import seventh.math.OOB;
 import seventh.math.Rectangle;
 import seventh.math.Triangle;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -1498,9 +1499,14 @@ public class Tile implements Renderable {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {		
+	public void render(Canvas canvas, Camera camera, float alpha) {		
 	    if(!this.isDestroyed) {
-	        canvas.drawScaledImage(image, renderX, renderY, width, height, 0xFFFFFFFF);
+	        //canvas.drawScaledImage(image, renderX, renderY, width, height, 0xFFFFFFFF);
+//	    	Vector2f pos = camera.getPosition();
+	    	Vector2f pos = camera.getRenderPosition(alpha);
+	    	float x = (this.x - pos.x);
+	    	float y = (this.y - pos.y);
+	    	canvas.drawScaledImage(image, x, y, width, height, 0xFFFFFFFF);	    	
 	    }
 	}
 

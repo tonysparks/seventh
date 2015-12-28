@@ -41,7 +41,7 @@ public class SliderView implements Renderable {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		Rectangle bounds = slider.getBounds();		
 		canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff383e18);
 		canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff000000);

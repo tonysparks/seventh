@@ -50,7 +50,7 @@ public class AnimatedTile extends Tile {
 	 * @see seventh.map.Tile#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {	
+	public void render(Canvas canvas, Camera camera, float alpha) {	
 		TextureRegion tex = image.getCurrentImage();
 		canvas.drawScaledImage(tex, getRenderX(), getRenderY(), getWidth(), getHeight(), 0xFFFFFFFF);
 //		canvas.drawImage(tex, getRenderX(), getRenderY(), 0xFFFFFFFF);

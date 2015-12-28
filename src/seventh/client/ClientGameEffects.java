@@ -185,7 +185,7 @@ public class ClientGameEffects {
 	 * Renders to the frame buffer
 	 * @param canvas
 	 */
-	public void preRenderFrameBuffer(Canvas canvas, Camera camera) {
+	public void preRenderFrameBuffer(Canvas canvas, Camera camera, float alpha) {
 		int size = this.frameBufferRenderables.size();
 		if(size>0) {
 			canvas.setDefaultTransforms();
@@ -196,14 +196,14 @@ public class ClientGameEffects {
 
 			for(int i = 0; i < size; i++) {
 				FrameBufferRenderable r = this.frameBufferRenderables.get(i);
-				r.frameBufferRender(canvas, camera);
+				r.frameBufferRender(canvas, camera, alpha);
 			}
 			
 			canvas.end();
 		}
 	}
 	
-	public void postRenderFrameBuffer(Canvas canvas, Camera camera) {
+	public void postRenderFrameBuffer(Canvas canvas, Camera camera, float alpha) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		canvas.setDefaultTransforms();
 		canvas.setShader(null);
@@ -214,14 +214,14 @@ public class ClientGameEffects {
 				this.frameBufferRenderables.remove(i);
 			}
 			else {
-				r.render(canvas, camera, 0);
+				r.render(canvas, camera, alpha);
 				i++;
 			}
 		}
 	}
 	
 	
-	public void renderFrameBuffer(Canvas canvas, Camera camera) {
+	public void renderFrameBuffer(Canvas canvas, Camera camera, float alpha) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		canvas.setDefaultTransforms();
 
@@ -241,21 +241,21 @@ public class ClientGameEffects {
 	}
 	
 		
-	public void renderBackground(Canvas canvas, Camera camera) {
-		backgroundEffects.render(canvas, camera, 0);
+	public void renderBackground(Canvas canvas, Camera camera, float alpha) {
+		backgroundEffects.render(canvas, camera, alpha);
 		
 		for(int i =0; i < trackMarks.length; i++) {
 			if(trackMarks[i] != null) {
-				trackMarks[i].render(canvas, camera, 0);
+				trackMarks[i].render(canvas, camera, alpha);
 			}
 		}
 	}
 	
-	public void renderForeground(Canvas canvas, Camera camera) {
-		foregroundEffects.render(canvas, camera, 0);
+	public void renderForeground(Canvas canvas, Camera camera, float alpha) {
+		foregroundEffects.render(canvas, camera, alpha);
 	}
 	
-	public void renderLightSystem(Canvas canvas, Camera camera) {
-		lightSystem.render(canvas, camera, 0);
+	public void renderLightSystem(Canvas canvas, Camera camera, float alpha) {
+		lightSystem.render(canvas, camera, alpha);
 	}		
 }

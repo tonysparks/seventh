@@ -34,10 +34,10 @@ public class ClientHealthPack extends ClientEntity {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
-		Vector2f cameraPos = camera.getPosition();
-		int x = (int)(pos.x - cameraPos.x);
-		int y = (int)(pos.y - cameraPos.y);
+	public void render(Canvas canvas, Camera camera, float alpha) {
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
+		float x = (pos.x - cameraPos.x);
+		float y = (pos.y - cameraPos.y);
 		canvas.drawImage(Art.healthPack, x, y, null);
 	}
 

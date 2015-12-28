@@ -25,6 +25,7 @@ public abstract class ClientEntity implements Renderable {
 	
 	protected ClientGame game;
 	protected Vector2f pos, facing, centerPos, movementDir;
+	protected Vector2f renderPos, previousPos;
 	protected Rectangle bounds;
 	protected float orientation;
 		
@@ -71,6 +72,9 @@ public abstract class ClientEntity implements Renderable {
 		this.game = game;
 		this.pos = pos;
 
+		this.previousPos = new Vector2f(pos);
+		this.renderPos = new Vector2f();
+		
 		this.facing = new Vector2f();
 		this.centerPos = new Vector2f();
 		this.movementDir = new Vector2f();
@@ -104,6 +108,9 @@ public abstract class ClientEntity implements Renderable {
 	public void reset() {
 		this.isDestroyed = false;
 		this.isAlive = true;
+		
+		this.previousPos.zeroOut();
+		this.renderPos.zeroOut();
 		
 		this.pos.zeroOut();
 		this.facing.zeroOut();
@@ -217,13 +224,8 @@ public abstract class ClientEntity implements Renderable {
 	 */
 	protected void interpolate(TimeStep timeStep) {
 		if(this.prevState != null && this.nextState != null) {
-			//long deltaTime = timeStep.getDeltaTime();
-				
 			// TODO :: figure out ping time
-			float alpha = 0.75f; //(timeStep.getGameClock() - prevState.)
-			//long cmdTime = prevTime + 33;
-			//float alpha = ((cmdTime - prevTime) / (nextTime - prevTime)) / 1000.0f;
-			
+			float alpha = 0.75f; 			
 			float dist = (pos.x - nextState.posX) * (pos.x - nextState.posX) + 
 						 (pos.y - nextState.posY) * (pos.y - nextState.posY);
 			
@@ -272,6 +274,16 @@ public abstract class ClientEntity implements Renderable {
 	 */
 	public Vector2f getPrevPos() {
 		return this.pos;
+	}
+	
+	/**
+	 * @param alpha
+	 * @return the position (accounted for time frame alpha) in which this entity should
+	 * be drawn
+	 */
+	public Vector2f getRenderPos(float alpha) {
+		Vector2f.Vector2fLerp(previousPos, pos, alpha, renderPos);
+		return renderPos;
 	}
 
 	/**

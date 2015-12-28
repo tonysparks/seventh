@@ -530,7 +530,7 @@ public class Terminal implements Updatable, Logger {
 	 * Renders the text
 	 * @param canvas
 	 */
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, float alpha) {
 		background.width = canvas.getWidth() + 50;
 		
 		canvas.fillRect(background.x, background.y, background.width, background.height, backgroundColor);

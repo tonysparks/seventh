@@ -136,7 +136,7 @@ public class ImageButtonView extends ButtonView {
 	 * @see com.fived.ricochet.ui.view.ButtonView#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
 	@Override
-	public void render(Canvas renderer, Camera camera, long alpha) {				
+	public void render(Canvas renderer, Camera camera, float alpha) {				
 		Button button = getButton();
 		if ( button.isVisible() ) {
 			Vector2f position = button.getScreenPosition();

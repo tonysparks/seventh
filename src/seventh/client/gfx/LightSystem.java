@@ -115,11 +115,11 @@ public interface LightSystem extends FrameBufferRenderable {
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.FrameBufferRenderable#frameBufferRender(seventh.client.gfx.Canvas, seventh.client.gfx.Camera)
 	 */
-	public abstract void frameBufferRender(Canvas canvas, Camera camera);
+	public abstract void frameBufferRender(Canvas canvas, Camera camera, float alpha);
 
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
-	public abstract void render(Canvas canvas, Camera camera, long alpha);
+	public abstract void render(Canvas canvas, Camera camera, float alpha);
 
 }

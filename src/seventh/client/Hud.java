@@ -217,7 +217,7 @@ public class Hud implements Renderable {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {	
+	public void render(Canvas canvas, Camera camera, float alpha) {	
 		canvas.setFont("Consola", 12);
 		canvas.drawString("FPS: " + app.getFps(), canvas.getWidth() - 60, 10, 0xff10f0ef);
 		miniMap.render(canvas, camera, alpha);

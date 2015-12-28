@@ -82,40 +82,29 @@ public class AnimationEffect implements Effect {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long a) {
-		Vector2f cameraPos = camera.getPosition();				
+	public void render(Canvas canvas, Camera camera, float alpha) {
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
 		float rx = (pos.x - cameraPos.x);
 		float ry = (pos.y - cameraPos.y);
 		
-		float alpha = 1.0f;
+		float currentAlpha = 1.0f;
 		if(!this.persist) {
-			 alpha = (float)this.fade.getCurrentValue() / 255.0f;
+			 currentAlpha = (float)this.fade.getCurrentValue() / 255.0f;
 		}
 		
 		float priorAlpha = canvas.getCompositeAlpha();
-		canvas.setCompositeAlpha(alpha);
-		
-//		canvas.rotate(this.rotation, rx, ry);
-//		TextureRegion image = anim.getCurrentImage();
-//		int w = image.getRegionWidth() / 2;
-//		int h = image.getRegionHeight() / 2;
-//		canvas.drawImage(anim.getCurrentImage(), rx-w, ry-h, null);
-//		canvas.rotate(-this.rotation, rx, ry);
-//
-//		canvas.setCompositeAlpha(a);
+		canvas.setCompositeAlpha(currentAlpha);
 		
 		TextureRegion region = anim.getCurrentImage();
 		sprite.setRegion(region);
 				
 		if(offsetX != 0 || offsetY != 0) {
-			//sprite.setSize(16, 16);
 			sprite.setPosition(rx-offsetX, ry-offsetY);
-			//sprite.setPosition(rx+22, ry-43);
 			sprite.setOrigin(offsetX, offsetY);
 		}
 		else {
-			int w = region.getRegionWidth() / 2;
-			int h = region.getRegionHeight() / 2;
+			float w = region.getRegionWidth() / 2f;
+			float h = region.getRegionHeight() / 2f;
 			
 			sprite.setPosition(rx-w, ry-h);
 		}

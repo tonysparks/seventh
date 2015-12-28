@@ -322,60 +322,60 @@ public class ClientGame {
 	 * 
 	 * @param canvas
 	 */
-	public void render(Canvas canvas) {
+	public void render(Canvas canvas, float alpha) {
 		boolean renderMethod1 = false;
 		
 		// TODO The lighting system is now broke :(
 		if(renderMethod1) {
 			canvas.fboBegin();
 			{
-				gameEffects.preRenderFrameBuffer(canvas, camera);
-				gameEffects.postRenderFrameBuffer(canvas, camera);
+				gameEffects.preRenderFrameBuffer(canvas, camera, alpha);
+				gameEffects.postRenderFrameBuffer(canvas, camera, alpha);
 	
 				canvas.setShader(null);
-				renderWorld(canvas, camera);
+				renderWorld(canvas, camera, alpha);
 			}
 			canvas.fboEnd();
 			
 			canvas.setShader(null);
-			gameEffects.renderFrameBuffer(canvas, camera);
+			gameEffects.renderFrameBuffer(canvas, camera, alpha);
 			
 			canvas.setShader(null);
 			DebugDraw.enable(false);
 			DebugDraw.render(canvas, camera);
 	
 			
-			hud.render(canvas, camera, 0);
+			hud.render(canvas, camera, alpha);
 		}
 		else {
 	
 			canvas.fboBegin();
 			{
-				gameEffects.preRenderFrameBuffer(canvas, camera);
+				gameEffects.preRenderFrameBuffer(canvas, camera, alpha);
 	
 			}
 			canvas.fboEnd();
 	
-			gameEffects.postRenderFrameBuffer(canvas, camera);
+			gameEffects.postRenderFrameBuffer(canvas, camera, alpha);
 			
-			renderWorld(canvas, camera);
+			renderWorld(canvas, camera, alpha);
 			
 			canvas.setShader(null);
 			DebugDraw.enable(false);
 			DebugDraw.render(canvas, camera);
 	
 			
-			hud.render(canvas, camera, 0);
+			hud.render(canvas, camera, alpha);
 		}
 		
 	}
 	
-	private void renderWorld(Canvas canvas, Camera camera) {				
+	private void renderWorld(Canvas canvas, Camera camera, float alpha) {				
 		canvas.begin();		
-		map.render(canvas, camera, 0);
+		map.render(canvas, camera, alpha);
 		canvas.end();
 		
-		gameEffects.renderBackground(canvas, camera);
+		gameEffects.renderBackground(canvas, camera, alpha);
 		
 				
 		ClientEntity[] entityList = entities.getEntities();
@@ -391,7 +391,7 @@ public class ClientGame {
 			if(entity != null) {
 				
 				if(entity.isBackgroundObject()) {
-					entity.render(canvas, camera, 0);
+					entity.render(canvas, camera, alpha);
 				}
 				else {
 					renderingOrderEntities[i] = entity;
@@ -403,19 +403,19 @@ public class ClientGame {
 		for(int i = 0; i < size; i++) {			
 			ClientEntity entity = renderingOrderEntities[i];			
 			if(entity != null) {								
-				entity.render(canvas, camera, 0);				
+				entity.render(canvas, camera, alpha);				
 			}
 			
 			renderingOrderEntities[i] = null;
 		}						
 				
-		gameEffects.renderForeground(canvas, camera);
-		map.renderForeground(canvas, camera, 0);
+		gameEffects.renderForeground(canvas, camera, alpha);
+		map.renderForeground(canvas, camera, alpha);
 		
 		canvas.setColor(0, 45);
-		map.renderSolid(canvas, camera, 0);
+		map.renderSolid(canvas, camera, alpha);
 
-		gameEffects.renderLightSystem(canvas, camera);
+		gameEffects.renderLightSystem(canvas, camera, alpha);
 	}
 	
 	/**
@@ -787,14 +787,8 @@ public class ClientGame {
 					
 					/* create the explosion effect */
 					NetExplosion explosion = (NetExplosion)ent;
-					
-					/* convert to UV coordinates */
-					Vector2f uvPos = new Vector2f(pos);
-					uvPos.x = (pos.x - camera.getPosition().x) / app.getScreenWidth();
-					uvPos.y = 1f - (pos.y - camera.getPosition().y) / app.getScreenHeight();
-					
+										
 					/* limit the explosion per player */
-//					gameEffects.addExplosion(explosion.ownerId, uvPos);
 					gameEffects.addExplosion(this, explosion.ownerId, pos);
 				}
 				else {

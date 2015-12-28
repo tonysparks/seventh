@@ -226,7 +226,7 @@ public class ClientTank extends ClientVehicle {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		this.tankSprite.render(canvas, camera, alpha);			
 	}
 

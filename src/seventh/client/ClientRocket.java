@@ -63,16 +63,16 @@ public class ClientRocket extends ClientEntity {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		
 //		TextureRegion image = anim.getCurrentImage();
 //		int hw = image.getRegionWidth()/2;
 //		int hh = image.getRegionHeight()/2;
 //		
 		
-		Vector2f cameraPos = camera.getPosition();
-		int x = (int)(pos.x - cameraPos.x) + bounds.width/2;
-		int y = (int)(pos.y - cameraPos.y) + bounds.height/2;				
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
+		float x = (pos.x - cameraPos.x) + bounds.width/2;
+		float y = (pos.y - cameraPos.y) + bounds.height/2;				
 		
 		double d = Math.toDegrees(orientation) + 90;
 //		canvas.rotate(d, x, y);

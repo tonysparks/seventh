@@ -147,10 +147,10 @@ public class ClientBullet extends ClientEntity {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		if(!oldPos.isZero()) {
 			
-			Vector2f cameraPos = camera.getPosition();
+			Vector2f cameraPos = camera.getRenderPosition(alpha);
 
 			renderPosStart.x = (oldPos.x-cameraPos.x);
 			renderPosStart.y = (oldPos.y-cameraPos.y);
@@ -158,15 +158,15 @@ public class ClientBullet extends ClientEntity {
 			renderPosEnd.x = (pos.x-cameraPos.x);
 			renderPosEnd.y = (pos.y-cameraPos.y);
 				
-			canvas.drawLine( (int)renderPosStart.x, (int)renderPosStart.y, (int)renderPosEnd.x, (int)renderPosEnd.y, 0x6fEE9A00);
+			canvas.drawLine(renderPosStart.x, renderPosStart.y, renderPosEnd.x, renderPosEnd.y, 0x6fEE9A00);
 			
 			Vector2f.Vector2fSubtract(renderPosStart, 1.0f, renderPosStart);
 			Vector2f.Vector2fSubtract(renderPosEnd, 1.0f, renderPosEnd);
-			canvas.drawLine( (int)renderPosStart.x, (int)renderPosStart.y, (int)renderPosEnd.x, (int)renderPosEnd.y, 0x51ffff00);
+			canvas.drawLine(renderPosStart.x, renderPosStart.y, renderPosEnd.x, renderPosEnd.y, 0x51ffff00);
 			
 			Vector2f.Vector2fSubtract(renderPosStart, -1.0f, renderPosStart);
 			Vector2f.Vector2fSubtract(renderPosEnd, -1.0f, renderPosEnd);
-			canvas.drawLine( (int)renderPosStart.x, (int)renderPosStart.y, (int)renderPosEnd.x, (int)renderPosEnd.y, 0x51ffff00);
+			canvas.drawLine(renderPosStart.x, renderPosStart.y, renderPosEnd.x, renderPosEnd.y, 0x51ffff00);
 				
 		}
 	}

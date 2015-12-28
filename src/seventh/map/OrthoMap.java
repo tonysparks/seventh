@@ -929,9 +929,10 @@ public class OrthoMap implements Map {
 	 * org.myriad.render.Camera)
 	 */
 	
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 					
-		Vector2f camPos = /*PhysicsUtil.interpolatedPosition(camera.getPhysicsObject(), alpha);*/camera.getPosition();
+		//Vector2f camPos = camera.getPosition();
+		Vector2f camPos = camera.getRenderPosition(alpha);
 		Rectangle viewport = camera.getViewPort();
 	
 		// remember the current frames viewport
@@ -1012,8 +1013,8 @@ public class OrthoMap implements Map {
 	 * @see org.myriad.render.scene.Scene#renderForeground(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
 	
-	public void renderForeground(Canvas canvas, Camera camera, long alpha) {
-		Vector2f camPos = /*PhysicsUtil.interpolatedPosition(camera.getPhysicsObject(), alpha);*/camera.getPosition();
+	public void renderForeground(Canvas canvas, Camera camera, float alpha) {
+		Vector2f camPos = camera.getRenderPosition(alpha);
 		Rectangle viewport = camera.getViewPort();
 				
 		// the viewport x, and y location
@@ -1083,8 +1084,9 @@ public class OrthoMap implements Map {
 	 * (non-Javadoc)
 	 * @see leola.live.game.Map#renderSolid(leola.live.gfx.Canvas, leola.live.gfx.Camera)
 	 */
-	public void renderSolid(Canvas canvas, Camera camera, long alpha) {
-		Vector2f camPos = camera.getPosition();
+	public void renderSolid(Canvas canvas, Camera camera, float alpha) {
+		//Vector2f camPos = camera.getPosition();
+		Vector2f camPos = camera.getRenderPosition(alpha);
 		Rectangle viewport = camera.getViewPort();
 		
 		int currentColor = canvas.getColor();
@@ -1096,29 +1098,29 @@ public class OrthoMap implements Map {
 		int vy = viewport.getY(); 
 		
 		// screen pixel x,y coordinate to draw the current tile to
-		int pixelX = 0;
-		int pixelY = 0;
+		float pixelX = 0;
+		float pixelY = 0;
 
 		int indexX = 0;
 		int indexY = 0;
 		
-		int toIndex_x=0, toIndex_y=0;
+		float toIndex_x=0, toIndex_y=0;
 		
 	    // Current Tile offset (to pixels)
-		int tileOffset_x =  -( (int)camPos.x % this.tileWidth );
-	    toIndex_x    = ( tileOffset_x + (int)camPos.x) / this.tileWidth;
+		float tileOffset_x =  -( camPos.x % this.tileWidth );
+	    toIndex_x    = ( tileOffset_x + camPos.x) / this.tileWidth;
 
 	    // current tile y offset (to pixels)
-	    int tileOffset_y = -( (int)camPos.y % this.tileHeight);
+	    float tileOffset_y = -( (int)camPos.y % this.tileHeight);
 	    toIndex_y    = (tileOffset_y + (int)camPos.y) / this.tileHeight;	    	    
 	    
-		indexY = toIndex_y;
+		indexY = (int)toIndex_y;
 		Layer layer = this.backgroundLayers[0];
 		for (pixelY = tileOffset_y;
 		     pixelY < viewport.getHeight() && indexY < this.maxY; 		     
 		     pixelY += this.tileHeight, indexY++) {
 			
-			for (pixelX = tileOffset_x, indexX = toIndex_x; 
+			for (pixelX = tileOffset_x, indexX = (int)toIndex_x; 
 			     pixelX < viewport.getWidth() && indexX < this.maxX; 
 			     pixelX += this.tileWidth, indexX++) {
 				
@@ -1131,8 +1133,8 @@ public class OrthoMap implements Map {
 						}
 						else if (mask > 1) {
 							
-							int px = pixelX + vx;
-							int py = pixelY + vy;
+							float px = pixelX + vx;
+							float py = pixelY + vy;
 							
 							TextureRegion image = this.shadeTilesLookup.get(mask-1);
 							if(image!=null) {								

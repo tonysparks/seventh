@@ -36,8 +36,9 @@ public abstract class ClientControllableEntity extends ClientEntity {
 	public ClientControllableEntity(ClientGame game, Vector2f pos) {
 		super(game, pos);	
 		
-		this.predictedPos = new Vector2f();
+		this.predictedPos = new Vector2f();				
 		this.renderPos = new Vector2f();
+		
 		this.isControlledByLocalPlayer = false;
 		
 
@@ -101,8 +102,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
 	 */
 	public Vector2f getRenderPos() {
 		if(isControlledByLocalPlayer()) {
-			renderPos.x = predictedPos.x * 0.6f + pos.x * 0.4f;
-			renderPos.y = predictedPos.y * 0.6f + pos.y * 0.4f;
+//			renderPos.x = predictedPos.x * 0.6f + pos.x * 0.4f;
+//			renderPos.y = predictedPos.y * 0.6f + pos.y * 0.4f;
+			renderPos.x = predictedPos.x * 0.90f + pos.x * 0.1f;
+			renderPos.y = predictedPos.y * 0.90f + pos.y * 0.1f;
 		}
 		else {
 			Vector2f.Vector2fCopy(pos, renderPos);
@@ -112,21 +115,26 @@ public abstract class ClientControllableEntity extends ClientEntity {
 		return renderPos;
 	}
 	
-	
 	/**
-	 * @return the center render position
+	 * @return the renderPos
 	 */
-	public Vector2f getRenderCenterPos() {
+	public Vector2f getRenderPos(float alpha) {
 		if(isControlledByLocalPlayer()) {
-			renderPos.x = (predictedPos.x+(bounds.width/2)) * 0.6f + (pos.x+(bounds.width/2) * 0.4f);
-			renderPos.y = (predictedPos.y+(bounds.height/2)) * 0.6f + (pos.y+(bounds.height/2) * 0.4f);
+//			renderPos.x = predictedPos.x * 0.6f + pos.x * 0.4f;
+//			renderPos.y = predictedPos.y * 0.6f + pos.y * 0.4f;
+			renderPos.x = predictedPos.x * 0.90f + pos.x * 0.1f;
+			renderPos.y = predictedPos.y * 0.90f + pos.y * 0.1f;
 		}
 		else {
 			Vector2f.Vector2fCopy(pos, renderPos);
-		}		
+		}
+		
+		Vector2f.Vector2fLerp(previousPos, renderPos, alpha, renderPos);
+		
+		//return predictedPos;
 		return renderPos;
 	}
-	
+		
 	/**
 	 * @return the height mask for if the entity is crouching or standing
 	 */
@@ -151,7 +159,8 @@ public abstract class ClientControllableEntity extends ClientEntity {
 	 * Does client side movement prediction
 	 * 
 	 */
-	public void movementPrediction(Map map, TimeStep timeStep, Vector2f vel) {				
+	public void movementPrediction(Map map, TimeStep timeStep, Vector2f vel) {	
+		
 		if(isAlive() && !vel.isZero()) {			
 			int movementSpeed = calculateMovementSpeed();
 									

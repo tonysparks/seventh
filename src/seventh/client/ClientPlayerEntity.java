@@ -453,7 +453,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		
 		this.bloodEmitter.update(timeStep);
 		
-		super.update(timeStep);		
+		Vector2f.Vector2fCopy(this.pos, previousPos);
+		super.update(timeStep);						
 	}
 
 	
@@ -470,25 +471,27 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	 * @see palisma.client.ClientEntity#render(leola.live.gfx.Canvas, leola.live.gfx.Camera)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		canvas.setCompositeAlpha(fadeAlphaColor/255.0f);
 		canvas.setColor(teamColor, fadeAlphaColor);	
 		
 		//states[currentState].render(canvas, camera)
-		Vector2f c = camera.getPosition();
-		Vector2f pos=getRenderPos();
-		int rx = (int)(pos.x - c.x);
-		int ry = (int)(pos.y - c.y);
+		Vector2f c = camera.getRenderPosition(alpha);
+		Vector2f pos = getRenderPos(alpha);
+		float rx = pos.x - c.x;
+		float ry = pos.y - c.y;
 
 		canvas.setFont("Consola", 14);
 		canvas.boldFont();
+				
 		if(fadeAlphaColor > 0) {
-			RenderFont.drawShadedString(canvas, player.getName(), rx - (bounds.width/2), ry + (bounds.height/2) + 40, teamColor );
+			
+			RenderFont.drawShadedString(canvas, player.getName(), rx - (bounds.width/2f), ry + (bounds.height/2f) + 40f, teamColor );
 		
 			if (invinceableTime > 0) {
 				canvas.setColor(teamColor, 122);
-				canvas.fillCircle(20, rx - (bounds.width/2), ry - (bounds.height/2), null);
-				canvas.drawCircle(21, rx - (bounds.width/2)-1, ry - (bounds.height/2)-1, 0xff000000);
+				canvas.fillCircle(20, rx - (bounds.width/2f), ry - (bounds.height/2f), null);
+				canvas.drawCircle(21, rx - (bounds.width/2f)-1f, ry - (bounds.height/2f)-1f, 0xff000000);
 			}				
 		}
 		bloodEmitter.render(canvas, camera, alpha);

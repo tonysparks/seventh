@@ -71,7 +71,7 @@ public class PanelView<T extends Renderable> implements Renderable {
 	 * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
 	@Override
-	public void render(Canvas renderer, Camera camera, long alpha) {
+	public void render(Canvas renderer, Camera camera, float alpha) {
 		int size = this.uiElements.size();
 		for(int i = 0; i < size; i++) {
 			this.uiElements.get(i).render(renderer, camera, alpha);

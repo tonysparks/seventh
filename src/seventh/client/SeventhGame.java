@@ -23,6 +23,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import seventh.ClientMain;
 import seventh.client.gfx.Art;
@@ -79,10 +80,6 @@ public class SeventhGame implements ApplicationListener {
 	
 	private Canvas canvas;
 	
-	private float accum;
-	private TimeStep timeStep;
-	private long gameClock;
-	
 	private InputMultiplexer inputs;
 	private KeyMap keyMap;
 	
@@ -94,7 +91,12 @@ public class SeventhGame implements ApplicationListener {
 	private UserInterfaceManager uiManager;
 	private MenuScreen menuScreen;
 	
-	private static final float TICK_RATE = 1.0f / 30.0f;
+	private TimeStep timeStep;
+	private long gameClock;
+	
+	private double currentTime;
+	private double accumulator;
+	private static final double step = 1.0/30.0;	
 	private static final long DELTA_TIME = 1000 / 30;
 	
 	/**
@@ -406,28 +408,33 @@ public class SeventhGame implements ApplicationListener {
 	public void pause() {		
 	}
 
+	
+	
 	/* (non-Javadoc)
 	 * @see com.badlogic.gdx.ApplicationListener#render()
 	 */
 	@Override
 	public void render() {
-		//Gdx.gl.glClearColor(0, 0, 0, 0); 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		float dt = Gdx.graphics.getDeltaTime(); 
-		accum += dt;
+		double newTime = TimeUtils.millis() / 1000.0;
+		double frameTime = Math.min(newTime - currentTime, 0.25);
 		
-		while (accum > TICK_RATE) {
+		currentTime = newTime;
+		accumulator += frameTime;
+		
+		while(accumulator >= step) {
 			timeStep.setDeltaTime(DELTA_TIME);
 			timeStep.setGameClock(gameClock);
 						
 			updateScreen(timeStep);
 			
-			accum -= TICK_RATE;
+			accumulator -= step;
 			gameClock += DELTA_TIME;
 		}
 		
-		renderScreen(canvas);		
+		float alpha = (float)(accumulator / step);
+		renderScreen(canvas, alpha);				
 	}
 	
 	/**
@@ -593,15 +600,15 @@ public class SeventhGame implements ApplicationListener {
 	}
 	
 
-	private void renderScreen(Canvas canvas) {
+	private void renderScreen(Canvas canvas, float alpha) {
 		Screen screen = this.sm.getCurrentState();
 		canvas.preRender();
 		if(screen != null) {
-			screen.render(canvas);
+			screen.render(canvas, alpha);
 		}		
 		
 		if(this.terminal.isActive()) {			
-			this.terminal.render(canvas);			
+			this.terminal.render(canvas, alpha);			
 		}
 		canvas.postRender();
 	}

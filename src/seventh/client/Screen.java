@@ -25,7 +25,7 @@ public interface Screen extends State {
 	 * 
 	 * @param renderer
 	 */
-	public void render(Canvas canvas);
+	public void render(Canvas canvas, float alpha);
 	
 	/**
 	 * @return the {@link Inputs} handler

@@ -97,7 +97,7 @@ public class KillLog implements Renderable {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 //		canvas.resizeFont(14);
 		canvas.setFont("Consola", 14);
 		canvas.boldFont();

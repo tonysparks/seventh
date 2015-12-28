@@ -99,16 +99,22 @@ public interface Canvas {
 	public double toDegrees(double radians);
 
 	public void drawLine(int x1, int y1, int x2, int y2, Integer color);
+	public void drawLine(float x1, float y1, float x2, float y2, Integer color);
 
 	public void drawRect(int x, int y, int width, int height, Integer color);
+	public void drawRect(float x, float y, float width, float height, Integer color);
 
 	public void fillRect(int x, int y, int width, int height, Integer color);
+	public void fillRect(float x, float y, float width, float height, Integer color);
 
 	public void drawCircle(float radius, int x, int y, Integer color);
+	public void drawCircle(float radius, float x, float y, Integer color);
 
 	public void fillCircle(float radius, int x, int y, Integer color);
+	public void fillCircle(float radius, float x, float y, Integer color);
 
 	public void drawString(String text, int x, int y, Integer color);
+	public void drawString(String text, float x, float y, Integer color);
 
 	public void drawImage(TextureRegion image, int x, int y, Integer color);
 	public void drawImage(TextureRegion image, float x, float y, Integer color);

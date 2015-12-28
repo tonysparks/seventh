@@ -58,8 +58,9 @@ public abstract class Particle implements Renderable {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
-		Vector2f c = camera.getPosition();
+	public void render(Canvas canvas, Camera camera, float alpha) {
+		//Vector2f c = camera.getPosition();
+		Vector2f c = camera.getRenderPosition(alpha);
 		float rx = (pos.x - c.x);
 		float ry = (pos.y - c.y);
 

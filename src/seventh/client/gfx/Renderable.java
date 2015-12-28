@@ -29,5 +29,5 @@ public interface Renderable {
 	 * @param camera
 	 * @param alpha
 	 */
-	public void render(Canvas canvas, Camera camera, long alpha);
+	public void render(Canvas canvas, Camera camera, float alpha);
 }

@@ -95,7 +95,7 @@ public class ListBoxView<T extends Renderable> implements Renderable {
 	 * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
 	@Override
-	public void render(Canvas renderer, Camera camera, long alpha) {
+	public void render(Canvas renderer, Camera camera, float alpha) {
 		
 		Rectangle bounds = box.getBounds();
 		

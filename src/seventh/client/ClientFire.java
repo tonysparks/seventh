@@ -74,7 +74,7 @@ public class ClientFire extends ClientEntity {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {		
+	public void render(Canvas canvas, Camera camera, float alpha) {		
 		
 //		Vector2f cameraPos = camera.getPosition();
 //		int x = (int)(pos.x - cameraPos.x);

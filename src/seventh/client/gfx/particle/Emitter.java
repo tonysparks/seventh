@@ -231,7 +231,7 @@ public abstract class Emitter implements Effect {
 	 * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 		if(isAlive()) {
 			int size = this.particles.size();
 			for(int i = 0; i < size; i++) {

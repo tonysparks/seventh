@@ -107,14 +107,14 @@ public class ClientDroppedItem extends ClientEntity {
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
 	@Override
-	public void render(Canvas canvas, Camera camera, long alpha) {
+	public void render(Canvas canvas, Camera camera, float alpha) {
 
 		if(weapon!=null) {
-			Vector2f cameraPos = camera.getPosition();
+			Vector2f cameraPos = camera.getRenderPosition(alpha);
 //			Vector2f pos = this.prevState.
 			float x = (pos.x - cameraPos.x);
 			float y = (pos.y - cameraPos.y);
-			weapon.setPosition(x-54, y-24);						
+			weapon.setPosition(x-54f, y-24f);						
 			canvas.fillCircle(10.0f, (int)x, (int)y, 0x3f4a4f8f);
 			canvas.drawSprite(weapon);
 //			canvas.fillRect(x, y, bounds.width, bounds.height, 0x0f00ff00);

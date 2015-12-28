@@ -54,7 +54,7 @@ public class LabelView implements Renderable {
 	/* (non-Javadoc)
 	 * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
-	public void render(Canvas renderer, Camera camera, long alpha) {
+	public void render(Canvas renderer, Camera camera, float alpha) {
 		String buttonTxt = this.label.getText();
 		if ( buttonTxt == null || buttonTxt.equals("") || !this.label.isVisible()) {
 			return;

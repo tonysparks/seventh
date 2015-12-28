@@ -11,6 +11,7 @@ import static seventh.math.Vector2f.Vector2fMult;
 import static seventh.math.Vector2f.Vector2fNormalize;
 import static seventh.math.Vector2f.Vector2fSet;
 import static seventh.math.Vector2f.Vector2fSubtract;
+import static seventh.math.Vector2f.Vector2fLerp;
 
 import java.util.Random;
 import java.util.Stack;
@@ -32,7 +33,7 @@ public class Camera2d implements Camera {
 	private Vector2f screenCoord;
 	private Vector2f destination;
 	
-	private Vector2f position;
+	private Vector2f position,prevPosition;
 		
 	private Rectangle viewport;
 	private Rectangle originalViewport;
@@ -84,6 +85,7 @@ public class Camera2d implements Camera {
 		this.vMovementSpeed	= new Vector2f();
 		
 		this.position = new Vector2f();
+		this.prevPosition = new Vector2f();
 				
 		this.worldViewport  = new Rectangle();
 		this.worldBounds    = new Vector2f();
@@ -183,6 +185,15 @@ public class Camera2d implements Camera {
 	@Override
 	public Vector2f getPosition() {
 		return this.position;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Camera#getRenderPosition(float)
+	 */
+	@Override
+	public Vector2f getRenderPosition(float alpha) {
+		Vector2fLerp(prevPosition, position, alpha, renderPosition);
+		return renderPosition;
 	}
 
 	/* (non-Javadoc)
@@ -306,7 +317,8 @@ public class Camera2d implements Camera {
 	 */	
 	public void update(TimeStep timeStep) {		
 				
-		Vector2f vPosition = this.position;			
+		Vector2f vPosition = this.position;		
+		Vector2fCopy(vPosition, prevPosition);
 		Vector2f vNextPosition=null;
 
 		float dt = (float)timeStep.asFraction();
@@ -329,7 +341,7 @@ public class Camera2d implements Camera {
 			vNextPosition = this.destination;
 		}
 		
-		boolean useEase = false;
+		boolean useEase = true;
 		
 		if(useEase) {
 			this.xEaseIn.update(timeStep);
@@ -338,12 +350,27 @@ public class Camera2d implements Camera {
 			DebugDraw.drawString("[" + xEaseIn.getValue() + "," + yEaseIn.getValue() +"]", 10, 200, 0xff00ff00);
 			
 			this.vDelta.zeroOut();
+			Vector2fSubtract(vNextPosition, vPosition, this.vDelta);									
+			
+			if(Vector2f.Vector2fLengthSq(vDelta) > 0.99f) 
+			{ 
+				//Vector2fLerp(vPosition, vNextPosition, 0.242f, vPosition);
+				//Vector2f.Vector2fInterpolate(vPosition, vNextPosition, 0.242f, vPosition);
+				
+
+				float speed = 0.242f;
+				float ispeed = 1.0f - speed;
+				Vector2fMult(vPosition, ispeed, vPosition);
+				Vector2fMult(vNextPosition, speed, vVelocity);
+				Vector2fAdd(vPosition, vVelocity, vPosition);
+			}
+			/*this.vDelta.zeroOut();
 			Vector2fSubtract(vNextPosition, vPosition, this.vDelta);
 			if(Vector2f.Vector2fLengthSq(vDelta) > 0.5f) {	
 			
 				this.vVelocity.set(this.xEaseIn.getValue(), this.yEaseIn.getValue());
 				setPosition(this.vVelocity);
-			}
+			}*/
 		}
 		else {							
 			this.vDelta.zeroOut();
