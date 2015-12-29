@@ -1095,7 +1095,6 @@ public class ClientGame {
 				case GRENADE: 
 				case ROCKET:
 				case ROCKET_LAUNCHER:					
-//					backgroundEffects.addEffect(new BloodEmitter(locationOfDeath, 7, 5200, 4000));
 					gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
 					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					break;

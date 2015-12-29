@@ -102,7 +102,7 @@ public class PlayerEntity extends Entity implements Controllable {
 	private static final int RECOVERY_TIME = 2000;
 	
 	public static final byte MAX_STAMINA = 100;
-	public static final float STAMINA_DECAY_RATE = 2;
+	public static final float STAMINA_DECAY_RATE = 4; // 2
 	public static final float STAMINA_RECOVER_RATE = 0.5f;
 	
 	private NetPlayer player;
@@ -471,7 +471,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			}			
 		}
 		else {
-			//stamina -= STAMINA_DECAY_RATE;
+			stamina -= STAMINA_DECAY_RATE;
 			if(stamina < 0) {
 				stamina = 0;
 				currentState = State.RUNNING;
@@ -680,9 +680,6 @@ public class PlayerEntity extends Entity implements Controllable {
 		}
 		else {
 					
-//			int previousKeys = (previousCommand != null) ? previousCommand.getKeys() : 0;
-//			float prevOrientation = (previousCommand != null) ? previousCommand.getOrientation() : -1; 		
-			
 			if( Keys.FIRE.isDown(keys) ) {
 				firing = true;
 			}
@@ -702,7 +699,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			if(Keys.USE.isDown(keys)) {
 				use();
 			}
-			else /*if (Keys.USE.isDown(previousKeys))*/ {
+			else {
 				unuse();	
 			}
 			
@@ -741,7 +738,6 @@ public class PlayerEntity extends Entity implements Controllable {
 				moveDown();
 			}
 			else {
-	//			inputVel.y = 0;
 				noMoveY();
 			}
 			
@@ -752,7 +748,6 @@ public class PlayerEntity extends Entity implements Controllable {
 				moveRight();
 			}
 			else {
-	//			inputVel.x = 0;
 				noMoveX();
 			}
 				
@@ -762,12 +757,7 @@ public class PlayerEntity extends Entity implements Controllable {
 				}
 			}
 			else {
-				stopSprinting();
-//				this.wasSprinting = false;
-//				
-//				if(!inputVel.isZero() && currentState != State.WALKING) {
-//					currentState = State.RUNNING;
-//				}			
+				stopSprinting();		
 			}
 			
 			if(Keys.CROUCH.isDown(keys)) {
@@ -799,6 +789,10 @@ public class PlayerEntity extends Entity implements Controllable {
 	 */
 	@Override
 	public void setOrientation(float orientation) {
+		if(isSprinting()) {
+			return;
+		}
+		
 		if(inventory != null) {
 			Weapon weapon = inventory.currentItem();
 			if(weapon==null || !weapon.isMeleeAttacking()) {

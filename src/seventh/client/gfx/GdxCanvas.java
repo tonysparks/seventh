@@ -383,8 +383,8 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public int getWidth(String str) {
-		this.bounds.setText(font, str);
-		return (int)this.bounds.width + 1;
+		this.bounds.setText(font, str.replaceAll(" ", "w"));
+		return (int)this.bounds.width+1;
 //		return (int)font.getBounds(str, bounds).width;
 	}
 

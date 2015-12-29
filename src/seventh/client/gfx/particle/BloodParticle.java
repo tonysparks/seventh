@@ -65,36 +65,27 @@ public class BloodParticle extends Particle {
 		
 		alphaFade.update(timeStep);
 		
-		double dt = timeStep.asFraction();
-		int newX = (int)Math.round(pos.x + vel.x * speed * dt);
-		int newY = (int)Math.round(pos.y + vel.y * speed * dt);
+		float dt = (float)timeStep.asFraction();
+//		int newX = (int)Math.round(pos.x + vel.x * speed * dt);
+//		int newY = (int)Math.round(pos.y + vel.y * speed * dt);
+		
+		float newX = (pos.x + vel.x * speed * dt);
+		float newY = (pos.y + vel.y * speed * dt);
 		
 		speed-=2;
 		if(speed < 0) {
 			speed = 0;
 		}
 		
-		pos.x = newX;
-		pos.y = newY;
+		setPos(newX, newY);		
 	}
 		
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.particle.Particle#doRender(leola.live.gfx.Canvas, leola.live.gfx.Camera, int, int)
 	 */
 	@Override
-	protected void doRender(Canvas canvas, Camera camera, float rx,
-			float ry) {
-//		canvas.clearTransform();
+	protected void doRender(Canvas canvas, Camera camera, float rx, float ry) {
 		float priorAlpha = canvas.getCompositeAlpha();
-//		canvas.drawString(this.alphaFade.getCurrentValue()+"", rx, ry, 0xff00ff00);
-//		canvas.setCompositeAlpha( (float)this.alphaFade.getCurrentValue() / 255.0f );
-//		canvas.rotate(angle, rx, ry);
-//		canvas.drawScaledImage(image, rx, ry, 32, 32, null);		
-//		canvas.rotate(-angle, rx, ry);
-//		canvas.setCompositeAlpha(priorAlpha);
-//		
-//		canvas.clearTransform();
-		
 		float alpha = (float)this.alphaFade.getCurrentValue() / 255.0f;
 		canvas.setCompositeAlpha(alpha);
 		sprite.setPosition(rx, ry);

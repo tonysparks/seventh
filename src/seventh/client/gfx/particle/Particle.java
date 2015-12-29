@@ -18,7 +18,7 @@ import seventh.shared.Timer;
 public abstract class Particle implements Renderable {
 
 	protected Timer timeToLive;
-	protected Vector2f pos, vel;
+	protected Vector2f pos, vel, prevPos;
 	
 	
 	/**
@@ -32,6 +32,12 @@ public abstract class Particle implements Renderable {
 		
 		this.pos = pos;
 		this.vel = vel;
+		this.prevPos = new Vector2f(this.pos);
+	}
+	
+	public void setPos(float x, float y) {
+		this.prevPos.set(this.pos);
+		this.pos.set(x, y);
 	}
 	
 	public boolean isAlive() {
@@ -59,10 +65,13 @@ public abstract class Particle implements Renderable {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {
-		//Vector2f c = camera.getPosition();
 		Vector2f c = camera.getRenderPosition(alpha);
-		float rx = (pos.x - c.x);
-		float ry = (pos.y - c.y);
+	
+		final float invAlpha = 1.0f - alpha;
+		float posx = (prevPos.x * invAlpha) + (pos.x * alpha);
+		float posy = (prevPos.y * invAlpha) + (pos.y * alpha);
+		float rx = (posx - c.x);
+		float ry = (posy - c.y);
 
 		doRender(canvas, camera, rx, ry);
 	}

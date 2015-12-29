@@ -115,7 +115,7 @@ public class TankSprite implements Renderable {
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {
 		Rectangle bounds = tank.getBounds();
-		Vector2f pos = tank.getRenderPos(); 
+		Vector2f pos = tank.getRenderPos(alpha); 
 		Vector2f cameraPos = camera.getRenderPosition(alpha);
 
 		

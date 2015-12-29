@@ -37,7 +37,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
 		super(game, pos);	
 		
 		this.predictedPos = new Vector2f();				
-		this.renderPos = new Vector2f();
+		this.renderPos = new Vector2f(pos);
 		
 		this.isControlledByLocalPlayer = false;
 		
@@ -120,18 +120,20 @@ public abstract class ClientControllableEntity extends ClientEntity {
 	 */
 	public Vector2f getRenderPos(float alpha) {
 		if(isControlledByLocalPlayer()) {
+			//Vector2f.Vector2fLerp(previousPos, pos, alpha, renderPos);
+			
 //			renderPos.x = predictedPos.x * 0.6f + pos.x * 0.4f;
 //			renderPos.y = predictedPos.y * 0.6f + pos.y * 0.4f;
-			renderPos.x = predictedPos.x * 0.90f + pos.x * 0.1f;
-			renderPos.y = predictedPos.y * 0.90f + pos.y * 0.1f;
+			renderPos.x = renderPos.x * 0.8f + pos.x * 0.2f;
+			renderPos.y = renderPos.y * 0.8f + pos.y * 0.2f;
 		}
-		else {
+		else {			
 			Vector2f.Vector2fCopy(pos, renderPos);
+			Vector2f.Vector2fLerp(previousPos, renderPos, alpha, renderPos);
 		}
-		
-		Vector2f.Vector2fLerp(previousPos, renderPos, alpha, renderPos);
-		
-		//return predictedPos;
+				
+		//Vector2f.Vector2fLerp(previousPos, renderPos, alpha, renderPos);
+		//Vector2f.Vector2fLerp(predictedPos, previousPos, alpha, renderPos);
 		return renderPos;
 	}
 		

@@ -18,7 +18,7 @@ import java.util.Set;
 public class ArrayMap<K,V>  implements Map<K, V> {
 	private static final int      MIN_HASH_CAPACITY = 2;
 	
-	private static final Object[] EMPTY_ARRAY = new Object[0];
+	private static final Object[] EMPTY_ARRAY = new Object[1];
 	
 	/** the hash keys */
 	protected Object[] hashKeys;
@@ -32,18 +32,14 @@ public class ArrayMap<K,V>  implements Map<K, V> {
 	
 	/** Construct empty table */
 	public ArrayMap() {		
-		hashKeys = EMPTY_ARRAY;
-		hashValues = EMPTY_ARRAY;
-		hashEntries = 0;
+		this(16);
 	}
 	
 	/** 
 	 * Construct table with preset capacity.
 	 * @param nhash capacity of hash part
 	 */
-	public ArrayMap(int nhash) {
-		this();
-		
+	public ArrayMap(int nhash) {		
 		presize(nhash);
 	}
 	
