@@ -96,25 +96,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
 	public Vector2f getPredictedPos() {
 		return predictedPos;
 	}
-	
-	/**
-	 * @return the renderPos
-	 */
-	public Vector2f getRenderPos() {
-		if(isControlledByLocalPlayer()) {
-//			renderPos.x = predictedPos.x * 0.6f + pos.x * 0.4f;
-//			renderPos.y = predictedPos.y * 0.6f + pos.y * 0.4f;
-			renderPos.x = predictedPos.x * 0.90f + pos.x * 0.1f;
-			renderPos.y = predictedPos.y * 0.90f + pos.y * 0.1f;
-		}
-		else {
-			Vector2f.Vector2fCopy(pos, renderPos);
-		}
 		
-		//return predictedPos;
-		return renderPos;
-	}
-	
 	/**
 	 * @return the renderPos
 	 */
