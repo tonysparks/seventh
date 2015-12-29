@@ -124,7 +124,9 @@ public class Explosion extends Entity {
 		setNetEntity(netEntity);
 		
 //		this.netEntity.damage = (byte)this.damage;
-		this.netEntity.ownerId = this.owner.getId();
+		if(this.owner!=null) {
+			this.netEntity.ownerId = this.owner.getId();
+		}
 		
 		return this.netEntity;
 	}
