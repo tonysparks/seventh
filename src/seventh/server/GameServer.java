@@ -3,8 +3,7 @@
  */
 package seventh.server;
 
-import harenet.api.Server;
-
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import harenet.api.Server;
 import leola.vm.Leola;
 import leola.vm.util.Classpath;
 import seventh.game.Game;
@@ -91,6 +91,7 @@ public class GameServer {
 	public static class GameServerSettings {
 		public String serverName;
 		public String currentMap;
+		public String startupScript;
 		public int maxScore;		
 		public int maxPlayers;
 		public long matchTime;
@@ -127,6 +128,7 @@ public class GameServer {
 		 */
 		if(settings == null) {
 			settings = new GameServerSettings();
+			settings.startupScript = config.getStartupScript();
 			settings.serverName = config.getServerName();
 			settings.gameType = config.getGameType();
 			settings.matchTime = config.getMatchTime();
@@ -192,6 +194,7 @@ public class GameServer {
 						
 		/* load some helper functions for objective scripts */
 		runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+		runtime.put("console", this.console);
 			
 		
 		/* if this is a dedicated server, we'll contact the 
@@ -222,7 +225,7 @@ public class GameServer {
 		this.serverContext.getStateMachine().setListener(new StateMachineListener<State>() {			
 			@Override
 			public void onEnterState(State state) {
-
+				
 				/* only listen for the first in game state
 				 * transition because we only need to 'wait'
 				 * for the server to be up the first time in.
@@ -230,7 +233,11 @@ public class GameServer {
 				 * This addresses the Single Player bug of the
 				 * Bots not spawning
 				 */
-				if( (state instanceof InGameState) ) {										
+				if( (state instanceof InGameState) ) {
+					if(settings.startupScript != null) {
+						console.execute("run", settings.startupScript);
+					}
+					
 					if(settings.alliedTeam != null) {
 						for(String name : settings.alliedTeam) {
 							console.execute("add_bot " + name + " allies");
@@ -346,6 +353,21 @@ public class GameServer {
 				serverContext.spawnGameSession(serverContext.getMapCycle().getCurrentMap());
 			}
 		});		
+		
+		console.addCommand(new Command("run") {
+			
+			@Override
+			public void execute(Console console, String... args) {
+				
+				try { 
+					serverContext.getRuntime().eval(new File(args[0]));
+				}
+				catch(Exception e) {
+					Cons.println("*** ERROR: Error running server script '" + mergeArgsDelim(" ", args) + "': " + e);
+				}
+				
+			}
+		});
 		
 		console.addCommand(new Command("add_bot"){			
 			@Override

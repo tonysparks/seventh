@@ -222,4 +222,8 @@ public class ServerSeventhConfig extends SeventhConfig {
 	public void setServerFrameRate(int fps) {
 		this.config.set(fps, "sv_framerate");
 	}
+	
+	public String getStartupScript() {
+		return this.config.getStr(null, "sv_startupscript");
+	}
 }
