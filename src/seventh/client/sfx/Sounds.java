@@ -3,7 +3,9 @@
  */
 package seventh.client.sfx;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import paulscode.sound.ListenerData;
 import paulscode.sound.SoundSystem;
@@ -169,6 +171,7 @@ public class Sounds {
 			axisSpeechYouTakeLead,		
 	};
 	
+	private static Map<String, Sound> loadedSounds = new ConcurrentHashMap<>();
 	private static Sound[][] channels = new Sound[32][];
 	private static float volume = 0.1f;
 	private static ClientSeventhConfig config;
@@ -446,8 +449,13 @@ public class Sounds {
 		}
 	}
 	
-	public static void destroy() {
-		if(soundSystem!=null) {			
+	public static synchronized void destroy() {
+		if(soundSystem!=null) {
+			for(Sound sound : loadedSounds.values()) {
+				sound.destroy();
+			}
+			loadedSounds.clear();
+			
 			soundSystem.removeTemporarySources();
 			try {
 				Thread.sleep(500);
@@ -466,9 +474,14 @@ public class Sounds {
 	 * @param soundFile
 	 * @return the {@link Sound} if loaded successfully
 	 */
-	public static Sound loadSound(String soundFile) {
-		try {
-			Sound sound = new Sound(soundFile, soundSystem);			
+	public static synchronized Sound loadSound(String soundFile) {
+		try {			
+			if(loadedSounds.containsKey(soundFile)) {
+				return loadedSounds.get(soundFile);
+			}
+			Sound sound = new Sound(soundFile, soundSystem);
+			loadedSounds.put(soundFile, sound);
+			
 			return sound;
 		}
 		catch(Exception e) {

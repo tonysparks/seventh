@@ -63,4 +63,8 @@ public class Sound {
 		return this.soundSystem.getVolume(soundFile);
 	}
 	
+	public void destroy() {
+		this.soundSystem.unloadSound(soundFile);
+	}
+	
 }
