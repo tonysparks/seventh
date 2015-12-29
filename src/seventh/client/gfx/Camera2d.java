@@ -7,19 +7,17 @@ package seventh.client.gfx;
 import static seventh.math.Vector2f.Vector2fAdd;
 import static seventh.math.Vector2f.Vector2fCopy;
 import static seventh.math.Vector2f.Vector2fGreaterOrEq;
+import static seventh.math.Vector2f.Vector2fLerp;
 import static seventh.math.Vector2f.Vector2fMult;
 import static seventh.math.Vector2f.Vector2fNormalize;
 import static seventh.math.Vector2f.Vector2fSet;
 import static seventh.math.Vector2f.Vector2fSubtract;
-import static seventh.math.Vector2f.Vector2fLerp;
 
 import java.util.Random;
 import java.util.Stack;
 
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
-import seventh.shared.EaseInInterpolation;
 import seventh.shared.TimeStep;
 
 /**
@@ -60,9 +58,7 @@ public class Camera2d implements Camera {
 	private Vector2f vMovementSpeed;
 	
 	private Vector2f worldBounds;	
-	
-	private EaseInInterpolation xEaseIn, yEaseIn;
-	
+		
 	/**
 	 * Constructs a new {@link Camera}
 	 * 
@@ -97,9 +93,6 @@ public class Camera2d implements Camera {
 		this.renderPosition = new Vector2f();
 		
 		this.rand = new Random();		
-		
-		this.xEaseIn = new EaseInInterpolation();
-		this.yEaseIn = new EaseInInterpolation();
 		
 		load();
 	}	
@@ -234,10 +227,7 @@ public class Camera2d implements Camera {
 	@Override
 	public void moveTo(Vector2f dest) {
 		this.destination.x = Math.abs( dest.x - this.screenCoord.x );
-		this.destination.y = Math.abs( dest.y - this.screenCoord.y );
-		
-		this.xEaseIn.reset(this.position.x, this.destination.x, (long)(this.vMovementSpeed.x * Math.abs(this.position.x-this.destination.x)));
-		this.yEaseIn.reset(this.position.y, this.destination.y, (long)(this.vMovementSpeed.y * Math.abs(this.position.y-this.destination.y)));
+		this.destination.y = Math.abs( dest.y - this.screenCoord.y );		
 	}
 
 	/* (non-Javadoc)
@@ -343,12 +333,7 @@ public class Camera2d implements Camera {
 		
 		boolean useEase = true;
 		
-		if(useEase) {
-			this.xEaseIn.update(timeStep);
-			this.yEaseIn.update(timeStep);
-			
-			DebugDraw.drawString("[" + xEaseIn.getValue() + "," + yEaseIn.getValue() +"]", 10, 200, 0xff00ff00);
-			
+		if(useEase) {			
 			this.vDelta.zeroOut();
 			Vector2fSubtract(vNextPosition, vPosition, this.vDelta);									
 			
@@ -356,21 +341,14 @@ public class Camera2d implements Camera {
 			{ 
 				//Vector2fLerp(vPosition, vNextPosition, 0.242f, vPosition);
 				//Vector2f.Vector2fInterpolate(vPosition, vNextPosition, 0.242f, vPosition);
-				
-
-				float speed = 0.242f;
-				float ispeed = 1.0f - speed;
+				final float speed = 0.242f;
+				final float ispeed = 1.0f - speed;
 				Vector2fMult(vPosition, ispeed, vPosition);
 				Vector2fMult(vNextPosition, speed, vVelocity);
 				Vector2fAdd(vPosition, vVelocity, vPosition);
-			}
-			/*this.vDelta.zeroOut();
-			Vector2fSubtract(vNextPosition, vPosition, this.vDelta);
-			if(Vector2f.Vector2fLengthSq(vDelta) > 0.5f) {	
-			
-				this.vVelocity.set(this.xEaseIn.getValue(), this.yEaseIn.getValue());
-				setPosition(this.vVelocity);
-			}*/
+				
+				Vector2f.Vector2fRound(vPosition, vPosition);		        
+			}			
 		}
 		else {							
 			this.vDelta.zeroOut();
