@@ -36,6 +36,7 @@ public class ClientRocket extends ClientEntity {
 		bounds.height = 10;
 		
 		this.light = game.getLightSystem().newPointLight(new Vector2f(pos));
+		this.light.setColor(1, 1, 1);
 		
 	}
 	
