@@ -128,7 +128,7 @@ public class ExplosionEmitter extends Emitter {
 		Vector2f pos = getPos().createClone();
 
 		pos.x += x * r.nextInt(25);
-		pos.y += y * r.nextInt(25);
+		pos.y += y * r.nextInt(25);	
 				
 		return new SmokeParticle(pos, new Vector2f(x,y), timeToLive, color);
 	}
@@ -172,8 +172,7 @@ public class ExplosionEmitter extends Emitter {
 			
 			speed = getRandom().nextInt(maxSpeed);
 			
-			pos.x = newX;
-			pos.y = newY;
+			setPos(newX, newY);
 		}
 		
 		/* (non-Javadoc)
