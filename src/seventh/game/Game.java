@@ -469,7 +469,35 @@ public class Game implements GameInfo, Debugable, Updatable {
 		return addGameTimer(new Timer(loop, endTime) {			
 			@Override
 			public void onFinish(Timer timer) {
-				function.xcall();
+				LeoObject result = function.call();
+				if(result.isError()) {
+					Cons.println("*** ERROR: Script error in GameTimer: " + result);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Adds the {@link LeoObject} callback as a the timer function, which will also randomize the start/end time.
+	 * 
+	 * @param loop
+	 * @param minStartTime
+	 * @param maxEndTime
+	 * @param function
+	 * @return true if the timer was added;false otherwise
+	 */
+	public boolean addRandomGameTimer(boolean loop, final long minStartTime, final long maxEndTime, final LeoObject function) {
+		return addGameTimer(new Timer(loop, minStartTime) {			
+			@Override
+			public void onFinish(Timer timer) {
+				LeoObject result = function.call();
+				if(result.isError()) {
+					Cons.println("*** ERROR: Script error in GameTimer: " + result);
+				}
+				
+				long delta = maxEndTime - minStartTime;
+				int millis = (int)delta / 100;
+				timer.setEndTime(minStartTime + random.nextInt(millis) * 100);
 			}
 		});
 	}
