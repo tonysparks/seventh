@@ -28,7 +28,7 @@ public class CameraController implements Updatable {
     private static final Vector2f GAME_SPEED = new Vector2f(130, 130);
     private static final Vector2f FREEFORM_SPEED = new Vector2f(330, 330);
     
-    private static final int freeformSpeed=120, fastFreeformSpeed=250;
+    private static final int freeformSpeed=220, fastFreeformSpeed=280;
     
 	private Map map;
 	private Camera camera;
