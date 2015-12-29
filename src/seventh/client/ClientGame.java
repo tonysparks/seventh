@@ -488,6 +488,31 @@ public class ClientGame {
     	});
     }
     
+	/**
+	 * Adds the {@link LeoObject} callback as a the timer function, which will also randomize the start/end time.
+	 * 
+	 * @param loop
+	 * @param minStartTime
+	 * @param maxEndTime
+	 * @param function
+	 * @return true if the timer was added;false otherwise
+	 */
+	public boolean addRandomGameTimer(boolean loop, final long minStartTime, final long maxEndTime, final LeoObject function) {
+		return addGameTimer(new Timer(loop, minStartTime) {			
+			@Override
+			public void onFinish(Timer timer) {
+				LeoObject result = function.call();
+				if(result.isError()) {
+					Cons.println("*** ERROR: Script error in GameTimer: " + result);
+				}
+				
+				long delta = maxEndTime - minStartTime;
+				int millis = (int)delta / 100;
+				timer.setEndTime(minStartTime + random.nextInt(millis) * 100);
+			}
+		});
+	}
+    
     
     /**
      * API for playing a sound
@@ -1157,7 +1182,9 @@ public class ClientGame {
 		scoreboard.setWinner(ClientTeam.fromId(msg.winnerTeamId));
 		showScoreBoard(true);
 		
-		gameTimers.removeTimers();
+		// We don't want to remove these, because they
+		// are not added again
+		// gameTimers.removeTimers();
 	}
 	
 	public void roundStarted(RoundStartedMessage msg) {		
