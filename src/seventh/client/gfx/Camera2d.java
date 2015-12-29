@@ -186,6 +186,8 @@ public class Camera2d implements Camera {
 	@Override
 	public Vector2f getRenderPosition(float alpha) {
 		Vector2fLerp(prevPosition, position, alpha, renderPosition);
+		// Fixes the pixel jitters of stationary objects
+		Vector2f.Vector2fRound(renderPosition, renderPosition);
 		return renderPosition;
 	}
 

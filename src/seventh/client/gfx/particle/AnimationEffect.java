@@ -105,8 +105,9 @@ public class AnimationEffect implements Effect {
 		else {
 			float w = region.getRegionWidth() / 2f;
 			float h = region.getRegionHeight() / 2f;
-			
-			sprite.setPosition(rx-w, ry-h);
+			float x = Math.round(rx-w);
+			float y = Math.round(ry-h);
+			sprite.setPosition(x,y);
 		}
 		sprite.setRotation(this.rotation-90);
 		

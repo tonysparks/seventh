@@ -30,6 +30,7 @@ public class ClientDroppedItem extends ClientEntity {
 		super(game, pos);		
 		
 		spin = (float)Math.toRadians((pos.x + pos.y) % 360);
+		Vector2f.Vector2fRound(pos, pos);
 	}
 	/* (non-Javadoc)
 	 * @see seventh.client.ClientEntity#updateState(seventh.game.net.NetEntity, long)
@@ -96,8 +97,6 @@ public class ClientDroppedItem extends ClientEntity {
 			}
 		}
 		if(weapon!=null) {			
-			//weapon.setOrigin( (int)(bounds.width * 0.75), (int)(bounds.height * 0.75));
-//			weapon.setOrigin(12, -12);
 			weapon.scale(-0.65f);
 			weapon.rotate( (float)Math.toDegrees(this.orientation));
 		}
@@ -111,7 +110,6 @@ public class ClientDroppedItem extends ClientEntity {
 
 		if(weapon!=null) {
 			Vector2f cameraPos = camera.getRenderPosition(alpha);
-//			Vector2f pos = this.prevState.
 			float x = (pos.x - cameraPos.x);
 			float y = (pos.y - cameraPos.y);
 			weapon.setPosition(x-54f, y-24f);						
