@@ -152,8 +152,7 @@ public class RocketTrailEmitter extends Emitter {
 			
 			speed = getRandom().nextInt(maxSpeed);
 			
-			pos.x = newX;
-			pos.y = newY;
+			setPos(newX, newY);			
 		}
 		
 		/* (non-Javadoc)
