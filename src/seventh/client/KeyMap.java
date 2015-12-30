@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import seventh.client.ControllerInput.ControllerButtons;
 import leola.vm.Leola;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
@@ -23,6 +24,11 @@ import com.badlogic.gdx.Input.Keys;
 public class KeyMap {
 
 	private LeoMap config;
+	private LeoMap joystick;
+	
+	/**
+	 * Keyboard settings
+	 */
 	private int reloadKey,
 				walkKey,
 				crouchKey,
@@ -35,12 +41,37 @@ public class KeyMap {
 				throwGrenadeKey,
 				useKey,
 				dropWeaponKey,
-				meleeAttack,
+				meleeAttackKey,
 				
 				sayKey,
 				teamSayKey;
 	
-	private static final String[] stringKey = new String[256];		
+	private boolean invertMouse;
+	
+	/**
+	 * Joystick settings
+	 */
+	private ControllerInput.ControllerButtons reloadBtn,
+                walkBtn,
+                crouchBtn,
+                sprintBtn,
+                upBtn,
+                downBtn,
+                leftBtn,
+                rightBtn,
+                fireBtn,
+                throwGrenadeBtn,
+                useBtn,
+                dropWeaponBtn,
+                meleeAttackBtn;
+	
+	private boolean invertJoystick;
+	private boolean isSouthPaw;
+	
+	private static final int NumberOfKeyboardKeys = 256; /* this includes mouse buttons and keyboard keys */
+	private static final int NumberOfJoystickButtons = 20;
+	
+	private static final String[] stringKey = new String[NumberOfKeyboardKeys + NumberOfJoystickButtons];		
 	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>();
 	static {
 		keyMap.put("any_key", Keys.ANY_KEY); 
@@ -202,7 +233,32 @@ public class KeyMap {
 		keyMap.put("mouse_button_left", Buttons.LEFT);
 		keyMap.put("mouse_button_middle", Buttons.MIDDLE);
 		keyMap.put("mouse_button_right", Buttons.RIGHT);
-			
+		
+		keyMap.put("js_left_trigger_btn", ControllerButtons.LEFT_TRIGGER_BTN.getKey());
+		keyMap.put("js_right_trigger_btn", ControllerButtons.RIGHT_TRIGGER_BTN.getKey());
+        
+		keyMap.put("js_left_joystick_btn", ControllerButtons.LEFT_JOYSTICK_BTN.getKey());
+		keyMap.put("js_right_joystick_btn", ControllerButtons.RIGHT_JOYSTICK_BTN.getKey());
+        
+		keyMap.put("js_y_btn", ControllerButtons.Y_BTN.getKey());
+		keyMap.put("js_x_btn", ControllerButtons.X_BTN.getKey());
+		keyMap.put("js_a_btn", ControllerButtons.A_BTN.getKey());
+        keyMap.put("js_b_btn", ControllerButtons.B_BTN.getKey());
+        
+        keyMap.put("js_start_btn", ControllerButtons.START_BTN.getKey());
+        keyMap.put("js_select_btn", ControllerButtons.SELECT_BTN.getKey());
+        keyMap.put("js_left_bumper_btn", ControllerButtons.LEFT_BUMPER_BTN.getKey());
+        keyMap.put("js_right_bumper_btn", ControllerButtons.RIGHT_BUMPER_BTN.getKey());
+        
+        keyMap.put("js_north_dpad_btn", ControllerButtons.NORTH_DPAD_BTN.getKey());
+        keyMap.put("js_ne_dpad_btn", ControllerButtons.NE_DPAD_BTN.getKey());
+        keyMap.put("js_east_dpad_btn", ControllerButtons.EAST_DPAD_BTN.getKey());
+        keyMap.put("js_se_dpad_btn", ControllerButtons.SE_DPAD_BTN.getKey());
+        keyMap.put("js_south_dpad_btn", ControllerButtons.SOUTH_DPAD_BTN.getKey());
+        keyMap.put("js_sw_dpad_btn", ControllerButtons.SW_DPAD_BTN.getKey());
+        keyMap.put("js_west_dpad_btn", ControllerButtons.WEST_DPAD_BTN.getKey());
+        keyMap.put("js_nw_dpad_btn", ControllerButtons.NW_DPAD_BTN.getKey());		
+		
 		stringKey[Keys.NUM_0] = "num_0"; 
 		stringKey[Keys.NUM_1] = "num_1"; 
 		stringKey[Keys.NUM_2] = "num_2"; 
@@ -362,6 +418,32 @@ public class KeyMap {
 		stringKey[Buttons.LEFT] = "mouse_button_left";
 		stringKey[Buttons.RIGHT] = "mouse_button_right";
 		stringKey[Buttons.MIDDLE] = "mouse_button_middle";		
+		
+		stringKey[ControllerButtons.LEFT_TRIGGER_BTN.getKey()] = "js_left_trigger_btn";
+		stringKey[ControllerButtons.RIGHT_TRIGGER_BTN.getKey()] = "js_right_trigger_btn";
+        
+		stringKey[ControllerButtons.LEFT_JOYSTICK_BTN.getKey()] = "js_left_joystick_btn";
+		stringKey[ControllerButtons.RIGHT_JOYSTICK_BTN.getKey()] = "js_right_joystick_btn";
+        
+		stringKey[ControllerButtons.Y_BTN.getKey()] = "js_y_btn";
+		stringKey[ControllerButtons.X_BTN.getKey()] = "js_x_btn";
+		stringKey[ControllerButtons.A_BTN.getKey()] = "js_a_btn";
+		stringKey[ControllerButtons.B_BTN.getKey()] = "js_b_btn";
+        
+		stringKey[ControllerButtons.START_BTN.getKey()] = "js_start_btn";
+		stringKey[ControllerButtons.SELECT_BTN.getKey()] = "js_select_btn";
+        
+		stringKey[ControllerButtons.LEFT_BUMPER_BTN.getKey()] = "js_left_bumper_btn";
+		stringKey[ControllerButtons.RIGHT_BUMPER_BTN.getKey()] = "js_right_bumper_btn";
+        
+		stringKey[ControllerButtons.NORTH_DPAD_BTN.getKey()] = "js_north_dpad_btn";
+		stringKey[ControllerButtons.NE_DPAD_BTN.getKey()] = "js_ne_dpad_btn";
+		stringKey[ControllerButtons.EAST_DPAD_BTN.getKey()] = "js_east_dpad_btn";
+		stringKey[ControllerButtons.SE_DPAD_BTN.getKey()] = "js_se_dpad_btn";
+		stringKey[ControllerButtons.SOUTH_DPAD_BTN.getKey()] = "js_south_dpad_btn";
+		stringKey[ControllerButtons.SW_DPAD_BTN.getKey()] = "js_sw_dpad_btn";
+		stringKey[ControllerButtons.WEST_DPAD_BTN.getKey()] = "js_west_dpad_btn";
+		stringKey[ControllerButtons.NW_DPAD_BTN.getKey()] = "js_nw_dpad_btn";
 	}
 	
 	public static final void main(String [] args) throws Exception {
@@ -380,6 +462,13 @@ public class KeyMap {
 	 */
 	public KeyMap(LeoMap config) {
 		this.config = config;
+		
+		if(!config.hasObject("joystick")) {
+            config.putByString("joystick", new LeoMap());
+        }
+        
+        this.joystick = config.getByString("joystick").as();
+		
 		refresh();
 	}
 	
@@ -396,10 +485,27 @@ public class KeyMap {
 		this.throwGrenadeKey = getKey(config, "throw_grenade", Buttons.RIGHT);
 		this.useKey  = getKey(config, "use", Keys.E);
 		this.dropWeaponKey  = getKey(config, "drop_weapon", Keys.F);
-		this.meleeAttack = getKey(config, "melee_attack", Keys.Q);
+		this.meleeAttackKey = getKey(config, "melee_attack", Keys.Q);
+		this.invertMouse = LeoObject.isTrue(config.getByString("inverted"));
 		
 		this.sayKey = getKey(config, "say", Keys.Y);
 		this.teamSayKey = getKey(config, "team_say", Keys.T);
+		
+		this.reloadBtn = getKey(joystick, "reload", ControllerButtons.Y_BTN);
+        this.walkBtn = getKey(joystick, "walk", ControllerButtons.LEFT_TRIGGER_BTN);
+        this.crouchBtn = getKey(joystick, "crouch", ControllerButtons.LEFT_BUMPER_BTN);
+        this.sprintBtn = getKey(joystick, "sprint", ControllerButtons.LEFT_JOYSTICK_BTN);
+        this.upBtn = getKey(joystick, "up", ControllerButtons.NORTH_DPAD_BTN);
+        this.downBtn = getKey(joystick, "down", ControllerButtons.SOUTH_DPAD_BTN);
+        this.leftBtn = getKey(joystick, "left", ControllerButtons.WEST_DPAD_BTN);
+        this.rightBtn = getKey(joystick, "right", ControllerButtons.EAST_DPAD_BTN);
+        this.fireBtn = getKey(joystick, "fire", ControllerButtons.RIGHT_TRIGGER_BTN);
+        this.throwGrenadeBtn = getKey(joystick, "throw_grenade", ControllerButtons.B_BTN);
+        this.useBtn  = getKey(joystick, "use", ControllerButtons.A_BTN);
+        this.dropWeaponBtn = getKey(joystick, "drop_weapon", ControllerButtons.SELECT_BTN);
+        this.meleeAttackBtn = getKey(joystick, "melee_attack", ControllerButtons.RIGHT_JOYSTICK_BTN);
+        this.invertJoystick = LeoObject.isTrue(joystick.getByString("inverted"));
+        this.isSouthPaw = LeoObject.isTrue(joystick.getByString("south_paw"));
 	}
 
 	private int getKey(LeoMap config, String name, int defaultKey) {
@@ -420,6 +526,19 @@ public class KeyMap {
 		return key;
 	}
 	
+	private ControllerButtons getKey(LeoMap config, String name, ControllerButtons defaultKey) {
+	    ControllerButtons key = defaultKey;
+        LeoObject value = config.getByString(name);
+        if(value != null) {	            
+            key = ControllerButtons.fromString(value.toString());
+            if(key == null) {
+                key = defaultKey;
+            }	            
+        }
+        
+        return key;
+    }
+	
 	public String keyString(int key) {
 		String strKey = keyToString(key);
 		return strKey.replace("_", " ");
@@ -433,11 +552,127 @@ public class KeyMap {
 	}
 	
 	
+	
 	/**
+     * @return true if the mouse is inverted
+     */
+    public boolean isMouseInverted() {
+        return invertMouse;
+    }
+    
+    /**
+     * @return true if the joystick is inverted
+     */
+    public boolean isJoystickInverted() {
+        return invertJoystick;
+    }
+
+    /**
+     * @return true if the joystick's are reversed, i.e., configured for the lefties, movement controlled by the right joystick,
+     * and aiming is controlled by the left joystick
+     */
+    public boolean isSouthPaw() {
+        return isSouthPaw;
+    }
+
+    /**
+     * @return the reloadBtn
+     */
+    public ControllerInput.ControllerButtons getReloadBtn() {
+        return reloadBtn;
+    }
+
+    /**
+     * @return the walkBtn
+     */
+    public ControllerInput.ControllerButtons getWalkBtn() {
+        return walkBtn;
+    }
+
+    /**
+     * @return the crouchBtn
+     */
+    public ControllerInput.ControllerButtons getCrouchBtn() {
+        return crouchBtn;
+    }
+
+    /**
+     * @return the sprintBtn
+     */
+    public ControllerInput.ControllerButtons getSprintBtn() {
+        return sprintBtn;
+    }
+
+    /**
+     * @return the upBtn
+     */
+    public ControllerInput.ControllerButtons getUpBtn() {
+        return upBtn;
+    }
+
+    /**
+     * @return the downBtn
+     */
+    public ControllerInput.ControllerButtons getDownBtn() {
+        return downBtn;
+    }
+
+    /**
+     * @return the leftBtn
+     */
+    public ControllerInput.ControllerButtons getLeftBtn() {
+        return leftBtn;
+    }
+
+    /**
+     * @return the rightBtn
+     */
+    public ControllerInput.ControllerButtons getRightBtn() {
+        return rightBtn;
+    }
+
+    /**
+     * @return the fireBtn
+     */
+    public ControllerInput.ControllerButtons getFireBtn() {
+        return fireBtn;
+    }
+
+    /**
+     * @return the throwGrenadeBtn
+     */
+    public ControllerInput.ControllerButtons getThrowGrenadeBtn() {
+        return throwGrenadeBtn;
+    }
+
+    /**
+     * @return the useBtn
+     */
+    public ControllerInput.ControllerButtons getUseBtn() {
+        return useBtn;
+    }
+
+    /**
+     * @return the dropWeaponBtn
+     */
+    public ControllerInput.ControllerButtons getDropWeaponBtn() {
+        return dropWeaponBtn;
+    }
+
+    /**
+     * @return the meleeAttackBtn
+     */
+    public ControllerInput.ControllerButtons getMeleeAttackBtn() {
+        return meleeAttackBtn;
+    }
+
+
+
+    /**
 	 * @return the meleeAttack
 	 */
-	public int getMeleeAttack() {
-		return meleeAttack;
+	public int getMeleeAttackKey() {
+		return meleeAttackKey;
 	}
 	
 	
@@ -637,7 +872,7 @@ public class KeyMap {
 	 * @param meleeAttack the meleeAttack to set
 	 */
 	public void setMeleeAttack(int meleeAttack) {
-		this.meleeAttack = meleeAttack;
+		this.meleeAttackKey = meleeAttack;
 	}
 
 	/**
@@ -660,7 +895,13 @@ public class KeyMap {
 	 * @param key
 	 */
 	public void setKey(String keymap, int key) {
-		config.setObject(keymap, Leola.toLeoObject(keyToString(key)));
+	    if(key>NumberOfKeyboardKeys) {
+	        joystick.setObject(keymap, Leola.toLeoObject(keyToString(key)));
+	    }
+	    else {
+	        config.setObject(keymap, Leola.toLeoObject(keyToString(key)));
+	    }
+	    
 		refresh();
 	}
 }
