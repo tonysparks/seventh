@@ -553,6 +553,8 @@ public class Terminal implements Updatable, Logger {
 				continue;
 			}
 			
+			if(y<0) break;
+			
 			String rowText = this.textBuffer.get(i);
 			RenderFont.drawShadedString(canvas, rowText, x, y, foregroundColor);
 			
