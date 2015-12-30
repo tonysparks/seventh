@@ -9,6 +9,7 @@ import harenet.api.Client;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import seventh.client.gfx.Art;
@@ -20,6 +21,7 @@ import seventh.client.gfx.Renderable;
 import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.Entity.Type;
+import seventh.game.PlayerEntity.Keys;
 import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
 import seventh.ui.ProgressBar;
@@ -142,6 +144,45 @@ public class Hud implements Renderable {
 		messageLog.log(message);
 
 		Sounds.playGlobalSound(Sounds.logAlert);
+	}
+	
+	
+	/**
+	 * Checks the players actions and determines if it impacts the {@link Hud}
+	 * 
+	 * @param keys
+	 */
+	public void applyPlayerInput(int keys) {
+	    /* Check to see if the user is planting or disarming
+         * a bomb
+         */
+        setAtBomb(false);
+        if(Keys.USE.isDown(keys)) {
+            if(this.localPlayer != null && this.localPlayer.isAlive()) {
+                Rectangle bounds = this.localPlayer.getEntity().getBounds();
+                List<ClientBombTarget> bombTargets = this.game.getBombTargets();
+                for(int i = 0; i < bombTargets.size(); i++) {
+                    ClientBombTarget target = bombTargets.get(i);                   
+                    if(target.isAlive()) {
+                        if(bounds.intersects(target.getBounds())) {
+                            
+                            /* if we are disarming it takes longer
+                             * than planting
+                             */
+                            if(target.isBombPlanted()) {
+                                setBombCompletionTime(5_000);
+                            }
+                            else {
+                                setBombCompletionTime(3_000);
+                            }
+                            
+                            setAtBomb(true);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 	}
 	
 	/**
