@@ -227,7 +227,6 @@ public class InGameScreen implements Screen {
 		createUI();
 								
 		this.controllerInput = new JoystickGameController();		
-		Controllers.addListener(this.controllerInput);				
 	}
 	
 	
@@ -372,6 +371,8 @@ public class InGameScreen implements Screen {
 		if(this.game != null) {
 			this.game.onReloadVideo();
 		}
+		
+		Controllers.addListener(this.controllerInput);
 		final ClientProtocol protocol = connection.getClientProtocol();
 		
 		Console console = app.getConsole();
