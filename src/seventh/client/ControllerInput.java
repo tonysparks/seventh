@@ -222,29 +222,29 @@ public class ControllerInput implements ControllerListener {
                 return isRightTriggerDown();
             
             case LEFT_BUMPER_BTN:
-                return this.buttons[0];
+                return this.buttons[4];
             case RIGHT_BUMPER_BTN:
-                return this.buttons[0];
+                return this.buttons[5];
 
             case LEFT_JOYSTICK_BTN:
-                return this.buttons[0];
+                return this.buttons[8];
             case RIGHT_JOYSTICK_BTN:
-                return this.buttons[0];
+                return this.buttons[9];
             
             case START_BTN:
-                return this.buttons[0];
+                return this.buttons[7];
             case SELECT_BTN:
-                return this.buttons[0];
+                return this.buttons[6];
               
             
             case A_BTN:
                 return this.buttons[0];
             case B_BTN:
-                return this.buttons[0];
+                return this.buttons[1];
             case X_BTN:
-                return this.buttons[0];
+                return this.buttons[2];
             case Y_BTN:
-                return this.buttons[0];                        
+                return this.buttons[3];                        
             default:
                 return false;
 	    }
@@ -350,7 +350,7 @@ public class ControllerInput implements ControllerListener {
 	    if(button >-1 && button < this.buttons.length)
 	        this.buttons[button] = false;
 	    
-//		System.out.println("ButtonUp:" + button);
+		System.out.println("ButtonUp:" + button);
 		return false;
 	}
 	

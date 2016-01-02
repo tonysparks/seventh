@@ -66,29 +66,29 @@ public class JoystickGameController extends ControllerInput implements GameContr
                 return !isRightTriggerDown();
             
             case LEFT_BUMPER_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[4];
             case RIGHT_BUMPER_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[5];
 
             case LEFT_JOYSTICK_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[8];
             case RIGHT_JOYSTICK_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[9];
             
             case START_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[7];
             case SELECT_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[6];
               
             
             case A_BTN:
                 return this.isButtonReleased[0];
             case B_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[1];
             case X_BTN:
-                return this.isButtonReleased[0];
+                return this.isButtonReleased[2];
             case Y_BTN:
-                return this.isButtonReleased[0];                        
+                return this.isButtonReleased[3];                        
             default:
                 return false;
         }

@@ -491,7 +491,7 @@ public class KeyMap {
 		this.sayKey = getKey(config, "say", Keys.Y);
 		this.teamSayKey = getKey(config, "team_say", Keys.T);
 		
-		this.reloadBtn = getKey(joystick, "reload", ControllerButtons.Y_BTN);
+		this.reloadBtn = getKey(joystick, "reload", ControllerButtons.X_BTN);
         this.walkBtn = getKey(joystick, "walk", ControllerButtons.LEFT_TRIGGER_BTN);
         this.crouchBtn = getKey(joystick, "crouch", ControllerButtons.LEFT_BUMPER_BTN);
         this.sprintBtn = getKey(joystick, "sprint", ControllerButtons.LEFT_JOYSTICK_BTN);
