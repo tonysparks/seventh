@@ -64,7 +64,9 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	private Light mussleFlash;
 	
 	/**
-	 * 
+	 * @param game
+	 * @param player
+	 * @param pos
 	 */
 	public ClientPlayerEntity(ClientGame game, ClientPlayer player, Vector2f pos) {
 		super(game, pos);
@@ -75,9 +77,9 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.invinceableTime = 0;		
 		this.lineOfSight = WeaponConstants.DEFAULT_LINE_OF_SIGHT;
 		
-		this.bloodEmitter = new BloodEmitter(new Vector2f());//, 3, 300000, -50001);
-		this.bloodEmitter.stop();
-				
+		this.bloodEmitter = game.getGameEffects().getBloodEmitterForPlayer(player.getId());
+		this.bloodEmitter.pause();
+						
 		this.bounds.width = 24;//16;
 		this.bounds.height = 24;
 		
@@ -87,9 +89,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.mussleFlash.setTexture(Art.fireWeaponLight);
 		this.mussleFlash.setColor(0.5f,0.5f,0.5f);
 								
-		setPlayer(player);
-		
-		//changeTeam(ClientTeam.NONE);
+		setPlayer(player);		
 	}
 	
 	/* (non-Javadoc)
@@ -99,6 +99,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	public void destroy() {
 		super.destroy();
 		mussleFlash.destroy();
+		bloodEmitter.pause();
 	}
 	
 	/**
@@ -433,14 +434,14 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		}
 		
 		
-		Vector2f pos = getCenterPos();		
-		mussleFlash.setPos(pos);
+		Vector2f centerPos = getCenterPos();		
+		mussleFlash.setPos(centerPos);
 		Vector2f.Vector2fMA(mussleFlash.getPos(), getFacing(), 40.0f, mussleFlash.getPos());
 		mussleFlash.setOrientation(getOrientation());
 		mussleFlash.setLuminacity((fadeAlphaColor-150)/255.0f);
 		mussleFlash.setColor(0.7f,.7f,0.5f);
 		
-		hearingBounds.centerAround(pos);
+		hearingBounds.centerAround(centerPos);
 		
 		/* Make sure the player was actually hit before we display any blood 
 		 * effects.  We do this by making sure our last update was recent, and
@@ -451,19 +452,18 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 			onDamage();
 		}		
 		
-		this.bloodEmitter.update(timeStep);
-		
 		Vector2f.Vector2fCopy(this.pos, previousPos);
 		super.update(timeStep);						
 	}
 
-	
+	/**
+	 * The player has taken damage
+	 */
 	protected void onDamage() {
 		this.bloodEmitter.resetTimeToLive();
 		this.bloodEmitter.setPos(getPos());			
 		this.bloodEmitter.start();
 		
-//		this.effects.addEffect(bloodEmitter);
 		Sounds.playSound(Sounds.hit, getId(), getCenterPos());
 	}
 	
@@ -494,8 +494,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 				canvas.drawCircle(21, rx - (bounds.width/2f)-1f, ry - (bounds.height/2f)-1f, 0xff000000);
 			}				
 		}
-		bloodEmitter.render(canvas, camera, alpha);
-		
+				
 		sprite.render(canvas, camera, alpha);
 		canvas.setCompositeAlpha(1.0f);
 
