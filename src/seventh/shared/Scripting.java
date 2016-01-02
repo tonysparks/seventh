@@ -25,7 +25,7 @@ public class Scripting {
 							.setAllowThreadLocals(false)
 							.setIsDebugMode(true)
 							.setBarebones(true)
-							.setSandboxed(true)
+							.setSandboxed(false)
 							.newRuntime();
 		return runtime;
 	}
