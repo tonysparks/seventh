@@ -5,6 +5,7 @@ package seventh.shared;
 
 import leola.vm.Args;
 import leola.vm.Leola;
+import seventh.server.SeventhScriptingCommonLibrary;
 
 /**
  * Scripting runtime factory methods
@@ -25,8 +26,14 @@ public class Scripting {
 							.setAllowThreadLocals(false)
 							.setIsDebugMode(true)
 							.setBarebones(true)
-							.setSandboxed(true)
+							.setSandboxed(false) // TODO
 							.newRuntime();
+		
+		/* load some helper functions for objective scripts */
+		runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+		runtime.put("console", Cons.getImpl());
+		
+		
 		return runtime;
 	}
 	
@@ -40,7 +47,12 @@ public class Scripting {
 		Leola runtime = Args.builder()
 							.setIsDebugMode(true)
 							.setAllowThreadLocals(false)
-							.newRuntime();		
+							.newRuntime();
+		
+		/* load some helper functions for objective scripts */
+		runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+		runtime.put("console", Cons.getImpl());
+		
 		return runtime;
 	}
 
