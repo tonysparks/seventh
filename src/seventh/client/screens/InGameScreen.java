@@ -6,6 +6,9 @@ package seventh.client.screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controllers;
+
 import seventh.ai.AICommand;
 import seventh.client.AIShortcut;
 import seventh.client.AIShortcuts;
@@ -23,6 +26,7 @@ import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayerEntity;
 import seventh.client.ClientProtocol;
 import seventh.client.ClientTeam;
+import seventh.client.ControllerInput.ControllerButtons;
 import seventh.client.Inputs;
 import seventh.client.JoystickGameController;
 import seventh.client.KeyMap;
@@ -55,9 +59,6 @@ import seventh.ui.TextBox;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.view.TextBoxView;
-
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.controllers.Controllers;
 
 /**
  * Represents when a player is actually playing the game.
@@ -132,22 +133,7 @@ public class InGameScreen implements Screen {
 		public boolean keyUp(int key) {
 		    
 			if(key == Keys.ESCAPE) {
-				if(getDialog().isOpen()) {				
-					app.removeInput(app.getUiManager());
-					getDialog().close();
-					Sounds.playGlobalSound(Sounds.uiNavigate);
-				}
-				else if(!getSayTxtBx().isDisabled()) {
-					hideTextBox(getSayTxtBx());
-				}
-				else if(!getTeamSayTxtBx().isDisabled()) {					
-					hideTextBox(getTeamSayTxtBx());
-				}
-				else {					
-					createUI();					
-					Sounds.playGlobalSound(Sounds.uiNavigate);
-				}
-
+				dialogMenu();
 				return true;
 				
 			}
@@ -302,6 +288,24 @@ public class InGameScreen implements Screen {
 		setupTextbox(teamSayTxtBx);
 		
 		this.app.addInputToFront(app.getUiManager());
+	}
+	
+	private void dialogMenu() {
+		if(getDialog().isOpen()) {				
+			app.removeInput(app.getUiManager());
+			getDialog().close();
+			Sounds.playGlobalSound(Sounds.uiNavigate);
+		}
+		else if(!getSayTxtBx().isDisabled()) {
+			hideTextBox(getSayTxtBx());
+		}
+		else if(!getTeamSayTxtBx().isDisabled()) {					
+			hideTextBox(getTeamSayTxtBx());
+		}
+		else {					
+			createUI();					
+			Sounds.playGlobalSound(Sounds.uiNavigate);
+		}
 	}
 	
 	private void showTextBox(TextBox box) {
@@ -536,7 +540,8 @@ public class InGameScreen implements Screen {
 	 */	
 	@Override
 	public void update(TimeStep timeStep) {
-		game.showScoreBoard(inputs.isKeyDown(Keys.TAB));
+		game.showScoreBoard(inputs.isKeyDown(Keys.TAB)||
+				            controllerInput.isButtonDown(ControllerButtons.SELECT_BTN));
 		
 		this.sayTxtBxView.update(timeStep);
 		this.teamSayTxtBxView.update(timeStep);
@@ -546,7 +551,11 @@ public class InGameScreen implements Screen {
 		isDebugMode = inputs.isKeyDown(Keys.ALT_LEFT);
 		
 		if(!dialog.isOpen() && (sayTxtBx.isDisabled()&&teamSayTxtBx.isDisabled()) ) {
-		
+			if(controllerInput.isButtonReleased(ControllerButtons.START_BTN)) {
+				dialogMenu();
+			}
+			
+			
 			inputKeys = controllerInput.pollInputs(timeStep, keyMap, cursor, inputKeys);
 			inputKeys = inputs.pollInputs(timeStep, keyMap, cursor, inputKeys);
 			        

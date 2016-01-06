@@ -41,7 +41,7 @@ public class JoystickGameController extends ControllerInput implements GameContr
         return result;
     }
     
-    private boolean isButtonReleased(ControllerButtons button) {
+    public boolean isButtonReleased(ControllerButtons button) {
         switch(button) {
             case NORTH_DPAD_BTN:
                 return !isPovDirectionDown(PovDirection.north);
