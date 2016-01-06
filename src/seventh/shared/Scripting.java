@@ -26,11 +26,7 @@ public class Scripting {
 							.setAllowThreadLocals(false)
 							.setIsDebugMode(true)
 							.setBarebones(true)
-<<<<<<< HEAD
 							.setSandboxed(false) // TODO
-=======
-							.setSandboxed(false)
->>>>>>> branch 'master' of https://github.com/tonysparks/seventh.git
 							.newRuntime();
 		
 		/* load some helper functions for objective scripts */
