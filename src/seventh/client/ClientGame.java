@@ -30,7 +30,6 @@ import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientBomb;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
-import seventh.game.PlayerEntity.Keys;
 import seventh.game.SoundType;
 import seventh.game.Timers;
 import seventh.game.net.NetEntity;
@@ -645,36 +644,7 @@ public class ClientGame {
 	 */
 	public void applyPlayerInput(int keys) {
 		this.cameraController.applyPlayerInput(keys);
-		
-		/* Check to see if the user is planting or disarming
-		 * a bomb
-		 */
-		hud.setAtBomb(false);
-		if(Keys.USE.isDown(keys)) {
-			if(this.localPlayer != null && this.localPlayer.isAlive()) {
-				Rectangle bounds = this.localPlayer.getEntity().getBounds(); 
-				for(int i = 0; i < bombTargets.size(); i++) {
-					ClientBombTarget target = bombTargets.get(i);					
-					if(target.isAlive()) {
-						if(bounds.intersects(target.getBounds())) {
-							
-							/* if we are disarming it takes longer
-							 * than planting
-							 */
-							if(target.isBombPlanted()) {
-								hud.setBombCompletionTime(5_000);
-							}
-							else {
-								hud.setBombCompletionTime(3_000);
-							}
-							
-							hud.setAtBomb(true);
-							break;
-						}
-					}
-				}
-			}
-		}		
+		this.hud.applyPlayerInput(keys);			
 	}
 	
 	/**
@@ -913,6 +883,8 @@ public class ClientGame {
 		this.entities.clear();		
 		this.bombTargets.clear();
 		this.vehicles.clear();
+		
+		this.gameTimers.removeTimers();
 		
 		this.gameEffects.removeAllLights();
 		this.gameEffects.clearEffects();
