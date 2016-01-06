@@ -77,9 +77,9 @@ public class ServerSeventhConfig extends SeventhConfig {
 	 */
 	public String getAddress() {
 		try {
-			return InetAddress.getLocalHost().getHostName();
+			return InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
-			Cons.println("*** ERROR: Unable to obtain local host name: " + e);
+			Cons.println("*** ERROR: Unable to obtain local host address: " + e);
 			return "0.0.0.0";
 		}
 	}
