@@ -15,6 +15,7 @@ import seventh.client.gfx.FrameBufferRenderable;
 import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.TankTrackMarks;
+import seventh.client.gfx.particle.BloodEmitter;
 import seventh.client.gfx.particle.Effect;
 import seventh.client.gfx.particle.Effects;
 import seventh.math.Vector2f;
@@ -41,8 +42,10 @@ public class ClientGameEffects {
 	private final Sprite frameBufferSprite;
 	
 	private final TankTrackMarks[] trackMarks;
+	
+	private final BloodEmitter[] playerBloodEmitters;
+	
 	/**
-	 * 
 	 */
 	public ClientGameEffects() {
 		this.frameBufferRenderables = new ArrayList<>();
@@ -50,7 +53,16 @@ public class ClientGameEffects {
 		this.backgroundEffects = new Effects();
 		this.foregroundEffects = new Effects();
 
-	
+		this.playerBloodEmitters = new BloodEmitter[SeventhConstants.MAX_PLAYERS];
+		for(int i = 0; i < this.playerBloodEmitters.length; i++) {
+		    this.playerBloodEmitters[i] = new BloodEmitter(new Vector2f());
+		    this.playerBloodEmitters[i].setPersistent(true);
+		    this.playerBloodEmitters[i].pause();
+		    
+		    this.backgroundEffects.addEffect(this.playerBloodEmitters[i]);
+		}
+		
+		
 		this.lightSystem = new ImageBasedLightSystem();		
 		this.frameBufferRenderables.add(lightSystem);
 		
@@ -58,6 +70,17 @@ public class ClientGameEffects {
 		this.frameBufferSprite = new Sprite();
 		
 		this.trackMarks = new TankTrackMarks[SeventhConstants.MAX_ENTITIES];
+	}
+	
+	/**
+	 * Retrieve the cached {@link BloodEmitter} for a particular player.  Note, this
+	 * assumes the supplied playerId is valid.
+	 * 
+	 * @param playerId
+	 * @return the {@link BloodEmitter} for a player.
+	 */
+	public BloodEmitter getBloodEmitterForPlayer(int playerId) {
+	    return this.playerBloodEmitters[playerId];
 	}
 	
 	/**
@@ -95,6 +118,13 @@ public class ClientGameEffects {
 				trackMarks[i] = null;
 			}
 		}
+		
+		for(int i = 0; i < this.playerBloodEmitters.length; i++) {         
+            this.playerBloodEmitters[i].reset();
+            this.playerBloodEmitters[i].pause();
+            
+            this.backgroundEffects.addEffect(this.playerBloodEmitters[i]);
+        }
 	}
 	
 	
@@ -107,6 +137,11 @@ public class ClientGameEffects {
 		
 		lightSystem.destroy();
 		frameBufferRenderables.clear();
+		
+		for(int i = 0; i < this.playerBloodEmitters.length; i++) {         
+            this.playerBloodEmitters[i].destroy();
+            this.playerBloodEmitters[i] = null;
+        }
 	}
 	
 	/**

@@ -3,10 +3,6 @@
  */
 package seventh.client;
 
-import seventh.client.gfx.Cursor;
-import seventh.client.screens.InGameScreen.Actions;
-import seventh.shared.TimeStep;
-
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -14,11 +10,84 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector3;
 
 /**
+ * Controller Input, this is optimized for an XBox controller.
+ * 
  * @author Tony
  *
  */
 public class ControllerInput implements ControllerListener {
 
+    /**
+     * Buttons as they relate to an XBox controller
+     * 
+     * @author Tony
+     *
+     */
+    public static enum ControllerButtons {        
+        LEFT_TRIGGER_BTN,
+        RIGHT_TRIGGER_BTN,
+        
+        LEFT_JOYSTICK_BTN,
+        RIGHT_JOYSTICK_BTN,
+        
+        Y_BTN,
+        X_BTN,
+        A_BTN,
+        B_BTN,
+        
+        START_BTN,
+        SELECT_BTN,
+        
+        LEFT_BUMPER_BTN,
+        RIGHT_BUMPER_BTN,
+        
+        NORTH_DPAD_BTN,
+        NE_DPAD_BTN,
+        EAST_DPAD_BTN,
+        SE_DPAD_BTN,
+        SOUTH_DPAD_BTN,
+        SW_DPAD_BTN,
+        WEST_DPAD_BTN,
+        NW_DPAD_BTN,
+        ;
+        
+        private static final int NumberOfKeyboardKeys = 256;
+        /**
+         * Returns the pseudo-key code of the button.  Note, this does not
+         * relate to the underlying controller button number, but rather is used
+         * to relate the {@link ControllerButtons} to the approach enum.
+         * 
+         * @return the pseudo-key code
+         */
+        public int getKey() {
+            // offset by the number of keyboard keys, we add it so that we can
+            // safely and correctly index into the KeyMap
+            return NumberOfKeyboardKeys + ordinal();
+        }
+        
+        private static final ControllerButtons[] values = values();
+        
+        public static ControllerButtons fromKey(int key) {
+            // adjust offset from the keyboard keys 
+            key -= NumberOfKeyboardKeys;
+            
+            if(key>-1&&key<values.length) {
+                return values[key];
+            }
+            return null;
+        }
+        
+        public static ControllerButtons fromString(String str) {
+           for(ControllerButtons b : values) {
+               if(b.name().equalsIgnoreCase(str)) {
+                   return b;
+               }
+           }
+           
+           return null;
+        }
+    }
+    
 	private boolean[] povDirections;
 	private boolean[] buttons;
 	
@@ -27,17 +96,51 @@ public class ControllerInput implements ControllerListener {
 	private float triggers;
 	private float triggerSensitivity;
 	
+	private float leftJoystickSensitivity;
+	private float rightJoystickSensitivity;
+	
 	private float[] movements;
+	
 	/**
-	 * 
 	 */
 	public ControllerInput() {
 		this.povDirections = new boolean[PovDirection.values().length];
 		this.buttons = new boolean[64];
 		this.isConnected = Controllers.getControllers().size > 0;
 		this.triggerSensitivity = 0.3f;
+		this.leftJoystickSensitivity = 0.2f;
+		this.rightJoystickSensitivity = 0.3f;
+		
 		this.movements = new float[4];
 	}
+	
+    /**
+     * @return the leftJoystickSensitivity
+     */
+    public float getLeftJoystickSensitivity() {
+        return leftJoystickSensitivity;
+    }
+    
+    /**
+     * @return the rightJoystickSensitivity
+     */
+    public float getRightJoystickSensitivity() {
+        return rightJoystickSensitivity;
+    }
+    
+    /**
+     * @param leftJoystickSensitivity the leftJoystickSensitivity to set
+     */
+    public void setLeftJoystickSensitivity(float leftJoystickSensitivity) {
+        this.leftJoystickSensitivity = leftJoystickSensitivity;
+    }
+    
+    /**
+     * @param rightJoystickSensitivity the rightJoystickSensitivity to set
+     */
+    public void setRightJoystickSensitivity(float rightJoystickSensitivity) {
+        this.rightJoystickSensitivity = rightJoystickSensitivity;
+    }
 	
 	/**
 	 * @param triggerSensitivity the triggerSensitivity to set
@@ -87,6 +190,124 @@ public class ControllerInput implements ControllerListener {
 		return this.buttons[button];
 	}
 	
+	
+	/**
+	 * Determines if a particular button is down
+	 * 
+	 * @param button
+	 * @return true if the button is down, false otherwise
+	 */
+	public boolean isButtonDown(ControllerButtons button) {
+	    switch(button) {
+    	    case NORTH_DPAD_BTN:
+    	        return isPovDirectionDown(PovDirection.north);
+    	    case NE_DPAD_BTN:
+    	        return isPovDirectionDown(PovDirection.northEast);
+            case EAST_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.east);
+            case SE_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.southEast);
+            case SOUTH_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.south);
+            case SW_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.southWest);
+            case WEST_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.west);
+            case NW_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.northWest);
+            
+            case LEFT_TRIGGER_BTN:
+                return isLeftTriggerDown();
+            case RIGHT_TRIGGER_BTN:
+                return isRightTriggerDown();
+            
+            case LEFT_BUMPER_BTN:
+                return this.buttons[4];
+            case RIGHT_BUMPER_BTN:
+                return this.buttons[5];
+
+            case LEFT_JOYSTICK_BTN:
+                return this.buttons[8];
+            case RIGHT_JOYSTICK_BTN:
+                return this.buttons[9];
+            
+            case START_BTN:
+                return this.buttons[7];
+            case SELECT_BTN:
+                return this.buttons[6];
+              
+            
+            case A_BTN:
+                return this.buttons[0];
+            case B_BTN:
+                return this.buttons[1];
+            case X_BTN:
+                return this.buttons[2];
+            case Y_BTN:
+                return this.buttons[3];                        
+            default:
+                return false;
+	    }
+	}
+	
+	public boolean isXAxisMovedLeftOnLeftJoystick() {
+	    return movements[1] < -this.leftJoystickSensitivity;
+	}
+	public boolean isXAxisMovedRightOnLeftJoystick() {
+        return movements[1] > this.leftJoystickSensitivity;
+    }
+	
+	public boolean isXAxisMovedLeftOnRightJoystick() {
+        return movements[3] < -this.rightJoystickSensitivity;
+    }
+    public boolean isXAxisMovedRightOnRightJoystick() {
+        return movements[3] > this.rightJoystickSensitivity;
+    }
+	
+    public boolean isYAxisMovedUpOnLeftJoystick() {
+        return movements[0] < -this.leftJoystickSensitivity;
+    }    
+    public boolean isYAxisMovedDownOnLeftJoystick() {
+        return movements[0] > this.leftJoystickSensitivity;
+    }
+    
+    public boolean isYAxisMovedUpOnRightJoystick() {
+        return movements[2] < -this.rightJoystickSensitivity;
+    }    
+    public boolean isYAxisMovedDownOnRightJoystick() {
+        return movements[2] > this.rightJoystickSensitivity;
+    }
+    
+    public boolean isXAxisOnRightJoystickMoved() {
+        return Math.abs(movements[3]) > this.rightJoystickSensitivity;
+    }
+    public boolean isYAxisOnRightJoystickMoved() {
+        return Math.abs(movements[2]) > this.rightJoystickSensitivity;
+    }
+    
+    public boolean isXAxisOnLeftJoystickMoved() {
+        return Math.abs(movements[1]) > this.leftJoystickSensitivity;
+    }
+    public boolean isYAxisOnLeftJoystickMoved() {
+        return Math.abs(movements[0]) > this.leftJoystickSensitivity;
+    }
+	
+	public float getLeftJoystickXAxis() {
+	    return movements[1];
+	}
+	public float getLeftJoystickYAxis() {
+        return movements[0];
+    }
+	
+	public float getRightJoystickXAxis() {
+        return movements[3];
+    }
+    public float getRightJoystickYAxis() {
+        return movements[2];
+    }
+	
+    
+    
 	/**
 	 * @return the isConnected
 	 */
@@ -126,14 +347,18 @@ public class ControllerInput implements ControllerListener {
 	
 	@Override
 	public boolean buttonUp(Controller controller, int button) {
-		this.buttons[button] = false;
-//		System.out.println("ButtonUp:" + button);
+	    if(button >-1 && button < this.buttons.length)
+	        this.buttons[button] = false;
+	    
+		System.out.println("ButtonUp:" + button);
 		return false;
 	}
 	
 	@Override
 	public boolean buttonDown(Controller controller, int button) {
-		this.buttons[button] = true;
+	    if(button >-1 && button < this.buttons.length)
+	        this.buttons[button] = true;
+	    
 //		System.out.println("ButtonDown:" + button);
 		return false;
 	}
@@ -149,108 +374,10 @@ public class ControllerInput implements ControllerListener {
         }
                     
         return true;
-		
-		
 	}
 	
 	@Override
 	public boolean accelerometerMoved(Controller controller, int accelCode, Vector3 value) {
 		return false;
 	}	
-	
-	
-	/**
-	 * Polls the input to determine if any of the mapped buttons have been triggerd for 
-	 * action.
-	 * 
-	 * @param timeStep
-	 * @param cursor
-	 * @param inputKeys
-	 * @return the inputKeys
-	 */
-	public int pollInput(TimeStep timeStep, Cursor cursor, int inputKeys) {
-	    if(isConnected()) {
-            float sensitivity = 0.2f;
-            
-            if(movements[0] > sensitivity) {
-                inputKeys |= Actions.DOWN.getMask();
-            }
-            if(movements[0] < -sensitivity) {
-                inputKeys |= Actions.UP.getMask();
-            }
-            
-            if(movements[1] > sensitivity) {
-                inputKeys |= Actions.RIGHT.getMask();
-            }
-            if(movements[1] < -sensitivity) {
-                inputKeys |= Actions.LEFT.getMask();
-            }
-            
-            sensitivity = 0.3f;
-            
-            float dx = movements[3];
-            float dy = movements[2];
-            
-            if( Math.abs(dx) > sensitivity || Math.abs(dy) > sensitivity) {
-                cursor.moveByDelta(dx, dy);
-            }
-            
-//          for(int i = 0; i < movements.length;i++) {
-//              movements[i] = false;
-//          }
-            
-            if(isRightTriggerDown()) {
-                inputKeys |= Actions.FIRE.getMask();
-            }
-            if(isLeftTriggerDown()) {
-                inputKeys |= Actions.THROW_GRENADE.getMask();
-            }
-            if(isButtonDown(2)) {
-                inputKeys |= Actions.RELOAD.getMask();
-            }
-//          if(controllerInput.isButtonDown(3)) {
-//              inputKeys |= Actions.WEAPON_SWITCH_UP.getMask();
-//          }
-            if(isButtonDown(1)||isButtonDown(5)) {
-                inputKeys |= Actions.MELEE_ATTACK.getMask();
-            }
-            if(isButtonDown(4)) {
-                inputKeys |= Actions.CROUCH.getMask();
-            }
-            
-            
-            if(isPovDirectionDown(PovDirection.north)) {
-                inputKeys |= Actions.UP.getMask();
-            }
-            else if(isPovDirectionDown(PovDirection.northEast)) {
-                inputKeys |= Actions.UP.getMask();
-                inputKeys |= Actions.RIGHT.getMask();
-            }
-            
-            else if(isPovDirectionDown(PovDirection.northWest)) {
-                inputKeys |= Actions.UP.getMask();
-                inputKeys |= Actions.LEFT.getMask();
-            }
-            
-            else if(isPovDirectionDown(PovDirection.south)) {
-                inputKeys |= Actions.DOWN.getMask();
-            }
-            else if(isPovDirectionDown(PovDirection.southEast)) {
-                inputKeys |= Actions.DOWN.getMask();
-                inputKeys |= Actions.RIGHT.getMask();
-            }
-            else if(isPovDirectionDown(PovDirection.southWest)) {
-                inputKeys |= Actions.DOWN.getMask();
-                inputKeys |= Actions.LEFT.getMask();
-            }
-            else if(isPovDirectionDown(PovDirection.east)) {                    
-                inputKeys |= Actions.RIGHT.getMask();
-            }
-            else if(isPovDirectionDown(PovDirection.west)) {                    
-                inputKeys |= Actions.LEFT.getMask();
-            }
-        }
-	    
-	    return inputKeys;
-	}
 }

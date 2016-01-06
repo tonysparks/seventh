@@ -226,4 +226,19 @@ public class ServerSeventhConfig extends SeventhConfig {
 	public String getStartupScript() {
 		return this.config.getStr(null, "sv_startupscript");
 	}
+	
+	public boolean isPrivate() {
+	    return this.config.getBool(false, "sv_private");
+	}
+	public void setPrivate(boolean isPrivate) {
+	    this.config.set(LeoObject.valueOf(isPrivate), "sv_private");
+	}
+	
+	public String getPrivatePassword() {
+	    return this.config.getStr(null, "sv_privatePassword");
+	}
+	
+	public void setPrivatePassword(String password) {
+	    this.config.set(LeoObject.valueOf(password), "sv_privatePassword");
+	}
 }

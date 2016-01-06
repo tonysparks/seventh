@@ -92,6 +92,7 @@ public class GameServer {
 		public String serverName;
 		public String currentMap;
 		public String startupScript;
+		public String password;
 		public int maxScore;		
 		public int maxPlayers;
 		public long matchTime;
@@ -101,6 +102,7 @@ public class GameServer {
 		public List<String> axisTeam;
 		public boolean isDedicatedServer;		
 		public boolean isLAN;
+		public boolean isPrivate;
 		public int port;
 	}
 	
@@ -368,6 +370,20 @@ public class GameServer {
 				
 			}
 		});
+		
+		console.addCommand(new Command("sv_privatePassword") {
+            
+            @Override
+            public void execute(Console console, String... args) {
+                ServerSeventhConfig config = serverContext.getConfig();
+                if(args==null||args.length < 1) {
+                    console.println("sv_privatePassword: " + config.getPrivatePassword());
+                }
+                else {
+                    config.setPrivatePassword(args[0]);
+                }
+            }
+        });
 		
 		console.addCommand(new Command("add_bot"){			
 			@Override

@@ -7,6 +7,8 @@ package seventh.client.gfx.particle;
 import seventh.client.gfx.Renderable;
 
 /**
+ * A visual effect
+ * 
  * @author Tony
  *
  */

@@ -174,6 +174,14 @@ public class Config {
 		return obj.toString();
 	}
 	
+	public boolean getBool(boolean defaultValue, String ...keys) {
+	    LeoObject obj = get(keys);
+	    if(obj==null) {
+	        return defaultValue;
+	    }
+	    return LeoObject.isTrue(obj);
+	}
+	
 	public boolean getBool(String ...keys ) {
 		LeoObject obj = get(keys);
 		return LeoObject.isTrue(obj);

@@ -33,7 +33,7 @@ public abstract class Emitter implements Effect {
 	private boolean dieInstantly;
 	private boolean decrementParticles;
 	
-	private boolean kill;
+	private boolean kill, isPaused, isPersistent;
 	
 	/**
 	 * 
@@ -52,7 +52,26 @@ public abstract class Emitter implements Effect {
 		this.decrementParticles = false;
 		
 		this.kill = false;
+		this.isPaused = false;
+		this.isPersistent = false;
 	}
+	
+	/**
+	 * If this emitter should stick around even after its timers have expired.  this should
+	 * be used if the emitter is cached and will want to be reused
+	 * 
+     * @return the persist
+     */
+    public boolean isPersistent() {
+        return isPersistent;
+    }
+    
+    /**
+     * @param persist the persist to set
+     */
+    public void setPersistent(boolean persist) {
+        this.isPersistent = persist;
+    }
 	
 	/**
 	 * @param decrementParticles the decrementParticles to set
@@ -67,7 +86,7 @@ public abstract class Emitter implements Effect {
 	public void setDieInstantly(boolean dieInstantly) {
 		this.dieInstantly = dieInstantly;
 	}
-	
+		
 	/**
 	 * @return the dieInstantly
 	 */
@@ -125,11 +144,19 @@ public abstract class Emitter implements Effect {
 	public void start() {
 		this.timeToLive.start();
 		this.nextSpawn.start();
+		this.isPaused = false;
 	}
 	
 	public void stop() {
 		this.timeToLive.stop();
 		this.nextSpawn.stop();
+		this.isPaused = false;
+	}
+	
+	public void pause() {
+	    this.timeToLive.pause();
+	    this.nextSpawn.pause();
+	    this.isPaused = true;
 	}
 	
 	public void reset() {
@@ -138,6 +165,7 @@ public abstract class Emitter implements Effect {
 		this.particles.clear();
 		this.deadParticles.clear();
 		this.numberOfParticles = 0;
+		this.kill = false;
 	}
 	
 	public void resetTimeToLive() {
@@ -154,10 +182,10 @@ public abstract class Emitter implements Effect {
 		}
 		
 		if(!isDieInstantly()) {
-			return !this.timeToLive.isTime() || !this.particles.isEmpty();
+			return (!this.timeToLive.isTime() || !this.particles.isEmpty()) || this.isPaused || this.isPersistent;
 		}
 		
-		return !this.timeToLive.isTime();
+		return !this.timeToLive.isTime() || this.isPaused || this.isPersistent;
 	}
 	
 	/* (non-Javadoc)
@@ -174,6 +202,7 @@ public abstract class Emitter implements Effect {
 	@Override
 	public void destroy() {
 		reset();
+		kill();
 	}
 	
 	/**

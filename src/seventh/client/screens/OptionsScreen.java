@@ -230,7 +230,7 @@ public class OptionsScreen implements Screen {
 		uiPos.y = startY;
 		setupButton(uiPos, "reload: '" + keys.keyString(keys.getReloadKey())+"'"); uiPos.y += yInc;
 		setupButton(uiPos, "drop weapon: '" + keys.keyString(keys.getDropWeaponKey())+"'"); uiPos.y += yInc;
-		setupButton(uiPos, "melee attack: '" + keys.keyString(keys.getMeleeAttack())+"'"); uiPos.y += yInc;
+		setupButton(uiPos, "melee attack: '" + keys.keyString(keys.getMeleeAttackKey())+"'"); uiPos.y += yInc;
 		setupButton(uiPos, "throw grenade: '" + keys.keyString(keys.getThrowGrenadeKey())+"'"); uiPos.y += yInc;
 		setupButton(uiPos, "fire: '" + keys.keyString(keys.getFireKey())+"'"); uiPos.y += yInc;
 		setupButton(uiPos, "use: '" + keys.keyString(keys.getUseKey()) +"'" ); uiPos.y += yInc;

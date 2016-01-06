@@ -23,9 +23,10 @@ import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayerEntity;
 import seventh.client.ClientProtocol;
 import seventh.client.ClientTeam;
-import seventh.client.ControllerInput;
 import seventh.client.Inputs;
+import seventh.client.JoystickGameController;
 import seventh.client.KeyMap;
+import seventh.client.KeyboardGameController;
 import seventh.client.Screen;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Camera;
@@ -56,7 +57,6 @@ import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.view.TextBoxView;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 
 /**
@@ -126,8 +126,8 @@ public class InGameScreen implements Screen {
 	private AIShortcuts aiShortcuts;
 	private AIShortcutsMenu aiShortcutsMenu;
 	
-	private ControllerInput controllerInput;	
-	private Inputs inputs = new Inputs() {
+	private JoystickGameController controllerInput;	
+	private KeyboardGameController inputs = new KeyboardGameController() {
 	    
 		public boolean keyUp(int key) {
 		    
@@ -226,19 +226,7 @@ public class InGameScreen implements Screen {
 		
 		createUI();
 								
-		this.controllerInput = new ControllerInput() {
-			
-			@Override
-			public boolean buttonUp(Controller controller, int button) {
-				super.buttonUp(controller, button);
-				if(button == 3) {
-					inputKeys |= Actions.WEAPON_SWITCH_UP.getMask();
-				}
-				return true;
-			}			
-		};
-		
-		Controllers.addListener(this.controllerInput);				
+		this.controllerInput = new JoystickGameController();		
 	}
 	
 	
@@ -383,6 +371,8 @@ public class InGameScreen implements Screen {
 		if(this.game != null) {
 			this.game.onReloadVideo();
 		}
+		
+		Controllers.addListener(this.controllerInput);
 		final ClientProtocol protocol = connection.getClientProtocol();
 		
 		Console console = app.getConsole();
@@ -557,65 +547,15 @@ public class InGameScreen implements Screen {
 		
 		if(!dialog.isOpen() && (sayTxtBx.isDisabled()&&teamSayTxtBx.isDisabled()) ) {
 		
-			inputKeys = controllerInput.pollInput(timeStep, cursor, inputKeys);
-			
+			inputKeys = controllerInput.pollInputs(timeStep, keyMap, cursor, inputKeys);
+			inputKeys = inputs.pollInputs(timeStep, keyMap, cursor, inputKeys);
+			        
 			if(inputs.isKeyDown(keyMap.getSayKey())) {
 				showTextBox(sayTxtBx);
 			}						
 			else if(inputs.isKeyDown(keyMap.getTeamSayKey())) {
 				showTextBox(teamSayTxtBx);
 			}
-			
-			if(inputs.isKeyDown(keyMap.getWalkKey())) {
-				inputKeys |= Actions.WALK.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getCrouchKey())) {
-				inputKeys |= Actions.CROUCH.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getSprintKey())) {
-				inputKeys |= Actions.SPRINT.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getUseKey())) {
-				inputKeys |= Actions.USE.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getDropWeaponKey())) {
-				inputKeys |= Actions.DROP_WEAPON.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getMeleeAttack())) {
-				inputKeys |= Actions.MELEE_ATTACK.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getReloadKey()) ) {
-				inputKeys |= Actions.RELOAD.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getUpKey())) {
-				inputKeys |= Actions.UP.getMask();
-			}
-			else if(inputs.isKeyDown(keyMap.getDownKey())) {
-				inputKeys |= Actions.DOWN.getMask();
-			}
-			
-			if(inputs.isKeyDown(keyMap.getLeftKey())) {
-				inputKeys |= Actions.LEFT.getMask();
-			}
-			else if(inputs.isKeyDown(keyMap.getRightKey())) {
-				inputKeys |= Actions.RIGHT.getMask();
-			}
-			
-			if(inputs.isButtonDown(keyMap.getFireKey()) || inputs.isKeyDown(keyMap.getFireKey()) ) {
-				inputKeys |= Actions.FIRE.getMask();
-			}
-			
-			if(inputs.isButtonDown(keyMap.getThrowGrenadeKey()) || inputs.isKeyDown(keyMap.getThrowGrenadeKey())) {
-				inputKeys |= Actions.THROW_GRENADE.getMask();
-			}
-			
 			
 			/* AI command shortcuts, the player can issue AI commands to nearby
 			 * Bots */

@@ -3,24 +3,24 @@
  */
 package seventh.client;
 
+import seventh.client.gfx.Cursor;
 import seventh.client.screens.InGameScreen.Actions;
 import seventh.shared.TimeStep;
 
 /**
+ * Handles Keyboard game input
+ * 
  * @author Tony
  *
  */
-public class KeyboardInput extends Inputs {
+public class KeyboardGameController extends Inputs implements GameController {
 
-    private KeyMap keyMap;
-    /**
-     * 
+    /*
+     * (non-Javadoc)
+     * @see seventh.client.GameController#pollInputs(seventh.shared.TimeStep, seventh.client.KeyMap, seventh.client.gfx.Cursor, int)
      */
-    public KeyboardInput(KeyMap keyMap) {
-        this.keyMap = keyMap;
-    }
-
-    public int pollInputs(TimeStep timeStep, int inputKeys) {
+    @Override
+    public int pollInputs(TimeStep timeStep, KeyMap keyMap, Cursor cursor, int inputKeys) {
         if(isKeyDown(keyMap.getWalkKey())) {
             inputKeys |= Actions.WALK.getMask();
         }
@@ -41,7 +41,7 @@ public class KeyboardInput extends Inputs {
             inputKeys |= Actions.DROP_WEAPON.getMask();
         }
         
-        if(isKeyDown(keyMap.getMeleeAttack())) {
+        if(isKeyDown(keyMap.getMeleeAttackKey())) {
             inputKeys |= Actions.MELEE_ATTACK.getMask();
         }
         
