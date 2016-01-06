@@ -906,6 +906,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 		this.players.resetStats();
 		this.aiSystem.destroy();
 		
+		this.gameTimers.removeTimers();
+		
 		this.dispatcher.removeAllEventListeners();
 	}
 	

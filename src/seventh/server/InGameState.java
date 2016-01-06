@@ -179,7 +179,7 @@ public class InGameState implements State {
 					GameEndedMessage msg = new GameEndedMessage();
 					msg.stats = game.getNetGameStats();
 					protocol.sendGameEndedMessage(msg);			
-					gameEnded = true;
+					gameEnded = true;					
 				}
 			}
 		});

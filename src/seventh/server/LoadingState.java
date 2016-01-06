@@ -43,7 +43,7 @@ public class LoadingState implements State {
 				
 		this.mapFile = mapFile;
 		
-		this.runtime = serverContext.getRuntime();
+		this.runtime = serverContext.newRuntime();
 		
 		/* indicates we haven't successfully loaded the map */
 		this.gameSession = null;

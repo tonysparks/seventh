@@ -16,6 +16,7 @@ import seventh.shared.Console;
 import seventh.shared.Debugable.DebugableListener;
 import seventh.shared.MapList;
 import seventh.shared.RconHash;
+import seventh.shared.Scripting;
 import seventh.shared.State;
 import seventh.shared.StateMachine;
 
@@ -261,6 +262,14 @@ public class ServerContext {
 	 * @return the runtime
 	 */
 	public Leola getRuntime() {
+		return runtime;
+	}
+	
+	/**
+	 * @return a new instance of the {@link Leola} runtime
+	 */
+	public Leola newRuntime() {
+		Leola runtime = Scripting.newRuntime();
 		return runtime;
 	}
 
