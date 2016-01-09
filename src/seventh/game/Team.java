@@ -190,7 +190,20 @@ public class Team implements Debugable {
 	}
 	
 	public void addPlayer(Player p) {
-		this.players.add(p);
+		boolean isAlreadyOnTeam = false;
+		for(int i = 0; i < this.players.size(); i++) {
+			Player player = this.players.get(i);
+			if(player != null) {
+				if(player.getId() == p.getId()) {
+					isAlreadyOnTeam = true;
+					break;
+				}
+			}
+		}
+		
+		if(!isAlreadyOnTeam) {
+			this.players.add(p);
+		}
 		p.setTeam(this);
 	}
 	public void removePlayer(Player p) {
