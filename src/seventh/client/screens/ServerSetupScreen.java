@@ -249,7 +249,8 @@ public class ServerSetupScreen implements Screen {
 		
 		uiPos.x = toggleX;
 		uiPos.y += yInc;
-		Button gameTypeBtn = setupButton(uiPos, this.gameSettings.gameType.name(), true);
+		Button gameTypeBtn = setupButton(uiPos, this.gameSettings.gameType.getDisplayName(), true);
+		gameTypeBtn.getBounds().setSize(340, 30);
 		
 		uiPos.x = startX;
 		uiPos.y += yInc;
@@ -416,7 +417,7 @@ public class ServerSetupScreen implements Screen {
 				maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
 				matchTimeLbl.setText(Long.toString(gameSettings.matchTime));
 				
-				event.getButton().setText(gameSettings.gameType.name());
+				event.getButton().setText(gameSettings.gameType.getDisplayName());
 			}
 		});
 		

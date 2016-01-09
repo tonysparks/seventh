@@ -23,10 +23,29 @@ import seventh.shared.TimeStep;
 public interface GameType extends Debugable {
 
 	public static enum Type {
-		TDM,
-		OBJ,
+		TDM("Team Death Match"),
+		OBJ("Objective Based Match"),
 		;
 		
+		private String displayName;
+		
+		/**
+		 * 
+		 */
+		private Type(String displayName) {
+			this.displayName = displayName;
+		}
+		
+		/**
+		 * @return the displayName
+		 */
+		public String getDisplayName() {
+			return displayName;
+		}
+		
+		/**
+		 * @return the network value
+		 */
 		public byte netValue() {
 			return (byte)ordinal();
 		}
