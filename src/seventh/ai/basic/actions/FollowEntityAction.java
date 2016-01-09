@@ -20,8 +20,6 @@ import seventh.shared.TimeStep;
 public class FollowEntityAction extends AdapterAction {
 	
 	private Entity followMe;	
-	private Vector2f previousPosition;
-	
 	private long timeSinceLastSeenExpireMSec;
 	
 	/**
@@ -33,9 +31,7 @@ public class FollowEntityAction extends AdapterAction {
 			throw new NullPointerException("The followMe entity is NULL!");
 		}
 		
-		this.previousPosition = new Vector2f();
-		
-		timeSinceLastSeenExpireMSec = 2_000;
+		this.timeSinceLastSeenExpireMSec = 2_000;
 	}
 	
 	/* (non-Javadoc)
@@ -44,7 +40,7 @@ public class FollowEntityAction extends AdapterAction {
 	@Override
 	public void start(Brain brain) {
 		this.timeSinceLastSeenExpireMSec = 2_000;
-		this.timeSinceLastSeenExpireMSec += brain.getWorld().getRandom().nextInt(3) * 1000;
+		this.timeSinceLastSeenExpireMSec += brain.getWorld().getRandom().nextInt(3) * 1000;		
 	}
 	
 	/* (non-Javadoc)
@@ -101,16 +97,17 @@ public class FollowEntityAction extends AdapterAction {
 				
 				// if the entity we are following is a certain distance away,
 				// recalculate the path to it
-			    if(Vector2f.Vector2fDistanceSq(start, newPosition) > 10_000) {
-					feeder.findPath(start, newPosition);								
+			    if(Vector2f.Vector2fDistanceSq(start, newPosition) > 15_000) {
+					feeder.findPath(start, newPosition);	
 				}
 				else {
-					feeder.clearPath();	
+					if(feeder.hasPath()) {
+						feeder.clearPath();
+					}
+					
 				}
 				
-				previousPosition.set(newPosition);
 			}
 		}		
 	}
-
 }

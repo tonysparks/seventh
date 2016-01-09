@@ -18,7 +18,6 @@ import seventh.shared.TimeStep;
 public class CoverEntityAction extends AdapterAction {
 	
 	private Entity followMe;
-	private Vector2f previousPosition;
 	
 	private long lastVisibleTime;
 	private final long timeSinceLastSeenExpireMSec;
@@ -28,9 +27,7 @@ public class CoverEntityAction extends AdapterAction {
 	 */
 	public CoverEntityAction(Entity followMe) {
 		this.followMe = followMe;
-		this.previousPosition = new Vector2f();
-		
-		timeSinceLastSeenExpireMSec = 7_000;
+		this.timeSinceLastSeenExpireMSec = 7_000;
 	}
 	
 	/* (non-Javadoc)
@@ -89,8 +86,6 @@ public class CoverEntityAction extends AdapterAction {
 					brain.getMotion().scanArea();
 				}
 			}
-			
-			previousPosition.set(newPosition);
 		}		
 	}
 
