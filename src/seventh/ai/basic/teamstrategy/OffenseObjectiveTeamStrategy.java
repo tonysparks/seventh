@@ -302,7 +302,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				if(player.isBot() && player.isAlive()) {
 					Brain brain = aiSystem.getBrain(player);
 					// TODO
-					System.out.println("Orders posted: " + currentState);
+					//System.out.println("Orders posted: " + currentState);
 					brain.getCommunicator().post(getCurrentAction(brain));		
 				}
 			}
@@ -374,7 +374,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 				// to accept new orders
 				if(!brain.getCommunicator().hasPendingCommands()) {
 					// TODO
-					System.out.println("Orders posted: " + currentState);
+					//System.out.println("Orders posted: " + currentState);
 					brain.getCommunicator().post(getCurrentAction(brain));
 				}
 			}
