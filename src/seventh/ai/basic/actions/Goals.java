@@ -97,9 +97,9 @@ public class Goals {
 		action.getActionResult().setValue(cover);
 		
 		return new ConcurrentGoal(action, new WeightedGoal(brain, "moveToCover",
-										   	new ShootWeaponEvaluator(this, brain.getRandomRangeMin(0.8), 0.8),
+										   	new ShootWeaponEvaluator(this, brain.getRandomRangeMin(0.83), 0.8),
 										   	new MeleeEvaluator(this, brain.getRandomRange(0.2, 0.4), 0),
-										   	new DoNothingEvaluator(this, brain.getRandomRangeMin(0.6), 0),
+										   	new DoNothingEvaluator(this, brain.getRandomRangeMin(0.55), 0),
 											new GrenadeEvaluator(this, brain.getRandomRangeMin(0.5), 0)
 		));
 	}
