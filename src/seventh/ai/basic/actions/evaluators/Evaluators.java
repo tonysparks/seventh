@@ -3,6 +3,9 @@
  */
 package seventh.ai.basic.actions.evaluators;
 
+import java.util.List;
+
+import seventh.ai.basic.Brain;
 import seventh.game.PlayerEntity;
 import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
@@ -13,6 +16,54 @@ import seventh.math.Vector2f;
  */
 public class Evaluators {
 
+	/**
+	 * Evaluate the best possible action for the supplied brain given a set of evaluators.
+	 * 
+	 * @param brain
+	 * @param evaluators
+	 * @return the best {@link ActionEvaluator} of the bunch
+	 */
+	public static ActionEvaluator evaluate(Brain brain, ActionEvaluator ... evaluators) {
+		double highestDesire = 0;
+		ActionEvaluator bestEval = null;
+		
+		int size = evaluators.length;
+		for(int i = 0; i < size; i++) {
+			ActionEvaluator eval = evaluators[i]; 
+			double desire = eval.calculateDesirability(brain);
+			if(bestEval == null || desire > highestDesire) {
+				bestEval = eval;
+				highestDesire = desire;
+			}
+		}
+		
+		return bestEval;
+	}
+	
+	/**
+	 * Evaluate the best possible action for the supplied brain given a set of evaluators.
+	 * 
+	 * @param brain
+	 * @param evaluators
+	 * @return the best {@link ActionEvaluator} of the bunch
+	 */
+	public static ActionEvaluator evaluate(Brain brain, List<ActionEvaluator> evaluators) {
+		double highestDesire = 0;
+		ActionEvaluator bestEval = null;
+		
+		int size = evaluators.size();
+		for(int i = 0; i < size; i++) {
+			ActionEvaluator eval = evaluators.get(i); 
+			double desire = eval.calculateDesirability(brain);
+			if(bestEval == null || desire > highestDesire) {
+				bestEval = eval;
+				highestDesire = desire;
+			}
+		}
+		
+		return bestEval;
+	}
+	
 	/**
 	 * Health score between 0 and 1
 	 * @param ent

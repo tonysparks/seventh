@@ -8,6 +8,7 @@ import java.util.List;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.evaluators.ActionEvaluator;
+import seventh.ai.basic.actions.evaluators.Evaluators;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -46,7 +47,7 @@ public class WeightedGoal extends Goal {
 	 */
 	@Override
 	public void start(Brain brain) {
-		this.currentActiveEvaluator = evaluate(brain);
+		this.currentActiveEvaluator = Evaluators.evaluate(brain, evaluators);
 		replace(this.currentActiveEvaluator.getAction(brain));
 	}
 	
@@ -57,7 +58,7 @@ public class WeightedGoal extends Goal {
 	public void update(Brain brain, TimeStep timeStep) {
 		this.updateEval.update(timeStep);
 		if(this.updateEval.isTime()) {
-			ActionEvaluator newEvaluator = evaluate(brain);
+			ActionEvaluator newEvaluator = Evaluators.evaluate(brain, evaluators);
 			
 			if( this.currentActiveEvaluator == null ||
 				this.isFinished(brain) || 
@@ -84,22 +85,5 @@ public class WeightedGoal extends Goal {
 		}
 		
 		super.update(brain, timeStep);
-	}
-	
-	private ActionEvaluator evaluate(Brain brain) {
-		double highestDesire = 0;
-		ActionEvaluator bestEval = null;
-		
-		int size = this.evaluators.size();
-		for(int i = 0; i < size; i++) {
-			ActionEvaluator eval = this.evaluators.get(i); 
-			double desire = eval.calculateDesirability(brain);
-			if(bestEval == null || desire > highestDesire) {
-				bestEval = eval;
-				highestDesire = desire;
-			}
-		}
-		
-		return bestEval;
 	}
 }
