@@ -20,6 +20,7 @@
 */
 package seventh.ui;
 
+import seventh.client.gfx.Theme;
 
 /**
  * A Simple text label.
@@ -71,6 +72,7 @@ public class Label extends Widget {
 		this.ignoreCR = true;
 		
 		this.textAlignment = TextAlignment.CENTER;
+		this.font = Theme.DEFAULT_FONT;
 	}
 	
 	/**

@@ -196,12 +196,12 @@ public class ServerListingsScreen implements Screen {
 		uiPos.y = 650;
 		
 		this.noServersFoundLbl = new Label("No Servers Found.");
+		this.noServersFoundLbl.setFont(theme.getSecondaryFontName());
+		this.noServersFoundLbl.setTextSize(18);
 		this.noServersFoundLbl.setBounds(new Rectangle(app.getScreenWidth(), 30));
 		this.noServersFoundLbl.getBounds().centerAround(uiPos);
-		this.noServersFoundLbl.setTextAlignment(TextAlignment.CENTER);
-		if(!this.showServersLabel.get()) {
-			noServersFoundLbl.hide();
-		}
+		this.noServersFoundLbl.setTextAlignment(TextAlignment.CENTER);		
+		checkServerListingLabel();
 		
 		optionsPanel.addWidget(noServersFoundLbl);
 		panelView.addElement(new LabelView(noServersFoundLbl));
@@ -278,6 +278,14 @@ public class ServerListingsScreen implements Screen {
 		else {
 			queryLANServer();
 		}
+		
+		checkServerListingLabel();
+	}
+	
+	private void checkServerListingLabel() {
+		if(!this.showServersLabel.get()) {
+			noServersFoundLbl.hide();
+		}
 	}
 	
 	private void queryInternetServers() {
@@ -295,6 +303,7 @@ public class ServerListingsScreen implements Screen {
 						showServersLabel.set(false);
 						if(result.isArray()) {
 							LeoArray array = result.as();
+							showServersLabel.set(array.isEmpty());
 							for(LeoObject obj : array) {
 								ServerInfo info = new ServerInfo(obj);
 								servers.add(info);
@@ -381,8 +390,6 @@ public class ServerListingsScreen implements Screen {
 			}, "client-lan-response-listener");
 			serverThread.setDaemon(true);
 			serverThread.start();
-			
-			
 			
 			Thread pingThread = new Thread(new Runnable() {
 				
