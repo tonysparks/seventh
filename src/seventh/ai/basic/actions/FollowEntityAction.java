@@ -21,7 +21,7 @@ public class FollowEntityAction extends AdapterAction {
 	
 	private Entity followMe;	
 	private long timeSinceLastSeenExpireMSec;
-	
+	private Vector2f previousDestination;
 	/**
 	 * @param feeder
 	 */
@@ -30,8 +30,9 @@ public class FollowEntityAction extends AdapterAction {
 		if(followMe == null) {
 			throw new NullPointerException("The followMe entity is NULL!");
 		}
-		
+		this.previousDestination = new Vector2f();
 		this.timeSinceLastSeenExpireMSec = 2_000;
+		//System.out.println("new follow");
 	}
 	
 	/* (non-Javadoc)
@@ -39,7 +40,7 @@ public class FollowEntityAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {
-		this.timeSinceLastSeenExpireMSec = 2_000;
+		this.timeSinceLastSeenExpireMSec = 12_000;
 		this.timeSinceLastSeenExpireMSec += brain.getWorld().getRandom().nextInt(3) * 1000;		
 	}
 	
@@ -95,16 +96,24 @@ public class FollowEntityAction extends AdapterAction {
 				Vector2f newPosition = mem.getLastSeenAt();
 				Vector2f start = brain.getEntityOwner().getPos();
 				
-				// if the entity we are following is a certain distance away,
-				// recalculate the path to it
-			    if(Vector2f.Vector2fDistanceSq(start, newPosition) > 15_000) {
-					feeder.findPath(start, newPosition);	
-				}
-				else {
-					if(feeder.hasPath()) {
-						feeder.clearPath();
-					}
+				if(Vector2f.Vector2fDistanceSq(previousDestination, newPosition) > 15_000) {
 					
+					// if the entity we are following is a certain distance away,
+					// recalculate the path to it
+				    if(Vector2f.Vector2fDistanceSq(start, newPosition) > 15_000) {
+						feeder.findPath(start, newPosition);
+						//System.out.println("new: " + previousDestination + " vs " + newPosition);
+						previousDestination.set(newPosition);
+						
+						
+					}
+					else {
+						if(feeder.hasPath()) {
+							feeder.clearPath();
+							//System.out.println("clear");
+						}
+						
+					}
 				}
 				
 			}
