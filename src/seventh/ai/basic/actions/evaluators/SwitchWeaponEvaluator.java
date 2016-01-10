@@ -52,14 +52,14 @@ public class SwitchWeaponEvaluator extends ActionEvaluator {
 				 */
 				if(weapon.isReady()) {
 					if( weapon.getTotalAmmo() <= 0 ) {
-						desire += brain.getRandomRange(0.3, 0.5);
+						desire = 1;
 					}
 					
 					
 					Weapon bestWeapon = getBestScoreWeapon(inventory);
 					if(bestWeapon != weapon) {
 						desire += brain.getRandomRange(0.1, 0.4);
-					}
+					}										
 				}
 				
 			}
@@ -72,7 +72,7 @@ public class SwitchWeaponEvaluator extends ActionEvaluator {
 			 * we should lessen the desire to switch weapons
 			 */
 			TargetingSystem system = brain.getTargetingSystem();
-			if(system.hasTarget()) {
+			if(desire < 1.0 && system.hasTarget()) {
 				desire *= brain.getRandomRange(0.4, 0.7);
 			}
 			
