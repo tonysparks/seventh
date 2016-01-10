@@ -165,7 +165,15 @@ public class FileSystemAssetWatcher implements AssetWatcher {
     
     @Override
     public void stopWatching() { 
-        this.isActive.set(false);
-        this.watchThread.interrupt();
+    	try {
+    		this.isActive.set(false);
+            this.watchThread.interrupt();    		
+    	}
+    	finally {
+    		try {
+    			this.watchService.close();
+    		}
+    		catch(IOException e) {}
+    	}
     }        
 }

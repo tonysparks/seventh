@@ -72,28 +72,35 @@ public class MasterServerClient {
 		String requestUrl = (gameType!=null) ? this.masterServerUrl + "?game_type=" + gameType : this.masterServerUrl;
 		URL url = new URL(requestUrl);
 		HttpURLConnection conn = connect(url);
-		
-		conn.setRequestMethod("GET");
-		conn.setRequestProperty("User-Agent", "Seventh Client");
-		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		conn.setRequestProperty("seventh_version", GameServer.VERSION);
-		
-		int responseCode = conn.getResponseCode();
-		if(responseCode != 200) {
-			Cons.println("Error response from master server: " + responseCode);
-		}
-		else {
-			BufferedReader istream = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String line = null;
-			StringBuilder sb=new StringBuilder("return ");
-			while( (line=istream.readLine()) != null) {
-				sb.append(line.replace(":", "->")).append("\n");
-			}
-			sb.append(" ;");
+		try {
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("User-Agent", "Seventh Client");
+			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			conn.setRequestProperty("seventh_version", GameServer.VERSION);
 			
-			Leola runtime = Scripting.newSandboxedRuntime();
-			result = runtime.eval(sb.toString());			
+			int responseCode = conn.getResponseCode();
+			if(responseCode != 200) {
+				Cons.println("Error response from master server: " + responseCode);
+			}
+			else {
+				BufferedReader istream = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				String line = null;
+				StringBuilder sb=new StringBuilder("return ");
+				while( (line=istream.readLine()) != null) {
+					sb.append(line.replace(":", "->")).append("\n");
+				}
+				sb.append(" ;");
+				
+				Leola runtime = Scripting.newSandboxedRuntime();
+				result = runtime.eval(sb.toString());			
+			}
 		}
+		finally {
+			if(conn != null) {
+				conn.disconnect();
+			}
+		}
+		
 		
 		return (result);
 	}
@@ -106,25 +113,31 @@ public class MasterServerClient {
 	public void sendHeartbeat(ServerContext serverContext) throws Exception {
 		URL url = new URL(this.masterServerUrl);
 		HttpURLConnection conn = connect(url);
-		
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("User-Agent", "Seventh Server");
-		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		conn.setRequestProperty("seventh_version", GameServer.VERSION);
-		
-		String urlParameters = populateGameServerPingParameters(serverContext);
-		
-		// Send post request
-		conn.setDoOutput(true);
-		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-		wr.writeBytes(urlParameters);
-		wr.flush();
-		wr.close();
- 
-		//Cons.println("Sending heartbeat request to: " + url);
-		int responseCode = conn.getResponseCode();
-		if(responseCode != 200) {
-			Cons.println("Error response from master server: " + responseCode);
+		try {
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("User-Agent", "Seventh Server");
+			conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			conn.setRequestProperty("seventh_version", GameServer.VERSION);
+			
+			String urlParameters = populateGameServerPingParameters(serverContext);
+			
+			// Send post request
+			conn.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+	 
+			//Cons.println("Sending heartbeat request to: " + url);
+			int responseCode = conn.getResponseCode();
+			if(responseCode != 200) {
+				Cons.println("Error response from master server: " + responseCode);
+			}
+		}
+		finally {
+			if(conn!=null) {
+				conn.disconnect();
+			}
 		}
 	}
 	
