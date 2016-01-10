@@ -24,7 +24,7 @@ public class StareAtEntityAction extends AdapterAction {
 	
 	public StareAtEntityAction(Entity stareAtMe) {
 		reset(stareAtMe);
-		timeSinceLastSeenExpireMSec = 1_000;
+		timeSinceLastSeenExpireMSec = 1_300;
 	}
 	
 	/**
@@ -48,12 +48,13 @@ public class StareAtEntityAction extends AdapterAction {
 	@Override
 	public void update(Brain brain, TimeStep timeStep) {
 		Entity me = brain.getEntityOwner();
-		Vector2f entityPos = stareAtMe.getPos();				
-		if( brain.getSensors().getSightSensor().inView(this.stareAtMe)) {					
+		Vector2f entityPos = stareAtMe.getCenterPos();				
+		if( brain.getSensors().getSightSensor().inView(this.stareAtMe) ||
+		    brain.getTargetingSystem().targetInLineOfFire(entityPos)) {					
 			/* add some slop value so that the Agent isn't too accurate */
 			float slop = brain.getWorld().getRandom().nextFloat() * (MAX_SLOP/3f);
 			
-			me.setOrientation(Entity.getAngleBetween(entityPos, me.getPos()) + slop );		
+			me.setOrientation(Entity.getAngleBetween(entityPos, me.getCenterPos()) + slop );			
 		}				
 	}
 
