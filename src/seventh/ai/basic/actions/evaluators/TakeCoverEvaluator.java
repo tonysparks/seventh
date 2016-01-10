@@ -45,11 +45,12 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 				score = 1.0;
 			}
 			else {
-				score = tweaker 
-						* 1.0 - Evaluators.healthScore(bot) 
-						* 1.0 - Evaluators.currentWeaponAmmoScore(bot)
-						* 1.0 - Evaluators.weaponDistanceScore(bot, enemy)
+				score = tweaker
+						 + Evaluators.healthScore(bot) 
+						 + Evaluators.currentWeaponAmmoScore(bot)
+						 + Evaluators.weaponDistanceScore(bot, enemy)
 						;
+				score = score / 4.0;
 			}
 			Vector2f lastSeenAt = system.getLastRemeberedPosition();
 			if(lastSeenAt != null) {
