@@ -97,9 +97,9 @@ public class Goals {
 		action.getActionResult().setValue(cover);
 		
 		return new ConcurrentGoal(action, new WeightedGoal(brain, "moveToCover",
-										   	new ShootWeaponEvaluator(this, brain.getRandomRangeMin(0.83), 0.8),
-										   	new MeleeEvaluator(this, brain.getRandomRange(0.2, 0.4), 0),
-										   	new DoNothingEvaluator(this, brain.getRandomRangeMin(0.55), 0),
+										   	new ShootWeaponEvaluator(this, brain.getRandomRangeMin(0.93), 0.8),
+										   	new MeleeEvaluator(this, 1, 0),
+										   	new DoNothingEvaluator(this, brain.getRandomRange(0.1, 0.35), 0),
 											new GrenadeEvaluator(this, brain.getRandomRangeMin(0.5), 0)
 		));
 	}
@@ -134,8 +134,9 @@ public class Goals {
 	 */
 	public Goal decideAttackMethod(Goals goals, Brain brain) {
 		return new WeightedGoal(brain, "decideAttackMethod",
+				//new DoNothingEvaluator(goals, 1, 1)
 				new ShootWeaponEvaluator(goals, brain.getRandomRangeMin(0.8), 0.8),
-				new MeleeEvaluator(goals, brain.getRandomRangeMin(0.5), 0),
+				new MeleeEvaluator(goals, brain.getRandomRangeMin(0.95), 0),
 				new GrenadeEvaluator(goals, brain.getRandomRangeMin(0.2), 0.2)
 		);
 	}
@@ -144,7 +145,7 @@ public class Goals {
 	public Goal enemyEncountered(Goals goals, Brain brain) {
 		return new WeightedGoal(brain, "enemyEncountered",
 				new MoveTowardEnemyEvaluator(goals, brain.getRandomRangeMin(0.48), 0.8),
-				new TakeCoverEvaluator(goals, brain.getRandomRangeMin(0.3), 0.9)
+				new TakeCoverEvaluator(goals, brain.getRandomRangeMin(0.76), 0.9)
 		);
 	}
 	
