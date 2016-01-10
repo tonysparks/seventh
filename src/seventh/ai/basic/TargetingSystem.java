@@ -96,10 +96,17 @@ public class TargetingSystem implements Updatable {
 		/*
 		 * If we have a target, look at them
 		 */
+		stareAtTarget();
+		
+	}
+	
+	/**
+	 * Stare at the current target, if there is one
+	 */
+	public void stareAtTarget() {
 		if(hasTarget()) {
 			brain.getMotion().stareAtEntity(getCurrentTarget());
 		}
-		
 	}
 	
 	/**
