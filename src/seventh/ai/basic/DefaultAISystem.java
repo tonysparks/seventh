@@ -63,6 +63,7 @@ public class DefaultAISystem implements AISystem {
 	private AssetWatcher watcher;
 	
 	private AIConfig config;
+	private World world;
 	
 	/**
 	 * 
@@ -98,7 +99,6 @@ public class DefaultAISystem implements AISystem {
 					return null;
 				}
 			});
-						
 		}
 		catch(Exception e) {
 			Cons.println("Unable to load the Leola runtime : " + e);
@@ -126,9 +126,12 @@ public class DefaultAISystem implements AISystem {
 			this.axisAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAxisTeam());
 		}
 		else {
-			this.alliedAIStrategy = new TDMTeamStrategy(gameType.getAlliedTeam());
-			this.axisAIStrategy = new TDMTeamStrategy(gameType.getAxisTeam());
+			this.alliedAIStrategy = new TDMTeamStrategy(this, gameType.getAlliedTeam());
+			this.axisAIStrategy = new TDMTeamStrategy(this, gameType.getAxisTeam());
 		}
+		
+        
+		this.world = new World(config, game, zones, goals);
 		
 		PlayerInfos players = game.getPlayerInfos();
 		players.forEachPlayerInfo(new PlayerInfoIterator() {
@@ -136,7 +139,7 @@ public class DefaultAISystem implements AISystem {
 			@Override
 			public void onPlayerInfo(PlayerInfo player) {
 				if(player.isBot()) {					
-					brains[player.getId()] = new Brain(getStrategyFor(player), new World(config, game, zones, goals), player);
+					brains[player.getId()] = new Brain(getStrategyFor(player), world, player);
 				}	
 			}
 		});
@@ -209,6 +212,13 @@ public class DefaultAISystem implements AISystem {
 		return goals;
 	}
 	
+	/**
+     * @return the world
+     */
+    public World getWorld() {
+        return world;
+    }
+	
 	/* (non-Javadoc)
 	 * @see seventh.ai.AISystem#destroy()
 	 */
@@ -227,7 +237,7 @@ public class DefaultAISystem implements AISystem {
 	@Override
 	public void playerJoined(PlayerInfo player) {
 		if(player.isBot()) {
-			this.brains[player.getId()] = new Brain(getStrategyFor(player), new World(config, game, zones, goals), player);
+			this.brains[player.getId()] = new Brain(getStrategyFor(player), world, player);
 		}
 	}
 	

@@ -613,31 +613,38 @@ public class World {
 	 * @param entity
 	 * @return the list of possible {@link AttackDirection}s
 	 */
-	public List<AttackDirection> getAttackDirections(Entity entity) {
-		this.attackDirections.clear();
-		
-		Vector2f pos = entity.getCenterPos();
-		final float distanceToCheck = 300f;
-		final float maxDirectionsToCheck = 10f;
-		Vector2f attackDir = new Vector2f();
-		
-		/* check each direction and see if a wall is providing us some
-		 * cover
-		 */
-		float currentAngle = 0;
-		for(int i = 0; i < maxDirectionsToCheck; i++) {
-			attackDir.set(1,0);
-			
-			Vector2f.Vector2fRotate(attackDir, Math.toRadians(currentAngle), attackDir);
-			Vector2f.Vector2fMA(pos, attackDir, distanceToCheck, attackDir);
-			
-			if(!map.lineCollides(pos, attackDir, entity.getHeightMask())) {
-				this.attackDirections.add(new AttackDirection(attackDir.createClone()));
-			}
-			
-			currentAngle += 360f/maxDirectionsToCheck;
-		}						
-		
-		return this.attackDirections;
+	public List<AttackDirection> getAttackDirections(Entity entity) {		
+		return getAttackDirections(entity.getCenterPos(), 300f, 10);
 	}
+	
+	/**
+     * Calculates the possible {@link AttackDirection}'s from the supplied position.
+     * 
+     * @param pos
+     * @return the list of possible {@link AttackDirection}s
+     */
+    public List<AttackDirection> getAttackDirections(Vector2f pos, float distanceToCheck, int numberOfDirectionsToCheck) {
+        this.attackDirections.clear();
+        
+        Vector2f attackDir = new Vector2f();
+        
+        /* check each direction and see if a wall is providing us some
+         * cover
+         */
+        float currentAngle = 0;
+        for(int i = 0; i < numberOfDirectionsToCheck; i++) {
+            attackDir.set(1,0);
+            
+            Vector2f.Vector2fRotate(attackDir, Math.toRadians(currentAngle), attackDir);
+            Vector2f.Vector2fMA(pos, attackDir, distanceToCheck, attackDir);
+            
+            if(!map.lineCollides(pos, attackDir)) {
+                this.attackDirections.add(new AttackDirection(attackDir.createClone()));
+            }
+            
+            currentAngle += 360f/(float)numberOfDirectionsToCheck;
+        }                       
+        
+        return this.attackDirections;
+    }
 }
