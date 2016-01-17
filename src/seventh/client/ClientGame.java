@@ -123,6 +123,7 @@ public class ClientGame {
 	
 	private final Timers gameTimers;
 	
+	private Leola runtime;
 	/**
 	 * Listens for {@link ClientEntity} life cycle
 	 * 
@@ -183,6 +184,8 @@ public class ClientGame {
 		
 		this.pools = new Pools(this);
 		this.zings = new Zings(this);
+		
+		this.runtime = Scripting.newSandboxedRuntime();
 	}	
 	
 	/**
@@ -360,7 +363,7 @@ public class ClientGame {
 			renderWorld(canvas, camera, alpha);
 			
 			canvas.setShader(null);
-			DebugDraw.enable(false);
+			DebugDraw.enable(true);
 			DebugDraw.render(canvas, camera);
 	
 			
@@ -854,8 +857,6 @@ public class ClientGame {
         File propertiesFile = new File(mapFile + ".client.props.leola");
         if(propertiesFile.exists()) {
             try {
-                Leola runtime = Scripting.newSandboxedRuntime();
-                
                 runtime.loadStatics(SeventhScriptingCommonLibrary.class);
                 runtime.put("game", this);
                 runtime.eval(propertiesFile);
@@ -866,7 +867,22 @@ public class ClientGame {
         }
     }
 	
-
+    /**
+     * Executes the callback function
+     * 
+     * @param functionName
+     * @param game
+     */
+    private void executeCallbackScript(String functionName, ClientGame game) {
+        LeoObject function = runtime.get(functionName);
+        if(LeoObject.isTrue(function)) {
+            LeoObject result = function.call(LeoObject.valueOf(game));
+            if(result.isError()) {
+                Cons.println("*** ERROR: Client calling '" + functionName + "' - " + result.toString());
+            }
+        }
+    }
+    
 	public void applyFullGameState(NetGameState gs) {
 		
 		ClientEntity[] entityList = this.entities.getEntities();
@@ -1154,9 +1170,7 @@ public class ClientGame {
 		scoreboard.setWinner(ClientTeam.fromId(msg.winnerTeamId));
 		showScoreBoard(true);
 		
-		// We don't want to remove these, because they
-		// are not added again
-		// gameTimers.removeTimers();
+		executeCallbackScript("onRoundEnded", this);
 	}
 	
 	public void roundStarted(RoundStartedMessage msg) {		
@@ -1171,6 +1185,8 @@ public class ClientGame {
 		
 		showScoreBoard(false);
 		applyFullGameState(msg.gameState);
+		
+		executeCallbackScript("onRoundStarted", this);
 	}
 	
 	public void gameEnded(GameEndedMessage msg) {
@@ -1314,6 +1330,7 @@ public class ClientGame {
 		this.vehicles.clear();
 		
 		this.gameEffects.destroy();
+		this.gameTimers.removeTimers();
 	}
 
 	/**
