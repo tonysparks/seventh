@@ -4,11 +4,17 @@
 package seventh.ai.basic.teamstrategy;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.squad.Squad;
+import seventh.ai.basic.squad.SquadDefendAction;
 import seventh.game.GameInfo;
+import seventh.game.Player;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 
 /**
  * The Team Death Match {@link TeamStrategy}.  
@@ -19,11 +25,17 @@ import seventh.shared.TimeStep;
 public class TDMTeamStrategy implements TeamStrategy {
 
 	private Team team;
+	Squad squad;
+	private DefaultAISystem aiSystem;
+	private Timer time;
 	/**
 	 * 
 	 */
-	public TDMTeamStrategy(Team team) {
+	public TDMTeamStrategy(DefaultAISystem aiSystem, Team team) {
 		this.team = team;
+		this.aiSystem = aiSystem;
+		this.squad = new Squad(aiSystem);
+		this.time = new Timer(false, 5_000);
 	}
 	
 	/* (non-Javadoc)
@@ -61,7 +73,11 @@ public class TDMTeamStrategy implements TeamStrategy {
 	 * @see seventh.ai.basic.AIGameTypeStrategy#playerSpawned(seventh.game.PlayerInfo)
 	 */
 	@Override
-	public void playerSpawned(PlayerInfo player) {		
+	public void playerSpawned(PlayerInfo player) {	
+	    if(player.getTeam().getId() == Team.AXIS_TEAM_ID) {
+	        if(player.isBot())
+	        this.squad.addSquadMember(aiSystem.getBrain(player));
+	    }
 	}
 	
 	/* (non-Javadoc)
@@ -69,6 +85,10 @@ public class TDMTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void startOfRound(GameInfo game) {
+//	    for(Player p : game.getGameType().getAxisTeam().getPlayers()) {
+//	        this.squad.addSquadMember(aiSystem.getBrain(p));
+//	    }
+	    //squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
 	}
 
 	/* (non-Javadoc)
@@ -83,6 +103,10 @@ public class TDMTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void update(TimeStep timeStep, GameInfo game) {
+	    time.update(timeStep);
+	    if(time.isTime()) {
+	        squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
+	    }
 	}
 
 	/* (non-Javadoc)

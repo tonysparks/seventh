@@ -160,4 +160,8 @@ public class Goals {
 		return action;
 	}
 	
+	public Action guard(Vector2f position) {
+	    SequencedGoal goal = new SequencedGoal("guard: " + position);
+	    return goal.addNext(new MoveToAction(position)).addNext(new GuardAction());	    
+	}
 }
