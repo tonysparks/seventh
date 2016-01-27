@@ -6,8 +6,8 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.ReloadAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.body.ReloadAction;
 import seventh.game.weapons.Weapon;
 
 /**
@@ -22,7 +22,7 @@ public class ReloadWeaponEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public ReloadWeaponEvaluator(Goals goals, double characterBias, double keepBias) {
+	public ReloadWeaponEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		this.reloadAction = new ReloadAction();
 	}

@@ -5,7 +5,6 @@ package seventh.ai.basic.teamstrategy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
@@ -14,13 +13,14 @@ import seventh.ai.basic.World;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.Zones;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
+import seventh.shared.Randomizer;
 import seventh.shared.TimeStep;
 
 /**
@@ -35,7 +35,7 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	private DefaultAISystem aiSystem;	
 	
 	private Zones zones;
-	private Random random;
+	private Randomizer random;
 	
 	private Zone zoneToAttack;
 	
@@ -43,7 +43,7 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	private DefensiveState currentState;
 		
 	private World world;
-	private Goals goals;
+	private Actions goals;
 	
 	private long timeUntilOrganizedAttack;
 	private List<PlayerEntity> playersInZone;
@@ -65,11 +65,9 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		
 		this.stats = aiSystem.getStats();
 		this.zones = aiSystem.getZones();
-		this.random = aiSystem.getRandom();
+		this.random = aiSystem.getRandomizer();
 		
 		this.goals = aiSystem.getGoals(); 
-//				new Goals(aiSystem.getRuntime());
-		
 		this.playersInZone = new ArrayList<>();
 		
 	}
@@ -98,7 +96,7 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 		this.zoneToAttack = calculateZoneToAttack();	
 		this.currentState = DefensiveState.RANDOM;		
 		this.timeUntilOrganizedAttack = 30_000 + random.nextInt(60_000);		
-		this.world = new World(aiSystem.getConfig(), game, zones, goals);
+		this.world = this.aiSystem.getWorld();
 	}
 	
 	
@@ -129,7 +127,7 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 				action = goals.defuseBomb();			
 				break;
 			case RANDOM:
-				action = goals.goToRandomSpot(brain);
+				action = goals.moveToRandomSpot(brain);
 				break;
 			case ATTACK_ZONE:
 			case DONE:			

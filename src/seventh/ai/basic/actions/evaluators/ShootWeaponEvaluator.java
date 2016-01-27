@@ -6,8 +6,8 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.ShootAtAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.ShootAtAction;
 import seventh.game.weapons.Weapon;
 
 /**
@@ -23,7 +23,7 @@ public class ShootWeaponEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public ShootWeaponEvaluator(Goals goals, double characterBias, double keepBias) {
+	public ShootWeaponEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		
 		this.shootAction = new ShootAtAction();

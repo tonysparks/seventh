@@ -5,13 +5,12 @@ package seventh.ai.basic;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import leola.vm.Leola;
 import seventh.ai.AICommand;
 import seventh.ai.AISystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.commands.AICommands;
 import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
 import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
@@ -24,12 +23,12 @@ import seventh.game.Team;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.AssetLoader;
 import seventh.shared.AssetWatcher;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
 import seventh.shared.FileSystemAssetWatcher;
+import seventh.shared.Randomizer;
 import seventh.shared.Scripting;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
@@ -54,10 +53,10 @@ public class DefaultAISystem implements AISystem {
 	private Zones zones;
 	private Stats stats;
 	
-	private Random random;
+	private Randomizer random;
 	private Leola runtime;
 	
-	private Goals goals;
+	private Actions goals;
 	private AICommands aiCommands;
 	
 	private AssetWatcher watcher;
@@ -69,20 +68,9 @@ public class DefaultAISystem implements AISystem {
 	 * 
 	 */
 	public DefaultAISystem() {
-		this.brains = new Brain[SeventhConstants.MAX_PLAYERS];
-		
-		
+		this.brains = new Brain[SeventhConstants.MAX_PLAYERS];				
 		try {						
 			this.runtime = Scripting.newRuntime();
-			
-			this.runtime.loadStatics(SeventhScriptingCommonLibrary.class);
-			this.runtime.loadLibrary(new AILeolaLibrary(), "ai");			
-			
-			this.runtime.eval(new File("./seventh/ai/goals.leola"));
-			
-			this.goals = new Goals(this.runtime);
-			
-			
 			this.watcher = new FileSystemAssetWatcher(new File("./seventh/ai"));
 			this.watcher.loadAsset("goals.leola", new AssetLoader<File>() {				
 				@Override
@@ -111,12 +99,14 @@ public class DefaultAISystem implements AISystem {
 	@Override
 	public void init(final GameInfo game) {
 		this.game = game;
-		this.random = game.getRandom();
+		this.random = new Randomizer(game.getRandom());
 		this.config = new AIConfig(game.getConfig().getConfig());
 		
 		this.zones = new Zones(game);
 		this.stats = new Stats(game, this.zones);
-				
+		
+		initScriptingEngine();
+		
 		this.aiCommands = new AICommands(this);
 		
 		GameType gameType = game.getGameType();
@@ -131,7 +121,7 @@ public class DefaultAISystem implements AISystem {
 		}
 		
         
-		this.world = new World(config, game, zones, goals);
+		this.world = new World(config, game, zones, goals, random);
 		
 		PlayerInfos players = game.getPlayerInfos();
 		players.forEachPlayerInfo(new PlayerInfoIterator() {
@@ -143,10 +133,28 @@ public class DefaultAISystem implements AISystem {
 				}	
 			}
 		});
-				
+		
+		
 		this.watcher.startWatching();
 	}
 	
+	
+	/**
+	 * Initialize the scripting engine
+	 */
+	private void initScriptingEngine() {
+		try {									
+			AILeolaLibrary aiLib = new AILeolaLibrary(this);
+			this.runtime.loadLibrary(aiLib, "ai");			
+
+			this.runtime.eval(new File("./seventh/ai/goals.leola"));
+			
+			this.goals = aiLib.getActionFactory();			
+		}
+		catch(Exception e) {
+			Cons.println("Unable to load the Leola runtime : " + e);
+		}
+	}
 	
 	/**
 	 * @param player
@@ -166,6 +174,7 @@ public class DefaultAISystem implements AISystem {
 	/**
 	 * @return the config
 	 */
+	@Override
 	public AIConfig getConfig() {
 		return config;
 	}
@@ -180,7 +189,8 @@ public class DefaultAISystem implements AISystem {
 	/**
 	 * @return the random
 	 */
-	public Random getRandom() {
+	@Override
+	public Randomizer getRandomizer() {
 		return random;
 	}
 	
@@ -208,7 +218,7 @@ public class DefaultAISystem implements AISystem {
 	/**
 	 * @return the goals
 	 */
-	public Goals getGoals() {
+	public Actions getGoals() {
 		return goals;
 	}
 	

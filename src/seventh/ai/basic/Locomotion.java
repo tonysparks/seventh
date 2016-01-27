@@ -4,26 +4,23 @@
 package seventh.ai.basic;
 
 import java.util.List;
-import java.util.Random;
 
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.BombAction;
-import seventh.ai.basic.actions.CrouchAction;
 import seventh.ai.basic.actions.DecoratorAction;
-import seventh.ai.basic.actions.DropWeaponAction;
-import seventh.ai.basic.actions.FireAtAction;
-import seventh.ai.basic.actions.FollowEntityAction;
-import seventh.ai.basic.actions.HeadScanAction;
-import seventh.ai.basic.actions.LookAtAction;
-import seventh.ai.basic.actions.MeleeAction;
-import seventh.ai.basic.actions.MoveAction;
-import seventh.ai.basic.actions.ReloadAction;
-import seventh.ai.basic.actions.ShootAction;
-import seventh.ai.basic.actions.SprintAction;
-import seventh.ai.basic.actions.StareAtEntityAction;
-import seventh.ai.basic.actions.SwitchWeaponAction;
-import seventh.ai.basic.actions.ThrowGrenadeAction;
-import seventh.ai.basic.actions.WalkAction;
+import seventh.ai.basic.actions.atom.BombAction;
+import seventh.ai.basic.actions.atom.DropWeaponAction;
+import seventh.ai.basic.actions.atom.StareAtEntityAction;
+import seventh.ai.basic.actions.atom.body.CrouchAction;
+import seventh.ai.basic.actions.atom.body.HeadScanAction;
+import seventh.ai.basic.actions.atom.body.LookAtAction;
+import seventh.ai.basic.actions.atom.body.MeleeAction;
+import seventh.ai.basic.actions.atom.body.MoveAction;
+import seventh.ai.basic.actions.atom.body.ReloadAction;
+import seventh.ai.basic.actions.atom.body.ShootAction;
+import seventh.ai.basic.actions.atom.body.SprintAction;
+import seventh.ai.basic.actions.atom.body.SwitchWeaponAction;
+import seventh.ai.basic.actions.atom.body.ThrowGrenadeAction;
+import seventh.ai.basic.actions.atom.body.WalkAction;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
@@ -39,6 +36,7 @@ import seventh.map.Tile;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
+import seventh.shared.Randomizer;
 import seventh.shared.TimeStep;
 
 
@@ -62,19 +60,20 @@ public class Locomotion implements Debugable {
 	private final PathPlanner<?> pathPlanner;
 	private Vector2f moveDelta;
 	
-	private Random random;
+	private Randomizer random;
 	
 	/*
 	 * cached common actions
 	 */
-	private HeadScanAction headScan;
-	private MoveAction moveAction;
 	private LookAtAction lookAt;
+	private HeadScanAction headScan;
 	private StareAtEntityAction stareAt;
-	private FireAtAction fireAt;
+
+	private MoveAction moveAction;
 	private CrouchAction crouchAction;
 	private WalkAction walkAction;
 	private SprintAction sprintAction;
+	
 	private ReloadAction reloadAction;
 	private MeleeAction meleeAction;
 	private DropWeaponAction dropWeaponAction;
@@ -100,7 +99,6 @@ public class Locomotion implements Debugable {
 		this.moveAction = new MoveAction();
 		this.lookAt = new LookAtAction(0);
 		this.stareAt = new StareAtEntityAction(null);
-		this.fireAt = new FireAtAction(null);
 		this.crouchAction = new CrouchAction();
 		this.walkAction = new WalkAction();
 		this.sprintAction = new SprintAction();
@@ -197,7 +195,7 @@ public class Locomotion implements Debugable {
 			if(!destinationGoal.isFinished(brain)) {
 				scanArea();
 			}
-		}
+		}				
 		
 		if(!handsGoal.isFinished(brain)) {
 			handsGoal.update(brain, timeStep);
@@ -307,23 +305,11 @@ public class Locomotion implements Debugable {
 		this.moveAction.setZonesToAvoid(avoid);
 		this.destinationGoal.setAction(this.moveAction);
 	}
-	
-	/**
-	 * Wanders around
-	 */
-	public void wander() {
-		dodgeTo(brain.getWorld().getRandomSpot(brain.getEntityOwner()));
-		scanArea();
-	}
-	
-	public void followEntity(Entity entity) {
-		Action action = new FollowEntityAction(entity);
 		
-		this.destinationGoal.setAction(action);
-	}
 	public void stopMoving() {
 		this.destinationGoal.end(brain);
 	}
+	
 	public void stopUsingHands() {
 		this.handsGoal.end(brain);
 	}
@@ -432,12 +418,7 @@ public class Locomotion implements Debugable {
 	public boolean isStaringAtEntity() {
 		return this.facingGoal.is(StareAtEntityAction.class);
 	}
-	
-	public void fireAt(Entity entity) {
-		this.fireAt.reset(entity);
-		this.handsGoal.setAction(this.fireAt);
-	}
-	
+		
 	public void shoot() {
 		this.handsGoal.setAction(this.shootAction);
 	}
@@ -465,31 +446,6 @@ public class Locomotion implements Debugable {
 		return false;
 	}
 	
-	public void attack(Entity ent) {
-		if(ent != null) {
-			if (! isStaringAtEntity()) 
-			{
-				stareAtEntity(ent);
-			}
-			//if (! isMoving() && !isTooClose(ent) )
-			if( !destinationGoal.is(FollowEntityAction.class) )
-			{
-				followEntity(ent);
-			}
-			
-			if (! handsInUse()) 
-			{
-				fireAt(ent);
-			}
-		}
-	}
-	
-	/**
-	 * @return if we are attacking
-	 */
-	public boolean isAttacking() {
-		return this.handsGoal.is(FireAtAction.class);
-	}
 	
 	/**
 	 * Directly moves the entity, based on the delta inputs

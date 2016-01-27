@@ -3,9 +3,11 @@
  */
 package seventh.ai;
 
+import seventh.ai.basic.AIConfig;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.shared.Debugable;
+import seventh.shared.Randomizer;
 import seventh.shared.Updatable;
 
 /**
@@ -21,6 +23,9 @@ public interface AISystem extends Updatable, Debugable {
 	 * @param game
 	 */
 	public void init(GameInfo game);
+	
+	public AIConfig getConfig();
+	public Randomizer getRandomizer();
 	
 	/**
 	 * Cleans up any allocated resources

@@ -5,8 +5,8 @@ package seventh.ai.basic.actions.evaluators;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.MoveAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.body.MoveAction;
 
 /**
  * @author Tony
@@ -20,7 +20,7 @@ public class ExploreActionEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public ExploreActionEvaluator(Goals goals, double characterBias, double keepBias) {
+	public ExploreActionEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		this.moveAction = new MoveAction();
 	}

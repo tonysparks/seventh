@@ -5,7 +5,7 @@ package seventh.ai.basic.actions.evaluators;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
 
 /**
@@ -20,7 +20,7 @@ public class StrategyEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public StrategyEvaluator(TeamStrategy teamStrategy, Goals goals, double characterBias, double keepBias) {
+	public StrategyEvaluator(TeamStrategy teamStrategy, Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		this.teamStrategy = teamStrategy;
 	}

@@ -6,7 +6,7 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Communicator;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 
 /**
  * @author Tony
@@ -20,7 +20,7 @@ public class CommandActionEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public CommandActionEvaluator(Goals goals, double characterBias, double keepBias) {
+	public CommandActionEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 	}
 

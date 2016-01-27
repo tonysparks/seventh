@@ -3,54 +3,32 @@
  */
 package seventh.ai.basic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import leola.vm.Leola;
 import leola.vm.exceptions.LeolaRuntimeException;
 import leola.vm.lib.LeolaIgnore;
 import leola.vm.lib.LeolaLibrary;
-import leola.vm.types.LeoArray;
 import leola.vm.types.LeoNamespace;
-import leola.vm.types.LeoObject;
-import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.AvoidMoveToAction;
-import seventh.ai.basic.actions.DefendAttackDirectionsAction;
-import seventh.ai.basic.actions.DefendZoneAction;
-import seventh.ai.basic.actions.DefuseBombAction;
-import seventh.ai.basic.actions.EvaluateAttackDirectionsAction;
-import seventh.ai.basic.actions.FindClosestBombTarget;
-import seventh.ai.basic.actions.FindSafeDistanceFromActiveBombAction;
-import seventh.ai.basic.actions.FireAtAction;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.GuardAction;
-import seventh.ai.basic.actions.GuardUntilAction;
-import seventh.ai.basic.actions.MoveToAction;
-import seventh.ai.basic.actions.MoveToBombAction;
-import seventh.ai.basic.actions.MoveToBombTargetToPlantAction;
-import seventh.ai.basic.actions.PlantBombAction;
-import seventh.ai.basic.actions.SecureZoneAction;
-import seventh.ai.basic.actions.SupressFireUntilAction;
-import seventh.ai.basic.actions.WaitAction;
-import seventh.game.BombTarget;
-import seventh.game.Entity;
-import seventh.math.Vector2f;
+import seventh.ai.AISystem;
+import seventh.ai.basic.actions.Actions;
 
 /**
- * AI Library
+ * AI Library, which includes useful AI functions for scripting.
  * 
+ * @see Actions
  * @author Tony
  *
  */
 public class AILeolaLibrary implements LeolaLibrary {
 
 	private Leola runtime;
-	private Goals goals;
+	private Actions actions;
+	private AISystem aiSystem;
 	
 	/**
-	 * 
+	 * @param aiSystem
 	 */
-	public AILeolaLibrary() {
+	public AILeolaLibrary(AISystem aiSystem) {
+		this.aiSystem = aiSystem;
 	}
 
 	/* (non-Javadoc)
@@ -62,107 +40,16 @@ public class AILeolaLibrary implements LeolaLibrary {
 		this.runtime = leola;
 		this.runtime.putIntoNamespace(this, namespace);
 		
-		this.goals = new Goals(this.runtime);
-		namespace.setObject("goals", Leola.toLeoObject(this.goals));
-	}
-	
+		this.actions = new Actions(this.aiSystem, this.runtime);
+		this.runtime.putIntoNamespace(this.actions, namespace);		
 		
-	/*--------------------------------------------------------------------------
-	 *                      Math functions
-	  --------------------------------------------------------------------------*/
-	
-	
-	/*--------------------------------------------------------------------------
-	 *                      Factory of Atom Actions
-	  --------------------------------------------------------------------------*/
-	 
-
-	public MoveToAction moveToAction(Vector2f destination) {
-		return new MoveToAction(destination);
-	}
-	
-	public AvoidMoveToAction avoidMoveToAction(Vector2f destination, LeoArray zonesToAvoid) {
-		List<Zone> zones = new ArrayList<>(zonesToAvoid.size());
-		for(LeoObject obj : zonesToAvoid) {
-			zones.add( (Zone)obj.getValue());
-		}
-		return new AvoidMoveToAction(destination, zones);
-	}	
-	
-	public FireAtAction fireAtAction(Entity enemy) {
-		return new FireAtAction(enemy);
-	}
-	
-	public SecureZoneAction secureZoneAction(Zone zone) {
-		return new SecureZoneAction(zone);
-	}
-	
-	public DefendZoneAction defendZoneAction(Zone zone) {
-		return new DefendZoneAction(zone);
-	}
-	
-	public MoveToBombAction moveToBombAction(BombTarget bomb) {
-		return new MoveToBombAction(bomb);
-	}
-	
-	public MoveToBombTargetToPlantAction moveToBombTargetToPlantAction(BombTarget bomb) {
-		return new MoveToBombTargetToPlantAction(bomb);
-	}
-	
-	
-	public PlantBombAction plantBombAction(BombTarget bomb) {
-		return new PlantBombAction(bomb);
-	}
-	
-	public DefuseBombAction defuseBombAction(BombTarget bomb) {
-		return new DefuseBombAction(bomb);
-	}
-	
-	public FindClosestBombTarget findClosestBombTargetToPlant() {
-		return new FindClosestBombTarget(false);
-	}
-	
-	public FindClosestBombTarget findClosestBombTargetToDefuse() {
-		return new FindClosestBombTarget(true);
-	}
-	
-	public FindSafeDistanceFromActiveBombAction findSafeDistanceFromActiveBombAction(BombTarget target) {
-		return new FindSafeDistanceFromActiveBombAction(target);
-	}
-	
-	public EvaluateAttackDirectionsAction evaluateAttackDirectionsAction() {
-		return new EvaluateAttackDirectionsAction();
-	}
-	
-	public DefendAttackDirectionsAction defendAttackDirectionsAction(List<AttackDirection> attackDirs, long timeToDefend) {
-		return new DefendAttackDirectionsAction(attackDirs, timeToDefend);
-	}
-
-	public WaitAction waitAction(long timeToWaitMSec) {
-		return new WaitAction(timeToWaitMSec);
-	}
-	
-	public GuardAction guardAction() {
-		return new GuardAction();
-	}
-	
-	public GuardUntilAction guardUntilAction(LeoObject isFinished) {
-		return new GuardUntilAction(isFinished);
-	}
-	
-	public SupressFireUntilAction supressFireUntilAction(Vector2f target, LeoObject isFinished) {
-		return new SupressFireUntilAction(isFinished, target);
 	}
 	
 	/**
-	 * Loads a function with a generator into an {@link Action} so that
-	 * they can be called within scripts
-	 * 
-	 * @param action
-	 * @return the {@link Action}
+	 * @return the {@link Actions} factory
 	 */
-	public Action action(String action) {
-		return this.goals.getScriptedAction(action);
-	}
-	
+	@LeolaIgnore
+	public Actions getActionFactory() {
+		return actions;
+	}	
 }
