@@ -98,7 +98,7 @@ public class TextureUtil {
 	 * @return
 	 */
 	public static TextureRegion subImage(TextureRegion image, int x, int y, int width, int height) {
-		return new TextureRegion(image, x, y, width, height);
+		return new TextureRegion(image.getTexture(), x, y, width, height);
 	}
 
 	public static Pixmap subPixmap(Pixmap pix, int x, int y, int width, int height) {
