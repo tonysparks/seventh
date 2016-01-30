@@ -5,9 +5,8 @@ package seventh.ai.basic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
 import seventh.game.GameInfo;
@@ -24,6 +23,7 @@ import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Geom;
+import seventh.shared.Randomizer;
 import seventh.shared.SeventhConstants;
 
 /**
@@ -39,7 +39,7 @@ public class World {
 	private PlayerEntity[] players;
 	private Map map;
 	private MapGraph<?> graph;
-	private Random random;
+	private Randomizer random;
 	
 	private List<Tile> tiles;
 	
@@ -52,7 +52,7 @@ public class World {
 	
 	private Zones zones;
 	
-	private Goals goals;
+	private Actions goals;
 	
 	private AIConfig config;
 	
@@ -61,13 +61,14 @@ public class World {
 	 * @param map
 	 * @param graph
 	 */
-	public World(AIConfig config, GameInfo game, Zones zones, Goals goals) {
+	public World(AIConfig config, GameInfo game, Zones zones, Actions goals, Randomizer randomizer) {
 		super();
 				
 		this.config = config;
 		this.game = game;
 		this.zones = zones;
 		this.goals = goals;
+		this.random = randomizer;
 		
 		this.entities = game.getEntities();
 		this.players = game.getPlayerEntities();
@@ -75,7 +76,7 @@ public class World {
 		this.map = game.getMap();
 		this.graph = game.getGraph();
 		
-		this.random = game.getRandom();
+		
 		this.tiles = new ArrayList<Tile>();
 		this.tileBounds = new Rectangle();
 		this.tileBounds.setWidth(map.getTileWidth());
@@ -97,7 +98,7 @@ public class World {
 	/**
 	 * @return the goals
 	 */
-	public Goals getGoals() {
+	public Actions getGoals() {
 		return goals;
 	}
 	
@@ -347,7 +348,7 @@ public class World {
 	/**
 	 * @return the random
 	 */
-	public Random getRandom() {
+	public Randomizer getRandom() {
 		return random;
 	}
 	

@@ -5,8 +5,8 @@ package seventh.ai.basic.actions.evaluators;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.MoveToAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.MoveToAction;
 import seventh.game.Entity;
 import seventh.game.weapons.Bullet;
 import seventh.math.Vector2f;
@@ -25,7 +25,7 @@ public class DefendSelfActionEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public DefendSelfActionEvaluator(Goals goals, double characterBias, double keepBias) {
+	public DefendSelfActionEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		this.moveToAction = new MoveToAction(new Vector2f());
 	}

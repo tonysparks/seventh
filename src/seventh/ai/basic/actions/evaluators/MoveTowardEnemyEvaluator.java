@@ -6,7 +6,7 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.game.PlayerEntity;
 
 /**
@@ -19,7 +19,7 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public MoveTowardEnemyEvaluator(Goals goals, double characterBias, double keepBias) {
+	public MoveTowardEnemyEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 	}
 
@@ -64,7 +64,7 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		return getGoals().chargeEnemy(getGoals(), brain, brain.getTargetingSystem().getCurrentTarget());
+		return getGoals().chargeEnemy(brain.getTargetingSystem().getCurrentTarget());
 	}
 
 }

@@ -6,8 +6,8 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.StrafeAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.StrafeAction;
 import seventh.game.PlayerEntity;
 
 /**
@@ -23,7 +23,7 @@ public class DodgeEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public DodgeEvaluator(Goals goals, double characterBias, double keepBias) {
+	public DodgeEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		this.strafeAction = new StrafeAction();
 	}

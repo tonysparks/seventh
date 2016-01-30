@@ -646,7 +646,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                 GameServerLeolaLibrary gLib = new GameServerLeolaLibrary(this);             
                 runtime.loadLibrary(gLib, "game2");
                 
-                AILeolaLibrary aiLib = new AILeolaLibrary();
+                AILeolaLibrary aiLib = new AILeolaLibrary(this.aiSystem);
                 runtime.loadLibrary(aiLib, "ai");
                 
                 runtime.put("game", this);

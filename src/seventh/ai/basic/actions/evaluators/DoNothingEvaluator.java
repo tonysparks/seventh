@@ -5,7 +5,7 @@ package seventh.ai.basic.actions.evaluators;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.actions.WaitAction;
 
 /**
@@ -20,7 +20,7 @@ public class DoNothingEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public DoNothingEvaluator(Goals goals, double characterBias, double keepBias) {
+	public DoNothingEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		noAction = new WaitAction(100);
 	}

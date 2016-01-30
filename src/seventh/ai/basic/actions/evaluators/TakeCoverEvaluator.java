@@ -7,7 +7,7 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.Cover;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.game.PlayerEntity;
 import seventh.math.Vector2f;
 
@@ -22,7 +22,7 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public TakeCoverEvaluator(Goals goals, double characterBias, double keepBias) {
+	public TakeCoverEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		this.cover = new Cover(new Vector2f(), new Vector2f());
 	}
@@ -95,7 +95,7 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 		
 		this.cover.setCoverPos(coverPosition);
 		this.cover.setAttackDir(attackDir);
-		return getGoals().moveToCover(this.cover, brain);
+		return getGoals().moveToCover(this.cover);
 	}
 
 }

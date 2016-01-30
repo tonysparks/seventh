@@ -7,7 +7,7 @@ import java.util.List;
 
 import seventh.ai.basic.AttackDirection;
 import seventh.ai.basic.World;
-import seventh.ai.basic.actions.GuardAction;
+import seventh.ai.basic.actions.atom.GuardAction;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

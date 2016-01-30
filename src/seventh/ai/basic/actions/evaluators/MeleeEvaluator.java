@@ -6,8 +6,8 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.MeleeAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.body.MeleeAction;
 import seventh.game.PlayerEntity;
 import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
@@ -24,7 +24,7 @@ public class MeleeEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public MeleeEvaluator(Goals goals, double characterBias, double keepBias) {
+	public MeleeEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		this.meleeAction = new MeleeAction();
 	}

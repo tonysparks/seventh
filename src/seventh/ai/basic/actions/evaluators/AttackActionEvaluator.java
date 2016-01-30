@@ -5,7 +5,7 @@ package seventh.ai.basic.actions.evaluators;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 
 /**
  * @author Tony
@@ -17,7 +17,7 @@ public class AttackActionEvaluator extends ActionEvaluator {
 	/**
 	 * @param characterBias
 	 */
-	public AttackActionEvaluator(Goals goals, double characterBias, double keepBias) {
+	public AttackActionEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 	}
 
@@ -46,7 +46,7 @@ public class AttackActionEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {		
-		return getGoals().enemyEncountered(getGoals(), brain);		
+		return getGoals().enemyEncountered();		
 	}
 
 }

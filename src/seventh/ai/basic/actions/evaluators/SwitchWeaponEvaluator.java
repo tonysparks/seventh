@@ -8,8 +8,8 @@ import java.util.List;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.SwitchWeaponAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.body.SwitchWeaponAction;
 import seventh.game.Entity.Type;
 import seventh.game.Inventory;
 import seventh.game.weapons.Weapon;
@@ -27,7 +27,7 @@ public class SwitchWeaponEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public SwitchWeaponEvaluator(Goals goals, double characterBias, double keepBias) {
+	public SwitchWeaponEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 		
 		this.switchWeaponAction = new SwitchWeaponAction(weaponType);

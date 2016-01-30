@@ -3,9 +3,9 @@
  */
 package seventh.ai.basic;
 
-import seventh.ai.basic.actions.ConcurrentGoal;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.WeightedGoal;
+import seventh.ai.basic.actions.ConcurrentAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.WeightedAction;
 import seventh.ai.basic.actions.evaluators.AttackActionEvaluator;
 import seventh.ai.basic.actions.evaluators.CommandActionEvaluator;
 import seventh.ai.basic.actions.evaluators.DefendSelfActionEvaluator;
@@ -15,6 +15,7 @@ import seventh.ai.basic.actions.evaluators.InvestigateActionEvaluator;
 import seventh.ai.basic.actions.evaluators.ReloadWeaponEvaluator;
 import seventh.ai.basic.actions.evaluators.SwitchWeaponEvaluator;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
+import seventh.shared.Randomizer;
 import seventh.shared.TimeStep;
 
 /**
@@ -26,31 +27,33 @@ import seventh.shared.TimeStep;
  */
 public class WeightedThoughtProcess implements ThoughtProcess {
 	
-	private ConcurrentGoal currentGoal;
+	private ConcurrentAction currentGoal;
 	
 	/**
 	 * 
 	 */
 	public WeightedThoughtProcess(TeamStrategy teamStrategy, Brain brain) {
+		World world = brain.getWorld();
 		
-		Goals goals = brain.getWorld().getGoals();
-		this.currentGoal = new ConcurrentGoal( 				
+		Actions goals = world.getGoals();		
+		Randomizer rand = world.getRandom();
+		this.currentGoal = new ConcurrentAction( 				
 				// high level goals
-				new WeightedGoal(brain, "highLevelGoal",
-										new AttackActionEvaluator(goals, brain.getRandomRangeMin(0.85), 0.82),
-										new DefendSelfActionEvaluator(goals, brain.getRandomRangeMin(0.85), 0.81),
-										new CommandActionEvaluator(goals, brain.getRandomRange(0.7, 0.8), 0.8),
-										new InvestigateActionEvaluator(goals, brain.getRandomRange(0.5, 0.9), 0.6),
+				new WeightedAction(brain.getConfig(), "highLevelGoal",
+										new AttackActionEvaluator(goals, rand.getRandomRangeMin(0.85), 0.82),
+										new DefendSelfActionEvaluator(goals, rand.getRandomRangeMin(0.85), 0.81),
+										new CommandActionEvaluator(goals, rand.getRandomRange(0.7, 0.8), 0.8),
+										new InvestigateActionEvaluator(goals, rand.getRandomRange(0.5, 0.9), 0.6),
 //										new RideVehicleEvaluator(goals, 1.0f,1f),//brain.getRandomRange(0.5, 0.7), 0.51),
 //										new StrategyEvaluator(teamStrategy, goals, brain.getRandomRange(0.1, ), 0)
-										new ExploreActionEvaluator(goals, brain.getRandomRange(0.1, 0.5), 0.5)											
+										new ExploreActionEvaluator(goals, rand.getRandomRange(0.1, 0.5), 0.5)											
 				),
 				
 				// Auxiliary goals, ones that do not impact the high level goals
-				new WeightedGoal(brain, "auxiliaryGoal",
-										new ReloadWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8), 0),
-										new SwitchWeaponEvaluator(goals, brain.getRandomRange(0.3, 0.8), 0),
-										new DoNothingEvaluator(goals, brain.getRandomRange(0.4, 0.9), 0)
+				new WeightedAction(brain.getConfig(), "auxiliaryGoal",
+										new ReloadWeaponEvaluator(goals, rand.getRandomRange(0.3, 0.8), 0),
+										new SwitchWeaponEvaluator(goals, rand.getRandomRange(0.3, 0.8), 0),
+										new DoNothingEvaluator(goals, rand.getRandomRange(0.4, 0.9), 0)
 				)
         );
 		

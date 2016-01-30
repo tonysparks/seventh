@@ -9,7 +9,6 @@ import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.squad.Squad;
 import seventh.ai.basic.squad.SquadDefendAction;
 import seventh.game.GameInfo;
-import seventh.game.Player;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.math.Vector2f;
@@ -43,7 +42,7 @@ public class TDMTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public Action getGoal(Brain brain) {	
-		return brain.getWorld().getGoals().moveToRandomSpot();
+		return brain.getWorld().getGoals().wander();
 	}
 	
 	/* (non-Javadoc)

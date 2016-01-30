@@ -6,8 +6,8 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.ThrowGrenadeAction;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.atom.body.ThrowGrenadeAction;
 import seventh.game.PlayerEntity;
 import seventh.math.Vector2f;
 
@@ -21,7 +21,7 @@ public class GrenadeEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public GrenadeEvaluator(Goals goals, double characterBias, double keepBias) {
+	public GrenadeEvaluator(Actions goals, double characterBias, double keepBias) {
 		super(goals, characterBias, keepBias);
 	}
 

@@ -5,7 +5,6 @@ package seventh.ai.basic.teamstrategy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
@@ -13,7 +12,7 @@ import seventh.ai.basic.Stats;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.Zones;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
@@ -21,6 +20,7 @@ import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.math.Vector2f;
+import seventh.shared.Randomizer;
 import seventh.shared.TimeStep;
 
 /**
@@ -35,14 +35,14 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 	private DefaultAISystem aiSystem;	
 	
 	private Zones zones;
-	private Random random;
+	private Randomizer random;
 	
 	private Zone zoneToAttack;
 	
 	private Stats stats;
 	private OffensiveState currentState;
 		
-	private Goals goals;
+	private Actions goals;
 	private long timeUntilOrganizedAttack;
 	
 	enum OffensiveState {
@@ -62,7 +62,7 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 		
 		this.stats = aiSystem.getStats();
 		this.zones = aiSystem.getZones();
-		this.random = aiSystem.getRandom();
+		this.random = aiSystem.getRandomizer();
 		
 		this.goals = aiSystem.getGoals(); 
 	}
@@ -121,13 +121,13 @@ public class OffenseObjectiveTeamStrategy implements TeamStrategy {
 			if(zoneToAttack != null) {
 				action = goals.infiltrate(zoneToAttack);
 			}
-			action = goals.goToRandomSpot(brain);
+			action = goals.moveToRandomSpot(brain);
 			break;
 		case PLANT_BOMB:			
 			action = goals.plantBomb();			
 			break;
 		case RANDOM:
-			action = goals.goToRandomSpot(brain);
+			action = goals.moveToRandomSpot(brain);
 			break;
 		case DONE:			
 		default:

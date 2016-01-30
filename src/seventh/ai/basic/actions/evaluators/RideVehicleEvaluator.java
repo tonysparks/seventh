@@ -8,7 +8,7 @@ import java.util.List;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.game.vehicles.Vehicle;
 
 /**
@@ -25,7 +25,7 @@ public class RideVehicleEvaluator extends ActionEvaluator {
      * @param characterBias
      * @param keepBias
      */
-    public RideVehicleEvaluator(Goals goals, double characterBias, double keepBias) {
+    public RideVehicleEvaluator(Actions goals, double characterBias, double keepBias) {
         super(goals, characterBias, keepBias);
         this.vehiclesToRide = new ArrayList<Vehicle>();
     }
@@ -65,7 +65,7 @@ public class RideVehicleEvaluator extends ActionEvaluator {
      */
     @Override
     public Action getAction(Brain brain) {
-        return getGoals().operateVehicle(brain, vehicleToRide);
+        return getGoals().operateVehicle(vehicleToRide);
     }
 
 }

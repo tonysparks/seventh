@@ -11,11 +11,11 @@ import seventh.ai.AICommand;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.CoverEntityAction;
-import seventh.ai.basic.actions.Goals;
-import seventh.ai.basic.actions.GuardAction;
-import seventh.ai.basic.actions.MoveToAction;
-import seventh.ai.basic.actions.SequencedGoal;
+import seventh.ai.basic.actions.Actions;
+import seventh.ai.basic.actions.SequencedAction;
+import seventh.ai.basic.actions.atom.CoverEntityAction;
+import seventh.ai.basic.actions.atom.GuardAction;
+import seventh.ai.basic.actions.atom.MoveToAction;
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
@@ -34,7 +34,7 @@ public class AICommands {
 		Action parse(Brain brain, String ... args);
 	}
 	
-	private Goals goals;
+	private Actions goals;
 	private GameInfo game;
 	
 	
@@ -107,7 +107,7 @@ public class AICommands {
 					attackDir.set(x, y);
 				}
 				
-				Action action = goals.takeCover(attackDir, brain);
+				Action action = goals.takeCover(attackDir);
 				return action;
 			}
 		});
@@ -123,7 +123,7 @@ public class AICommands {
                     dest.set(x, y);
                 }
                 
-                SequencedGoal action = new SequencedGoal("MoveToAndGuard");
+                SequencedAction action = new SequencedAction("MoveToAndGuard");
                 action.addLastAction(new MoveToAction(dest));
                 action.addLastAction(new GuardAction());
                 return action;
@@ -141,7 +141,7 @@ public class AICommands {
                 }
                 
                 
-                return goals.surpressFire(goals, brain, dest);
+                return goals.surpressFire(dest);
             }
         });		
 		

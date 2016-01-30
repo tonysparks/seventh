@@ -6,7 +6,7 @@ package seventh.ai.basic.actions.evaluators;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Locomotion;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.actions.Goals;
+import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.actions.TimedAction;
 import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
@@ -24,7 +24,7 @@ public class SurpressFireEvaluator extends ActionEvaluator {
 	 * @param goals
 	 * @param characterBias
 	 */
-	public SurpressFireEvaluator(Goals goals, double characterBias, double keepBias, final Vector2f target) {
+	public SurpressFireEvaluator(Actions goals, double characterBias, double keepBias, final Vector2f target) {
 		super(goals, characterBias, keepBias);
 		
 		this.target = target;
