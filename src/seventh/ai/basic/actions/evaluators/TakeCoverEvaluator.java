@@ -70,8 +70,8 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 			}
 			
 			
-			if(!system.currentTargetInLineOfFire()) {
-				score *= 0.9;
+			if(system.currentTargetInLineOfFire()) {
+				score *= 0.7;
 			}
 			
 			score *= getCharacterBias();

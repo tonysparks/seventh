@@ -265,7 +265,7 @@ public class Actions {
 	public CompositeAction enemyEncountered() {
 		return new WeightedAction(config, "enemyEncountered",
 				new MoveTowardEnemyEvaluator(this, random.getRandomRangeMin(0.48), 0.8),
-				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.76), 0.9)
+				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.51), 0.9)
 		);
 	}
 	
