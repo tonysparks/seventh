@@ -59,6 +59,11 @@ public interface Connection extends Endpoint {
 	public long getNumberOfDroppedPackets();
 	
 	/**
+	 * @return the number of bytes compressed
+	 */
+	public long getNumberOfBytesCompressed();
+	
+	/**
 	 * Sends a message to the server
 	 * @param protocolFlags
 	 * @param msg

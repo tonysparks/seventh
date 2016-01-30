@@ -110,15 +110,17 @@ public class Host {
 		selector = Selector.open();
 		datagramChannel.register(selector, SelectionKey.OP_READ);
 
-		readBuffer = IOBuffer.Factory.allocateDirect(config.getMtu());
+		readBuffer = config.useDirectBuffers() ? IOBuffer.Factory.allocateDirect(config.getMtu()) :
+		                                         IOBuffer.Factory.allocate(config.getMtu());
 		readBuffer.clear();
 
-		writeBuffer = IOBuffer.Factory.allocateDirect(config.getMtu());
+		writeBuffer = config.useDirectBuffers() ? IOBuffer.Factory.allocateDirect(config.getMtu()) :
+                                                  IOBuffer.Factory.allocate(config.getMtu());
 		writeBuffer.clear();
 		
 		peers = new Peer[config.getMaxConnections()];
 		
-		protocol = new Protocol();
+		protocol = new Protocol(config.getCompressionThreshold(), config.getMtu());
 	}
 	
 	/**
@@ -458,17 +460,15 @@ public class Host {
 
 			/* if we had any messages, lets send it out */
 			if(numberOfMessages > 0) {
-				int endPosition = writeBuffer.position();
-				writeBuffer.position(0);
-				{
-//					protocol.setSentTime(Time.time());			
-					protocol.setSendSequence(peer.nextSequenceNumber());
-					protocol.setAcknowledge(peer.getRemoteSequence());
-					protocol.setAckHistory(peer.getAckHistory());
-					
-					protocol.writeTo(writeBuffer);
-				}
-				writeBuffer.position(endPosition);
+				
+//				protocol.setSentTime(Time.time());			
+				protocol.setSendSequence(peer.nextSequenceNumber());
+				protocol.setAcknowledge(peer.getRemoteSequence());
+				protocol.setAckHistory(peer.getAckHistory());
+				
+				protocol.writeTo(writeBuffer);
+				
+				peer.addNumberOfBytesCompressed(protocol.getNumberOfBytesCompressed());
 				
 				send(writeBuffer, peer);
 			}
@@ -610,7 +610,7 @@ public class Host {
 	 * @param peer
 	 * @return the number of bytes transfered
 	 */
-	private int send(IOBuffer buffer, Peer peer) {
+	private int send(IOBuffer buffer, Peer peer) {	    
 		buffer.flip();
 		try {
 			peer.setLastSendTime(System.currentTimeMillis());
@@ -662,8 +662,7 @@ public class Host {
 		/* if this packet isn't from our
 		 * network protocol ignore it
 		 */
-		if(protocol.isValid()) {
-			
+		if(protocol.isValid()) {					    
 			byte peerId = protocol.getPeerId();
 			
 			/* this is the first time this client
@@ -713,7 +712,7 @@ public class Host {
 					if(peer.isSequenceMoreRecent(seqNumber)) {
 						int numberOfDroppedPackets = seqNumber - peer.getRemoteSequence();
 						if(numberOfDroppedPackets > 1) {
-							peer.addDroppedPacket(numberOfDroppedPackets);
+							peer.addDroppedPacket(numberOfDroppedPackets-1);
 						}
 						
 						peer.setRemoteSequence(seqNumber);		

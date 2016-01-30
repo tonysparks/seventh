@@ -23,6 +23,9 @@ public class NetConfig {
 	
 	private long pingRate;
 	
+	private int compressionThreshold;
+	private boolean useDirectBuffers;
+	
 	private Log log;
 	private NetMessageFactory messageFactory;
 	
@@ -37,6 +40,8 @@ public class NetConfig {
 			, 33		   // poll the network 
 			, 1500         // mtu
 			, 16           // max connections
+			, 400          // compressionThreshold
+			, false        // useDirectBuffers
 			, new SysoutLog()
 			, messageFactory);
 	}
@@ -49,6 +54,8 @@ public class NetConfig {
 	 * @param pollRate
 	 * @param mtu
 	 * @param maxConnections
+	 * @param compressionThreshold
+	 * @param useDirectBuffers
 	 * @param log
 	 * @param messageFactory
 	 */
@@ -57,7 +64,10 @@ public class NetConfig {
 				, long heartbeat
 				, long pingRate
 				, int pollRate
-				, int mtu, int maxConnections, Log log
+				, int mtu, int maxConnections
+				, int compressionThreshold
+				, boolean useDirectBuffers
+				, Log log
 				, NetMessageFactory messageFactory) {
 		super();
 		this.timeout = timeout;
@@ -67,6 +77,8 @@ public class NetConfig {
 		this.pollRate = pollRate;
 		this.mtu = mtu;
 		this.maxConnections = maxConnections;
+		this.compressionThreshold = compressionThreshold;
+		this.useDirectBuffers = useDirectBuffers;
 		this.log = log;
 		this.messageFactory = messageFactory;
 	}
@@ -204,4 +216,33 @@ public class NetConfig {
 	public long getTimeout() {
 		return timeout;
 	}
+	
+	/**
+     * @return the compressionThreshold
+     */
+    public int getCompressionThreshold() {
+        return compressionThreshold;
+    }
+    
+    /**
+     * @param compressionThreshold the compressionThreshold to set
+     */
+    public void setCompressionThreshold(int compressionThreshold) {
+        this.compressionThreshold = compressionThreshold;
+    }
+    
+    /**
+     * @return if native buffers are to be used for reading/writing from
+     * the network sockets
+     */
+    public boolean useDirectBuffers() {
+        return this.useDirectBuffers;
+    }
+    
+    /**
+     * @param useDirectBuffers the useDirectBuffers to set
+     */
+    public void setUseDirectBuffers(boolean useDirectBuffers) {
+        this.useDirectBuffers = useDirectBuffers;
+    }
 }

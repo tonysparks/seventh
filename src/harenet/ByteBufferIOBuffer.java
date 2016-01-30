@@ -133,7 +133,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
 	 */
 	@Override
 	public IOBuffer put(IOBuffer src) {
-		buffer.put(src.array(), src.arrayOffset(), src.capacity());
+		//buffer.put(src.array(), src.arrayOffset(), src.capacity());
+	    buffer.put(src.asByteBuffer());
 		return this;
 	}
 

@@ -510,6 +510,7 @@ public class Hud implements Renderable {
 		canvas.drawString("D: " + client.getNumberOfDroppedPackets(), x, y - 60, 0xff00CC00);
 		canvas.drawString("UR: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, 0xff00CC00);
 		canvas.drawString("US: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, 0xff00CC00);
+		canvas.drawString("C: " + client.getNumberOfBytesCompressed() + " KiB", x, y - 120, 0xff00CC00);
 	}
 	
 	

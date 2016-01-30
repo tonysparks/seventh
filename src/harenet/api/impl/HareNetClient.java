@@ -138,6 +138,14 @@ public class HareNetClient extends HareNetEndpoint implements Client {
 	}
 	
 	/* (non-Javadoc)
+	 * @see harenet.api.Connection#getNumberOfBytesCompressed()
+	 */
+	@Override
+	public long getNumberOfBytesCompressed() {
+	    return peer.getNumberOfBytesCompressed();
+	}
+	
+	/* (non-Javadoc)
 	 * @see net.jenet.api.Connection#isConnected()
 	 */
 	@Override

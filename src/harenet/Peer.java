@@ -76,6 +76,7 @@ public class Peer {
 	private long numberOfBytesSent;
 	private long numberOfBytesRecv;
 	private long numberOfDroppedPackets;
+	private long numberOfBytesCompressed;
 	
 	private int[] ackBuffer;
 	private int ackBufferIndex;
@@ -144,6 +145,13 @@ public class Peer {
 	}
 	
 	/**
+     * @return the numberOfBytesCompressed
+     */
+    public long getNumberOfBytesCompressed() {
+        return numberOfBytesCompressed;
+    }
+	
+	/**
 	 * @return the numberOfBytesRecv
 	 */
 	public long getNumberOfBytesRecv() {
@@ -163,6 +171,10 @@ public class Peer {
 	
 	public void addNumberOfBytesSent(int bytes) {
 		this.numberOfBytesSent += bytes;
+	}
+	
+	public void addNumberOfBytesCompressed(int bytes) {
+	    this.numberOfBytesCompressed += bytes;
 	}
 	
 	public void addDroppedPacket() {

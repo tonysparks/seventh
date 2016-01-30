@@ -86,8 +86,18 @@ public class Config {
 			}
 			
 			LeoObject loggingEnabled = netMap.getByString("enable_log");
-			if(loggingEnabled != null ) {
+			if(loggingEnabled != null) {
 				this.netConfig.enableLog(LeoObject.isTrue(loggingEnabled));
+			}
+			
+			LeoObject compressionThreshold = netMap.getByString("compression_threshold");
+			if(compressionThreshold != null && compressionThreshold.isNumber()) {
+			    this.netConfig.setCompressionThreshold(compressionThreshold.asInt());
+			}
+			
+			LeoObject useDirectBuffers = netMap.getByString("use_direct_buffers");
+			if(useDirectBuffers != null) {
+			    this.netConfig.setUseDirectBuffers(LeoObject.isTrue(useDirectBuffers));
 			}
 		}
 	}

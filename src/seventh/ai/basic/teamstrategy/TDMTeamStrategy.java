@@ -104,7 +104,7 @@ public class TDMTeamStrategy implements TeamStrategy {
 	public void update(TimeStep timeStep, GameInfo game) {
 	    time.update(timeStep);
 	    if(time.isTime()) {
-	        squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
+//	        squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
 	    }
 	}
 
