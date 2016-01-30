@@ -3,17 +3,12 @@
  */
 package seventh.ai.basic;
 
-import java.util.List;
-
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
-import seventh.game.Bomb;
-import seventh.game.BombTarget;
 import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.graph.GraphNode;
 import seventh.map.Tile;
-import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.Debugable;
@@ -108,7 +103,7 @@ public class Brain implements Debugable {
 	}
 	
 	public double getRandomRange(double min, double max) {
-		return min + (world.getRandom().nextDouble() * (max - min));
+		return this.world.getRandom().getRandomRange(min, max);
 	}
 	
 	
@@ -118,7 +113,7 @@ public class Brain implements Debugable {
 	
 	public double getRandomRangeMax(double max) {
 		return getRandomRange(0.0, max);
-	}		
+	}
 	
 	/**
 	 * Broadcasts a command
@@ -149,7 +144,7 @@ public class Brain implements Debugable {
 			
 			this.targetingSystem.update(timeStep);
 			
-			//debugDraw();
+			debugDraw();
 			//debugDrawPathPlanner();
 		}		
 	}
@@ -160,12 +155,17 @@ public class Brain implements Debugable {
 		Cover cover = world.getCover(entityOwner, entityOwner.getPos());
 		//DebugDraw.fillRectRelative( (int)cover.getCoverPos().x, (int)cover.getCoverPos().y, 5, 5, 0xff00ff00);
 		
-		List<AttackDirection> attackDirections = world.getAttackDirections(entityOwner);
+		/*List<AttackDirection> attackDirections = world.getAttackDirections(entityOwner);
 		for(AttackDirection dir : attackDirections) {
 			DebugDraw.drawLineRelative(entityOwner.getPos(), dir.getDirection(), 0xff00ff00);
-		}
+		}*/
 		
 		//DebugDraw.drawString(this.thoughtProcess.toString(), new Vector2f(-120, 700), 0xff00ffff);
+		
+		//Vector2f p = new Vector2f(entityOwner.getPos().x-250, entityOwner.getPos().y + 40);
+		//DebugDraw.drawStringRelative(motion.getDebugInformation().toString(), p, 0xff00ffff);
+		//DebugDraw.drawString(this.thoughtProcess.toString(), p, 0xff00ffff);
+		
 		
 		Vector2f p = new Vector2f(entityOwner.getPos().x-50, entityOwner.getPos().y + 40);
 		String str = this.thoughtProcess.toString();
@@ -180,13 +180,13 @@ public class Brain implements Debugable {
 			p.x += 10;
 		}
 		
-		for(BombTarget target : world.getBombTargetsWithActiveBombs()) {
+		/*for(BombTarget target : world.getBombTargetsWithActiveBombs()) {
 			if( target.getBomb() != null ) {
 				Bomb bomb = target.getBomb();
 				Rectangle b = bomb.getBlastRadius();
 				DebugDraw.fillRectRelative(b.x, b.y, b.width, b.height, 0xaf00ffff);
 			}
-		}
+		}*/
 	}
 	
 	@SuppressWarnings("unused")
