@@ -5,6 +5,7 @@ package seventh.shared;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -121,6 +122,9 @@ public class FileSystemAssetWatcher implements AssetWatcher {
                         }
                         
                         key.reset();
+                    }
+                    catch (ClosedWatchServiceException e) {
+                    	break;
                     }
                     catch (InterruptedException e) {
                         break;
