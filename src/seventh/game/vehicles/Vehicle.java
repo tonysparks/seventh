@@ -119,6 +119,10 @@ public abstract class Vehicle extends Entity implements Controllable {
 	 * @param operator the operator to set
 	 */
 	public void operate(PlayerEntity operator) {
+		if(!hasOperator()) {
+			beginOperating();
+		}
+		
 		this.operator = operator;
 	}
 
@@ -128,7 +132,14 @@ public abstract class Vehicle extends Entity implements Controllable {
 	 */
 	public void stopOperating(PlayerEntity operator) {
 		this.operator = null;
+		endOperating();
 	}	
+	
+	protected void beginOperating() {		
+	}
+	
+	protected void endOperating() {		
+	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.game.Entity#isTouching(seventh.game.Entity)

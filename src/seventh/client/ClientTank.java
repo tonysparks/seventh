@@ -6,6 +6,7 @@ package seventh.client;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.PanzerTankSprite;
 import seventh.client.gfx.TankSprite;
 import seventh.game.Entity.State;
 import seventh.game.net.NetEntity;
@@ -50,7 +51,8 @@ public class ClientTank extends ClientVehicle {
 		
 		this.lineOfSight = WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT;
 			
-		this.tankSprite = new TankSprite(this);
+		this.tankSprite = //new PanzerTankSprite(this); 
+				new TankSprite(this);
 				
 		this.turretFacing = new Vector2f();
 		

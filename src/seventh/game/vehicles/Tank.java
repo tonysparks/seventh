@@ -27,6 +27,7 @@ import seventh.shared.EaseInInterpolation;
 import seventh.shared.Geom;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
+import seventh.shared.Updatable;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -37,6 +38,43 @@ import seventh.shared.WeaponConstants;
  */
 public class Tank extends Vehicle {
 
+	static class SoundEmitter implements Updatable {
+		private Timer timer;
+		private boolean loop, hasStarted;;
+		
+		public SoundEmitter(long start) {
+			this(start, false);
+		}
+		
+		public SoundEmitter(long start, boolean loop) {
+			this.timer = new Timer(loop, start);
+			this.loop = loop;
+			this.hasStarted = false;
+		}
+		
+		public void reset() {
+			this.timer.reset();
+			this.hasStarted = false;
+		}
+		
+		public void stop() {
+			this.timer.stop();
+			this.hasStarted = false;
+		}
+		
+		public void play(Game game, int id, SoundType sound, Vector2f pos) {
+			if(this.timer.isTime()|| !this.hasStarted) {
+				game.emitSound(id, sound, pos);
+				this.hasStarted = true;
+			}
+		}
+		
+		@Override
+		public void update(TimeStep timeStep) {
+			this.timer.update(timeStep);
+		}
+	}
+	
 	private final NetTank netTank;
 	
 	private int previousKeys;
@@ -75,6 +113,11 @@ public class Tank extends Vehicle {
 	private EaseInInterpolation stopEase;
 	private Vector2f previousVel;
 	
+	private SoundEmitter idleEngineSnd,
+						 moveSnd,
+						 turretRotateSnd, 
+						 refDownSnd;
+	
 	/**
 	 * @param position
 	 * @param speed
@@ -94,6 +137,11 @@ public class Tank extends Vehicle {
 		
 		this.stopEase = new EaseInInterpolation(WeaponConstants.TANK_MOVEMENT_SPEED, 0f, 800);
 		this.previousVel = new Vector2f();
+		
+		this.idleEngineSnd = new SoundEmitter(8_500, true);
+		this.moveSnd = new SoundEmitter(5_800, true);
+		this.turretRotateSnd = new SoundEmitter(800, true);
+		this.refDownSnd = new SoundEmitter(1_500, true);
 		
 		this.primaryWeapon = new RocketLauncher(game, this) {
 
@@ -293,7 +341,9 @@ public class Tank extends Vehicle {
 		
 		if(!hasThrottle && !this.isStopped) {
 			this.isStopping = true;
+			//game.emitSound(getId(), SoundType.TANK_REV_DOWN, getCenterPos());
 		}
+		
 		
 		if(isAlive() && (hasThrottle || this.isStopping) ) {
 			if(currentState != State.WALKING && currentState != State.SPRINTING) {
@@ -304,7 +354,7 @@ public class Tank extends Vehicle {
 				this.throttleWarmupTime += timeStep.getDeltaTime();
 				
 				if(hasOperator() && this.throttleWarmupTime > 590) {
-					game.emitSound(getOperator().getId(), SoundType.TANK_START_MOVE, getCenterPos());
+					game.emitSound(getOperator().getId(), SoundType.TANK_REV_UP, getCenterPos());
 				}
 			}
 			else {
@@ -407,7 +457,7 @@ public class Tank extends Vehicle {
 			this.currentState = State.IDLE;
 			
 			this.throttleWarmupTime = 0;
-			this.throttleStartTime = 200;	
+			this.throttleStartTime = 200;			
 		}
 		
 		
@@ -526,6 +576,7 @@ public class Tank extends Vehicle {
 		
 			this.turretFacing.set(1, 0); // make right vector
 			Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
+			this.turretRotateSnd.play(game, getId(), SoundType.TANK_TURRET_MOVE, getPos());
 		}
 		
 		
@@ -554,13 +605,13 @@ public class Tank extends Vehicle {
 
 	protected void makeMovementSounds(TimeStep timeStep) {
 		if (nextMovementSound <= 0) {
-			SoundType snd = SoundType.TANK_MOVE1;
-			if (isRetracting) {
-				snd = SoundType.TANK_START_MOVE;
-			}
+//			SoundType snd = SoundType.TANK_MOVE1;
+//			if (isRetracting) {
+//				snd = SoundType.TANK_START_MOVE;
+//			}
 
 			isRetracting = !isRetracting;
-			game.emitSound(getId(), snd, getCenterPos());
+//			game.emitSound(getId(), snd, getCenterPos());
 			nextMovementSound = 700;// 1500;
 		} else {
 			nextMovementSound -= timeStep.getDeltaTime();
@@ -571,6 +622,24 @@ public class Tank extends Vehicle {
 				nextMovementSound = 1;
 			}*/
 		}
+		
+		
+		this.idleEngineSnd.update(timeStep);
+		this.moveSnd.update(timeStep);
+		this.turretRotateSnd.update(timeStep);
+		this.refDownSnd.update(timeStep);
+		
+		if(currentState==State.IDLE) 
+		{
+			this.idleEngineSnd.play(game, getId(), SoundType.TANK_IDLE, getCenterPos());
+			this.moveSnd.reset();
+		}
+		else {
+			this.moveSnd.play(game, getId(), SoundType.TANK_MOVE, getCenterPos());
+			this.idleEngineSnd.reset();
+		}
+
+		
 	}
 
 	/*
@@ -761,6 +830,10 @@ public class Tank extends Vehicle {
 	 */
 	public void maneuverLeft() {
 		this.vel.x = -1;
+		
+		if(game.getRandom().nextInt(5)==4)
+			this.turretRotateSnd.play(game, getId(), SoundType.TANK_SHIFT, getCenterPos());
+		//this.refDownSnd.play(game, getId(), SoundType.TANK_REV_UP, getCenterPos());
 	}
 	
 	/**
@@ -768,6 +841,9 @@ public class Tank extends Vehicle {
 	 */
 	public void maneuverRight() {
 		this.vel.x = 1;
+		if(game.getRandom().nextInt(5)==4)
+			this.turretRotateSnd.play(game, getId(), SoundType.TANK_SHIFT, getCenterPos());
+		//this.refDownSnd.play(game, getId(), SoundType.TANK_REV_UP, getCenterPos());
 	}
 	
 	/**
@@ -775,6 +851,16 @@ public class Tank extends Vehicle {
 	 */
 	public void stopManeuvering() {
 		this.vel.x = 0;
+	}
+	
+	@Override
+	protected void beginOperating() {
+		game.emitSound(getId(), SoundType.TANK_ON, getCenterPos());
+	}
+	
+	@Override
+	protected void endOperating() {
+		game.emitSound(getId(), SoundType.TANK_OFF, getCenterPos());
 	}
 	
 	/**

@@ -142,6 +142,18 @@ public class Art {
 	public static  TextureRegion tankTurret = null;
 	public static  TextureRegion tankTrackMarks = null;
 	
+	public static  TextureRegion shermanTankImage = null;
+	public static  TextureRegion shermanTankBase = null;
+	public static  TextureRegion shermanTankTurret = null;
+	public static  TextureRegion shermanTankBaseDamaged = null;
+	public static  TextureRegion shermanTankTurretDamaged = null;
+	
+	public static  TextureRegion panzerTankImage = null;
+	public static  TextureRegion panzerTankBase = null;
+	public static  TextureRegion panzerTankTurret = null;
+	public static  TextureRegion panzerTankBaseDamaged = null;
+	public static  TextureRegion panzerTankTurretDamaged = null;
+	
 	public static  TextureRegion rippleImg = null;
 	/**
 	 * Reloads the graphics
@@ -303,6 +315,18 @@ public class Art {
 							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_turret.png"), 0, 0, 108, 175), 1, 1)[0];
 		
 		tankTrackMarks = loadImage("./seventh/gfx/vehicles/tank_track_mark.png");
+		
+		shermanTankImage = loadImage("./seventh/gfx/vehicles/tanks/sherman/sherman_tank.png");
+		shermanTankBase = TextureUtil.subImage(shermanTankImage, 15, 180, 272, 149);
+		shermanTankTurret = TextureUtil.subImage(shermanTankImage, 304, 187, 197, 108);
+		shermanTankBaseDamaged = TextureUtil.subImage(shermanTankImage, 15, 8, 272, 155);
+		shermanTankTurretDamaged = TextureUtil.subImage(shermanTankImage, 304, 22, 187, 108);
+		
+		panzerTankImage = loadImage("./seventh/gfx/vehicles/tanks/panzer/panzer_tank.png");
+		panzerTankBase = TextureUtil.subImage(panzerTankImage, 0, 310, 257, 195);
+		panzerTankTurret = TextureUtil.subImage(panzerTankImage, 35, 20, 273, 125);
+		panzerTankBaseDamaged = TextureUtil.subImage(panzerTankImage, 254, 310, 265, 195);		
+		panzerTankTurretDamaged = TextureUtil.subImage(panzerTankImage, 35, 168, 273, 125);
 		
 		rippleImg = loadImage("./seventh/gfx/ripple.png");
 	}
@@ -654,5 +678,19 @@ public class Art {
 //		}
 //		int frameTime = 450;
 //		return newAnimatedImage(new int[] { frameTime, frameTime, frameTime, frameTime, frameTime, frameTime }, tankTracks);
+	}
+	
+	public static AnimatedImage newShermanTankTracks() {
+		return newAnimatedImage(new int[] {100}, new TextureRegion[] {shermanTankBase});
+	}
+	public static AnimatedImage newShermanTankTracksDamaged() {
+		return newAnimatedImage(new int[] {100}, new TextureRegion[] {shermanTankBaseDamaged});
+	}
+	
+	public static AnimatedImage newPanzerTankTracks() {
+		return newAnimatedImage(new int[] {100}, new TextureRegion[] {panzerTankBase});
+	}
+	public static AnimatedImage newPanzerTankTracksDamaged() {		
+		return newAnimatedImage(new int[] {100}, new TextureRegion[] {panzerTankBaseDamaged});
 	}
 }

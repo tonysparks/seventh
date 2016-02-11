@@ -123,8 +123,8 @@ public class Sounds {
 	
 	public static final int[] bulletZing = {115,116,117};
 	
-	public static final int[] tankStart = {118};
-	public static final int[] tankMove = {119};
+	//public static final int[] tankStart = {118};
+	//public static final int[] tankMove = {119};
 	public static final int[] healthPackPickup = {120};
 
 	public static final int[] alliedSpeechAttack = {121};
@@ -146,6 +146,15 @@ public class Sounds {
 	public static final int[] axisSpeechIllCoverYou = {136};
 	public static final int[] axisSpeechTakingFire = {137};
 	public static final int[] axisSpeechYouTakeLead = {138};
+
+	public static final int[] tankOn = {139};
+	public static final int[] tankOff = {140};
+	public static final int[] tankIdle = {141};
+	public static final int[] tankShift = {142,143,144};
+	public static final int[] tankRevUp = {145};
+	public static final int[] tankRevDown = {146};
+	public static final int[] tankTurret = {147};
+	public static final int[] tankMove = {148};
 	
 	public static final int[][] alliedSpeeches = {
 			alliedSpeechAttack,
@@ -333,8 +342,9 @@ public class Sounds {
             loadSound("./seventh/sfx/bullet_zing02.wav") ,   // 116
             loadSound("./seventh/sfx/bullet_zing03.wav") ,   // 117
             
-            loadSound("./seventh/sfx/tank/movement_start.wav") ,   // 118
-            loadSound("./seventh/sfx/tank/movement_loop.wav") ,   // 119
+//            loadSound("./seventh/sfx/tank/movement_start.wav") ,   // 118
+//            loadSound("./seventh/sfx/tank/movement_loop.wav") ,   // 119
+            null,null,
             loadSound("./seventh/sfx/player/healthpack_pickup.wav") ,   // 120
             
             loadSound("./seventh/sfx/player/speech/allied/attack.wav") ,   // 121
@@ -357,6 +367,17 @@ public class Sounds {
             loadSound("./seventh/sfx/player/speech/axis/ill_cover_you.wav") ,   // 136
             loadSound("./seventh/sfx/player/speech/axis/taking_fire_help.wav") ,   // 137
             loadSound("./seventh/sfx/player/speech/axis/you_take_lead.wav") ,   // 138
+            
+            loadSound("./seventh/sfx/tank/tank_on.wav") ,   // 139
+            loadSound("./seventh/sfx/tank/tank_off.wav") ,   // 140
+            loadSound("./seventh/sfx/tank/tank_idle.wav") ,   // 141
+            loadSound("./seventh/sfx/tank/tank_shift1.wav") ,   // 142
+            loadSound("./seventh/sfx/tank/tank_shift2.wav") ,   // 143
+            loadSound("./seventh/sfx/tank/tank_shift3.wav") ,   // 144
+            loadSound("./seventh/sfx/tank/tank_revup.wav") ,   // 145
+            loadSound("./seventh/sfx/tank/tank_revdown.wav") ,   // 146
+            loadSound("./seventh/sfx/tank/tank_turret2.wav") ,   // 147
+            loadSound("./seventh/sfx/tank/tank_move.wav") ,   // 148
 		};
 	};
 
@@ -795,18 +816,30 @@ public class Sounds {
 		case IMPACT_WOOD:
 			sound = playFreeSound(impactWood, x, y);
 			break;
-		case TANK_START_MOVE: 
-			sound = playFreeSound(tankStart, x, y);
+		case TANK_ON: 
+			sound = playFreeSound(tankOn, x, y);
 			break;
-		case TANK_MOVE1:
+		case TANK_OFF: 
+			sound = playFreeSound(tankOff, x, y);
+			break;
+		case TANK_REV_UP: 
+			sound = playFreeSound(tankRevUp, x, y);
+			break;			
+		case TANK_REV_DOWN: 
+			sound = playFreeSound(tankRevDown, x, y);
+			break;			
+		case TANK_IDLE: 
+			sound = playFreeSound(tankIdle, x, y);
+			break;			
+		case TANK_SHIFT: 
+			sound = playFreeSound(tankShift, x, y);
+			break;			
+		case TANK_TURRET_MOVE: 
+			sound = playFreeSound(tankTurret, x, y);
+			break;					
+		case TANK_MOVE: 
 			sound = playFreeSound(tankMove, x, y);
-			break;
-		case TANK_MOVE2:
-			sound = playFreeSound(mechRetractFootstep, x, y);
-			break;
-		case TANK_TURRET_MOVE:
-			sound = playFreeSound(mechTorsoMove, x, y);
-			break;		
+			break;					
 		case BREATH_HEAVY: 
 			sound = playFreeSound(breadthHeavy, x, y);
 			break;

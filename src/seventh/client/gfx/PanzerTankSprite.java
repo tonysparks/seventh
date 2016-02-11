@@ -18,7 +18,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author Tony
  *
  */
-public class TankSprite implements Renderable {
+public class PanzerTankSprite implements Renderable {
 
 	private AnimatedImage tankTracksDamaged;
 	private Sprite tankTurretDamaged;
@@ -38,16 +38,16 @@ public class TankSprite implements Renderable {
 	/**
 	 * 
 	 */
-	public TankSprite(ClientTank tank) {
+	public PanzerTankSprite(ClientTank tank) {
 
 		this.tank = tank;
 //		this.tankTracks = Art.newTankTracks();
 //		this.tankTurret = new Sprite(Art.tankTurret);
-		this.tankTracks = Art.newShermanTankTracks();
-		this.tankTurret = new Sprite(Art.shermanTankTurret);
+		this.tankTracks = Art.newPanzerTankTracks();
+		this.tankTurret = new Sprite(Art.panzerTankTurret);
 		
-		this.tankTracksDamaged = Art.newShermanTankTracksDamaged();
-		this.tankTurretDamaged = new Sprite(Art.shermanTankTurretDamaged);
+		this.tankTracksDamaged = Art.newPanzerTankTracksDamaged();
+		this.tankTurretDamaged = new Sprite(Art.panzerTankTurretDamaged);
 		
 		this.tankTrack = new Sprite(this.tankTracks.getCurrentImage());
 		this.bobDir = 1.0f;
@@ -160,9 +160,9 @@ public class TankSprite implements Renderable {
 		float originX = 55;
 		float originY = 114;*/
 		
-		rx += 70f;
-		ry += 15f;
-		float originX = 62f;
+		rx += 35f;
+		ry += 25f;
+		float originX = 95f;
 		Sprite turretSprite = isDamaged ? tankTurret : tankTurretDamaged;
 		float originY = turretSprite.getRegionHeight()/2f;
 		
