@@ -465,13 +465,13 @@ public class Hud implements Renderable {
 		long usedMemory = maxMemory - runtime.freeMemory() / (1024*1024);
 		
 		
-		int x = 20;
+		int x = 12;
 		int y = canvas.getHeight() - 125;
 		
-		canvas.fillRect( x, y, 100, 15, 0xcf696969 );
+		canvas.fillRect( x, y, 100, 15, 0x9f696969 );
 		if (usedMemory > 0 && maxMemory > 0) {
 			double percentage = ((double)usedMemory / (double)maxMemory);
-			canvas.fillRect( x, y, (int)(100 * percentage), 15, 0xdf3f3f3f );
+			canvas.fillRect( x, y, (int)(100 * percentage), 15, 0xaf2f2f2f );
 		}
 		canvas.drawRect( x-1, y, 101, 15, 0xff000000 );
 		
@@ -490,7 +490,7 @@ public class Hud implements Renderable {
 		canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );		
 		
 		canvas.setFont("Consola", 14);
-		canvas.drawString(usedMemory + " MiB / " + maxMemory + " MiB", x - 20, y - 20, 0xff00CC00);
+		canvas.drawString(usedMemory + " / " + maxMemory + " MiB", x, y - 20, 0x6f00CC00);
 	}
 	
 
@@ -500,17 +500,23 @@ public class Hud implements Renderable {
 	 * @param canvas
 	 */
 	private void drawNetworkUsage(Canvas canvas) {
-		int x = 10;
-		int y = canvas.getHeight() - 225;
-				
+		int x = 12;
+		int y = canvas.getHeight() - 150;
+		
+		int color = 0x6f00CC00;
+		
 		canvas.setFont("Consola", 14);
 		Client client = app.getClientConnection().getClient();
-		canvas.drawString("R: " + client.getAvgBitsPerSecRecv() + " B/S", x, y - 20, 0xff00CC00);
-		canvas.drawString("S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 40, 0xff00CC00);
-		canvas.drawString("D: " + client.getNumberOfDroppedPackets(), x, y - 60, 0xff00CC00);
-		canvas.drawString("UR: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, 0xff00CC00);
-		canvas.drawString("US: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, 0xff00CC00);
-		canvas.drawString("C: " + client.getNumberOfBytesCompressed() + " KiB", x, y - 120, 0xff00CC00);
+		canvas.drawString("R: " + client.getAvgBitsPerSecRecv() + " B/S", x, y - 20, color);
+		canvas.drawString("S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 40, color);
+		canvas.drawString("D: " + client.getNumberOfDroppedPackets(), x, y - 60, color);
+		canvas.drawString("UR: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, color);
+		canvas.drawString("US: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, color);
+		
+		String compressedBytes = client.getNumberOfBytesCompressed()>1024?
+									client.getNumberOfBytesCompressed()/1024 + " KiB" : 
+									client.getNumberOfBytesCompressed() + " B";
+		canvas.drawString("C: " + compressedBytes, x, y - 120, color);
 	}
 	
 	
