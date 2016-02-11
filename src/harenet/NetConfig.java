@@ -40,7 +40,7 @@ public class NetConfig {
 			, 33		   // poll the network 
 			, 1500         // mtu
 			, 16           // max connections
-			, 400          // compressionThreshold
+			, 500          // compressionThreshold
 			, false        // useDirectBuffers
 			, new SysoutLog()
 			, messageFactory);

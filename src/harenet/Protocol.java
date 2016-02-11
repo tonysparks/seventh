@@ -278,18 +278,18 @@ public class Protocol implements Transmittable {
 	        this.deflater.setInput(buffer.array(), numberOfBytesToSkip, buffer.position()-numberOfBytesToSkip );
             this.deflater.finish();
             
-            int len = deflater.deflate(this.compressionBuffer.array(), 2, this.compressionBuffer.capacity()-2, Deflater.FULL_FLUSH);            
+            int len = deflater.deflate(this.compressionBuffer.array(), numberOfBytesToSkip, this.compressionBuffer.capacity()-numberOfBytesToSkip, Deflater.FULL_FLUSH);            
             if(!deflater.finished()) {
                 return; /* not able to compress with the amount of space given */
             }
             
-            this.numberOfBytesCompressed = (size-2)-len;
+            this.numberOfBytesCompressed = (size-numberOfBytesToSkip)-len;
             
-            this.compressionBuffer.position(2);
+            this.compressionBuffer.position(numberOfBytesToSkip);
             this.compressionBuffer.limit(len);
             
-            buffer.limit(len+2);
-            buffer.position(2);
+            buffer.limit(len+numberOfBytesToSkip);
+            buffer.position(numberOfBytesToSkip);
             buffer.put(this.compressionBuffer);
             
             this.flags |= FLAG_COMPRESSED;
@@ -308,18 +308,21 @@ public class Protocol implements Transmittable {
 	        this.inflater.setInput(buffer.array(), numberOfBytesToSkip, buffer.limit()-numberOfBytesToSkip);	        
             int len = 0;
             try {
-                len = this.inflater.inflate(this.compressionBuffer.array(), 2, this.compressionBuffer.capacity()-2);
+                len = this.inflater.inflate(this.compressionBuffer.array(), numberOfBytesToSkip, this.compressionBuffer.capacity()-numberOfBytesToSkip);
             }
             catch(DataFormatException e) {
                 throw new RuntimeException(e);
             }
             
+            this.numberOfBytesCompressed = len-(buffer.limit()-numberOfBytesToSkip);
+            
             this.compressionBuffer.position(2);
             this.compressionBuffer.limit(len);
             
-            buffer.limit(len+2);
-            buffer.position(2);
+            buffer.limit(len+numberOfBytesToSkip);
+            buffer.position(numberOfBytesToSkip);
             buffer.put(this.compressionBuffer);
+            buffer.position(numberOfBytesToSkip);
 	    }
 	}
 }

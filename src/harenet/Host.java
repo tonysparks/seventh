@@ -703,6 +703,7 @@ public class Host {
 					peer.setAddress(receivedAddress);
 					peer.setLastReceivedTime(System.currentTimeMillis());
 					peer.addNumberOfBytesRecv(buffer.limit());	
+					peer.addNumberOfBytesCompressed(protocol.getNumberOfBytesCompressed());
 					
 					int seqNumber = protocol.getSendSequence();
 					
