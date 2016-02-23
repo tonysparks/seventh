@@ -16,6 +16,7 @@ import seventh.game.Game;
 import seventh.game.Player;
 import seventh.game.Players;
 import seventh.game.Team;
+import seventh.game.events.GameEndEvent;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
@@ -23,6 +24,7 @@ import seventh.game.events.RoundStartedListener;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
+import seventh.game.type.GameType.GameState;
 import seventh.shared.Cons;
 import seventh.shared.TimeStep;
 
@@ -46,6 +48,7 @@ public abstract class AbstractTeamGameType implements GameType {
 	
 	private NetGameTypeInfo gameTypeInfo;
 	private GameState gameState;
+	private Type type;
 	
 	private List<Team> highScoreTeams;
 	private Random random;
@@ -57,9 +60,11 @@ public abstract class AbstractTeamGameType implements GameType {
 	 * delay the game ending by one frame.
 	 */
 	private int numberOfFramesForGameEnd;
-	private Type type;
+	private boolean gameEnded;
 	
+	private EventDispatcher dispatcher;
 	private Leola runtime;
+	
 	
 	/**
 	 * @param type
@@ -96,7 +101,9 @@ public abstract class AbstractTeamGameType implements GameType {
 	 * @see seventh.game.type.GameType#registerListeners(seventh.game.GameInfo, leola.frontend.listener.EventDispatcher)
 	 */
 	@Override
-	public void registerListeners(final Game game, EventDispatcher dispatcher) {		
+	public void registerListeners(final Game game, EventDispatcher dispatcher) {	
+		this.dispatcher = dispatcher;
+		
 		dispatcher.addEventListener(RoundEndedEvent.class, new RoundEndedListener() {
 			@Override
 			public void onRoundEnded(RoundEndedEvent event) {
@@ -215,6 +222,12 @@ public abstract class AbstractTeamGameType implements GameType {
 		return gameState;
 	}
 	
+	/**
+	 * @return the dispatcher
+	 */
+	protected EventDispatcher getDispatcher() {
+		return dispatcher;
+	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.game.type.GameType#getMatchTime()
@@ -321,9 +334,36 @@ public abstract class AbstractTeamGameType implements GameType {
 			this.numberOfFramesForGameEnd = 0;
 		}
 		
-		return doUpdate(game, timeStep);
+		GameState gameState = doUpdate(game, timeStep);
+		checkEndGame(game, gameState);
+		
+		return gameState;
 	}
 	
+	
+	/**
+	 * Determine if the game has ended, and if it has, distribute a message
+	 * 
+	 * @param game
+	 * @param gameState
+	 */
+	private void checkEndGame(Game game, GameState gameState) {
+		if(gameState!=GameState.IN_PROGRESS) {
+			if(!gameEnded) {
+				this.dispatcher.queueEvent(new GameEndEvent(this, game.getNetGameStats()));			
+				this.gameEnded = true;
+			}
+		}	
+	}
+	
+	
+	/**
+	 * Do the actual logic for handling this game type
+	 * 
+	 * @param game
+	 * @param timeStep
+	 * @return the resulting {@link GameState}
+	 */
 	protected abstract GameState doUpdate(Game game, TimeStep timeStep);
 		
 	/**

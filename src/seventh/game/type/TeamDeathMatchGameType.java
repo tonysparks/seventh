@@ -27,7 +27,6 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	
 	private List<Vector2f> axisSpawns;
 	private List<Vector2f> alliedSpawns;
-	private EventDispatcher dispatcher;
 	
 	/**
 	 * @param maxKills
@@ -44,8 +43,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	 */
 	@Override
 	protected void doRegisterListeners(final Game game, EventDispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-		this.dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
+		dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
 			
 			@Override
 			@EventMethod
@@ -91,7 +89,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 	 */
 	@Override
 	public void start(Game game) {
-		this.dispatcher.queueEvent(new RoundStartedEvent(this));
+		getDispatcher().queueEvent(new RoundStartedEvent(this));
 	}
 	
 	/*
@@ -109,11 +107,11 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 				
 				if(leaders.size() > 1) {
 					setGameState(GameState.TIE);
-					this.dispatcher.queueEvent(new RoundEndedEvent(this, null, game.getNetGameStats()));
+					getDispatcher().queueEvent(new RoundEndedEvent(this, null, game.getNetGameStats()));
 				}
 				else {
 					setGameState(GameState.WINNER);
-					this.dispatcher.queueEvent(new RoundEndedEvent(this, leaders.get(0), game.getNetGameStats()));
+					getDispatcher().queueEvent(new RoundEndedEvent(this, leaders.get(0), game.getNetGameStats()));
 				}
 			}
 		}

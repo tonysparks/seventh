@@ -24,7 +24,6 @@ import seventh.ai.basic.DefaultAISystem;
 import seventh.game.Entity.KilledListener;
 import seventh.game.Entity.Type;
 import seventh.game.PlayerEntity.Keys;
-import seventh.game.events.GameEndEvent;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.PlayerSpawnedEvent;
@@ -35,7 +34,6 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
-import seventh.game.events.SoundEventPool;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
@@ -47,7 +45,6 @@ import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.type.GameType;
-import seventh.game.type.GameType.GameState;
 import seventh.game.vehicles.Tank;
 import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.Explosion;
@@ -72,6 +69,7 @@ import seventh.shared.Debugable;
 import seventh.shared.Scripting;
 import seventh.shared.SeventhConfig;
 import seventh.shared.SeventhConstants;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 import seventh.shared.Updatable;
@@ -144,8 +142,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 	
 	private SoundEventPool soundEvents
 					     , lastFramesSoundEvents;		
-	
-	private boolean gameEnded;	
+		
 	private boolean enableFOW;
 	private int previousKeys;
 	
@@ -602,15 +599,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 		this.aiSystem.update(timeStep);
 		this.gameTimers.update(timeStep);		
 		
-		GameState gameState = this.gameType.update(this, timeStep);
-		this.time = this.gameType.getRemainingTime();
-		
-		if(gameState!=GameState.IN_PROGRESS) {
-			if(!gameEnded) {
-				this.dispatcher.queueEvent(new GameEndEvent(this, this.getNetGameStats()));			
-				this.gameEnded = true;
-			}
-		}				
+		this.gameType.update(this, timeStep);
+		this.time = this.gameType.getRemainingTime();								
 	}
 	
 	/**

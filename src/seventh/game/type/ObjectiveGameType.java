@@ -32,7 +32,6 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 	private long roundDelayTime;
 	private long currentDelayTime;
 	private boolean inIntermission;
-	private EventDispatcher dispatcher;
 	
 	private List<Vector2f> alliedSpawnPoints, axisSpawnPoints;
 	
@@ -223,7 +222,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 			winner.score(1);
 		}
 		
-		this.dispatcher.queueEvent(new RoundEndedEvent(this, winner, game.getNetGameStats()));			
+		getDispatcher().queueEvent(new RoundEndedEvent(this, winner, game.getNetGameStats()));			
 		
 	}
 	
@@ -260,7 +259,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		
 		resetRemainingTime();
 									
-		this.dispatcher.queueEvent(new RoundStartedEvent(this));
+		getDispatcher().queueEvent(new RoundStartedEvent(this));
 	}
 
 
@@ -269,7 +268,6 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 	 */
 	@Override
 	protected void doRegisterListeners(Game game, EventDispatcher dispatcher) {		
-		this.dispatcher = dispatcher;
 	}
 
 	
