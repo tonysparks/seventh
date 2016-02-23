@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game;
+package seventh.shared;
 
 /**
  * All available sounds in the game

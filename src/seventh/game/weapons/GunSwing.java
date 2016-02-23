@@ -6,10 +6,10 @@ package seventh.game.weapons;
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.PlayerEntity;
-import seventh.game.SoundType;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 
 /**

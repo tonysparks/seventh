@@ -5,10 +5,10 @@ package seventh.game.weapons;
 
 import leola.vm.types.LeoMap;
 import seventh.game.Entity;
-import seventh.game.SoundType;
 import seventh.game.Entity.Type;
 import seventh.game.Game;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 

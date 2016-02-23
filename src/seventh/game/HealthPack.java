@@ -5,6 +5,7 @@ package seventh.game;
 
 import seventh.game.net.NetEntity;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 
 /**

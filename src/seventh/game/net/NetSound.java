@@ -7,8 +7,8 @@ import java.util.List;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.game.SoundEventPool;
 import seventh.game.events.SoundEmittedEvent;
-import seventh.game.events.SoundEventPool;
 import seventh.math.Vector2f;
 
 /**

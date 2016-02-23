@@ -30,7 +30,6 @@ import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientBomb;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
-import seventh.game.SoundType;
 import seventh.game.Timers;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
@@ -70,6 +69,7 @@ import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
 import seventh.shared.Scripting;
 import seventh.shared.SeventhConstants;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -363,7 +363,7 @@ public class ClientGame {
 			renderWorld(canvas, camera, alpha);
 			
 			canvas.setShader(null);
-			DebugDraw.enable(true);
+			DebugDraw.enable(false);
 			DebugDraw.render(canvas, camera);
 	
 			
@@ -1119,14 +1119,21 @@ public class ClientGame {
 					switch(player.getTeam()) {
 					// TODO use pool
 						case ALLIES: {
-							if(random.nextBoolean()) {
+							switch(random.nextInt(4)) {
+							case 0:
+								anim = Art.newAlliedBackDeathAnim();
+								break;
+							case 1:
+								anim = Art.newAlliedBackDeath2Anim();
+								break;
+							case 2: 
 								anim = Art.newAlliedFrontDeathAnim();
-								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
+								break;
+							default:
+								anim = Art.newAlliedFrontDeath2Anim();
+								break;
 							}
-							else {
-								anim = Art.newAlliedBackDeathAnim();								
-								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
-							}														
+							Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);																					
 							break;
 						}
 						case AXIS: {

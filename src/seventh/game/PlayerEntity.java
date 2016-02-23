@@ -6,7 +6,6 @@ package seventh.game;
 import java.util.List;
 
 import seventh.game.events.SoundEmittedEvent;
-import seventh.game.events.SoundEventPool;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
@@ -29,6 +28,7 @@ import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Geom;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 

@@ -5,13 +5,13 @@ package seventh.game.weapons;
 
 import seventh.game.Entity;
 import seventh.game.Game;
-import seventh.game.SoundType;
 import seventh.game.SurfaceTypeToSoundType;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
 import seventh.map.Map;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 
 /**

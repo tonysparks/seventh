@@ -7,8 +7,8 @@ import leola.vm.types.LeoMap;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
 import seventh.game.Game;
-import seventh.game.SoundType;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.WeaponConstants;
 
 /**

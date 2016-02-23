@@ -10,11 +10,11 @@ import java.util.List;
 import seventh.ai.basic.memory.SoundMemory;
 import seventh.ai.basic.memory.SoundMemory.SoundMemoryRecord;
 import seventh.game.PlayerEntity;
-import seventh.game.SoundType;
+import seventh.game.SoundEventPool;
 import seventh.game.Team;
 import seventh.game.events.SoundEmittedEvent;
-import seventh.game.events.SoundEventPool;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 

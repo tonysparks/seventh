@@ -1,10 +1,11 @@
 /*
  * see license.txt 
  */
-package seventh.game.events;
+package seventh.game;
 
-import seventh.game.SoundType;
+import seventh.game.events.SoundEmittedEvent;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 
 
 /**

@@ -6,11 +6,11 @@ package seventh.ai.basic.memory;
 import java.util.List;
 
 import seventh.game.PlayerEntity;
-import seventh.game.SoundType;
+import seventh.game.SoundEventPool;
 import seventh.game.events.SoundEmittedEvent;
-import seventh.game.events.SoundEventPool;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Updatable;
 

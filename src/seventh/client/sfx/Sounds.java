@@ -16,12 +16,12 @@ import paulscode.sound.codecs.CodecWav;
 import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 import seventh.client.ClientSeventhConfig;
 import seventh.client.ClientTeam;
-import seventh.game.SoundType;
 import seventh.game.net.NetSound;
 import seventh.math.Vector2f;
 import seventh.shared.Command;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.SoundType;
 
 /**
  * @author Tony

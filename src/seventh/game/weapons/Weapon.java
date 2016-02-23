@@ -11,11 +11,11 @@ import leola.vm.types.LeoObject;
 import seventh.game.Entity;
 import seventh.game.Entity.Type;
 import seventh.game.Game;
-import seventh.game.SoundType;
 import seventh.game.net.NetWeapon;
 import seventh.math.Vector2f;
 import seventh.shared.Config;
 import seventh.shared.Cons;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 
 /**
