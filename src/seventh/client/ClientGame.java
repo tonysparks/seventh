@@ -13,7 +13,6 @@ import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.client.ClientEntity.OnRemove;
 import seventh.client.gfx.AnimatedImage;
-import seventh.client.gfx.AnimationPool;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
@@ -185,7 +184,7 @@ public class ClientGame {
 		this.pools = new Pools(this);
 		this.zings = new Zings(this);
 		
-		this.runtime = Scripting.newSandboxedRuntime();
+		this.runtime = Scripting.newSandboxedRuntime();		
 	}	
 	
 	/**
@@ -1107,15 +1106,42 @@ public class ClientGame {
 				case EXPLOSION:
 				case GRENADE: 
 				case ROCKET:
-				case ROCKET_LAUNCHER:					
-					gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
+				case ROCKET_LAUNCHER:		
+					if(random.nextBoolean()) {
+						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
+						
+					}
+					else {
+						AnimatedImage anim = null;
+						Vector2f pos = new Vector2f(locationOfDeath);
+						Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
+						
+						switch(player.getTeam()) {
+							case ALLIES:
+								anim = Art.newAlliedExplosionDeathAnim();
+								break;
+							case AXIS:
+								anim = Art.newAxisExplosionDeathAnim();
+								break;
+							default:
+								break;
+						}
+						// Objective game type keeps the dead bodies around
+						boolean persist = gameType.equals(GameType.Type.OBJ);
+						
+						// spawn the death animation
+						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));						
+					}
+					
 					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
+					
 					break;
 				default:
 					Vector2f pos = new Vector2f(locationOfDeath);
+					Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);																					
 										
 					AnimatedImage anim = null;
-					AnimationPool pool = null;
+					//AnimationPool pool = null;
 					switch(player.getTeam()) {
 					// TODO use pool
 						case ALLIES: {
@@ -1133,17 +1159,22 @@ public class ClientGame {
 								anim = Art.newAlliedFrontDeath2Anim();
 								break;
 							}
-							Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);																					
 							break;
 						}
 						case AXIS: {
-							if(random.nextBoolean()) {
+							switch(random.nextInt(4)) {
+							case 0:
+								anim = Art.newAxisBackDeathAnim();
+								break;
+							case 1:
+								anim = Art.newAxisBackDeath2Anim();
+								break;
+							case 2: 
 								anim = Art.newAxisFrontDeathAnim();
-								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
-							}
-							else {
-								anim = Art.newAxisBackDeathAnim();								
-								Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
+								break;
+							default:
+								anim = Art.newAxisFrontDeath2Anim();
+								break;
 							}
 							break;
 						}
@@ -1194,6 +1225,20 @@ public class ClientGame {
 		applyFullGameState(msg.gameState);
 		
 		executeCallbackScript("onRoundStarted", this);
+		
+		/*
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedBackDeath2Anim().loop(true), new Vector2f(120,320), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedExplosionDeathAnim().loop(true), new Vector2f(220,320), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedFrontDeathAnim().loop(true), new Vector2f(120,420), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedFrontDeath2Anim().loop(true), new Vector2f(220,420), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedBackDeathAnim().loop(true), new Vector2f(120,520), 0f, true));
+		
+		int axisY = 420;
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisBackDeath2Anim().loop(true), new Vector2f(120,320+axisY), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisExplosionDeathAnim().loop(true), new Vector2f(220,320+axisY), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisFrontDeathAnim().loop(true), new Vector2f(120,420+axisY), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisFrontDeath2Anim().loop(true), new Vector2f(220,420+axisY), 0f, true));
+		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisBackDeathAnim().loop(true), new Vector2f(120,520+axisY), 0f, true));*/
 	}
 	
 	public void gameEnded(GameEndedMessage msg) {
