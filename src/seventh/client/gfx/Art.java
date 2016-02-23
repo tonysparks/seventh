@@ -247,7 +247,7 @@ public class Art {
 		alliedBackDeath2Image = TextureUtil.splitImage(
 				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_03.png"), 0, 0, 260, 290), 2, 3);
 		alliedFrontDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_02.png"), 0, 0, 310, 175), 2, 6);		
+				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_02.png"), 0, 0, 330, 190), 2, 6);		
 		alliedExplosionDeathImage = TextureUtil.splitImage(
 				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_04.png"), 0, 0, 330, 290), 2, 4);
 				
@@ -256,7 +256,7 @@ public class Art {
 		axisBackDeath2Image = TextureUtil.splitImage(
 				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_03.png"), 0, 0, 260, 290), 2, 3);		
 		axisFrontDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_02.png"), 0, 0, 310, 180), 2, 6);
+				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_02.png"), 0, 0, 330, 190), 2, 6);
 		axisExplosionDeathImage = TextureUtil.splitImage(
 				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_04.png"), 0, 0, 330, 290), 2, 4);
 		
