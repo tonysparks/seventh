@@ -170,7 +170,7 @@ public class ServerSeventhConfig extends SeventhConfig {
 	 * @return the match time -- the max amount of time a match should last
 	 */
 	public long getMatchTime() {
-		return this.config.getInt(20, "sv_matchtime") * 60 * 1000L;
+		return this.config.getInt(20, "sv_matchtime");
 	}
 	
 	public void setMatchTime(long matchTime) {

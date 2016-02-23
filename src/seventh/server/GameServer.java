@@ -549,6 +549,19 @@ public class GameServer {
 			console.addCommand("exit", console.getCommand("sv_exit"));
 			console.addCommand("quit", console.getCommand("sv_exit"));
 		}
+		
+		console.addCommand(new Command("get"){			
+			@Override
+			public void execute(Console console, String... args) {
+				switch(args.length) {
+					case 0: console.println("<Usage> get [variable name]");
+						break;
+					default: 
+						console.println(args[0] + " = " + config.getConfig().get(args[0]));
+						break;					
+				}
+			}
+		});
 				
 		console.addCommand(new Command("set"){			
 			@Override

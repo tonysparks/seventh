@@ -76,7 +76,7 @@ public class LoadingState implements State {
 		ServerSeventhConfig config = this.serverContext.getConfig();
 		
 		int maxKills = config.getMaxScore();
-		long matchTime = config.getMatchTime();
+		long matchTime = config.getMatchTime() * 60L * 1000L;
 		
 		return script.loadGameType(mapFile, maxKills, matchTime);
 	}
