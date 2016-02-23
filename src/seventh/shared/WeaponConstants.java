@@ -18,13 +18,13 @@ public interface WeaponConstants {
 	public static final int THOMPSON_WEIGHT = 5;
 	
 	public static final int SPRINGFIELD_LINE_OF_SIGHT = 400;
-	public static final int SPRINGFIELD_WEIGHT = 40;
+	public static final int SPRINGFIELD_WEIGHT = 30;
 	
 	public static final int M1GARAND_LINE_OF_SIGHT = 300;
 	public static final int M1GARAND_WEIGHT = 13;	
 	
 	public static final int MP44_LINE_OF_SIGHT = 250;
-	public static final int MP44_WEIGHT = 38;
+	public static final int MP44_WEIGHT = 28;
 	
 	public static final int MP40_LINE_OF_SIGHT = 200;
 	public static final int MP40_WEIGHT = 5;
@@ -42,7 +42,7 @@ public interface WeaponConstants {
 	public static final int SHOTGUN_WEIGHT = 12;
 	
 	public static final int RISKER_LINE_OF_SIGHT = 300;
-	public static final int RISKER_WEIGHT = 40;
+	public static final int RISKER_WEIGHT = 30;
 	
 
 	/*

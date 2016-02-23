@@ -3,6 +3,11 @@
  */
 package seventh.client;
 
+import static seventh.shared.SeventhConstants.PLAYER_MIN_SPEED;
+import static seventh.shared.SeventhConstants.PLAYER_SPEED;
+import static seventh.shared.SeventhConstants.SPRINT_SPEED_FACTOR;
+import static seventh.shared.SeventhConstants.WALK_SPEED_FACTOR;
+
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
@@ -25,7 +30,6 @@ import seventh.client.weapon.ClientThompson;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.Entity.State;
 import seventh.game.Entity.Type;
-import seventh.game.PlayerEntity;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
@@ -33,7 +37,6 @@ import seventh.game.net.NetWeapon;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
-
 /**
  * @author Tony
  *
@@ -228,19 +231,19 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	 */
 	@Override
 	protected int calculateMovementSpeed() {
-		int speed = PlayerEntity.PLAYER_SPEED;
+		int speed = PLAYER_SPEED;
 		int mSpeed = speed;
 		if(currentState==State.WALKING) {
-			mSpeed = (int)( (float)speed * PlayerEntity.WALK_SPEED_FACTOR);
+			mSpeed = (int)( (float)speed * WALK_SPEED_FACTOR);
 		}
 		else if(currentState == State.SPRINTING) {			
-			mSpeed = (int)( (float)speed * PlayerEntity.SPRINT_SPEED_FACTOR); // 1.35		
+			mSpeed = (int)( (float)speed * SPRINT_SPEED_FACTOR); // 1.35		
 		}
 				
 		mSpeed -= weaponWeight;
 				
-		if(mSpeed < PlayerEntity.PLAYER_MIN_SPEED) {
-			mSpeed = PlayerEntity.PLAYER_MIN_SPEED;
+		if(mSpeed < PLAYER_MIN_SPEED) {
+			mSpeed = PLAYER_MIN_SPEED;
 		}
 		
 		return mSpeed;

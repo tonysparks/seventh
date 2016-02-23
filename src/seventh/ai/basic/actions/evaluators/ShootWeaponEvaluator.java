@@ -42,6 +42,7 @@ public class ShootWeaponEvaluator extends ActionEvaluator {
 			if (weapon != null) {
 				double weaponScore = Evaluators.currentWeaponAmmoScore(brain.getEntityOwner());
 				double distanceScore = Evaluators.weaponDistanceScore(brain.getEntityOwner(), system.getCurrentTarget());
+								
 				
 				desire  = (weaponScore + distanceScore) / 2.0;
 				desire *= getCharacterBias();

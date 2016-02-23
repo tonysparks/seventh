@@ -3,12 +3,14 @@
  */
 package seventh.ai.basic;
 
+import static seventh.shared.SeventhConstants.PLAYER_HEIGHT;
+import static seventh.shared.SeventhConstants.PLAYER_WIDTH;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import seventh.game.BombTarget;
 import seventh.game.GameInfo;
-import seventh.game.PlayerEntity;
 import seventh.map.Map;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -55,7 +57,7 @@ public class Zones {
 		
 		zones = new Zone[numberOfRows][numberOfCols];
 		
-		Rectangle entityBounds = new Rectangle(PlayerEntity.PLAYER_WIDTH, PlayerEntity.PLAYER_HEIGHT);
+		Rectangle entityBounds = new Rectangle(PLAYER_WIDTH, PLAYER_HEIGHT);
 		
 		int id = 0;
 		for(int y = 0; y < numberOfRows; y++) {
