@@ -12,6 +12,9 @@ import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.math.Vector2f;
+import seventh.shared.Command;
+import seventh.shared.Cons;
+import seventh.shared.Console;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -35,6 +38,13 @@ public class TDMTeamStrategy implements TeamStrategy {
 		this.aiSystem = aiSystem;
 		this.squad = new Squad(aiSystem);
 		this.time = new Timer(false, 5_000);
+		Cons.getImpl().addCommand(new Command("squadDefend") {
+			
+			@Override
+			public void execute(Console console, String... args) {
+				squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
+			}
+		});
 	}
 	
 	/* (non-Javadoc)
@@ -74,8 +84,9 @@ public class TDMTeamStrategy implements TeamStrategy {
 	@Override
 	public void playerSpawned(PlayerInfo player) {	
 	    if(player.getTeam().getId() == Team.AXIS_TEAM_ID) {
-	        if(player.isBot())
-	        this.squad.addSquadMember(aiSystem.getBrain(player));
+	        if(player.isBot()) {
+	        	this.squad.addSquadMember(aiSystem.getBrain(player));
+	        }
 	    }
 	}
 	
@@ -84,9 +95,6 @@ public class TDMTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void startOfRound(GameInfo game) {
-//	    for(Player p : game.getGameType().getAxisTeam().getPlayers()) {
-//	        this.squad.addSquadMember(aiSystem.getBrain(p));
-//	    }
 	    //squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
 	}
 
@@ -103,9 +111,9 @@ public class TDMTeamStrategy implements TeamStrategy {
 	@Override
 	public void update(TimeStep timeStep, GameInfo game) {
 	    time.update(timeStep);
-	    if(time.isTime()) {
+//	    if(time.isTime()) {
 //	        squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
-	    }
+//	    }
 	}
 
 	/* (non-Javadoc)

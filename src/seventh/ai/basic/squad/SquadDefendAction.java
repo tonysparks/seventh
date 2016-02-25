@@ -7,7 +7,6 @@ import java.util.List;
 
 import seventh.ai.basic.AttackDirection;
 import seventh.ai.basic.World;
-import seventh.ai.basic.actions.atom.GuardAction;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -28,12 +27,18 @@ public class SquadDefendAction extends SquadAction {
     @Override
     public void start(Squad squad) {
         World world = squad.getWorld();
-        List<AttackDirection> directionsToDefend = world.getAttackDirections(this.defendPosition, 50f, 12);
+        List<AttackDirection> directionsToDefend = world.getAttackDirections(this.defendPosition, 150f, 12);
 
-        if(!directionsToDefend.isEmpty()) {
+        List<SquadMember> members = squad.getMembers();
+        if(!directionsToDefend.isEmpty() && !members.isEmpty()) {
+        	int increment = 1;
+        	if(directionsToDefend.size()> members.size()) {
+        		increment = directionsToDefend.size() / members.size();
+        	}
+        	
             int i = 0;
-            for(SquadMember member : squad.getMembers()) {
-                AttackDirection dir = directionsToDefend.get(i++ % directionsToDefend.size());
+            for(SquadMember member : members) {
+                AttackDirection dir = directionsToDefend.get( (i += increment) % directionsToDefend.size());
                 Vector2f position = new Vector2f(dir.getDirection());
                 //Vector2f.Vector2fMA(defendPosition, dir.getDirection(), 10f + world.getRandom().nextInt(100), position);
                 
