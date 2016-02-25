@@ -239,8 +239,12 @@ public class BufferIO {
 				result = new NetLight();
 				break;
 			}
-			case TANK: {
-				result = new NetTank();
+			case SHERMAN_TANK: {
+				result = new NetTank(Type.SHERMAN_TANK);
+				break;
+			}
+			case PANZER_TANK: {
+				result = new NetTank(Type.PANZER_TANK);
 				break;
 			}
 			default: {

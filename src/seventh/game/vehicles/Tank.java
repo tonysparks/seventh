@@ -8,7 +8,7 @@ import java.util.List;
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.PlayerEntity.Keys;
-import seventh.game.SoundType;
+import seventh.game.SoundEmitter;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Bullet;
@@ -25,9 +25,9 @@ import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.EaseInInterpolation;
 import seventh.shared.Geom;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
-import seventh.shared.Updatable;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -37,43 +37,6 @@ import seventh.shared.WeaponConstants;
  * 
  */
 public class Tank extends Vehicle {
-
-	static class SoundEmitter implements Updatable {
-		private Timer timer;
-		private boolean loop, hasStarted;;
-		
-		public SoundEmitter(long start) {
-			this(start, false);
-		}
-		
-		public SoundEmitter(long start, boolean loop) {
-			this.timer = new Timer(loop, start);
-			this.loop = loop;
-			this.hasStarted = false;
-		}
-		
-		public void reset() {
-			this.timer.reset();
-			this.hasStarted = false;
-		}
-		
-		public void stop() {
-			this.timer.stop();
-			this.hasStarted = false;
-		}
-		
-		public void play(Game game, int id, SoundType sound, Vector2f pos) {
-			if(this.timer.isTime()|| !this.hasStarted) {
-				game.emitSound(id, sound, pos);
-				this.hasStarted = true;
-			}
-		}
-		
-		@Override
-		public void update(TimeStep timeStep) {
-			this.timer.update(timeStep);
-		}
-	}
 	
 	private final NetTank netTank;
 	
@@ -119,16 +82,15 @@ public class Tank extends Vehicle {
 						 refDownSnd;
 	
 	/**
-	 * @param position
-	 * @param speed
-	 * @param game
 	 * @param type
+	 * @param position
+	 * @param game
 	 */
-	public Tank(Vector2f position, final Game game) {
-		super(position, WeaponConstants.TANK_MOVEMENT_SPEED, game, Type.TANK);
+	protected Tank(Type type, Vector2f position, final Game game) {
+		super(position, WeaponConstants.TANK_MOVEMENT_SPEED, game, type);
 
 		this.turretFacing = new Vector2f();
-		this.netTank = new NetTank();
+		this.netTank = new NetTank(type);
 		this.netTank.id = getId();
 		
 		this.blowupTimer = new Timer(false, 3_000);

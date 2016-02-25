@@ -1,0 +1,25 @@
+/*
+ * see license.txt 
+ */
+package seventh.client;
+
+import seventh.client.gfx.PanzerTankSprite;
+import seventh.math.Vector2f;
+
+/**
+ * @author Tony
+ *
+ */
+public class ClientPanzerTank extends ClientTank {
+
+	/**
+	 * @param game
+	 * @param pos
+	 */
+	public ClientPanzerTank(ClientGame game, Vector2f pos) {
+		super(game, pos);
+		
+		setTankSprite(new PanzerTankSprite(this));
+	}
+
+}

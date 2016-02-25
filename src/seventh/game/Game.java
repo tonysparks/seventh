@@ -11,6 +11,7 @@ import static seventh.shared.SeventhConstants.SPAWN_INVINCEABLILITY_TIME;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -45,6 +46,8 @@ import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.type.GameType;
+import seventh.game.vehicles.PanzerTank;
+import seventh.game.vehicles.ShermanTank;
 import seventh.game.vehicles.Tank;
 import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.Explosion;
@@ -843,7 +846,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 	 * @param player
 	 */
 	public void playerJoined(Player player) {
-		Cons.println("Player " + player.getName() + " has joined the game.");
+		Cons.println("Player " + player.getName() + " has joined the game @ " + new Date());
 		
 		this.players.addPlayer(player);
 		this.gameType.playerJoin(player);
@@ -868,7 +871,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 	public void playerLeft(int playerId) {
 		Player player = this.players.removePlayer(playerId);
 		if(player!=null) {
-			Cons.println("Player " + player.getName() + " has left the game.");
+			Cons.println("Player " + player.getName() + " has left the game @ " + new Date());
 			
 			this.aiSystem.playerLeft(player);
 			this.gameType.playerLeft(player);			
@@ -1201,22 +1204,54 @@ public class Game implements GameInfo, Debugable, Updatable {
 	}
 	
 	/**
-	 * Spawns a new {@link Tank}
+	 * Spawns a new {@link PanzerTank}
+	 * 
 	 * @param x
 	 * @param y
-	 * @return the {@link Tank}
+	 * @return the {@link PanzerTank}
 	 */
-	public Tank newTank(float x, float y) {
-		return newTank(new Vector2f(x, y));
+	public Tank newPanzerTank(float x, float y) {
+		return newPanzerTank(new Vector2f(x, y));
 	}
 	
 	/**
-	 * Spawns a new {@link Tank}
+	 * Spawns a new {@link PanzerTank}
+	 * 
 	 * @param pos
-	 * @return the {@link Tank}
+	 * @return the {@link PanzerTank}
 	 */
-	public Tank newTank(Vector2f pos) {
-		final Tank tank = new Tank(pos, this);		
+	public Tank newPanzerTank(Vector2f pos) {
+		return registerTank(new PanzerTank(pos, this));				
+	}
+	
+	/**
+	 * Spawns a new {@link ShermanTank}
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the {@link ShermanTank}
+	 */
+	public Tank newShermanTank(float x, float y) {
+		return newShermanTank(new Vector2f(x, y));
+	}
+	
+	/**
+	 * Spawns a new {@link ShermanTank}
+	 * 
+	 * @param pos
+	 * @return the {@link ShermanTank}
+	 */
+	public Tank newShermanTank(Vector2f pos) {
+		return registerTank(new ShermanTank(pos, this));				
+	}
+	
+	/**
+	 * Register a {@link Tank} with the game
+	 * 
+	 * @param tank
+	 * @return the supplied tank
+	 */
+	private Tank registerTank(final Tank tank) {
 		tank.onKill = new KilledListener() {
 			
 			@Override

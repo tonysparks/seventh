@@ -798,8 +798,13 @@ public class ClientGame {
 				
 				break;
 			}
-			case TANK: {
-				entity = new ClientTank(this, pos);
+			case SHERMAN_TANK: {
+				entity = new ClientShermanTank(this, pos);
+				vehicles.add( (ClientVehicle)entity );
+				break;
+			}
+			case PANZER_TANK: {
+				entity = new ClientPanzerTank(this, pos);
 				vehicles.add( (ClientVehicle)entity );
 				break;
 			}

@@ -139,7 +139,8 @@ public abstract class Entity implements Debugable {
 		HEALTH_PACK,					
 		
 		/* Vehicles */
-		TANK,
+		SHERMAN_TANK,
+		PANZER_TANK,
 		
 		UNKNOWN,
 		
@@ -170,7 +171,7 @@ public abstract class Entity implements Debugable {
 		 * @return true if this is a vehicle
 		 */
 		public boolean isVehicle() {
-			return this == TANK;
+			return this == SHERMAN_TANK;
 		}
 		
 		/**

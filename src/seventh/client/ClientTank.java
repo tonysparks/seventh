@@ -6,7 +6,6 @@ package seventh.client;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.PanzerTankSprite;
 import seventh.client.gfx.TankSprite;
 import seventh.game.Entity.State;
 import seventh.game.net.NetEntity;
@@ -41,25 +40,30 @@ public class ClientTank extends ClientVehicle {
 	/**
 	 * @param pos
 	 */
-	public ClientTank(ClientGame game, Vector2f pos) {
+	protected ClientTank(ClientGame game, Vector2f pos) {
 		super(game, pos);	
 		
 		this.effects = game.getGameEffects();
 		
+		this.lineOfSight = WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT;
+
 		this.bounds.width = WeaponConstants.TANK_AABB_WIDTH;
 		this.bounds.height = WeaponConstants.TANK_AABB_HEIGHT;
 		
-		this.lineOfSight = WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT;
-			
-		this.tankSprite = //new PanzerTankSprite(this); 
-				new TankSprite(this);
 				
-		this.turretFacing = new Vector2f();
-		
 		this.previousTrackMark = new Vector2f();
 		this.trackMarkOffset = new Vector2f();
+		this.turretFacing = new Vector2f();
+		
 		this.vehicleOOB = new OOB();
 		this.vehicleOOB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);
+	}
+	
+	/**
+	 * @param tankSprite the tankSprite to set
+	 */
+	public void setTankSprite(TankSprite tankSprite) {
+		this.tankSprite = tankSprite;
 	}
 	
 	/* (non-Javadoc)

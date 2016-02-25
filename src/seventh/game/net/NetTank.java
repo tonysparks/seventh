@@ -20,10 +20,16 @@ public class NetTank extends NetVehicle {
 	public int operatorId;
 	
 	/**
-	 * 
 	 */
 	public NetTank() {
-		this.type = Type.TANK.netValue();
+		this.type = Type.SHERMAN_TANK.netValue();
+	}
+	
+	/**
+	 * @param type the type of tank
+	 */
+	public NetTank(Type type) {
+		this.type = type.netValue();
 	}
 	
 	/* (non-Javadoc)

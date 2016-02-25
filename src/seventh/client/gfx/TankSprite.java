@@ -3,6 +3,9 @@
  */
 package seventh.client.gfx;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayerEntity;
 import seventh.client.ClientTank;
@@ -11,43 +14,42 @@ import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 /**
  * @author Tony
  *
  */
 public class TankSprite implements Renderable {
 
-	private AnimatedImage tankTracksDamaged;
-	private Sprite tankTurretDamaged;
+	protected AnimatedImage tankTracksDamaged;
+	protected Sprite tankTurretDamaged;
 	
-	private AnimatedImage tankTracks;
-	private Sprite tankTurret;
-	private Sprite tankTrack;
+	protected AnimatedImage tankTracks;
+	protected Sprite tankTurret;
+	protected Sprite tankTrack;
 	private float bobScale;
 	private float bobTime;	
 	private float bobDir;
 
-	private ClientTank tank;
+	protected ClientTank tank;
 
-	private AnimatedImage railgunFlash;
-	private Sprite muzzleFlash;
+	protected AnimatedImage railgunFlash;
+	protected Sprite muzzleFlash;
 
 	/**
-	 * 
+	 * @param tank
+	 * @param tankTracks
+	 * @param tankTurret
+	 * @param damagedTankTracks
+	 * @param damagedTankTurret
 	 */
-	public TankSprite(ClientTank tank) {
+	protected TankSprite(ClientTank tank, AnimatedImage tankTracks, Sprite tankTurret, AnimatedImage damagedTankTracks, Sprite damagedTankTurret) {
 
 		this.tank = tank;
-//		this.tankTracks = Art.newTankTracks();
-//		this.tankTurret = new Sprite(Art.tankTurret);
-		this.tankTracks = Art.newShermanTankTracks();
-		this.tankTurret = new Sprite(Art.shermanTankTurret);
+		this.tankTracks = tankTracks;
+		this.tankTurret = tankTurret;
 		
-		this.tankTracksDamaged = Art.newShermanTankTracksDamaged();
-		this.tankTurretDamaged = new Sprite(Art.shermanTankTurretDamaged);
+		this.tankTracksDamaged = damagedTankTracks;
+		this.tankTurretDamaged = damagedTankTurret;
 		
 		this.tankTrack = new Sprite(this.tankTracks.getCurrentImage());
 		this.bobDir = 1.0f;
@@ -112,7 +114,33 @@ public class TankSprite implements Renderable {
 //		mechTorso.setPosition(pos.x, pos.y);
 	}
 
-	private float px, py;
+	/**
+	 * Allow the implementing tank to adjust some of the rendering properties
+	 * 
+	 * @param rx
+	 * @param ry
+	 * @param turretAngle
+	 * @param canvas
+	 * @param camera
+	 * @param alpha
+	 */
+	protected void renderTurret(float rx, float ry, float turretAngle, Canvas canvas, Camera camera, float alpha) {
+		
+		rx += 70f;
+		ry += 15f;
+		float originX = 62f;
+		
+		boolean isDamaged = false;
+		Sprite turretSprite = isDamaged ? tankTurretDamaged : tankTurret;
+		float originY = turretSprite.getRegionHeight()/2f;
+		
+		turretSprite.setRotation(turretAngle);
+		turretSprite.setOrigin(originX, originY);
+		turretSprite.setPosition(rx,ry);		
+		
+		canvas.drawSprite(turretSprite);
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
 	 */
@@ -122,60 +150,28 @@ public class TankSprite implements Renderable {
 		Vector2f pos = tank.getRenderPos(alpha); 
 		Vector2f cameraPos = camera.getRenderPosition(alpha);
 
-		boolean isDamaged = true;
+		boolean isDamaged = false;
 		float rx = Math.round((pos.x - cameraPos.x) - (bounds.width/2.0f) + WeaponConstants.TANK_WIDTH/2f);
 		float ry = Math.round((pos.y - cameraPos.y) - (bounds.height/2.0f) + WeaponConstants.TANK_HEIGHT/2f);
 		
-		TextureRegion tex = isDamaged ? tankTracks.getCurrentImage() : tankTracksDamaged.getCurrentImage();		
+		TextureRegion tex = isDamaged ? tankTracksDamaged.getCurrentImage() : tankTracks.getCurrentImage();		
 		tankTrack.setRegion(tex);		
 		float trackAngle = (float) (Math.toDegrees(tank.getOrientation()));
 		
 		
 		rx = Math.round((pos.x-40f) - cameraPos.x);
 		ry = Math.round((pos.y+40f) - cameraPos.y);
-		/*
-		rx = Math.round((pos.x + WeaponConstants.TANK_AABB_WIDTH/4f)  - cameraPos.x);
-		ry = Math.round((pos.y + WeaponConstants.TANK_AABB_HEIGHT/4f) - cameraPos.y);
-		
-		rx -= 5;
-		ry -= 25;*/
-		
-//		rx = Math.round((pos.x + WeaponConstants.TANK_WIDTH/2f)  - cameraPos.x);
-//		ry = Math.round((pos.y + WeaponConstants.TANK_HEIGHT/2f) - cameraPos.y);
-		
 		
 		tankTrack.setRotation(trackAngle);	
 		tankTrack.setOrigin(tex.getRegionWidth()/2f,tex.getRegionHeight()/2f);
 		tankTrack.setPosition(rx, ry);
 		
 		canvas.drawSprite(tankTrack);
-//		canvas.fillRect( (int)(rx+tex.getRegionWidth()/2f), (int)(ry+tex.getRegionHeight()/2f), 5, 5, 0xff00ff00);
 		
+		float turretAngle = (float)Math.toDegrees(tank.getTurretOrientation());
 		
-		float turretAngle = (float)Math.toDegrees(tank.getTurretOrientation());// + 90.0f;		
+		renderTurret(rx, ry, turretAngle, canvas, camera, alpha);
 		
-		/*rx += 0f;
-		ry -= 40f;
-		
-		float originX = 55;
-		float originY = 114;*/
-		
-		rx += 70f;
-		ry += 15f;
-		float originX = 62f;
-		Sprite turretSprite = isDamaged ? tankTurret : tankTurretDamaged;
-		float originY = turretSprite.getRegionHeight()/2f;
-		
-		turretSprite.setRotation(turretAngle);
-		turretSprite.setOrigin(originX, originY);
-		turretSprite.setPosition(rx,ry);		
-		
-	//	canvas.fillRect( (int)rx, (int)ry, (int)tankTurret.getRegionWidth(), (int)tankTurret.getRegionHeight(), 0xffff0000);
-		canvas.drawSprite(turretSprite);
-		
-	//	canvas.fillRect( (int)rx, (int)ry, 5, 5, 0xff00ff00);
-//		canvas.fillRect( (int)(rx+originX), (int)(ry+originY), 5, 5, 0xff00ff00);
-
 		if(tank.isSecondaryWeaponFiring()) {
 			TextureRegion tx = railgunFlash.getCurrentImage();
 
