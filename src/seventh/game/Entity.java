@@ -171,7 +171,8 @@ public abstract class Entity implements Debugable {
 		 * @return true if this is a vehicle
 		 */
 		public boolean isVehicle() {
-			return this == SHERMAN_TANK;
+			return this == SHERMAN_TANK ||
+				   this == PANZER_TANK;
 		}
 		
 		/**
