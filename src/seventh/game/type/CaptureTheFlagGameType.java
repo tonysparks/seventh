@@ -20,6 +20,8 @@ import seventh.game.events.FlagCapturedListener;
 import seventh.game.events.FlagReturnedEvent;
 import seventh.game.events.FlagReturnedListener;
 import seventh.game.events.FlagStolenEvent;
+import seventh.game.events.PlayerKilledEvent;
+import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
 import seventh.math.Rectangle;
@@ -79,6 +81,8 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 	
 	private Rectangle alliedHomeBase, axisHomeBase;
 	
+	private long spawnDelay;
+	
 	/**
 	 * @param runtime
 	 * @param maxScore
@@ -92,7 +96,8 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 			 Vector2f alliedFlagSpawn,
 			 Vector2f axisFlagSpawn,
 			 Rectangle alliedHomeBase,
-			 Rectangle axisHomeBase) {
+			 Rectangle axisHomeBase,
+			 long spawnDelay) {
 		
 		super(Type.CTF, runtime, alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
 		
@@ -101,6 +106,8 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 		
 		this.alliedHomeBase = alliedHomeBase;		
 		this.axisHomeBase = axisHomeBase;
+		
+		this.spawnDelay = spawnDelay;
 	}
 
 	/* (non-Javadoc)
@@ -136,7 +143,15 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 			@EventMethod
 			public void onFlagReturnedEvent(FlagReturnedEvent event) {						
 			}
-		});		
+		});	
+		
+		dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
+			
+			@Override
+			public void onPlayerKilled(PlayerKilledEvent event) {
+				event.getPlayer().applySpawnDelay(spawnDelay);
+			}
+		});
 	}
 	
 	/* (non-Javadoc)

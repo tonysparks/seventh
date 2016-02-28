@@ -46,6 +46,7 @@ public class CaptureTheFlagScript extends AbstractGameTypeScript {
 		Rectangle alliedHomeBase = new Rectangle();
 		Rectangle axisHomeBase = new Rectangle();
 		
+		long spawnDelay = 10_000;
 		
 		File scriptFile = new File(mapFile + ".ctf.leola");
 		if(!scriptFile.exists()) {
@@ -63,11 +64,15 @@ public class CaptureTheFlagScript extends AbstractGameTypeScript {
 				
 				alliedHomeBase = (Rectangle)config.getObject("alliedHomeBase").getValue();
 				axisHomeBase = (Rectangle)config.getObject("axisHomeBase").getValue();
+				
+				if(config.hasObject("spawnDelay")) {
+					spawnDelay = config.getObject("spawnDelay").asLong();
+				}
 			}
 		}
 		
 		GameType gameType = new CaptureTheFlagGameType(getRuntime(), alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime, 
-				alliedFlagSpawn, axisFlagSpawn, alliedHomeBase, axisHomeBase);
+				alliedFlagSpawn, axisFlagSpawn, alliedHomeBase, axisHomeBase, spawnDelay);
 		return gameType;
 	}
 }
