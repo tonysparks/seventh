@@ -4,6 +4,7 @@
 package seventh.game.net;
 
 import seventh.game.Entity.Type;
+import seventh.shared.SeventhConstants;
 import harenet.IOBuffer;
 
 /**
@@ -22,7 +23,7 @@ public class NetTank extends NetVehicle {
 	/**
 	 */
 	public NetTank() {
-		this.type = Type.SHERMAN_TANK.netValue();
+		this(Type.SHERMAN_TANK);
 	}
 	
 	/**
@@ -30,6 +31,7 @@ public class NetTank extends NetVehicle {
 	 */
 	public NetTank(Type type) {
 		this.type = type.netValue();
+		this.operatorId = SeventhConstants.INVALID_PLAYER_ID;
 	}
 	
 	/* (non-Javadoc)

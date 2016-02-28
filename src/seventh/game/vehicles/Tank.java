@@ -25,6 +25,7 @@ import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 import seventh.shared.EaseInInterpolation;
 import seventh.shared.Geom;
+import seventh.shared.SeventhConstants;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
@@ -855,7 +856,7 @@ public class Tank extends Vehicle {
 	public NetEntity getNetEntity() {
 		super.setNetEntity(netTank);
 		netTank.state = getCurrentState().netValue();
-		netTank.operatorId = hasOperator() ? this.getOperator().getId() : 0;
+		netTank.operatorId = hasOperator() ? this.getOperator().getId() : SeventhConstants.INVALID_PLAYER_ID;
 		netTank.turretOrientation = (short)Math.toDegrees(turretOrientation);
 		netTank.primaryWeaponState = primaryWeapon.getState().netValue();
 		netTank.secondaryWeaponState = secondaryWeapon.getState().netValue();

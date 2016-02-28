@@ -14,6 +14,7 @@ import seventh.game.weapons.Weapon;
 import seventh.map.Map;
 import seventh.math.OOB;
 import seventh.math.Vector2f;
+import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 
@@ -91,7 +92,7 @@ public class ClientTank extends ClientVehicle {
 		center.y += WeaponConstants.TANK_AABB_HEIGHT/2f;
 		this.vehicleOOB.update(orientation, center);
 		
-		if(netTank.operatorId > 0) {
+		if(netTank.operatorId != SeventhConstants.INVALID_PLAYER_ID) {
 			ClientPlayer clientPlayer = game.getPlayers().getPlayer(netTank.operatorId);
 			if(clientPlayer!=null) {
 				setOperator(clientPlayer.getEntity());
