@@ -166,7 +166,10 @@ public class PathPlanner<E> {
 		this.currentNode = 0;
 		
 		this.fuzzySearchPath = new FuzzySearchPath<E>(world.getRandom());
+		this.fuzzySearchPath.tilesToAvoid = this.tilesToAvoid;
+		
 		this.avoidSearchPath = new AvoidSearchPath<E>();		
+		this.avoidSearchPath.tilesToAvoid = this.tilesToAvoid;
 	} 
 	
 	private void setPath(List<GraphNode<Tile, E>> newPath) {
