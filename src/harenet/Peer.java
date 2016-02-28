@@ -182,7 +182,7 @@ public class Peer {
 	}
 	
 	public void addDroppedPacket(int numberOfPackets) {
-		this.numberOfDroppedPackets += numberOfDroppedPackets;
+		this.numberOfDroppedPackets += numberOfPackets;
 	}
 	
 	public long getAvgBitsPerSecRecv() {
