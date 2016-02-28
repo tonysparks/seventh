@@ -3,10 +3,9 @@
  */
 package seventh.server;
 
-import harenet.api.Connection;
-
 import java.io.IOException;
 
+import harenet.api.Connection;
 import seventh.network.messages.AICommandMessage;
 import seventh.network.messages.BombDisarmedMessage;
 import seventh.network.messages.BombExplodedMessage;
@@ -15,6 +14,9 @@ import seventh.network.messages.ClientDisconnectMessage;
 import seventh.network.messages.ClientReadyMessage;
 import seventh.network.messages.ConnectAcceptedMessage;
 import seventh.network.messages.ConnectRequestMessage;
+import seventh.network.messages.FlagCapturedMessage;
+import seventh.network.messages.FlagReturnedMessage;
+import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
@@ -336,4 +338,24 @@ public interface ServerProtocol {
      * @param msg
      */
     public void sendConnectAcceptedMessage(int clientId, ConnectAcceptedMessage msg);
+    
+    /**
+     * Sends a {@link FlagCapturedMessage} message to all clients
+     * 
+     * @param msg
+     */
+    public void sendFlagCapturedMessage(FlagCapturedMessage msg);
+    
+    /**
+     * Sends a {@link FlagReturnedMessage} message to all clients
+     * @param msg
+     */
+    public void sendFlagReturnedMessage(FlagReturnedMessage msg);
+    
+    /**
+     * Sends a {@link FlagStolenMessage} message to all clients
+     * 
+     * @param msg
+     */
+    public void sendFlagStolenMessage(FlagStolenMessage msg);
 }

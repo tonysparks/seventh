@@ -826,6 +826,14 @@ public class ClientGame {
 				entity = new ClientHealthPack(this, pos);
 				break;
 			}
+			case ALLIED_FLAG: {
+				entity = new ClientFlag(this, ClientTeam.ALLIES, pos);
+				break;
+			}
+			case AXIS_FLAG: {
+				entity = new ClientFlag(this, ClientTeam.AXIS, pos);
+				break;
+			}			
 			default: {
 				Cons.println("Unknown type of entity: " + type.name());
 			}
@@ -1280,6 +1288,15 @@ public class ClientGame {
                 hud.getObjectiveLog().log("You must kill as many " + localPlayer.getTeam().opposingTeam().getName() + " as possible.");
             }
             break;
+        case CTF: {
+        	if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
+                hud.getObjectiveLog().log("The team with the most flag captures, wins.");
+            }
+            else {
+                hud.getObjectiveLog().log("You must capture your flag from the " + localPlayer.getTeam().opposingTeam().getName() + " team.");
+            }
+        	break;
+        }
         default:
             break;
 		

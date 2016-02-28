@@ -142,6 +142,10 @@ public abstract class Entity implements Debugable {
 		SHERMAN_TANK,
 		PANZER_TANK,
 		
+		ALLIED_FLAG,
+		AXIS_FLAG,
+		
+		
 		UNKNOWN,
 		
 		;

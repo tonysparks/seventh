@@ -187,7 +187,6 @@ public class Game implements GameInfo, Debugable, Updatable {
 		
 		this.config = config;
 		this.gameType = gameType;		
-		this.gameType.registerListeners(this, dispatcher);
 		
 		this.dispatcher = dispatcher;
 		
@@ -298,7 +297,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 			}
 		});
 		
-		aiSystem.init(this);		
+		this.aiSystem.init(this);		
+		this.gameType.registerListeners(this, dispatcher);
 	}
 		
 	
@@ -1419,6 +1419,26 @@ public class Game implements GameInfo, Debugable, Updatable {
 			
 			newFire(position.createClone(), speed, vel, owner, damage);
 		}
+	}
+	
+	/**
+	 * @param position
+	 * @return a new Allied Flag
+	 */
+	public Flag newAlliedFlag(Vector2f position) {
+		Flag flag = new Flag(this, position, Type.ALLIED_FLAG);
+		addEntity(flag);
+		return flag;
+	}
+	
+	/**
+	 * @param position
+	 * @return a new Axis flag
+	 */
+	public Flag newAxisFlag(Vector2f position) {
+		Flag flag = new Flag(this, position, Type.AXIS_FLAG);
+		addEntity(flag);
+		return flag;
 	}
 	
 	/*

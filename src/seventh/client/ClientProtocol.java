@@ -11,6 +11,9 @@ import seventh.network.messages.BombPlantedMessage;
 import seventh.network.messages.ClientReadyMessage;
 import seventh.network.messages.ConnectAcceptedMessage;
 import seventh.network.messages.ConnectRequestMessage;
+import seventh.network.messages.FlagCapturedMessage;
+import seventh.network.messages.FlagReturnedMessage;
+import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
@@ -237,6 +240,32 @@ public interface ClientProtocol {
 	 * @param msg
 	 */
 	public void receiveRconTokenMessage(Connection conn, RconTokenMessage msg);
+	
+	/**
+	 * A Flag has been captured
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void receiveFlagCapturedMessage(Connection conn, FlagCapturedMessage msg);
+	
+	
+	/**
+	 * A Flag has been returned
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void receiveFlagReturnedMessage(Connection conn, FlagReturnedMessage msg);
+	
+	
+	/**
+	 * A Flag has been stolen
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void receiveFlagStolenMessage(Connection conn, FlagStolenMessage msg);
 	
 	/**
 	 * Sends a {@link ClientReadyMessage}

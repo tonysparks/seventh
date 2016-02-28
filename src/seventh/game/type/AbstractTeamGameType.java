@@ -25,6 +25,7 @@ import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
 import seventh.game.type.GameType.GameState;
+import seventh.math.Vector2f;
 import seventh.shared.Cons;
 import seventh.shared.TimeStep;
 
@@ -65,6 +66,7 @@ public abstract class AbstractTeamGameType implements GameType {
 	private EventDispatcher dispatcher;
 	private Leola runtime;
 	
+	private List<Vector2f> alliedSpawnPoints, axisSpawnPoints;
 	
 	/**
 	 * @param type
@@ -72,9 +74,14 @@ public abstract class AbstractTeamGameType implements GameType {
 	 * @param maxScore
 	 * @param matchTime
 	 */
-	public AbstractTeamGameType(GameType.Type type, Leola runtime, int maxScore, long matchTime) {
+	public AbstractTeamGameType(GameType.Type type, Leola runtime, List<Vector2f> alliedSpawnPoints,
+			 List<Vector2f> axisSpawnPoints, int maxScore, long matchTime) {
 		this.type = type;
 		this.runtime = runtime;
+		
+		this.alliedSpawnPoints = alliedSpawnPoints;
+		this.axisSpawnPoints = axisSpawnPoints;
+		
 		this.matchTime = matchTime;
 		this.maxScore = maxScore;
 		this.timeRemaining = this.matchTime;
@@ -169,6 +176,23 @@ public abstract class AbstractTeamGameType implements GameType {
 	public Team getAxisTeam() {
 		return this.teams[AXIS];
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.type.GameType#getAlliedSpawnPoints()
+	 */
+	@Override
+	public List<Vector2f> getAlliedSpawnPoints() {
+		return this.alliedSpawnPoints;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.type.GameType#getAxisSpawnPoints()
+	 */
+	@Override
+	public List<Vector2f> getAxisSpawnPoints() {	
+		return this.axisSpawnPoints;
+	}
+	
 	
 	protected Team getRandomTeam() {
 		if(random.nextBoolean()) {
@@ -356,6 +380,30 @@ public abstract class AbstractTeamGameType implements GameType {
 		}	
 	}
 	
+	/**
+	 * Check and see if it's time to respawn players
+	 * 
+	 * @param timeStep
+	 * @param game
+	 */
+	protected void checkRespawns(TimeStep timeStep, Game game) {
+		if (GameState.IN_PROGRESS == getGameState()) {
+			Player[] players = game.getPlayers().getPlayers();
+			for (int i = 0; i < players.length; i++) {
+				Player player = players[i];
+				if (player != null) {
+					if (player.isDead() && !player.isSpectating()) {
+						player.updateSpawnTime(timeStep);
+						if (player.readyToSpawn()) {
+							game.spawnPlayerEntity(player.getId());
+						}
+					}
+				}
+			}
+			
+			
+		}
+	}
 	
 	/**
 	 * Do the actual logic for handling this game type

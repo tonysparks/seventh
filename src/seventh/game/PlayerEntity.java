@@ -117,6 +117,7 @@ public class PlayerEntity extends Entity implements Controllable {
 	private boolean isFlashlightOn;
 	private long vehicleTime;
 	
+	private Flag carriedFlag;
 	
 	/**
 	 * @param position
@@ -213,13 +214,26 @@ public class PlayerEntity extends Entity implements Controllable {
 	 */
 	@Override
 	public void kill(Entity killer) {	
-		super.kill(killer);
-		
 		unuse();
+		
+		dropFlag();
 		
 		/* suicides don't leave weapons */
 		if(killer != this) {
 			dropItem(false);
+		}
+		
+		super.kill(killer);
+	}
+	
+	/**
+	 * Drops the flag if carrying one
+	 */
+	public void dropFlag() {
+		if(this.carriedFlag!=null) {
+			Flag flag = this.carriedFlag;
+			this.carriedFlag = null;
+			flag.drop();
 		}
 	}
 	
@@ -228,17 +242,22 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @param makeSound
 	 */
 	public void dropItem(boolean makeSound) {
-		Weapon weapon = this.inventory.currentItem();
-		if(weapon != null) {
-			this.inventory.removeItem(weapon);
-			this.inventory.nextItem();
-			
-			Vector2f weaponPos = new Vector2f(getFacing());
-			Vector2f.Vector2fMA(getCenterPos(), weaponPos, 40, weaponPos);
-			game.newDroppedItem(weaponPos, weapon);
-			
-			if(makeSound) {
-				game.emitSound(getId(), SoundType.WEAPON_DROPPED, weaponPos);
+		if(this.carriedFlag!=null) {
+			this.carriedFlag.drop();
+		}
+		else {		
+			Weapon weapon = this.inventory.currentItem();
+			if(weapon != null) {
+				this.inventory.removeItem(weapon);
+				this.inventory.nextItem();
+				
+				Vector2f weaponPos = new Vector2f(getFacing());
+				Vector2f.Vector2fMA(getCenterPos(), weaponPos, 40, weaponPos);
+				game.newDroppedItem(weaponPos, weapon);
+				
+				if(makeSound) {
+					game.emitSound(getId(), SoundType.WEAPON_DROPPED, weaponPos);
+				}
 			}
 		}
 	}
@@ -260,6 +279,15 @@ public class PlayerEntity extends Entity implements Controllable {
 			weapon.setOwner(this);
 			game.emitSound(getId(), SoundType.WEAPON_PICKUP, getPos());			
 		}
+	}
+	
+	/**
+	 * Pickup a flag
+	 * 
+	 * @param flag
+	 */
+	public void pickupFlag(Flag flag) {
+		this.carriedFlag = flag;
 	}
 	
 	/**
@@ -1382,7 +1410,7 @@ public class PlayerEntity extends Entity implements Controllable {
 			}
 			
 			Type entType = ent.getType();
-			boolean isCalculatedEntity = entType==Type.PLAYER;//||entType==Type.GRENADE||entType==Type.NAPALM_GRENADE;
+			boolean isCalculatedEntity = entType==Type.PLAYER;
 			
 			if(isCalculatedEntity && game.isEnableFOW()) {				
 				if(ent.getId() != id) {
@@ -1471,6 +1499,10 @@ public class PlayerEntity extends Entity implements Controllable {
 						if(bomb.isPlanted()) {
 							entitiesInView.add(ent);
 						}
+						break;
+					case ALLIED_FLAG:
+					case AXIS_FLAG:
+						entitiesInView.add(ent);
 						break;
 					case LIGHT_BULB:
 					case BOMB_TARGET:

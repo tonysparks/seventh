@@ -33,8 +33,6 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 	private long currentDelayTime;
 	private boolean inIntermission;
 	
-	private List<Vector2f> alliedSpawnPoints, axisSpawnPoints;
-	
 	private Team attacker, defender;
 	
 	/**
@@ -51,10 +49,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 							 long roundDelayTime,
 							 byte defenderTeamId) {
 		
-		super(GameType.Type.OBJ, runtime, maxScore, roundTime);
-		
-		this.alliedSpawnPoints = alliedSpawnPoints;
-		this.axisSpawnPoints = axisSpawnPoints;
+		super(GameType.Type.OBJ, runtime, alliedSpawnPoints, axisSpawnPoints, maxScore, roundTime);
 		
 		this.outstandingObjectives = objectives;		
 		this.minimumObjectivesToComplete = minimumObjectivesToComplete;		
@@ -93,21 +88,6 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		return defender;
 	}
 	
-	/* (non-Javadoc)
-	 * @see seventh.game.type.GameType#getAlliedSpawnPoints()
-	 */
-	@Override
-	public List<Vector2f> getAlliedSpawnPoints() {
-		return this.alliedSpawnPoints;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.game.type.GameType#getAxisSpawnPoints()
-	 */
-	@Override
-	public List<Vector2f> getAxisSpawnPoints() {	
-		return this.axisSpawnPoints;
-	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.game.type.GameType#start(seventh.game.Game)

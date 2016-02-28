@@ -161,6 +161,10 @@ public class Art {
 	public static  TextureRegion panzerTankTurretDamaged = null;
 	
 	public static  TextureRegion rippleImg = null;
+	
+	public static  TextureRegion alliedFlagImg = null;
+	public static  TextureRegion axisFlagImg = null;
+	
 	/**
 	 * Reloads the graphics
 	 */
@@ -331,6 +335,9 @@ public class Art {
 		panzerTankTurretDamaged = TextureUtil.subImage(panzerTankImage, 35, 168, 273, 125);
 		
 		rippleImg = loadImage("./seventh/gfx/ripple.png");
+		
+		alliedFlagImg = loadImage("./seventh/gfx/allied_flag.png");
+		axisFlagImg = loadImage("./seventh/gfx/axis_flag.png");
 	}
 
 	

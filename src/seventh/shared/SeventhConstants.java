@@ -23,6 +23,8 @@ public interface SeventhConstants {
 	
 	public static final int MAX_SOUNDS = 32;
 	
+	public static final int INVALID_PLAYER_ID = MAX_PLAYERS;
+	
 	public static final int SPAWN_INVINCEABLILITY_TIME = 2_000;
 	
 	
@@ -35,7 +37,7 @@ public interface SeventhConstants {
 	public static final int RUN_DELAY_TIME = 300;
 	public static final int SPRINT_DELAY_TIME = 200;
 	
-	public static final float WALK_SPEED_FACTOR = 0.484f;
+	public static final float WALK_SPEED_FACTOR = 0.584f;
 	public static final float SPRINT_SPEED_FACTOR = 1.60f; // 1.95f
 	
 	public static final int ENTERING_VEHICLE_TIME = 2500;
@@ -46,4 +48,7 @@ public interface SeventhConstants {
 	public static final byte MAX_STAMINA = 100;
 	public static final float STAMINA_DECAY_RATE = 4; // 2
 	public static final float STAMINA_RECOVER_RATE = 0.5f;
+	
+	public static final int FLAG_WIDTH = 20;
+	public static final int FLAG_HEIGHT = 20;
 }

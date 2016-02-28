@@ -7,6 +7,7 @@ import leola.vm.Leola;
 import seventh.game.GameMap;
 import seventh.game.Players;
 import seventh.game.type.AbstractGameTypeScript;
+import seventh.game.type.CaptureTheFlagScript;
 import seventh.game.type.GameType;
 import seventh.game.type.ObjectiveScript;
 import seventh.game.type.TeamDeathMatchScript;
@@ -88,7 +89,10 @@ public class LoadingState implements State {
 	private GameType loadObjGameType(String mapFile) throws Exception {
 		return loadGameType(mapFile, new ObjectiveScript(runtime));
 	}
-	
+
+	private GameType loadCTFGameType(String mapFile) throws Exception {
+		return loadGameType(mapFile, new CaptureTheFlagScript(runtime));
+	}
 
 	
 	/**
@@ -128,6 +132,10 @@ public class LoadingState implements State {
 				}
 				case TDM: {
 					gameType = loadTDMGameType(mapFile);
+					break;
+				}
+				case CTF: {
+					gameType = loadCTFGameType(mapFile);
 					break;
 				}
 			}			

@@ -160,7 +160,16 @@ public class Player implements PlayerInfo, Debugable {
 	 * The player has died, delay their time to spawn
 	 */
 	public void applySpawnDelay() {
-		this.spawnTime = SPAWN_DELAY;
+		applySpawnDelay(SPAWN_DELAY);
+	}
+	
+	/**
+	 * The player has died, delay their time to spawn
+	 * 
+	 * @param time
+	 */
+	public void applySpawnDelay(long time) {
+		this.spawnTime = time;
 	}
 	
 	/**

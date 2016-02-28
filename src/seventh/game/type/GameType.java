@@ -25,6 +25,8 @@ public interface GameType extends Debugable {
 	public static enum Type {
 		TDM("Team Death Match"),
 		OBJ("Objective Based Match"),
+		CTF("Capture The Flag"),
+		
 		;
 		
 		private String displayName;
@@ -65,6 +67,9 @@ public interface GameType extends Debugable {
 			if(gameType != null) {			
 				if("obj".equalsIgnoreCase(gameType.trim())) {
 					result = OBJ;
+				}
+				else if ("ctf".equalsIgnoreCase(gameType.trim())) {
+					result = CTF;
 				}
 			}
 			

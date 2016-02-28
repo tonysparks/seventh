@@ -3,10 +3,9 @@
  */
 package seventh.server;
 
-import harenet.api.Connection;
-
 import java.io.IOException;
 
+import harenet.api.Connection;
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
 import seventh.game.Entity;
@@ -21,6 +20,12 @@ import seventh.game.events.BombExplodedEvent;
 import seventh.game.events.BombExplodedListener;
 import seventh.game.events.BombPlantedEvent;
 import seventh.game.events.BombPlantedListener;
+import seventh.game.events.FlagCapturedEvent;
+import seventh.game.events.FlagCapturedListener;
+import seventh.game.events.FlagReturnedEvent;
+import seventh.game.events.FlagReturnedListener;
+import seventh.game.events.FlagStolenEvent;
+import seventh.game.events.FlagStolenListener;
 import seventh.game.events.GameEndEvent;
 import seventh.game.events.GameEndListener;
 import seventh.game.events.PlayerKilledEvent;
@@ -37,6 +42,9 @@ import seventh.game.net.NetGameUpdate;
 import seventh.network.messages.BombDisarmedMessage;
 import seventh.network.messages.BombExplodedMessage;
 import seventh.network.messages.BombPlantedMessage;
+import seventh.network.messages.FlagCapturedMessage;
+import seventh.network.messages.FlagReturnedMessage;
+import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
@@ -250,6 +258,37 @@ public class InGameState implements State {
                 protocol.sendTileRemovedMessage(msg);
             }
         });
+		
+		this.dispatcher.addEventListener(FlagCapturedEvent.class, new FlagCapturedListener() {
+			
+			@Override
+			public void onFlagCapturedEvent(FlagCapturedEvent event) {
+				FlagCapturedMessage msg = new FlagCapturedMessage();
+				msg.flag = event.getFlag().getNetFlag();
+				protocol.sendFlagCapturedMessage(msg);
+			}
+		});
+		
+		this.dispatcher.addEventListener(FlagReturnedEvent.class, new FlagReturnedListener() {
+			
+			@Override
+			public void onFlagReturnedEvent(FlagReturnedEvent event) {
+				FlagReturnedMessage msg = new FlagReturnedMessage();
+				msg.flag = event.getFlag().getNetFlag();
+				msg.playerId = event.getPlayerId();
+				protocol.sendFlagReturnedMessage(msg);
+			}
+		});
+		
+		this.dispatcher.addEventListener(FlagStolenEvent.class, new FlagStolenListener() {
+			
+			@Override
+			public void onFlagStolenEvent(FlagStolenEvent event) {
+				FlagStolenMessage msg = new FlagStolenMessage();
+				msg.flag = event.getFlag().getNetFlag();
+				protocol.sendFlagStolenMessage(msg);
+			}
+		});
 	}
 		
 	

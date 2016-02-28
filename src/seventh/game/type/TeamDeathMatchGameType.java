@@ -24,18 +24,13 @@ import seventh.shared.TimeStep;
  *
  */
 public class TeamDeathMatchGameType extends AbstractTeamGameType {
-	
-	private List<Vector2f> axisSpawns;
-	private List<Vector2f> alliedSpawns;
-	
+		
 	/**
 	 * @param maxKills
 	 * @param matchTime
 	 */
 	public TeamDeathMatchGameType(Leola runtime, List<Vector2f> alliedSpawns, List<Vector2f> axisSpawns, int maxKills, long matchTime) {
-		super(Type.TDM, runtime, maxKills, matchTime);
-		this.axisSpawns = axisSpawns;
-		this.alliedSpawns = alliedSpawns;
+		super(Type.TDM, runtime, alliedSpawns, axisSpawns, maxKills, matchTime);		
 	}
 	
 	/* (non-Javadoc)
@@ -65,25 +60,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 			}
 		});
 	}
-	
-
-
-	/* (non-Javadoc)
-	 * @see seventh.game.type.GameType#getAlliedSpawnPoints()
-	 */
-	@Override
-	public List<Vector2f> getAlliedSpawnPoints() {
-		return this.alliedSpawns;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.game.type.GameType#getAxisSpawnPoints()
-	 */
-	@Override
-	public List<Vector2f> getAxisSpawnPoints() {	
-		return this.axisSpawns;
-	}
-	
+		
 	/* (non-Javadoc)
 	 * @see seventh.game.type.GameType#start(seventh.game.Game)
 	 */
@@ -117,20 +94,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
 		}
 		
 		
-		if (GameState.IN_PROGRESS == getGameState()) {
-			Player[] players = game.getPlayers().getPlayers();
-			for (int i = 0; i < players.length; i++) {
-				Player player = players[i];
-				if (player != null) {
-					if (player.isDead() && !player.isSpectating()) {
-						player.updateSpawnTime(timeStep);
-						if (player.readyToSpawn()) {
-							game.spawnPlayerEntity(player.getId());
-						}
-					}
-				}
-			}
-		}
+		checkRespawns(timeStep, game);
 		
 		return getGameState();
 	}

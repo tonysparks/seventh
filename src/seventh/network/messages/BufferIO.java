@@ -13,6 +13,7 @@ import seventh.game.net.NetDroppedItem;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
 import seventh.game.net.NetFire;
+import seventh.game.net.NetFlag;
 import seventh.game.net.NetLight;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
@@ -67,6 +68,10 @@ public class BufferIO {
 	
 	public static final byte TILE_REMOVED = 30;
 	public static final byte TILES_REMOVED= 31;
+	
+	public static final byte FLAG_CAPTURED = 32;
+	public static final byte FLAG_RETURNED = 33;
+	public static final byte FLAG_STOLEN = 34;
 	
 	/**
 	 * The Seventh {@link NetMessageFactory} implementation
@@ -147,6 +152,12 @@ public class BufferIO {
 				    break;
 				case TILES_REMOVED: message = new TilesRemovedMessage();
 				    break;
+				case FLAG_CAPTURED: message = new FlagCapturedMessage();
+					break;
+				case FLAG_RETURNED: message = new FlagReturnedMessage();
+					break;
+				case FLAG_STOLEN: message = new FlagStolenMessage();
+					break;
 				default: throw new IllegalArgumentException("Unknown type: " + type);
 			}
 			
@@ -245,6 +256,14 @@ public class BufferIO {
 			}
 			case PANZER_TANK: {
 				result = new NetTank(Type.PANZER_TANK);
+				break;
+			}
+			case ALLIED_FLAG: {
+				result = new NetFlag(Type.ALLIED_FLAG);
+				break;
+			}
+			case AXIS_FLAG: {
+				result = new NetFlag(Type.AXIS_FLAG);
 				break;
 			}
 			default: {

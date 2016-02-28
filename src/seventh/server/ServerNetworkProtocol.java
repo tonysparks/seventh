@@ -26,6 +26,9 @@ import seventh.network.messages.ClientDisconnectMessage;
 import seventh.network.messages.ClientReadyMessage;
 import seventh.network.messages.ConnectAcceptedMessage;
 import seventh.network.messages.ConnectRequestMessage;
+import seventh.network.messages.FlagCapturedMessage;
+import seventh.network.messages.FlagReturnedMessage;
+import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
@@ -631,5 +634,29 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 	@Override
 	public void sendPlayerSpeechMessage(PlayerSpeechMessage msg, int exceptClientId) {
 	    queueSendToAllExcept(Endpoint.FLAG_RELIABLE, msg, exceptClientId);   
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.server.ServerProtocol#sendFlagCapturedMessage(seventh.network.messages.FlagCapturedMessage)
+	 */
+	@Override
+	public void sendFlagCapturedMessage(FlagCapturedMessage msg) {
+		queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.server.ServerProtocol#sendFlagReturnedMessage(seventh.network.messages.FlagReturnedMessage)
+	 */
+	@Override
+	public void sendFlagReturnedMessage(FlagReturnedMessage msg) {
+		queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.server.ServerProtocol#sendFlagStolenMessage(seventh.network.messages.FlagStolenMessage)
+	 */
+	@Override
+	public void sendFlagStolenMessage(FlagStolenMessage msg) {
+		queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
 	}
 }

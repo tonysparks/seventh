@@ -65,8 +65,12 @@ public class ServerSetupScreen implements Screen {
 	private GameServerSettings gameSettings;
 	private List<String> mapListings;
 	private int currentMapIndex;
+	private int gameTypeIndex;
 	
 	private Random random;
+	private static final GameType.Type[] GAME_TYPES = {
+		GameType.Type.TDM, GameType.Type.OBJ, GameType.Type.CTF
+	};
 	private static final String[] BOT_NAMES = {
 		"Messiah",
 		"Irishman",
@@ -398,19 +402,23 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				switch (gameSettings.gameType) {
+				gameTypeIndex = (gameTypeIndex + 1) % GAME_TYPES.length;
+				
+				switch (GAME_TYPES[gameTypeIndex]) {
 					case OBJ:
-						gameSettings.gameType = GameType.Type.TDM;
-						gameSettings.matchTime = 20;
-						gameSettings.maxScore = 50;
-						break;
-					case TDM:
 						gameSettings.gameType = GameType.Type.OBJ;
 						gameSettings.matchTime = 3;
 						gameSettings.maxScore = 7;
 						break;
-					default:
+					case TDM:
 						gameSettings.gameType = GameType.Type.TDM;
+						gameSettings.matchTime = 20;
+						gameSettings.maxScore = 50;
+						break;
+					case CTF:
+						gameSettings.gameType = GameType.Type.CTF;
+						gameSettings.matchTime = 20;
+						gameSettings.maxScore = 3;
 						break;
 				}
 				

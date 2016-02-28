@@ -24,6 +24,9 @@ import seventh.network.messages.BombPlantedMessage;
 import seventh.network.messages.ClientReadyMessage;
 import seventh.network.messages.ConnectAcceptedMessage;
 import seventh.network.messages.ConnectRequestMessage;
+import seventh.network.messages.FlagCapturedMessage;
+import seventh.network.messages.FlagReturnedMessage;
+import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
@@ -281,6 +284,15 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
 		}
 		else if(message instanceof RconTokenMessage) {
 			receiveRconTokenMessage(conn, (RconTokenMessage)message);
+		}
+		else if(message instanceof FlagCapturedMessage) {
+			receiveFlagCapturedMessage(conn, (FlagCapturedMessage)message);
+		}
+		else if(message instanceof FlagReturnedMessage) {
+			receiveFlagReturnedMessage(conn, (FlagReturnedMessage)message);
+		}
+		else if(message instanceof FlagStolenMessage) {
+			receiveFlagStolenMessage(conn, (FlagStolenMessage)message);
 		}
 		else {
 			Cons.println("Unknown message: " + message);
@@ -555,6 +567,33 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         }
     }
     
+    /* (non-Javadoc)
+     * @see seventh.client.ClientProtocol#receiveFlagCapturedMessage(harenet.api.Connection, seventh.network.messages.FlagCapturedMessage)
+     */
+    @Override
+    public void receiveFlagCapturedMessage(Connection conn, FlagCapturedMessage msg) {
+    	if(game!=null) {
+    		// TODO
+    	}
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.ClientProtocol#receiveFlagReturnedMessage(harenet.api.Connection, seventh.network.messages.FlagReturnedMessage)
+     */
+    @Override
+    public void receiveFlagReturnedMessage(Connection conn, FlagReturnedMessage msg) {
+    	// TODO Auto-generated method stub
+    	
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.ClientProtocol#receiveFlagStolenMessage(harenet.api.Connection, seventh.network.messages.FlagStolenMessage)
+     */
+    @Override
+    public void receiveFlagStolenMessage(Connection conn, FlagStolenMessage msg) {
+    	// TODO Auto-generated method stub
+    	
+    }
     
     /* (non-Javadoc)
      * @see seventh.client.ClientProtocol#sendClientReadyMessage(seventh.network.messages.ClientReadyMessage)
