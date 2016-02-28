@@ -88,7 +88,8 @@ public class HeadScanAction extends AdapterAction {
 				if(!attackDirections.isEmpty()) {
 
 					int numberOfAttackDirs = attackDirections.size();
-					if(this.attackDirectionIndex < 0 || this.pickAttackDirectionTime > 2_000) {
+					if(this.attackDirectionIndex < 0 || this.attackDirectionIndex>=numberOfAttackDirs 
+							|| this.pickAttackDirectionTime > 2_000) {
 
 						int index = this.attackDirectionIndex + this.direction;
 						if(index < 0 || index >= numberOfAttackDirs) {
