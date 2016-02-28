@@ -639,8 +639,7 @@ public class PlayerSprite implements Renderable {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {
-		Vector2f cameraPos = //camera.getPosition();//
-							 camera.getRenderPosition(alpha);
+		Vector2f cameraPos = camera.getRenderPosition(alpha);
 		
 		// TODO: delete
 		//canvas.drawString(adjustments.toString(), 350, 100, 0xffffffff);

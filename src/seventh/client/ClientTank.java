@@ -225,7 +225,7 @@ public class ClientTank extends ClientVehicle {
 	@Override
 	public void update(TimeStep timeStep) {	
 		super.update(timeStep);
-		
+				
 		this.tankSprite.update(timeStep);
 	}
 

@@ -152,7 +152,7 @@ public class TankSprite implements Renderable {
 
 		boolean isDamaged = false;
 		float rx = Math.round((pos.x - cameraPos.x) - (bounds.width/2.0f) + WeaponConstants.TANK_WIDTH/2f);
-		float ry = Math.round((pos.y - cameraPos.y) - (bounds.height/2.0f) + WeaponConstants.TANK_HEIGHT/2f);
+		float ry = Math.round((pos.y - cameraPos.y) - (bounds.height/2.0f) + WeaponConstants.TANK_HEIGHT/2f);				
 		
 		TextureRegion tex = isDamaged ? tankTracksDamaged.getCurrentImage() : tankTracks.getCurrentImage();		
 		tankTrack.setRegion(tex);		

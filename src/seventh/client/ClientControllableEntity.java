@@ -110,8 +110,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
 			renderPos.y = renderPos.y * 0.8f + predictedPos.y * 0.2f;
 		}
 		else {			
-			Vector2f.Vector2fCopy(pos, renderPos);
-			Vector2f.Vector2fLerp(previousPos, renderPos, alpha, renderPos);
+			Vector2f.Vector2fLerp(previousPos, pos, alpha, renderPos);
 		}
 				
 		//Vector2f.Vector2fLerp(previousPos, renderPos, alpha, renderPos);

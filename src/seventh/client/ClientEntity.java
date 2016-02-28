@@ -147,6 +147,7 @@ public abstract class ClientEntity implements Renderable {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		Vector2f.Vector2fCopy(this.pos, previousPos);
 		
 		if(this.updateReceived) {
 		    previousLastUpdate = lastUpdate;

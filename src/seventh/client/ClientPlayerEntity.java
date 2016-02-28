@@ -454,8 +454,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		if(this.damageDelta < 0 && (previousLastUpdate+400) >= clockTime) {
 			onDamage();
 		}		
-		
-		Vector2f.Vector2fCopy(this.pos, previousPos);
+				
 		super.update(timeStep);						
 	}
 
