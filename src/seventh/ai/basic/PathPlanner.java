@@ -6,7 +6,6 @@ package seventh.ai.basic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import seventh.game.Entity;
 import seventh.game.Player;
@@ -18,6 +17,7 @@ import seventh.graph.GraphNode;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
+import seventh.shared.Randomizer;
 
 
 /**
@@ -34,7 +34,6 @@ public class PathPlanner<E> {
 	private int currentNode;
 	private Vector2f destination;
 	private Vector2f finalDestination;	
-	private Random random;
 	
 	private World world;
 	private Brain brain;
@@ -82,12 +81,14 @@ public class PathPlanner<E> {
 	    return null;
 	}
 	
-	private boolean shouldIgnoreTile(Tile tile) {
-		return this.tilesToAvoid.contains(tile);
-	}
-	
-	private class FuzzySearchPath extends AStarGraphSearch<Tile, E> {
+	public static class FuzzySearchPath<E> extends AStarGraphSearch<Tile, E> {
 		public int actualFuzzy;
+		public List<Tile> tilesToAvoid;
+		private Randomizer random;
+		
+		public FuzzySearchPath(Randomizer random) {
+			this.random = random;
+		}
 		
 		@Override
 		protected int heuristicEstimateDistance(
@@ -110,13 +111,13 @@ public class PathPlanner<E> {
 		
 		@Override
 		protected boolean shouldIgnore(GraphNode<Tile, E> node) {
-//		    return false;//return isEntityOnTile(node.getValue());
-			return shouldIgnoreTile(node.getValue());
+			return this.tilesToAvoid.contains(node.getValue());
 		}
 	}
 	
-	private class AvoidSearchPath extends AStarGraphSearch<Tile,E> {
+	public static class AvoidSearchPath<E> extends AStarGraphSearch<Tile,E> {
 		public List<Zone> zonesToAvoid;
+		public List<Tile> tilesToAvoid;
 		
 		@Override
 		protected int heuristicEstimateDistance(
@@ -130,11 +131,6 @@ public class PathPlanner<E> {
 						   ((goalTile.getY() - currentTile.getY()) *
 						    (goalTile.getY() - currentTile.getY()));
 			
-			
-//			if(isEntityOnTile(goalTile)) {
-//                return Integer.MAX_VALUE;
-//            }
-            
 			return distance;
 		}
 		
@@ -148,12 +144,12 @@ public class PathPlanner<E> {
 				}
 			}
 			
-			return shouldIgnoreTile(node.getValue());
+			return this.tilesToAvoid.contains(node.getValue());
 		}
 	}
 	
-	private FuzzySearchPath fuzzySearchPath; 	
-	private AvoidSearchPath avoidSearchPath;
+	private FuzzySearchPath<E> fuzzySearchPath; 	
+	private AvoidSearchPath<E> avoidSearchPath;
 	
 	/**
 	 * @param path
@@ -164,14 +160,13 @@ public class PathPlanner<E> {
 		this.graph = graph;
 		this.finalDestination = new Vector2f();
 		this.destination = new Vector2f();
-		this.random = new Random();
 		
 		this.path = new ArrayList<GraphNode<Tile, E>>();
 		this.tilesToAvoid = new ArrayList<Tile>();
 		this.currentNode = 0;
 		
-		this.fuzzySearchPath = new FuzzySearchPath();
-		this.avoidSearchPath = new AvoidSearchPath();		
+		this.fuzzySearchPath = new FuzzySearchPath<E>(world.getRandom());
+		this.avoidSearchPath = new AvoidSearchPath<E>();		
 	} 
 	
 	private void setPath(List<GraphNode<Tile, E>> newPath) {
