@@ -82,7 +82,7 @@ public class Flag extends Entity {
 			
 			/* do not allow this to be dropped here */
 			if(game.getMap().pointCollides((int)flagPos.x, (int)flagPos.y)) {
-				flagPos = this.carriedBy.getCenterPos();
+				flagPos.set(this.carriedBy.getCenterPos());
 			}
 			
 			this.pos.set(flagPos);
