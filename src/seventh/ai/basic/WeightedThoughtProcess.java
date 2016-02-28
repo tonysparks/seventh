@@ -30,7 +30,8 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 	private ConcurrentAction currentGoal;
 	
 	/**
-	 * 
+	 * @param teamStrategy
+	 * @param brain
 	 */
 	public WeightedThoughtProcess(TeamStrategy teamStrategy, Brain brain) {
 		World world = brain.getWorld();
