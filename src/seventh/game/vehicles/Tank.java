@@ -44,7 +44,6 @@ public class Tank extends Vehicle {
 	private float previousOrientation;
 	
 	private long nextMovementSound;
-	private long lastTorsoMovementSound;
 
 	private boolean isFiringPrimary;
 	private boolean isFiringSecondary;
@@ -56,8 +55,6 @@ public class Tank extends Vehicle {
 	private long throttleStartTime;
 	private long throttleWarmupTime;
 	
-//	private float movementTime;
-//	private float movementRate;	
 	private float desiredOrientation;
 
 	private Weapon primaryWeapon;
