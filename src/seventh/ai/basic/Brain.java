@@ -123,6 +123,16 @@ public class Brain implements Debugable {
 	public void broadcastCommand(Action cmd) {
 		this.communicator.broadcastAction(this, cmd);
 	}
+	
+	/**
+	 * Have this bot do the supplied {@link Action}, make
+	 * it top priority
+	 * 
+	 * @param action
+	 */
+	public void doAction(Action action) {
+		this.communicator.makeTopPriority(action);
+	}
 		
 	/**
 	 * Lets the brain think for a game tick
