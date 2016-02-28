@@ -60,7 +60,15 @@ public class ClientFlag extends ClientEntity {
 	public boolean killIfOutdated(long gameClock) {
 		return false;
 	}
-		
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.ClientEntity#isBackgroundObject()
+	 */
+	@Override
+	public boolean isBackgroundObject() {
+		return true;
+	}
+	
 	/* (non-Javadoc)
 	 * @see palisma.client.ClientEntity#update(leola.live.TimeStep)
 	 */
@@ -79,11 +87,15 @@ public class ClientFlag extends ClientEntity {
 			Vector2f flagPos = pos;
 			if (carrier != null) {
 				flagPos = carrier.getEntity().getRenderPos(alpha);
+				//flagPos.x = flagPos.x + carrier.getEntity().bounds.width/2;
+				//flagPos.y = flagPos.y + carrier.getEntity().bounds.height/2;
 			}
 			
 			float x = (flagPos.x - cameraPos.x);
 			float y = (flagPos.y - cameraPos.y);
 			flagImg.setPosition(x, y);
+			//flagImg.setBounds(x, y, 52, 52);
+			//flagImg.setCenter(x, y);			
 			canvas.drawSprite(flagImg);			
 		}
 		
