@@ -27,7 +27,8 @@ public class SquadDefendAction extends SquadAction {
     @Override
     public void start(Squad squad) {
         World world = squad.getWorld();
-        List<AttackDirection> directionsToDefend = world.getAttackDirections(this.defendPosition, 150f, 12);
+        float radius = (float)world.getRandom().getRandomRange(100f, 150f);
+        List<AttackDirection> directionsToDefend = world.getAttackDirections(this.defendPosition, radius, 12);
 
         List<SquadMember> members = squad.getMembers();
         if(!directionsToDefend.isEmpty() && !members.isEmpty()) {
@@ -42,7 +43,7 @@ public class SquadDefendAction extends SquadAction {
                 Vector2f position = new Vector2f(dir.getDirection());
                 //Vector2f.Vector2fMA(defendPosition, dir.getDirection(), 10f + world.getRandom().nextInt(100), position);
                 
-                member.getBot().getCommunicator().makeTopPriority(world.getGoals().guard(position));
+                member.getBot().doAction(world.getGoals().guard(position));
             
             }
         }
@@ -53,17 +54,13 @@ public class SquadDefendAction extends SquadAction {
      */
     @Override
     public void end(Squad squad) {
-        // TODO Auto-generated method stub
-        
     }
     
     /* (non-Javadoc)
      * @see seventh.ai.basic.squad.SquadAction#cancel(seventh.ai.basic.squad.Squad)
      */
     @Override
-    public void cancel(Squad squad) {
-        // TODO Auto-generated method stub
-        
+    public void cancel(Squad squad) {    	
     }
     
     /* (non-Javadoc)
@@ -79,7 +76,6 @@ public class SquadDefendAction extends SquadAction {
      */
     @Override
     public void update(TimeStep timeStep) {
-        
     }
 
 }
