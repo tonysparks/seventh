@@ -35,7 +35,9 @@ public class ConcurrentAction implements Action {
 	 * @return the Action
 	 */
 	public Action getAction(int index) {
-		return this.concurrentActions.get(index);
+		if(index > -1 && index <this.concurrentActions.size())
+			return this.concurrentActions.get(index);
+		return null;
 	}
 	
 	/**
