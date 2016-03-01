@@ -155,6 +155,12 @@ public class Sounds {
 	public static final int[] tankRevDown = {146};
 	public static final int[] tankTurret = {147};
 	public static final int[] tankMove = {148};
+
+	public static final int[] flagCaptured = {149};
+	public static final int[] flagStolen = {150};
+	public static final int[] flagReturned = {151};
+	public static final int[] enemyFlagCaptured = {152};
+	public static final int[] enemyFlagStolen = {153};
 	
 	public static final int[][] alliedSpeeches = {
 			alliedSpeechAttack,
@@ -180,8 +186,9 @@ public class Sounds {
 			axisSpeechYouTakeLead,		
 	};
 	
-	private static Map<String, Sound> loadedSounds = new ConcurrentHashMap<>();
-	private static Sound[][] channels = new Sound[32][];
+	private static final Random random = new Random();
+	private static Map<String, SoundBuffer> loadedSounds = new ConcurrentHashMap<>();
+	private static Sound[][] channels = new Sound[16][];
 	private static float volume = 0.1f;
 	private static ClientSeventhConfig config;
 	
@@ -378,6 +385,12 @@ public class Sounds {
             loadSound("./seventh/sfx/tank/tank_revdown.wav") ,   // 146
             loadSound("./seventh/sfx/tank/tank_turret2.wav") ,   // 147
             loadSound("./seventh/sfx/tank/tank_move.wav") ,   // 148
+            
+            loadSound("./seventh/sfx/ctf/flag_captured.wav") ,   // 149
+            loadSound("./seventh/sfx/ctf/flag_stolen.wav") ,   // 150
+            loadSound("./seventh/sfx/ctf/flag_returned.wav") ,   // 151
+            loadSound("./seventh/sfx/ctf/enemy_flag_captured.wav") ,   // 152
+            loadSound("./seventh/sfx/ctf/enemy_flag_stolen.wav") ,   // 153
 		};
 	};
 
@@ -395,7 +408,7 @@ public class Sounds {
 			SoundSystemConfig.setLogger(new SoundSystemLogger() {
 				@Override
 				public void errorMessage(String message, String error, int code) {
-					Cons.println("*** Error in the sound system: " + message + " " + error + " :: " + code);
+					Cons.println("*** Error in the sound system: " + message + " (" + error + ") :: " + code);
 				}
 				@Override
 				public void message(String message, int code) {
@@ -409,6 +422,7 @@ public class Sounds {
 			});
 			SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
 			SoundSystemConfig.setCodec( "wav", CodecWav.class );
+			SoundSystemConfig.setDefaultFadeDistance(10000f);
 			
 			soundSystem = new SoundSystem(LibraryLWJGLOpenAL.class);
 			setVolume(volume);		
@@ -472,7 +486,7 @@ public class Sounds {
 	
 	public static synchronized void destroy() {
 		if(soundSystem!=null) {
-			for(Sound sound : loadedSounds.values()) {
+			for(SoundBuffer sound : loadedSounds.values()) {
 				sound.destroy();
 			}
 			loadedSounds.clear();
@@ -497,12 +511,18 @@ public class Sounds {
 	 */
 	public static synchronized Sound loadSound(String soundFile) {
 		try {			
+			Sound sound = null;
 			if(loadedSounds.containsKey(soundFile)) {
-				return loadedSounds.get(soundFile);
+				sound = loadedSounds.get(soundFile).newSound();
 			}
-			Sound sound = new Sound(soundFile, soundSystem);
-			loadedSounds.put(soundFile, sound);
+			else {
+				SoundBuffer buffer = new SoundBuffer(soundSystem, soundFile, random);
+				loadedSounds.put(soundFile, buffer);
+				
+				sound = buffer.newSound();
+			}
 			
+			sound.setVolume(volume);
 			return sound;
 		}
 		catch(Exception e) {
@@ -512,15 +532,16 @@ public class Sounds {
 		return null;
 	}
 	
-	private static final Random random = new Random();
+	
 	public static Sound findFreeSound(int soundIndex) {
-		
 		for(int i = 0; i < channels.length; i++) {
 			Sound[] sounds = channels[i];		
 			Sound sound = sounds[soundIndex];
-			if(!sound.isPlaying()) return sound;
+			if(!sound.isPlaying()) {
+				return sound;
+			}
 		}
-		
+		System.out.println("Returning NULL!");
 		return null;
 	}
 	
@@ -561,7 +582,7 @@ public class Sounds {
 			x = data.position.x;
 			y = data.position.y;
 		}
-		return playSound(soundBank, uiChannel, x, y);
+		return playFreeSound(soundBank, x, y);
 	}
 	
 	/**
@@ -606,12 +627,16 @@ public class Sounds {
 	}
 	
 	public static Sound playFreeSound(int[] soundBank, float x, float y) {
+		return playFreeSound(soundBank, x, y, 1.0f);
+	}
+	
+	public static Sound playFreeSound(int[] soundBank, float x, float y, float damp) {
 		int index = random.nextInt(soundBank.length);
 		int soundIndex = soundBank[index];
 		Sound snd = findFreeSound(soundIndex);
 		if(snd!=null) {
-			snd.reset();
-			snd.setVolume(volume); // TODO global config
+			//snd.reset();
+			snd.setVolume(volume*damp); // TODO global config
 			snd.play(x,y);
 		}
 		return snd;
@@ -644,6 +669,7 @@ public class Sounds {
 	
 	public static Sound playSound(SoundType type, float x, float y) {	
 		Sound sound = null;
+		float footStepDamp = 0.35f;
 		switch(type) {
 		case EMPTY_FIRE: 
 			sound = playFreeSound(emptyFireSnd, x, y);
@@ -736,25 +762,25 @@ public class Sounds {
 			break;			
 			
 		case SURFACE_GRASS:			
-			sound = playFreeSound(grassWalk, x, y);			
+			sound = playFreeSound(grassWalk, x, y, footStepDamp);			
 			break;
 		case SURFACE_METAL:
-			sound = playFreeSound(metalWalk, x, y);
+			sound = playFreeSound(metalWalk, x, y, footStepDamp);
 			break;
 		case SURFACE_NORMAL:
-			sound = playFreeSound(normalWalk, x, y);
+			sound = playFreeSound(normalWalk, x, y, footStepDamp);
 			break;
 		case SURFACE_WATER:
-			sound = playFreeSound(waterWalk, x, y);
+			sound = playFreeSound(waterWalk, x, y, footStepDamp);
 			break;
 		case SURFACE_WOOD:
-			sound = playFreeSound(woodWalk, x, y);
+			sound = playFreeSound(woodWalk, x, y, footStepDamp);
 			break;
 		case SURFACE_DIRT: 
-			sound = playFreeSound(dirtWalk, x, y);
+			sound = playFreeSound(dirtWalk, x, y, footStepDamp);
 			break;
 		case SURFACE_SAND: 
-			sound = playFreeSound(dirtWalk, x, y);
+			sound = playFreeSound(dirtWalk, x, y, footStepDamp);
 			break;
 		case WEAPON_SWITCH:
 			sound = playFreeSound(weaponSwitch, x, y);
@@ -848,6 +874,21 @@ public class Sounds {
 			break;
 		case HEALTH_PACK_PICKUP:
 			sound = playFreeSound(healthPackPickup, x, y);
+		    break;
+		case ENEMY_FLAG_CAPTURED:
+			sound = playFreeSound(enemyFlagCaptured, x, y);
+		    break;
+		case ENEMY_FLAG_STOLEN:
+			sound = playFreeSound(enemyFlagStolen, x, y);
+		    break;
+		case FLAG_CAPTURED:
+			sound = playFreeSound(flagCaptured, x, y);
+		    break;
+		case FLAG_RETURNED:
+			sound = playFreeSound(flagReturned, x, y);
+		    break;
+		case FLAG_STOLEN:
+			sound = playFreeSound(flagStolen, x, y);
 		    break;
 		case MUTE:
 			

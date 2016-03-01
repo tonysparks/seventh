@@ -4,8 +4,6 @@
  */
 package seventh.client.sfx;
 
-import java.io.File;
-
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 
@@ -14,57 +12,63 @@ import paulscode.sound.SoundSystemConfig;
  *
  */
 public class Sound {	
-	private String soundFile;	
+	private String sourceName;	
 	private SoundSystem soundSystem;
 	/**
 	 * @param soundFile
 	 * @param soundSystem
 	 */
-	public Sound(String soundFile, SoundSystem soundSystem) throws Exception {
-		super();
-		this.soundFile = soundFile;
+	public Sound(SoundSystem soundSystem, String soundFile, String soundName) throws Exception {		
 		this.soundSystem = soundSystem;
-		this.soundSystem.loadSound(new File(soundFile).toURI().toURL(), soundFile);
-//		this.soundSystem.newSource(false, soundFile, soundFile, false, 0, 0, 0, SoundSystemConfig.ATTENUATION_ROLLOFF,
-//                SoundSystemConfig.getDefaultRolloff()); 
+		this.sourceName = soundName;
+		
+		this.soundSystem.newSource(true, this.sourceName, soundFile, false, 0, 0, 0, 
+				SoundSystemConfig.ATTENUATION_ROLLOFF, SoundSystemConfig.getDefaultRolloff()); 
 	}
 
+	public void setPosition(float x, float y) {
+		this.soundSystem.setPosition(sourceName, x, y, 0);
+	}
+	
 	public void play(float x, float y) {
 		play(x, y, false);
 	}
 	
 	public void play(float x, float y, boolean loop) {
-		SoundSystemConfig.setDefaultFadeDistance(10000f);
-		this.soundSystem.quickPlay(true, soundFile, loop, x, y, 0, 
-				SoundSystemConfig.ATTENUATION_NONE, 10.0f);				
+		this.soundSystem.setPosition(sourceName, x, y, 0);
+		this.soundSystem.setLooping(sourceName, loop);
+		this.soundSystem.play(sourceName);
+		
+//		this.soundSystem.quickPlay(true, soundFile, loop, x, y, 0, 
+//				SoundSystemConfig.ATTENUATION_NONE, 10.0f);				
 	}
 	
 	public void stop() {
-		this.soundSystem.stop(soundFile);
+		this.soundSystem.stop(sourceName);
 	}
 	
 	public void pause() {
-		this.soundSystem.pause(soundFile);
+		this.soundSystem.pause(sourceName);
 	}
 	
 	public boolean isPlaying() {
-		return this.soundSystem.playing(soundFile);
+		return this.soundSystem.playing(sourceName);
 	}
 	
 	public void reset() {
-		this.soundSystem.rewind(soundFile);
+		this.soundSystem.rewind(sourceName);
 	}
 	
 	public void setVolume(float v) {
-		this.soundSystem.setVolume(soundFile, v);
+		this.soundSystem.setVolume(sourceName, v);
 	}
 	
 	public float getVolume() {
-		return this.soundSystem.getVolume(soundFile);
+		return this.soundSystem.getVolume(sourceName);
 	}
 	
 	public void destroy() {
-		this.soundSystem.unloadSound(soundFile);
+		this.soundSystem.removeSource(sourceName);
 	}
 	
 }
