@@ -48,6 +48,9 @@ import seventh.math.Vector2f;
 import seventh.network.messages.BombDisarmedMessage;
 import seventh.network.messages.BombExplodedMessage;
 import seventh.network.messages.BombPlantedMessage;
+import seventh.network.messages.FlagCapturedMessage;
+import seventh.network.messages.FlagReturnedMessage;
+import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameUpdateMessage;
@@ -1477,6 +1480,45 @@ public class ClientGame {
 	
 	public void removeTiles(TilesRemovedMessage msg) {
 	    map.removeDestructableTilesAt(msg.tiles);
+	}
+	
+	public void flagCaptured(FlagCapturedMessage msg) {
+		if(this.localPlayer == null) {
+			Sounds.playGlobalSound(Sounds.flagCaptured);
+		}
+		else {
+			ClientPlayer player = this.players.getPlayer(msg.capturedBy);
+			if(player!=null) {
+				if(player.getTeam().equals(this.localPlayer.getTeam())) {
+					Sounds.playGlobalSound(Sounds.flagCaptured);
+				}
+				else {
+					Sounds.playGlobalSound(Sounds.enemyFlagCaptured);
+				}				
+			}
+		}
+	}
+	
+	public void flagStolen(FlagStolenMessage msg) {
+		if(this.localPlayer == null) {
+			Sounds.playGlobalSound(Sounds.flagStolen);
+		}
+		else {
+			ClientPlayer player = this.players.getPlayer(msg.stolenBy);
+			if(player!=null) {
+				if(player.getTeam().equals(this.localPlayer.getTeam())) {
+					Sounds.playGlobalSound(Sounds.flagStolen);
+				}
+				else {
+					Sounds.playGlobalSound(Sounds.enemyFlagStolen);
+				}				
+			}
+		}
+	}
+	
+	public void flagReturned(FlagReturnedMessage msg) {
+		Sounds.playGlobalSound(Sounds.flagCaptured);
+		
 	}
 }
  

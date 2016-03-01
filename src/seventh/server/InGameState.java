@@ -264,7 +264,8 @@ public class InGameState implements State {
 			@Override
 			public void onFlagCapturedEvent(FlagCapturedEvent event) {
 				FlagCapturedMessage msg = new FlagCapturedMessage();
-				msg.flag = event.getFlag().getNetFlag();
+				msg.flagId = event.getFlag().getId();
+				msg.capturedBy = event.getPlayerId();
 				protocol.sendFlagCapturedMessage(msg);
 			}
 		});
@@ -274,8 +275,8 @@ public class InGameState implements State {
 			@Override
 			public void onFlagReturnedEvent(FlagReturnedEvent event) {
 				FlagReturnedMessage msg = new FlagReturnedMessage();
-				msg.flag = event.getFlag().getNetFlag();
-				msg.playerId = event.getPlayerId();
+				msg.flagId = event.getFlag().getId();
+				msg.returnedBy = event.getPlayerId();
 				protocol.sendFlagReturnedMessage(msg);
 			}
 		});
@@ -285,7 +286,8 @@ public class InGameState implements State {
 			@Override
 			public void onFlagStolenEvent(FlagStolenEvent event) {
 				FlagStolenMessage msg = new FlagStolenMessage();
-				msg.flag = event.getFlag().getNetFlag();
+				msg.flagId = event.getFlag().getId();
+				msg.stolenBy = event.getPlayerId();
 				protocol.sendFlagStolenMessage(msg);
 			}
 		});

@@ -100,12 +100,20 @@ public class Flag extends Entity {
 	}
 	
 	/**
+	 * @return true if the flag is at its home base
+	 */
+	public boolean isAtHomeBase() {
+		return Vector2f.Vector2fEquals(this.pos, getSpawnLocation());
+	}
+	
+	/**
 	 * Returns to the home base
 	 */
 	public void returnHome() {
 		drop();
 		this.pos.set(getSpawnLocation());		
 		this.bounds.centerAround(this.pos);
+		
 	}
 	
 	/**
@@ -141,6 +149,9 @@ public class Flag extends Entity {
 	}
 	
 	public NetFlag getNetFlag() {
+		this.setNetEntity(netFlag);
+		this.netFlag.carriedBy = isBeingCarried() ? 
+				carriedBy.getId() : SeventhConstants.INVALID_PLAYER_ID;
 		return this.netFlag;
 	}
 	
@@ -149,10 +160,7 @@ public class Flag extends Entity {
 	 */
 	@Override
 	public NetEntity getNetEntity() {
-		this.setNetEntity(netFlag);
-		this.netFlag.carriedBy = isBeingCarried() ? 
-				carriedBy.getId() : SeventhConstants.INVALID_PLAYER_ID;
-		return this.netFlag;
+		return getNetFlag();
 	}
 
 }

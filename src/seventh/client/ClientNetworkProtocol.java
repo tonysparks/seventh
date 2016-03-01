@@ -573,7 +573,7 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     @Override
     public void receiveFlagCapturedMessage(Connection conn, FlagCapturedMessage msg) {
     	if(game!=null) {
-    		// TODO
+    		game.flagCaptured(msg);
     	}
     }
     
@@ -582,8 +582,9 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      */
     @Override
     public void receiveFlagReturnedMessage(Connection conn, FlagReturnedMessage msg) {
-    	// TODO Auto-generated method stub
-    	
+    	if(game!=null) {
+    		game.flagReturned(msg);
+    	}
     }
     
     /* (non-Javadoc)
@@ -591,8 +592,9 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      */
     @Override
     public void receiveFlagStolenMessage(Connection conn, FlagStolenMessage msg) {
-    	// TODO Auto-generated method stub
-    	
+    	if(game!=null) {
+    		game.flagStolen(msg);
+    	}
     }
     
     /* (non-Javadoc)

@@ -64,8 +64,10 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 							getDispatcher().queueEvent(new FlagStolenEvent(this, flag, otherPlayer.getId()));
 						}
 						else {
-							flag.returnHome();
-							getDispatcher().queueEvent(new FlagReturnedEvent(this, flag, otherPlayer.getId()));
+							if(!flag.isAtHomeBase()) {
+								flag.returnHome();
+								getDispatcher().queueEvent(new FlagReturnedEvent(this, flag, otherPlayer.getId()));
+							}
 						}				
 					}
 				}

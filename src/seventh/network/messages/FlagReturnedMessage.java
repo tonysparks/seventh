@@ -4,15 +4,14 @@
 package seventh.network.messages;
 
 import harenet.IOBuffer;
-import seventh.game.net.NetFlag;
 
 /**
  * @author Tony
  *
  */
 public class FlagReturnedMessage extends AbstractNetMessage {
-	public NetFlag flag;
-	public int playerId;
+	public int flagId;
+	public int returnedBy;
 	
 	/**
 	 * 
@@ -27,9 +26,8 @@ public class FlagReturnedMessage extends AbstractNetMessage {
 	@Override
 	public void read(IOBuffer buffer) {	
 		super.read(buffer);
-		this.flag = new NetFlag();
-		this.flag.read(buffer);
-		this.playerId = buffer.getUnsignedByte();
+		this.flagId = buffer.getUnsignedByte();
+		this.returnedBy = buffer.getUnsignedByte();
 	}
 	
 	/* (non-Javadoc)
@@ -38,7 +36,7 @@ public class FlagReturnedMessage extends AbstractNetMessage {
 	@Override
 	public void write(IOBuffer buffer) {	
 		super.write(buffer);
-		this.flag.write(buffer);
-		this.playerId = buffer.getUnsignedByte();
+		buffer.putUnsignedByte(flagId);
+		buffer.putUnsignedByte(returnedBy);
 	}
 }
