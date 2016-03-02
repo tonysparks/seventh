@@ -3,15 +3,14 @@
  */
 package seventh.client.weapon;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import seventh.client.ClientPlayerEntity;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Camera;
-import seventh.client.sfx.Sounds;
 import seventh.game.net.NetWeapon;
 import seventh.game.weapons.Weapon.State;
 import seventh.shared.TimeStep;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * @author Tony
@@ -24,7 +23,7 @@ public class ClientWeapon {
 	
 	protected int beginFireKick, endFireKick;
 	protected int weaponWeight;
-	private boolean startFiring, startSwitch, startReloading, canFireAgain;
+	private boolean startFiring, startReloading, canFireAgain;
 			
 	private int firstFire;
 	
@@ -173,16 +172,11 @@ public class ClientWeapon {
 					}
 					break;
 				}
-				case SWITCHING: {
-					if(!startSwitch) {
-						Sounds.startPlaySound(Sounds.weaponSwitch, channelId,this.owner.getCenterPos());
-					}
-					startSwitch = true;
+				case SWITCHING: {					
 					break;
 				}
 				default: {
 //					startFiring = false;
-					startSwitch = false;
 					canFireAgain = true;
 					
 					startReloading = false;					

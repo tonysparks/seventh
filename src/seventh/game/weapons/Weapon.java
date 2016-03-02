@@ -313,6 +313,7 @@ public abstract class Weapon {
 	public void setSwitchingWeaponState() {
 		state = State.SWITCHING;
 		weaponTime = 900;
+		game.emitSound(getOwnerId(), SoundType.WEAPON_SWITCH, getPos());
 	}
 	
 	protected void setFireState() {
