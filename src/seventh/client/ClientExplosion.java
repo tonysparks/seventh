@@ -7,9 +7,6 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Light;
 import seventh.client.gfx.particle.ExplosionEmitter;
-import seventh.client.sfx.Sounds;
-import seventh.game.net.NetEntity;
-import seventh.game.net.NetExplosion;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -18,21 +15,15 @@ import seventh.shared.TimeStep;
  *
  */
 public class ClientExplosion extends ClientEntity {
-
-//	private AnimatedImage anim;
-	private boolean soundPlayed;	
-	private long ownerId;	
+	
 	private long explositionLightTime;
 	private Light light;
+
 	/**
 	 * 
 	 */
 	public ClientExplosion(ClientGame game, Vector2f pos) {
 		super(game, pos);
-		
-//		anim = game.getPools().getExplosion().create();
-//		anim.loop(false);
-		this.soundPlayed = false;	
 		
 		game.addForegroundEffect(new ExplosionEmitter(pos, 4000, 0,10));
 		light = game.getLightSystem().newPointLight();
@@ -50,19 +41,6 @@ public class ClientExplosion extends ClientEntity {
 			}
 		});
 	}
-	
-	/* (non-Javadoc)
-	 * @see palisma.client.ClientEntity#updateState(palisma.game.net.NetEntity, long)
-	 */
-	@Override
-	public void updateState(NetEntity state, long time) {	
-		super.updateState(state, time);
-		
-		NetExplosion explosion = (NetExplosion)state;
-		ownerId = explosion.ownerId;
-		
-	}
-	
 		
 	/* (non-Javadoc)
 	 * @see palisma.client.ClientEntity#update(leola.live.TimeStep)
@@ -70,13 +48,6 @@ public class ClientExplosion extends ClientEntity {
 	@Override
 	public void update(TimeStep timeStep) {	
 		super.update(timeStep);
-		
-		if(!soundPlayed) {
-			Sounds.playSound(Sounds.explodeSnd, ownerId, pos);
-			this.soundPlayed = true;
-		}
-		
-//		anim.update(timeStep);	
 		
 		explositionLightTime -= timeStep.getDeltaTime();
 		if(explositionLightTime < 0) {
@@ -89,23 +60,6 @@ public class ClientExplosion extends ClientEntity {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {
-//		Vector2f cameraPos = camera.getPosition();
-//		int x = (int)(pos.x - cameraPos.x);
-//		int y = (int)(pos.y - cameraPos.y);
-//		
-//		canvas.drawImage(anim.getCurrentImage(), x-bounds.width/4, y-bounds.height/4, 0x3fffffff);
-		//canvas.fillRect(x-bounds.width/2, y-bounds.height/2, this.bounds.width, this.bounds.height, 0x1fff0000);
-		
-		//canvas.drawImage(anim.getCurrentImage(), x-bounds.width/4, y-bounds.height/4, null);
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.client.ClientEntity#destroy()
-	 */
-	@Override
-	public void destroy() {	
-		super.destroy();
-//		game.getPools().getExplosion().free(anim);
 	}
 
 }
