@@ -16,7 +16,6 @@ import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.PlayerSprite;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.particle.BloodEmitter;
-import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientKar98;
 import seventh.client.weapon.ClientM1Garand;
 import seventh.client.weapon.ClientMP40;
@@ -464,9 +463,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	protected void onDamage() {
 		this.bloodEmitter.resetTimeToLive();
 		this.bloodEmitter.setPos(getPos());			
-		this.bloodEmitter.start();
-		
-		Sounds.playSound(Sounds.hit, getId(), getCenterPos());
+		this.bloodEmitter.start();		
 	}
 	
 	/* (non-Javadoc)
