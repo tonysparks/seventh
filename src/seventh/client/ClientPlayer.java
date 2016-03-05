@@ -174,4 +174,19 @@ public class ClientPlayer {
 	public int getSpectatingPlayerId() {
 		return spectatingPlayerId;
 	}
+	
+	/**
+	 * If this player is currently controlling an
+	 * entity, this ID will be returned.  If this player
+	 * is currently spectating another entity, that entity
+	 * ID will be returned.
+	 * 
+	 * @return the ID of the currently viewed entity.
+	 */
+	public int getViewingEntityId() {
+		if(isAlive()) {
+			return this.entity.getId();
+		}
+		return getSpectatingPlayerId();
+	}
 }
