@@ -45,6 +45,7 @@ import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
+import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
 import seventh.game.vehicles.PanzerTank;
 import seventh.game.vehicles.ShermanTank;
@@ -348,6 +349,16 @@ public class Game implements GameInfo, Debugable, Updatable {
 		}
 		
 		return MAX_PLAYERS;
+	}
+	
+	/**
+	 * Emits a sound for the client to hear
+	 * 
+	 * @param id
+	 * @param sound
+	 */
+	public void emitSound(int id, SoundType sound) {
+		soundEvents.emitSound(id, sound, id);
 	}
 	
 	/**
@@ -1714,6 +1725,45 @@ public class Game implements GameInfo, Debugable, Updatable {
 		return gamePartialStats;
 	}
 	
+	
+	/**
+	 * In order to properly play the location of a sound, some sounds are attached
+	 * to an entity.  But, not all players are updated every frame, so this can cause
+	 * the sound to play in the wrong position; to fix this, if the Player is not included
+	 * in this update, we enable the positional information of the NetSound and by pass
+	 * the client's positional information.
+	 * 
+	 * @param snds
+	 * @param entities
+	 */
+	private void adjustNetSoundsPosition(NetSound[] snds, NetEntity[] entities) {
+		if(snds!=null) {
+			for(int sndIndex = 0; sndIndex < snds.length; sndIndex++) {
+				NetSound snd = snds[sndIndex];
+				if(snd != null) {
+					switch(snd.getSoundType().getSourceType()) {
+						case REFERENCED:
+						case REFERENCED_ATTACHED:
+							/* If the attached entity is not included in this
+							 * packet, then include the positional information of the
+							 * sound
+							 */
+							NetSoundByEntity sndByEntity = (NetSoundByEntity) snd;
+							if(entities[sndByEntity.entityId] == null) {
+								sndByEntity.enablePosition();
+								System.out.println("Sound enabled!");
+							}
+							else {
+								System.out.println("Sound by entity!");
+							}
+							break;
+						default: /* do nothing */
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * @param playerId
 	 * @return returns only the entities within the viewport of the supplied player
@@ -1731,7 +1781,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		
 		if (player.isPureSpectator()) {
 			NetEntity.toNetEntities(entities, netUpdate.entities);
-			NetSound.toNetSounds(netUpdate.sounds, soundEvents);
+			netUpdate.sounds = NetSound.toNetSounds(soundEvents);
 			netUpdate.numberOfSounds = (byte)soundEvents.numberOfSounds();
 			
 			/*
@@ -1755,20 +1805,22 @@ public class Game implements GameInfo, Debugable, Updatable {
 				 */			
 				aSoundsHeard.clear();
 				aSoundsHeard = playerEntity.getHeardSounds(soundEvents, aSoundsHeard);			
-				NetSound.toNetSounds(netUpdate.sounds, aSoundsHeard); 
+				netUpdate.sounds = NetSound.toNetSounds(aSoundsHeard); 
 				netUpdate.numberOfSounds = (byte)aSoundsHeard.size();								
 				
 				/*
 				 * Calculate all the visuals this player can see
 				 */
 				aEntitiesInView.clear();
-				aEntitiesInView = playerEntity.getEntitiesInView(this);
+				aEntitiesInView = playerEntity.getEntitiesInView(this, aEntitiesInView);
 				NetEntity.toNetEntities(aEntitiesInView, netUpdate.entities);
 				
 				/* now add the players full entity state */
 				if(playerEntity.isAlive()) {
 					netUpdate.entities[playerEntity.getId()] = playerEntity.getNetPlayer();
 				}
+				
+				adjustNetSoundsPosition(netUpdate.sounds, netUpdate.entities);
 			}
 		}
 		

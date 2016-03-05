@@ -3,6 +3,22 @@
  */
 package seventh.game;
 
+import static seventh.shared.SeventhConstants.ENTERING_VEHICLE_TIME;
+import static seventh.shared.SeventhConstants.EXITING_VEHICLE_TIME;
+import static seventh.shared.SeventhConstants.MAX_STAMINA;
+import static seventh.shared.SeventhConstants.PLAYER_HEARING_RADIUS;
+import static seventh.shared.SeventhConstants.PLAYER_HEIGHT;
+import static seventh.shared.SeventhConstants.PLAYER_MIN_SPEED;
+import static seventh.shared.SeventhConstants.PLAYER_SPEED;
+import static seventh.shared.SeventhConstants.PLAYER_WIDTH;
+import static seventh.shared.SeventhConstants.RECOVERY_TIME;
+import static seventh.shared.SeventhConstants.RUN_DELAY_TIME;
+import static seventh.shared.SeventhConstants.SPRINT_DELAY_TIME;
+import static seventh.shared.SeventhConstants.SPRINT_SPEED_FACTOR;
+import static seventh.shared.SeventhConstants.STAMINA_DECAY_RATE;
+import static seventh.shared.SeventhConstants.STAMINA_RECOVER_RATE;
+import static seventh.shared.SeventhConstants.WALK_SPEED_FACTOR;
+
 import java.util.List;
 
 import seventh.game.events.SoundEmittedEvent;
@@ -31,8 +47,6 @@ import seventh.shared.Geom;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
-
-import static seventh.shared.SeventhConstants.*;
 
 /**
  * A controllable {@link Entity} by either AI or a Player.  
@@ -138,7 +152,7 @@ public class PlayerEntity extends Entity implements Controllable {
 		this.enemyDir = new Vector2f();
 				
 		this.inventory = new Inventory();						
-		this.hearingBounds = new Rectangle();
+		this.hearingBounds = new Rectangle(PLAYER_HEARING_RADIUS, PLAYER_HEARING_RADIUS);
 		
 		this.stamina = MAX_STAMINA;
 		
@@ -367,7 +381,7 @@ public class PlayerEntity extends Entity implements Controllable {
 	@Override
 	public void damage(Entity damager, int amount) {
 		if(this.invinceableTime<=0) {
-			super.damage(damager, amount);
+			super.damage(damager, amount);			
 		}
 	}
 
@@ -1354,19 +1368,15 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @param soundsHeard (the out parameter)
 	 * @return the same instance as soundsHeard, just returned for convenience
 	 */
-	public List<SoundEmittedEvent> getHeardSounds(SoundEventPool soundEvents, List<SoundEmittedEvent> soundsHeard) {
-		
-		Vector2f pos = getCenterPos();
-		// NOTE: this is for performance reasons only, this is not thread-safe!!!
-		int radius = getHearingRadius();
-		this.hearingBounds.set( (int)pos.x - (radius/2), (int)pos.y - (radius/2), radius, radius);
+	public List<SoundEmittedEvent> getHeardSounds(SoundEventPool soundEvents, List<SoundEmittedEvent> soundsHeard) {		
+		this.hearingBounds.centerAround(getCenterPos());		
 		
 		int size = soundEvents.numberOfSounds();		
 		for(int i = 0; i < size; i++) {
 			SoundEmittedEvent event = soundEvents.getSound(i);
 			if(this.hearingBounds.contains(event.getPos())) {
-				soundsHeard.add(event);
-			}
+				soundsHeard.add(event);				
+			} 
 		}
 				
 		return soundsHeard;
@@ -1385,13 +1395,12 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * @param game
 	 * @return a list of {@link Entity}s that are in this players view
 	 */
-	public List<Entity> getEntitiesInView(Game game) {
+	public List<Entity> getEntitiesInView(Game game, List<Entity> entitiesInView) {
 		/*
 		 * Calculate all the visuals this player can see
 		 */
 		Map map = game.getMap();
 		Entity[] entities = game.getEntities();
-		List<Entity> entitiesInView = game.aEntitiesInView;
 		
 		Vector2f centerPos = getCenterPos();
 		if(isOperatingVehicle()) {
@@ -1490,7 +1499,7 @@ public class PlayerEntity extends Entity implements Controllable {
 				
 				}
 			}
-			else /*if (!game.isEnableFOW())*/ {		
+			else {		
 				/* We don't always send every entity over the wire */
 				Type type = ent.getType();
 				switch(type) {

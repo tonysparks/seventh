@@ -9,6 +9,7 @@ import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 
 /**
@@ -45,6 +46,8 @@ public class Explosion extends Entity {
 		
 		this.damage = damage;
 		this.owner = owner;
+		
+		game.emitSound(getId(), SoundType.EXPLOSION, getCenterPos());
 		
 		this.explositionTime = 550;
 		this.checkedDestructableTiles = false;

@@ -54,6 +54,10 @@ public class Bullet extends Entity {
 					}
 					else {
 						
+						if(otherType.isPlayer()) {
+							game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getCenterPos());								
+						}
+						
 						if(!bullet.isPiercing()) {					
 							bullet.kill(other);	
 						}	

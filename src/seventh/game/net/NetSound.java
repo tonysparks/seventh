@@ -10,17 +10,53 @@ import harenet.messages.NetMessage;
 import seventh.game.SoundEventPool;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.math.Vector2f;
+import seventh.shared.Bits;
+import seventh.shared.SoundType;
 
 /**
+ * Break sounds up into categories: 
+ * 
+ * 1) ones that are just spawned at a location
+ * 2) others that are associated with an Entity (can be attached, so
+ *    that the sound moves with the entity)
+ * 3) global, ones that are heard always 
+ * 
  * @author Tony
  *
  */
 public class NetSound implements NetMessage {	
-	public byte type;
+	public byte type;	
+	
 	public short posX, posY;
+	private boolean hasPositionalInformation;
 	
 	private static final short TILE_WIDTH = 32;
 	private static final short TILE_HEIGHT = 32;
+	
+	public NetSound() {
+	}
+	
+	/**
+	 * @param pos
+	 */
+	public NetSound(Vector2f pos) {
+		this.setPos(pos);
+		this.enablePosition();
+	}
+	
+	public void setPos(Vector2f pos) {
+		this.posX = (short)pos.x;
+		this.posY = (short)pos.y;
+	}
+	
+	public void setSoundType(SoundType soundType) {
+		if(this.hasPositionalInformation) {
+			this.type = Bits.setSignBit(soundType.netValue());
+		}
+		else {
+			this.type = soundType.netValue();
+		}
+	}
 	
 	
 	/* (non-Javadoc)
@@ -28,15 +64,19 @@ public class NetSound implements NetMessage {
 	 */
 	@Override
 	public void read(IOBuffer buffer) {	
-		type = buffer.get();
-//		posX = buffer.getShort();
-//		posY = buffer.getShort();
+		/* type = buffer.get(); 
+		 * 
+		 * This is actually done by the readNetSound factory
+		 * method
+		 * */
 		
-		posX = (short)(buffer.get() & 0xFF);
-		posX *= TILE_WIDTH;
-		
-		posY = (short)(buffer.get() & 0xFF);
-		posY *= TILE_WIDTH;
+		if(hasPositionalInformation()) {
+			posX = (short)(buffer.get() & 0xFF);
+			posX *= TILE_WIDTH;
+			
+			posY = (short)(buffer.get() & 0xFF);
+			posY *= TILE_WIDTH;
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -44,33 +84,104 @@ public class NetSound implements NetMessage {
 	 */
 	@Override
 	public void write(IOBuffer buffer) {
-		buffer.put(type);
-//		buffer.putShort(posX);
-//		buffer.putShort(posY);
+		if(this.hasPositionalInformation) {
+			this.type = Bits.setSignBit(this.type);
+		}
 		
-		buffer.put( (byte)(posX/TILE_WIDTH) );
-		buffer.put( (byte)(posY/TILE_HEIGHT) );
+		buffer.put(type);
+		
+		if(this.hasPositionalInformation) {
+			buffer.put( (byte)(posX/TILE_WIDTH) );
+			buffer.put( (byte)(posY/TILE_HEIGHT) );
+		}
+	}
+	
+	/**
+	 * @return the {@link SoundType}
+	 */
+	public SoundType getSoundType() {
+		return SoundType.fromNet(Bits.getWithoutSignBit(type));
+	}
+	
+	/**
+	 * Determines if this {@link NetSound} has positional (x,y)
+	 * information
+	 * 
+	 * @return the hasPositionalInformation
+	 */
+	public boolean hasPositionalInformation() {
+		return Bits.isSignBitSet(this.type);
+	}
+	
+	/**
+	 * Enable the positional information of this NetSound
+	 */
+	public void enablePosition() {
+		this.hasPositionalInformation = true;
 	}
 	
 	/**
 	 * Converts the {@link SoundEmittedEvent} into a {@link NetSound}
 	 * @param event
 	 */
-	public void toNetSound(SoundEmittedEvent event) {
-		type = event.getSoundType().netValue();
-		Vector2f pos = event.getPos();
-		posX = (short)pos.x;
-		posY = (short)pos.y;
+	public static NetSound toNetSound(SoundEmittedEvent event) {
+		NetSound sound = null;
+		switch(event.getSoundType().getSourceType()) {
+			case POSITIONAL: {		
+				sound = new NetSound(event.getPos());
+				break;
+			}
+			case REFERENCED: 
+			case REFERENCED_ATTACHED: {
+				sound = new NetSoundByEntity(event.getPos(), event.getEntityId());
+				break;
+			}
+			default: sound = new NetSound();
+		}
+		
+		sound.setSoundType(event.getSoundType());
+		
+		return sound;
+	}
+	
+	public static NetSound readNetSound(IOBuffer buffer) {
+		NetSound snd = null;
+		byte type = buffer.get();
+		switch(SoundType.fromNet(Bits.getWithoutSignBit(type)).getSourceType()) {
+			case REFERENCED:
+			case REFERENCED_ATTACHED:
+				snd = new NetSoundByEntity();
+				snd.type = type;
+				snd.read(buffer);
+				break;
+			case POSITIONAL:
+				snd = new NetSound();
+				snd.type = type;
+				snd.read(buffer);
+				break;
+			case GLOBAL:
+				snd = new NetSound();
+				snd.type = type;
+				snd.read(buffer);
+				break;
+			default: throw new IllegalArgumentException("Invalid NetSound type: " + type);
+		}
+		
+		
+		
+		return snd;
 	}
 	
 	/**
 	 * @param sounds
 	 * @return converts the List of {@link SoundEmittedEvent} to the respective {@link NetSound} array
 	 */
-	public static NetSound[] toNetSounds(NetSound[] snds, List<SoundEmittedEvent> sounds) {
+	public static NetSound[] toNetSounds(List<SoundEmittedEvent> sounds) {		
 		int size = sounds.size();
+		
+		NetSound[] snds = new NetSound[size];
 		for(int i = 0; i < size; i++) {
-			snds[i].toNetSound(sounds.get(i));//.getNetSound();
+			snds[i] = NetSound.toNetSound(sounds.get(i));
 		}
 		
 		return snds;
@@ -80,10 +191,12 @@ public class NetSound implements NetMessage {
 	 * @param sounds
 	 * @return converts the List of {@link SoundEmittedEvent} to the respective {@link NetSound} array
 	 */
-	public static NetSound[] toNetSounds(NetSound[] snds, SoundEventPool sounds) {
-		int size = sounds.numberOfSounds(); 
+	public static NetSound[] toNetSounds(SoundEventPool sounds) {
+		int size = sounds.numberOfSounds();
+		
+		NetSound[] snds = new NetSound[size];
 		for(int i = 0; i < size; i++) {
-			snds[i].toNetSound(sounds.getSound(i));
+			snds[i] = NetSound.toNetSound(sounds.getSound(i));
 		}
 		
 		return snds;

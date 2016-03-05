@@ -28,7 +28,7 @@ public interface SeventhConstants {
 	public static final int SPAWN_INVINCEABLILITY_TIME = 2_000;
 	
 	
-	public static final int PLAYER_HEARING_RADIUS = 900;
+	public static final int PLAYER_HEARING_RADIUS = 1400;
 	public static final int PLAYER_WIDTH = 24;//16;
 	public static final int PLAYER_HEIGHT = 24;
 	

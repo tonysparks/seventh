@@ -41,6 +41,7 @@ import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
+import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
 import seventh.map.Map;
 import seventh.math.Rectangle;
@@ -527,7 +528,7 @@ public class ClientGame {
      * @return the {@link Sound}
      */
     public Sound playSound(SoundType soundType, float x, float y) {
-    	return Sounds.playSound(soundType, x, y);
+    	return Sounds.playSound(soundType, x, y); 
     }
     
     /**
@@ -1000,7 +1001,64 @@ public class ClientGame {
 			for(int i = 0; i < size; i++) {
 				NetSound snd = netUpdate.sounds[i];
 				if(snd!=null) {
-					Sounds.playSound(snd, snd.posX, snd.posY);
+					
+					switch(snd.getSoundType().getSourceType()) {
+						case POSITIONAL: {
+							Sounds.playSound(snd, snd.posX, snd.posY);
+							break;
+						}
+						case REFERENCED: {
+							NetSoundByEntity soundByEntity = (NetSoundByEntity) snd;
+							if(soundByEntity.hasPositionalInformation()) {
+								Sounds.playSound(snd, snd.posX, snd.posY);	
+							}
+							else {
+								ClientEntity entity = this.entities.getEntity(soundByEntity.entityId);
+								if(entity != null) {
+									Vector2f pos = entity.getCenterPos();
+									if(entity.getId()==this.localPlayer.getViewingEntityId()) {
+										/* dampen the sound of the local players footsteps,
+										 * otherwise it's too loud
+										 */
+										switch(snd.getSoundType()) {
+											case SURFACE_DIRT:
+											case SURFACE_GRASS:
+											case SURFACE_METAL:
+											case SURFACE_NORMAL:
+											case SURFACE_SAND:
+											case SURFACE_WATER:
+											case SURFACE_WOOD:
+												Sounds.playSound(snd, pos.x, pos.y, 0.35f );
+												break;
+											default: Sounds.playSound(snd, pos.x, pos.y );
+										}										
+									}
+									else {									
+										Sounds.playSound(snd, pos.x, pos.y);
+									}
+								}
+							}
+							
+							break;
+						}
+						case REFERENCED_ATTACHED: {
+							NetSoundByEntity soundByEntity = (NetSoundByEntity) snd;
+							if(soundByEntity.hasPositionalInformation()) {
+								Sounds.playSound(snd, snd.posX, snd.posY);	
+							}
+							else {
+								ClientEntity entity = this.entities.getEntity(soundByEntity.entityId);
+								if(entity != null) {
+									Vector2f pos = entity.getCenterPos();
+									entity.attachSound(Sounds.playSound(snd, pos.x, pos.y));
+								}
+							}
+							break;
+						}
+						case GLOBAL:
+							Sounds.playGlobalSound(snd);
+							break;
+					}					
 				}
 			}
 		}

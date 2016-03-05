@@ -15,7 +15,21 @@ public class SoundEmittedEvent extends Event {
 	private int id;
 	private SoundType soundType;
 	private Vector2f pos;
-		
+	private int entityId;
+	
+	/**
+	 * @param source
+	 * @param id
+	 * @param soundType
+	 * @param entityId
+	 */
+	public SoundEmittedEvent(Object source, int id, SoundType soundType, int entityId) {
+		super(source);
+		this.id = id;
+		this.soundType = soundType;
+		this.entityId = entityId;
+	}
+	
 	/**
 	 * @param source
 	 * @param id
@@ -26,7 +40,8 @@ public class SoundEmittedEvent extends Event {
 		super(source);
 		this.id = id;
 		this.soundType = soundType;
-		this.pos = pos;		
+		this.pos = pos;
+		this.entityId = -1;
 	}
 	
 	
@@ -79,14 +94,16 @@ public class SoundEmittedEvent extends Event {
 	}
 	
 	/**
-	 * @return the netSound
+	 * @return the entityId
 	 */
-//	public NetSound getNetSound() {
-//		this.netSound.type = soundType.netValue();
-//		this.netSound.posX = (short)pos.x;
-//		this.netSound.posY = (short)pos.y;
-//		
-//		return netSound;
-//	}
+	public int getEntityId() {
+		return entityId;
+	}
 	
+	/**
+	 * @param entityId the entityId to set
+	 */
+	public void setEntityId(int entityId) {
+		this.entityId = entityId;
+	}
 }

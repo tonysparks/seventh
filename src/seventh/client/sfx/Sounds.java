@@ -540,8 +540,7 @@ public class Sounds {
 			if(!sound.isPlaying()) {
 				return sound;
 			}
-		}
-		System.out.println("Returning NULL!");
+		}		
 		return null;
 	}
 	
@@ -559,13 +558,21 @@ public class Sounds {
 //		Sound sound = findFreeSound(soundIndex);
 //		if(sound!=null) 
 		{
-	//		sound.reset();
-			sound.stop();
+//			sound.stop();
 			sound.setVolume(volume); // TODO global config
 			sound.play(x,y);	
 		}
 		
 		return sound;
+	}
+	
+	
+	public static Sound playGlobalSound(NetSound snd) {
+		return playGlobalSound(snd.getSoundType());
+	}
+	
+	public static Sound playGlobalSound(SoundType type) {
+		return playGlobalSound(soundBank(type));
 	}
 	
 	/**
@@ -614,7 +621,7 @@ public class Sounds {
 		Sound[] sounds = channels[ (int)channelId % channels.length];		
 		Sound sound = sounds[soundIndex];
 		if(!sound.isPlaying()) {
-			sound.reset();
+//			sound.reset();
 			sound.setVolume(volume); // TODO global config
 			sound.play(x,y);
 		}
@@ -631,25 +638,36 @@ public class Sounds {
 	}
 	
 	public static Sound playFreeSound(int[] soundBank, float x, float y, float damp) {
-		int index = random.nextInt(soundBank.length);
-		int soundIndex = soundBank[index];
-		Sound snd = findFreeSound(soundIndex);
-		if(snd!=null) {
-			//snd.reset();
-			snd.setVolume(volume*damp); // TODO global config
-			snd.play(x,y);
+		if(soundBank != null) {
+			int index = random.nextInt(soundBank.length);
+			int soundIndex = soundBank[index];
+			Sound snd = findFreeSound(soundIndex);
+			if(snd!=null) {
+				snd.setVolume(volume*damp); // TODO global config
+				snd.play(x,y);
+			}
+			return snd;
 		}
-		return snd;
+		
+		return null;
 	}
 	
 	public static Sound playSound(byte soundId, float x, float y) {
+		return playSound(soundId, x, y, 1.0f);
+	}
+	
+	public static Sound playSound(byte soundId, float x, float y, float damp) {
 		SoundType type = SoundType.fromNet(soundId);
-		return playSound(type, x, y);
+		return playSound(type, x, y, damp);
 	}
 	
 	public static Sound playSound(NetSound sound, float x, float y) {
-		SoundType type = SoundType.fromNet(sound.type);
-		return playSound(type, x, y);
+		return playSound(sound, x, y, 1.0f);
+	}
+	
+	public static Sound playSound(NetSound sound, float x, float y, float damp) {
+		SoundType type = sound.getSoundType();
+		return playSound(type, x, y, damp);
 	}
 	
 	public static Sound playSpeechSound(int teamId, byte speech, float x, float y) {
@@ -667,234 +685,263 @@ public class Sounds {
 		return (sound);
 	}
 	
-	public static Sound playSound(SoundType type, float x, float y) {	
-		Sound sound = null;
-		float footStepDamp = 0.35f;
+	/**
+	 * @param type
+	 * @return the corresponding sound bank for the {@link SoundType}
+	 */
+	public static int[] soundBank(SoundType type) {
+		int[] sound = null;
 		switch(type) {
 		case EMPTY_FIRE: 
-			sound = playFreeSound(emptyFireSnd, x, y);
+			sound = emptyFireSnd;
 			break;
 			
 		case THOMPSON_FIRE: 
-			sound = playFreeSound(thompsonFire, x, y);
+			sound = thompsonFire;
 			break;
 		case THOMPSON_RELOAD: 
-			sound = playFreeSound(thompsonReload, x, y);
+			sound = thompsonReload;
 			break;
 		
 		
 		case EXPLOSION:
-			sound = playFreeSound(explodeSnd, x, y);
+			sound = explodeSnd;
 			break;		
 		case RPG_FIRE:
-			sound = playFreeSound(rocketFire, x, y);
+			sound = rocketFire;
 			break;
 			
 		case GRENADE_PINPULLED:
-			sound = playFreeSound(grenadePinPulled, x, y);
+			sound = grenadePinPulled;
 			break;			
 		case GRENADE_THROW:
-			sound = playFreeSound(grenadeThrow, x, y);
+			sound = grenadeThrow;
 			break;
 			
 		case SHOTGUN_FIRE:
-			sound = playFreeSound(shotgunFire, x, y);
+			sound = shotgunFire;
 			break;
 		case SHOTGUN_RELOAD: 
-			sound = playFreeSound(shotgunReload, x, y);
+			sound = shotgunReload;
 			break;
 		case SHOTGUN_PUMP:
-			sound = playFreeSound(shotgunPump, x, y);
+			sound = shotgunPump;
 			break;			
 			
 		case SPRINGFIELD_FIRE:
-			sound = playFreeSound(springfieldFire, x, y);			
+			sound = springfieldFire;			
 			break;
 		case SPRINGFIELD_RECHAMBER:
-			sound = playFreeSound(springfieldRechamber, x, y);
+			sound = springfieldRechamber;
 			break;
 		case SPRINGFIELD_RELOAD: 
-			sound = playFreeSound(springfieldReload, x, y);
+			sound = springfieldReload;
 			break;
 		
 		case RISKER_FIRE:
-			sound = playFreeSound(riskerFire, x, y);			
+			sound = riskerFire;			
 			break;
 		case RISKER_RECHAMBER:
-			sound = playFreeSound(riskerRechamber, x, y);
+			sound = riskerRechamber;
 			break;
 		case RISKER_RELOAD: 
-			sound = playFreeSound(riskerReload, x, y);
+			sound = riskerReload;
 			break;
 			
 		case M1_GARAND_FIRE: 
-			sound = playFreeSound(m1Fire, x, y);
+			sound = m1Fire;
 			break;
 		case M1_GARAND_LAST_FIRE:
-			sound = playFreeSound(m1FireLast, x, y);
+			sound = m1FireLast;
 			break;
 		case M1_GARAND_RELOAD:
-			sound = playFreeSound(m1Reload, x, y);
+			sound = m1Reload;
 			break;
 			
 		case KAR98_FIRE:
-			sound = playFreeSound(kar98Fire, x, y);
+			sound = kar98Fire;
 			break;
 		case KAR98_RECHAMBER:
-			sound = playFreeSound(kar98Rechamber, x, y);
+			sound = kar98Rechamber;
 			break;
 		case KAR98_RELOAD:
-			sound = playFreeSound(kar98Reload, x, y);
+			sound = kar98Reload;
 			break;
 		
 		case MP44_FIRE:
-			sound = playFreeSound(mp44Fire, x, y);
+			sound = mp44Fire;
 			break;
 		case MP44_RELOAD:
-			sound = playFreeSound(mp44Reload, x, y);
+			sound = mp44Reload;
 			break;
 			
 		case MP40_FIRE:
-			sound = playFreeSound(mp40Fire, x, y);
+			sound = mp40Fire;
 			break;
 		case MP40_RELOAD:
-			sound = playFreeSound(mp40Reload, x, y);
+			sound = mp40Reload;
 			break;			
 			
 		case SURFACE_GRASS:			
-			sound = playFreeSound(grassWalk, x, y, footStepDamp);			
+			sound = grassWalk;			
 			break;
 		case SURFACE_METAL:
-			sound = playFreeSound(metalWalk, x, y, footStepDamp);
+			sound = metalWalk;
 			break;
 		case SURFACE_NORMAL:
-			sound = playFreeSound(normalWalk, x, y, footStepDamp);
+			sound = normalWalk;
 			break;
 		case SURFACE_WATER:
-			sound = playFreeSound(waterWalk, x, y, footStepDamp);
+			sound = waterWalk;
 			break;
 		case SURFACE_WOOD:
-			sound = playFreeSound(woodWalk, x, y, footStepDamp);
+			sound = woodWalk;
 			break;
 		case SURFACE_DIRT: 
-			sound = playFreeSound(dirtWalk, x, y, footStepDamp);
+			sound = dirtWalk;
 			break;
 		case SURFACE_SAND: 
-			sound = playFreeSound(dirtWalk, x, y, footStepDamp);
+			sound = dirtWalk;
 			break;
 		case WEAPON_SWITCH:
-			sound = playFreeSound(weaponSwitch, x, y);
+			sound = weaponSwitch;
 			break;
 		case RUFFLE:
-			sound = playFreeSound(ruffle, x, y);
+			sound = ruffle;
 			break;
 		case BOMB_TICK:
-			sound = playFreeSound(bombTick, x, y);
+			sound = bombTick;
 			break;
 		case BOMB_PLANT:
-			sound = playFreeSound(bombPlant, x, y);
+			sound = bombPlant;
 			break;
 		case BOMB_DISARM:
-			sound = playFreeSound(bombDisarm, x, y);
+			sound = bombDisarm;
 			break;			
 		case WEAPON_DROPPED:
-			sound = playFreeSound(weaponDrop, x, y);
+			sound = weaponDrop;
 			break;
 		case WEAPON_PICKUP:		
-			sound = playFreeSound(weaponPickupSnd, x, y);
+			sound = weaponPickupSnd;
 			break;
 		case AMMO_PICKUP:
-			sound = playFreeSound(ammoPickupSnd, x, y);
+			sound = ammoPickupSnd;
 			break;
 		case MELEE_SWING:
-			sound = playFreeSound(meleeSwing, x, y);
+			sound = meleeSwing;
 			break;
 		case MELEE_HIT:
-			sound = playFreeSound(meleeHit, x, y);
+			sound = meleeHit;
 			break;
 		case PISTOL_FIRE:
-			sound = playFreeSound(pistolFire, x, y);
+			sound = pistolFire;
 			break;
 		case PISTOL_RELOAD:
-			sound = playFreeSound(pistolReload, x, y);
+			sound = pistolReload;
 			break;
 		case UI_ELEMENT_HOVER:
-			sound = playFreeSound(uiHover, x, y);
+			sound = uiHover;
 			break;
 		case UI_ELEMENT_SELECT:
-			sound = playFreeSound(uiSelect, x, y);
+			sound = uiSelect;
 			break;			
 		case UI_NAVIGATE:
-			sound = playFreeSound(uiNavigate, x, y);
+			sound = uiNavigate;
 			break;				
 		case UI_KEY_TYPE:
-			sound = playFreeSound(uiKeyType, x, y);
+			sound = uiKeyType;
 			break;
 		case IMPACT_METAL:
-			sound = playFreeSound(impactMetal, x, y);
+			sound = impactMetal;
 			break;
 		case IMPACT_DEFAULT:
-			sound = playFreeSound(impactDefault, x, y);
+			sound = impactDefault;
 			break;
 		case IMPACT_FOLIAGE:			
-			sound = playFreeSound(impactFoliage, x, y);
-			break;
+			sound = impactFoliage;
+			break;		
 		case IMPACT_WOOD:
-			sound = playFreeSound(impactWood, x, y);
+			sound = impactWood;
 			break;
+		case IMPACT_FLESH:
+			sound = hit;
+			break;			
 		case TANK_ON: 
-			sound = playFreeSound(tankOn, x, y);
+			sound = tankOn;
 			break;
 		case TANK_OFF: 
-			sound = playFreeSound(tankOff, x, y);
+			sound = tankOff;
 			break;
 		case TANK_REV_UP: 
-			sound = playFreeSound(tankRevUp, x, y);
+			sound = tankRevUp;
 			break;			
 		case TANK_REV_DOWN: 
-			sound = playFreeSound(tankRevDown, x, y);
+			sound = tankRevDown;
 			break;			
 		case TANK_IDLE: 
-			sound = playFreeSound(tankIdle, x, y);
+			sound = tankIdle;
 			break;			
 		case TANK_SHIFT: 
-			sound = playFreeSound(tankShift, x, y);
+			sound = tankShift;
 			break;			
 		case TANK_TURRET_MOVE: 
-			sound = playFreeSound(tankTurret, x, y);
+			sound = tankTurret;
 			break;					
 		case TANK_MOVE: 
-			sound = playFreeSound(tankMove, x, y);
+			sound = tankMove;
 			break;					
 		case BREATH_HEAVY: 
-			sound = playFreeSound(breadthHeavy, x, y);
+			sound = breadthHeavy;
 			break;
 		case BREATH_LITE:
-			sound = playFreeSound(breadthLite, x, y);
+			sound = breadthLite;
 			break;
 		case HEALTH_PACK_PICKUP:
-			sound = playFreeSound(healthPackPickup, x, y);
+			sound = healthPackPickup;
 		    break;
 		case ENEMY_FLAG_CAPTURED:
-			sound = playFreeSound(enemyFlagCaptured, x, y);
+			sound = enemyFlagCaptured;
 		    break;
 		case ENEMY_FLAG_STOLEN:
-			sound = playFreeSound(enemyFlagStolen, x, y);
+			sound = enemyFlagStolen;
 		    break;
 		case FLAG_CAPTURED:
-			sound = playFreeSound(flagCaptured, x, y);
+			sound = flagCaptured;
 		    break;
 		case FLAG_RETURNED:
-			sound = playFreeSound(flagReturned, x, y);
+			sound = flagReturned;
 		    break;
 		case FLAG_STOLEN:
-			sound = playFreeSound(flagStolen, x, y);
+			sound = flagStolen;
 		    break;
 		case MUTE:
 			
 		default:
 			break;
 		}
+		return sound;
+	}
+	
+	public static Sound playSound(SoundType type, float x, float y) {
+		return playSound(type, x, y, 1.0f);
+	}
+	
+	
+	/**
+	 * Play a sound at the specified location
+	 * 
+	 * @param type
+	 * @param x
+	 * @param y
+	 * @return the {@link Sound}
+	 */
+	public static Sound playSound(SoundType type, float x, float y, float damp) {
+		Sound sound = null;
+		int[] soundBank = soundBank(type);
+		if(soundBank != null) {
+			sound = playFreeSound(soundBank, x, y, damp);
+		}
+		
 		return sound;
 	}
 

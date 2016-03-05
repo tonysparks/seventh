@@ -47,12 +47,7 @@ public class NetGameUpdate implements NetMessage {
 		deadPersistantEntities = new BitArray(SeventhConstants.MAX_PERSISTANT_ENTITIES - 1);
 		hasDeadEntities = true;
 		
-		numberOfInts = entityBitArray.numberOfInts();
-		
-		sounds = new NetSound[SeventhConstants.MAX_SOUNDS];	
-		for(int i = 0; i < sounds.length; i++) {
-			sounds[i] = new NetSound();
-		}
+		numberOfInts = entityBitArray.numberOfInts();		
 	}
 	
 	
@@ -91,10 +86,9 @@ public class NetGameUpdate implements NetMessage {
 		
 		if( (bits & SOUND_MASK) != 0) {
 			numberOfSounds = buffer.get();
-//			sounds = new NetSound[len];
+			sounds = new NetSound[numberOfSounds];
 			for(short i = 0; i < numberOfSounds; i++) {
-//				sounds[i] = new NetSound();
-				sounds[i].read(buffer);
+				sounds[i] = NetSound.readNetSound(buffer);				
 			}
 		}
 		

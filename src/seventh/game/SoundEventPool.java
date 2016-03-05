@@ -31,6 +31,18 @@ public class SoundEventPool {
 		clear();
 	}
 
+	
+	/**
+	 * Emits a sound
+	 * 
+	 * @param id
+	 * @param sound
+	 * @param entityId
+	 */
+	public void emitSound(int id, SoundType sound, int entityId) {
+		emitSound(id, sound, null, entityId);
+	}
+	
 	/**
 	 * Emits the sound
 	 * 
@@ -39,12 +51,25 @@ public class SoundEventPool {
 	 * @param pos
 	 */
 	public void emitSound(int id, SoundType sound, Vector2f pos) {
+		emitSound(id, sound, pos, id);
+	}
+	
+	/**
+	 * Emits the sound
+	 * 
+	 * @param id
+	 * @param sound
+	 * @param pos
+	 * @param entityId
+	 */
+	public void emitSound(int id, SoundType sound, Vector2f pos, int entityId) {
 		if(usedIndex+1 < events.length) {
 		
 			SoundEmittedEvent event = events[++usedIndex];
 			event.setId(id);
 			event.setSoundType(sound);
 			event.setPos(pos);
+			event.setEntityId(entityId);
 		}		
 	}
 	
@@ -54,7 +79,7 @@ public class SoundEventPool {
 	 * @param event
 	 */
 	public void emitSound(SoundEmittedEvent event) {
-		emitSound(event.getId(), event.getSoundType(), event.getPos());
+		emitSound(event.getId(), event.getSoundType(), event.getPos(), event.getEntityId());
 	}
 	
 	/**

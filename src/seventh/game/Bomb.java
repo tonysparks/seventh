@@ -12,6 +12,7 @@ import seventh.game.net.NetBomb;
 import seventh.game.net.NetEntity;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -37,6 +38,8 @@ public class Bomb extends Entity {
 	
 	private int splashWidth, maxSpread;
 	private Rectangle blastRadius;
+	
+	private int tickMarker;
 	
 	/**
 	 * @param position
@@ -76,6 +79,7 @@ public class Bomb extends Entity {
 		
 		this.splashWidth = 20;
 		this.maxSpread = 40;
+		this.tickMarker = 10;
 	}
 	
 	/* (non-Javadoc)
@@ -104,6 +108,19 @@ public class Bomb extends Entity {
 			if(this.nextExplosionTimer.isTime()) {
 				game.newBigExplosion(getCenterPos(), this.planter, this.splashWidth, this.maxSpread, 200);
 			}
+		}
+		
+		if(this.timer.isUpdating()) {
+			if(this.timer.getRemainingTime() < 10_000) {
+				long trSec = this.timer.getRemainingTime()/1_000;
+				if(trSec <= tickMarker) {
+					game.emitSound(getId(), SoundType.BOMB_TICK, getPos());					
+					tickMarker--;
+				}			
+			}
+		}
+		else {
+			tickMarker=10;
 		}
 		
 		

@@ -6,6 +6,7 @@ package seventh.client;
 import java.util.Random;
 
 import seventh.client.gfx.Renderable;
+import seventh.client.sfx.Sound;
 import seventh.game.Entity.Type;
 import seventh.game.net.NetEntity;
 import seventh.math.Rectangle;
@@ -42,6 +43,9 @@ public abstract class ClientEntity implements Renderable {
 	private boolean isAlive;
 	
 	private boolean isDestroyed;
+	
+	private Sound[] attachedSounds;
+	
 	/**
 	 * Invoked on each update
 	 * @author Tony
@@ -117,6 +121,12 @@ public abstract class ClientEntity implements Renderable {
 		this.centerPos.zeroOut();
 		this.movementDir.zeroOut();
 		this.bounds.setLocation(this.pos);
+		
+		if(this.attachedSounds != null) {
+			for(int i = 0; i < this.attachedSounds.length; i++) {
+				this.attachedSounds[i] = null;
+			}
+		}
 	}
 	
 	/**
@@ -149,6 +159,10 @@ public abstract class ClientEntity implements Renderable {
 	public void update(TimeStep timeStep) {
 		Vector2f.Vector2fCopy(this.pos, previousPos);
 		
+		if(attachedSounds != null) {
+			updateSounds(attachedSounds);
+		}
+		
 		if(this.updateReceived) {
 		    previousLastUpdate = lastUpdate;
 			lastUpdate = timeStep.getGameClock();
@@ -163,6 +177,43 @@ public abstract class ClientEntity implements Renderable {
 		}
 	}
 
+	/**
+	 * Update the attached sounds position
+	 * 
+	 * @param sounds
+	 */
+	protected void updateSounds(Sound[] sounds) {
+		Vector2f pos = getCenterPos();		
+		for(int i = 0; i < sounds.length; i++) {
+			Sound snd = sounds[i];
+			if(snd != null) {
+				if(!snd.isPlaying()) {
+					sounds[i] = null;
+				}
+				else {
+					snd.setPosition(pos.x, pos.y);					
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Attach a sound to this entity
+	 * 
+	 * @param sound
+	 */
+	public void attachSound(Sound sound) {
+		if(this.attachedSounds==null) {
+			this.attachedSounds = new Sound[8];
+		}
+		
+		for(int i = 0; i < this.attachedSounds.length; i++) {
+			Sound snd = this.attachedSounds[i];
+			if(snd == null) {
+				this.attachedSounds[i] = sound;
+			}
+		}
+	}
 	
 	/**
 	 * @return the onRemove
