@@ -7,6 +7,7 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.squad.Squad;
+import seventh.ai.basic.squad.SquadAttackAction;
 import seventh.ai.basic.squad.SquadDefendAction;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
@@ -43,6 +44,14 @@ public class TDMTeamStrategy implements TeamStrategy {
 			@Override
 			public void execute(Console console, String... args) {
 				squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
+			}
+		});
+		
+		Cons.getImpl().addCommand(new Command("squadAttack") {
+			
+			@Override
+			public void execute(Console console, String... args) {
+				squad.doAction(new SquadAttackAction(new Vector2f(275, 215)));
 			}
 		});
 	}
