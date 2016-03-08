@@ -143,6 +143,10 @@ public interface GameInfo {
 	 */
 	public abstract List<Vehicle> getVehicles();
 	
+	/**
+	 * @return the flags
+	 */
+	public abstract List<Flag> getFlags();
 	
 	/**
 	 * Gets a {@link BombTarget} if its in arms length from the {@link PlayerEntity}

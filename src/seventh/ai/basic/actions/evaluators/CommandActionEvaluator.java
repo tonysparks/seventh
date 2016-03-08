@@ -33,6 +33,15 @@ public class CommandActionEvaluator extends ActionEvaluator {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.actions.evaluators.ActionEvaluator#isContinuable()
+	 */
+	@Override
+	public boolean isContinuable() {	
+		return true;
+	}
+	
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.actions.evaluators.ActionEvaluator#calculateDesirability(seventh.ai.basic.Brain)
 	 */
 	@Override

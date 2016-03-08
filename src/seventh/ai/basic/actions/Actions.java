@@ -30,6 +30,7 @@ import seventh.ai.basic.actions.atom.GuardUntilAction;
 import seventh.ai.basic.actions.atom.MoveToAction;
 import seventh.ai.basic.actions.atom.MoveToBombAction;
 import seventh.ai.basic.actions.atom.MoveToBombTargetToPlantAction;
+import seventh.ai.basic.actions.atom.MoveToFlagAction;
 import seventh.ai.basic.actions.atom.MoveToVehicleAction;
 import seventh.ai.basic.actions.atom.PlantBombAction;
 import seventh.ai.basic.actions.atom.SecureZoneAction;
@@ -42,8 +43,10 @@ import seventh.ai.basic.actions.evaluators.MoveTowardEnemyEvaluator;
 import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
 import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
 import seventh.game.BombTarget;
+import seventh.game.Flag;
 import seventh.game.PlayerEntity;
 import seventh.game.vehicles.Vehicle;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Randomizer;
 
@@ -89,6 +92,9 @@ public class Actions {
 		return new AvoidMoveToAction(destination, zones);
 	}	
 	
+	public MoveToFlagAction moveToFlagAction(Flag flag) {
+		return new MoveToFlagAction(flag);
+	}
 	
 	public SecureZoneAction secureZoneAction(Zone zone) {
 		return new SecureZoneAction(zone);
@@ -283,5 +289,22 @@ public class Actions {
 	public Action guard(Vector2f position) {
 	    SequencedAction goal = new SequencedAction("guard: " + position);
 	    return goal.addNext(new MoveToAction(position)).addNext(new GuardAction());	    
+	}
+	
+	public Action returnFlag(Flag flag) {
+		SequencedAction goal = new SequencedAction("returnFlag: " + flag.getType());
+		// TODO
+	    return goal.addNext(new MoveToFlagAction(flag));
+	}
+	
+	public Action captureFlag(Flag flag, Vector2f homebase) {
+		SequencedAction goal = new SequencedAction("captureFlag: " + flag.getType());		
+	    return goal.addNext(new MoveToFlagAction(flag))
+	    		   .addNext(new MoveToAction(homebase));
+	}
+	
+	public Action defendFlag(Flag flag, Rectangle homebase) {
+		SequencedAction goal = new SequencedAction("defendFlag: " + flag.getType());				
+	    return goal.addNext(new MoveToFlagAction(flag));
 	}
 }

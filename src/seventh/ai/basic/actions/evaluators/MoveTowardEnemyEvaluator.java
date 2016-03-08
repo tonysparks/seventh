@@ -64,7 +64,10 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		return getGoals().chargeEnemy(brain.getTargetingSystem().getCurrentTarget());
+		if(brain.getTargetingSystem().hasTarget()) {
+			return getGoals().chargeEnemy(brain.getTargetingSystem().getCurrentTarget());
+		}
+		return null;
 	}
 
 }

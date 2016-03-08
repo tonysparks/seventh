@@ -13,6 +13,7 @@ import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
 import seventh.ai.basic.actions.evaluators.ExploreActionEvaluator;
 import seventh.ai.basic.actions.evaluators.InvestigateActionEvaluator;
 import seventh.ai.basic.actions.evaluators.ReloadWeaponEvaluator;
+import seventh.ai.basic.actions.evaluators.StrategyEvaluator;
 import seventh.ai.basic.actions.evaluators.SwitchWeaponEvaluator;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.shared.Randomizer;
@@ -46,7 +47,7 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 										new CommandActionEvaluator(goals, rand.getRandomRange(0.7, 0.8), 0.8),
 										new InvestigateActionEvaluator(goals, rand.getRandomRange(0.5, 0.9), 0.6),
 //										new RideVehicleEvaluator(goals, 1.0f,1f),//brain.getRandomRange(0.5, 0.7), 0.51),
-//										new StrategyEvaluator(teamStrategy, goals, brain.getRandomRange(0.1, ), 0)
+										new StrategyEvaluator(teamStrategy, goals, rand.getRandomRange(0.2, 0.6), 0),
 										new ExploreActionEvaluator(goals, rand.getRandomRange(0.1, 0.5), 0.5)											
 				),
 				

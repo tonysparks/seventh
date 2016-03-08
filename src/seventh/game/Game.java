@@ -135,6 +135,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 	
 	private List<BombTarget> bombTargets;
 	private List<Vehicle> vehicles;
+	private List<Flag> flags;
 	
 	private Players players;
 				
@@ -209,6 +210,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		
 		this.bombTargets = new ArrayList<BombTarget>();
 		this.vehicles = new ArrayList<Vehicle>();
+		this.flags = new ArrayList<Flag>();
 		
 		this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
 		this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
@@ -567,6 +569,14 @@ public class Game implements GameInfo, Debugable, Updatable {
 	@Override
 	public List<Vehicle> getVehicles() {
 		return vehicles;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.game.GameInfo#getFlags()
+	 */
+	@Override
+	public List<Flag> getFlags() {	
+		return this.flags;
 	}
 	
 	/* (non-Javadoc)
@@ -1439,6 +1449,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 	public Flag newAlliedFlag(Vector2f position) {
 		Flag flag = new Flag(this, position, Type.ALLIED_FLAG);
 		addEntity(flag);
+		this.flags.add(flag);
+		
 		return flag;
 	}
 	
@@ -1449,6 +1461,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 	public Flag newAxisFlag(Vector2f position) {
 		Flag flag = new Flag(this, position, Type.AXIS_FLAG);
 		addEntity(flag);
+		this.flags.add(flag);
+		
 		return flag;
 	}
 	
@@ -1751,11 +1765,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 							NetSoundByEntity sndByEntity = (NetSoundByEntity) snd;
 							if(entities[sndByEntity.entityId] == null) {
 								sndByEntity.enablePosition();
-								System.out.println("Sound enabled!");
 							}
-							else {
-								System.out.println("Sound by entity!");
-							}
+							
 							break;
 						default: /* do nothing */
 					}

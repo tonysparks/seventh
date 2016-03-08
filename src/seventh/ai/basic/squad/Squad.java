@@ -3,13 +3,12 @@
  */
 package seventh.ai.basic.squad;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.World;
-import seventh.ai.basic.squad.SquadMember.Role;
+import seventh.ai.basic.teamstrategy.Roles;
+import seventh.game.PlayerInfo;
+import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.shared.Updatable;
 
@@ -22,48 +21,51 @@ import seventh.shared.Updatable;
 public class Squad implements Updatable {
 
     private DefaultAISystem aiSystem;
-    private List<SquadMember> members;
+    private Brain[] members;
+    private Roles roles;
     
     private SquadAction squadAction;
+    private int size;
     /**
      * 
      */
     public Squad(DefaultAISystem aiSystem) {
         this.aiSystem = aiSystem;
-        this.members = new ArrayList<SquadMember>();
+        this.members = new Brain[SeventhConstants.MAX_PLAYERS];
+        this.roles = new Roles();
     }
+    
+    /**
+	 * @return the roles
+	 */
+	public Roles getRoles() {
+		return roles;
+	}
 
     public void addSquadMember(Brain bot) {
-        if(this.members.isEmpty()) {
-            this.members.add(new SquadMember(bot, Role.LEADER));
-        }
-        else {
-            this.members.add(new SquadMember(bot, assignRole(bot)));
-        }
+    	if(bot.getPlayer().isAlive()) {
+    		if(this.members[bot.getPlayer().getId()] == null) {
+    			this.size++;	
+    		}
+    		
+    		this.members[bot.getPlayer().getId()] = bot;
+    	}
     }
     
     public boolean isInSquad(Brain bot) {
-        for(int i = 0; i < this.members.size(); i++) {
-            SquadMember member = this.members.get(i);
-            if(member.getBot().getPlayer().getId() == bot.getPlayer().getId()) {
+        for(int i = 0; i < this.members.length; i++) {
+            Brain member = this.members[i];
+            if(member.getPlayer().getId() == bot.getPlayer().getId()) {
                 return true;
             }
         }
         return false;
     }
     
-    public boolean hasRole(Role role) {
-        for(int i = 0; i < this.members.size(); i++) {
-            SquadMember member = this.members.get(i);
-            if(member.getRole().equals(role)) {
-                return true;
-            }
-        }
-        return false;
+    public int squadSize() {
+    	return size;
     }
-    public Role assignRole(Brain bot) {
-        return Role.LEFT_FLANK;
-    }
+    
     
     public World getWorld() {
         return this.aiSystem.getWorld();
@@ -79,7 +81,7 @@ public class Squad implements Updatable {
     /**
      * @return the members
      */
-    public List<SquadMember> getMembers() {
+    public Brain[] getMembers() {
         return members;
     }
     
@@ -104,4 +106,13 @@ public class Squad implements Updatable {
             }
         }
     }
+    
+    public void onPlayerKilled(PlayerInfo player) {
+    	this.members[player.getId()] = null;
+    	if(this.size>0) {
+    		this.size--;
+    	}
+    	
+    	this.roles.removeDeadPlayer(player);
+    }    
 }

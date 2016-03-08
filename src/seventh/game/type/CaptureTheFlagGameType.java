@@ -112,6 +112,36 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 		this.spawnDelay = spawnDelay;
 	}
 
+	/**
+	 * @return the alliedHomeBase
+	 */
+	public Rectangle getAlliedHomeBase() {
+		return alliedHomeBase;
+	}
+	
+	/**
+	 * @return the axisHomeBase
+	 */
+	public Rectangle getAxisHomeBase() {
+		return axisHomeBase;
+	}
+	
+	/**
+	 * @return the alliedFlag
+	 */
+	public Flag getAlliedFlag() {
+		return alliedFlag;
+	}
+	
+	/**
+	 * @return the axisFlag
+	 */
+	public Flag getAxisFlag() {
+		return axisFlag;
+	}
+	
+	
+	
 	/* (non-Javadoc)
 	 * @see palisma.game.type.GameType#registerListeners(leola.frontend.listener.EventDispatcher)
 	 */

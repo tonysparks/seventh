@@ -478,6 +478,27 @@ public class Team implements Debugable {
 		return numberOfAlivePlayers;
 	}
 	
+	/**
+	 * @return the number of bots on this team
+	 */
+	public int getNumberOfBots() {
+		int numberOfBots = 0;
+		for(int i = 0; i < this.players.size(); i++) {
+			if(this.players.get(i).isBot()) {
+				numberOfBots++;
+			}
+		}
+		
+		return numberOfBots;
+	}
+	
+	/**
+	 * @return the current team size
+	 */
+	public int getTeamSize() {
+		return this.players.size();
+	}
+	
 	
 	/**
 	 * @return this team on a serializable form

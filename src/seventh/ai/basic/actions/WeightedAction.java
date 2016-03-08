@@ -67,20 +67,21 @@ public class WeightedAction extends CompositeAction {
 				((newEvaluator.getKeepBias() > this.currentActiveEvaluator.getKeepBias() ) &&
 				    (newEvaluator != this.currentActiveEvaluator)) ) { 
 				
-				this.currentActiveEvaluator = newEvaluator;
-				Action action = this.currentActiveEvaluator.getAction(brain);
-
-				// TODO : Figure out how to overridde the the current evaluator
-				
-				// TODO: -- BUG with taking command overriding shooting player
-				
-				
-				// if it is a CommandActionEvaluator (override the command)
-//					if(!(action instanceof WaitAction))
-//						System.out.println(action.getClass().getSimpleName());
-				this.replace(action);
-				if(newEvaluator.isRepeatable()) {
-					action.start(brain);
+				Action action = newEvaluator.getAction(brain);
+				if(action!=null) {
+					this.currentActiveEvaluator = newEvaluator;
+					
+					if(this.currentActiveEvaluator.isContinuable()) {
+						interrupt(brain);										
+						addFirstAction(action);					
+					}
+					else {			
+						this.replace(action);
+					}
+					
+					if(newEvaluator.isRepeatable()) {
+						action.start(brain);
+					}
 				}
 			}
 		}

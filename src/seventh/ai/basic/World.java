@@ -6,6 +6,7 @@ package seventh.ai.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import seventh.ai.basic.PathPlanner.AvoidSearchPath;
 import seventh.ai.basic.actions.Actions;
 import seventh.game.BombTarget;
 import seventh.game.Entity;
@@ -56,6 +57,8 @@ public class World {
 	
 	private AIConfig config;
 	
+	private AvoidSearchPath<?> searchPath;
+	
 	/**
 	 * @param entities
 	 * @param map
@@ -86,6 +89,7 @@ public class World {
 		this.attackDirections = new ArrayList<AttackDirection>();
 		
 		this.activeBombs = new ArrayList<BombTarget>();
+		this.searchPath = new AvoidSearchPath<>();
 	}
 	
 	/**
@@ -647,5 +651,33 @@ public class World {
         }                       
         
         return this.attackDirections;
+    }
+    
+    private void findPath(Zone[] adjacentZones, Vector2f start, Vector2f destination) {
+    	
+    	Zone targetZone = zones.getZone(destination);
+    	if(targetZone.isHabitable()) {
+    		Zone[] adjacent = zones.getAdjacentZones(targetZone);
+    		if(adjacent != null) {
+	    		for(int i = 0; i < adjacent.length; i++)  {
+	    			Zone zone = adjacent[i];
+	    			if(zone.isHabitable()) {
+	    			//	graph.findPathAvoidZones(searchPath, start, destination, zonesToAvoid)
+	    			}
+	    			
+	    		}
+    		}
+    	}
+    }
+    
+    public void findPath(Vector2f start, Vector2f destination) {
+    	
+    	Zone targetZone = zones.getZone(destination);
+    	if(targetZone.isHabitable()) {
+    		Zone[] adjacent = zones.getAdjacentZones(targetZone);
+    		if(adjacent != null) {
+	    		findPath(adjacent, start, destination);
+    		}
+    	}
     }
 }

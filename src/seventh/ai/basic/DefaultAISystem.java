@@ -12,6 +12,7 @@ import seventh.ai.AISystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.commands.AICommands;
+import seventh.ai.basic.teamstrategy.CaptureTheFlagTeamStrategy;
 import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
 import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
@@ -108,20 +109,27 @@ public class DefaultAISystem implements AISystem {
 		initScriptingEngine();
 		
 		this.aiCommands = new AICommands(this);
+		this.world = new World(config, game, zones, goals, random);
 		
 		GameType gameType = game.getGameType();
 		
-		if(gameType.getType().equals(GameType.Type.OBJ)) {
-			this.alliedAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAlliedTeam());
-			this.axisAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAxisTeam());
-		}
-		else {
-			this.alliedAIStrategy = new TDMTeamStrategy(this, gameType.getAlliedTeam());
-			this.axisAIStrategy = new TDMTeamStrategy(this, gameType.getAxisTeam());
-		}
+		switch(gameType.getType()) {
+			case CTF:
+				this.alliedAIStrategy = new CaptureTheFlagTeamStrategy(this, gameType.getAlliedTeam());
+				this.axisAIStrategy = new CaptureTheFlagTeamStrategy(this, gameType.getAxisTeam());
+				break;
+			case OBJ:
+				this.alliedAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAlliedTeam());
+				this.axisAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAxisTeam());
+				break;
+			case TDM:				
+			default:
+				this.alliedAIStrategy = new TDMTeamStrategy(this, gameType.getAlliedTeam());
+				this.axisAIStrategy = new TDMTeamStrategy(this, gameType.getAxisTeam());
+				break;
 		
+		}
         
-		this.world = new World(config, game, zones, goals, random);
 		
 		PlayerInfos players = game.getPlayerInfos();
 		players.forEachPlayerInfo(new PlayerInfoIterator() {

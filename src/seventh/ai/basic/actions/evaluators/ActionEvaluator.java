@@ -56,6 +56,10 @@ public abstract class ActionEvaluator {
 		return false;
 	}
 	
+	public boolean isContinuable() {
+		return false;
+	}
+	
 	/**
 	 * Calculates the desirability
 	 * 

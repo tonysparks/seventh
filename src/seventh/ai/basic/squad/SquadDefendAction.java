@@ -6,7 +6,12 @@ package seventh.ai.basic.squad;
 import java.util.List;
 
 import seventh.ai.basic.AttackDirection;
+import seventh.ai.basic.Brain;
 import seventh.ai.basic.World;
+import seventh.ai.basic.actions.Action;
+import seventh.ai.basic.actions.WaitAction;
+import seventh.ai.basic.teamstrategy.Roles;
+import seventh.ai.basic.teamstrategy.Roles.Role;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -17,8 +22,10 @@ import seventh.shared.TimeStep;
 public class SquadDefendAction extends SquadAction {
 
     private Vector2f defendPosition;
+    private List<AttackDirection> directionsToDefend;
+    
     /**
-     * 
+     * @param position
      */
     public SquadDefendAction(Vector2f position) {
         this.defendPosition = position;
@@ -28,25 +35,46 @@ public class SquadDefendAction extends SquadAction {
     public void start(Squad squad) {
         World world = squad.getWorld();
         float radius = (float)world.getRandom().getRandomRange(100f, 150f);
-        List<AttackDirection> directionsToDefend = world.getAttackDirections(this.defendPosition, radius, 12);
+        directionsToDefend = world.getAttackDirections(this.defendPosition, radius, 12);
 
-        List<SquadMember> members = squad.getMembers();
-        if(!directionsToDefend.isEmpty() && !members.isEmpty()) {
-        	int increment = 1;
-        	if(directionsToDefend.size()> members.size()) {
-        		increment = directionsToDefend.size() / members.size();
-        	}
-        	
-            int i = 0;
-            for(SquadMember member : members) {
-                AttackDirection dir = directionsToDefend.get( (i += increment) % directionsToDefend.size());
-                Vector2f position = new Vector2f(dir.getDirection());
-                //Vector2f.Vector2fMA(defendPosition, dir.getDirection(), 10f + world.getRandom().nextInt(100), position);
-                
-                member.getBot().doAction(world.getGoals().guard(position));
-            
-            }
-        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.squad.SquadAction#getAction(seventh.ai.basic.squad.Squad)
+     */
+    @Override
+    public Action getAction(Squad squad) {
+    	if(squad.squadSize() > 0 ) {
+    		World world = squad.getWorld();
+	        Brain[] members = squad.getMembers();
+	        Roles roles = squad.getRoles();
+	        
+	        int squadSize = squad.squadSize();
+	        
+	        if(!directionsToDefend.isEmpty() && squadSize>0) {
+	        	int increment = 1;
+	        	if(directionsToDefend.size()> squadSize) {
+	        		increment = directionsToDefend.size() / squadSize;
+	        	}
+	        	
+	            int i = 0;
+	        	for(int j = 0; j < members.length; j++) {
+	        		Brain member = members[j];
+	        		if(member!=null) {
+	        			if(roles.getAssignedRole(member.getPlayer()) != Role.None) {
+			                AttackDirection dir = directionsToDefend.get( (i += increment) % directionsToDefend.size());
+			                Vector2f position = new Vector2f(dir.getDirection());
+			                //Vector2f.Vector2fMA(defendPosition, dir.getDirection(), 10f + world.getRandom().nextInt(100), position);
+			                
+			                return (world.getGoals().guard(position));
+	        			}
+	        		}
+	            
+	            }
+	        }
+    	}
+    	
+    	return new WaitAction(500);
     }
     
     /* (non-Javadoc)

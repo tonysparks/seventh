@@ -6,8 +6,13 @@ package seventh.ai.basic.squad;
 import java.util.List;
 
 import seventh.ai.basic.AttackDirection;
+import seventh.ai.basic.Brain;
 import seventh.ai.basic.World;
+import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.SequencedAction;
+import seventh.ai.basic.actions.WaitAction;
+import seventh.ai.basic.teamstrategy.Roles;
+import seventh.ai.basic.teamstrategy.Roles.Role;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -18,6 +23,7 @@ import seventh.shared.TimeStep;
 public class SquadAttackAction extends SquadAction {
 
     private Vector2f attackPosition;
+    private List<AttackDirection> attackDirections;
     
     /**
      * @param position
@@ -30,25 +36,36 @@ public class SquadAttackAction extends SquadAction {
     public void start(Squad squad) {
         World world = squad.getWorld();
 
-        
-        List<SquadMember> members = squad.getMembers();
-        if(!members.isEmpty()) {
-        	List<AttackDirection> attackDirections = world.getAttackDirections(attackPosition, 150f, members.size());
-        	if(attackDirections.isEmpty()) {
-        		attackDirections.add(new AttackDirection(attackPosition));
-        	}
+        this.attackDirections = world.getAttackDirections(attackPosition, 150f, squad.squadSize());        
+    	if(attackDirections.isEmpty()) {
+    		attackDirections.add(new AttackDirection(attackPosition));
+    	}
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.squad.SquadAction#getAction(seventh.ai.basic.squad.Squad)
+     */
+    @Override
+    public Action getAction(Squad squad) {
+        if(squad.squadSize()>0) {
+        	World world = squad.getWorld();
+        	Brain[] members = squad.getMembers();
+        	Roles roles = squad.getRoles();
+        	
         	int j = 0;
-        	for(int i = 0; i < members.size(); i++) {
-        		SquadMember member = members.get(i);
-        		AttackDirection dir = attackDirections.get( (j+=1) % attackDirections.size());
-        		member.getBot().doAction(
-        				new SequencedAction("squadAttack")
-        					.addNext(world.getGoals().moveToAction(dir.getDirection()))
-        					.addNext(world.getGoals().waitAction(10_000))
-        				 
-        				);
+        	for(int i = 0; i < members.length; i++) {
+        		Brain member = members[i];
+        		if(member!=null) {
+        			if(roles.getAssignedRole(member.getPlayer()) != Role.None) {        			
+		        		AttackDirection dir = attackDirections.get( (j+=1) % attackDirections.size());
+		        		return new SequencedAction("squadAttack")
+		        					.addNext(world.getGoals().moveToAction(dir.getDirection()));
+        			}
+        		}
         	}
         }
+        
+        return new WaitAction(500);
     }
     
     /* (non-Javadoc)
