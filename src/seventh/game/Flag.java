@@ -103,7 +103,7 @@ public class Flag extends Entity {
 	 * @return true if the flag is at its home base
 	 */
 	public boolean isAtHomeBase() {
-		return Vector2f.Vector2fEquals(this.pos, getSpawnLocation());
+		return Vector2f.Vector2fApproxEquals(this.pos, getSpawnLocation());
 	}
 	
 	/**
