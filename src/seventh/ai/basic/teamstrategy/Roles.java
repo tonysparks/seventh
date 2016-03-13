@@ -75,21 +75,15 @@ public class Roles {
 	
 	public void assignRole(Role role, PlayerInfo entity) {
 		if(entity.isAlive()) {
-			this.roles[role.ordinal()][entity.getId()] = entity;
-		}
-	}
-	
-	public void reassignRole(Role role, PlayerInfo entity) {
-		if(entity.isAlive()) {
-		
+			
 			for(int i = 0; i < this.roles.length; i++) {
 				this.roles[i][entity.getId()] = null;
 			}
 			
-			assignRole(role, entity);
+			this.roles[role.ordinal()][entity.getId()] = entity;
 		}
 	}
-	
+		
 	public void removeDeadEntities() {
 		for(int i = 0; i < this.roles.length; i++) {
 			for(int j = 0; j < this.roles[i].length; j++) {
