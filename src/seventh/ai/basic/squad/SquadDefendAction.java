@@ -11,7 +11,6 @@ import seventh.ai.basic.World;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.WaitAction;
 import seventh.ai.basic.teamstrategy.Roles;
-import seventh.ai.basic.teamstrategy.Roles.Role;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -61,7 +60,8 @@ public class SquadDefendAction extends SquadAction {
 	        	for(int j = 0; j < members.length; j++) {
 	        		Brain member = members[j];
 	        		if(member!=null) {
-	        			if(roles.getAssignedRole(member.getPlayer()) != Role.None) {
+	        			//if(roles.getAssignedRole(member.getPlayer()) != Role.None) 
+	        			{
 			                AttackDirection dir = directionsToDefend.get( (i += increment) % directionsToDefend.size());
 			                Vector2f position = new Vector2f(dir.getDirection());
 			                //Vector2f.Vector2fMA(defendPosition, dir.getDirection(), 10f + world.getRandom().nextInt(100), position);
