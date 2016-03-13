@@ -19,6 +19,8 @@ import seventh.ai.basic.squad.SquadDefendAction;
 import seventh.ai.basic.teamstrategy.Roles.Role;
 import seventh.game.Flag;
 import seventh.game.GameInfo;
+import seventh.game.Player;
+import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.type.CaptureTheFlagGameType;
@@ -28,7 +30,7 @@ import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 
 /**
- * Handles the objective based game type.
+ * The overall team strategy for capture the flag bots
  * 
  * @author Tony
  *
@@ -92,6 +94,9 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 	}
 	
 	private void assignRoles() {
+		
+		/* Let's first assign roles to any idol bots
+		 */
 		for(int i = 0; i < unassignedPlayers.length; i++) {
 			PlayerInfo player = this.unassignedPlayers[i];
 			if(player != null && player.isAlive()) {
@@ -107,25 +112,95 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 		}
 		
 		
-		/* If the enemy has stolen their flag, reassign bots
-		 * to look for it
-		 * TODO -- add evaluators dynamically
-		 * 
+		/* Now let's asses the game world and determine if we need
+		 * to reassign any bots
 		 */
-//		if(this.enemyFlag.isBeingCarried()||!this.enemyFlag.isAtHomeBase()) {
-//			if(!this.roles.hasRoleAssigned(Role.Retriever)) {
-//				PlayerInfo player = this.roles.getPlayer(Role.Defender);
-//			}
-//		}
+		if(this.enemyFlag.isBeingCarried()||!this.enemyFlag.isAtHomeBase()) {
+			
+			/* Ensure we need to fulfill this role */
+			if(!this.roles.hasRoleAssigned(Role.Retriever)) {
+				
+				/* Defenders automatically are Retrievers if the flag
+				 * is gone, so if we don't have any defenders convert one
+				 * of our offensive bots
+				 */
+				if(!this.roles.hasRoleAssigned(Role.Defender)) {				
+					PlayerInfo retriever = getBestPlayerToRetrieveFlag();
+					if(retriever!=null) {
+						assignRole(Role.Retriever, retriever);
+					}									
+				}
+				
+			}		
+		}
+		else {
+			
+			// TODO: What else???
+			
+		}
+	}
+	
+	
+	/**
+	 * @return the best possible player to go and retrieve the flag
+	 */
+	private PlayerInfo getBestPlayerToRetrieveFlag() {
+		PlayerInfo bestPlayer = null;
+		float bestDistance = -1;
+		List<Player> players = this.team.getPlayers();
+		for(int i = 0; i < players.size(); i++) {
+			Player player = players.get(i);
+			if(player.isAlive() && player.isBot()) {
+				PlayerEntity ent = player.getEntity();
+				
+				// I know this is cheating like crazy, maybe
+				// I can do something smarter...
+				float distanceFromFlag = this.enemyFlag.distanceFromSq(ent);
+				if(bestPlayer==null||distanceFromFlag<bestDistance) {
+					
+					/* check and see if we are about to score
+					 * with this player, if so, don't use them
+					 */
+					if(this.teamsFlag.isBeingCarried()) {
+						if(this.teamsFlag.getCarriedBy().getId() == player.getId()) {
+							float distanceToScore = this.teamsFlag.distanceFromSq(captureDestination);
+							if(distanceToScore < distanceFromFlag) {
+								continue;
+							}
+						}
+					}
+					
+					
+					bestPlayer = player;
+					bestDistance = distanceFromFlag;
+				}
+			}
+		}
+		
+		return bestPlayer;
 	}
 	
 	private Role findRole(PlayerInfo player) {
+		
+		/* if this player got side tracked and is currently carrying the flag, get their
+		 * ass back to base to score
+		 */
+		if(this.teamsFlag.isBeingCarried() && this.teamsFlag.getCarriedBy().getId() == player.getId()) {
+			return Role.Capturer;
+		}
+		
+		/* if the enemy flag is out of our base, go send this bot hunting
+		 * for it
+		 */
 		if(this.enemyFlag.isBeingCarried()||!this.enemyFlag.isAtHomeBase()) {
 			if(!this.roles.hasRoleAssigned(Role.Retriever)) {
 				return Role.Retriever;
 			}
-		}
+		}				
 		
+		/* if the enemy flag is safe at our base, let's be aggressive
+		 * and go and try to capture our flag
+		 */
 		if(!this.teamsFlag.isBeingCarried()) {
 			if(!this.roles.hasRoleAssigned(Role.Capturer)) {
 				return Role.Capturer;
@@ -161,6 +236,9 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 				if(this.enemyFlag.isAtHomeBase()) {
 					if(this.defenseSquad.squadSize()>0) {
 						return this.currentSquadAction.getAction(defenseSquad);
+					}
+					else {
+						return goals.defendFlag(this.enemyFlag, this.captureArea);
 					}
 				}
 				return goals.returnFlag(this.enemyFlag);
@@ -293,8 +371,10 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 	 * @see seventh.ai.AIGameTypeStrategy#update(seventh.shared.TimeStep, seventh.game.Game)
 	 */
 	@Override
-	public void update(TimeStep timeStep, GameInfo game) {				
-		assignRoles();		
+	public void update(TimeStep timeStep, GameInfo game) {	
+		if(this.hasRoundStarted) {
+			assignRoles();		
+		}
 		
 		//this.currentSquadAction.update(timeStep);
 	}
