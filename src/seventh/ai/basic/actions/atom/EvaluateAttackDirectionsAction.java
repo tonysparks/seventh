@@ -3,6 +3,7 @@
  */
 package seventh.ai.basic.actions.atom;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import seventh.ai.basic.AttackDirection;
@@ -26,7 +27,7 @@ public class EvaluateAttackDirectionsAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {
-		List<AttackDirection> attackDirs = brain.getWorld().getAttackDirections(brain.getEntityOwner());		
+		List<AttackDirection> attackDirs = new ArrayList<>(brain.getWorld().getAttackDirections(brain.getEntityOwner()));		
 		this.getActionResult().setSuccess(attackDirs);
 	}
 	
