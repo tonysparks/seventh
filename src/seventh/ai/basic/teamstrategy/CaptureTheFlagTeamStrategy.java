@@ -75,6 +75,12 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 	private boolean hasRoundStarted;
 	
 	/**
+	 * The percentage point of being 
+	 * aggressive
+	 */
+	private double aggressiveness;
+	
+	/**
 	 * @param aiSystem
 	 * @param team
 	 */
@@ -90,7 +96,7 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 		this.defendPositions = new ArrayList<>();
 		
 		this.unassignedPlayers = new PlayerInfo[SeventhConstants.MAX_PLAYERS];
-		this.defenseSquad = new Squad(aiSystem);				
+		this.defenseSquad = new Squad(aiSystem);					
 	}
 	
 	private void assignRoles() {
@@ -202,13 +208,15 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 		 * and go and try to capture our flag
 		 */
 		if(!this.teamsFlag.isBeingCarried()) {
-			if(!this.roles.hasRoleAssigned(Role.Capturer)) {
-				return Role.Capturer;
-			}
+			int numberAssigned = this.roles.getNumberAssignedToRole(Role.Capturer);
 			
-			if(!this.roles.hasRoleAssigned(Role.CoCapturer)) {
-					return Role.CoCapturer;
-			}			
+			int numberOfBots = this.team.getNumberOfBots();
+			if(numberOfBots>0) {
+				double amount = (double)numberAssigned / (double)numberOfBots;
+				if(amount<this.aggressiveness) {
+					return Role.Capturer;	
+				}
+			}						
 		}
 		
 		return Role.Defender;		
@@ -227,7 +235,9 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 	
 	private void dispatchRoleAction(Role role, PlayerInfo player) {
 		Brain brain = aiSystem.getBrain(player.getId());
-		brain.doAction(getActionForRole(role));
+		if(brain != null) {
+			brain.doAction(getActionForRole(role));
+		}
 	}
 	
 	private Action getActionForRole(Role role) {
@@ -243,7 +253,6 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 				}
 				return goals.returnFlag(this.enemyFlag);
 			}
-			case CoCapturer:
 			case Capturer: return goals.captureFlag(teamsFlag, captureDestination);
 			case Retriever: return goals.returnFlag(this.enemyFlag);
 			default: return goals.wander();
@@ -313,12 +322,14 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 		this.stealDestination = this.teamsFlag.getSpawnLocation();
 		
 		World world = this.aiSystem.getWorld();
-		List<AttackDirection> dirs = world.getAttackDirections(this.captureDestination, (this.captureArea.width+this.captureArea.height) / 2f, 12);
+		List<AttackDirection> dirs = new ArrayList<>(world.getAttackDirections(this.captureDestination, (this.captureArea.width+this.captureArea.height) / 2f, 12));
 		for(AttackDirection dir : dirs) {
 			this.defendPositions.add(dir.getDirection());
 		}
 		
-		dirs = world.getAttackDirections(this.stealDestination, (this.stealArea.width+this.stealArea.height) / 2f, 12);
+		dirs.clear();
+		
+		dirs.addAll(world.getAttackDirections(this.stealDestination, (this.stealArea.width+this.stealArea.height) / 2f, 12));
 		for(AttackDirection dir : dirs) {
 			this.stealPositions.add(dir.getDirection());
 		}
@@ -330,6 +341,8 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 		this.currentSquadAction.start(defenseSquad);
 		
 		this.hasRoundStarted = true;
+		
+		this.aggressiveness = world.getRandom().getRandomRangeMin(0.25f);
 	}
 	
 		

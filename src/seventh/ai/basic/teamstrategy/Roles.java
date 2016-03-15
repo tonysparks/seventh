@@ -16,7 +16,6 @@ public class Roles {
 
 	public enum Role {
 		Capturer,	
-		CoCapturer,
 		Defender,		
 		Retriever,
 		
@@ -82,6 +81,17 @@ public class Roles {
 			
 			this.roles[role.ordinal()][entity.getId()] = entity;
 		}
+	}
+	
+	public int getNumberAssignedToRole(Role role) {
+		int sum = 0;
+		for(int i = 0; i < this.roles[role.ordinal()].length; i++) {
+			PlayerInfo entity = this.roles[role.ordinal()][i];
+			if(entity!=null && entity.isAlive()) {
+				sum++;
+			}
+		}
+		return sum;
 	}
 		
 	public void removeDeadEntities() {
