@@ -51,7 +51,6 @@ public class Brain implements Debugable {
 		this.motion = new Locomotion(this);
 		this.sensors = new Sensors(this);
 		this.thoughtProcess = new WeightedThoughtProcess(strategy, this); 
-//				new SimpleThoughtProcess(new ReactiveThinkListener(strategy, world.getGoals()), this);
 		this.communicator = new Communicator(world);
 		
 		this.targetingSystem = new TargetingSystem(this);
