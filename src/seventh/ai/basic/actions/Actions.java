@@ -15,6 +15,7 @@ import seventh.ai.basic.AIConfig;
 import seventh.ai.basic.AttackDirection;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Cover;
+import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.actions.atom.AvoidMoveToAction;
 import seventh.ai.basic.actions.atom.DefendAttackDirectionsAction;
@@ -63,12 +64,14 @@ public class Actions {
 	private Randomizer random;
 	private AIConfig config;
 	
+	private DefaultAISystem aiSystem;
 	
 	/**
 	 * @param aiSystem
 	 * @param runtime
 	 */
 	public Actions(AISystem aiSystem, Leola runtime) {
+		this.aiSystem = (DefaultAISystem)aiSystem;
 		this.runtime = runtime;
 		
 		this.random = aiSystem.getRandomizer();
@@ -270,8 +273,8 @@ public class Actions {
 	
 	public CompositeAction enemyEncountered() {
 		return new WeightedAction(config, "enemyEncountered",
-				new MoveTowardEnemyEvaluator(this, random.getRandomRangeMin(0.48), 0.8),
-				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.51), 0.9)
+				new MoveTowardEnemyEvaluator(this, random.getRandomRangeMin(0.68), 0.8),
+				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.51), 0.7)
 		);
 	}
 	
@@ -298,13 +301,26 @@ public class Actions {
 	}
 	
 	public Action captureFlag(Flag flag, Vector2f homebase) {
-		SequencedAction goal = new SequencedAction("captureFlag: " + flag.getType());		
+		SequencedAction goal = new SequencedAction("captureFlag: " + flag.getType());
+		
+		Zone flagZone = aiSystem.getWorld().getZone(flag.getSpawnLocation());
+		Zone homeBaseZone = aiSystem.getWorld().getZone(homebase);
+		
+		List<Zone> zonesToAvoid = new ArrayList<>();
+		Zone[] zones = aiSystem.getStats().getTop5DeadliesZones();
+		for(int i = 0; i < zones.length;i++) {
+			Zone zone = zones[i];
+			if(zone!=null&&flagZone!=zone&&homeBaseZone!=zone) {
+				zonesToAvoid.add(zone);				
+			}
+		}
+		//AvoidMoveToAction
 	    return goal.addNext(new MoveToFlagAction(flag))
-	    		   .addNext(new MoveToAction(homebase));
+	    		   .addNext(new AvoidMoveToAction(homebase, zonesToAvoid));
 	}
 	
 	public Action defendFlag(Flag flag, Rectangle homebase) {
-		SequencedAction goal = new SequencedAction("defendFlag: " + flag.getType());				
-	    return goal.addNext(new MoveToFlagAction(flag));
+		SequencedAction goal = new SequencedAction("defendFlag: " + flag.getType());		
+	    return goal.addNext(new MoveToFlagAction(flag)); // TODO .addNext(defend(zone));
 	}
 }
