@@ -3,6 +3,7 @@
  */
 package seventh.ai.basic.squad;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import seventh.ai.basic.AttackDirection;
@@ -10,7 +11,6 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.World;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.WaitAction;
-import seventh.ai.basic.teamstrategy.Roles;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -28,13 +28,14 @@ public class SquadDefendAction extends SquadAction {
      */
     public SquadDefendAction(Vector2f position) {
         this.defendPosition = position;
+        this.directionsToDefend = new ArrayList<>();
     }
 
     @Override
     public void start(Squad squad) {
         World world = squad.getWorld();
         float radius = (float)world.getRandom().getRandomRange(100f, 150f);
-        directionsToDefend = world.getAttackDirections(this.defendPosition, radius, 12);
+        directionsToDefend.addAll(world.getAttackDirections(this.defendPosition, radius, 12));
 
     }
     
@@ -46,7 +47,7 @@ public class SquadDefendAction extends SquadAction {
     	if(squad.squadSize() > 0 ) {
     		World world = squad.getWorld();
 	        Brain[] members = squad.getMembers();
-	        Roles roles = squad.getRoles();
+//	        Roles roles = squad.getRoles();
 	        
 	        int squadSize = squad.squadSize();
 	        

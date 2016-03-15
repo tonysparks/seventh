@@ -3,6 +3,7 @@
  */
 package seventh.ai.basic.squad;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import seventh.ai.basic.AttackDirection;
@@ -30,13 +31,14 @@ public class SquadAttackAction extends SquadAction {
      */
     public SquadAttackAction(Vector2f position) {
         this.attackPosition = position;
+        this.attackDirections = new ArrayList<>();
     }
 
     @Override
     public void start(Squad squad) {
         World world = squad.getWorld();
 
-        this.attackDirections = world.getAttackDirections(attackPosition, 150f, squad.squadSize());        
+        this.attackDirections.addAll(world.getAttackDirections(attackPosition, 150f, squad.squadSize()));        
     	if(attackDirections.isEmpty()) {
     		attackDirections.add(new AttackDirection(attackPosition));
     	}
