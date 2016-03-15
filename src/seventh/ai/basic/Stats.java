@@ -33,6 +33,8 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 	private int numberOfBombsExploded;
 	private int totalNumberOfBombTargets;
 	
+	private Zone[] topFiveDeadliest;
+	
 	/**
 	 * @param game
 	 * @param zones
@@ -41,7 +43,9 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 		this.players = game.getPlayerInfos();
 		this.zones = zones;
 		this.totalNumberOfBombTargets = game.getBombTargets().size();
-				
+		
+		this.topFiveDeadliest = new Zone[5];
+		
 		game.getDispatcher().addEventListener(PlayerKilledEvent.class, this);
 		game.getDispatcher().addEventListener(PlayerSpawnedEvent.class, this);
 	}
@@ -70,6 +74,43 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 		}
 		
 		return deadliest;
+	}
+	
+	
+	public Zone[] getTop5DeadliesZones() {
+		Zone[][] zs = this.zones.getZones();
+		for(int y = 0; y < zs.length; y++) {
+			for(int x = 0; x < zs[y].length; x++) {				
+				Zone zone = zs[y][x];
+				if(zone.isHabitable()) {
+					ZoneStats s = zone.getStats();
+					
+					int totalKilled = s.getTotalKilled();
+					int positionToSet = -1;
+					//for(int i = 0; i < this.topFiveDeadliest.length; i++) {
+					for(int i = this.topFiveDeadliest.length-1; i >= 0; i--) {	
+						if(this.topFiveDeadliest[i]==null||this.topFiveDeadliest[i].getStats().getTotalKilled() < totalKilled) {
+							positionToSet = i;
+							// TODO: fix this
+						}
+					}
+					
+					if(positionToSet>-1) {
+						if(positionToSet<4) { 
+							for(int i = 0; i < positionToSet; i++) {
+								Zone tmp = this.topFiveDeadliest[i+1];
+								this.topFiveDeadliest[i] = tmp;
+							}	
+						}
+						
+						this.topFiveDeadliest[positionToSet] = zone;
+						
+					}
+				}
+			}
+		}
+		
+		return this.topFiveDeadliest;
 	}
 	
 	/*
