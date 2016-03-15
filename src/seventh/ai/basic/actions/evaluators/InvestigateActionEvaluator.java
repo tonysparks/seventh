@@ -87,7 +87,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 				case EMPTY_FIRE:
 				case GRENADE_PINPULLED:				
 				case M1_GARAND_LAST_FIRE:
-					desirability += brain.getRandomRange(0.4, 0.5);
+					desirability += brain.getRandomRange(0.64, 0.85);
 					break;
 										
 				case BOMB_DISARM:
