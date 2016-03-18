@@ -131,18 +131,32 @@ public class PathPlanner<E> {
 						   ((goalTile.getY() - currentTile.getY()) *
 						    (goalTile.getY() - currentTile.getY()));
 			
+			if(shouldBeAvoided(currentTile)||shouldBeAvoided(goalTile)) {
+				distance = Integer.MAX_VALUE;
+			}
+			
 			return distance;
 		}
 		
-		@Override
-		protected boolean shouldIgnore(GraphNode<Tile, E> node) {
-			Tile tile = node.getValue();
+		private boolean shouldBeAvoided(Tile tile) {
 			for(int i = 0; i < zonesToAvoid.size(); i++) {
 				Zone zone = zonesToAvoid.get(i);
 				if(zone.getBounds().intersects(tile.getBounds())) {
 					return true;
 				}
 			}
+			return false;
+		}
+		
+		@Override
+		protected boolean shouldIgnore(GraphNode<Tile, E> node) {
+			/*Tile tile = node.getValue();
+			for(int i = 0; i < zonesToAvoid.size(); i++) {
+				Zone zone = zonesToAvoid.get(i);
+				if(zone.getBounds().intersects(tile.getBounds())) {
+					return true;
+				}
+			}*/
 			
 			return this.tilesToAvoid.contains(node.getValue());
 		}
