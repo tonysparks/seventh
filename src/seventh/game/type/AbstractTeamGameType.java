@@ -392,7 +392,7 @@ public abstract class AbstractTeamGameType implements GameType {
 			for (int i = 0; i < players.length; i++) {
 				Player player = players[i];
 				if (player != null) {
-					if (player.isDead() && !player.isSpectating()) {
+					if (player.isDead() && !player.isPureSpectator()) {
 						player.updateSpawnTime(timeStep);
 						if (player.readyToSpawn()) {
 							game.spawnPlayerEntity(player.getId());
@@ -402,6 +402,33 @@ public abstract class AbstractTeamGameType implements GameType {
 			}
 			
 			
+		}
+	}
+	
+	/**
+	 * Checks to see if any players should be spectating, because they are dead
+	 * 
+	 * @param timeStep
+	 * @param game
+	 */
+	protected void checkSpectating(TimeStep timeStep, Game game) {
+		Player[] players = game.getPlayers().getPlayers();
+		for (int i = 0; i < players.length; i++) {
+			Player player = players[i];
+			if (player != null) {
+
+				if (!player.isPureSpectator() && !player.isSpectating() && player.isDead()) {
+					player.applyLookAtDeathDelay();
+				}
+
+				player.updateLookAtDeathTime(timeStep);
+
+				if (!player.isPureSpectator() && !player.isSpectating() && player.readyToLookAwayFromDeath()) {
+					Player spectateMe = getNextPlayerToSpectate(game.getPlayers(), player);
+					player.setSpectating(spectateMe);
+				}
+			}
+
 		}
 	}
 	

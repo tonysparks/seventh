@@ -153,24 +153,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 				endRound(defender, game);
 			}			
 			else {
-				Player[] players = game.getPlayers().getPlayers();
-				for (int i = 0; i < players.length; i++) {
-					Player player = players[i];
-					if (player != null) {
-
-						if (!player.isPureSpectator() && !player.isSpectating() && player.isDead()) {
-							player.applyLookAtDeathDelay();
-						}
-
-						player.updateLookAtDeathTime(timeStep);
-
-						if (!player.isPureSpectator() && !player.isSpectating() && player.readyToLookAwayFromDeath()) {
-							Player spectateMe = getNextPlayerToSpectate(game.getPlayers(), player);
-							player.setSpectating(spectateMe);
-						}
-					}
-
-				}
+				checkSpectating(timeStep, game);
 			}				
 		}
 		

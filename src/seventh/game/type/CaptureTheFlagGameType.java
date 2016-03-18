@@ -217,6 +217,7 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 		}
 		
 		checkRespawns(timeStep, game);
+		checkSpectating(timeStep, game);
 		
 		if (GameState.IN_PROGRESS == getGameState()) {
 			
