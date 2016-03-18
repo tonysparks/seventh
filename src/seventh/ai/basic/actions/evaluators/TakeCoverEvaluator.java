@@ -37,7 +37,7 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 		if(system.hasTarget()) {
 			PlayerEntity bot = brain.getEntityOwner();
 			
-			final double tweaker = 1.0;
+			final double tweaker = 0.4;
 			
 			final PlayerEntity enemy = system.getCurrentTarget();
 			
@@ -45,12 +45,15 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 				score = 1.0;
 			}
 			else {
+				// the lower the score for health and weapons, the more likely we 
+				// want to run for cover
+				score = 1.0 - ((Evaluators.healthScore(bot) + Evaluators.currentWeaponAmmoScore(bot)) / 2.0);
+				
 				score = tweaker
-						 + Evaluators.healthScore(bot) 
-						 + Evaluators.currentWeaponAmmoScore(bot)
+						 + score
 						 + Evaluators.weaponDistanceScore(bot, enemy)
 						;
-				score = score / 4.0;
+				score = score / 3.0;
 			}
 			Vector2f lastSeenAt = system.getLastRemeberedPosition();
 			if(lastSeenAt != null) {
@@ -71,7 +74,7 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 			
 			
 			if(system.currentTargetInLineOfFire()) {
-				score *= 0.7;
+				score *= 0.6;
 			}
 			
 			score *= getCharacterBias();

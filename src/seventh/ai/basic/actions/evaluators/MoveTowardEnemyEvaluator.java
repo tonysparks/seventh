@@ -41,10 +41,11 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 			}
 			else {
 				score = tweaker 
-						* Evaluators.healthScore(bot) 
-						* Evaluators.currentWeaponAmmoScore(bot)
-						* Evaluators.weaponDistanceScore(bot, enemy)
+						+ Evaluators.healthScore(bot) 
+						+ Evaluators.currentWeaponAmmoScore(bot)
+						+ Evaluators.weaponDistanceScore(bot, enemy)
 						;
+				score = score / 4.0;
 			}
 			
 			
