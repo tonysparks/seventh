@@ -15,6 +15,8 @@ import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.PlayerSpawnedEvent;
 import seventh.game.events.PlayerSpawnedListener;
 import seventh.shared.Debugable;
+import seventh.shared.TimeStep;
+import seventh.shared.Updatable;
 
 /**
  * Keeps interesting statistics about the game
@@ -22,7 +24,7 @@ import seventh.shared.Debugable;
  * @author Tony
  *
  */
-public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombExplodedListener, Debugable {
+public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombExplodedListener, Updatable, Debugable {
 
 	private Zones zones;
 	private PlayerInfos players;
@@ -50,55 +52,87 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 		game.getDispatcher().addEventListener(PlayerSpawnedEvent.class, this);
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.shared.Updatable#update(seventh.shared.TimeStep)
+	 */
+	@Override
+	public void update(TimeStep timeStep) {
+		calculateTop5DeadliesZones();
+	}
+	
 	/**
 	 * @return the Zone which contains the most amount of deaths
 	 */
 	public Zone getDeadliesZone() {
-		Zone deadliest = null;
-		int killCount = 0;
-		
-		Zone[][] zs = this.zones.getZones();
-		for(int y = 0; y < zs.length; y++) {
-			for(int x = 0; x < zs[y].length; x++) {				
-				Zone zone = zs[y][x];
-				if(zone.isHabitable()) {
-					ZoneStats s = zone.getStats();
-					
-					int totalKilled = s.getTotalKilled();
-					if(deadliest == null || killCount < totalKilled) {
-						deadliest = s.getZone();
-						killCount = totalKilled;
-					}
-				}
-			}
+//		Zone deadliest = null;
+//		int killCount = 0;
+//		
+//		Zone[][] zs = this.zones.getZones();
+//		for(int y = 0; y < zs.length; y++) {
+//			for(int x = 0; x < zs[y].length; x++) {				
+//				Zone zone = zs[y][x];
+//				if(zone.isHabitable()) {
+//					ZoneStats s = zone.getStats();
+//					
+//					int totalKilled = s.getTotalKilled();
+//					if(deadliest == null || killCount < totalKilled) {
+//						deadliest = s.getZone();
+//						killCount = totalKilled;
+//					}
+//				}
+//			}
+//		}
+//		
+//		return deadliest;
+		if(this.topFiveDeadliest[0]==null) {
+			return this.zones.getZone(0, 0);
 		}
-		
-		return deadliest;
+		return this.topFiveDeadliest[0];
 	}
 	
+	private boolean isAlreadyInTop5(Zone zone) {
+		for(int j = 0; j < this.topFiveDeadliest.length; j++) {
+			if(this.topFiveDeadliest[j]!=null&&this.topFiveDeadliest[j].getId()==zone.getId()) {
+				return true;
+			}
+		}
+		return false;		
+	}
 	
 	public Zone[] getTop5DeadliesZones() {
+		return this.topFiveDeadliest;
+	}
+	
+	private void calculateTop5DeadliesZones() {
 		Zone[][] zs = this.zones.getZones();
 		for(int y = 0; y < zs.length; y++) {
 			for(int x = 0; x < zs[y].length; x++) {				
 				Zone zone = zs[y][x];
-				if(zone.isHabitable()) {
+				if(zone.isHabitable() && !isAlreadyInTop5(zone)) {
 					ZoneStats s = zone.getStats();
 					
 					int totalKilled = s.getTotalKilled();
 					int positionToSet = -1;
+					
 					//for(int i = 0; i < this.topFiveDeadliest.length; i++) {
 					for(int i = this.topFiveDeadliest.length-1; i >= 0; i--) {	
-						if(this.topFiveDeadliest[i]==null||this.topFiveDeadliest[i].getStats().getTotalKilled() < totalKilled) {
+						if(this.topFiveDeadliest[i]==null) {
 							positionToSet = i;
-							// TODO: fix this
+							continue;
+						}
+								
+						if(this.topFiveDeadliest[i].getStats().getTotalKilled() < totalKilled) {								
+							positionToSet = i;							
+						}
+						else {
+							break;
 						}
 					}
 					
 					if(positionToSet>-1) {
 						if(positionToSet<4) { 
-							for(int i = 0; i < positionToSet; i++) {
-								Zone tmp = this.topFiveDeadliest[i+1];
+							for(int i = this.topFiveDeadliest.length-1; i > positionToSet; i--) {
+								Zone tmp = this.topFiveDeadliest[i-1];
 								this.topFiveDeadliest[i] = tmp;
 							}	
 						}
@@ -109,8 +143,6 @@ public class Stats implements PlayerKilledListener, PlayerSpawnedListener, BombE
 				}
 			}
 		}
-		
-		return this.topFiveDeadliest;
 	}
 	
 	/*
