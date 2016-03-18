@@ -85,7 +85,7 @@ public class ClientFlag extends ClientEntity {
 		if(flagImg != null) {
 			Vector2f cameraPos = camera.getRenderPosition(alpha);
 			Vector2f flagPos = pos;
-			if (carrier != null) {
+			if (carrier != null && carrier.isAlive()) {
 				flagPos = carrier.getEntity().getRenderPos(alpha);
 				//flagPos.x = flagPos.x + carrier.getEntity().bounds.width/2;
 				//flagPos.y = flagPos.y + carrier.getEntity().bounds.height/2;

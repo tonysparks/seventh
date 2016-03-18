@@ -205,7 +205,7 @@ public class Scoreboard {
 			String winner = "Allies win!";
 			int color = 0xffffffff;
 			
-			if(winningTeam!=null) {
+			if(winningTeam!=null&&winningTeam!=ClientTeam.NONE) {
 				winner = winningTeam.getName() + " win!";
 				color = winningTeam.getColor();
 			}
