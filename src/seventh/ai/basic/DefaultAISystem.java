@@ -305,6 +305,8 @@ public class DefaultAISystem implements AISystem {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		this.stats.update(timeStep);
+		
 		for(int i = 0; i < brains.length; i++) {
 			Brain brain = brains[i];
 			if(brain != null) {
@@ -326,6 +328,19 @@ public class DefaultAISystem implements AISystem {
 	 */
 	@SuppressWarnings("unused")
 	private void debugDrawZones() {
+		Zone[] zones = this.stats.getTop5DeadliesZones();
+		for(int i = 0; i < zones.length; i++) {
+			Zone z = zones[i];
+			if(z!=null) {
+				Rectangle bounds = z.getBounds();
+				DebugDraw.drawStringRelative(z.getId()+"", bounds.x, bounds.y, 0xff00ffff);
+				DebugDraw.fillRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0x1fff00ff);
+				
+				
+				DebugDraw.drawString(i + ":" + z.getId()+"", 10, 40 + (i*20), 0xff00ffff);
+			}
+		}
+		/*
 		Zone[][] zs = zones.getZones();
 		for(int y = 0; y < zs.length; y++) {
 			for(int x = 0; x < zs[y].length; x++) {
@@ -364,7 +379,7 @@ public class DefaultAISystem implements AISystem {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	/**
