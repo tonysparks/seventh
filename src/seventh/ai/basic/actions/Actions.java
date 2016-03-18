@@ -274,7 +274,7 @@ public class Actions {
 	public CompositeAction enemyEncountered() {
 		return new WeightedAction(config, "enemyEncountered",
 				new MoveTowardEnemyEvaluator(this, random.getRandomRangeMin(0.68), 0.8),
-				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.51), 0.7)
+				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.31), 0.7)
 		);
 	}
 	
@@ -315,7 +315,7 @@ public class Actions {
 			}
 		}
 		//AvoidMoveToAction
-	    return goal.addNext(new MoveToFlagAction(flag))
+	    return goal.addNext(new MoveToFlagAction(flag, zonesToAvoid))
 	    		   .addNext(new AvoidMoveToAction(homebase, zonesToAvoid));
 	}
 	
