@@ -260,10 +260,22 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getDesirability(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public double getDesirability(Brain brain) {
+		if(!this.enemyFlag.isAtHomeBase()) {
+			return 1.0;
+		}
+		
+		return 0.7;
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public Action getGoal(Brain brain) {
+	public Action getAction(Brain brain) {
 		if(this.hasRoundStarted) {
 			PlayerInfo player = brain.getPlayer();
 			Role role = this.roles.getAssignedRole(player);
@@ -370,14 +382,6 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 	 */
 	@Override
 	public void endOfRound(GameInfo game) {			
-	}
-
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void onGoaless(Brain brain) {
-		this.unassignedPlayers[brain.getPlayer().getId()] = brain.getPlayer();
 	}
 		
 	/* (non-Javadoc)

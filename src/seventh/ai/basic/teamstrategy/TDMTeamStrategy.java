@@ -57,10 +57,18 @@ public class TDMTeamStrategy implements TeamStrategy {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getDesirability(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public double getDesirability(Brain brain) {	
+		return 0;
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public Action getGoal(Brain brain) {	
+	public Action getAction(Brain brain) {	
 		return brain.getWorld().getGoals().wander();
 	}
 	
@@ -70,13 +78,6 @@ public class TDMTeamStrategy implements TeamStrategy {
 	@Override
 	public Team getTeam() {
 		return this.team;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void onGoaless(Brain brain) {		
 	}
 
 	/* (non-Javadoc)

@@ -30,15 +30,15 @@ public interface TeamStrategy extends Debugable {
 	 * @param brain
 	 * @return the goal for the bot
 	 */
-	public Action getGoal(Brain brain);
+	public Action getAction(Brain brain);
 	
 	/**
-	 * The agent has no immeidate goals, free to take
-	 * orders
-	 * 
 	 * @param brain
+	 * @return the desirability of executing the team strategy
+	 * for this bot
 	 */
-	public void onGoaless(Brain brain);
+	public double getDesirability(Brain brain);
+	
 	
 	/**
 	 * Start of a round

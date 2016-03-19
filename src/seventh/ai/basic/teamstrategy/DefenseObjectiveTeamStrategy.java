@@ -73,10 +73,18 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getDesirability(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public double getDesirability(Brain brain) {	
+		return 0.7;
+	}
+	
+	/* (non-Javadoc)
 	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public Action getGoal(Brain brain) {
+	public Action getAction(Brain brain) {
 		return getCurrentAction(brain);
 	}
 	
@@ -248,17 +256,6 @@ public class DefenseObjectiveTeamStrategy implements TeamStrategy {
 	public void endOfRound(GameInfo game) {		
 		this.currentState = DefensiveState.DEFEND;
 		this.zoneToAttack = null;
-	}
-
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void onGoaless(Brain brain) {
-		Action action = getCurrentAction(brain);
-		if(action != null) {
-			brain.getCommunicator().post(action);
-		}
 	}
 	
 	/**

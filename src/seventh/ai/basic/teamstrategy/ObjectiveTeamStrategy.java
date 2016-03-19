@@ -32,14 +32,25 @@ public class ObjectiveTeamStrategy implements TeamStrategy {
 		this.aiSystem = aiSystem;
 		this.team = team;		
 	}
+
+	/* (non-Javadoc)
+	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getDesirability(seventh.ai.basic.Brain)
+	 */
+	@Override
+	public double getDesirability(Brain brain) {
+		if(strategy!=null) {
+			return strategy.getDesirability(brain);
+		}
+		return 0;
+	}
 	
 	/* (non-Javadoc)
 	 * @see seventh.ai.basic.teamstrategy.TeamStrategy#getGoal(seventh.ai.basic.Brain)
 	 */
 	@Override
-	public Action getGoal(Brain brain) {
+	public Action getAction(Brain brain) {
 		if(strategy!=null) {
-			return strategy.getGoal(brain);
+			return strategy.getAction(brain);
 		}
 		return new WaitAction(1000);
 	}
@@ -52,17 +63,7 @@ public class ObjectiveTeamStrategy implements TeamStrategy {
 		return this.team;
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.AIGameTypeStrategy#onGoaless(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void onGoaless(Brain brain) {
-		if(strategy!=null) {
-			strategy.onGoaless(brain);
-		}
-	}
-	
+		
 	/* (non-Javadoc)
 	 * @see seventh.ai.AIGameTypeStrategy#startOfRound(seventh.game.Game)
 	 */
