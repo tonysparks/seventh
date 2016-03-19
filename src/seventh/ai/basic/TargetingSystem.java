@@ -107,6 +107,9 @@ public class TargetingSystem implements Updatable {
 		if(hasTarget()) {
 			brain.getMotion().stareAtEntity(getCurrentTarget());
 		}
+		else {
+			brain.getMotion().scanArea();
+		}
 	}
 	
 	/**

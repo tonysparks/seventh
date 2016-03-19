@@ -4,6 +4,7 @@
 package seventh.ai.basic.actions.atom;
 
 import seventh.ai.basic.Brain;
+import seventh.ai.basic.PersonalityTraits;
 import seventh.ai.basic.actions.AdapterAction;
 import seventh.game.Entity;
 import seventh.math.Vector2f;
@@ -14,18 +15,13 @@ import seventh.shared.TimeStep;
  *
  */
 public class StareAtEntityAction extends AdapterAction {
-
-	/**
-	 * Max value to offset aiming
-	 */
-	private static final float MAX_SLOP = (float)(Math.PI/8);
 	
 	private Entity stareAtMe;	
 	private final long timeSinceLastSeenExpireMSec;
 	
 	public StareAtEntityAction(Entity stareAtMe) {
 		reset(stareAtMe);
-		timeSinceLastSeenExpireMSec = 1_300;
+		timeSinceLastSeenExpireMSec = 1000_300;
 	}
 	
 	/**
@@ -50,13 +46,14 @@ public class StareAtEntityAction extends AdapterAction {
 	public void update(Brain brain, TimeStep timeStep) {
 		Entity me = brain.getEntityOwner();
 		Vector2f entityPos = stareAtMe.getCenterPos();				
-		if( brain.getSensors().getSightSensor().inView(this.stareAtMe) ||
-		    brain.getTargetingSystem().targetInLineOfFire(entityPos)) {					
+//		if( brain.getSensors().getSightSensor().inView(this.stareAtMe) || brain.getTargetingSystem().targetInLineOfFire(entityPos))  
+		{					
 			/* add some slop value so that the Agent isn't too accurate */
-			float slop = brain.getWorld().getRandom().nextFloat() * (MAX_SLOP/3f);
+			PersonalityTraits personality = brain.getPersonality();
+			float slop = personality.calculateAccuracy(brain); 
 			
-			me.setOrientation(Entity.getAngleBetween(entityPos, me.getCenterPos()) + slop );			
-		}				
+			me.setOrientation(Entity.getAngleBetween(entityPos, me.getCenterPos()) + slop );	
+		}			
 	}
 
 	@Override

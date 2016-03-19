@@ -22,7 +22,7 @@ public class ShootAtAction extends AdapterAction {
 	/**
 	 */
 	public ShootAtAction() {
-		this.shouldCheckLOF = new Timer(true, 200);
+		this.shouldCheckLOF = new Timer(true, 100);
 		this.shouldCheckLOF.start();
 		this.inLOF = false;
 	}

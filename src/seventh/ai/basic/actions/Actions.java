@@ -241,7 +241,7 @@ public class Actions {
 	}
 	
 	public Action wander() {
-		Action action = getScriptedAction("moveToRandomSpot");
+		Action action = getScriptedAction("wander");
 		return action;
 	}
 	
