@@ -30,7 +30,9 @@ public class StrategyEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public double calculateDesirability(Brain brain) {
-		double score = 0.35;
+		double score = brain.getPersonality().obedience + this.teamStrategy.getDesirability(brain);
+		score = score / 2.0;
+		
 		score *= getCharacterBias();
 		return score;
 	}
@@ -40,7 +42,7 @@ public class StrategyEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public Action getAction(Brain brain) {
-		return teamStrategy.getGoal(brain);
+		return teamStrategy.getAction(brain);
 	}
 
 }

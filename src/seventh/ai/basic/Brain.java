@@ -36,11 +36,14 @@ public class Brain implements Debugable {
 	
 	private TargetingSystem targetingSystem;
 	
+	private PersonalityTraits personality;
+	
 	/**
 	 * @param runtime
 	 * @param world
 	 */
-	public Brain(TeamStrategy strategy, World world, PlayerInfo player) {
+	public Brain(PersonalityTraits personality, TeamStrategy strategy, World world, PlayerInfo player) {
+		this.personality = personality;
 		this.world = world;
 		this.player = player;
 		
@@ -115,6 +118,13 @@ public class Brain implements Debugable {
 	}
 	
 	/**
+	 * @return the personality
+	 */
+	public PersonalityTraits getPersonality() {
+		return personality;
+	}
+	
+	/**
 	 * Broadcasts a command
 	 * 
 	 * @param cmd
@@ -153,8 +163,8 @@ public class Brain implements Debugable {
 			
 			this.targetingSystem.update(timeStep);
 			
-			debugDraw();
-			debugDrawPathPlanner();
+			//debugDraw();
+			//debugDrawPathPlanner();
 		}		
 	}
 	
@@ -204,12 +214,12 @@ public class Brain implements Debugable {
 		int y = (int) entityOwner.getCenterPos().y;
 		GraphNode<Tile, ?> snode = world.getGraph().getNodeByWorld(x,y);
 		if(snode != null) {
-			DebugDraw.fillRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0x8f00ff00);
+			DebugDraw.fillRectRelative(snode.getValue().getX(), snode.getValue().getY(), snode.getValue().getWidth(), snode.getValue().getHeight(), 0x3b00ff00);
 		}
 		
 		Tile t = world.getMap().getWorldTile(0, x, y);
 		if(t!=null) {
-			DebugDraw.fillRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0x8f0000ff);
+			DebugDraw.fillRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0x1b0000ff);
 		}
 		
 //		MapGraph<?> tt = world.getGraph();
@@ -229,7 +239,7 @@ public class Brain implements Debugable {
 			for(GraphNode<Tile, ?> node : pathPlanner.getPath()) {
 				Tile tile = node.getValue();
 				if(tile != null) {
-					DebugDraw.fillRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0x1f00ff00);
+					DebugDraw.fillRectRelative(tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), 0x0600ff00);
 				}
 			}
 		}		

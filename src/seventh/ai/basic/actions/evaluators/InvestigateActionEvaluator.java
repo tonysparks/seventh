@@ -36,7 +36,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 		
 		SoundEmittedEvent sound = brain.getSensors().getSoundSensor().getClosestSound();
 		if(sound != null) {
-			desirability = 0.35;
+			desirability = brain.getPersonality().curiosity;
 			
 			switch(sound.getSoundType()) {																		
 				case EXPLOSION:	

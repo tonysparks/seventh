@@ -33,7 +33,7 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 		if(system.hasTarget()) {
 			PlayerEntity bot = brain.getEntityOwner();
 			
-			final double tweaker = 1.0;
+			final double tweaker = brain.getPersonality().aggressiveness;
 			final PlayerEntity enemy = system.getCurrentTarget();
 			
 			if(enemy.isOperatingVehicle()) {				

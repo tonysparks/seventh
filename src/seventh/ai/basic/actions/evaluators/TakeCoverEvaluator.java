@@ -37,7 +37,7 @@ public class TakeCoverEvaluator extends ActionEvaluator {
 		if(system.hasTarget()) {
 			PlayerEntity bot = brain.getEntityOwner();
 			
-			final double tweaker = 0.4;
+			final double tweaker = 1.0 - brain.getPersonality().aggressiveness;
 			
 			final PlayerEntity enemy = system.getCurrentTarget();
 			
