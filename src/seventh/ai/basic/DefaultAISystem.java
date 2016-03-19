@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 
 import leola.vm.Leola;
+import leola.vm.types.LeoArray;
+import leola.vm.types.LeoObject;
 import seventh.ai.AICommand;
 import seventh.ai.AISystem;
 import seventh.ai.basic.actions.Action;
@@ -23,7 +25,6 @@ import seventh.game.PlayerInfos.PlayerInfoIterator;
 import seventh.game.Team;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;
-import seventh.math.Vector2f;
 import seventh.shared.AssetLoader;
 import seventh.shared.AssetWatcher;
 import seventh.shared.Cons;
@@ -65,11 +66,19 @@ public class DefaultAISystem implements AISystem {
 	private AIConfig config;
 	private World world;
 	
+	private final PersonalityTraits[] personalities;
+	
 	/**
 	 * 
 	 */
 	public DefaultAISystem() {
-		this.brains = new Brain[SeventhConstants.MAX_PLAYERS];				
+		this.brains = new Brain[SeventhConstants.MAX_PLAYERS];	
+
+		this.personalities = new PersonalityTraits[SeventhConstants.MAX_PLAYERS];
+		for(int i = 0; i < this.personalities.length; i++) {
+			this.personalities[i] = new PersonalityTraits();
+		}
+		
 		try {						
 			this.runtime = Scripting.newRuntime();
 			this.watcher = new FileSystemAssetWatcher(new File("./seventh/ai"));
@@ -88,10 +97,41 @@ public class DefaultAISystem implements AISystem {
 					return null;
 				}
 			});
+			
+			
+			this.watcher.loadAsset("personalities.leola", new AssetLoader<File>() {				
+				@Override
+				public File loadAsset(String filename) throws IOException {
+					try {
+						Cons.println("Evaluating: " + filename);
+						runtime.eval(new File(filename));
+						
+						LeoObject config = runtime.get("personalities");
+						if(LeoObject.isTrue(config) && config.isArray()) {
+							LeoArray a = config.as();
+							for(int i = 0; i < personalities.length; i++) {
+								LeoObject p = a.get(i);
+								personalities[i].accuracy = p.getObject("accuracy").asDouble();
+								personalities[i].aggressiveness = p.getObject("aggressiveness").asDouble();
+								personalities[i].curiosity = p.getObject("curiosity").asDouble();
+								personalities[i].obedience = p.getObject("obedience").asDouble();
+							}
+						}
+						
+						Cons.println("Successfully evaluated: " + filename);
+					} 
+					catch (Exception e) {
+						Cons.println("*** Error evaluating: " + filename);
+						Cons.println("*** " + e);
+					}
+					return null;
+				}
+			});
 		}
 		catch(Exception e) {
 			Cons.println("Unable to load the Leola runtime : " + e);
 		}
+		
 	}
 	
 	/* (non-Javadoc)
@@ -137,7 +177,7 @@ public class DefaultAISystem implements AISystem {
 			@Override
 			public void onPlayerInfo(PlayerInfo player) {
 				if(player.isBot()) {					
-					brains[player.getId()] = new Brain(getStrategyFor(player), world, player);
+					brains[player.getId()] = new Brain(personalities[player.getId()], getStrategyFor(player), world, player);
 				}	
 			}
 		});
@@ -255,7 +295,7 @@ public class DefaultAISystem implements AISystem {
 	@Override
 	public void playerJoined(PlayerInfo player) {
 		if(player.isBot()) {
-			this.brains[player.getId()] = new Brain(getStrategyFor(player), world, player);
+			this.brains[player.getId()] = new Brain(personalities[player.getId()], getStrategyFor(player), world, player);
 		}
 	}
 	
