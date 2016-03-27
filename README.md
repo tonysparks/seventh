@@ -4,7 +4,7 @@ seventh
 A top down 2D Shooter game I've been working on in my spare time.  This repository only includes the source.  You can download the BETA version of the game here: http://162.243.250.245:8080/seventh/
 
 ##Features##
-* Two game modes (Team Death Match, Objective Based)
+* Three game modes (Team Death Match, Objective Based, Capture the Flag)
 * 9 different weapons
 * Melee
 * Grenades
@@ -12,9 +12,10 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
 * Multiplayer and Single player (Single player vs. Bots)
 
 ##TODO##
-* Update graphics to WWII
+* Update all graphics to WWII
+* Replace temporary sounds
 * Create more maps
-* New game types (CTF, custom)
+* New game types (custom)
 * Flamethrower
 * Tanks/Vehicles
 * Destructable terrain
