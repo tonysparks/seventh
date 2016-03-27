@@ -44,7 +44,7 @@ public class ServerMain {
 					int port = SeventhConstants.DEFAULT_PORT;
 					
 					Leola runtime = Scripting.newRuntime();
-					ServerSeventhConfig config = new ServerSeventhConfig(new Config("./seventh/server_config.leola", "server_config", runtime));
+					ServerSeventhConfig config = new ServerSeventhConfig(new Config("./assets/server_config.leola", "server_config", runtime));
 					GameServer server = new GameServer(config, console, runtime);
 					
 					

@@ -160,7 +160,7 @@ public class GameServer {
 					  boolean isLocal, 
 					  GameServerSettings settings) throws Exception  {
 		
-		this(new ServerSeventhConfig(new Config("./seventh/server_config.leola", "server_config", runtime)), 
+		this(new ServerSeventhConfig(new Config("./assets/server_config.leola", "server_config", runtime)), 
 				console, 
 				runtime, 
 				isLocal, 

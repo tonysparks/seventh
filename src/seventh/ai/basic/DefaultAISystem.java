@@ -81,7 +81,7 @@ public class DefaultAISystem implements AISystem {
 		
 		try {						
 			this.runtime = Scripting.newRuntime();
-			this.watcher = new FileSystemAssetWatcher(new File("./seventh/ai"));
+			this.watcher = new FileSystemAssetWatcher(new File("./assets/ai"));
 			this.watcher.loadAsset("goals.leola", new AssetLoader<File>() {				
 				@Override
 				public File loadAsset(String filename) throws IOException {
@@ -195,7 +195,7 @@ public class DefaultAISystem implements AISystem {
 			AILeolaLibrary aiLib = new AILeolaLibrary(this);
 			this.runtime.loadLibrary(aiLib, "ai");			
 
-			this.runtime.eval(new File("./seventh/ai/goals.leola"));
+			this.runtime.eval(new File("./assets/ai/goals.leola"));
 			
 			this.goals = aiLib.getActionFactory();			
 		}

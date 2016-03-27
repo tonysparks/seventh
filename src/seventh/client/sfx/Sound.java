@@ -35,12 +35,10 @@ public class Sound {
 	}
 	
 	public void play(float x, float y, boolean loop) {
+		this.soundSystem.setDistOrRoll(sourceName, 0.001f);
 		this.soundSystem.setPosition(sourceName, x, y, 0);
 		this.soundSystem.setLooping(sourceName, loop);
-		this.soundSystem.play(sourceName);
-		
-//		this.soundSystem.quickPlay(true, soundFile, loop, x, y, 0, 
-//				SoundSystemConfig.ATTENUATION_NONE, 10.0f);				
+		this.soundSystem.play(sourceName);						
 	}
 	
 	public void stop() {

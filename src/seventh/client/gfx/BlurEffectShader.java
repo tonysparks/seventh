@@ -15,7 +15,7 @@ public class BlurEffectShader extends Shader {
 	/**
 	 */
 	private BlurEffectShader() {
-		super("./seventh/gfx/shaders/base.vert", "./seventh/gfx/shaders/blur.frag");				
+		super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/blur.frag");				
 	}
 	
 	

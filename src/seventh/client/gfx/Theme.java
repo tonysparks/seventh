@@ -56,19 +56,19 @@ public class Theme {
 				, //0xffffffff 
 				0xfff1f401
 //				, "Futurist Fixed-width"
-//				, "./seventh/gfx/fonts/future.ttf"
+//				, "./assets/gfx/fonts/future.ttf"
 //				
 //				, "Futurist Fixed-width"
-//				, "./seventh/gfx/fonts/future.ttf"
+//				, "./assets/gfx/fonts/future.ttf"
 //				, "Bebas"				
-//				, "./seventh/gfx/fonts/Bebas.ttf"
+//				, "./assets/gfx/fonts/Bebas.ttf"
 //				, "Bebas"
-//				, "./seventh/gfx/fonts/Bebas.ttf"
+//				, "./assets/gfx/fonts/Bebas.ttf"
 				, "Napalm Vertigo"
-				, "./seventh/gfx/fonts/Napalm Vertigo.ttf"
+				, "./assets/gfx/fonts/Napalm Vertigo.ttf"
 				
 				, "Army"
-				, "./seventh/gfx/fonts/Army.ttf"
+				, "./assets/gfx/fonts/Army.ttf"
 				);
 	}
 

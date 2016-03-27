@@ -22,7 +22,7 @@ public class MapList {
 	 * @return the map listings
 	 */
 	public static List<String> getMapListing() {
-		final String path = "./seventh/maps/";
+		final String path = "./assets/maps/";
 		
 		File dir = new File(path);
 		File[] maps = dir.listFiles(new FilenameFilter() {

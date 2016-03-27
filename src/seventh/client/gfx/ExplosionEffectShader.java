@@ -15,7 +15,7 @@ public class ExplosionEffectShader extends Shader {
 	/**
 	 */
 	private ExplosionEffectShader() {
-		super("./seventh/gfx/shaders/base.vert", "./seventh/gfx/shaders/explosion.frag");
+		super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/explosion.frag");
 	}
 	
 	

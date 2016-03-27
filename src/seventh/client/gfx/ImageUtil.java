@@ -26,7 +26,7 @@ import javax.imageio.ImageIO;
 public class ImageUtil {
 	
 //	public static final void main(String [] args) throws Exception {
-//		BufferedImage img = loadImage("./seventh/gfx/lightmap_flashlight.png");
+//		BufferedImage img = loadImage("./assets/gfx/lightmap_flashlight.png");
 //		System.out.println(img);
 //		
 //		BufferedImage alpha = new BufferedImage(img.getWidth(), img.getHeight(), Transparency.BITMASK);

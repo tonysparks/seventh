@@ -103,7 +103,7 @@ public class Art {
 		
 	public static  TextureRegion smokeImage = null;
 	
-//	public static  TextureRegion tankImage = loadImage("./seventh/gfx/tank.png");
+//	public static  TextureRegion tankImage = loadImage("./assets/gfx/tank.png");
 	
 	public static  Sprite smallAssaultRifleIcon = null;
 	public static  Sprite smallShotgunIcon = null;
@@ -186,90 +186,90 @@ public class Art {
 		}
 		
 
-		shotgunImage = loadImage("./seventh/gfx/weapons/m3.bmp", 0xff00ff);
-		rpgImage = loadImage("./seventh/gfx/weapons/rpg.bmp", 0xff00ff);
+		shotgunImage = loadImage("./assets/gfx/weapons/m3.bmp", 0xff00ff);
+		rpgImage = loadImage("./assets/gfx/weapons/rpg.bmp", 0xff00ff);
 
-//		Pixmap grenadePixmap = loadPixmap("./seventh/gfx/weapons/grenade.png");
+//		Pixmap grenadePixmap = loadPixmap("./assets/gfx/weapons/grenade.png");
 //		grenadeImage = TextureUtil.tex(TextureUtil.resizePixmap(grenadePixmap, 12, 12));
 //		grenadeIcon = TextureUtil.tex(grenadePixmap);
 
-		grenadeImage = loadImage("./seventh/gfx/weapons/grenade.png");
+		grenadeImage = loadImage("./assets/gfx/weapons/grenade.png");
 		grenadeIcon = TextureUtil.resizeImage(grenadeImage, 12, 12);
 		
-		springfieldImage = loadImage("./seventh/gfx/weapons/springfield.bmp", 0xff00ff);
-		thompsonImage = loadImage("./seventh/gfx/weapons/thompson.bmp", 0xff00ff);
-		m1GarandImage = loadImage("./seventh/gfx/weapons/m1garand.bmp", 0xff00ff);
-		kar98Image = loadImage("./seventh/gfx/weapons/kar98.bmp", 0xff00ff);
-		mp44Image = loadImage("./seventh/gfx/weapons/mp44.bmp", 0xff00ff);
-		mp40Image = loadImage("./seventh/gfx/weapons/mp40.bmp", 0xff00ff);
-		pistolImage = loadImage("./seventh/gfx/weapons/pistol.bmp", 0xff00ff);
-		riskerImage = loadImage("./seventh/gfx/weapons/risker.bmp", 0xff00ff);
+		springfieldImage = loadImage("./assets/gfx/weapons/springfield.bmp", 0xff00ff);
+		thompsonImage = loadImage("./assets/gfx/weapons/thompson.bmp", 0xff00ff);
+		m1GarandImage = loadImage("./assets/gfx/weapons/m1garand.bmp", 0xff00ff);
+		kar98Image = loadImage("./assets/gfx/weapons/kar98.bmp", 0xff00ff);
+		mp44Image = loadImage("./assets/gfx/weapons/mp44.bmp", 0xff00ff);
+		mp40Image = loadImage("./assets/gfx/weapons/mp40.bmp", 0xff00ff);
+		pistolImage = loadImage("./assets/gfx/weapons/pistol.bmp", 0xff00ff);
+		riskerImage = loadImage("./assets/gfx/weapons/risker.bmp", 0xff00ff);
 		
-		bombImage = loadImage("./seventh/gfx/weapons/bomb.bmp", 0xff00ff);
+		bombImage = loadImage("./assets/gfx/weapons/bomb.bmp", 0xff00ff);
 		bombImage.flip(false, true);
-		computerImage = loadImage("./seventh/gfx/computer.bmp");
+		computerImage = loadImage("./assets/gfx/computer.bmp");
 		
 
-//		legsImage = loadImage("./seventh/gfx/player/legs.bmp", 0xff00ff);
+//		legsImage = loadImage("./assets/gfx/player/legs.bmp", 0xff00ff);
 //		legsModel = new Model(legsImage, 128, 64, 2, 4);
 //
-//		alliedCharacterModel = new Model(loadImage("./seventh/gfx/player/allied_01.png"), 128, 128, 2, 3);
-//		axisCharacterModel = new Model(loadImage("./seventh/gfx/player/axis_01.png"), 128, 128, 2, 3);
+//		alliedCharacterModel = new Model(loadImage("./assets/gfx/player/allied_01.png"), 128, 128, 2, 3);
+//		axisCharacterModel = new Model(loadImage("./assets/gfx/player/axis_01.png"), 128, 128, 2, 3);
 
-		alliedBodyModel = new Model(loadImage("./seventh/gfx/player/allied_positions.png"), 201, 173, 2, 3);				
-		alliedWalkModel = new Model(loadImage("./seventh/gfx/player/allied_legs_walk.png"), 372, 196, 2, 4);
-		alliedSprintModel = new Model(loadImage("./seventh/gfx/player/allied_legs_sprint.png"), 256, 190, 2, 3);
-		alliedCrouchLegs = loadImage("./seventh/gfx/player/allied_crouch_legs.png");
+		alliedBodyModel = new Model(loadImage("./assets/gfx/player/allied_positions.png"), 201, 173, 2, 3);				
+		alliedWalkModel = new Model(loadImage("./assets/gfx/player/allied_legs_walk.png"), 372, 196, 2, 4);
+		alliedSprintModel = new Model(loadImage("./assets/gfx/player/allied_legs_sprint.png"), 256, 190, 2, 3);
+		alliedCrouchLegs = loadImage("./assets/gfx/player/allied_crouch_legs.png");
 						
-		axisBodyModel = new Model(loadImage("./seventh/gfx/player/axis_positions.png"), 201, 173, 2, 3);		
-		axisWalkModel = new Model(loadImage("./seventh/gfx/player/axis_legs_walk.png"), 372, 196, 2, 4);
-		axisSprintModel = new Model(loadImage("./seventh/gfx/player/axis_legs_sprint.png"), 256, 190, 2, 3);
-		axisCrouchLegs = loadImage("./seventh/gfx/player/axis_crouch_legs.png");
+		axisBodyModel = new Model(loadImage("./assets/gfx/player/axis_positions.png"), 201, 173, 2, 3);		
+		axisWalkModel = new Model(loadImage("./assets/gfx/player/axis_legs_walk.png"), 372, 196, 2, 4);
+		axisSprintModel = new Model(loadImage("./assets/gfx/player/axis_legs_sprint.png"), 256, 190, 2, 3);
+		axisCrouchLegs = loadImage("./assets/gfx/player/axis_crouch_legs.png");
 		
 		
-		shotgunIcon = loadImage("./seventh/gfx/weapons/shotgun_icon.png");
-		rocketIcon = loadImage("./seventh/gfx/weapons/rpg_icon.png");
-		springfieldIcon = loadImage("./seventh/gfx/weapons/springfield_icon.png");
-		thompsonIcon = loadImage("./seventh/gfx/weapons/thompson_icon.png");
-		m1GarandIcon = loadImage("./seventh/gfx/weapons/m1garand_icon.png");
-		kar98Icon = loadImage("./seventh/gfx/weapons/kar98_icon.png");
-		mp44Icon = loadImage("./seventh/gfx/weapons/mp44_icon.png");
-		mp40Icon = loadImage("./seventh/gfx/weapons/mp40_icon.png");
-		pistolIcon = loadImage("./seventh/gfx/weapons/pistol_icon.png");
-		riskerIcon = loadImage("./seventh/gfx/weapons/risker_icon.png");
+		shotgunIcon = loadImage("./assets/gfx/weapons/shotgun_icon.png");
+		rocketIcon = loadImage("./assets/gfx/weapons/rpg_icon.png");
+		springfieldIcon = loadImage("./assets/gfx/weapons/springfield_icon.png");
+		thompsonIcon = loadImage("./assets/gfx/weapons/thompson_icon.png");
+		m1GarandIcon = loadImage("./assets/gfx/weapons/m1garand_icon.png");
+		kar98Icon = loadImage("./assets/gfx/weapons/kar98_icon.png");
+		mp44Icon = loadImage("./assets/gfx/weapons/mp44_icon.png");
+		mp40Icon = loadImage("./assets/gfx/weapons/mp40_icon.png");
+		pistolIcon = loadImage("./assets/gfx/weapons/pistol_icon.png");
+		riskerIcon = loadImage("./assets/gfx/weapons/risker_icon.png");
 		
-		explosionImage = TextureUtil.splitImage(loadImage("./seventh/gfx/explosion.png"), 4, 4);
-		TextureRegion tmp = loadImage("./seventh/gfx/fire.png");
+		explosionImage = TextureUtil.splitImage(loadImage("./assets/gfx/explosion.png"), 4, 4);
+		TextureRegion tmp = loadImage("./assets/gfx/fire.png");
 		tmp.flip(false, false);
 		fireImage = TextureUtil.splitImage(tmp, 1, 5);
-		rocketImage = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/rocket.bmp", 0xff00ff), 1, 1);
+		rocketImage = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/rocket.bmp", 0xff00ff), 1, 1);
 
-		deathsImage = loadImage("./seventh/gfx/player/death_symbol.png");
+		deathsImage = loadImage("./assets/gfx/player/death_symbol.png");
 
 		alliedBackDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_01.png"), 0, 0, 300, 210), 2, 4);
+				TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_01.png"), 0, 0, 300, 210), 2, 4);
 		alliedBackDeath2Image = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_03.png"), 0, 0, 260, 290), 2, 3);
+				TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_03.png"), 0, 0, 260, 290), 2, 3);
 		alliedFrontDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_02.png"), 0, 0, 330, 190), 2, 6);		
+				TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_02.png"), 0, 0, 330, 190), 2, 6);		
 		alliedExplosionDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/allied_death_04.png"), 0, 0, 330, 290), 2, 4);
+				TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_04.png"), 0, 0, 330, 290), 2, 4);
 				
 		axisBackDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_01.png"), 0, 0, 300, 210), 2, 4);
+				TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_01.png"), 0, 0, 300, 210), 2, 4);
 		axisBackDeath2Image = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_03.png"), 0, 0, 260, 290), 2, 3);		
+				TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_03.png"), 0, 0, 260, 290), 2, 3);		
 		axisFrontDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_02.png"), 0, 0, 330, 190), 2, 6);
+				TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_02.png"), 0, 0, 330, 190), 2, 6);
 		axisExplosionDeathImage = TextureUtil.splitImage(
-				TextureUtil.subImage(loadImage("./seventh/gfx/player/axis_death_04.png"), 0, 0, 330, 290), 2, 4);
+				TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_04.png"), 0, 0, 330, 290), 2, 4);
 		
-		bloodImages = TextureUtil.splitImage(loadImage("./seventh/gfx/particles/blood.png"), 2, 4);
-		gibImages = TextureUtil.splitImage(loadImage("./seventh/gfx/particles/gibs.png"), 2, 2);
+		bloodImages = TextureUtil.splitImage(loadImage("./assets/gfx/particles/blood.png"), 2, 4);
+		gibImages = TextureUtil.splitImage(loadImage("./assets/gfx/particles/gibs.png"), 2, 2);
 
-		smokeImage = loadImage("./seventh/gfx/particles/smoke.png");
+		smokeImage = loadImage("./assets/gfx/particles/smoke.png");
 
-		// tankImage = loadImage("./seventh/gfx/tank.png");
+		// tankImage = loadImage("./assets/gfx/tank.png");
 
 		final int smallIconWidth = 64, smallIconHeight = 32;
 		smallAssaultRifleIcon = TextureUtil.resizeImage(thompsonIcon, smallIconWidth, smallIconHeight);
@@ -285,59 +285,59 @@ public class Art {
 		smallPistolIcon = TextureUtil.resizeImage(pistolIcon, smallIconWidth, smallIconHeight);
 		smallRiskerIcon = TextureUtil.resizeImage(riskerIcon, smallIconWidth, smallIconHeight);
 
-		cursorImg = loadImage("./seventh/gfx/crosshair.png");
+		cursorImg = loadImage("./assets/gfx/crosshair.png");
 						
-		thompsonMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/thompson_muzzle_flash.png"), 2, 2);
-		springfieldMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/springfield_muzzle_flash.png"), 2, 2);
-		m1GarandMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/m1garand_muzzle_flash.png"), 2, 2);
-		kar98MuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/kar98_muzzle_flash.png"), 2, 2);
-		mp40MuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/mp40_muzzle_flash.png"), 2, 2);
-		mp44MuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/mp44_muzzle_flash.png"), 2, 2);
-		shotgunMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/shotgun_muzzle_flash.png"), 2, 2);
-		rocketMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/rpg_muzzle_flash.png"), 2, 2);
-		riskerMuzzleFlash = TextureUtil.splitImage(loadImage("./seventh/gfx/weapons/risker_muzzle_flash.png"), 2, 2);
+		thompsonMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/thompson_muzzle_flash.png"), 2, 2);
+		springfieldMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/springfield_muzzle_flash.png"), 2, 2);
+		m1GarandMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/m1garand_muzzle_flash.png"), 2, 2);
+		kar98MuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/kar98_muzzle_flash.png"), 2, 2);
+		mp40MuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/mp40_muzzle_flash.png"), 2, 2);
+		mp44MuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/mp44_muzzle_flash.png"), 2, 2);
+		shotgunMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/shotgun_muzzle_flash.png"), 2, 2);
+		rocketMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/rpg_muzzle_flash.png"), 2, 2);
+		riskerMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/risker_muzzle_flash.png"), 2, 2);
 		
-		healthPack = TextureUtil.resizeImage(loadImage("./seventh/gfx/healthpack.png"), 16, 16);
-		healthIcon = TextureUtil.resizeImage(loadImage("./seventh/gfx/health.bmp"), 12, 12);
-		staminaIcon = TextureUtil.resizeImage(loadImage("./seventh/gfx/stamina.png"), 12, 12);
+		healthPack = TextureUtil.resizeImage(loadImage("./assets/gfx/healthpack.png"), 16, 16);
+		healthIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/health.bmp"), 12, 12);
+		staminaIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/stamina.png"), 12, 12);
 		
-		TextureRegion navArrow = loadImage("./seventh/gfx/ui_nav_arrows.png");
+		TextureRegion navArrow = loadImage("./assets/gfx/ui_nav_arrows.png");
 		upArrow = new Sprite(navArrow);
 		upArrow.flip(false, true);
 		downArrow = new Sprite(navArrow);
 		
-		fireWeaponLight = loadImage("./seventh/gfx/weapon_fire.png");
-		lightMap = loadImage("./seventh/gfx/light.png");
-		flashLight = loadImage("./seventh/gfx/lightmap_flashlight.png");
+		fireWeaponLight = loadImage("./assets/gfx/weapon_fire.png");
+		lightMap = loadImage("./assets/gfx/light.png");
+		flashLight = loadImage("./assets/gfx/lightmap_flashlight.png");
 		
-		bullet = loadImage("./seventh/gfx/bullet.png");
-		bulletImage = loadImage("./seventh/gfx/weapons/bullet.png");
+		bullet = loadImage("./assets/gfx/bullet.png");
+		bulletImage = loadImage("./assets/gfx/weapons/bullet.png");
 		
 		tankTracks = TextureUtil.splitImage(
-							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
+							TextureUtil.subImage(loadImage("./assets/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
 //		tankTracks = TextureUtil.splitImage(
-//				TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_tracks.png"), 7,18,100,204), 1, 1);		
+//				TextureUtil.subImage(loadImage("./assets/gfx/vehicles/tank_tracks.png"), 7,18,100,204), 1, 1);		
 		tankTurret = TextureUtil.splitImage( 
-							TextureUtil.subImage(loadImage("./seventh/gfx/vehicles/tank_turret.png"), 0, 0, 108, 175), 1, 1)[0];
+							TextureUtil.subImage(loadImage("./assets/gfx/vehicles/tank_turret.png"), 0, 0, 108, 175), 1, 1)[0];
 		
-		tankTrackMarks = loadImage("./seventh/gfx/vehicles/tank_track_mark.png");
+		tankTrackMarks = loadImage("./assets/gfx/vehicles/tank_track_mark.png");
 		
-		shermanTankImage = loadImage("./seventh/gfx/vehicles/tanks/sherman/sherman_tank.png");
+		shermanTankImage = loadImage("./assets/gfx/vehicles/tanks/sherman/sherman_tank.png");
 		shermanTankBase = TextureUtil.subImage(shermanTankImage, 15, 180, 272, 149);
 		shermanTankTurret = TextureUtil.subImage(shermanTankImage, 304, 187, 197, 108);
 		shermanTankBaseDamaged = TextureUtil.subImage(shermanTankImage, 15, 8, 272, 155);
 		shermanTankTurretDamaged = TextureUtil.subImage(shermanTankImage, 304, 22, 187, 108);
 		
-		panzerTankImage = loadImage("./seventh/gfx/vehicles/tanks/panzer/panzer_tank.png");
+		panzerTankImage = loadImage("./assets/gfx/vehicles/tanks/panzer/panzer_tank.png");
 		panzerTankBase = TextureUtil.subImage(panzerTankImage, 0, 310, 257, 195);
 		panzerTankTurret = TextureUtil.subImage(panzerTankImage, 35, 20, 273, 125);
 		panzerTankBaseDamaged = TextureUtil.subImage(panzerTankImage, 254, 310, 265, 195);		
 		panzerTankTurretDamaged = TextureUtil.subImage(panzerTankImage, 35, 168, 273, 125);
 		
-		rippleImg = loadImage("./seventh/gfx/ripple.png");
+		rippleImg = loadImage("./assets/gfx/ripple.png");
 		
-		alliedFlagImg = loadImage("./seventh/gfx/allied_flag.png");
-		axisFlagImg = loadImage("./seventh/gfx/axis_flag.png");
+		alliedFlagImg = loadImage("./assets/gfx/allied_flag.png");
+		axisFlagImg = loadImage("./assets/gfx/axis_flag.png");
 	}
 
 	

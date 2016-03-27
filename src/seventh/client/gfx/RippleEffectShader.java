@@ -15,7 +15,7 @@ public class RippleEffectShader extends Shader {
 	/**
 	 */
 	private RippleEffectShader() {
-		super("./seventh/gfx/shaders/base.vert", "./seventh/gfx/shaders/ripple.frag");				
+		super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/ripple.frag");				
 	}
 	
 	

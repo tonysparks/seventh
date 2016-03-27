@@ -31,7 +31,7 @@ public class ClientMain {
 	/**
 	 * Client configuration file location
 	 */
-	private static final String CLIENT_CFG_PATH = "./seventh/client_config.leola";		
+	private static final String CLIENT_CFG_PATH = "./assets/client_config.leola";		
 	
 	/**
 	 * Loads the client configuration file.

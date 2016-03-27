@@ -376,12 +376,12 @@ public class SeventhGame implements ApplicationListener {
 		
 		this.canvas = new GdxCanvas();
 		try {
-			this.canvas.loadFont("./seventh/gfx/fonts/Courier New.ttf", "Courier New");
-			this.canvas.loadFont("./seventh/gfx/fonts/Consola.ttf", "Consola");
-			this.canvas.loadFont("./seventh/gfx/fonts/Army.ttf", "Army");
-			this.canvas.loadFont("./seventh/gfx/fonts/Napalm Vertigo.ttf", "Napalm Vertigo");
-//			this.canvas.loadFont("./seventh/gfx/fonts/Bebas.ttf", "Bebas");
-			this.canvas.loadFont("./seventh/gfx/fonts/future.ttf", "Futurist Fixed-width");
+			this.canvas.loadFont("./assets/gfx/fonts/Courier New.ttf", "Courier New");
+			this.canvas.loadFont("./assets/gfx/fonts/Consola.ttf", "Consola");
+			this.canvas.loadFont("./assets/gfx/fonts/Army.ttf", "Army");
+			this.canvas.loadFont("./assets/gfx/fonts/Napalm Vertigo.ttf", "Napalm Vertigo");
+//			this.canvas.loadFont("./assets/gfx/fonts/Bebas.ttf", "Bebas");
+			this.canvas.loadFont("./assets/gfx/fonts/future.ttf", "Futurist Fixed-width");
 			
 			this.canvas.setDefaultFont("Courier New", 14);			
 		}

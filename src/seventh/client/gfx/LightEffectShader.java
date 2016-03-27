@@ -15,7 +15,7 @@ public class LightEffectShader extends Shader {
 	/**
 	 */
 	public LightEffectShader() {
-		super("./seventh/gfx/shaders/base.vert", "./seventh/gfx/shaders/light.frag");				
+		super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/light.frag");				
 	}
 	
 	

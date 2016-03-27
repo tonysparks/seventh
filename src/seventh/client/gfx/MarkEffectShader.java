@@ -15,7 +15,7 @@ public class MarkEffectShader extends Shader {
 	/**
 	 */
 	private MarkEffectShader() {
-		super("./seventh/gfx/shaders/base.vert", "./seventh/gfx/shaders/inprint.frag");
+		super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/inprint.frag");
 	}
 	
 	

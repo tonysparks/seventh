@@ -44,8 +44,8 @@ public class ShaderTest implements Renderable {
 	
 	
 	private ShaderProgram loadShader(String fragFile) {
-		ShaderProgram shader = new ShaderProgram(Gdx.files.internal("./seventh/gfx/shaders/base.vert")
-				 							   , Gdx.files.internal("./seventh/gfx/shaders/" + fragFile));
+		ShaderProgram shader = new ShaderProgram(Gdx.files.internal("./assets/gfx/shaders/base.vert")
+				 							   , Gdx.files.internal("./assets/gfx/shaders/" + fragFile));
 		if(!shader.isCompiled()) {
 			System.out.println("Not compiled!");
 		}

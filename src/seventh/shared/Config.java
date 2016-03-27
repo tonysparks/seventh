@@ -315,7 +315,7 @@ public class Config {
 	}	
 	
 	public static void main(String [] args) throws Exception {
-		Config config = new Config("./seventh/client_config.leola", "client_config");
+		Config config = new Config("./assets/client_config.leola", "client_config");
 		config.save("./test.leola");
 	}
 }

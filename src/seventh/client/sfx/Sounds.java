@@ -194,203 +194,203 @@ public class Sounds {
 	
 	private static Sound[] createChannel() {
 		return new Sound[] {					
-			loadSound("./seventh/sfx/player/die1.wav") ,   // 0
-			loadSound("./seventh/sfx/player/die2.wav") ,   // 1
-			loadSound("./seventh/sfx/player/die3.wav") ,   // 2
-			loadSound("./seventh/sfx/player/hit1.wav") ,   // 3
-			loadSound("./seventh/sfx/player/hit2.wav") ,   // 4
-			loadSound("./seventh/sfx/player/hit3.wav") ,   // 5												
+			loadSound("./assets/sfx/player/die1.wav") ,   // 0
+			loadSound("./assets/sfx/player/die2.wav") ,   // 1
+			loadSound("./assets/sfx/player/die3.wav") ,   // 2
+			loadSound("./assets/sfx/player/hit1.wav") ,   // 3
+			loadSound("./assets/sfx/player/hit2.wav") ,   // 4
+			loadSound("./assets/sfx/player/hit3.wav") ,   // 5												
 
-			loadSound("./seventh/sfx/weapon_drop01.wav") ,   // 6,
-			loadSound("./seventh/sfx/weapon_drop02.wav") ,   // 7,			
-			loadSound("./seventh/sfx/ui/element_hover.wav") ,   // 8,
-			loadSound("./seventh/sfx/ui/element_select.wav") ,   // 9,
-			loadSound("./seventh/sfx/player/body_explode1.wav"), // 10
-			loadSound("./seventh/sfx/player/body_explode2.wav"), // 11						
-			loadSound("./seventh/sfx/bomb_tick.wav"), // 12
-			loadSound("./seventh/sfx/bomb_plant.wav"), // 13
-			loadSound("./seventh/sfx/bomb_disarm.wav"), // 14
+			loadSound("./assets/sfx/weapon_drop01.wav") ,   // 6,
+			loadSound("./assets/sfx/weapon_drop02.wav") ,   // 7,			
+			loadSound("./assets/sfx/ui/element_hover.wav") ,   // 8,
+			loadSound("./assets/sfx/ui/element_select.wav") ,   // 9,
+			loadSound("./assets/sfx/player/body_explode1.wav"), // 10
+			loadSound("./assets/sfx/player/body_explode2.wav"), // 11						
+			loadSound("./assets/sfx/bomb_tick.wav"), // 12
+			loadSound("./assets/sfx/bomb_plant.wav"), // 13
+			loadSound("./assets/sfx/bomb_disarm.wav"), // 14
 			
 			// UI stuff
-			loadSound("./seventh/sfx/log_alert.wav"), // 15
-			loadSound("./seventh/sfx/player/weapon_pickup.wav"), //16
+			loadSound("./assets/sfx/log_alert.wav"), // 15
+			loadSound("./assets/sfx/player/weapon_pickup.wav"), //16
 															
 			// misc.
-			loadSound("./seventh/sfx/explosion1.wav") ,   // 17
-			loadSound("./seventh/sfx/explosion2.wav") ,   // 18		
-			loadSound("./seventh/sfx/explosion3.wav") ,   // 19		
-			loadSound("./seventh/sfx/empty_fire.wav") ,   // 20
-			loadSound("./seventh/sfx/player/ammo_pickup.wav") ,   // 21									
-			loadSound("./seventh/sfx/respawn.wav") ,   // 22
-			loadSound("./seventh/sfx/weapon_switch.wav") ,   // 23
-			loadSound("./seventh/sfx/player/ruffle1.wav"), // 24
-			loadSound("./seventh/sfx/player/ruffle2.wav"), // 25
-			loadSound("./seventh/sfx/player/ruffle3.wav"), // 26
+			loadSound("./assets/sfx/explosion1.wav") ,   // 17
+			loadSound("./assets/sfx/explosion2.wav") ,   // 18		
+			loadSound("./assets/sfx/explosion3.wav") ,   // 19		
+			loadSound("./assets/sfx/empty_fire.wav") ,   // 20
+			loadSound("./assets/sfx/player/ammo_pickup.wav") ,   // 21									
+			loadSound("./assets/sfx/respawn.wav") ,   // 22
+			loadSound("./assets/sfx/weapon_switch.wav") ,   // 23
+			loadSound("./assets/sfx/player/ruffle1.wav"), // 24
+			loadSound("./assets/sfx/player/ruffle2.wav"), // 25
+			loadSound("./assets/sfx/player/ruffle3.wav"), // 26
 			
-			loadSound("./seventh/sfx/thompson/thompson_fire.wav") ,   // 27
-			loadSound("./seventh/sfx/thompson/thompson_reload.wav") ,   // 28
+			loadSound("./assets/sfx/thompson/thompson_fire.wav") ,   // 27
+			loadSound("./assets/sfx/thompson/thompson_reload.wav") ,   // 28
 				
-			loadSound("./seventh/sfx/shotgun/shotgun_fire.wav") ,		// 29
-			loadSound("./seventh/sfx/shotgun/shotgun_pump.wav") ,   // 30
-			loadSound("./seventh/sfx/shotgun/shotgun_reload.wav") ,   // 31
+			loadSound("./assets/sfx/shotgun/shotgun_fire.wav") ,		// 29
+			loadSound("./assets/sfx/shotgun/shotgun_pump.wav") ,   // 30
+			loadSound("./assets/sfx/shotgun/shotgun_reload.wav") ,   // 31
 			
-			loadSound("./seventh/sfx/springfield/springfield_fire.wav") ,   // 32
-			loadSound("./seventh/sfx/springfield/springfield_reload.wav") ,   // 33
-			loadSound("./seventh/sfx/springfield/springfield_rechamber.wav") ,   // 34
+			loadSound("./assets/sfx/springfield/springfield_fire.wav") ,   // 32
+			loadSound("./assets/sfx/springfield/springfield_reload.wav") ,   // 33
+			loadSound("./assets/sfx/springfield/springfield_rechamber.wav") ,   // 34
 		
-			loadSound("./seventh/sfx/m1garand/m1garand_fire.wav") ,   // 35
-			loadSound("./seventh/sfx/m1garand/m1garand_fire_last.wav") ,   // 36
-			loadSound("./seventh/sfx/m1garand/m1garand_reload.wav") ,   // 37
+			loadSound("./assets/sfx/m1garand/m1garand_fire.wav") ,   // 35
+			loadSound("./assets/sfx/m1garand/m1garand_fire_last.wav") ,   // 36
+			loadSound("./assets/sfx/m1garand/m1garand_reload.wav") ,   // 37
 			
 
-			loadSound("./seventh/sfx/grenade/grenade_pinpull.wav") ,   // 38
-			loadSound("./seventh/sfx/grenade/grenade_throw.wav") ,   // 39
+			loadSound("./assets/sfx/grenade/grenade_pinpull.wav") ,   // 38
+			loadSound("./assets/sfx/grenade/grenade_throw.wav") ,   // 39
 			
-			loadSound("./seventh/sfx/rocket/rocket_fire.wav") ,   // 40
+			loadSound("./assets/sfx/rocket/rocket_fire.wav") ,   // 40
 			
-			loadSound("./seventh/sfx/kar98/kar98_fire.wav") ,   // 41
-			loadSound("./seventh/sfx/kar98/kar98_reload.wav") ,   // 42
-			loadSound("./seventh/sfx/kar98/kar98_rechamber.wav") ,   // 43
+			loadSound("./assets/sfx/kar98/kar98_fire.wav") ,   // 41
+			loadSound("./assets/sfx/kar98/kar98_reload.wav") ,   // 42
+			loadSound("./assets/sfx/kar98/kar98_rechamber.wav") ,   // 43
 			
-			loadSound("./seventh/sfx/mp44/mp44_fire.wav") ,   // 44
-			loadSound("./seventh/sfx/mp44/mp44_reload.wav") ,   // 45
+			loadSound("./assets/sfx/mp44/mp44_fire.wav") ,   // 44
+			loadSound("./assets/sfx/mp44/mp44_reload.wav") ,   // 45
 			
-			loadSound("./seventh/sfx/mp40/mp40_fire.wav") ,   // 46
-			loadSound("./seventh/sfx/mp40/mp40_reload.wav") ,   // 47
+			loadSound("./assets/sfx/mp40/mp40_fire.wav") ,   // 46
+			loadSound("./assets/sfx/mp40/mp40_reload.wav") ,   // 47
 			
-			loadSound("./seventh/sfx/melee/melee_swing01.wav") ,   // 48
-			loadSound("./seventh/sfx/melee/melee_swing02.wav") ,   // 49
-			loadSound("./seventh/sfx/melee/melee_hit01.wav") ,   // 50
-			loadSound("./seventh/sfx/melee/melee_hit02.wav") ,   // 51
+			loadSound("./assets/sfx/melee/melee_swing01.wav") ,   // 48
+			loadSound("./assets/sfx/melee/melee_swing02.wav") ,   // 49
+			loadSound("./assets/sfx/melee/melee_hit01.wav") ,   // 50
+			loadSound("./assets/sfx/melee/melee_hit02.wav") ,   // 51
 			
 			// footsteps
-			loadSound("./seventh/sfx/player/footsteps/foot_normal01.wav") ,   // 52
-			loadSound("./seventh/sfx/player/footsteps/foot_normal02.wav") ,   // 53
-			loadSound("./seventh/sfx/player/footsteps/foot_normal03.wav") ,   // 54
-			loadSound("./seventh/sfx/player/footsteps/foot_normal04.wav") ,   // 55
+			loadSound("./assets/sfx/player/footsteps/foot_normal01.wav") ,   // 52
+			loadSound("./assets/sfx/player/footsteps/foot_normal02.wav") ,   // 53
+			loadSound("./assets/sfx/player/footsteps/foot_normal03.wav") ,   // 54
+			loadSound("./assets/sfx/player/footsteps/foot_normal04.wav") ,   // 55
 			
-			loadSound("./seventh/sfx/player/footsteps/foot_dirt01.wav") ,   // 56
-			loadSound("./seventh/sfx/player/footsteps/foot_dirt02.wav") ,   // 57
-			loadSound("./seventh/sfx/player/footsteps/foot_dirt03.wav") ,   // 58
-			loadSound("./seventh/sfx/player/footsteps/foot_dirt04.wav") ,   // 59
+			loadSound("./assets/sfx/player/footsteps/foot_dirt01.wav") ,   // 56
+			loadSound("./assets/sfx/player/footsteps/foot_dirt02.wav") ,   // 57
+			loadSound("./assets/sfx/player/footsteps/foot_dirt03.wav") ,   // 58
+			loadSound("./assets/sfx/player/footsteps/foot_dirt04.wav") ,   // 59
 			
-			loadSound("./seventh/sfx/player/footsteps/foot_grass01.wav") ,   // 60
-			loadSound("./seventh/sfx/player/footsteps/foot_grass02.wav") ,   // 61
-			loadSound("./seventh/sfx/player/footsteps/foot_grass03.wav") ,   // 62
-			loadSound("./seventh/sfx/player/footsteps/foot_grass04.wav") ,   // 63
+			loadSound("./assets/sfx/player/footsteps/foot_grass01.wav") ,   // 60
+			loadSound("./assets/sfx/player/footsteps/foot_grass02.wav") ,   // 61
+			loadSound("./assets/sfx/player/footsteps/foot_grass03.wav") ,   // 62
+			loadSound("./assets/sfx/player/footsteps/foot_grass04.wav") ,   // 63
 			
-			loadSound("./seventh/sfx/player/footsteps/foot_metal01.wav") ,   // 64
-			loadSound("./seventh/sfx/player/footsteps/foot_metal02.wav") ,   // 65
-			loadSound("./seventh/sfx/player/footsteps/foot_metal03.wav") ,   // 66
-			loadSound("./seventh/sfx/player/footsteps/foot_metal04.wav") ,   // 67
+			loadSound("./assets/sfx/player/footsteps/foot_metal01.wav") ,   // 64
+			loadSound("./assets/sfx/player/footsteps/foot_metal02.wav") ,   // 65
+			loadSound("./assets/sfx/player/footsteps/foot_metal03.wav") ,   // 66
+			loadSound("./assets/sfx/player/footsteps/foot_metal04.wav") ,   // 67
 			
-			loadSound("./seventh/sfx/player/footsteps/foot_water01.wav") ,   // 68
-			loadSound("./seventh/sfx/player/footsteps/foot_water02.wav") ,   // 69
-			loadSound("./seventh/sfx/player/footsteps/foot_water03.wav") ,   // 70
-			loadSound("./seventh/sfx/player/footsteps/foot_water04.wav") ,   // 71
+			loadSound("./assets/sfx/player/footsteps/foot_water01.wav") ,   // 68
+			loadSound("./assets/sfx/player/footsteps/foot_water02.wav") ,   // 69
+			loadSound("./assets/sfx/player/footsteps/foot_water03.wav") ,   // 70
+			loadSound("./assets/sfx/player/footsteps/foot_water04.wav") ,   // 71
 			
-			loadSound("./seventh/sfx/player/footsteps/foot_wood01.wav") ,   // 72
-			loadSound("./seventh/sfx/player/footsteps/foot_wood02.wav") ,   // 73
-			loadSound("./seventh/sfx/player/footsteps/foot_wood03.wav") ,   // 74
-			loadSound("./seventh/sfx/player/footsteps/foot_wood04.wav") ,   // 75
+			loadSound("./assets/sfx/player/footsteps/foot_wood01.wav") ,   // 72
+			loadSound("./assets/sfx/player/footsteps/foot_wood02.wav") ,   // 73
+			loadSound("./assets/sfx/player/footsteps/foot_wood03.wav") ,   // 74
+			loadSound("./assets/sfx/player/footsteps/foot_wood04.wav") ,   // 75
 			
-			loadSound("./seventh/sfx/ui/navigate01.wav") ,   // 76			
-			loadSound("./seventh/sfx/ui/navigate02.wav") ,   // 77
+			loadSound("./assets/sfx/ui/navigate01.wav") ,   // 76			
+			loadSound("./assets/sfx/ui/navigate02.wav") ,   // 77
 			
-			loadSound("./seventh/sfx/ui/key_type01.wav") ,   // 78
-			loadSound("./seventh/sfx/ui/key_type02.wav") ,   // 79
-			loadSound("./seventh/sfx/ui/key_type03.wav") ,   // 80
+			loadSound("./assets/sfx/ui/key_type01.wav") ,   // 78
+			loadSound("./assets/sfx/ui/key_type02.wav") ,   // 79
+			loadSound("./assets/sfx/ui/key_type03.wav") ,   // 80
 			
-			loadSound("./seventh/sfx/pistol/pistol_fire.wav") ,   // 81
-			loadSound("./seventh/sfx/pistol/pistol_reload.wav") ,   // 82
+			loadSound("./assets/sfx/pistol/pistol_fire.wav") ,   // 81
+			loadSound("./assets/sfx/pistol/pistol_reload.wav") ,   // 82
 			
-			loadSound("./seventh/sfx/impact/impact_metal01.wav") ,   // 83
-			loadSound("./seventh/sfx/impact/impact_metal02.wav") ,   // 84
-			loadSound("./seventh/sfx/impact/impact_metal03.wav") ,   // 85
-			loadSound("./seventh/sfx/impact/impact_metal04.wav") ,   // 86
-			loadSound("./seventh/sfx/impact/impact_metal05.wav") ,   // 87
+			loadSound("./assets/sfx/impact/impact_metal01.wav") ,   // 83
+			loadSound("./assets/sfx/impact/impact_metal02.wav") ,   // 84
+			loadSound("./assets/sfx/impact/impact_metal03.wav") ,   // 85
+			loadSound("./assets/sfx/impact/impact_metal04.wav") ,   // 86
+			loadSound("./assets/sfx/impact/impact_metal05.wav") ,   // 87
 			
-			loadSound("./seventh/sfx/impact/impact_wood01.wav") ,   // 88
-			loadSound("./seventh/sfx/impact/impact_wood02.wav") ,   // 89
-			loadSound("./seventh/sfx/impact/impact_wood03.wav") ,   // 90
-			loadSound("./seventh/sfx/impact/impact_wood04.wav") ,   // 91
-			loadSound("./seventh/sfx/impact/impact_wood05.wav") ,   // 92
+			loadSound("./assets/sfx/impact/impact_wood01.wav") ,   // 88
+			loadSound("./assets/sfx/impact/impact_wood02.wav") ,   // 89
+			loadSound("./assets/sfx/impact/impact_wood03.wav") ,   // 90
+			loadSound("./assets/sfx/impact/impact_wood04.wav") ,   // 91
+			loadSound("./assets/sfx/impact/impact_wood05.wav") ,   // 92
 			
-			loadSound("./seventh/sfx/impact/impact_foliage01.wav") ,   // 93
-			loadSound("./seventh/sfx/impact/impact_foliage02.wav") ,   // 94
-			loadSound("./seventh/sfx/impact/impact_foliage03.wav") ,   // 95
-			loadSound("./seventh/sfx/impact/impact_foliage04.wav") ,   // 96
-			loadSound("./seventh/sfx/impact/impact_foliage05.wav") ,   // 97
+			loadSound("./assets/sfx/impact/impact_foliage01.wav") ,   // 93
+			loadSound("./assets/sfx/impact/impact_foliage02.wav") ,   // 94
+			loadSound("./assets/sfx/impact/impact_foliage03.wav") ,   // 95
+			loadSound("./assets/sfx/impact/impact_foliage04.wav") ,   // 96
+			loadSound("./assets/sfx/impact/impact_foliage05.wav") ,   // 97
 			
-			loadSound("./seventh/sfx/impact/impact_default01.wav") ,   // 98
-			loadSound("./seventh/sfx/impact/impact_default02.wav") ,   // 99
-			loadSound("./seventh/sfx/impact/impact_default03.wav") ,   // 100
-			loadSound("./seventh/sfx/impact/impact_default04.wav") ,   // 101
-			loadSound("./seventh/sfx/impact/impact_default05.wav") ,   // 102
+			loadSound("./assets/sfx/impact/impact_default01.wav") ,   // 98
+			loadSound("./assets/sfx/impact/impact_default02.wav") ,   // 99
+			loadSound("./assets/sfx/impact/impact_default03.wav") ,   // 100
+			loadSound("./assets/sfx/impact/impact_default04.wav") ,   // 101
+			loadSound("./assets/sfx/impact/impact_default05.wav") ,   // 102
 			
-			loadSound("./seventh/sfx/risker/risker_fire.wav") ,   // 103
-			loadSound("./seventh/sfx/risker/risker_reload.wav") ,   // 104
-			loadSound("./seventh/sfx/risker/risker_rechamber.wav") ,   // 105
+			loadSound("./assets/sfx/risker/risker_fire.wav") ,   // 103
+			loadSound("./assets/sfx/risker/risker_reload.wav") ,   // 104
+			loadSound("./assets/sfx/risker/risker_rechamber.wav") ,   // 105
 			
-			loadSound("./seventh/sfx/player/footsteps/mech_footstep01.wav") ,   // 106
-			loadSound("./seventh/sfx/player/footsteps/mech_footstep02.wav") ,   // 107
+			loadSound("./assets/sfx/player/footsteps/mech_footstep01.wav") ,   // 106
+			loadSound("./assets/sfx/player/footsteps/mech_footstep02.wav") ,   // 107
 			
-			loadSound("./seventh/sfx/player/mech_torso_move.wav") ,   // 108
+			loadSound("./assets/sfx/player/mech_torso_move.wav") ,   // 108
 			
-			loadSound("./seventh/sfx/player/breathing_lite01.wav") ,   // 109
-			loadSound("./seventh/sfx/player/breathing_lite02.wav") ,   // 110
-			loadSound("./seventh/sfx/player/breathing_lite03.wav") ,   // 111
+			loadSound("./assets/sfx/player/breathing_lite01.wav") ,   // 109
+			loadSound("./assets/sfx/player/breathing_lite02.wav") ,   // 110
+			loadSound("./assets/sfx/player/breathing_lite03.wav") ,   // 111
 			
-			loadSound("./seventh/sfx/player/breathing_heavy01.wav") ,   // 112
-			loadSound("./seventh/sfx/player/breathing_heavy02.wav") ,   // 113
-			loadSound("./seventh/sfx/player/breathing_heavy03.wav") ,   // 114
+			loadSound("./assets/sfx/player/breathing_heavy01.wav") ,   // 112
+			loadSound("./assets/sfx/player/breathing_heavy02.wav") ,   // 113
+			loadSound("./assets/sfx/player/breathing_heavy03.wav") ,   // 114
 			
-			loadSound("./seventh/sfx/bullet_zing01.wav") ,   // 115
-            loadSound("./seventh/sfx/bullet_zing02.wav") ,   // 116
-            loadSound("./seventh/sfx/bullet_zing03.wav") ,   // 117
+			loadSound("./assets/sfx/bullet_zing01.wav") ,   // 115
+            loadSound("./assets/sfx/bullet_zing02.wav") ,   // 116
+            loadSound("./assets/sfx/bullet_zing03.wav") ,   // 117
             
-//            loadSound("./seventh/sfx/tank/movement_start.wav") ,   // 118
-//            loadSound("./seventh/sfx/tank/movement_loop.wav") ,   // 119
+//            loadSound("./assets/sfx/tank/movement_start.wav") ,   // 118
+//            loadSound("./assets/sfx/tank/movement_loop.wav") ,   // 119
             null,null,
-            loadSound("./seventh/sfx/player/healthpack_pickup.wav") ,   // 120
+            loadSound("./assets/sfx/player/healthpack_pickup.wav") ,   // 120
             
-            loadSound("./seventh/sfx/player/speech/allied/attack.wav") ,   // 121
-            loadSound("./seventh/sfx/player/speech/allied/cover_me.wav") ,   // 122
-            loadSound("./seventh/sfx/player/speech/allied/follow_me.wav") ,   // 123
-            loadSound("./seventh/sfx/player/speech/allied/get_out_of_my_way.wav") ,   // 124
-            loadSound("./seventh/sfx/player/speech/allied/get_us_killed.wav") ,   // 125
-            loadSound("./seventh/sfx/player/speech/allied/hold_position.wav") ,   // 126
-            loadSound("./seventh/sfx/player/speech/allied/ill_cover_you.wav") ,   // 127
-            loadSound("./seventh/sfx/player/speech/allied/taking_fire_help.wav") ,   // 128
-            loadSound("./seventh/sfx/player/speech/allied/you_take_lead.wav") ,   // 129
+            loadSound("./assets/sfx/player/speech/allied/attack.wav") ,   // 121
+            loadSound("./assets/sfx/player/speech/allied/cover_me.wav") ,   // 122
+            loadSound("./assets/sfx/player/speech/allied/follow_me.wav") ,   // 123
+            loadSound("./assets/sfx/player/speech/allied/get_out_of_my_way.wav") ,   // 124
+            loadSound("./assets/sfx/player/speech/allied/get_us_killed.wav") ,   // 125
+            loadSound("./assets/sfx/player/speech/allied/hold_position.wav") ,   // 126
+            loadSound("./assets/sfx/player/speech/allied/ill_cover_you.wav") ,   // 127
+            loadSound("./assets/sfx/player/speech/allied/taking_fire_help.wav") ,   // 128
+            loadSound("./assets/sfx/player/speech/allied/you_take_lead.wav") ,   // 129
             
             
-            loadSound("./seventh/sfx/player/speech/axis/attack.wav") ,   // 130
-            loadSound("./seventh/sfx/player/speech/axis/cover_me.wav") ,   // 131
-            loadSound("./seventh/sfx/player/speech/axis/follow_me.wav") ,   // 132
-            loadSound("./seventh/sfx/player/speech/axis/get_out_of_my_way.wav") ,   // 133
-            loadSound("./seventh/sfx/player/speech/axis/get_us_killed.wav") ,   // 134
-            loadSound("./seventh/sfx/player/speech/axis/hold_position.wav") ,   // 135
-            loadSound("./seventh/sfx/player/speech/axis/ill_cover_you.wav") ,   // 136
-            loadSound("./seventh/sfx/player/speech/axis/taking_fire_help.wav") ,   // 137
-            loadSound("./seventh/sfx/player/speech/axis/you_take_lead.wav") ,   // 138
+            loadSound("./assets/sfx/player/speech/axis/attack.wav") ,   // 130
+            loadSound("./assets/sfx/player/speech/axis/cover_me.wav") ,   // 131
+            loadSound("./assets/sfx/player/speech/axis/follow_me.wav") ,   // 132
+            loadSound("./assets/sfx/player/speech/axis/get_out_of_my_way.wav") ,   // 133
+            loadSound("./assets/sfx/player/speech/axis/get_us_killed.wav") ,   // 134
+            loadSound("./assets/sfx/player/speech/axis/hold_position.wav") ,   // 135
+            loadSound("./assets/sfx/player/speech/axis/ill_cover_you.wav") ,   // 136
+            loadSound("./assets/sfx/player/speech/axis/taking_fire_help.wav") ,   // 137
+            loadSound("./assets/sfx/player/speech/axis/you_take_lead.wav") ,   // 138
             
-            loadSound("./seventh/sfx/tank/tank_on.wav") ,   // 139
-            loadSound("./seventh/sfx/tank/tank_off.wav") ,   // 140
-            loadSound("./seventh/sfx/tank/tank_idle.wav") ,   // 141
-            loadSound("./seventh/sfx/tank/tank_shift1.wav") ,   // 142
-            loadSound("./seventh/sfx/tank/tank_shift2.wav") ,   // 143
-            loadSound("./seventh/sfx/tank/tank_shift3.wav") ,   // 144
-            loadSound("./seventh/sfx/tank/tank_revup.wav") ,   // 145
-            loadSound("./seventh/sfx/tank/tank_revdown.wav") ,   // 146
-            loadSound("./seventh/sfx/tank/tank_turret2.wav") ,   // 147
-            loadSound("./seventh/sfx/tank/tank_move.wav") ,   // 148
+            loadSound("./assets/sfx/tank/tank_on.wav") ,   // 139
+            loadSound("./assets/sfx/tank/tank_off.wav") ,   // 140
+            loadSound("./assets/sfx/tank/tank_idle.wav") ,   // 141
+            loadSound("./assets/sfx/tank/tank_shift1.wav") ,   // 142
+            loadSound("./assets/sfx/tank/tank_shift2.wav") ,   // 143
+            loadSound("./assets/sfx/tank/tank_shift3.wav") ,   // 144
+            loadSound("./assets/sfx/tank/tank_revup.wav") ,   // 145
+            loadSound("./assets/sfx/tank/tank_revdown.wav") ,   // 146
+            loadSound("./assets/sfx/tank/tank_turret2.wav") ,   // 147
+            loadSound("./assets/sfx/tank/tank_move.wav") ,   // 148
             
-            loadSound("./seventh/sfx/ctf/flag_captured.wav") ,   // 149
-            loadSound("./seventh/sfx/ctf/flag_stolen.wav") ,   // 150
-            loadSound("./seventh/sfx/ctf/flag_returned.wav") ,   // 151
-            loadSound("./seventh/sfx/ctf/enemy_flag_captured.wav") ,   // 152
-            loadSound("./seventh/sfx/ctf/enemy_flag_stolen.wav") ,   // 153
+            loadSound("./assets/sfx/ctf/flag_captured.wav") ,   // 149
+            loadSound("./assets/sfx/ctf/flag_stolen.wav") ,   // 150
+            loadSound("./assets/sfx/ctf/flag_returned.wav") ,   // 151
+            loadSound("./assets/sfx/ctf/enemy_flag_captured.wav") ,   // 152
+            loadSound("./assets/sfx/ctf/enemy_flag_stolen.wav") ,   // 153
 		};
 	};
 

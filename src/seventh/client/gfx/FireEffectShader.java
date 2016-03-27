@@ -15,7 +15,7 @@ public class FireEffectShader extends Shader {
 	/**
 	 */
 	private FireEffectShader() {
-		super("./seventh/gfx/shaders/base.vert", "./seventh/gfx/shaders/fire.frag");
+		super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/fire.frag");
 	}
 	
 	

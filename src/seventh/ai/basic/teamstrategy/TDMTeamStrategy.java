@@ -95,7 +95,10 @@ public class TDMTeamStrategy implements TeamStrategy {
 	public void playerSpawned(PlayerInfo player) {	
 	    if(player.getTeam().getId() == Team.AXIS_TEAM_ID) {
 	        if(player.isBot()) {
-	        	this.squad.addSquadMember(aiSystem.getBrain(player));
+	        	Brain brain = aiSystem.getBrain(player);
+	        	if(brain!=null) {
+	        		this.squad.addSquadMember(brain);
+	        	}
 	        }
 	    }
 	}
