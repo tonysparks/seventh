@@ -4,3 +4,11 @@
 /bin/
 /.classpath
 /.project
+/assets/
+/build/
+/release/
+/build.xml
+/seventh_error.log
+/seventh_server.xml
+/seventh.xml
+/template/
