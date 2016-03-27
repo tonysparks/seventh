@@ -34,6 +34,39 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
 * SoundSystem is used for 3d sound
 * Tiled is used for the map editor
 
+##Build from Source##
+* Download the source code from github:
+ - git clone https://github.com/tonysparks/seventh
+* Download the game assets from [here](https://dl.dropboxusercontent.com/u/11954191/seventh.zip) 
+* Open the seventh.zip file and copy the *seventh/assets* folder into your project folder
+  - folder structure should look like this:
+  ```
+  seventh/
+    assets/
+    lib/
+    src/
+  ```
+* Compile the project by (TODO: convert to Maven project to make this easier):
+ - Eclipse:
+    - Convert to Java project
+    - Add jars in *lib* folder to classpath
+
+
+##Run from Source##
+* Run the game by:
+ - Windows:
+ ```
+ java -cp ./lib/*;./lib/libgdx/*;./bin/ -Djava.library.path="./lib/natives" -Xmx1g seventh.ClientMain
+ ```
+ - Mac/Linux/Unix:
+ ```
+ java -cp ./lib/*:./lib/libgdx/*:./bin/ -Djava.library.path="./lib/natives" -Xmx1g seventh.ClientMain
+ ```
+
+
+
+ 
+ 
 ##Screenshots##
 ![alt text](http://i.imgur.com/Y8bV3jM.png "Title Screen")
 ![alt text](http://i.imgur.com/PgQNj1W.png "In Game")
