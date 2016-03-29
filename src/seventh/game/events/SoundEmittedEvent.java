@@ -12,11 +12,11 @@ import seventh.shared.SoundType;
  *
  */
 public class SoundEmittedEvent extends Event {
+	private int bufferIndex;
 	private int id;
 	private SoundType soundType;
 	private Vector2f pos;
 	private int entityId;
-	
 	/**
 	 * @param source
 	 * @param id
@@ -45,6 +45,19 @@ public class SoundEmittedEvent extends Event {
 	}
 	
 	
+	/**
+	 * @param bufferIndex the bufferIndex to set
+	 */
+	public void setBufferIndex(int bufferIndex) {
+		this.bufferIndex = bufferIndex;
+	}
+	
+	/**
+	 * @return the bufferIndex
+	 */
+	public int getBufferIndex() {
+		return bufferIndex;
+	}
 	
 	/**
 	 * @param id the id to set

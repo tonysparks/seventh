@@ -34,6 +34,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
@@ -226,6 +227,9 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 		else if(message instanceof PlayerSpeechMessage) {
 			receivePlayerSpeechMessage(conn, (PlayerSpeechMessage)message);
 		}
+		else if(message instanceof PlayerCommanderMessage) {
+			receivePlayerCommanderMessage(conn, (PlayerCommanderMessage)message);
+		}
 		else if(message instanceof ClientDisconnectMessage) {
 			receiveClientDisconnectMessage(conn, (ClientDisconnectMessage)message);
 		}
@@ -379,6 +383,18 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 		RemoteClient client = this.clients.getClient(conn.getId());	
 		Player player = client.getPlayer();
 		player.setName(msg.name);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.server.ServerProtocol#receivePlayerCommanderMessage(harenet.api.Connection, seventh.network.messages.PlayerCommanderMessage)
+	 */
+	@Override
+	public void receivePlayerCommanderMessage(Connection conn, PlayerCommanderMessage msg) {
+		RemoteClient client = this.clients.getClient(conn.getId());	
+		Player player = client.getPlayer();		
+		if(game.playerCommander(player, msg.isCommander)) {
+			sendPlayerCommanderMessage(msg);		
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -657,6 +673,14 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 	 */
 	@Override
 	public void sendFlagStolenMessage(FlagStolenMessage msg) {
+		queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.server.ServerProtocol#sendPlayerCommanderMessage(seventh.network.messages.PlayerCommanderMessage)
+	 */
+	@Override
+	public void sendPlayerCommanderMessage(PlayerCommanderMessage msg) {
 		queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
 	}
 }

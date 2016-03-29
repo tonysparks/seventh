@@ -19,6 +19,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerInputMessage;
@@ -169,6 +170,15 @@ public interface ClientProtocol {
 	 */
 	public void receivePlayerSpeechMessage(Connection conn, PlayerSpeechMessage msg);
 	
+	
+	/**
+	 * A player has gone to or from Commander
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void receivePlayerCommanderMessage(Connection conn, PlayerCommanderMessage msg);
+	
 	/**
 	 * An objective based round has just started.
 	 * 
@@ -316,6 +326,13 @@ public interface ClientProtocol {
 	 */
 	public void sendPlayerInputMessage(PlayerInputMessage msg);
 	
+	
+	/**
+	 * Sends a {@link PlayerCommanderMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendPlayerCommanderMessage(PlayerCommanderMessage msg);
 	
 	/**
 	 * Sends an {@link AICommandMessage}

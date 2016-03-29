@@ -32,6 +32,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerInputMessage;
@@ -253,11 +254,23 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
 		else if(message instanceof BombDisarmedMessage) {
 			receiveBombDisarmedMessage(conn, (BombDisarmedMessage)message);
 		}
+		else if(message instanceof FlagCapturedMessage) {
+			receiveFlagCapturedMessage(conn, (FlagCapturedMessage)message);
+		}
+		else if(message instanceof FlagReturnedMessage) {
+			receiveFlagReturnedMessage(conn, (FlagReturnedMessage)message);
+		}
+		else if(message instanceof FlagStolenMessage) {
+			receiveFlagStolenMessage(conn, (FlagStolenMessage)message);
+		}
 		else if(message instanceof TileRemovedMessage) {
 		    receiveTileRemovedMessage(conn, (TileRemovedMessage)message);
 		}
 		else if(message instanceof TilesRemovedMessage) {
 		    receiveTilesRemovedMessage(conn, (TilesRemovedMessage)message);
+		}
+		else if(message instanceof PlayerCommanderMessage) {
+			receivePlayerCommanderMessage(conn, (PlayerCommanderMessage)message);
 		}
 		/* None game messages */
 		
@@ -284,15 +297,6 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
 		}
 		else if(message instanceof RconTokenMessage) {
 			receiveRconTokenMessage(conn, (RconTokenMessage)message);
-		}
-		else if(message instanceof FlagCapturedMessage) {
-			receiveFlagCapturedMessage(conn, (FlagCapturedMessage)message);
-		}
-		else if(message instanceof FlagReturnedMessage) {
-			receiveFlagReturnedMessage(conn, (FlagReturnedMessage)message);
-		}
-		else if(message instanceof FlagStolenMessage) {
-			receiveFlagStolenMessage(conn, (FlagStolenMessage)message);
 		}
 		else {
 			Cons.println("Unknown message: " + message);
@@ -476,6 +480,16 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         if(game!=null) {
             game.playerSpeech(msg);
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.ClientProtocol#receivePlayerCommanderMessage(harenet.api.Connection, seventh.network.messages.PlayerCommanderMessage)
+     */
+    @Override
+    public void receivePlayerCommanderMessage(Connection conn, PlayerCommanderMessage msg) {
+    	if(game!=null) {
+    		game.playerCommander(msg);
+    	}
     }
     
     /* (non-Javadoc)
@@ -683,5 +697,13 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     @Override
     public void sendPlayerInputMessage(PlayerInputMessage msg) {
         sendUnReliableMessage(msg);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.ClientProtocol#sendPlayerCommanderMessage(seventh.network.messages.PlayerCommanderMessage)
+     */
+    @Override
+    public void sendPlayerCommanderMessage(PlayerCommanderMessage msg) {
+    	queueSendReliableMessage(msg);
     }
 }

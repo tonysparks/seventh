@@ -11,6 +11,7 @@ import seventh.game.SoundEventPool;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.math.Vector2f;
 import seventh.shared.Bits;
+import seventh.shared.SeventhConstants;
 import seventh.shared.SoundType;
 
 /**
@@ -170,6 +171,40 @@ public class NetSound implements NetMessage {
 		
 		
 		return snd;
+	}
+	
+	
+	/**
+	 * Consolidates the {@link List} of {@link SoundEmittedEvent}'s, which means it will 
+	 * remove any duplicates
+	 * 
+	 * @param sounds
+	 * @return the list of {@link NetSound}s
+	 */
+	public static NetSound[] consolidateToNetSounds(List<SoundEmittedEvent> sounds) {		
+		
+		int sum = 0;
+		int size = sounds.size();
+		SoundEmittedEvent[] buffer = new SoundEmittedEvent[SeventhConstants.MAX_SOUNDS];
+		
+		for(int i = 0; i < size; i++) {
+			SoundEmittedEvent sndEvent = sounds.get(i);
+			if(buffer[sndEvent.getBufferIndex()] == null) {
+				buffer[sndEvent.getBufferIndex()] = sndEvent;		
+				sum++;
+			}
+		}
+		
+		NetSound[] snds = new NetSound[sum];
+		int index = 0;
+		for(int i = 0; i < buffer.length; i++) {
+			SoundEmittedEvent sndEvent = buffer[i];
+			if(sndEvent != null) {
+				snds[index++] = NetSound.toNetSound(sndEvent);
+			}
+		}
+		
+		return snds;
 	}
 	
 	/**

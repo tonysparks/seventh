@@ -73,6 +73,8 @@ public class BufferIO {
 	public static final byte FLAG_RETURNED = 33;
 	public static final byte FLAG_STOLEN = 34;
 	
+	public static final byte PLAYER_COMMANDER = 35;
+	
 	/**
 	 * The Seventh {@link NetMessageFactory} implementation
 	 * 
@@ -157,6 +159,8 @@ public class BufferIO {
 				case FLAG_RETURNED: message = new FlagReturnedMessage();
 					break;
 				case FLAG_STOLEN: message = new FlagStolenMessage();
+					break;
+				case PLAYER_COMMANDER: message = new PlayerCommanderMessage();
 					break;
 				default: throw new IllegalArgumentException("Unknown type: " + type);
 			}

@@ -25,6 +25,8 @@ public class ClientPlayer {
 	
 	private PlayerSprite axisSprite;
 	private PlayerSprite alliedSprite;
+
+	private boolean isCommander;
 	
 	/**
 	 * 
@@ -43,7 +45,8 @@ public class ClientPlayer {
 	public void updateStats(NetPlayerStat state) {
 		this.stats= state;
 		this.name = state.name;
-				
+		//this.isCommander = state.isCommander;		
+		
 		if(this.team.getId() != this.stats.teamId) {
 			changeTeam(ClientTeam.fromId(this.stats.teamId));			
 		}
@@ -53,6 +56,7 @@ public class ClientPlayer {
 		this.stats.deaths = state.deaths;
 		this.stats.kills = state.kills;		
 	}
+
 	
 	public int getId() {
 		return this.id;
@@ -155,6 +159,21 @@ public class ClientPlayer {
 	 */
 	public boolean isPureSpectator() {
 		return isSpectating() && this.team == ClientTeam.NONE;
+	}
+	
+	
+	/**
+	 * @return the isCommander
+	 */
+	public boolean isCommander() {
+		return isCommander;
+	}
+	
+	/**
+	 * @param isCommander the isCommander to set
+	 */
+	public void setCommander(boolean isCommander) {
+		this.isCommander = isCommander;
 	}
 	
 	/**

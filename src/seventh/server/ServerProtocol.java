@@ -22,6 +22,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerInputMessage;
@@ -125,6 +126,16 @@ public interface ServerProtocol {
      * @throws IOException
      */
     public void receivePlayerNameChangedMessage(Connection conn, PlayerNameChangeMessage msg) throws IOException;
+    
+
+    /**
+	 * A player has gone to or from Commander
+	 * 
+	 * @param conn
+	 * @param msg
+	 */
+	public void receivePlayerCommanderMessage(Connection conn, PlayerCommanderMessage msg);
+    
     /**
      * The client has issued a global text message
      * 
@@ -331,6 +342,7 @@ public interface ServerProtocol {
      */
     public void sendPlayerSpeechMessage(PlayerSpeechMessage msg, int exceptClientId);
     
+    
     /**
      * Sends a {@link ConnectAcceptedMessage} to a particular client
      * 
@@ -358,4 +370,11 @@ public interface ServerProtocol {
      * @param msg
      */
     public void sendFlagStolenMessage(FlagStolenMessage msg);
+    
+    /**
+	 * Sends a {@link PlayerCommanderMessage}
+	 * 
+	 * @param msg
+	 */
+	public void sendPlayerCommanderMessage(PlayerCommanderMessage msg);
 }

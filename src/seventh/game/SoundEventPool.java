@@ -26,6 +26,7 @@ public class SoundEventPool {
 		this.events = new SoundEmittedEvent[maxSounds];
 		for(int i = 0; i < this.events.length; i++) {
 			this.events[i] = new SoundEmittedEvent(events, i, SoundType.MUTE, new Vector2f());
+			this.events[i].setBufferIndex(i);
 		}
 		
 		clear();

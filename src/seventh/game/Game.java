@@ -1143,6 +1143,37 @@ public class Game implements GameInfo, Debugable, Updatable {
         }
     }
     
+    
+    /**
+     * Attempts to change the player's commander status
+     * @param player
+     * @param isCommander
+     * @return true if successfully changed the commander status of the player
+     */
+    public boolean playerCommander(Player player, boolean isCommander) {
+    	if(player!=null) {
+    		if(isCommander) {
+    			Team team = player.getTeam();
+    			if(team.isValid() && !team.hasCommander()) {
+    				if(player.isAlive()) {
+    					Entity ent = player.getEntity();
+    					ent.softKill();
+    						
+    					removePlayer(ent);
+    				}
+    				
+    				player.setCommander(isCommander);
+    				return true;
+    			}
+    		}
+    		else {
+    			player.setCommander(isCommander);
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     /**
      * Receives an AICommand from a player.
      * 
@@ -1792,9 +1823,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 		
 		if (player.isPureSpectator()) {
 			NetEntity.toNetEntities(entities, netUpdate.entities);
-			netUpdate.sounds = NetSound.toNetSounds(soundEvents);
-			netUpdate.numberOfSounds = (byte)soundEvents.numberOfSounds();
-			
+			netUpdate.setNetSounds(NetSound.toNetSounds(soundEvents));
+						
 			/*
 			 * If the current player you are watching is dead,
 			 * follow another player
@@ -1806,7 +1836,31 @@ public class Game implements GameInfo, Debugable, Updatable {
 				}
 			}
 			
-		}		
+		}	
+		else if(player.isCommander()) {
+			Team team = player.getTeam();
+			List<Player> players = team.getPlayers();
+			
+			aEntitiesInView.clear();
+			aSoundsHeard.clear();
+			
+			
+			for(int i = 0; i < players.size(); i++) {
+				Player p = players.get(i);
+				if(p.isAlive()) {
+					PlayerEntity playerEntity = p.getEntity();
+					
+					aSoundsHeard = playerEntity.getHeardSounds(soundEvents, aSoundsHeard);			
+					aEntitiesInView = playerEntity.getEntitiesInView(this, aEntitiesInView);	
+					aEntitiesInView.add(playerEntity);
+				}
+			}
+			
+			netUpdate.setNetSounds(NetSound.consolidateToNetSounds(aSoundsHeard)); 			
+			NetEntity.toNetEntities(aEntitiesInView, netUpdate.entities);
+			
+			adjustNetSoundsPosition(netUpdate.sounds, netUpdate.entities);
+		}
 		else {
 			PlayerEntity playerEntity = player.isSpectating() ? player.getSpectatingEntity() : player.getEntity();
 			
@@ -1816,8 +1870,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 				 */			
 				aSoundsHeard.clear();
 				aSoundsHeard = playerEntity.getHeardSounds(soundEvents, aSoundsHeard);			
-				netUpdate.sounds = NetSound.toNetSounds(aSoundsHeard); 
-				netUpdate.numberOfSounds = (byte)aSoundsHeard.size();								
+				netUpdate.setNetSounds(NetSound.toNetSounds(aSoundsHeard)); 
+										
 				
 				/*
 				 * Calculate all the visuals this player can see

@@ -213,7 +213,7 @@ public abstract class AbstractTeamGameType implements GameType {
 	 */
 	@Override
 	public Player getNextPlayerToSpectate(Players players, Player spectator) {
-		if(spectator.isPureSpectator()) {
+		if(spectator.isPureSpectator()||spectator.isCommander()) {
 			return players.getNextAlivePlayerFrom(spectator.getSpectating());
 		}
 		Player player = spectator.getSpectating();
@@ -225,7 +225,7 @@ public abstract class AbstractTeamGameType implements GameType {
 	 */
 	@Override
 	public Player getPrevPlayerToSpectate(Players players, Player spectator) {
-		if(spectator.isPureSpectator()) {
+		if(spectator.isPureSpectator()||spectator.isCommander()) {
 			return players.getPrevAlivePlayerFrom(spectator.getSpectating());
 		}
 		Player player = spectator.getSpectating();
@@ -392,7 +392,7 @@ public abstract class AbstractTeamGameType implements GameType {
 			for (int i = 0; i < players.length; i++) {
 				Player player = players[i];
 				if (player != null) {
-					if (player.isDead() && !player.isPureSpectator()) {
+					if (player.canSpawn()) {
 						player.updateSpawnTime(timeStep);
 						if (player.readyToSpawn()) {
 							game.spawnPlayerEntity(player.getId());
@@ -416,7 +416,10 @@ public abstract class AbstractTeamGameType implements GameType {
 		for (int i = 0; i < players.length; i++) {
 			Player player = players[i];
 			if (player != null) {
-
+				if(player.isCommander()) {
+					continue;
+				}
+				
 				if (!player.isPureSpectator() && !player.isSpectating() && player.isDead()) {
 					player.applyLookAtDeathDelay();
 				}

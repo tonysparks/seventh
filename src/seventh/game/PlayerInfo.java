@@ -82,6 +82,11 @@ public interface PlayerInfo {
 	public abstract boolean hasEntity();
 
 	/**
+	 * @return true if this player is eligible to spawn
+	 */
+	public boolean canSpawn();
+	
+	/**
 	 * @return true if this Player is not controlling an {@link Entity} or the
 	 * controlled {@link Entity} is dead.
 	 */
@@ -104,6 +109,12 @@ public interface PlayerInfo {
 	 */
 	public abstract boolean isPureSpectator();
 
+	
+	/**
+	 * @return if the player is currently commanding their team
+	 */
+	public boolean isCommander();
+	
 	/**
 	 * @return the {@link Entity} which this player is spectating
 	 */

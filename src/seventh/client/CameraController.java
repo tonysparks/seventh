@@ -115,7 +115,7 @@ public class CameraController implements Updatable {
 	 * @return the isCameraRoaming
 	 */
 	public boolean isCameraRoaming() {
-		return isCameraRoaming && this.localPlayer.isPureSpectator();
+		return isCameraRoaming && (this.localPlayer.isPureSpectator()||this.localPlayer.isCommander());
 	}
 	
 	/* (non-Javadoc)
@@ -178,6 +178,22 @@ public class CameraController implements Updatable {
 		}
 		
 		this.previousKeys = keys;
+	}
+	
+	public void enterCommanderCameraMode() {
+		setFreeformCameraSpeed();
+		
+		this.isCameraRoaming = true;
+		
+		// center the camera position
+		cameraDest.set(camera.getPosition());
+		cameraDest.x += camera.getViewPort().width/2;
+		cameraDest.y += camera.getViewPort().height/2;
+	}
+	
+	public void leaveCommanderCameraMode() {
+		setGameCameraSpeed();
+		this.isCameraRoaming = false;
 	}
 	
 	private void enterFreeformCameraMode() {

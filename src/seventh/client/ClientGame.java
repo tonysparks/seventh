@@ -55,6 +55,7 @@ import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
@@ -1492,6 +1493,21 @@ public class ClientGame {
 		ClientPlayer player = this.players.getPlayer(msg.playerId);
 		if(player != null) {
 			Sounds.playSpeechSound(player.getTeam().getId(), msg.speechCommand, msg.posX, msg.posY);
+		}
+	}
+	
+	public void playerCommander(PlayerCommanderMessage msg) {
+		ClientPlayer player = this.players.getPlayer(msg.playerId);
+		if(player != null) {
+			player.setCommander(msg.isCommander);
+			if(player.getId()==localPlayer.getId()) {
+				if(msg.isCommander) {
+					cameraController.enterCommanderCameraMode();
+				}
+				else {
+					cameraController.leaveCommanderCameraMode();
+				}
+			}
 		}
 	}
 	

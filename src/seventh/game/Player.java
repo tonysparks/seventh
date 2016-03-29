@@ -41,6 +41,7 @@ public class Player implements PlayerInfo, Debugable {
 	private byte teamId;
 	private boolean isBot;	
 	private boolean isDummy;
+	private boolean isCommander;
 	
 	private long spawnTime;
 	private long lookAtDeathTime;
@@ -334,6 +335,12 @@ public class Player implements PlayerInfo, Debugable {
 		return this.entity != null;
 	}
 	
+	
+	@Override
+	public boolean canSpawn() {
+		return isDead() && !isPureSpectator() && !isCommander();
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.PlayerInfo#isDead()
 	 */
@@ -366,6 +373,11 @@ public class Player implements PlayerInfo, Debugable {
 		return team==Team.SPECTATOR;
 	}
 	
+	@Override
+	public boolean isCommander() {
+		return this.isCommander;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.PlayerInfo#getSpectatingEntity()
 	 */
@@ -384,6 +396,13 @@ public class Player implements PlayerInfo, Debugable {
 			return Entity.INVALID_ENTITY_ID;
 		}
 		return ent.getId();
+	}
+	
+	/**
+	 * Make this player a commander
+	 */
+	public void setCommander(boolean commander) {
+		this.isCommander = commander;
 	}
 	
 	/**

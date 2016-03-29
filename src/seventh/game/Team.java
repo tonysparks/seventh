@@ -134,6 +134,13 @@ public class Team implements Debugable {
 	}
 	
 	/**
+	 * @return true if this is either the allied or axis team
+	 */
+	public boolean isValid() {
+		return this.getId() != SPECTATOR.getId();
+	}
+	
+	/**
 	 * Returns the number of players in the supplied list that are on this 
 	 * team.
 	 * @param players
@@ -265,7 +272,18 @@ public class Team implements Debugable {
 		}
 		return isDead;
 	}
-	
+
+	/**
+	 * @return true if there is a commander on this team
+	 */
+	public boolean hasCommander() {		
+		for(int i = 0; i < this.players.size(); i++) {
+			if(this.players.get(i).isCommander()) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * @return a semi-random alive player that is on this team, null

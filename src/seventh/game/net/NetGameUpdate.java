@@ -176,4 +176,14 @@ public class NetGameUpdate implements NetMessage {
 		
 
 	}
+	
+	/**
+	 * Set the number of sounds 
+	 * 
+	 * @param sounds
+	 */
+	public void setNetSounds(NetSound[] sounds) {
+		this.sounds = sounds;
+		this.numberOfSounds = (byte) sounds.length;
+	}
 }

@@ -44,6 +44,7 @@ import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.AICommandMessage;
+import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerInputMessage;
 import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
@@ -509,6 +510,18 @@ public class InGameScreen implements Screen {
 						protocol.sendRconMessage(new RconMessage(msg));
 					}
 				}
+			}
+		});
+		
+		console.addCommand(new Command("commander") {
+			
+			@Override
+			public void execute(Console console, String... args) {
+				PlayerCommanderMessage msg = new PlayerCommanderMessage();
+				ClientPlayer localPlayer = game.getLocalPlayer();
+				msg.playerId = localPlayer.getId();
+				msg.isCommander = !localPlayer.isCommander();
+				protocol.sendPlayerCommanderMessage(msg);
 			}
 		});
 	}
