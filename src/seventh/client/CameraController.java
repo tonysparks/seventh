@@ -28,7 +28,7 @@ public class CameraController implements Updatable {
     private static final Vector2f GAME_SPEED = new Vector2f(130, 130);
     private static final Vector2f FREEFORM_SPEED = new Vector2f(330, 330);
     
-    private static final int freeformSpeed=220, fastFreeformSpeed=280;
+    private static final int freeformSpeed=750, fastFreeformSpeed=800;
     
 	private Map map;
 	private Camera camera;
@@ -44,6 +44,9 @@ public class CameraController implements Updatable {
 	
 	
 	private Rectangle cameraShakeBounds;
+	private Rectangle bounds;
+	
+	private int viewportWidth, viewportHeight;
 	
 	private boolean isCameraRoaming, isFastCamera;
 	private int previousKeys;
@@ -67,6 +70,10 @@ public class CameraController implements Updatable {
 		
 		this.playerVelocity = new Vector2f();
 
+		this.bounds = new Rectangle();
+		this.viewportWidth = this.camera.getViewPort().width;
+		this.viewportHeight = this.camera.getViewPort().height;
+		
 		setGameCameraSpeed();
 	}
 	
@@ -124,6 +131,31 @@ public class CameraController implements Updatable {
 	@Override
 	public void update(TimeStep timeStep) {
 		updateCameraPosition(timeStep);
+	}
+	
+	/**
+	 * Applies the mouse/joystick inputs
+	 * 
+	 * @param mx
+	 * @param my
+	 */
+	public void applyPlayerInput(float mx, float my) {
+		if(isCameraRoaming()) {
+			final float threshold = 25.0f;
+			if(mx < threshold) {
+				this.playerVelocity.x = -1;
+			}
+			else if(mx > this.viewportWidth-threshold) {
+				this.playerVelocity.x = 1;
+			}
+			
+			if(my < threshold) {
+				this.playerVelocity.y = -1;
+			}
+			else if(my > this.viewportHeight-threshold) {
+				this.playerVelocity.y = 1;
+			}
+		}
 	}
 	
 	
@@ -224,8 +256,8 @@ public class CameraController implements Updatable {
 		final int movementSpeed = isFastCamera ? fastFreeformSpeed : freeformSpeed;
 		if(playerVelocity.lengthSquared() > 0) {
 			Vector2f pos = cameraDest;		
-			Rectangle bounds = new Rectangle(camera.getViewPort());
-						
+			
+			bounds.set(camera.getViewPort());					
 			bounds.setLocation(pos);
 			
 			double dt = timeStep.asFraction();

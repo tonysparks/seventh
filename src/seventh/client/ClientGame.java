@@ -702,6 +702,9 @@ public class ClientGame {
 			double orientation = Math.atan2((my+cameraPos.y)-pos.y, (mx+cameraPos.x)-pos.x);
 			return (float)orientation;
 		}
+		else {
+			cameraController.applyPlayerInput(mx, my);
+		}
 		return 0f;
 	}
 	
