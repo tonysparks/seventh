@@ -65,6 +65,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		
 	private Light mussleFlash;
 	
+	private boolean isSelected;
+	
 	/**
 	 * @param game
 	 * @param player
@@ -163,6 +165,21 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		return bloodEmitter;
 	}	
 	
+	/**
+	 * If this has been selected
+	 * 
+	 * @param isSelected
+	 */
+	public void isSelected(boolean isSelected) {
+		this.isSelected = isSelected;
+	}
+	
+	/**
+	 * @return if this entity is selected
+	 */
+	public boolean isSelected() {
+		return this.isSelected;
+	}
 		
 	/**
 	 * @return the Players ID
@@ -483,11 +500,10 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		canvas.setFont("Consola", 14);
 		canvas.boldFont();
 				
-		if(fadeAlphaColor > 0) {
-			
+		if(fadeAlphaColor > 0) {			
 			RenderFont.drawShadedString(canvas, player.getName(), rx - (bounds.width/2f), ry + (bounds.height/2f) + 40f, teamColor );
 		
-			if (invinceableTime > 0) {
+			if (invinceableTime > 0 || isSelected()) {
 				canvas.setColor(teamColor, 122);
 				canvas.fillCircle(20, rx - (bounds.width/2f), ry - (bounds.height/2f), null);
 				canvas.drawCircle(21, rx - (bounds.width/2f)-1f, ry - (bounds.height/2f)-1f, 0xff000000);

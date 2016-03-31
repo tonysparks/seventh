@@ -18,12 +18,14 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.LightSystem;
+import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.particle.AnimationEffect;
 import seventh.client.gfx.particle.BloodEmitter;
 import seventh.client.gfx.particle.Effect;
 import seventh.client.gfx.particle.Emitter;
 import seventh.client.gfx.particle.GibEmitter;
 import seventh.client.gfx.particle.RocketTrailEmitter;
+import seventh.client.screens.InGameScreen.Actions;
 import seventh.client.sfx.Sound;
 import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientBomb;
@@ -127,6 +129,9 @@ public class ClientGame {
 	
 	private final Timers gameTimers;
 	
+	private final Vector2f screenToWorld;
+	private       ClientPlayerEntity selectedEntity;
+	
 	private Leola runtime;
 	/**
 	 * Listens for {@link ClientEntity} life cycle
@@ -182,6 +187,7 @@ public class ClientGame {
 		this.gameType = GameType.Type.TDM;
 
 		this.cacheRect = new Rectangle();
+		this.screenToWorld = new Vector2f();
 
 		this.gameEffects = new ClientGameEffects();
 		this.entityListener = this.gameEffects.getLightSystem().getClientEntityListener();		
@@ -241,9 +247,19 @@ public class ClientGame {
 	 * @return the x and y converted to world coordinates
 	 */
 	public Vector2f screenToWorldCoordinates(int x, int y) {
+		return screenToWorldCoordinates(x, y, new Vector2f());
+	}
+	
+	/**
+	 * @param x - screen x position
+	 * @param y - screen y position
+	 * @param out
+	 * @return the x and y converted to world coordinates
+	 */
+	public Vector2f screenToWorldCoordinates(int x, int y, Vector2f out) {
 		Vector2f pos = camera.getPosition();
-		Vector2f wpos = new Vector2f(x + pos.x, y + pos.y);
-		return wpos;
+		out.set(x + pos.x, y + pos.y);
+		return out;
 	}
 	
 	/**
@@ -372,6 +388,11 @@ public class ClientGame {
 	
 			
 			hud.render(canvas, camera, alpha);
+			// TODO move into selector class and move it into
+			// the HUD class
+			if(this.selectedEntity != null) {
+				//RenderFont.drawShadedString(canvas, ", x, y, color);
+			}
 		}
 		
 	}
@@ -647,11 +668,39 @@ public class ClientGame {
 	 * Applies the players input.  This is used for
 	 * client side prediction.
 	 * 
+	 * @param mx the mouse x coordinate
+	 * @param my the mouse y coordinate
 	 * @param keys
 	 */
-	public void applyPlayerInput(int keys) {
-		this.cameraController.applyPlayerInput(keys);
-		this.hud.applyPlayerInput(keys);			
+	public void applyPlayerInput(float mx, float my, int keys) {
+		this.cameraController.applyPlayerInput(mx, my, keys);
+		this.hud.applyPlayerInput(keys);	
+		
+		
+		// TODO: Move into selector class
+		if(this.cameraController.isCameraRoaming()) {
+			if(this.localPlayer.isCommander() && ((keys & Actions.FIRE.getMask()) != 0)) {
+				Vector2f clickPos = screenToWorldCoordinates((int)mx, (int)my, this.screenToWorld);
+				for(int i = 0; i < this.players.getMaxNumberOfPlayers(); i++) {
+					ClientPlayer player = this.players.getPlayer(i);
+					if(player != null && player.isAlive()) {
+						if(player.getTeam().getId() == this.localPlayer.getTeam().getId()) {
+							if(player.getEntity().getBounds().contains(clickPos)) {
+								if(this.selectedEntity != player.getEntity()) {
+									if(this.selectedEntity != null) {
+										this.selectedEntity.isSelected(false);
+									}
+									this.selectedEntity = player.getEntity();
+									this.selectedEntity.isSelected(true);
+									Sounds.playGlobalSound(SoundType.UI_ELEMENT_SELECT);
+								}
+							}
+							
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -702,9 +751,7 @@ public class ClientGame {
 			double orientation = Math.atan2((my+cameraPos.y)-pos.y, (mx+cameraPos.x)-pos.x);
 			return (float)orientation;
 		}
-		else {
-			cameraController.applyPlayerInput(mx, my);
-		}
+		
 		return 0f;
 	}
 	

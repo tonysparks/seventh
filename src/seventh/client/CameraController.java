@@ -139,7 +139,7 @@ public class CameraController implements Updatable {
 	 * @param mx
 	 * @param my
 	 */
-	public void applyPlayerInput(float mx, float my) {
+	private void applyPlayerMouseInput(float mx, float my) {
 		if(isCameraRoaming()) {
 			final float threshold = 25.0f;
 			if(mx < threshold) {
@@ -164,7 +164,10 @@ public class CameraController implements Updatable {
 	 * 
 	 * @param keys
 	 */
-	public void applyPlayerInput(int keys) {
+	public void applyPlayerInput(float mx, float my, int keys) {
+		applyPlayerMouseInput(mx, my);
+		
+		
 		if(Keys.UP.isDown(keys)) {
 			playerVelocity.y = -1;			 
 		}

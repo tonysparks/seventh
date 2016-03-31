@@ -601,7 +601,7 @@ public class InGameScreen implements Screen {
 		connection.updateNetwork(timeStep);
 						
 		game.update(timeStep);
-		game.applyPlayerInput(inputKeys);
+		game.applyPlayerInput(mousePos.x, mousePos.y, inputKeys);
 		
 		inputKeys = 0;
 		
