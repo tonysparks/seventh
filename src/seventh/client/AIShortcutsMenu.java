@@ -15,15 +15,18 @@ import seventh.shared.TimeStep;
  */
 public class AIShortcutsMenu implements Renderable {
 
+	private final ClientGame game;
     private AIShortcuts shortcuts;
     private boolean show;
     
     private String[] texts;
     
+    
     /**
      * 
      */
-    public AIShortcutsMenu(KeyMap keyMap, AIShortcuts shortcuts) {
+    public AIShortcutsMenu(ClientGame game, KeyMap keyMap, AIShortcuts shortcuts) {
+    	this.game = game;
         this.shortcuts = shortcuts;
         
         this.texts = new String[this.shortcuts.getCommands().size() + 1];
@@ -36,7 +39,7 @@ public class AIShortcutsMenu implements Renderable {
     }
     
     public boolean isShowing() {
-        return this.show;
+        return this.show || this.game.isLocalPlayerCommander();
     }
     
     public void show() {

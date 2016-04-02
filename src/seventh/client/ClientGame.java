@@ -18,7 +18,6 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.LightSystem;
-import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.particle.AnimationEffect;
 import seventh.client.gfx.particle.BloodEmitter;
 import seventh.client.gfx.particle.Effect;
@@ -591,6 +590,20 @@ public class ClientGame {
 	 */
 	public ClientPlayer getLocalPlayer() {
 		return localPlayer;
+	}
+	
+	/**
+	 * @return if the local player is in commander mode
+	 */
+	public boolean isLocalPlayerCommander() {
+		return this.localPlayer != null && this.localPlayer.isCommander();
+	}
+	
+	/**
+	 * @return the selectedEntity
+	 */
+	public ClientPlayerEntity getSelectedEntity() {
+		return selectedEntity;
 	}
 	
 	/**
@@ -1418,7 +1431,7 @@ public class ClientGame {
 	public void teamTextMessage(TeamTextMessage msg) {
 		ClientPlayer player = players.getPlayer(msg.playerId);
 		if(player != null) {
-			if(player.isAlive()) {
+			if(player.isAlive() || player.isCommander()) {
 				hud.postMessage("(Team) " + player.getName() + ": " + msg.message);
 			}
 			else {
@@ -1433,7 +1446,7 @@ public class ClientGame {
 	public void textMessage(TextMessage msg) {
 		ClientPlayer player = players.getPlayer(msg.playerId);
 		if(player != null) {
-			if(player.isAlive()) {
+			if(player.isAlive() || player.isCommander()) {
 				hud.postMessage(player.getName() + ": " + msg.message);
 			}
 			else {

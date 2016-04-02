@@ -28,6 +28,8 @@ public class WeightedAction extends CompositeAction {
 	
 	private ActionEvaluator currentActiveEvaluator;
 		
+	private Action currentAction;
+	
 	/**
 	 * 
 	 */
@@ -68,7 +70,7 @@ public class WeightedAction extends CompositeAction {
 				    (newEvaluator != this.currentActiveEvaluator)) ) { 
 				
 				Action action = newEvaluator.getAction(brain);
-				if(action!=null) {
+				if(action!=null&&this.currentAction!=action) {
 					this.currentActiveEvaluator = newEvaluator;
 					
 					if(this.currentActiveEvaluator.isContinuable()) {
@@ -82,6 +84,8 @@ public class WeightedAction extends CompositeAction {
 					if(newEvaluator.isRepeatable()) {
 						action.start(brain);
 					}
+					
+					this.currentAction = action;
 				}
 			}
 		}

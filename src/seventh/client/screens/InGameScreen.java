@@ -208,8 +208,8 @@ public class InGameScreen implements Screen {
 		commands.add(new DefendPlantedBombAIShortcut(Keys.L));
 		commands.add(new TakeCoverAIShortcut(Keys.U));
 		
-		this.aiShortcuts = new AIShortcuts(commands);
-		this.aiShortcutsMenu = new AIShortcutsMenu(keyMap, aiShortcuts);
+		this.aiShortcuts = new AIShortcuts(this.keyMap, commands, commands.get(2));
+		this.aiShortcutsMenu = new AIShortcutsMenu(game, keyMap, aiShortcuts);
 		
 		createUI();
 								

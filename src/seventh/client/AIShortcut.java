@@ -50,19 +50,41 @@ public abstract class AIShortcut {
     
     
     /**
+     * @param game
+     * @return the id of the bot to send the command to
+     */
+    protected int getBotId(ClientGame game) {
+    	int botId = -1;
+    	if(game.isLocalPlayerCommander()) {
+    		ClientPlayerEntity bot = game.getSelectedEntity();
+    		if(bot != null && bot.isAlive()) {
+    			botId = bot.getId();
+    		}
+    	}
+    	else {
+            ClientPlayer localPlayer = game.getLocalPlayer();
+            
+            if(localPlayer.isAlive()) {
+            	botId = findClosestBot(game, localPlayer);    
+            }                        
+    	}
+    	
+    	return botId;
+    }
+    
+    /**
      * Finds the closest friendly bot
      * @param game
      * @return the id of the closest bot, or -1 if no bots are available.
      */
-    protected int findClosestBot(ClientGame game) {
-        ClientPlayer localPlayer = game.getLocalPlayer();
+    protected int findClosestBot(ClientGame game, ClientPlayer otherPlayer) {        
         ClientPlayers players = game.getPlayers();
         
-        if(!localPlayer.isAlive()) {
+        if(!otherPlayer.isAlive()) {
             return -1;
         }
         
-        ClientTeam team = localPlayer.getTeam();
+        ClientTeam team = otherPlayer.getTeam();
         
         int closestBot = -1;
         float closestDistance = -1f;
@@ -70,7 +92,7 @@ public abstract class AIShortcut {
             ClientPlayer player = players.getPlayer(i);
             if(player != null && player.isAlive() && player.isBot()) {
                 if(player.getTeam().equals(team)) {
-                    Vector2f pos = localPlayer.getEntity().getPos();
+                    Vector2f pos = otherPlayer.getEntity().getPos();
                     Vector2f botPos = player.getEntity().getPos();
                     
                     float dist = Vector2f.Vector2fDistanceSq(pos, botPos);

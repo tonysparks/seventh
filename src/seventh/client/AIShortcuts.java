@@ -16,13 +16,19 @@ public class AIShortcuts {
 
     private int[] shortcuts;
     private boolean[] isDown;
+    private boolean isMouseButtonDown;
     
     private List<AIShortcut> commands;
+    private AIShortcut hotCommand;
+    
+    private KeyMap keyMap;
     /**
      * 
      */
-    public AIShortcuts(List<AIShortcut> commands) {
+    public AIShortcuts(KeyMap keyMap, List<AIShortcut> commands, AIShortcut hotCommand) {
+    	this.keyMap = keyMap;
         this.commands = commands;
+        this.hotCommand = hotCommand;
         this.shortcuts = new int[commands.size()];
         this.isDown = new boolean[this.shortcuts.length];
         
@@ -60,6 +66,18 @@ public class AIShortcuts {
                 this.isDown[i] = false;
             }
         }
+        boolean isMouseButtonDown = inputs.isButtonDown(keyMap.getFireKey());
+        if(isMouseButtonDown) {
+        	this.isMouseButtonDown = true;
+        }
+        
+        if(this.isMouseButtonDown && !isMouseButtonDown) {
+        	this.hotCommand.execute(console, game);
+        }
+        
+        if(!isMouseButtonDown) {
+        	this.isMouseButtonDown = false;
+        }
         
         return result;
     }
@@ -78,19 +96,14 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-            ClientPlayer localPlayer = game.getLocalPlayer();
-            
-            if(!localPlayer.isAlive()) {
-                return;
-            }
-            
-            int closestBot = findClosestBot(game);
-            if(closestBot > -1) {
+        	int botId = getBotId(game);
+            if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
-                int playerId = localPlayer.getId();
-                console.execute("ai " + closestBot + " followMe " + playerId);
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " follow me!" );
-                console.execute("speech " + 2);
+                ClientPlayer bot = players.getPlayer(botId);
+                int playerId = findClosestBot(game, bot);
+                console.execute("ai " + botId + " followMe " + playerId);
+                console.execute("team_say " + bot.getName() + " follow me!" );
+                //console.execute("speech " + 2);
             }
         }
         
@@ -111,18 +124,12 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-            ClientPlayer localPlayer = game.getLocalPlayer();
-            
-            if(!localPlayer.isAlive()) {
-                return;
-            }
-            
-            int closestBot = findClosestBot(game);
-            if(closestBot > -1) {
+        	int botId = getBotId(game);
+            if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
-                console.execute("ai " + closestBot + " surpressFire " + (int)worldPosition.x + " " + (int)worldPosition.y);
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " surpress fire!" );
+                console.execute("ai " + botId+ " surpressFire " + (int)worldPosition.x + " " + (int)worldPosition.y);
+                console.execute("team_say " + players.getPlayer(botId).getName() + " surpress fire!" );
             }    
         }
     }
@@ -142,19 +149,14 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-            ClientPlayer localPlayer = game.getLocalPlayer();
-            
-            if(!localPlayer.isAlive()) {
-                return;
-            }
-            
-            int closestBot = findClosestBot(game);
-            if(closestBot > -1) {
+        	int botId = getBotId(game);
+            if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
-                console.execute("ai " + closestBot + " moveTo " + (int)worldPosition.x + " " + (int)worldPosition.y);
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " take cover here!" );
-                console.execute("speech " + 5);
+                System.out.println("MOving here: " + worldPosition);
+                console.execute("ai " + botId + " moveTo " + (int)worldPosition.x + " " + (int)worldPosition.y);
+                console.execute("team_say " + players.getPlayer(botId).getName() + " take cover here!" );
+               // console.execute("speech " + 5);
             }    
         }
     }
@@ -172,17 +174,11 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-            ClientPlayer localPlayer = game.getLocalPlayer();
-            
-            if(!localPlayer.isAlive()) {
-                return;
-            }
-            
-            int closestBot = findClosestBot(game);
-            if(closestBot > -1) {
+        	int botId = getBotId(game);
+            if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
-                console.execute("ai " + closestBot + " defuseBomb");
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " defuse the bomb!" );
+                console.execute("ai " + botId + " defuseBomb");
+                console.execute("team_say " + players.getPlayer(botId).getName() + " defuse the bomb!" );
             }    
         }
     }
@@ -200,17 +196,11 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-            ClientPlayer localPlayer = game.getLocalPlayer();
-            
-            if(!localPlayer.isAlive()) {
-                return;
-            }
-            
-            int closestBot = findClosestBot(game);
-            if(closestBot > -1) {
+        	int botId = getBotId(game);
+            if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
-                console.execute("ai " + closestBot + " plantBomb");
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " plant the bomb!" );
+                console.execute("ai " + botId + " plantBomb");
+                console.execute("team_say " + players.getPlayer(botId).getName() + " plant the bomb!" );
             }    
         }
     }
@@ -229,17 +219,11 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-            ClientPlayer localPlayer = game.getLocalPlayer();
-            
-            if(!localPlayer.isAlive()) {
-                return;
-            }
-            
-            int closestBot = findClosestBot(game);
-            if(closestBot > -1) {
+        	int botId = getBotId(game);
+            if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
-                console.execute("ai " + closestBot + " defendBomb");
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " defend the bomb!" );
+                console.execute("ai " + botId + " defendBomb");
+                console.execute("team_say " + players.getPlayer(botId).getName() + " defend the bomb!" );
             }    
         }
     }
@@ -259,19 +243,13 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-            ClientPlayer localPlayer = game.getLocalPlayer();
-            
-            if(!localPlayer.isAlive()) {
-                return;
-            }
-            
-            int closestBot = findClosestBot(game);
-            if(closestBot > -1) {
+        	int botId = getBotId(game);
+            if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
-                console.execute("ai " + closestBot + " takeCover " + (int)worldPosition.x + " " + (int)worldPosition.y);
-                console.execute("team_say " + players.getPlayer(closestBot).getName() + " take cover!" );
-                console.execute("speech " + 5);
+                console.execute("ai " + botId + " takeCover " + (int)worldPosition.x + " " + (int)worldPosition.y);
+                console.execute("team_say " + players.getPlayer(botId).getName() + " take cover!" );
+                //console.execute("speech " + 5);
             }    
         }
     }
