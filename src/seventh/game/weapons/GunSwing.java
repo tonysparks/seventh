@@ -59,6 +59,9 @@ public class GunSwing {
 		this.hitBox.setSize(64, 64);
 	}
 	
+	public void setOwner(Entity owner) {
+		this.owner = owner;
+	}
 	
 	/**
 	 * Determines if the swing is hitting anyone

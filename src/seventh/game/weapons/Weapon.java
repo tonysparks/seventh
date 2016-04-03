@@ -144,6 +144,7 @@ public abstract class Weapon {
 	 */
 	public void setOwner(Entity owner) {
 		this.owner = owner;
+		this.gunSwing.setOwner(owner);
 	}
 	
 	/**
