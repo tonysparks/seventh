@@ -817,7 +817,7 @@ public class ClientGame {
 			case PLAYER: {
 				ClientPlayer player = players.getPlayer(ent.id);
 				if(player!=null) {					
-					entity = new ClientPlayerEntity(this, player, pos);				
+					entity = new ClientPlayerEntity(this, player, pos);							
 				}
 				break;
 			}
@@ -1204,13 +1204,10 @@ public class ClientGame {
 			entity.spawned();
 			
 			if(localPlayer != null ) {
-				if( player == localPlayer) {			
-					entity.setControlledByLocalPlayer(true);
+				if( player.getId() == localPlayer.getId() ||
+					localPlayer.getSpectatingPlayerId() == player.getId()) {			
 					camera.centerAroundNow(spawnLocation);
-				}			
-				else if ( localPlayer.getSpectatingPlayerId() == player.getId()) {
-					camera.centerAroundNow(spawnLocation);
-				}
+				}							
 			}
 			
 			
