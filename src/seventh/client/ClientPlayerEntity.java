@@ -92,7 +92,12 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.mussleFlash = lightSystem.newPointLight();
 		this.mussleFlash.setTexture(Art.fireWeaponLight);
 		this.mussleFlash.setColor(0.5f,0.5f,0.5f);
-								
+		
+		ClientPlayer localPlayer = game.getLocalPlayer();
+		if(localPlayer != null) {
+			setControlledByLocalPlayer(localPlayer.getId() == player.getId());
+		}
+		
 		setPlayer(player);		
 	}
 	
