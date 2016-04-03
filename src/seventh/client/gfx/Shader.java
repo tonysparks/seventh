@@ -71,7 +71,10 @@ public class Shader {
 	 * Destroys this shader
 	 */
 	public void destroy() {
-		getShader().dispose();
+		try {
+			getShader().dispose();
+		}
+		catch(Exception ignore) {}
 	}
 	
 	/**
