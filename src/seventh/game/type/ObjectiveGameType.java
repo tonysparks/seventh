@@ -148,8 +148,9 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 			else if(getRemainingTime() <= 0 ) {
 				endRound(defender, game);
 			}
-			else if( attacker.isTeamDead() && attacker.teamSize() > 0 
-				&& (!this.outstandingObjectives.isEmpty() ? numberOfObjectivesInProgress < this.outstandingObjectives.size() : true) ) {
+			else if( (attacker.isTeamDead() && attacker.teamSize() > 0)
+				&& (numberOfObjectivesInProgress+this.completedObjectives.size() < this.minimumObjectivesToComplete) ) {
+				//&& (!this.outstandingObjectives.isEmpty() ? numberOfObjectivesInProgress < this.outstandingObjectives.size() : true) ) {
 				endRound(defender, game);
 			}			
 			else {

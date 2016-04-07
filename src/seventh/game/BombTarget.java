@@ -113,6 +113,14 @@ public class BombTarget extends Entity {
 	}
 	
 	/**
+	 * @return true if the bomb is currently detonating and 
+	 * destroying this target
+	 */
+	public boolean isBeingDestroyed() {
+		return this.bomb != null && this.bomb.isBlowingUp();
+	}
+	
+	/**
 	 * @return the bomb
 	 */
 	public Bomb getBomb() {

@@ -82,7 +82,7 @@ public class BombTargetObjective implements Objective {
 	 */
 	@Override
 	public boolean isInProgress(GameInfo game) {
-		return target != null && target.bombActive();
+		return target != null && (target.bombActive()||target.isBeingDestroyed());
 	}
 
 	/* (non-Javadoc)

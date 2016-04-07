@@ -227,6 +227,13 @@ public class Bomb extends Entity {
 	}
 	
 	/**
+	 * @return true if this bomb is blowing up right now
+	 */
+	public boolean isBlowingUp() {
+		return this.blowingupTimer.isUpdating();
+	}
+	
+	/**
 	 * Stops planting the bomb
 	 */
 	public void stopPlanting() {
