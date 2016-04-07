@@ -553,6 +553,20 @@ public class ClientGame {
     }
     
     /**
+     * API for playing a sound
+     * 
+     * @param snd
+     * @param x
+     * @param y
+     * @return the {@link Sound}
+     */
+    public Sound playSound(Sound snd, float x, float y) {    	
+    	snd.setVolume(Sounds.getVolume());
+    	snd.play(x, y);
+    	return snd;
+    }
+    
+    /**
      * API for loading a sound
      * 
      * @param path
