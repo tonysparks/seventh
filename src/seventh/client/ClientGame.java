@@ -1233,15 +1233,13 @@ public class ClientGame {
 //				BloodEmitter emitter = entity.getBloodEmitter();
 //				emitter.resetTimeToLive();
 //				backgroundEffects.addEffect(emitter);
-				if(meansOfDeath != Type.FIRE) {
-					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 4, 15200, 14000));
-				}
 				
 				switch(meansOfDeath) {
 				case EXPLOSION:
 				case GRENADE: 
 				case ROCKET:
 				case ROCKET_LAUNCHER:		
+					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 1, 50));
 					if(random.nextBoolean()) {
 						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
 						
@@ -1270,8 +1268,13 @@ public class ClientGame {
 					
 					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					
-					break;
+					break;				
 				default:
+					
+					if(meansOfDeath != Type.FIRE) {					
+						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 6, 15200, 14000, 1, 20));
+					}
+					
 					Vector2f pos = new Vector2f(locationOfDeath);
 					Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);																					
 										
