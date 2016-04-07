@@ -939,10 +939,24 @@ public class Sounds {
 		Sound sound = null;
 		int[] soundBank = soundBank(type);
 		if(soundBank != null) {
-			sound = playFreeSound(soundBank, x, y, damp);
+			sound = playFreeSound(soundBank, x, y, dampSound(type, damp));
 		}
 		
 		return sound;
 	}
 
+	private static float dampSound(SoundType type, float damp) {
+		// avoid these from being too loud and
+		// annoying
+		switch(type) {
+			case SURFACE_WOOD:
+			case SURFACE_GRASS:
+			case SURFACE_METAL:
+			case SURFACE_WATER:
+			case SURFACE_SAND:				
+				return damp * 0.32f;
+			default:
+		}
+		return damp;
+	}
 }
