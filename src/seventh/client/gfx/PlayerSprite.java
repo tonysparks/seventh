@@ -91,7 +91,7 @@ public class PlayerSprite implements Renderable {
 	
 		
 	private Motion swayMotion, bobMotion;
-	private float xOffset, yOffset;
+	private float xOffset, yOffset, prevXOffset, prevYOffset;
 	
 	private boolean isReloading, 
 					isSwitching, 
@@ -243,6 +243,8 @@ public class PlayerSprite implements Renderable {
 		
 		effects.update(timeStep);
 		
+		prevXOffset = xOffset;
+		prevYOffset = yOffset;
 		xOffset = yOffset = 0;
 		
 		float weaponWeight = 1.0f;
@@ -603,7 +605,7 @@ public class PlayerSprite implements Renderable {
 		{
 
 			setTextureRegion(sprite, activeBodyPosition.getCurrentImage());		
-			canvas.drawSprite(sprite);				
+			canvas.drawRawSprite(sprite);				
 			
 			
 			debugRenderSprite(canvas, sprite, 0xff00ffff);
@@ -618,11 +620,14 @@ public class PlayerSprite implements Renderable {
 	 * @param pos
 	 * @param color
 	 */
-	private void renderPlayer(Canvas canvas, Vector2f cameraPos, Vector2f pos, int color) {
+	private void renderPlayer(Canvas canvas, Vector2f cameraPos, Vector2f pos, int color, float alpha) {
 		Rectangle bounds = entity.getBounds();
+		//xOffset=yOffset=0;
+		float nx = xOffset + ((prevXOffset - xOffset) * alpha);
+		float ny = yOffset + ((prevYOffset - yOffset) * alpha);
 		
-		float rx = (pos.x - cameraPos.x) + (bounds.width/2.0f) + xOffset;
-		float ry = (pos.y - cameraPos.y) + (bounds.height/2.0f) + yOffset;
+		float rx = (pos.x - cameraPos.x) + (bounds.width/2.0f) + nx;
+		float ry = (pos.y - cameraPos.y) + (bounds.height/2.0f) + ny;
 				
 		double angle = Math.toDegrees(entity.getOrientation()) + 90.0;
 		float rot = (float)(angle + bobMotion.value);		
@@ -647,7 +652,7 @@ public class PlayerSprite implements Renderable {
 		effects.render(canvas,camera, alpha);
 				
 		Vector2f renderPos = entity.getRenderPos(alpha);
-		renderPlayer(canvas, cameraPos, renderPos, 1);
+		renderPlayer(canvas, cameraPos, renderPos, 0xffffffff, alpha);		
 	}
 	
 	private void setTextureRegion(Sprite sprite, TextureRegion region) {
