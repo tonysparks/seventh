@@ -111,15 +111,18 @@ public class KillLog implements Renderable {
 		for(int i = 0; i < size; i++) {
 			Entry m = logs.get(i);
 			
-			int color = m.killed.getTeam().getColor();
+			int killedColor = m.killed.getTeam().getColor();
+			int killerColor = killedColor;
+			
 			String message = m.killed.getName() + " died";
 			if(m.killer != null) {
+				killerColor = m.killer.getTeam().getColor();
 				if(m.killed.getId() == m.killer.getId()) {
 					message = m.killed.getName() + " took their own life";
 					int length = canvas.getWidth(message);
-					RenderFont.drawShadedString(canvas, message, startX-length, y, color);
+					RenderFont.drawShadedString(canvas, message, startX-length, y, killerColor);
 				}
-				else {					
+				else {										
 					int yOffset = (int)Art.smallAssaultRifleIcon.getHeight() / 2;
 					
 					int killedLength = canvas.getWidth(m.killed.getName()) + 10;
@@ -128,88 +131,88 @@ public class KillLog implements Renderable {
 										
 					switch(m.mod) {
 						case EXPLOSION: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawImage(Art.grenadeImage, startX-killedLength-iconLength+10, y-16, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case NAPALM_GRENADE:
 						case GRENADE: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawImage(Art.grenadeImage, startX-killedLength-iconLength, y-10, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case THOMPSON: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallAssaultRifleIcon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case ROCKET: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallRocketIcon, startX-killedLength-iconLength, y-yOffset-5, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case SHOTGUN: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallShotgunIcon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case ROCKET_LAUNCHER: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallRocketIcon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case SPRINGFIELD: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallSniperRifleIcon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case M1_GARAND: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallM1GarandIcon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case KAR98: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallkar98Icon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case MP44: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallmp44Icon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case MP40: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallmp40Icon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case PISTOL: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallPistolIcon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						case RISKER: {
-							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
 							canvas.drawSprite(Art.smallRiskerIcon, startX-killedLength-iconLength, y-yOffset, null);
-							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, color);
+							RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
 							break;
 						}
 						default: {
 							message = m.killer.getName() + " killed " + m.killed.getName();
 							int messageLength = canvas.getWidth(message) + 10;
-							RenderFont.drawShadedString(canvas, message, startX-messageLength, y, color);
+							RenderFont.drawShadedString(canvas, message, startX-messageLength, y, killerColor);
 						}
 					}
 					
@@ -218,7 +221,7 @@ public class KillLog implements Renderable {
 			}
 			else {
 				int messageLength = canvas.getWidth(message) + 10;
-				RenderFont.drawShadedString(canvas, message, startX-messageLength, y, color);
+				RenderFont.drawShadedString(canvas, message, startX-messageLength, y, killedColor);
 			}
 			
 			
