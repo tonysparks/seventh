@@ -63,14 +63,15 @@ public class WeightedAction extends CompositeAction {
 		if(this.updateEval.isTime()) {
 			ActionEvaluator newEvaluator = Evaluators.evaluate(brain, evaluators);
 			
+			boolean isFinished = isFinished(brain);
 			if( this.currentActiveEvaluator == null ||
-				this.isFinished(brain) || 
+				isFinished || 
 				newEvaluator.isRepeatable() ||
 				((newEvaluator.getKeepBias() > this.currentActiveEvaluator.getKeepBias() ) &&
 				    (newEvaluator != this.currentActiveEvaluator)) ) { 
 				
 				Action action = newEvaluator.getAction(brain);
-				if(action!=null&&this.currentAction!=action) {
+				if(action!=null && (isFinished||this.currentAction!=action) ) {
 					this.currentActiveEvaluator = newEvaluator;
 					
 					if(this.currentActiveEvaluator.isContinuable()) {
