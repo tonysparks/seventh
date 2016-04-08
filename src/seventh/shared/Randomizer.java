@@ -40,14 +40,27 @@ public class Randomizer {
 	
 	
 	public double getRandomRange(double min, double max) {
-		return min + (this.random.nextDouble() * (max - min));
+		return getRandomRange(random, min, max);
 	}	
 	
 	public double getRandomRangeMin(double min) {
-		return getRandomRange(min, 1.0);
+		return getRandomRangeMin(random, min);
 	}
 	
 	public double getRandomRangeMax(double max) {
-		return getRandomRange(0.0, max);
+		return getRandomRangeMax(random, max);
+	}
+	
+	
+	public static double getRandomRange(Random random, double min, double max) {
+		return min + (random.nextDouble() * (max - min));
+	}	
+	
+	public static double getRandomRangeMin(Random random, double min) {
+		return getRandomRange(random, min, 1.0);
+	}
+	
+	public static double getRandomRangeMax(Random random, double max) {
+		return getRandomRange(random, 0.0, max);
 	}
 }
