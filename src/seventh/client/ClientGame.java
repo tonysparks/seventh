@@ -567,6 +567,16 @@ public class ClientGame {
     }
     
     /**
+     * API for playing a global sound
+     * @param snd
+     * @return the {@link Sound}
+     */
+    public Sound playGlobalSound(Sound snd) {
+    	Vector2f pos = Sounds.getPosition();
+    	return playSound(snd, pos.x, pos.y);
+    }
+    
+    /**
      * API for loading a sound
      * 
      * @param path
