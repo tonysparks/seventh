@@ -190,6 +190,7 @@ public class Sounds {
 	private static Map<String, SoundBuffer> loadedSounds = new ConcurrentHashMap<>();
 	private static Sound[][] channels = new Sound[16][];
 	private static float volume = 0.1f;
+	private static Vector2f listenerPosition = new Vector2f();
 	private static ClientSeventhConfig config;
 	
 	private static Sound[] createChannel() {
@@ -480,8 +481,13 @@ public class Sounds {
 	
 	public static void setPosition(Vector2f pos) {
 		if(soundSystem!=null) {
+			listenerPosition.set(pos);
 			soundSystem.setListenerPosition(pos.x, pos.y, 0);
 		}
+	}
+	
+	public static Vector2f getPosition() {
+		return listenerPosition;
 	}
 	
 	public static synchronized void destroy() {
@@ -555,14 +561,8 @@ public class Sounds {
 		Sound[] sounds = channels[ (int)channelId % channels.length];		
 		Sound sound = sounds[soundIndex];
 		
-//		Sound sound = findFreeSound(soundIndex);
-//		if(sound!=null) 
-		{
-//			sound.stop();
-			sound.setVolume(volume); // TODO global config
-			sound.play(x,y);	
-		}
-		
+		sound.setVolume(volume); // TODO global config
+		sound.play(x,y);	
 		return sound;
 	}
 	
@@ -621,7 +621,6 @@ public class Sounds {
 		Sound[] sounds = channels[ (int)channelId % channels.length];		
 		Sound sound = sounds[soundIndex];
 		if(!sound.isPlaying()) {
-//			sound.reset();
 			sound.setVolume(volume); // TODO global config
 			sound.play(x,y);
 		}
@@ -954,7 +953,7 @@ public class Sounds {
 			case SURFACE_METAL:
 			case SURFACE_WATER:
 			case SURFACE_SAND:				
-				return damp * 0.32f;
+				return damp * 0.22f;
 			default:
 		}
 		return damp;

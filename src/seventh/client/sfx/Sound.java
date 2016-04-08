@@ -35,7 +35,7 @@ public class Sound {
 	}
 	
 	public void play(float x, float y, boolean loop) {
-		this.soundSystem.setDistOrRoll(sourceName, 0.018f);
+		this.soundSystem.setDistOrRoll(sourceName, 0.009f);
 		this.soundSystem.setPosition(sourceName, x, y, 0);
 		this.soundSystem.setLooping(sourceName, loop);
 		this.soundSystem.play(sourceName);						
