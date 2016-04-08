@@ -45,7 +45,7 @@ public class GibEmitter extends Emitter {
 		}
 		Vector2f vel = new Vector2f(1,0);
 		Vector2f.Vector2fRotate(vel, Math.toRadians(r.nextInt(360)), vel);
-		BloodParticle p = new BloodParticle(pos, vel, r.nextInt(360), 5000);
+		BloodParticle p = new BloodParticle(pos, vel, r.nextInt(360), 1.0f, 5000);
 		p.setSpeed(40);
 		p.setImage(Art.randomGib());
 		

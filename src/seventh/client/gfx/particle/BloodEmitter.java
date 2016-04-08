@@ -7,6 +7,7 @@ package seventh.client.gfx.particle;
 import java.util.Random;
 
 import seventh.math.Vector2f;
+import seventh.shared.Randomizer;
 
 /**
  * @author Tony
@@ -63,7 +64,9 @@ public class BloodEmitter extends Emitter {
 			pos.y -= r.nextInt(distance);
 		}
 		
-		return new BloodParticle(pos, new Vector2f(), r.nextInt(360), this.particleTimeToLive);
+		float scale = (float)Randomizer.getRandomRangeMin(r, 0.7f);
+		
+		return new BloodParticle(pos, new Vector2f(), r.nextInt(360), scale, this.particleTimeToLive);
 	}
 
 }

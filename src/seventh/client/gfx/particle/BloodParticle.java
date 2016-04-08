@@ -23,19 +23,21 @@ public class BloodParticle extends Particle {
 	private Sprite sprite;
 	private int speed;
 	private float angle;
+	private float scale;
 	
 	private FadeValue alphaFade;
 	/**
 	 * @param pos
 	 * @param vel
 	 */
-	public BloodParticle(Vector2f pos, Vector2f vel, int angle, int timeToLive) {
+	public BloodParticle(Vector2f pos, Vector2f vel, int angle, float scale, int timeToLive) {
 		super(pos, vel, timeToLive);
 		
 		this.speed = 10;
 		this.angle = (float)angle;
 		this.image = Art.randomBloodspat();
 		this.sprite = new Sprite(image);
+		this.sprite.setScale(scale);
 		this.sprite.flip(false, true);
 		
 		this.alphaFade = new FadeValue(255, 0, timeToLive + 1000);
@@ -47,6 +49,7 @@ public class BloodParticle extends Particle {
 	public void setImage(TextureRegion image) {
 		this.image = image;
 		this.sprite.setRegion(image);
+		this.sprite.setScale(scale);
 	}
 	
 	/**
