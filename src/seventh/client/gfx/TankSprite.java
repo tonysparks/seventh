@@ -200,13 +200,13 @@ public class TankSprite implements Renderable {
 		if(tank.isSecondaryWeaponFiring()) {
 			TextureRegion tx = railgunFlash.getCurrentImage();
 
-			int i = tank.getRandom().nextInt(3);
+			//int i = tank.getRandom().nextInt(3);
 			//for(int i = 0; i < 3; i++) 
 			{
 				muzzleFlash.setRegion(tx);			
 
-				float xOffset = 70;
-				float yOffset = -100;
+				//float xOffset = 70;
+				//float yOffset = -100;
 
 				muzzleFlash.setSize(tx.getRegionWidth()+16, tx.getRegionHeight()+16);
 				muzzleFlash.setPosition(rx, ry);
