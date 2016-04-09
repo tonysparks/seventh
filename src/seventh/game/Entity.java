@@ -47,6 +47,15 @@ public abstract class Entity implements Debugable {
 		OPERATING_VEHICLE,
 		EXITING_VEHICLE,
 		
+		/**
+		 * Entity is destroyed, and shouldn't be
+		 * removed (only DEAD will cause a removal)
+		 */
+		DESTROYED,
+		
+		/**
+		 * Entity is dead and should be removed
+		 */
 		DEAD,
 		
 		;

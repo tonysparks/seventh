@@ -1262,18 +1262,23 @@ public class Game implements GameInfo, Debugable, Updatable {
 	 * @param y
 	 * @return the {@link PanzerTank}
 	 */
-	public Tank newPanzerTank(float x, float y) {
-		return newPanzerTank(new Vector2f(x, y));
+	public Tank newPanzerTank(float x, float y, Long timeToKill) {
+		return newPanzerTank(new Vector2f(x, y), timeToKill);
 	}
 	
 	/**
 	 * Spawns a new {@link PanzerTank}
 	 * 
 	 * @param pos
+	 * @param timeToKill the time it takes for this once it is destroyed to be
+	 * set to the killed state
 	 * @return the {@link PanzerTank}
 	 */
-	public Tank newPanzerTank(Vector2f pos) {
-		return registerTank(new PanzerTank(pos, this));				
+	public Tank newPanzerTank(Vector2f pos, Long timeToKill) {
+		if(timeToKill==null) {
+			timeToKill = -1L;
+		}
+		return registerTank(new PanzerTank(pos, this, timeToKill));				
 	}
 	
 	/**
@@ -1281,20 +1286,27 @@ public class Game implements GameInfo, Debugable, Updatable {
 	 * 
 	 * @param x
 	 * @param y
+	 * @param timeToKill the time it takes for this once it is destroyed to be
+	 * set to the killed state
 	 * @return the {@link ShermanTank}
 	 */
-	public Tank newShermanTank(float x, float y) {
-		return newShermanTank(new Vector2f(x, y));
+	public Tank newShermanTank(float x, float y, Long timeToKill) {
+		return newShermanTank(new Vector2f(x, y), timeToKill);
 	}
 	
 	/**
 	 * Spawns a new {@link ShermanTank}
 	 * 
 	 * @param pos
+	 * @param timeToKill the time it takes for this once it is destroyed to be
+	 * set to the killed state
 	 * @return the {@link ShermanTank}
 	 */
-	public Tank newShermanTank(Vector2f pos) {
-		return registerTank(new ShermanTank(pos, this));				
+	public Tank newShermanTank(Vector2f pos, Long timeToKill) {
+		if(timeToKill==null) {
+			timeToKill = -1L;
+		}
+		return registerTank(new ShermanTank(pos, this, timeToKill));				
 	}
 	
 	/**
@@ -1308,10 +1320,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 			
 			@Override
 			public void onKill(Entity entity, Entity killer) {
-				vehicles.remove(tank);
-				if(tank.hasOperator()) {
-					tank.getOperator().kill(killer);
-				}
+				vehicles.remove(tank);				
 			}
 		};
 		

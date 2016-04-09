@@ -11,6 +11,7 @@ import seventh.math.OOB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -28,27 +29,59 @@ public abstract class Vehicle extends Entity implements Controllable {
 	protected int aabbWidth, aabbHeight;
 	private PlayerEntity operator;
 	
+	private Timer killTimer;
+	private Entity killer;
+	
 	/**
 	 * @param position
 	 * @param speed
 	 * @param game
 	 * @param type
 	 */
-	public Vehicle(Vector2f position, int speed, Game game, Type type) {
+	public Vehicle(Vector2f position, int speed, Game game, Type type, long timeToKill) {
 		super(game.getNextPersistantId(), position, speed, game, type);				
 		
 		this.operateHitBox = new Rectangle();
 		this.vehicleBB = new OOB();
 		this.center = new Vector2f();
+		
+		this.killTimer = new Timer(false, timeToKill < 0 ? Long.MAX_VALUE : timeToKill);
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.game.Entity#kill(seventh.game.Entity)
+	 */
+	@Override
+	public void kill(Entity killer) {
+		if(this.currentState!=State.DESTROYED &&
+		   this.currentState!=State.DEAD) { 
+			this.killTimer.start();
+			
+			this.currentState = State.DESTROYED;
+			this.killer = killer;
+			
+			if(hasOperator()) {
+				getOperator().kill(killer);
+			}
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.Entity#update(seventh.shared.TimeStep)
 	 */
 	@Override
 	public boolean update(TimeStep timeStep) {	
+		if(isDestroyed()) {
+			return false;
+		}
+		
 		boolean blocked = super.update(timeStep);
 		updateOperateHitBox();
+		
+		killTimer.update(timeStep);
+		if(killTimer.isOnFirstTime()) {
+			super.kill(killer);
+		}
 		
 		return blocked;
 	}
@@ -97,6 +130,10 @@ public abstract class Vehicle extends Entity implements Controllable {
 	 * @return true if the {@link Entity} is close enough to operate this {@link Vehicle}
 	 */
 	public boolean canOperate(Entity operator) {
+		if(!isAlive() || isDestroyed()) {
+			return false;
+		}
+		
 		return !hasOperator() && this.operateHitBox.intersects(operator.getBounds());
 	}
 	
@@ -161,4 +198,12 @@ public abstract class Vehicle extends Entity implements Controllable {
 		
 		return false; 
 	}
+	
+	/**
+	 * @return true if the current state is destroyed
+	 */
+	public boolean isDestroyed() {
+		return getCurrentState()==State.DESTROYED;
+	}
+	
 }

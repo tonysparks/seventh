@@ -612,7 +612,7 @@ public class GameServer {
 								try {
 									int x = Integer.parseInt(args[0]);
 									int y = Integer.parseInt(args[1]);
-									game.newShermanTank(x, y);
+									game.newShermanTank(x, y, 60_000L);
 								}
 								catch(Exception e) {
 									console.println("Unable to create tank: " + e);

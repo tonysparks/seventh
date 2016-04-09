@@ -84,8 +84,8 @@ public class Tank extends Vehicle {
 	 * @param position
 	 * @param game
 	 */
-	protected Tank(Type type, Vector2f position, final Game game) {
-		super(position, WeaponConstants.TANK_MOVEMENT_SPEED, game, type);
+	protected Tank(Type type, Vector2f position, final Game game, long timeToKill) {
+		super(position, WeaponConstants.TANK_MOVEMENT_SPEED, game, type, timeToKill);
 
 		this.turretFacing = new Vector2f();
 		this.netTank = new NetTank(type);
@@ -230,6 +230,10 @@ public class Tank extends Vehicle {
 	@Override
 	public boolean update(TimeStep timeStep) {
 
+		if(isDestroyed()) {
+			return false;
+		}
+		
 		if( checkIfDying(timeStep) ) {
 			return false;
 		}
@@ -284,6 +288,7 @@ public class Tank extends Vehicle {
 			
 			if(this.blowupTimer.isTime()) {
 				super.kill(killer);
+				this.isDying = false;
 			}
 		}
 		
@@ -295,6 +300,10 @@ public class Tank extends Vehicle {
 	 * @return true if blocked
 	 */
 	private boolean movementUpdate(TimeStep timeStep) {
+		if(isDestroyed()) {
+			return false;
+		}
+		
 		boolean isBlocked = false;
 		
 		boolean hasThrottle = ! this.vel.isZero();

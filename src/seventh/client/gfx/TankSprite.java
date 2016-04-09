@@ -34,6 +34,8 @@ public class TankSprite implements Renderable {
 
 	protected AnimatedImage railgunFlash;
 	protected Sprite muzzleFlash;
+	
+	private boolean isDestroyed;
 
 	/**
 	 * @param tank
@@ -58,8 +60,24 @@ public class TankSprite implements Renderable {
 		this.railgunFlash = Art.newThompsonMuzzleFlash();
 		this.railgunFlash.loop(true);
 		this.muzzleFlash = new Sprite();
+		
+		this.isDestroyed = false;
 	}
 
+	/**
+	 * @param isDestroyed the isDestroyed to set
+	 */
+	public void setDestroyed(boolean isDestroyed) {
+		this.isDestroyed = isDestroyed;
+	}
+	
+	/**
+	 * @return the isDestroyed
+	 */
+	public boolean isDestroyed() {
+		return isDestroyed;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.Renderable#update(seventh.shared.TimeStep)
 	 */
@@ -114,6 +132,20 @@ public class TankSprite implements Renderable {
 //		mechTorso.setPosition(pos.x, pos.y);
 	}
 
+	protected void renderTankBase(float rx, float ry, float trackAngle, Canvas canvas, Camera camera, float alpha) {
+		rx += 0f;
+		ry -= 15f;
+		
+		TextureRegion tex = isDestroyed ? tankTracksDamaged.getCurrentImage() : tankTracks.getCurrentImage();		
+		tankTrack.setRegion(tex);		
+		
+		tankTrack.setRotation(trackAngle);	
+		tankTrack.setOrigin(tex.getRegionWidth()/2f,tex.getRegionHeight()/2f);
+		tankTrack.setPosition(rx, ry);
+		
+		canvas.drawSprite(tankTrack);
+	}
+	
 	/**
 	 * Allow the implementing tank to adjust some of the rendering properties
 	 * 
@@ -125,13 +157,14 @@ public class TankSprite implements Renderable {
 	 * @param alpha
 	 */
 	protected void renderTurret(float rx, float ry, float turretAngle, Canvas canvas, Camera camera, float alpha) {
+		rx += 0f;
+		ry -= 15f;
 		
 		rx += 70f;
 		ry += 15f;
 		float originX = 62f;
 		
-		boolean isDamaged = false;
-		Sprite turretSprite = isDamaged ? tankTurretDamaged : tankTurret;
+		Sprite turretSprite = isDestroyed ? tankTurretDamaged : tankTurret;
 		float originY = turretSprite.getRegionHeight()/2f;
 		
 		turretSprite.setRotation(turretAngle);
@@ -150,23 +183,15 @@ public class TankSprite implements Renderable {
 		Vector2f pos = tank.getRenderPos(alpha); 
 		Vector2f cameraPos = camera.getRenderPosition(alpha);
 
-		boolean isDamaged = false;
 		float rx = Math.round((pos.x - cameraPos.x) - (bounds.width/2.0f) + WeaponConstants.TANK_WIDTH/2f);
 		float ry = Math.round((pos.y - cameraPos.y) - (bounds.height/2.0f) + WeaponConstants.TANK_HEIGHT/2f);				
-		
-		TextureRegion tex = isDamaged ? tankTracksDamaged.getCurrentImage() : tankTracks.getCurrentImage();		
-		tankTrack.setRegion(tex);		
-		float trackAngle = (float) (Math.toDegrees(tank.getOrientation()));
-		
 		
 		rx = Math.round((pos.x-40f) - cameraPos.x);
 		ry = Math.round((pos.y+40f) - cameraPos.y);
 		
-		tankTrack.setRotation(trackAngle);	
-		tankTrack.setOrigin(tex.getRegionWidth()/2f,tex.getRegionHeight()/2f);
-		tankTrack.setPosition(rx, ry);
+		float trackAngle = (float) (Math.toDegrees(tank.getOrientation()));
 		
-		canvas.drawSprite(tankTrack);
+		renderTankBase(rx, ry, trackAngle, canvas, camera, alpha);
 		
 		float turretAngle = (float)Math.toDegrees(tank.getTurretOrientation());
 		

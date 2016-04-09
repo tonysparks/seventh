@@ -7,6 +7,9 @@ package seventh.client;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.TankSprite;
+import seventh.client.gfx.particle.Emitter;
+import seventh.client.gfx.particle.RenderableEffect;
+import seventh.client.gfx.particle.RocketTrailEmitter;
 import seventh.game.Entity.State;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
@@ -38,6 +41,8 @@ public class ClientTank extends ClientVehicle {
 	private Vector2f trackMarkOffset;
 	private OOB vehicleOOB;
 	
+	private boolean removeGfx;
+	
 	/**
 	 * @param pos
 	 */
@@ -58,6 +63,21 @@ public class ClientTank extends ClientVehicle {
 		
 		this.vehicleOOB = new OOB();
 		this.vehicleOOB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);
+		
+		setOnRemove(new OnRemove() {
+			
+			@Override
+			public void onRemove(ClientEntity me, ClientGame game) {
+				removeGfx = true;
+			}
+		});
+	}
+	
+	/**
+	 * @return if we should remove the destroyed graphics
+	 */
+	private boolean removeGfx() {
+		return this.removeGfx;
 	}
 	
 	/**
@@ -65,6 +85,13 @@ public class ClientTank extends ClientVehicle {
 	 */
 	public void setTankSprite(TankSprite tankSprite) {
 		this.tankSprite = tankSprite;
+	}
+	
+	/**
+	 * @return the tankSprite
+	 */
+	public TankSprite getTankSprite() {
+		return tankSprite;
 	}
 	
 	/* (non-Javadoc)
@@ -76,6 +103,28 @@ public class ClientTank extends ClientVehicle {
 		
 		NetTank netTank = (NetTank)state;
 		this.currentState = State.fromNetValue(netTank.state);
+		
+		if(this.currentState==State.DESTROYED) {
+			TankSprite tankSprite = getTankSprite();
+			if(tankSprite != null&&!tankSprite.isDestroyed()) {
+				tankSprite.setDestroyed(true);
+								
+				game.addForegroundEffect(new RenderableEffect(tankSprite) {					
+					@Override
+					public boolean isDone() {
+						return removeGfx();
+					}
+				});
+				Emitter rocketTrail = new RocketTrailEmitter(getCenterPos(), 40_000, 0) {					
+					@Override
+					public boolean isDone() {
+						return !this.isAlive() || removeGfx();
+					}
+				};				
+				rocketTrail.start();
+				game.addForegroundEffect(rocketTrail);
+			}
+		}
 		
 		this.orientation = (float)Math.toRadians(netTank.orientation);
 		this.turretOrientation = (float)Math.toRadians(netTank.turretOrientation);
