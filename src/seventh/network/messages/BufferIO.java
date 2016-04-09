@@ -170,6 +170,17 @@ public class BufferIO {
 			return message;
 		}
 	}
+		
+	public static void writeAngle(IOBuffer buffer, int degrees) {
+		int bangle = ( degrees * 256) / 360;
+		buffer.putUnsignedByte(bangle);
+	}
+		
+	public static short readAngle(IOBuffer buffer) {
+		int bangle = buffer.getUnsignedByte();
+		int degree = (bangle * 360) / 256;
+		return (short)degree;
+	}
 	
 	
 	public static void write(IOBuffer buffer, Vector2f v) {

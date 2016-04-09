@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 /**
  * The full player state.  This is message is for the local player.
@@ -55,7 +56,7 @@ public class NetPlayer extends NetEntity {
 		super.read(buffer);
 		bits = buffer.get();
 		
-		orientation = buffer.getShort();
+		orientation = BufferIO.readAngle(buffer);
 		state = buffer.get();
 		grenades = buffer.get();
 		health = buffer.get();
@@ -83,7 +84,7 @@ public class NetPlayer extends NetEntity {
 		checkBits();
 		buffer.put(bits);
 		
-		buffer.putShort(orientation);
+		BufferIO.writeAngle(buffer, orientation);
 		buffer.put(state);
 		buffer.put(grenades);
 		buffer.put(health);

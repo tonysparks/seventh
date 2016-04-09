@@ -4,6 +4,7 @@
 package seventh.game.net;
 
 import seventh.game.Entity.Type;
+import seventh.network.messages.BufferIO;
 import seventh.shared.SeventhConstants;
 import harenet.IOBuffer;
 
@@ -42,8 +43,8 @@ public class NetTank extends NetVehicle {
 		super.read(buffer);
 		
 		state = buffer.get();
-		orientation = buffer.getShort();
-		turretOrientation = buffer.getShort();
+		orientation = BufferIO.readAngle(buffer);
+		turretOrientation = BufferIO.readAngle(buffer);
 		primaryWeaponState = buffer.get();
 		secondaryWeaponState = buffer.get();
 		operatorId = buffer.getUnsignedByte();
@@ -57,8 +58,9 @@ public class NetTank extends NetVehicle {
 		super.write(buffer);
 		
 		buffer.put(state);
-		buffer.putShort(orientation);
-		buffer.putShort(turretOrientation);
+		BufferIO.writeAngle(buffer, orientation);
+		BufferIO.writeAngle(buffer, turretOrientation);
+		
 		buffer.put(primaryWeaponState);
 		buffer.put(secondaryWeaponState);
 		buffer.putUnsignedByte(operatorId);

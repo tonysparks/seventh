@@ -6,6 +6,7 @@ package seventh.game.net;
 import harenet.IOBuffer;
 import seventh.game.Entity.State;
 import seventh.game.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 /**
  * This is a partial message for other entities that are NOT the local
@@ -35,7 +36,7 @@ public class NetPlayerPartial extends NetEntity {
 	public void read(IOBuffer buffer) {	
 		super.read(buffer);
 				
-		orientation = buffer.getShort();
+		orientation = BufferIO.readAngle(buffer);
 		state = buffer.get();
 		health = buffer.get();
 		
@@ -70,7 +71,7 @@ public class NetPlayerPartial extends NetEntity {
 	public void write(IOBuffer buffer) {	
 		super.write(buffer);
 				
-		buffer.putShort(orientation);
+		BufferIO.writeAngle(buffer, orientation);
 		buffer.put(state);		
 		buffer.put(health);
 		
