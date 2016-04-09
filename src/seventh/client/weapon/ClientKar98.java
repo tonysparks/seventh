@@ -26,4 +26,11 @@ public class ClientKar98 extends ClientWeapon {
 		this.weaponWeight = WeaponConstants.KAR98_WEIGHT;
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.client.weapon.ClientWeapon#isBoltAction()
+	 */
+	@Override
+	public boolean isBoltAction() {
+		return true;
+	}
 }

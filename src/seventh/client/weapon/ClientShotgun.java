@@ -59,4 +59,12 @@ public class ClientShotgun extends ClientWeapon {
 	protected boolean onFire() {		
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.weapon.ClientWeapon#isPumpAction()
+	 */
+	@Override
+	public boolean isPumpAction() {
+		return true;
+	}
 }

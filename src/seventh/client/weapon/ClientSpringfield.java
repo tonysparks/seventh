@@ -58,4 +58,12 @@ public class ClientSpringfield extends ClientWeapon {
 	protected boolean onFire() {		
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.weapon.ClientWeapon#isBoltAction()
+	 */
+	@Override
+	public boolean isBoltAction() {
+		return true;
+	}
 }

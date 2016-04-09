@@ -11,6 +11,7 @@ import seventh.client.gfx.Camera;
 import seventh.game.net.NetWeapon;
 import seventh.game.weapons.Weapon.State;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 
 /**
  * @author Tony
@@ -32,6 +33,13 @@ public class ClientWeapon {
 	protected AnimatedImage muzzleFlash;
 		
 	protected final ClientPlayerEntity owner;
+	
+	private Timer specialReloadActionReloadTimer;
+	private Timer fireWaitTimer;
+	
+	static final long boltActionTime = 1_000;
+	static final long pumpActionTime = 100;
+	
 	/**
 	 * 
 	 */
@@ -39,6 +47,8 @@ public class ClientWeapon {
 		this.owner = owner;
 		this.channelId = this.owner.getPlayerId();
 		this.firstFire = 0;
+		this.specialReloadActionReloadTimer = new Timer(false, boltActionTime);
+		this.fireWaitTimer = new Timer(false, 100);
 	}
 	
 	/**
@@ -141,14 +151,45 @@ public class ClientWeapon {
 		return false;
 	}
 	
+	public boolean isBoltAction() {
+		return false;
+	}
+	
+	public boolean isPumpAction() {
+		return false;
+	}
+	
+	public boolean isSpecialReloadingAction() {
+		return this.specialReloadActionReloadTimer.isUpdating();
+	}
+	
+	private void startSpecialReloadActionTimer() {
+		if(isBoltAction()) this.specialReloadActionReloadTimer.setEndTime(500);//boltActionTime);
+		else if(isPumpAction()) this.specialReloadActionReloadTimer.setEndTime(pumpActionTime);
+		
+		this.specialReloadActionReloadTimer.reset();
+		this.specialReloadActionReloadTimer.start();
+	}
 	
 	public void update(TimeStep timeStep) {
+		
+		this.fireWaitTimer.update(timeStep);
+		this.specialReloadActionReloadTimer.update(timeStep);
+		
 		if(this.nextState!=null) {
 			State state = State.fromNet(nextState.state);	
 			if(state != State.FIRING) {
 				firstFire = 0;
 			}
 			
+			if(isPumpAction() /*|| isBoltAction()*/) {
+				if(startReloading) {
+					if(state!=State.RELOADING) {
+						startSpecialReloadActionTimer();						
+					}
+				}
+			}
+						
 			switch(state) {
 				case FIRE_EMPTY: {															
 					break;
@@ -164,6 +205,17 @@ public class ClientWeapon {
 								
 						}
 					}
+					
+					if(!this.fireWaitTimer.isUpdating() && firstFire == 1) {						
+						this.fireWaitTimer.setEndTime(isBoltAction() ? 50 : 300);
+						this.fireWaitTimer.reset();
+						this.fireWaitTimer.start();
+					}
+					
+					if(!this.specialReloadActionReloadTimer.isUpdating() && this.fireWaitTimer.isOnFirstTime()) {
+						startSpecialReloadActionTimer();
+					}
+					
 					break;
 				}
 				case RELOADING: {
