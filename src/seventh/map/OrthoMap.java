@@ -269,7 +269,7 @@ public class OrthoMap implements Map {
 		int wy = (tileOffset_y + y) / this.tileHeight;
 		
 		for (int i = 0; i < this.collidableLayers.length; i++) {		
-			Tile tile = getTile(this.collidableLayers[i].getIndex(), wx, wy); 
+			Tile tile = this.backgroundLayers[this.collidableLayers[i].getIndex()].getRow(wy)[wx]; 					
 			if ( tile != null ) {
 				int tileHeightMask = tile.getHeightMask();
 				if(tileHeightMask>0) {
@@ -353,7 +353,7 @@ public class OrthoMap implements Map {
 					for (int i = 0; i < collidableLayers.length; i++) {
 						Layer layer = collidableLayers[i];
 							
-						Tile tile = layer.getRow(indexY).get(indexX);
+						Tile tile = layer.getRow(indexY)[indexX];
 						if ( tile != null ) {
 							int tileHeightMask = tile.getHeightMask();
 							if(tileHeightMask>0) {							
@@ -469,8 +469,9 @@ public class OrthoMap implements Map {
 					continue;
 				}
 				
+				
 				for( int j = 0; j < this.backgroundLayers[i].numberOfRows(); j++ ) {
-					this.backgroundLayers[i].getRow(j).clear();
+					this.backgroundLayers[i].destroy();
 				}
 				this.backgroundLayers[i] = null;
 			}
@@ -487,7 +488,7 @@ public class OrthoMap implements Map {
 				}
 				
 				for( int j = 0; j < this.foregroundLayers[i].numberOfRows(); j++ ) {
-					this.foregroundLayers[i].getRow(j).clear();
+					this.foregroundLayers[i].destroy();
 				}
 				
 				this.foregroundLayers[i] = null;
@@ -612,7 +613,7 @@ public class OrthoMap implements Map {
 				continue;
 			}
 						
-			Tile tile = this.collidableLayers[i].getRow(wy).get(wx);
+			Tile tile = this.collidableLayers[i].getRow(wy)[wx];
 			if(tile != null && tile.getHeightMask() > 0) {
 				return true;
 			}
@@ -628,7 +629,7 @@ public class OrthoMap implements Map {
 	 */
 	
 	public Tile getTile(int layer, int x, int y) {
-		return this.backgroundLayers[layer].getRow(y).get(x);
+		return this.backgroundLayers[layer].getRow(y)[x];
 	}
 	
 	/* (non-Javadoc)
@@ -637,7 +638,7 @@ public class OrthoMap implements Map {
 	@Override
 	public Tile getCollidableTile(int x, int y) {
 		for(int i = 0; i < collidableLayers.length; i++) {
-			Tile tile = collidableLayers[i].getRow(y).get(x);
+			Tile tile = collidableLayers[i].getRow(y)[x];
 			if(tile != null) {
 				return tile;
 			}
@@ -713,9 +714,9 @@ public class OrthoMap implements Map {
         for(int i = 0; i < this.destructableLayer.length; i++) {
             Layer layer = this.destructableLayer[i];
             for(int y = 0; y < layer.numberOfRows(); y++) {
-                List<Tile> row = layer.getRow(y);
-                for(int x = 0; x < row.size(); x++) {
-                    Tile tile = row.get(x);
+                Tile[] row = layer.getRow(y);
+                for(int x = 0; x < row.length; x++) {
+                    Tile tile = row[x];
                     if(tile != null) {
                         this.originalLayer[y][x] = true;
 //                        this.calculatedLayer[y][x] = true;
@@ -775,7 +776,7 @@ public class OrthoMap implements Map {
 	@SuppressWarnings("all")
 	public <E> MapGraph<E> createMapGraph(GraphNodeFactory<E> factory) {		
 		int numberOfRows = backgroundLayers[0].numberOfRows();
-		int numberOfColumns = backgroundLayers[0].getRow(0).size();
+		int numberOfColumns = backgroundLayers[0].getRow(0).length;
 		
 		GraphNode[][] nodes = new GraphNode[numberOfRows][numberOfColumns];
 		for(int i = 0; i < numberOfRows; i++) {
@@ -788,7 +789,7 @@ public class OrthoMap implements Map {
 				boolean isCollidable = false;
 				for(int i = 0; i < collidableLayers.length; i++) {
 					if ( collidableLayers[i] != null ) {
-						Tile tile = collidableLayers[i].getRow(y).get(x);
+						Tile tile = collidableLayers[i].getRow(y)[x];
 						isCollidable = tile != null;
 						if(isCollidable) {
 							break;
@@ -987,7 +988,7 @@ public class OrthoMap implements Map {
 							continue;
 						}
 							
-						Tile tile = layer.getRow(indexY).get(indexX);
+						Tile tile = layer.getRow(indexY)[indexX];
 						if ( tile != null ) {												
 							tile.setRenderingPosition(pixelX + vx, pixelY + vy);
 							tile.render(canvas, camera, alpha);
@@ -1013,7 +1014,7 @@ public class OrthoMap implements Map {
 	 * @see org.myriad.render.scene.Scene#renderForeground(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
 	
-	public void renderForeground(Canvas canvas, Camera camera, float alpha) {
+	public void renderForeground(Canvas canvas, Camera camera, float alpha) {		
 		Vector2f camPos = camera.getRenderPosition(alpha);
 		Rectangle viewport = camera.getViewPort();
 				
@@ -1049,7 +1050,6 @@ public class OrthoMap implements Map {
 				
 				if ( (indexY >= 0 && indexX >= 0) && (indexY < this.maxY && indexX < this.maxX) ) {
 					
-					//for(int i = this.foregroundLayers.length - 1; i >= 0; i--) 
 					for(int i = 0; i < this.foregroundLayers.length; i++)
 					{
 						Layer layer = this.foregroundLayers[i];
@@ -1061,18 +1061,10 @@ public class OrthoMap implements Map {
 							continue;
 						}
 						
-						Tile tile = layer.getRow(indexY).get(indexX);
-//						Tile maskedTile = getTile(0, indexX, indexY);
+						Tile tile = layer.getRow(indexY)[indexX];
 						if ( tile != null ) {
-//							if(maskedTile == null || maskedTile.getMask() == 0) {
-//								canvas.setCompositeAlpha(0.1f);
-							
-							
 							tile.setRenderingPosition(pixelX + vx, pixelY + vy);
 							tile.render(canvas, camera, alpha);
-//							}							
-//							canvas.setCompositeAlpha(1f);
-							
 						}
 					}
 				}
@@ -1125,7 +1117,7 @@ public class OrthoMap implements Map {
 			     pixelX += this.tileWidth, indexX++) {
 				
 				if ( (indexY >= 0 && indexX >= 0) && (indexY < this.maxY && indexX < this.maxX) ) {																
-					Tile tile = layer.getRow(indexY).get(indexX);
+					Tile tile = layer.getRow(indexY)[indexX];
 					if ( tile != null ) {
 						int mask = tile.getMask();
 						if(mask==0) {							
@@ -1157,6 +1149,8 @@ public class OrthoMap implements Map {
 		if ( this.mapOffset==null || this.currentFrameViewport==null ) {
 			return;
 		}
+		boolean doIt = false;
+		if(!doIt) return;
 		
 		Vector2f camPos = this.mapOffset;
 		Rectangle viewport = this.currentFrameViewport;
@@ -1194,7 +1188,11 @@ public class OrthoMap implements Map {
 							continue;
 						}
 						
-						Tile tile = layer.getRow(indexY).get(indexX);
+						if ( layer.hasAnimations() ) {
+							continue;
+						}
+						
+						Tile tile = layer.getRow(indexY)[indexX];
 						if ( tile != null ) {
 							tile.update(timeStep);
 						}
@@ -1205,7 +1203,11 @@ public class OrthoMap implements Map {
 							continue;
 						}
 						
-						Tile tile = layer.getRow(indexY).get(indexX);
+						if ( layer.hasAnimations() ) {
+							continue;
+						}
+						
+						Tile tile = layer.getRow(indexY)[indexX];
 						if ( tile != null ) {
 							tile.update(timeStep);
 						}
@@ -1233,15 +1235,7 @@ public class OrthoMap implements Map {
 				 , viewport.getX()
 				 , viewport.getY()
 				 , viewport.getWidth()
-				 , viewport.getHeight(), 0xFFFFFFFF);
-		
-//		r.drawImage(this.backgroundImage
-//				 , (int) screenCord.x
-//				 , (int) screenCord.y
-//				 , viewport.getWidth()
-//				 , viewport.getHeight()
-//				 , camPos.x
-//				 , camPos.y);
+				 , viewport.getHeight(), 0xFFFFFFFF);		
 	}
 
 	/* (non-Javadoc)
@@ -1322,12 +1316,12 @@ public class OrthoMap implements Map {
 	    boolean wasRemoved = false;
 	    for(int i = 0; i < this.destructableLayer.length; i++) {
             Layer layer = this.destructableLayer[i];
-            Tile tile = layer.getRow(tileY).get(tileX);
+            Tile tile = layer.getRow(tileY)[tileX];
             if(tile!=null) {
                 if(!tile.isDestroyed()) {
                     this.destroyedTiles.add(tile);
                     tile.setDestroyed(true);
-                    layer.getRow(tileY).set(tileX, null);
+                    layer.getRow(tileY)[tileX] = null;
                     wasRemoved = true;
                 }
             }
@@ -1360,7 +1354,7 @@ public class OrthoMap implements Map {
 			for(int x = 0; x < getTileWorldWidth(); x++) {
 				Tile topTile = null;
 				for(int i = 0; i < layers.length; i++) {
-					Tile tile = layers[i].getRow(y).get(x); 
+					Tile tile = layers[i].getRow(y)[x]; 
 					if(tile != null) {
 						topTile = tile;
 						break;

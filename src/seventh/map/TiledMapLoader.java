@@ -109,6 +109,7 @@ public class TiledMapLoader implements MapLoader {
 			
 			LeoArray data = layer.getByString("data").as();
 			int width = layer.getInt("width");	
+			int height = layer.getInt("height");
 			
 			boolean isCollidable = false;
 			boolean isForeground = false;
@@ -143,22 +144,29 @@ public class TiledMapLoader implements MapLoader {
 				continue;
 			}
 			
-			Layer mapLayer = new Layer(isCollidable, isForeground, isDestructable, isProperty, index, heightMask);
+			Layer mapLayer = new Layer(isCollidable, 
+					                   isForeground, 
+					                   isDestructable, 
+					                   isProperty, 
+					                   index, 
+					                   heightMask,
+					                   height);
 			mapLayers.add(mapLayer);
 			
 			if(!isForeground) {
 				index++;
 			}													
-			
-			List<Tile> row = null;
+						
+			Tile[] row = null; //new Tile[width];
 			
 			int y = -tileHeight; // account for zero
+			int rowIndex = 0;
 			for(int x = 0; x < data.size(); x++) {
 				int tileId = data.get(x).asInt();
 				
-				if(x % width == 0) {					
-					row = new ArrayList<Tile>(width);
-					mapLayer.addRow(row);
+				if(x % width == 0) {						
+					row = new Tile[width];
+					mapLayer.addRow(rowIndex++, row);
 					y+=tileHeight;
 				}
 				
@@ -168,6 +176,7 @@ public class TiledMapLoader implements MapLoader {
 						Tile tile = null;
 						if( atlas.isAnimatedTile(tileId) ) {
 							tile = new AnimatedTile(atlas.getAnimatedTile(tileId), tileWidth, tileHeight); 
+							mapLayer.setContainsAnimations(true);
 						}
 						else {
 							tile = new Tile(image, tileWidth,tileHeight);
@@ -180,10 +189,10 @@ public class TiledMapLoader implements MapLoader {
 							int collisionId = atlas.getTileId(tileId);
 							tile.setCollisionMaskById(collisionId);
 						}
-						row.add(tile);
+						row[x%width] = tile;
 					}
 					else {
-						row.add(null);
+						row[x%width] = null;
 					}
 				}
 				// if we are headless...
@@ -197,10 +206,10 @@ public class TiledMapLoader implements MapLoader {
 							int collisionId = atlas.getTileId(tileId);
 							tile.setCollisionMaskById(collisionId);
 						}
-						row.add(tile);
+						row[x%width] = tile;
 					}
 					else {
-						row.add(null);
+						row[x%width] = null;
 					}
 				}
 			}

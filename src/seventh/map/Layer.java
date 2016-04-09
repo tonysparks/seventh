@@ -4,9 +4,6 @@
  */
 package seventh.map;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A {@link Layer} in a {@link Map}.
  * 
@@ -28,7 +25,7 @@ public class Layer {
 	/**
 	 * Underlying layer
 	 */
-	private List< List<Tile> > layer;
+	private Tile[][] rows;
 	
 	/**
 	 * Collidables
@@ -57,6 +54,10 @@ public class Layer {
 	 */
 	private boolean isDestructable;
 	
+	/**
+	 * If this layer has animations
+	 */
+	private boolean hasAnimation;
 	
 	private int index;
 	private int heightMask;
@@ -64,8 +65,15 @@ public class Layer {
 	/**
 	 * Constructs a {@link Layer}.
 	 */
-	public Layer(boolean collidable, boolean isForeground, boolean isDestructable, boolean isLightLayer, int index, int heightMask) {
-		this.layer = new ArrayList<List<Tile>>();
+	public Layer(boolean collidable, 
+			     boolean isForeground, 
+			     boolean isDestructable, 
+			     boolean isLightLayer, 
+			     int index, 
+			     int heightMask,
+			     int numberOfRows) {
+		
+		this.rows = new Tile[numberOfRows][];		
 		this.canCollide = collidable;
 		this.isForeground = isForeground;
 		this.isDestructable = isDestructable;
@@ -86,10 +94,10 @@ public class Layer {
 	 * Applies the height mask to this layer
 	 */
 	public void applyHeightMask() {
-		for(List<Tile> row : this.layer) {
-			int size = row.size();
-			for(int i = 0; i < size;i++) {
-				Tile t = row.get(i);
+		for(int rowIndex = 0; rowIndex < this.rows.length; rowIndex++) {
+			Tile[] row = this.rows[rowIndex];
+			for(int i = 0; i < row.length;i++) {
+				Tile t = row[i];
 				if(t!=null) {
 					t.setHeightMask(heightMask);					
 				}
@@ -154,7 +162,7 @@ public class Layer {
 	 * @return
 	 */
 	public int numberOfRows() {
-		return this.layer.size();
+		return this.rows.length;
 	}
 	/**
 	 * Get a row in the layer.
@@ -162,8 +170,8 @@ public class Layer {
 	 * @param i
 	 * @return
 	 */
-	public List<Tile> getRow(int i) {
-		return this.layer.get(i);
+	public Tile[] getRow(int i) {
+		return this.rows[i];
 	}
 	
 	/**
@@ -171,11 +179,10 @@ public class Layer {
 	 * 
 	 * @param row
 	 */
-	public void addRow(List<Tile> row) {
-		this.layer.add(row);
-		int size = row.size();
-		for(int i = 0; i < size;i++) {
-			Tile t = row.get(i);
+	public void addRow(int index, Tile[] row) {
+		this.rows[index] = row;		
+		for(int i = 0; i < row.length;i++) {
+			Tile t = row[i];
 			if(t!=null) {
 				t.setHeightMask(heightMask);
 			}
@@ -187,15 +194,33 @@ public class Layer {
 	 * @param it
 	 */
 	public void foreach(LayerTileIterator it) {
-	    int worldHeight = this.layer.size();
+	    int worldHeight = this.rows.length;
 	    for(int y = 0; y < worldHeight; y++) {
 	        
-	        List<Tile> row = getRow(y);
-	        int worldWidth = row.size();
+	        Tile[] row = getRow(y);
+	        int worldWidth = row.length;
             for(int x = 0; x < worldWidth; x++) {
-                Tile tile = row.get(x);
+                Tile tile = row[x];
                 it.onTile(tile, x, y);
             }
         }
+	}
+	
+	public boolean hasAnimations() {
+		return this.hasAnimation;
+	}
+	
+	public void setContainsAnimations(boolean hasAnimations) {
+		this.hasAnimation = hasAnimations;
+	}
+	
+	public void destroy() {
+		for(int rowIndex = 0; rowIndex < this.rows.length; rowIndex++) {
+			Tile[] row = this.rows[rowIndex];
+			for(int i = 0; i < row.length;i++) {
+				row[i] = null;
+			}
+			this.rows[rowIndex] = null;
+		}
 	}
 }

@@ -61,7 +61,7 @@ public class MiniMap implements Renderable {
 			for(int x = 0; x < map.getTileWorldWidth(); x++) {
 				Tile topTile = null;
 				for(int i = 0; i < layers.length; i++) {
-					Tile tile = layers[i].getRow(y).get(x); 
+					Tile tile = layers[i].getRow(y)[x]; 
 					if(tile != null) {
 						topTile = tile;
 					}

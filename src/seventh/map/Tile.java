@@ -4,6 +4,7 @@
  */
 package seventh.map;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.client.gfx.Camera;
@@ -1243,6 +1244,7 @@ public class Tile implements Renderable {
 	private int width, height;	
 	private int xIndex, yIndex;
 	private TextureRegion image;
+	private Sprite sprite;
 	
 	private int renderX, renderY;
 	private int mask;
@@ -1264,6 +1266,10 @@ public class Tile implements Renderable {
 		this.collisionMask = CollisionMask.NO_COLLISION;
 		this.surfaceType = SurfaceType.CEMENT;
 		this.isDestroyed = false;
+		
+		if(image!=null) {
+			this.sprite = new Sprite(image);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -1500,12 +1506,21 @@ public class Tile implements Renderable {
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {		
 	    if(!this.isDestroyed) {
-	        canvas.drawScaledImage(image, renderX, renderY, width, height, 0xFFFFFFFF);
+	    	sprite.setPosition(renderX, renderY);
+	    	canvas.drawRawSprite(sprite);
+	       // canvas.drawScaledImage(image, renderX, renderY, width, height, 0xFFFFFFFF);
 
 //	    	Vector2f pos = camera.getRenderPosition(alpha);
 //	    	float x = (this.x - pos.x);
 //	    	float y = (this.y - pos.y);
-//	    	canvas.drawScaledImage(image, x, y, width, height, 0xFFFFFFFF);	    	
+//	    	canvas.drawScaledImage(image, x, y, width, height, 0xFFFFFFFF);
+	    	
+	    	
+//	    	Vector2f pos = camera.getRenderPosition(alpha);
+//	    	float x = (int)(this.x - pos.x);
+//	    	float y = (int)(this.y - pos.y);
+//	    	sprite.setPosition(x, y);
+//	    	canvas.drawRawSprite(sprite);	
 	    }
 	}
 
