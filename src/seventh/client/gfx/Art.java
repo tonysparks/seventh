@@ -54,12 +54,6 @@ public class Art {
 	public static  TextureRegion bombImage = null;
 	public static  TextureRegion computerImage = null;	
 	
-//	public static  TextureRegion legsImage = null;		
-//	public static  Model legsModel = null;	
-//	public static  Model alliedCharacterModel = null;
-//	public static  Model axisCharacterModel = null;
-	
-	
 	public static  Model alliedBodyModel = null;		
 	public static  Model alliedWalkModel = null;
 	public static  Model alliedSprintModel = null;
@@ -143,9 +137,6 @@ public class Art {
 	public static  TextureRegion bullet = null;
 	public static  TextureRegion bulletImage = null;
 	
-	
-	public static  TextureRegion[] tankTracks = null;
-	public static  TextureRegion tankTurret = null;
 	public static  TextureRegion tankTrackMarks = null;
 	
 	public static  TextureRegion shermanTankImage = null;
@@ -208,20 +199,13 @@ public class Art {
 		bombImage = loadImage("./assets/gfx/weapons/bomb.bmp", 0xff00ff);
 		bombImage.flip(false, true);
 		computerImage = loadImage("./assets/gfx/computer.bmp");
-		
 
-//		legsImage = loadImage("./assets/gfx/player/legs.bmp", 0xff00ff);
-//		legsModel = new Model(legsImage, 128, 64, 2, 4);
-//
-//		alliedCharacterModel = new Model(loadImage("./assets/gfx/player/allied_01.png"), 128, 128, 2, 3);
-//		axisCharacterModel = new Model(loadImage("./assets/gfx/player/axis_01.png"), 128, 128, 2, 3);
-
-		alliedBodyModel = new Model(loadImage("./assets/gfx/player/allied_positions.png"), 201, 173, 2, 3);				
+		alliedBodyModel = new Model(loadImage("./assets/gfx/player/allied_positions.png"), 201, 256, 3, 3);	
 		alliedWalkModel = new Model(loadImage("./assets/gfx/player/allied_legs_walk.png"), 372, 196, 2, 4);
 		alliedSprintModel = new Model(loadImage("./assets/gfx/player/allied_legs_sprint.png"), 256, 190, 2, 3);
 		alliedCrouchLegs = loadImage("./assets/gfx/player/allied_crouch_legs.png");
 						
-		axisBodyModel = new Model(loadImage("./assets/gfx/player/axis_positions.png"), 201, 173, 2, 3);		
+		axisBodyModel = new Model(loadImage("./assets/gfx/player/axis_positions.png"), 201, 256, 3, 3);
 		axisWalkModel = new Model(loadImage("./assets/gfx/player/axis_legs_walk.png"), 372, 196, 2, 4);
 		axisSprintModel = new Model(loadImage("./assets/gfx/player/axis_legs_sprint.png"), 256, 190, 2, 3);
 		axisCrouchLegs = loadImage("./assets/gfx/player/axis_crouch_legs.png");
@@ -312,14 +296,7 @@ public class Art {
 		
 		bullet = loadImage("./assets/gfx/bullet.png");
 		bulletImage = loadImage("./assets/gfx/weapons/bullet.png");
-		
-		tankTracks = TextureUtil.splitImage(
-							TextureUtil.subImage(loadImage("./assets/gfx/vehicles/tank_tracks.png"), 0,0,108,144), 1, 1);
-//		tankTracks = TextureUtil.splitImage(
-//				TextureUtil.subImage(loadImage("./assets/gfx/vehicles/tank_tracks.png"), 7,18,100,204), 1, 1);		
-		tankTurret = TextureUtil.splitImage( 
-							TextureUtil.subImage(loadImage("./assets/gfx/vehicles/tank_turret.png"), 0, 0, 108, 175), 1, 1)[0];
-		
+				
 		tankTrackMarks = loadImage("./assets/gfx/vehicles/tank_track_mark.png");
 		
 		shermanTankImage = loadImage("./assets/gfx/vehicles/tanks/sherman/sherman_tank.png");
@@ -764,16 +741,7 @@ public class Art {
 	public static AnimatedImage newRiskerMuzzleFlash() {
 		return newAnimatedImage(new int[] { 20, 20, 10, 20 }, riskerMuzzleFlash).loop(false);
 	}
-	
-	public static AnimatedImage newTankTracks() {
-		return newAnimatedImage(new int[] {100}, tankTracks);
-//		if(animationFrames != null) {
-//			return newAnimatedImage(animationFrames, tankTracks);
-//		}
-//		int frameTime = 450;
-//		return newAnimatedImage(new int[] { frameTime, frameTime, frameTime, frameTime, frameTime, frameTime }, tankTracks);
-	}
-	
+		
 	public static AnimatedImage newShermanTankTracks() {
 		return newAnimatedImage(new int[] {100}, new TextureRegion[] {shermanTankBase});
 	}

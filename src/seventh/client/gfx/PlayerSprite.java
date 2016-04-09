@@ -75,6 +75,10 @@ public class PlayerSprite implements Renderable {
 						  runBody, 
 						  sprintBody, 
 						  reloadBody,
+						  idlePumpActionReloadBody,
+						  crouchPumpActionReloadBody,
+						  walkPumpActionReloadBody,
+						  runPumpActionReloadBody,
 						  switchWeaponBody,
 						  meleeBody;
 	
@@ -96,7 +100,8 @@ public class PlayerSprite implements Renderable {
 	private boolean isReloading, 
 					isSwitching, 
 					isMelee, 
-					isFiring;
+					isFiring,
+					isPumpAction;
 	
 	
 	private Effects effects;	
@@ -175,9 +180,14 @@ public class PlayerSprite implements Renderable {
 		walkBody = newAnimation(100, bodyModel.getFrame(2));
 		runBody = newAnimation(100, bodyModel.getFrame(0)); 
 		sprintBody = newAnimation(100, bodyModel.getFrame(1));
-		reloadBody = newAnimation(500, bodyModel.getFrame(5), bodyModel.getFrame(0));
+		reloadBody = newAnimation(500, bodyModel.getFrame(5), bodyModel.getFrame(0));		
 		switchWeaponBody = newAnimation(100, bodyModel.getFrame(5));
 		meleeBody = newAnimation(100, bodyModel.getFrame(1));
+		
+		idlePumpActionReloadBody = newAnimation(200, bodyModel.getFrame(6));
+		crouchPumpActionReloadBody = newAnimation(200, bodyModel.getFrame(7));
+		walkPumpActionReloadBody = newAnimation(200, bodyModel.getFrame(8));
+		runPumpActionReloadBody = newAnimation(200, bodyModel.getFrame(6));
 				
 		idleLegsAnimation = newAnimation(150, walkLegsModel.getFrame(0));
 		crouchingLegsAnimation = newAnimation(0, crouchLegsModel);
@@ -247,11 +257,18 @@ public class PlayerSprite implements Renderable {
 		prevYOffset = yOffset;
 		xOffset = yOffset = 0;
 		
+		this.isPumpAction = false;
+		
 		float weaponWeight = 1.0f;
 		ClientWeapon weapon = entity.getWeapon();		
 		if(weapon != null) {
 			weaponWeight = 100.0f - weapon.getWeaponWeight();
 			weaponWeight *= 0.01f;
+			
+			
+			if(weapon.isPumpAction()) {
+				this.isPumpAction = weapon.isSpecialReloadingAction();
+			}			
 		}
 		
 		activeBodyPosition = idleBody; 
@@ -262,17 +279,17 @@ public class PlayerSprite implements Renderable {
 		
 		switch(currentState) {
 		case IDLE:
-			activeBodyPosition = idleBody;
+			activeBodyPosition = isPumpAction ? idlePumpActionReloadBody : idleBody;
 			activeLegsAnimation = idleLegsAnimation;
 			resetLegMovements();
 			break;
 		case CROUCHING:
-			activeBodyPosition = crouchBody;
+			activeBodyPosition = isPumpAction ? crouchPumpActionReloadBody : crouchBody;
 			activeLegsAnimation = crouchingLegsAnimation;
 			resetLegMovements();
 			break;
 		case WALKING: {						
-			activeBodyPosition = walkBody;
+			activeBodyPosition = isPumpAction ? walkPumpActionReloadBody : walkBody;
 			activeLegsAnimation = walkLegsAnimation;
 			
 			bobMotion.set(5, 0.6);
@@ -283,7 +300,7 @@ public class PlayerSprite implements Renderable {
 			
 		} break;
 		case RUNNING: {
-			activeBodyPosition = runBody;
+			activeBodyPosition = isPumpAction ? runPumpActionReloadBody : runBody;
 			activeLegsAnimation = runLegsAnimation;
 						
 			bobMotion.set(12*weaponWeight,2.4*weaponWeight); //(8, 1.4);
@@ -318,7 +335,13 @@ public class PlayerSprite implements Renderable {
 			this.isMelee = weapon.getState() == seventh.game.weapons.Weapon.State.MELEE_ATTACK;
 			this.isFiring = weapon.getState() == seventh.game.weapons.Weapon.State.FIRING;
 			
-			if( this.isReloading ) {
+			if(weapon.isBoltAction()) {
+				if(!this.isReloading && weapon.isSpecialReloadingAction()) {
+					this.isReloading = true;
+				}
+			}
+						
+			if( this.isReloading /*&& !this.isPumpAction*/) {
 				this.activeBodyPosition = reloadBody;
 			}
 			else if (this.isMelee) {
@@ -327,8 +350,7 @@ public class PlayerSprite implements Renderable {
 			else if (this.isSwitching) {
 				this.activeBodyPosition = switchWeaponBody;
 			}
-			
-			
+						
 			if(weapon instanceof ClientRocketLauncher && !this.isMelee) {
 				activeBodyPosition = crouchBody;
 			}
