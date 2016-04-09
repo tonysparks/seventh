@@ -5,7 +5,7 @@ package seventh.ai.basic.squad;
 
 import seventh.ai.basic.Brain;
 
-/**
+/** 
  * @author Tony
  *
  */
