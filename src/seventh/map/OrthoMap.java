@@ -798,8 +798,11 @@ public class OrthoMap implements Map {
 				}
 				
 				if(!isCollidable) {					
-					GraphNode<Tile, E> node = new GraphNode<Tile, E>(this.getTile(0, x, y));
-					nodes[y][x] = node;
+					Tile tile = this.getTile(0, x, y);
+					if(tile != null) {
+						GraphNode<Tile, E> node = new GraphNode<Tile, E>(tile);
+						nodes[y][x] = node;
+					}
 				}
 			}
 		}
