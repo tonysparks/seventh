@@ -24,7 +24,6 @@ import seventh.ai.basic.AILeolaLibrary;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.game.Entity.KilledListener;
 import seventh.game.Entity.Type;
-import seventh.game.PlayerEntity.Keys;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.PlayerSpawnedEvent;
@@ -149,7 +148,6 @@ public class Game implements GameInfo, Debugable, Updatable {
 					     , lastFramesSoundEvents;		
 		
 	private boolean enableFOW;
-	private int previousKeys;
 	
 	// data members that are strictly here for performance
 	// reasons
@@ -1205,18 +1203,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 				PlayerEntity entity = player.getEntity();				
 				entity.handleUserCommand(msg.keys, msg.orientation);								
 			}
-			else if (player.isSpectating()) {
-				if(Keys.LEFT.isDown(this.previousKeys) && !Keys.LEFT.isDown(msg.keys)) {
-					Player spectateMe = gameType.getPrevPlayerToSpectate(getPlayers(), player);
-					player.setSpectating(spectateMe);
-				}
-				else if(Keys.RIGHT.isDown(this.previousKeys) && !Keys.RIGHT.isDown(msg.keys)) {
-					Player spectateMe = gameType.getNextPlayerToSpectate(getPlayers(), player);
-					player.setSpectating(spectateMe);
-				}
-				this.previousKeys = msg.keys;
-				
-				
+			else {				
+				player.handleInput(this, msg.keys);
 			}
 		}
 	}

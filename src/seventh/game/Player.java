@@ -6,6 +6,7 @@ package seventh.game;
 import java.util.Date;
 
 import seventh.game.Entity.Type;
+import seventh.game.PlayerEntity.Keys;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.math.Vector2f;
@@ -53,6 +54,8 @@ public class Player implements PlayerInfo, Debugable {
 	private Vector2f killedAt;
 	
 	private Type weaponClass;
+	
+	private int previousKeys;
 	
 	/**
 	 * @param id
@@ -396,6 +399,26 @@ public class Player implements PlayerInfo, Debugable {
 			return Entity.INVALID_ENTITY_ID;
 		}
 		return ent.getId();
+	}
+
+	/**
+	 * Handle input from the player
+	 * 
+	 * @param game
+	 * @param keys
+	 */
+	public void handleInput(Game game, int keys) {
+		if (isSpectating()) {
+			if(Keys.LEFT.isDown(this.previousKeys) && !Keys.LEFT.isDown(keys)) {
+				Player spectateMe = game.getGameType().getPrevPlayerToSpectate(game.getPlayers(), this);
+				setSpectating(spectateMe);
+			}
+			else if(Keys.RIGHT.isDown(this.previousKeys) && !Keys.RIGHT.isDown(keys)) {
+				Player spectateMe = game.getGameType().getNextPlayerToSpectate(game.getPlayers(), this);
+				setSpectating(spectateMe);
+			}
+			this.previousKeys = keys;
+		}
 	}
 	
 	/**
