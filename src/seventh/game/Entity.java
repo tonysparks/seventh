@@ -250,6 +250,7 @@ public abstract class Entity implements Debugable {
 	
 	protected Vector2f pos;
 	protected Vector2f vel;
+	protected Vector2f cache;
 	private Vector2f centerPos;
 	private Vector2f movementDir;
 	
@@ -318,6 +319,7 @@ public abstract class Entity implements Debugable {
 		this.health = this.maxHealth;
 		
 		this.movementDir = new Vector2f();
+		this.cache = new Vector2f();
 		
 		this.bounds = new Rectangle();	
 		this.bounds.setLocation(position);
@@ -821,9 +823,9 @@ public abstract class Entity implements Debugable {
 	 * @return calculates the line of sight, which returns a {@link List} of {@link Tile} this entity
 	 * is able to see
 	 */
-	protected List<Tile> calculateLineOfSight(List<Tile> tiles) {
+	public List<Tile> calculateLineOfSight(List<Tile> tiles) {
 		Map map = game.getMap();
-		Geom.calculateLineOfSight(tiles, centerPos, getFacing(), WeaponConstants.DEFAULT_LINE_OF_SIGHT, map, getHeightMask());
+		Geom.calculateLineOfSight(tiles, centerPos, getFacing(), WeaponConstants.DEFAULT_LINE_OF_SIGHT, map, getHeightMask(), cache);
 		return tiles;
 	}
 	

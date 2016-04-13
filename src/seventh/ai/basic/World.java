@@ -22,7 +22,6 @@ import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.shared.Geom;
 import seventh.shared.Randomizer;
 import seventh.shared.SeventhConstants;
 
@@ -255,12 +254,8 @@ public class World {
 	 * @param entity
 	 * @return
 	 */
-	public List<PlayerEntity> getPlayersInLineOfSight(List<PlayerEntity> players, PlayerEntity entity) {
-		Vector2f pos = entity.getPos();
-		Vector2f facing = entity.getFacing();
-		int radius = entity.getLineOfSight();
-						
-		tiles = Geom.calculateLineOfSight(tiles, pos, facing, radius, map, entity.getHeightMask());
+	public List<PlayerEntity> getPlayersInLineOfSight(List<PlayerEntity> players, PlayerEntity entity) {		
+		tiles = entity.calculateLineOfSight(tiles);
 		int size = tiles.size();
 		for(int i = 0; i < size;i++) {
 			Tile tile = tiles.get(i);

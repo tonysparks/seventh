@@ -732,9 +732,9 @@ public class Tank extends Vehicle {
 	 * @see seventh.game.Entity#calculateLineOfSight()
 	 */
 	@Override
-	protected List<Tile> calculateLineOfSight(List<Tile> tiles) {
+	public List<Tile> calculateLineOfSight(List<Tile> tiles) {
 		Map map = game.getMap();
-		Geom.calculateLineOfSight(tiles, getCenterPos(), getTurretFacing(), WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT, map, getHeightMask());
+		Geom.calculateLineOfSight(tiles, getCenterPos(), getTurretFacing(), WeaponConstants.TANK_DEFAULT_LINE_OF_SIGHT, map, getHeightMask(), cache);
 		return tiles;
 	}
 		

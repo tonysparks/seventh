@@ -1383,9 +1383,9 @@ public class PlayerEntity extends Entity implements Controllable {
 	}
 	
 	@Override
-	protected List<Tile> calculateLineOfSight(List<Tile> tiles) {
+	public List<Tile> calculateLineOfSight(List<Tile> tiles) {
 		Map map = game.getMap();
-		Geom.calculateLineOfSight(tiles, getCenterPos(), getFacing(), getLineOfSight(), map, getHeightMask());
+		Geom.calculateLineOfSight(tiles, getCenterPos(), getFacing(), getLineOfSight(), map, getHeightMask(), cache);
 		return tiles;
 	}
 	

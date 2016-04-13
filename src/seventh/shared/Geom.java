@@ -47,11 +47,11 @@ public class Geom {
 	 * @param radius
 	 * @param map
 	 */
-	public static List<Tile> calculateLineOfSight(List<Tile> tiles, Vector2f pos, Vector2f facing, int radius, Map map, int heightMask) {
+	public static List<Tile> calculateLineOfSight(List<Tile> tiles, Vector2f pos, Vector2f facing, int radius, Map map, int heightMask, Vector2f cache) {
 		map.setMask(tiles, 0);
 		
 		tiles = map.getTilesInCircle((int)(pos.x + facing.x * radius), (int)(pos.y + facing.y * radius), radius, tiles);
-		Vector2f tilePos = new Vector2f();
+		Vector2f tilePos = cache; // avoid allocation
 		
 		int size = tiles.size();
 		for(int i = 0; i < size; i++) {
