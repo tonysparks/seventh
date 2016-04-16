@@ -1191,7 +1191,7 @@ public class OrthoMap implements Map {
 							continue;
 						}
 						
-						if ( layer.hasAnimations() ) {
+						if ( !layer.hasAnimations() ) {
 							continue;
 						}
 						
@@ -1206,7 +1206,7 @@ public class OrthoMap implements Map {
 							continue;
 						}
 						
-						if ( layer.hasAnimations() ) {
+						if ( !layer.hasAnimations() ) {
 							continue;
 						}
 						

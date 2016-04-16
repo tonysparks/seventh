@@ -42,6 +42,8 @@ public class Layer {
 	 */
 	private boolean isLightLayer;
 	
+	private boolean isVisible;
+	
 	/**
 	 * If this is a property layer and 
 	 * doesn't have render data
@@ -62,25 +64,38 @@ public class Layer {
 	private int index;
 	private int heightMask;
 	
+	private String name;
+	
 	/**
 	 * Constructs a {@link Layer}.
 	 */
-	public Layer(boolean collidable, 
+	public Layer(String name,
+			     boolean collidable, 
 			     boolean isForeground, 
 			     boolean isDestructable, 
 			     boolean isLightLayer, 
+			     boolean isVisible,
 			     int index, 
 			     int heightMask,
 			     int numberOfRows) {
 		
+		this.name = name;
 		this.rows = new Tile[numberOfRows][];		
 		this.canCollide = collidable;
 		this.isForeground = isForeground;
 		this.isDestructable = isDestructable;
 		this.isLightLayer = isLightLayer;
 		this.isPropertyLayer = isLightLayer || collidable;
+		this.isVisible = isVisible;
 		this.index = index;
 		this.heightMask = heightMask;
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -149,6 +164,13 @@ public class Layer {
 		return isPropertyLayer;
 	}
 
+	/**
+	 * @return the isVisible
+	 */
+	public boolean isVisible() {
+		return isVisible;
+	}
+	
 	/**
 	 * @param isForeground the isForeground to set
 	 */

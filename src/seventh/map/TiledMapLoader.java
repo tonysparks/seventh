@@ -116,6 +116,7 @@ public class TiledMapLoader implements MapLoader {
 			boolean isProperty = false;
 			boolean isSurfaceTypes = false;
 			boolean isDestructable = false;
+			boolean isVisible = layer.getBoolean("visible");
 			
 			int heightMask = 0;
 			if ( layer.has(LeoString.valueOf("properties"))) {
@@ -144,10 +145,12 @@ public class TiledMapLoader implements MapLoader {
 				continue;
 			}
 			
-			Layer mapLayer = new Layer(isCollidable, 
+			Layer mapLayer = new Layer(layer.getString("name"),
+									   isCollidable, 
 					                   isForeground, 
 					                   isDestructable, 
 					                   isProperty, 
+					                   isVisible,
 					                   index, 
 					                   heightMask,
 					                   height);
