@@ -74,7 +74,7 @@ public class HeadScanAction extends AdapterAction {
 			
 			Vector2f dest = null;
 			if(feeder.hasPath()) {
-				dest = feeder.nextDestination(ent);			
+				dest = feeder.nextWaypoint(ent);			
 				
 				this.pickAttackDirectionTime = 0;
 				this.attackDirectionIndex = -1;

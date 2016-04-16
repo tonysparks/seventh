@@ -22,8 +22,6 @@ import seventh.shared.TimeStep;
 public class MoveAction extends AdapterAction {
 
 	private Vector2f destination;
-	private int fuzzyNess;
-	
 	private List<Zone> zonesToAvoid;
 	
 	/**
@@ -36,15 +34,7 @@ public class MoveAction extends AdapterAction {
 	 * @param destination
 	 */
 	public MoveAction(Vector2f destination) {
-		this(0, destination);
-	}
-	
-	/**
-	 * @param destination
-	 */
-	public MoveAction(int fuzzyNess, Vector2f destination) {	
 		this.destination = destination;
-		this.fuzzyNess = fuzzyNess;
 		this.zonesToAvoid = new ArrayList<Zone>();
 	}
 	
@@ -54,14 +44,7 @@ public class MoveAction extends AdapterAction {
 	public void setDestination(Vector2f destination) {
 		this.destination.set(destination);
 	}
-	
-	/**
-	 * @param fuzzyNess the fuzzyNess to set
-	 */
-	public void setFuzzyNess(int fuzzyNess) {
-		this.fuzzyNess = fuzzyNess;
-	}
-	
+		
 	/**
 	 * @param zonesToAvoid the zonesToAvoid to set
 	 */
@@ -86,7 +69,7 @@ public class MoveAction extends AdapterAction {
 		PathPlanner<?> feeder = brain.getMotion().getPathPlanner(); 
 				
 		if(this.zonesToAvoid.isEmpty()) { 
-			feeder.findFuzzyPath(position, this.destination, this.fuzzyNess);
+			feeder.findPath(position, this.destination);
 		}
 		else {
 			feeder.findAvoidancePath(position, this.destination, this.zonesToAvoid);

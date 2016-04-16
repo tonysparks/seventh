@@ -17,7 +17,6 @@ import seventh.graph.GraphNode;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
-import seventh.shared.Randomizer;
 
 
 /**
@@ -32,7 +31,7 @@ public class PathPlanner<E> {
 	private MapGraph<E> graph;
 	private List<GraphNode<Tile, E>> path;
 	private int currentNode;
-	private Vector2f destination;
+	private Vector2f nextWaypoint;
 	private Vector2f finalDestination;	
 	
 	private World world;
@@ -81,14 +80,8 @@ public class PathPlanner<E> {
 	    return null;
 	}
 	
-	public static class FuzzySearchPath<E> extends AStarGraphSearch<Tile, E> {
-		public int actualFuzzy;
+	public static class SearchPath<E> extends AStarGraphSearch<Tile, E> {
 		public List<Tile> tilesToAvoid;
-		private Randomizer random;
-		
-		public FuzzySearchPath(Randomizer random) {
-			this.random = random;
-		}
 		
 		@Override
 		protected int heuristicEstimateDistance(
@@ -96,17 +89,17 @@ public class PathPlanner<E> {
 				GraphNode<Tile, E> goal) {			
 			Tile currentTile = currentNode.getValue();
 			Tile goalTile = goal.getValue();
+						
+			int dx = Math.abs(currentTile.getX() - goalTile.getX());
+			int dy = Math.abs(currentTile.getY() - goalTile.getY());						
 			
-			int distance = ((goalTile.getX() - currentTile.getX()) *
-						    (goalTile.getX() - currentTile.getX())) +
-						   ((goalTile.getY() - currentTile.getY()) *
-						    (goalTile.getY() - currentTile.getY()));
+			final int D = 1;
+			//final int D2 = 2;
 			
-//			if(isEntityOnTile(goalTile)) {
-//			    return Integer.MAX_VALUE;
-//			}
+			//distance = D * (dx+dy) + (D2 - 2 * D) * Math.min(dx, dy);
+			int distance = D * (dx+dy);
 			
-			return distance + random.nextInt(actualFuzzy);
+			return distance;//
 		}
 		
 		@Override
@@ -126,10 +119,14 @@ public class PathPlanner<E> {
 			Tile currentTile = currentNode.getValue();
 			Tile goalTile = goal.getValue();
 			
-			int distance = ((goalTile.getX() - currentTile.getX()) *
-						    (goalTile.getX() - currentTile.getX())) +
-						   ((goalTile.getY() - currentTile.getY()) *
-						    (goalTile.getY() - currentTile.getY()));
+			int dx = Math.abs(currentTile.getX() - goalTile.getX());
+			int dy = Math.abs(currentTile.getY() - goalTile.getY());						
+			
+			final int D = 1;
+			//final int D2 = 2;
+			
+			//distance = D * (dx+dy) + (D2 - 2 * D) * Math.min(dx, dy);
+			int distance = D * (dx+dy);
 			
 			if(shouldBeAvoided(currentTile)||shouldBeAvoided(goalTile)) {
 				distance = Integer.MAX_VALUE;
@@ -162,7 +159,7 @@ public class PathPlanner<E> {
 		}
 	}
 	
-	private FuzzySearchPath<E> fuzzySearchPath; 	
+	private SearchPath<E> fuzzySearchPath; 	
 	private AvoidSearchPath<E> avoidSearchPath;
 	
 	/**
@@ -173,13 +170,13 @@ public class PathPlanner<E> {
 	    this.world = brain.getWorld();
 		this.graph = graph;
 		this.finalDestination = new Vector2f();
-		this.destination = new Vector2f();
+		this.nextWaypoint = new Vector2f();
 		
 		this.path = new ArrayList<GraphNode<Tile, E>>();
 		this.tilesToAvoid = new ArrayList<Tile>();
 		this.currentNode = 0;
 		
-		this.fuzzySearchPath = new FuzzySearchPath<E>(world.getRandom());
+		this.fuzzySearchPath = new SearchPath<E>();
 		this.fuzzySearchPath.tilesToAvoid = this.tilesToAvoid;
 		
 		this.avoidSearchPath = new AvoidSearchPath<E>();		
@@ -213,8 +210,6 @@ public class PathPlanner<E> {
 	 * @return the estimated cost of moving from start to destination
 	 */
 	public int pathCost(Vector2f start, Vector2f destination) {
-		this.fuzzySearchPath.actualFuzzy = 1;
-		//this.finalDestination.set(destination);
 		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
 		int cost = newPath.size() * 32;
 		return cost;
@@ -227,30 +222,12 @@ public class PathPlanner<E> {
 	 * @param destination
 	 */
 	public void findPath(Vector2f start, Vector2f destination) {				
-		this.fuzzySearchPath.actualFuzzy = 1;
-		
 		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
 		setPath(newPath);
 		
 		this.finalDestination.set(destination);
 	}
 	
-	
-	/**
-	 * Finds a fuzzy (meaning not necessarily the most optimal but different) path between the start and end point
-	 * @param start
-	 * @param destination
-	 * @param the amount of fuzzy the add to the path (the greater the number the less efficient the 
-	 * path is to the destination)
-	 */
-	public void findFuzzyPath(Vector2f start, Vector2f destination, final int fuzzyness) {
-		this.fuzzySearchPath.actualFuzzy = Math.max(1, fuzzyness);
-		
-		List<GraphNode<Tile, E>> newPath = this.graph.findFuzzyPath(this.fuzzySearchPath, start, destination, fuzzyness);
-		setPath(newPath);		
-		
-		this.finalDestination.set(destination);
-	}
 	
 	/**
 	 * Finds a path, avoiding the supplied {@link Zone}s
@@ -307,12 +284,19 @@ public class PathPlanner<E> {
 		return currentNode == 0 && !path.isEmpty();
 	}
 
-	public Vector2f nextDestination(PlayerEntity ent) {
+	
+	/**
+	 * Retrieves the next way-point on the path.
+	 * 
+	 * @param ent
+	 * @return the next way-point on the path
+	 */
+	public Vector2f nextWaypoint(PlayerEntity ent) {
 		Vector2f cPos = ent.getCenterPos();
 		int x = (int)cPos.x;
 		int y = (int)cPos.y;
 		
-		destination.zeroOut();
+		nextWaypoint.zeroOut();
 		
 		if(! path.isEmpty() && currentNode < path.size() ) {
 			GraphNode<Tile, E> node = path.get(currentNode);
@@ -340,7 +324,7 @@ public class PathPlanner<E> {
 						world.getMap().getTilesInRect(entOnTile.getBounds(), tilesToAvoid);
 						tilesToAvoid.add(tile);
 						findPath(cPos, this.finalDestination);
-						return nextDestination(ent);
+						return nextWaypoint(ent);
 					}
 				}
 			}
@@ -355,11 +339,11 @@ public class PathPlanner<E> {
 //				}
 //			}
 			
-			destination.x = (centerX - x);
-			destination.y = (centerY - y);
+			nextWaypoint.x = (centerX - x);
+			nextWaypoint.y = (centerY - y);
 		}
 		
-		return destination;
+		return nextWaypoint;
 	}
 	
 	/**

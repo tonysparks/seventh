@@ -212,9 +212,8 @@ public class Locomotion implements Debugable {
 		moveDelta.zeroOut();
 		if(pathPlanner.hasPath()) {
 			if (!pathPlanner.atDestination()) {
-//				Vector2f nextDest = pathFeeder.nextDestination(me.getPos());
-				Vector2f nextDest = pathPlanner.nextDestination(me);
-				moveDelta.set(nextDest);
+				Vector2f waypoint = pathPlanner.nextWaypoint(me);
+				moveDelta.set(waypoint);
 			}
 			else {
 				Vector2f nextDest = pathPlanner.getDestination();
@@ -275,24 +274,10 @@ public class Locomotion implements Debugable {
 	 */
 	public void moveTo(Vector2f dest) {
 		this.moveAction.setDestination(dest);
-		this.moveAction.setFuzzyNess(0);
 		this.moveAction.clearAvoids();
 		this.destinationGoal.setAction(this.moveAction);
 	}
-	
-	/**
-	 * Similar to {@link Locomotion#moveTo(Vector2f)} but the path
-	 * to the destination is not in a straight line
-	 * 
-	 * @param dest
-	 */
-	public void dodgeTo(Vector2f dest) {
-		this.moveAction.setDestination(dest);
-		this.moveAction.setFuzzyNess(1_000_000);
-		this.moveAction.clearAvoids();
-		this.destinationGoal.setAction(this.moveAction);
-	}
-	
+		
 	/**
 	 * Moves to the destination, avoiding the supplied {@link Zone}s.
 	 * 
@@ -301,7 +286,6 @@ public class Locomotion implements Debugable {
 	 */
 	public void avoidMoveTo(Vector2f dest, List<Zone> avoid) {
 		this.moveAction.setDestination(dest);
-		this.moveAction.setFuzzyNess(0);
 		this.moveAction.setZonesToAvoid(avoid);
 		this.destinationGoal.setAction(this.moveAction);
 	}
