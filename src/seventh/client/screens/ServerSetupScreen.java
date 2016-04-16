@@ -83,7 +83,7 @@ public class ServerSetupScreen implements Screen {
 		"Jeremy",
 		"Tripwire",
 		"Leo",
-		"Mr.X",
+		"nvm",
 	};
 	
 	/**
