@@ -5,10 +5,13 @@ package seventh.ai.basic;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import leola.vm.Leola;
-import leola.vm.types.LeoArray;
+import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
+import leola.vm.types.LeoUserFunction;
 import seventh.ai.AICommand;
 import seventh.ai.AISystem;
 import seventh.ai.basic.actions.Action;
@@ -66,19 +69,22 @@ public class DefaultAISystem implements AISystem {
 	private AIConfig config;
 	private World world;
 	
-	private final PersonalityTraits[] personalities;
+	private final Map<String, PersonalityTraits> personalities;
+	private static final PersonalityTraits defaultPersonality = new PersonalityTraits();
+	static {
+		defaultPersonality.accuracy = 0.6;
+		defaultPersonality.aggressiveness = 0.7;
+		defaultPersonality.curiosity = 0.65;
+		defaultPersonality.obedience = 1.0;
+	}
 	
 	/**
 	 * 
 	 */
 	public DefaultAISystem() {
 		this.brains = new Brain[SeventhConstants.MAX_PLAYERS];	
-
-		this.personalities = new PersonalityTraits[SeventhConstants.MAX_PLAYERS];
-		for(int i = 0; i < this.personalities.length; i++) {
-			this.personalities[i] = new PersonalityTraits();
-		}
-		
+		this.personalities = new HashMap<>();
+				
 		try {						
 			this.runtime = Scripting.newRuntime();
 			this.watcher = new FileSystemAssetWatcher(new File("./assets/ai"));
@@ -107,15 +113,23 @@ public class DefaultAISystem implements AISystem {
 						runtime.eval(new File(filename));
 						
 						LeoObject config = runtime.get("personalities");
-						if(LeoObject.isTrue(config) && config.isArray()) {
-							LeoArray a = config.as();
-							for(int i = 0; i < personalities.length; i++) {
-								LeoObject p = a.get(i);
-								personalities[i].accuracy = p.getObject("accuracy").asDouble();
-								personalities[i].aggressiveness = p.getObject("aggressiveness").asDouble();
-								personalities[i].curiosity = p.getObject("curiosity").asDouble();
-								personalities[i].obedience = p.getObject("obedience").asDouble();
-							}
+						if(LeoObject.isTrue(config) && config.isMap()) {
+							LeoMap a = config.as();
+							a.foreach(new LeoUserFunction() {
+								public LeoObject call(LeoObject key, LeoObject value) {
+									PersonalityTraits traits = new PersonalityTraits();
+				
+									traits.accuracy = value.getObject("accuracy").asDouble();
+									traits.aggressiveness = value.getObject("aggressiveness").asDouble();
+									traits.curiosity = value.getObject("curiosity").asDouble();
+									traits.obedience = value.getObject("obedience").asDouble();
+									
+									personalities.put(key.toString(), traits);
+									
+									return LeoObject.NULL;
+								}
+							});
+							
 						}
 						
 						Cons.println("Successfully evaluated: " + filename);
@@ -177,7 +191,7 @@ public class DefaultAISystem implements AISystem {
 			@Override
 			public void onPlayerInfo(PlayerInfo player) {
 				if(player.isBot()) {					
-					brains[player.getId()] = new Brain(personalities[player.getId()], getStrategyFor(player), world, player);
+					brains[player.getId()] = new Brain(getPersonalityTraitsFor(player), getStrategyFor(player), world, player);
 				}	
 			}
 		});
@@ -217,6 +231,19 @@ public class DefaultAISystem implements AISystem {
 		}
 		
 		return null;
+	}
+	
+	private PersonalityTraits getPersonalityTraitsFor(PlayerInfo player) {
+		PersonalityTraits traits = null;
+		if(player!=null) {
+			traits = this.personalities.get(player.getName().toLowerCase());
+			
+			if(traits==null) {
+				traits = this.personalities.get("default");			
+			}
+		}
+		
+		return traits==null ? defaultPersonality : traits;
 	}
 	
 	/**
@@ -295,7 +322,7 @@ public class DefaultAISystem implements AISystem {
 	@Override
 	public void playerJoined(PlayerInfo player) {
 		if(player.isBot()) {
-			this.brains[player.getId()] = new Brain(personalities[player.getId()], getStrategyFor(player), world, player);
+			this.brains[player.getId()] = new Brain(getPersonalityTraitsFor(player), getStrategyFor(player), world, player);
 		}
 	}
 	
