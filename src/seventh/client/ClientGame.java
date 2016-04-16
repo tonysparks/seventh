@@ -826,8 +826,6 @@ public class ClientGame {
 		ClientEntity entity = null;
 		
 		Type type = Type.fromNet(ent.type);
-		
-//		System.out.println("Creating: " + type.name() + " id " + ent.id);
 		 
 		final Vector2f pos = new Vector2f(ent.posX, ent.posY);
 		switch(type) {
