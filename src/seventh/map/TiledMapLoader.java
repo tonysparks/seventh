@@ -7,6 +7,8 @@ package seventh.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
@@ -14,8 +16,6 @@ import leola.vm.types.LeoString;
 import seventh.client.gfx.TextureUtil;
 import seventh.map.Map.SceneDef;
 import seventh.map.Tile.SurfaceType;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * @author Tony
@@ -174,14 +174,9 @@ public class TiledMapLoader implements MapLoader {
 				boolean flippedVertically = (tileId & FLIPPED_VERTICALLY_FLAG) != 0; 
 				boolean flippedDiagonally = (tileId & FLIPPED_DIAGONALLY_FLAG) != 0;
 				
-				int prevId = tileId;
 				tileId &= ~(FLIPPED_HORIZONTALLY_FLAG |
                             FLIPPED_VERTICALLY_FLAG |
                             FLIPPED_DIAGONALLY_FLAG);
-				
-				if(prevId != tileId) {
-					System.out.println(tileId + " vs " + prevId);
-				}
 				
 				if(x % width == 0) {						
 					row = new Tile[width];
