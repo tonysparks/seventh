@@ -1420,6 +1420,36 @@ public class Tile implements Renderable {
         this.isDestroyed = isDestroyed;
     }
     
+    public void setFlippedHorizontally(boolean isFlipped) {
+    	this.sprite.setFlip(isFlipped, this.sprite.isFlipY());
+    }
+    
+    public void setFlippedVertially(boolean isFlipped) {
+    	this.sprite.setFlip(this.sprite.isFlipX(), !isFlipped);
+    }
+            
+    public void setFlips(boolean isFlippedHorizontal, boolean isFlippedVert, boolean isFlippedDiagnally) {
+    	if(isFlippedDiagnally) {
+    		if(isFlippedHorizontal && isFlippedVert) {
+    			this.sprite.flip(true, false);
+    			this.sprite.rotate(-270f);
+    		}
+    		else if(isFlippedHorizontal) {
+    			this.sprite.rotate(-270f);
+    		}
+    		else if(isFlippedVert) {
+    			this.sprite.rotate(-90f);
+    		}
+    		else {
+    			this.sprite.flip(false, true);
+    			this.sprite.rotate(-270f);
+    		}
+    	}
+    	else {
+    		this.sprite.flip(isFlippedHorizontal, isFlippedVert);
+    	}
+    }
+    
 	/**
 	 * Sets the index position
 	 * @param x

@@ -23,6 +23,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class TiledMapLoader implements MapLoader {
 
+	private static final int FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+	private static final int FLIPPED_VERTICALLY_FLAG   = 0x40000000;
+	private static final int FLIPPED_DIAGONALLY_FLAG   = 0x20000000;
+	
 	/**
 	 * Loads an {@link OrthoMap} created from the "Tiled" program.
 	 * 
@@ -166,6 +170,18 @@ public class TiledMapLoader implements MapLoader {
 			int rowIndex = 0;
 			for(int x = 0; x < data.size(); x++) {
 				int tileId = data.get(x).asInt();
+				boolean flippedHorizontally = (tileId & FLIPPED_HORIZONTALLY_FLAG) != 0;
+				boolean flippedVertically = (tileId & FLIPPED_VERTICALLY_FLAG) != 0; 
+				boolean flippedDiagonally = (tileId & FLIPPED_DIAGONALLY_FLAG) != 0;
+				
+				int prevId = tileId;
+				tileId &= ~(FLIPPED_HORIZONTALLY_FLAG |
+                            FLIPPED_VERTICALLY_FLAG |
+                            FLIPPED_DIAGONALLY_FLAG);
+				
+				if(prevId != tileId) {
+					System.out.println(tileId + " vs " + prevId);
+				}
 				
 				if(x % width == 0) {						
 					row = new Tile[width];
@@ -187,6 +203,7 @@ public class TiledMapLoader implements MapLoader {
 												
 						tile.setPosition( (x%width) * tileWidth, y);
 //						tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
+						tile.setFlips(flippedHorizontally, flippedVertically, flippedDiagonally);
 						
 						if(isCollidable) {
 							int collisionId = atlas.getTileId(tileId);
@@ -231,6 +248,24 @@ public class TiledMapLoader implements MapLoader {
 		TilesetAtlas atlas = new  TilesetAtlas();
 		for(LeoObject t : tilesets) {
 			LeoMap tileset = t.as();
+						
+			// skip the sourced tilesets
+			if(t.hasObject("source")) {
+				// HACK: Updated version of Tiled which no longer supports inlining
+				// shared tilests (lame)
+				String source = tileset.getString("source");
+				if(source.endsWith("collidables.tsx")) {
+					tileset.putByString("image", LeoString.valueOf("./assets/gfx/tiles/collision_tileset.png"));
+					tileset.putByString("name", LeoString.valueOf("collidables"));
+				}
+				else if(source.endsWith("city.tsx")) {
+					tileset.putByString("image", LeoString.valueOf("./assets/gfx/tiles/cs2dnorm.png"));
+					tileset.putByString("name", LeoString.valueOf("city"));
+				}
+				
+				tileset.putByString("tilewidth", LeoObject.valueOf(32));
+				tileset.putByString("tileheight", LeoObject.valueOf(32));
+			}
 			
 			int firstgid = tileset.getInt("firstgid");			
 			int margin = tileset.getInt("margin");
