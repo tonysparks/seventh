@@ -134,11 +134,12 @@ public class ClientBullet extends ClientEntity {
 
 		
 		if(vel.isZero()) {			
-			ClientPlayer player = game.getPlayers().getPlayer(bullet.ownerId);
+			/*ClientPlayer player = game.getPlayers().getPlayer(bullet.ownerId);
 			if(player!=null&&player.isAlive()) {
 				Vector2f.Vector2fCopy(player.getEntity().getFacing(), vel);
 			}
-			else {
+			else*/ 
+			{
 				Vector2f.Vector2fSubtract(getPos(), getOrigin(), vel);
 				Vector2f.Vector2fNormalize(vel, vel);
 			}
@@ -153,8 +154,8 @@ public class ClientBullet extends ClientEntity {
 		super.update(timeStep);
 		
 		
-		//Vector2f.Vector2fSubtract(getPos(), getOrigin(), vel);
-		//Vector2f.Vector2fNormalize(vel, vel);
+		Vector2f.Vector2fSubtract(getPos(), getOrigin(), vel);
+		Vector2f.Vector2fNormalize(vel, vel);
 		if(Vector2f.Vector2fDistanceSq(getOrigin(), getPos()) > 20 ) {
 			Vector2f.Vector2fMS(getPos(), vel, tracerLength, oldPos);
 		}
