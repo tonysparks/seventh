@@ -145,27 +145,16 @@ public class MapGraph<T> {
 	
 	/**
 	 * Finds a fuzzy (meaning not necessarily the most optimal but different) path between the start and end point
+	 * 
 	 * @param start
 	 * @param destination
-	 * @param the amount of fuzzy the add to the path (the greater the number the less efficient the 
-	 * path is to the destination)
 	 * @return the list of node to travel to reach the destination
 	 */
-	public List<GraphNode<Tile, T>> findFuzzyPath(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination, final int fuzzyNess) {							
+	public List<GraphNode<Tile, T>> findPath(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination) {							
 		GraphNode<Tile, T> startNode = getNearestNodeByWorld(start);		
 		GraphNode<Tile, T> destNode = getNearestNodeByWorld(destination);
 		List<GraphNode<Tile, T>> resultPath = searchPath.search(startNode, destNode);
 		return resultPath; 
 	}
-	
 
-	/**
-	 * Finds the optimal path between the start and end point
-	 * @param start
-	 * @param destination
-	 * @return the list of node to travel to reach the destination
-	 */
-	public List<GraphNode<Tile, T>> findPath(GraphSearchPath<Tile, T> searchPath, Vector2f start, Vector2f destination) {				
-		return findFuzzyPath(searchPath, start, destination, 0);
-	}	
 }
