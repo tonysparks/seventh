@@ -60,14 +60,20 @@ public class MiniMap implements Renderable {
 		for(int y = 0; y < map.getTileWorldHeight(); y++) {
 			for(int x = 0; x < map.getTileWorldWidth(); x++) {
 				Tile topTile = null;
-				for(int i = 0; i < layers.length; i++) {
+				
+				boolean hasGroundTile = false;
+				for(int i = 0; i < layers.length; i++) {										
 					Tile tile = layers[i].getRow(y)[x]; 
 					if(tile != null) {
-						topTile = tile;
+						if(!layers[i].collidable()) {
+							hasGroundTile = true;
+						}
+						
+						topTile = tile;						
 					}
 				}
 				
-				if(topTile != null) {
+				if(topTile != null && hasGroundTile) {
 					TextureRegion tex = topTile.getImage();
 					
 					if(!cache.containsKey(tex)) {
@@ -82,15 +88,16 @@ public class MiniMap implements Renderable {
 								int color = p.getPixel(px, py);
 								r += (color >> 24) & 0xff;
 								g += (color >> 16) & 0xff;
-								b += (color >> 8) & 0xff;
+								b += (color >> 8) & 0xff;								
 							}
 						}
 						
-						
 						int numberOfPixels = p.getWidth() * p.getHeight();
-						r /= numberOfPixels;
-						g /= numberOfPixels;
-						b /= numberOfPixels;
+						if(numberOfPixels>0) {
+							r /= numberOfPixels;
+							g /= numberOfPixels;
+							b /= numberOfPixels;
+						}
 												
 						int blendedColor = Color.toIntBits(r, g, b, 100);
 
