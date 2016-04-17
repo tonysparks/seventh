@@ -120,7 +120,7 @@ public class Scoreboard {
 				
 		int yIncBig = 50;
 		int y = 140;
-		int x = 40;	
+		int x = 60;	
 		
 		setBigFont(canvas);
 		
@@ -170,6 +170,11 @@ public class Scoreboard {
 		
 			if (numberOfBlue>0) {
 				y+=yIncBig;
+
+				canvas.fillCircle(14, x - 38, y - 18, 0xff000000);
+				canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
+				canvas.drawImage(Art.alliedIcon, x - 40, y - 20, null);
+				
 				RenderFont.drawShadedString(canvas, "Allies " + blueScore, x, y, ClientTeam.ALLIES.getColor());
 				y = drawTeam(canvas, teams.get(ClientTeam.ALLIES), x, y);
 			}
@@ -177,7 +182,9 @@ public class Scoreboard {
 			if (numberOfRed>0) {
 				y+=yIncBig;
 				
-				//canvas.drawScaledImage(Art.axisIcon, x - Art.axisIcon.getWidth(), y, 16, 16, null);
+				canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
+				canvas.drawImage(Art.axisIcon, x - 40, y - 20, null);
+				
 				RenderFont.drawShadedString(canvas, "Axis " + redScore, x, y, ClientTeam.AXIS.getColor());
 				y = drawTeam(canvas, teams.get(ClientTeam.AXIS), x, y);
 			}
@@ -187,16 +194,24 @@ public class Scoreboard {
 			if (numberOfRed>0) {
 				y+=yIncBig;
 				
-				//canvas.drawScaledImage(Art.axisIcon, x-32, y-16, 24, 24, null);
+				canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
+				canvas.drawImage(Art.axisIcon, x - 40, y - 20, null);
+				
 				RenderFont.drawShadedString(canvas, "Axis " + redScore, x, y, ClientTeam.AXIS.getColor());
 				y = drawTeam(canvas, teams.get(ClientTeam.AXIS), x, y);
 			}
 			
 			if (numberOfBlue>0) {
 				y+=yIncBig;
+				
+				canvas.fillCircle(14, x - 38, y - 18, 0xff000000);
+				canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
+				canvas.drawImage(Art.alliedIcon, x - 40, y - 20, null);
+				
 				//canvas.drawScaledImage(Art.axisIcon, x-32, y-16, 24, 24, null);
 				RenderFont.drawShadedString(canvas, "Allies " + blueScore, x, y, ClientTeam.ALLIES.getColor());
 				y = drawTeam(canvas, teams.get(ClientTeam.ALLIES), x, y);
+				
 			}
 			
 		}

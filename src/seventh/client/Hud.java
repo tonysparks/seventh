@@ -292,6 +292,8 @@ public class Hud implements Renderable {
 		
 		drawScore(canvas);
 		
+		drawPlayersRemaining(canvas);
+		
 		drawClock(canvas);
 		
 		drawSpectating(canvas);
@@ -308,6 +310,8 @@ public class Hud implements Renderable {
 			}
 			
 		}
+		
+		
 		
 		
 		drawBombProgressBar(canvas, camera);
@@ -370,6 +374,43 @@ public class Hud implements Renderable {
 				
 		txt = scoreboard.getAxisScore() + "";
 		RenderFont.drawShadedString(canvas, txt, x + 4, y, 0xffffffff);
+	}
+	
+	private void drawPlayersRemaining(Canvas canvas) {
+		seventh.game.type.GameType.Type type = game.getGameType();
+		if(type!=null && type.equals(seventh.game.type.GameType.Type.OBJ)) {
+			int numberOfAxisAlive = 0;
+			int numberOfAlliedAlive = 0;
+			
+			ClientPlayers players = game.getPlayers();
+			for(int i = 0; i < players.getMaxNumberOfPlayers(); i++) {
+				ClientPlayer player = players.getPlayer(i);
+				if(player!=null) {
+					if(player.isAlive()) {
+						if(player.getTeam()==ClientTeam.ALLIES) {
+							numberOfAlliedAlive++;
+						}
+						else {
+							numberOfAxisAlive++;
+						}
+					}
+				}
+			}
+
+			int x = 200;
+			int y = canvas.getHeight() - 40;
+			
+			canvas.fillCircle(14, x + 2, y + 2, 0xff000000);
+			canvas.fillCircle(13, x + 3, y + 3, 0xffffffff);
+			canvas.drawImage(Art.alliedIcon, x, y, null);
+			RenderFont.drawShadedString(canvas, Integer.toString(numberOfAlliedAlive), x + 40, y + 20, ClientTeam.ALLIES.getColor());
+			
+			x += 70;
+			
+			canvas.fillCircle(13, x + 3, y + 3, 0xffffffff);
+			canvas.drawImage(Art.axisIcon, x, y, null);
+			RenderFont.drawShadedString(canvas, Integer.toString(numberOfAxisAlive), x + 40, y + 20, ClientTeam.AXIS.getColor());
+		}
 	}
 	
 	private void drawClock(Canvas canvas) {
