@@ -50,10 +50,10 @@ public interface WeaponConstants {
 	 */
 	public static final int TANK_DEFAULT_LINE_OF_SIGHT = 300;
 	public static final int TANK_MOVEMENT_SPEED = 90; // 50
-	public static final int TANK_WIDTH = 145;
-	public static final int TANK_HEIGHT = 110;
-	public static final int TANK_AABB_WIDTH = 200;
-	public static final int TANK_AABB_HEIGHT = 200;
+	public static final int TANK_WIDTH = 225; //145
+	public static final int TANK_HEIGHT = 145;//110
+	public static final int TANK_AABB_WIDTH = 240; 
+	public static final int TANK_AABB_HEIGHT = 240;
 	
 	/**
 	 * Number of pixels the player must be away in order

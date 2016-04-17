@@ -116,7 +116,7 @@ public class Tank extends Vehicle {
 				float x = ownerDir.y * 5.0f;
 				float y = -ownerDir.x * 5.0f;
 
-				Vector2f.Vector2fMA(ownerPos, ownerDir, 105.0f, pos);
+				Vector2f.Vector2fMA(ownerPos, ownerDir, 145.0f, pos);
 
 				pos.x += x;
 				pos.y += y;
@@ -638,6 +638,14 @@ public class Tank extends Vehicle {
 		}
 		
 	}
+	
+	
+	/**
+	 * Set this tank to destroyed
+	 */
+	public void disable() {
+		this.currentState = State.DESTROYED;
+	}
 
 	
 	/* (non-Javadoc)
@@ -653,6 +661,22 @@ public class Tank extends Vehicle {
 		if(hasOperator()) {
 			getOperator().kill(killer);
 		}
+	}
+	
+	public void setOrientationNow(float orientation) {
+		final float fullCircle = FastMath.fullCircle;
+		if(this.orientation < 0) {
+			this.orientation += fullCircle;
+		}
+		this.orientation = orientation;
+	}
+	
+	public void setTurretOrientationNow(float desiredOrientation) {
+		final float fullCircle = FastMath.fullCircle;
+		if(desiredOrientation < 0) {
+			desiredOrientation += fullCircle;
+		}
+		this.turretOrientation = desiredOrientation;
 	}
 	
 	/*

@@ -186,8 +186,8 @@ public class TankSprite implements Renderable {
 		float rx = Math.round((pos.x - cameraPos.x) - (bounds.width/2.0f) + WeaponConstants.TANK_WIDTH/2f);
 		float ry = Math.round((pos.y - cameraPos.y) - (bounds.height/2.0f) + WeaponConstants.TANK_HEIGHT/2f);				
 		
-		rx = Math.round((pos.x-40f) - cameraPos.x);
-		ry = Math.round((pos.y+40f) - cameraPos.y);
+		rx = Math.round((pos.x-10f) - cameraPos.x);
+		ry = Math.round((pos.y+60f) - cameraPos.y);
 		
 		float trackAngle = (float) (Math.toDegrees(tank.getOrientation()));
 		
