@@ -64,6 +64,8 @@ public class Art {
 	public static  Model axisSprintModel = null;
 	public static  TextureRegion axisCrouchLegs = null;	
 	
+	public static  TextureRegion alliedIcon = null;
+	public static  TextureRegion axisIcon = null;
 	
 	public static  TextureRegion shotgunIcon = null;
 	public static  TextureRegion rocketIcon = null;	
@@ -315,6 +317,9 @@ public class Art {
 		
 		alliedFlagImg = loadImage("./assets/gfx/allied_flag.png");
 		axisFlagImg = loadImage("./assets/gfx/axis_flag.png");
+		
+		alliedIcon = loadImage("./assets/gfx/allied_icon.png");
+		axisIcon = loadImage("./assets/gfx/axis_icon.png");
 	}
 
 	
