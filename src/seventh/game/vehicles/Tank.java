@@ -663,12 +663,14 @@ public class Tank extends Vehicle {
 		}
 	}
 	
-	public void setOrientationNow(float orientation) {
+	public void setOrientationNow(float desiredOrientation) {
 		final float fullCircle = FastMath.fullCircle;
-		if(this.orientation < 0) {
-			this.orientation += fullCircle;
+		if(desiredOrientation < 0) {
+			desiredOrientation += fullCircle;
 		}
-		this.orientation = orientation;
+		this.orientation = desiredOrientation;
+						
+		syncOOB(this.orientation, pos);
 	}
 	
 	public void setTurretOrientationNow(float desiredOrientation) {
