@@ -278,7 +278,8 @@ public class TiledMapLoader implements MapLoader {
 			TextureRegion[] images = null;
 												
 			if(loadImages) {
-				image = TextureUtil.loadImage(tileset.getString("image"));
+				final String imagePath = tileset.getString("image");
+				image = TextureUtil.loadImage(imagePath);
 				image.flip(false, true);
 				images = TextureUtil.toTileSet(image, tilewidth, tileheight, margin, spacing);			
 			}
