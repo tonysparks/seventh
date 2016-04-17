@@ -167,9 +167,6 @@ public class CameraController implements Updatable {
 	 * @param keys
 	 */
 	public void applyPlayerInput(float mx, float my, int keys) {
-		applyPlayerMouseInput(mx, my);
-		
-		
 		if(Keys.UP.isDown(keys)) {
 			playerVelocity.y = -1;			 
 		}
@@ -190,6 +187,9 @@ public class CameraController implements Updatable {
 			playerVelocity.x = 0;
 		}
 
+		
+		applyPlayerMouseInput(mx, my);
+		
 		if(Keys.SPRINT.isDown(keys)) {
 		    if(isCameraRoaming()) {
 //		        setFastFreeformCameraSpeed();
