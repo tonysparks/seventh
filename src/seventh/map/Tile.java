@@ -1421,14 +1421,20 @@ public class Tile implements Renderable {
     }
     
     public void setFlippedHorizontally(boolean isFlipped) {
+    	if(this.sprite==null) return;
+    	
     	this.sprite.setFlip(isFlipped, this.sprite.isFlipY());
     }
     
     public void setFlippedVertially(boolean isFlipped) {
+    	if(this.sprite==null) return;
+    	
     	this.sprite.setFlip(this.sprite.isFlipX(), !isFlipped);
     }
             
     public void setFlips(boolean isFlippedHorizontal, boolean isFlippedVert, boolean isFlippedDiagnally) {
+    	if(this.sprite==null) return;
+    	
     	if(isFlippedDiagnally) {
     		if(isFlippedHorizontal && isFlippedVert) {
     			this.sprite.flip(true, false);
