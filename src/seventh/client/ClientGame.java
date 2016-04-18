@@ -862,6 +862,9 @@ public class ClientGame {
 				rocketTrail.start();
 				
 				gameEffects.addForegroundEffect(rocketTrail);
+				
+				cameraController.shakeCamera(pos);
+				
 				break;
 			}
 			case NAPALM_GRENADE:
