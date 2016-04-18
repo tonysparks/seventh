@@ -152,7 +152,7 @@ public class ClientGameEffects {
 	 */
 	public void addExplosion(ClientGame game, int index, Vector2f pos) {
 		//explosions.activate(index, pos);
-		this.backgroundEffects.addEffect(new Explosion(game, pos));
+		this.foregroundEffects.addEffect(new Explosion(game, pos));
 	}
 
 	/**
