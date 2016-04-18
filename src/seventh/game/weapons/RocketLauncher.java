@@ -38,6 +38,13 @@ public class RocketLauncher extends Weapon {
 		applyScriptAttributes("rocket_launcher");
 	}
 
+	/**
+	 * Emits the fire rocket sound
+	 */
+	protected void emitFireSound() {
+		game.emitSound(getOwnerId(), SoundType.RPG_FIRE, getPos());
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see seventh.game.weapons.Weapon#beginFire()
@@ -46,7 +53,7 @@ public class RocketLauncher extends Weapon {
 	public boolean beginFire() {
 		if(canFire()) {
 			newRocket();
-			game.emitSound(getOwnerId(), SoundType.RPG_FIRE, getPos());
+			emitFireSound();
 			
 			bulletsInClip--;
 			weaponTime = 1500;
