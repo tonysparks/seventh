@@ -19,6 +19,7 @@ import seventh.shared.TimeStep;
 public class LookAtAction extends AdapterAction {
 	
 	private float destinationOrientation;
+	private Vector2f position;
 	
 	public LookAtAction(float orientation) {
 		this.destinationOrientation = orientation;		
@@ -26,6 +27,13 @@ public class LookAtAction extends AdapterAction {
 	
 	public LookAtAction(Entity entity, Vector2f position) {		
 		reset(entity, position);
+	}
+	
+	/**
+	 * 
+	 */
+	public LookAtAction(Vector2f position) {
+		this.position = position;
 	}
 
 	/**
@@ -49,8 +57,9 @@ public class LookAtAction extends AdapterAction {
 	 */
 	@Override
 	public void start(Brain brain) {				
-		//brain.getEntityOwner().setOrientation(this.destinationOrientation);
-		//this.getActionResult().setSuccess();
+		if(this.position != null) {
+			reset(brain.getEntityOwner(), this.position);			
+		}
 	}
 
 	/* (non-Javadoc)

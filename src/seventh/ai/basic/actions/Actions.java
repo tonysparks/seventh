@@ -36,7 +36,9 @@ import seventh.ai.basic.actions.atom.MoveToVehicleAction;
 import seventh.ai.basic.actions.atom.PlantBombAction;
 import seventh.ai.basic.actions.atom.SecureZoneAction;
 import seventh.ai.basic.actions.atom.SupressFireUntilAction;
+import seventh.ai.basic.actions.atom.body.LookAtAction;
 import seventh.ai.basic.actions.atom.body.MoveAction;
+import seventh.ai.basic.actions.atom.body.ShootAction;
 import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
 import seventh.ai.basic.actions.evaluators.GrenadeEvaluator;
 import seventh.ai.basic.actions.evaluators.MeleeEvaluator;
@@ -83,6 +85,12 @@ public class Actions {
 	  --------------------------------------------------------------------------*/
 	 
 
+	public Action shootAtAction(Vector2f destination) {
+		return new SequencedAction("shootAt")
+				.addNext(new LookAtAction(destination))
+				.addNext(new ShootAction());
+	}
+	
 	public MoveToAction moveToAction(Vector2f destination) {
 		return new MoveToAction(destination);
 	}
