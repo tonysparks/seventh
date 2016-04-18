@@ -34,8 +34,8 @@ public class PanzerTankSprite extends TankSprite {
 //		ry -= 40f;
 //		
 		
-		rx += 15f;
-		ry -= 25f;
+		rx += 10f; //15
+		ry -= 28f; // 25
 		
 		TextureRegion tex = isDestroyed() ? tankTracksDamaged.getCurrentImage() : tankTracks.getCurrentImage();		
 		tankTrack.setRegion(tex);		

@@ -3,12 +3,12 @@
  */
 package seventh.client.gfx;
 
-import seventh.math.Vector2f;
-import seventh.shared.TimeStep;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
+import seventh.math.Vector2f;
+import seventh.shared.TimeStep;
 
 /**
  * @author Tony
@@ -25,7 +25,7 @@ public class TankTrackMarks implements Renderable {
 			this.x = x; 
 			this.y = y;
 			this.orientation = orientation;
-			this.alpha = 0.55f;
+			this.alpha = 0.15f;
 		}
 		
 		public void decay(TimeStep timeStep) {
@@ -58,7 +58,7 @@ public class TankTrackMarks implements Renderable {
 		}
 		
 		
-		this.trackMarkSprite = new Sprite(Art.tankTrackMarks);
+		this.trackMarkSprite = new Sprite(Art.tankTrackMarks);		
 		this.shader = MarkEffectShader.getInstance().getShader();
 		
 		shader.begin();
@@ -107,7 +107,16 @@ public class TankTrackMarks implements Renderable {
 			//canvas.setShader(shader);
 			//canvas.getFrameBuffer().bind(0);
 			//trackMarkSprite.getTexture().bind(1);
+			//int srcFunc = canvas.getSrcBlendFunction();
+			//int dstFunc = canvas.getDstBlendFunction();
+			
+			//canvas.enableBlending();
+			//canvas.setBlendFunction(GL20.GL_ZERO, GL20.GL_BLEND_SRC_RGB );
+			
 			canvas.drawRawSprite(trackMarkSprite);
+			
+			//canvas.setBlendFunction(srcFunc, dstFunc);
+			//canvas.disableBlending();
 			//canvas.flush();
 			//trackMarkSprite.getTexture().bind(0);
 			//canvas.setShader(null);
