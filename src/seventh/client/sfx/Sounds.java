@@ -155,12 +155,15 @@ public class Sounds {
 	public static final int[] tankRevDown = {146};
 	public static final int[] tankTurret = {147};
 	public static final int[] tankMove = {148};
-
-	public static final int[] flagCaptured = {149};
-	public static final int[] flagStolen = {150};
-	public static final int[] flagReturned = {151};
-	public static final int[] enemyFlagCaptured = {152};
-	public static final int[] enemyFlagStolen = {153};
+	public static final int[] tankFire = {149};
+	
+	public static final int[] flagCaptured = {150};
+	public static final int[] flagStolen = {1501};
+	public static final int[] flagReturned = {152};
+	public static final int[] enemyFlagCaptured = {153};
+	public static final int[] enemyFlagStolen = {154};
+	
+	public static final int[] mg42Fire = {155,156};
 	
 	public static final int[][] alliedSpeeches = {
 			alliedSpeechAttack,
@@ -386,12 +389,16 @@ public class Sounds {
             loadSound("./assets/sfx/tank/tank_revdown.wav") ,   // 146
             loadSound("./assets/sfx/tank/tank_turret2.wav") ,   // 147
             loadSound("./assets/sfx/tank/tank_move.wav") ,   // 148
+            loadSound("./assets/sfx/tank/tank_fire.wav") ,   // 149
             
-            loadSound("./assets/sfx/ctf/flag_captured.wav") ,   // 149
-            loadSound("./assets/sfx/ctf/flag_stolen.wav") ,   // 150
-            loadSound("./assets/sfx/ctf/flag_returned.wav") ,   // 151
-            loadSound("./assets/sfx/ctf/enemy_flag_captured.wav") ,   // 152
-            loadSound("./assets/sfx/ctf/enemy_flag_stolen.wav") ,   // 153
+            loadSound("./assets/sfx/ctf/flag_captured.wav") ,   // 150
+            loadSound("./assets/sfx/ctf/flag_stolen.wav") ,   // 151
+            loadSound("./assets/sfx/ctf/flag_returned.wav") ,   // 152
+            loadSound("./assets/sfx/ctf/enemy_flag_captured.wav") ,   // 153
+            loadSound("./assets/sfx/ctf/enemy_flag_stolen.wav") ,   // 154
+            
+            loadSound("./assets/sfx/mg42/mg42_fire01.wav") ,   // 155
+            loadSound("./assets/sfx/mg42/mg42_fire02.wav") ,   // 155
 		};
 	};
 
@@ -888,7 +895,10 @@ public class Sounds {
 			break;					
 		case TANK_MOVE: 
 			sound = tankMove;
-			break;					
+			break;		
+		case TANK_FIRE:
+			sound = tankFire;
+			break;
 		case BREATH_HEAVY: 
 			sound = breadthHeavy;
 			break;
@@ -913,6 +923,9 @@ public class Sounds {
 		case FLAG_STOLEN:
 			sound = flagStolen;
 		    break;
+		case MG42_FIRE:
+			sound = mg42Fire;
+			break;
 		case MUTE:
 			
 		default:
@@ -954,6 +967,16 @@ public class Sounds {
 			case SURFACE_WATER:
 			case SURFACE_SAND:				
 				return damp * 0.22f;
+			case TANK_FIRE:
+			case TANK_IDLE:
+			case TANK_MOVE:
+			case TANK_OFF:
+			case TANK_ON:
+			case TANK_REV_DOWN:
+			case TANK_REV_UP:
+			case TANK_SHIFT:
+			case TANK_TURRET_MOVE:
+				return damp * 1.82f;
 			default:
 		}
 		return damp;
