@@ -16,7 +16,9 @@ import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
+import seventh.math.OOB;
 import seventh.math.Vector2f;
+import seventh.shared.DebugDraw;
 
 
 /**
@@ -37,7 +39,7 @@ public class PathPlanner<E> {
 	private World world;
 	private Brain brain;
 	
-	private List<Tile> tilesToAvoid;
+	private List<Tile> tilesToAvoid, dbg;
 	
 	private Entity isEntityOnTile(Tile tile) {
 		Entity ent = isVehicleOnTile(tile);
@@ -73,7 +75,9 @@ public class PathPlanner<E> {
 	        
 	        Vehicle v = vehicles.get(i);	        
             if(tile.getBounds().intersects(v.getBounds())) {
-                return v;
+            	if(v.getOBB().intersects(tile.getBounds())) {
+            		return v;
+            	}
             }	        	        
 	    }
 	    
@@ -81,7 +85,7 @@ public class PathPlanner<E> {
 	}
 	
 	public static class SearchPath<E> extends AStarGraphSearch<Tile, E> {
-		public List<Tile> tilesToAvoid;
+		public List<Tile> tilesToAvoid = new ArrayList<>();
 		
 		@Override
 		protected int heuristicEstimateDistance(
@@ -104,13 +108,18 @@ public class PathPlanner<E> {
 		
 		@Override
 		protected boolean shouldIgnore(GraphNode<Tile, E> node) {
-			return this.tilesToAvoid.contains(node.getValue());
+			boolean ignore = this.tilesToAvoid.contains(node.getValue());
+			if(ignore) {
+				//System.out.println("Ignoring: " + node.getValue().getXIndex() + "," + node.getValue().getYIndex());
+				return true;
+			}
+			return false;
 		}
 	}
 	
 	public static class AvoidSearchPath<E> extends AStarGraphSearch<Tile,E> {
+		public List<Tile> tilesToAvoid = new ArrayList<>();
 		public List<Zone> zonesToAvoid;
-		public List<Tile> tilesToAvoid;
 		
 		@Override
 		protected int heuristicEstimateDistance(
@@ -174,13 +183,11 @@ public class PathPlanner<E> {
 		
 		this.path = new ArrayList<GraphNode<Tile, E>>();
 		this.tilesToAvoid = new ArrayList<Tile>();
+		this.dbg = new ArrayList<>();
 		this.currentNode = 0;
 		
 		this.fuzzySearchPath = new SearchPath<E>();
-		this.fuzzySearchPath.tilesToAvoid = this.tilesToAvoid;
-		
 		this.avoidSearchPath = new AvoidSearchPath<E>();		
-		this.avoidSearchPath.tilesToAvoid = this.tilesToAvoid;
 	} 
 	
 	private void setPath(List<GraphNode<Tile, E>> newPath) {
@@ -222,6 +229,16 @@ public class PathPlanner<E> {
 	 * @param destination
 	 */
 	public void findPath(Vector2f start, Vector2f destination) {				
+		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
+		setPath(newPath);
+		
+		this.finalDestination.set(destination);
+	}
+	
+	public void findPath(Vector2f start, Vector2f destination, List<Tile> tilesToAvoid) {
+		this.fuzzySearchPath.tilesToAvoid.clear();
+		this.fuzzySearchPath.tilesToAvoid.addAll(tilesToAvoid);
+		
 		List<GraphNode<Tile, E>> newPath = this.graph.findPath(this.fuzzySearchPath, start, destination);
 		setPath(newPath);
 		
@@ -296,6 +313,12 @@ public class PathPlanner<E> {
 		int x = (int)cPos.x;
 		int y = (int)cPos.y;
 		
+		//for(Tile t : dbg) {
+			//DebugDraw.fillRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0xff00ffff);
+			//DebugDraw.drawRectRelative(t.getX(), t.getY(), t.getWidth(), t.getHeight(), 0xffff00ff);
+			//DebugDraw.drawStringRelative("" + t.getXIndex() + "," + t.getYIndex(),t.getX()+16, t.getY()+16, 0xffff00ff);
+		//}
+		
 		nextWaypoint.zeroOut();
 		
 		if(! path.isEmpty() && currentNode < path.size() ) {
@@ -322,8 +345,34 @@ public class PathPlanner<E> {
 					Entity entOnTile = isEntityOnTile(tile);
 					if(entOnTile != null) {						
 						world.getMap().getTilesInRect(entOnTile.getBounds(), tilesToAvoid);
-						tilesToAvoid.add(tile);
-						findPath(cPos, this.finalDestination);
+						System.out.println("Length: " + tilesToAvoid.size());
+						if(entOnTile.getType().isVehicle()) {
+							Vehicle vehicle = (Vehicle) entOnTile;
+							OOB oob = vehicle.getOBB();
+							for(int i = 0; i < tilesToAvoid.size(); ) {
+								Tile t = tilesToAvoid.get(i);
+								if(!oob.intersects(t.getBounds())) {
+									tilesToAvoid.remove(i);
+								}
+								else {
+									i++;
+								}
+							}
+						}
+						
+						// TODO: Problem, we are eliminating Orthonogol tiles, which
+						// makes diagnol movement legal, since it is removed, we 
+						// have to figure out how to make the diagnol movement illegal
+						
+						System.out.println("New Length: " + tilesToAvoid.size());
+						
+						dbg.clear();
+						dbg.addAll(tilesToAvoid);
+						
+						
+						//tilesToAvoid.add(tile);
+						findPath(cPos, this.finalDestination, tilesToAvoid);
+						tilesToAvoid.clear();
 						return nextWaypoint(ent);
 					}
 				}
