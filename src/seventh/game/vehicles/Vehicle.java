@@ -117,6 +117,7 @@ public abstract class Vehicle extends Entity implements Controllable {
 		operateHitBox.y = bounds.y - WeaponConstants.VEHICLE_HITBOX_THRESHOLD/2;
 	}
 	
+	
 	/**
 	 * @return true if this vehicle is moving
 	 */
@@ -187,9 +188,9 @@ public abstract class Vehicle extends Entity implements Controllable {
 		// first check the cheap AABB
 		if(bounds.intersects(other.getBounds())) {
 		
-			if(other instanceof Tank) {
-				Tank otherTank = (Tank)other;
-				return this.vehicleBB.intersects(otherTank.vehicleBB);
+			if(other instanceof Vehicle) {
+				Vehicle otherVehicle = (Vehicle)other;
+				return this.vehicleBB.intersects(otherVehicle.vehicleBB);
 			}
 			else {
 				return this.vehicleBB.intersects(other.getBounds());

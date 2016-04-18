@@ -6,11 +6,11 @@ package seventh.graph;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import seventh.graph.Edges.Directions;
 import seventh.shared.ArrayMap;
 
 /**
@@ -203,14 +203,50 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
             /*
              * For each neighbor (the nodes edges contain the neighbors)
              */
-            Iterator<Edge<E, T>> it = x.edges();
-            while(it.hasNext()) {
-                Edge<E, T> edge = it.next();                
+            Edges<E, T> edges = x.edges();            
+            int skipMask = 0;
+            
+            for(int i = 0; i < edges.size(); i++) {
+                Edge<E,T> edge = edges.get(i);     
+                if(edge == null) {
+                	continue;
+                }
+                
                 GraphNode<E, T> y = edge.getRight();
                 
                 /* If this node has been visited before, ignore it and move on */
-                if ( y == null || closedSet.contains(y) || shouldIgnore(y)) {
+                if ( y == null || closedSet.contains(y)) {
                     continue;
+                }
+                
+                Directions dir = Directions.fromIndex(i);
+                if(shouldIgnore(y)) {
+                	if(Directions.isCardinal(i)) {
+                		switch(dir) {
+	                		case N:
+	                			skipMask |= Directions.NE.getMask();
+	                			skipMask |= Directions.NW.getMask();
+	                			break;
+	                		case E:
+	                			skipMask |= Directions.NE.getMask();
+	                			skipMask |= Directions.SE.getMask();
+	                			break;
+	                		case S:
+	                			skipMask |= Directions.SE.getMask();
+	                			skipMask |= Directions.SW.getMask();
+	                			break;
+	                		case W:	                			
+	                			skipMask |= Directions.NW.getMask();
+	                			skipMask |= Directions.SW.getMask();
+	                			break;
+	                		default:
+                		}
+                	}
+                	continue;
+                }
+                
+                if((dir.getMask() & skipMask) != 0) {
+                	continue;
                 }
                 
                 /* Compile the shortest distance traveled between x and y plus the sum scores*/

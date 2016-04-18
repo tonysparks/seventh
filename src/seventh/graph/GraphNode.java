@@ -3,9 +3,7 @@
  */
 package seventh.graph;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import seventh.graph.Edges.Directions;
 
 /**
  * A node in a graph linked by {@link Edge}s.
@@ -15,7 +13,7 @@ import java.util.List;
  */
 public class GraphNode<E, T> {
 
-    private List<Edge<E,T>> edges;
+    private Edges<E, T> edges;
     private E value;
     
     /**
@@ -24,7 +22,7 @@ public class GraphNode<E, T> {
      * @param value
      */
     public GraphNode(E value) {
-        this.edges = new ArrayList<Edge<E,T>>();
+        this.edges = new Edges<E, T>();
         this.value = value;
     }
     
@@ -42,16 +40,8 @@ public class GraphNode<E, T> {
      * 
      * @param edge
      */
-    public void addEdge(Edge<E,T> edge) {
-        this.edges.add(edge);
-    }
-    
-    /**
-     * Removes an {@link Edge}
-     * @param edge
-     */
-    public void removeEdge(Edge<E,T> edge) {
-        this.edges.remove(edge);
+    public void addEdge(Directions dir, Edge<E,T> edge) {
+        this.edges.addEdge(dir, edge);
     }
     
     /**
@@ -73,8 +63,8 @@ public class GraphNode<E, T> {
      * 
      * @return
      */
-    public Iterator<Edge<E,T>> edges() {
-        return this.edges.iterator();
+    public Edges<E, T> edges() {
+        return this.edges;
     }
     
     /**
@@ -91,10 +81,13 @@ public class GraphNode<E, T> {
         Edge<E,T> result = null;
         
         /* Search for the matching Edge (the one that links the right and left) */
-        Iterator<Edge<E,T>> it = edges();
-        while (it.hasNext()) {
-            Edge<E,T> edge = it.next();
-
+        Edges<E, T> edges = edges();
+        for(int i = 0; i < edges.size(); i++) {
+            Edge<E,T> edge = edges.get(i);
+            if(edge == null) {
+            	continue;
+            }
+        	
             /* Notice we check if the REFERENCE equals the right node */
             if (edge.getRight() == rightNode) {
                 result = edge;

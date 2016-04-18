@@ -5,7 +5,6 @@
 package seventh.graph;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -41,9 +40,13 @@ public class DepthFirstGraphSearch<E,T> implements GraphSearch<E,T> {
             }
             
             /* Search each neighbor for the root */
-            Iterator<Edge<E,T>> it = node.edges();
-            while(it.hasNext()) {
-                Edge<E,T> edge = it.next();
+            Edges<E, T> edges = node.edges();
+            for(int i = 0; i < edges.size(); i++) {            	
+                Edge<E,T> edge = edges.get(i);
+                if(edge == null) {
+                	continue;
+                }
+            	
 
                 /* Search the neighbor node */
                 GraphNode<E,T> rightNode = edge.getRight();

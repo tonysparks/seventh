@@ -13,7 +13,7 @@ import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Bullet;
 import seventh.game.weapons.Explosion;
-import seventh.game.weapons.Railgun;
+import seventh.game.weapons.MG42;
 import seventh.game.weapons.Rocket;
 import seventh.game.weapons.RocketLauncher;
 import seventh.game.weapons.Weapon;
@@ -106,6 +106,20 @@ public class Tank extends Vehicle {
 		this.primaryWeapon = new RocketLauncher(game, this) {
 
 			@Override
+			protected void emitFireSound() {
+				game.emitSound(getOwnerId(), SoundType.TANK_FIRE, getPos());
+			}
+			
+			@Override
+			public boolean beginFire() {			
+				boolean isFired = super.beginFire();
+				if(isFired) {
+					weaponTime = 3_000;
+				}
+				return isFired;
+			}
+			
+			@Override
 			protected Vector2f newRocketPosition() {
 				this.bulletsInClip = 500;
 
@@ -139,7 +153,7 @@ public class Tank extends Vehicle {
 			}
 		};
 		
-		this.secondaryWeapon = new Railgun(game, this) {
+		this.secondaryWeapon = new MG42(game, this) {
 
 			@Override
 			protected Vector2f newBulletPosition() {				
@@ -150,7 +164,7 @@ public class Tank extends Vehicle {
 				float x = ownerDir.y * 1.0f;
 				float y = -ownerDir.x * 1.0f;
 
-				Vector2f.Vector2fMA(ownerPos, ownerDir, 105.0f, pos);
+				Vector2f.Vector2fMA(ownerPos, ownerDir, 145.0f, pos);
 
 				pos.x += x;
 				pos.y += y;
@@ -230,6 +244,17 @@ public class Tank extends Vehicle {
 	@Override
 	public boolean update(TimeStep timeStep) {
 
+		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
+		DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
+		DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
+		DebugDraw.fillRectRelative((int)vehicleBB.topLeft.x, (int)vehicleBB.topLeft.y, 5, 5, 0xff1f0000);
+		DebugDraw.fillRectRelative((int)vehicleBB.topRight.x, (int)vehicleBB.topRight.y, 5, 5, 0xffff0000);
+		DebugDraw.fillRectRelative((int)vehicleBB.bottomLeft.x, (int)vehicleBB.bottomLeft.y, 5, 5, 0xff001f00);
+		DebugDraw.fillRectRelative((int)vehicleBB.bottomRight.x, (int)vehicleBB.bottomRight.y, 5, 5, 0xff00ff00);
+		
+		DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
+		DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
+		
 		if(isDestroyed()) {
 			return false;
 		}
@@ -262,17 +287,6 @@ public class Tank extends Vehicle {
 		updateOperateHitBox();
 	
 		syncOOB(orientation, pos);
-
-		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
-		DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
-		DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
-		DebugDraw.fillRectRelative((int)vehicleBB.topLeft.x, (int)vehicleBB.topLeft.y, 5, 5, 0xff1f0000);
-		DebugDraw.fillRectRelative((int)vehicleBB.topRight.x, (int)vehicleBB.topRight.y, 5, 5, 0xffff0000);
-		DebugDraw.fillRectRelative((int)vehicleBB.bottomLeft.x, (int)vehicleBB.bottomLeft.y, 5, 5, 0xff001f00);
-		DebugDraw.fillRectRelative((int)vehicleBB.bottomRight.x, (int)vehicleBB.bottomRight.y, 5, 5, 0xff00ff00);
-		
-		DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
-		DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
 		
 		return isBlocked;
 	}
@@ -284,6 +298,7 @@ public class Tank extends Vehicle {
 			
 			if(this.explosionTimer.isTime()) {
 				game.newBigExplosion(getCenterPos(), this, 20, 50, 100);
+				game.newBigExplosion(getPos(), this, 20, 50, 100);
 			}
 			
 			if(this.blowupTimer.isTime()) {
@@ -373,10 +388,16 @@ public class Tank extends Vehicle {
 					}
 									
 				}
-	//			else if(collidesAgainstVehicle(bounds)) {
-	//				bounds.x = (int)pos.x;				
-	//				isBlocked = true;
-	//			}
+				
+				if(!isBlocked) {
+					vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
+					if(collidesAgainstVehicle(bounds)) {				
+						bounds.x = (int)pos.x;				
+						isBlocked = true;
+						isXBlocked = true;
+					}
+				}
+				
 				
 				
 				bounds.y = (int)newY;
@@ -388,10 +409,15 @@ public class Tank extends Vehicle {
 						isYBlocked = true;
 					}
 				}
-	//			else if(collidesAgainstVehicle(bounds)) {				
-	//				bounds.y = (int)pos.y;
-	//				isBlocked = true;
-	//			}
+								
+				if(!isBlocked) {
+					vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
+					if(collidesAgainstVehicle(bounds)) {				
+						bounds.y = (int)pos.y;				
+						isBlocked = true;
+						isYBlocked = true;
+					}
+				}
 				
 	
 				/* some things want to stop dead it their tracks
@@ -473,7 +499,7 @@ public class Tank extends Vehicle {
 			
 		}
 		
-		return collides;
+		return false;
 	}
 	
 	protected void updateOrientation(TimeStep timeStep) {
@@ -495,11 +521,11 @@ public class Tank extends Vehicle {
 			float newOrientation = this.desiredOrientation;
 			
 			Map map = game.getMap();
-			if(map.rectCollides(bounds)) {
+			if(map.rectCollides(bounds) || collidesAgainstVehicle(bounds)) {
 				
 				this.vehicleBB.rotateTo(newOrientation);
 				
-				if(map.rectCollides(vehicleBB)) {
+				if(map.rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {
 					newOrientation = orientation;
 					
 					desiredOrientation = orientation;
@@ -510,7 +536,7 @@ public class Tank extends Vehicle {
 						totalAmountAdjusted += adjustAmount;
 						this.vehicleBB.rotateTo(newOrientation);						
 					}
-					while(map.rectCollides(vehicleBB) && (Math.abs(totalAmountAdjusted) < Math.abs(deltaMove)));
+					while((map.rectCollides(vehicleBB)||collidesAgainstVehicle(bounds)) && (Math.abs(totalAmountAdjusted) < Math.abs(deltaMove)));
 				}
 			}
 			
@@ -623,7 +649,7 @@ public class Tank extends Vehicle {
 			amount = 1;
 		} 
 		else if(damager instanceof Rocket) {
-			amount /= 2;
+			//amount /= 2;
 		} else if (damager instanceof Bullet) {
 			amount = 0;
 		}

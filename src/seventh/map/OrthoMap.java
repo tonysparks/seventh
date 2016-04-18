@@ -13,6 +13,7 @@ import seventh.client.gfx.Canvas;
 import seventh.client.gfx.ShadeTiles;
 import seventh.graph.Edge;
 import seventh.graph.GraphNode;
+import seventh.graph.Edges.Directions;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.OOB;
 import seventh.math.Rectangle;
@@ -838,29 +839,29 @@ public class OrthoMap implements Map {
 				GraphNode<Tile, E> w = null;
 				if(x>0) w = nodes[y][x - 1];
 				
-				if (nw != null && (n!=null||w!=null) ) {
-					node.addEdge(new Edge<Tile, E>(node, nw, factory.createEdgeData(this, node, nw)));
-				}
 				if (n != null) {
-					node.addEdge(new Edge<Tile, E>(node, n, factory.createEdgeData(this, node, n)));
+					node.addEdge(Directions.N, new Edge<Tile, E>(node, n, factory.createEdgeData(this, node, n)));
 				}
 				if (ne != null && (n!=null||e!=null)) {
-					node.addEdge(new Edge<Tile, E>(node, ne, factory.createEdgeData(this, node, ne)));
+					node.addEdge(Directions.NE, new Edge<Tile, E>(node, ne, factory.createEdgeData(this, node, ne)));
 				}
 				if (e != null) {
-					node.addEdge(new Edge<Tile, E>(node, e, factory.createEdgeData(this, node, e)));
+					node.addEdge(Directions.E, new Edge<Tile, E>(node, e, factory.createEdgeData(this, node, e)));
 				}
 				if (se != null && (s!=null||e!=null)) {
-					node.addEdge(new Edge<Tile, E>(node, se, factory.createEdgeData(this, node, se)));
+					node.addEdge(Directions.SE, new Edge<Tile, E>(node, se, factory.createEdgeData(this, node, se)));
 				}
 				if (s != null) {
-					node.addEdge(new Edge<Tile, E>(node, s, factory.createEdgeData(this, node, s)));
+					node.addEdge(Directions.S, new Edge<Tile, E>(node, s, factory.createEdgeData(this, node, s)));
 				}
 				if (sw != null && (s!=null||w!=null)) {
-					node.addEdge(new Edge<Tile, E>(node, sw, factory.createEdgeData(this, node, sw)));
+					node.addEdge(Directions.SW, new Edge<Tile, E>(node, sw, factory.createEdgeData(this, node, sw)));
 				}
 				if (w != null) {
-					node.addEdge(new Edge<Tile, E>(node, w, factory.createEdgeData(this, node, w)));
+					node.addEdge(Directions.W, new Edge<Tile, E>(node, w, factory.createEdgeData(this, node, w)));
+				}
+				if (nw != null && (n!=null||w!=null) ) {
+					node.addEdge(Directions.NW, new Edge<Tile, E>(node, nw, factory.createEdgeData(this, node, nw)));
 				}
 			}
 		}			

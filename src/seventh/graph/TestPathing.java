@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import seventh.graph.Edges.Directions;
 import seventh.graph.GraphSearch.SearchCondition;
 
 /**
@@ -192,28 +193,28 @@ public class TestPathing {
 			GraphNode<NodeData, EdgeData> w = nodes.get(new NodeData(data.x - 1, data.y));
 			
 			if (nw != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, nw, new EdgeData()));
+				node.addEdge(Directions.NW, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, nw, new EdgeData()));
 			}
 			if (n != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, n, new EdgeData()));
+				node.addEdge(Directions.N, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, n, new EdgeData()));
 			}
 			if (ne != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, ne, new EdgeData()));
+				node.addEdge(Directions.NE, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, ne, new EdgeData()));
 			}
 			if (e != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, e, new EdgeData()));
+				node.addEdge(Directions.E, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, e, new EdgeData()));
 			}
 			if (se != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, se, new EdgeData()));
+				node.addEdge(Directions.SE, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, se, new EdgeData()));
 			}
 			if (s != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, s, new EdgeData()));
+				node.addEdge(Directions.S, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, s, new EdgeData()));
 			}
 			if (sw != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, sw, new EdgeData()));
+				node.addEdge(Directions.SW, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, sw, new EdgeData()));
 			}
 			if (w != null) {
-				node.addEdge(new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, w, new EdgeData()));
+				node.addEdge(Directions.W, new Edge<TestPathing.NodeData, TestPathing.EdgeData>(node, w, new EdgeData()));
 			}
 		}
 		
