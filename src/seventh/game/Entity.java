@@ -138,7 +138,7 @@ public abstract class Entity implements Debugable {
 		NAPALM_GRENADE,
 		PISTOL,
 		
-		RAILGUN,
+		MG42,
 		
 		BOMB,
 		BOMB_TARGET,
