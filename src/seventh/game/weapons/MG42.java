@@ -18,7 +18,7 @@ import seventh.shared.WeaponConstants;
  * @author Tony
  *
  */
-public class Railgun extends Weapon {
+public class MG42 extends Weapon {
 
 
 	private int roundsPerSecond;
@@ -32,8 +32,8 @@ public class Railgun extends Weapon {
 	 * @param owner
 	 * @param type
 	 */
-	public Railgun(Game game, Entity owner) {
-		super(game, owner, Type.RAILGUN);
+	public MG42(Game game, Entity owner) {
+		super(game, owner, Type.MG42);
 		
 		this.roundsPerSecond = 15;
 		this.damage = 40;
@@ -46,7 +46,7 @@ public class Railgun extends Weapon {
 		this.lineOfSight = WeaponConstants.THOMPSON_LINE_OF_SIGHT;
 		this.weaponWeight = WeaponConstants.THOMPSON_WEIGHT;
 		
-		this.netWeapon.type = Type.RAILGUN.netValue();
+		this.netWeapon.type = Type.MG42.netValue();
 		
 		applyScriptAttributes("railgun");
 	}
@@ -101,7 +101,7 @@ public class Railgun extends Weapon {
 	public boolean beginFire() {
 		if(canFire() && !isOverheated()) {
 			newBullet();
-			game.emitSound(getOwnerId(), SoundType.KAR98_FIRE, getPos());
+			game.emitSound(getOwnerId(), SoundType.MG42_FIRE, getPos());
 			
 			weaponTime = 1000/roundsPerSecond;
 			

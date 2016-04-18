@@ -98,7 +98,7 @@ public class Evaluators {
 				case MP44:
 					score = 0.8;
 					break;				
-				case RAILGUN:
+				case MG42:
 					score = 0.8;
 					break;
 				case RISKER:
