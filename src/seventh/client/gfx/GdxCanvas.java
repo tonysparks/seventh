@@ -882,4 +882,43 @@ public class GdxCanvas implements Canvas {
 	public void popZoom() {
 	}
 
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#enableBlending()
+	 */
+	@Override
+	public void enableBlending() {
+		this.batch.enableBlending();
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#disableBlending()
+	 */
+	@Override
+	public void disableBlending() {
+		this.batch.disableBlending();
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#setBlendFunction(int, int)
+	 */
+	@Override
+	public void setBlendFunction(int srcFunc, int dstFunc) {
+		this.batch.setBlendFunction(srcFunc, dstFunc);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#getSrcBlendFunction()
+	 */
+	@Override
+	public int getSrcBlendFunction() {
+		return this.batch.getBlendSrcFunc();
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#getDstBlendFunction()
+	 */
+	@Override
+	public int getDstBlendFunction() {
+		return this.batch.getBlendDstFunc();
+	}
 }

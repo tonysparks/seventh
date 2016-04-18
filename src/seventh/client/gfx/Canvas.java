@@ -154,4 +154,9 @@ public interface Canvas {
 	public void setTransform(Matrix4 mat);
 	public void setProjectionMatrix(Matrix4 mat);
 	
+	public void enableBlending();
+	public void disableBlending();
+	public void setBlendFunction(int srcFunc, int dstFunc);
+	public int getSrcBlendFunction();
+	public int getDstBlendFunction();
 }
