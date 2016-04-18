@@ -17,18 +17,22 @@ public class AIShortcuts {
     private int[] shortcuts;
     private boolean[] isDown;
     private boolean isMouseButtonDown;
+    private boolean isMouseButton2Down;
     
     private List<AIShortcut> commands;
     private AIShortcut hotCommand;
+    private AIShortcut secondaryHotCommand;
     
     private KeyMap keyMap;
     /**
      * 
      */
-    public AIShortcuts(KeyMap keyMap, List<AIShortcut> commands, AIShortcut hotCommand) {
+    public AIShortcuts(KeyMap keyMap, List<AIShortcut> commands, AIShortcut hotCommand, AIShortcut secondaryHotCommand) {
     	this.keyMap = keyMap;
         this.commands = commands;
         this.hotCommand = hotCommand;
+        this.secondaryHotCommand = secondaryHotCommand;
+        
         this.shortcuts = new int[commands.size()];
         this.isDown = new boolean[this.shortcuts.length];
         
@@ -66,20 +70,27 @@ public class AIShortcuts {
                 this.isDown[i] = false;
             }
         }
-        boolean isMouseButtonDown = inputs.isButtonDown(keyMap.getFireKey());
-        if(isMouseButtonDown) {
-        	this.isMouseButtonDown = true;
-        }
         
-        if(this.isMouseButtonDown && !isMouseButtonDown) {
-        	this.hotCommand.execute(console, game);
-        }
-        
-        if(!isMouseButtonDown) {
-        	this.isMouseButtonDown = false;
-        }
-        
+        this.isMouseButtonDown = checkHotKey(this.hotCommand, this.isMouseButtonDown, inputs.isButtonDown(keyMap.getFireKey()), console, game);
+        this.isMouseButton2Down = checkHotKey(this.secondaryHotCommand, this.isMouseButton2Down, inputs.isButtonDown(keyMap.getThrowGrenadeKey()), console, game);
+                
         return result;
+    }
+    
+    private boolean checkHotKey(AIShortcut hotCommand, boolean wasDown, boolean isDown, Console console, ClientGame game) {
+    	if(isDown) {
+    		wasDown = true;
+        }
+        
+        if(wasDown && !isDown) {
+        	hotCommand.execute(console, game);
+        }
+        
+        if(!isDown) {
+        	wasDown = false;
+        }
+        
+        return wasDown;
     }
     
     public static class FollowMeAIShortcut extends AIShortcut {
@@ -153,7 +164,6 @@ public class AIShortcuts {
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
-                System.out.println("MOving here: " + worldPosition);
                 console.execute("ai " + botId + " moveTo " + (int)worldPosition.x + " " + (int)worldPosition.y);
                 console.execute("team_say " + players.getPlayer(botId).getName() + " take cover here!" );
                // console.execute("speech " + 5);
