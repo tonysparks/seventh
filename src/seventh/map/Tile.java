@@ -11,7 +11,7 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
 import seventh.math.Circle;
-import seventh.math.OOB;
+import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Triangle;
 import seventh.shared.TimeStep;
@@ -79,7 +79,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {			
+			public boolean rectCollide(Rectangle a, OBB oob) {			
 				return false;
 			}
 			
@@ -96,7 +96,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {			
+			public boolean rectCollide(Rectangle a, OBB oob) {			
 				return true;
 			}
 			
@@ -115,7 +115,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				a.width /= 2;
 				return oob.intersects(a);
 			}
@@ -135,7 +135,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				a.x += (a.width/2);
 				a.width /= 2;
 				return oob.intersects(a);
@@ -158,7 +158,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				a.height /= 2;
 				return oob.intersects(a);
 			}
@@ -180,7 +180,7 @@ public class Tile implements Renderable {
 			
 
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				a.y += (a.height/2);
 				a.height /= 2;
 				return oob.intersects(a);
@@ -212,7 +212,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				int height = a.height;
 								
 				a.height /= 2;
@@ -263,7 +263,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				int width = a.width;
 				int height = a.height;
 								
@@ -318,7 +318,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				int height = a.height;
 								
 				a.height /= 2;
@@ -374,7 +374,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB b) {										
+			public boolean rectCollide(Rectangle a, OBB b) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -423,7 +423,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {						
+			public boolean rectCollide(Rectangle a, OBB oob) {						
 				a.height = 5;				
 				return oob.intersects(a);
 				
@@ -445,7 +445,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {						
+			public boolean rectCollide(Rectangle a, OBB oob) {						
 				a.y += a.height - 5;
 				a.height = 5;					
 				return oob.intersects(a);
@@ -468,7 +468,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				a.width = 5;					
 				return oob.intersects(a);
 				
@@ -490,7 +490,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				a.x += a.width - 5;
 				a.width = 5;					
 				return oob.intersects(a);
@@ -527,7 +527,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -587,7 +587,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -647,7 +647,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -707,7 +707,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -768,7 +768,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -828,7 +828,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -881,7 +881,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -917,7 +917,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -953,7 +953,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -989,7 +989,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				int ax = a.x;
 				int ay = a.y;
 				int width = a.width;
@@ -1021,7 +1021,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {										
+			public boolean rectCollide(Rectangle a, OBB oob) {										
 				a.x += a.width/2;
 				a.width = 5;						
 				return oob.intersects(a);
@@ -1046,7 +1046,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				a.y += a.height/2;
 				a.height = 5;						
 				return oob.intersects(a);
@@ -1076,7 +1076,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				return true;
 			}
 			
@@ -1108,7 +1108,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				return true;
 			}
 			
@@ -1140,7 +1140,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				return true;
 			}
 			
@@ -1172,7 +1172,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				return true;
 			}
 			
@@ -1201,7 +1201,7 @@ public class Tile implements Renderable {
 			}
 			
 			@Override
-			public boolean rectCollide(Rectangle a, OOB oob) {
+			public boolean rectCollide(Rectangle a, OBB oob) {
 				return true;
 			}
 			
@@ -1226,7 +1226,7 @@ public class Tile implements Renderable {
 //		public abstract void setBounds(Rectangle rect);
 		
 		public abstract boolean rectCollide(Rectangle a, Rectangle b);
-		public abstract boolean rectCollide(Rectangle a, OOB oob);
+		public abstract boolean rectCollide(Rectangle a, OBB oob);
 		public abstract boolean pointCollide(Rectangle a, int x, int y);
 		
 		

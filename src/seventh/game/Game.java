@@ -60,7 +60,7 @@ import seventh.map.Layer.LayerTileIterator;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
-import seventh.math.OOB;
+import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.AICommandMessage;
@@ -837,7 +837,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		return pos;
 	}
 	
-	public Vector2f findFreeRandomSpotNotIn(Entity entity, Rectangle bounds, OOB notIn) {
+	public Vector2f findFreeRandomSpotNotIn(Entity entity, Rectangle bounds, OBB notIn) {
 		Vector2f pos = new Vector2f(bounds.x+random.nextInt(bounds.width), bounds.y+random.nextInt(bounds.height));
 		Rectangle temp = new Rectangle(entity.getBounds());
 		temp.setLocation(pos);

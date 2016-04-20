@@ -10,7 +10,7 @@ package seventh.math;
  * @author Tony
  *
  */
-public class OOB {
+public class OBB {
 
 	public float width;
 	public float height;
@@ -23,7 +23,7 @@ public class OOB {
 	/**
 	 * Defaults to nothing
 	 */
-    public OOB() {
+    public OBB() {
         this(0, new Vector2f(), 0, 0);
     }
 	
@@ -32,7 +32,7 @@ public class OOB {
      * 
      * @param r
      */
-	public OOB(Rectangle r) {
+	public OBB(Rectangle r) {
 	    this(0, new Vector2f(r.x + r.width/2, r.y + r.height/2), r.width, r.height);
 	}
 	
@@ -42,17 +42,17 @@ public class OOB {
 	 * @param orientation
 	 * @param r
 	 */
-	public OOB(float orientation, Rectangle r) {
+	public OBB(float orientation, Rectangle r) {
         this(orientation, new Vector2f(r.x + r.width/2, r.y + r.height/2), r.width, r.height);
     }
 	
 	/**
-	 * Based off of the supplied {@link OOB}
+	 * Based off of the supplied {@link OBB}
 	 * 
-	 * @param oob
+	 * @param obb
 	 */
-	public OOB(OOB oob) {
-	    this(oob.orientation, new Vector2f(oob.center), oob.width, oob.height);
+	public OBB(OBB obb) {
+	    this(obb.orientation, new Vector2f(obb.center), obb.width, obb.height);
 	}
 	
 	/**
@@ -62,7 +62,7 @@ public class OOB {
 	 * @param width
 	 * @param height
 	 */
-	public OOB(float orientation, float cx, float cy, float width, float height) {
+	public OBB(float orientation, float cx, float cy, float width, float height) {
 	    this(orientation, new Vector2f(cx, cy), width, height);
 	}
 	
@@ -72,7 +72,7 @@ public class OOB {
 	 * @param width
 	 * @param height
 	 */
-	public OOB(float orientation, Vector2f center, float width, float height) {
+	public OBB(float orientation, Vector2f center, float width, float height) {
 		this.orientation = orientation;
 		this.center = center;
 		this.width = width;
@@ -87,7 +87,7 @@ public class OOB {
 	}
 	
 	/**
-	 * Updates the {@link OOB}
+	 * Updates the {@link OBB}
 	 * 
 	 * @param newOrientation
 	 * @param center
@@ -228,7 +228,7 @@ public class OOB {
     }
 	
 	/**
-	 * Determines if the supplied point is inside the {@link OOB}
+	 * Determines if the supplied point is inside the {@link OBB}
 	 * 
 	 * @param p
 	 * @return true if the point is inside the OOB
@@ -238,32 +238,37 @@ public class OOB {
 	}
 	
 	/**
-     * Determines if the supplied point is inside the {@link OOB}
+     * Determines if the supplied point is inside the {@link OBB}
      * 
      * @param px
      * @param py
-     * @return true if the point is inside the OOB
+     * @return true if the point is inside the {@link OBB}
      */
     public boolean contains(float px, float py) {
         
         // just do simple contains if there is no rotation
-        if(orientation == 0) {
-            return Math.abs(center.x-px) < width/2 && Math.abs(center.y-py) < height/2;
-        }
-
-        double tx = Math.cos(orientation)*px - Math.sin(orientation)*py;
-        double ty = Math.cos(orientation)*py + Math.sin(orientation)*px;
-
-        double cx = Math.cos(orientation)*center.x - Math.sin(orientation)*center.y;
-        double cy = Math.cos(orientation)*center.y + Math.sin(orientation)*center.x;
-
-        return Math.abs(cx-tx) < width/2 && Math.abs(cy-ty) < height/2;
+//        if(orientation == 0) {
+//            return Math.abs(center.x-px) < width/2 && Math.abs(center.y-py) < height/2;
+//        }
+//
+//        double tx = Math.cos(orientation)*px - Math.sin(orientation)*py;
+//        double ty = Math.cos(orientation)*py + Math.sin(orientation)*px;
+//
+//        double cx = Math.cos(orientation)*center.x - Math.sin(orientation)*center.y;
+//        double cy = Math.cos(orientation)*center.y + Math.sin(orientation)*center.x;
+//
+//        return Math.abs(cx-tx) < width/2 && Math.abs(cy-ty) < height/2;
+    	
+    	double newy = Math.sin(orientation) * (py-center.y) + Math.cos(orientation) * (px - center.x);
+    	double newx = Math.cos(orientation) * (px-center.x) - Math.sin(orientation) * (py - center.y);
+    	return (newy > center.y - height/2f) && (newy < center.y + height/2f) &&
+    		   (newx > center.x - width/2f)  && (newx < center.x + width/2f);
     }
 	
     /**
-     * Determines if the {@link Rectangle} interests with this {@link OOB}
+     * Determines if the {@link Rectangle} interests with this {@link OBB}
      * @param b
-     * @return true if the {@link Rectangle} intersects with this {@link OOB}
+     * @return true if the {@link Rectangle} intersects with this {@link OBB}
      */
     public boolean intersects(Rectangle b) {
     	return // check to see if the OOB corners are within the rectangle
@@ -288,7 +293,7 @@ public class OOB {
     }
 
     public boolean expensiveIntersects(Rectangle b) {
-        return // check to see if the OOB corners are within the rectangle
+        return // check to see if the OBB corners are within the rectangle
                b.contains(topLeft) ||
                b.contains(topRight) ||
                b.contains(bottomLeft) ||
@@ -310,12 +315,12 @@ public class OOB {
     }
     
     /**
-     * Determines if the supplied {@link OOB} intersects this {@link OOB}
+     * Determines if the supplied {@link OBB} intersects this {@link OBB}
      * 
      * @param other
-     * @return true if the two {@link OOB}'s overlap
+     * @return true if the two {@link OBB}'s overlap
      */
-	public boolean intersects(OOB other) {
+	public boolean intersects(OBB other) {
 		return // check the for line intersections
 			   checkLineAgainstOOB(topLeft, topRight, other) ||
 			   checkLineAgainstOOB(topRight, bottomRight, other) ||
@@ -330,13 +335,13 @@ public class OOB {
 		
 	/**
 	 * Probably a more efficient way of doing this, but in general the algorithm
-	 * determines if any of the four corners of either {@link OOB} is contained in the
-	 * other {@link OOB} (and checks the reverse)
+	 * determines if any of the four corners of either {@link OBB} is contained in the
+	 * other {@link OBB} (and checks the reverse)
 	 * 
 	 * @param other
-	 * @return true if any of the supplied {@link OOB} corners are contained in this {@link OOB}
+	 * @return true if any of the supplied {@link OBB} corners are contained in this {@link OBB}
 	 */
-	private boolean hasCornersInside(OOB other) {
+	private boolean hasCornersInside(OBB other) {
 	    return contains(other.topLeft) ||
 	           contains(other.topRight) ||
 	           contains(other.bottomLeft) ||
@@ -345,14 +350,14 @@ public class OOB {
 
 	/**
 	 * Not very efficient means of testing, but tests the supplied line with all of the other lines
-	 * that make up the other {@link OOB}
+	 * that make up the other {@link OBB}
 	 * 
 	 * @param a
 	 * @param b
 	 * @param other
-	 * @return true if the supplied line intersects with one of the lines that make up the {@link OOB}
+	 * @return true if the supplied line intersects with one of the lines that make up the {@link OBB}
 	 */
-	private boolean checkLineAgainstOOB(Vector2f a, Vector2f b, OOB other) {
+	private boolean checkLineAgainstOOB(Vector2f a, Vector2f b, OBB other) {
 		return Line.lineIntersectLine(a, b, other.topLeft, other.topRight) ||
 			   Line.lineIntersectLine(a, b, other.topRight, other.bottomRight) ||
 			   Line.lineIntersectLine(a, b, other.bottomRight, other.bottomLeft) ||
@@ -384,7 +389,7 @@ public class OOB {
     }
 
     public static void main(String[] args) {
-	    OOB a = new OOB( (float)Math.PI/4f, new Vector2f(0,0), 50, 50);
+	    OBB a = new OBB( (float)Math.PI/4f, new Vector2f(0,0), 50, 50);
 	    
 	    
 	    System.out.println(a.contains(1, 1));
@@ -410,7 +415,7 @@ public class OOB {
         printOOB(a);
         
 	    
-	    OOB b = new OOB( a.orientation, new Vector2f(35.355f,35.355f), 50, 50);
+	    OBB b = new OBB( a.orientation, new Vector2f(35.355f,35.355f), 50, 50);
 	    b.translate(1, 1);
 	    b.translate(-1, -1);
 	    printOOB(b);
@@ -418,7 +423,7 @@ public class OOB {
 	    System.out.println("A intersects B: " + a.intersects(b));
 	}
 	
-	private static void printOOB(OOB a) {
+	private static void printOOB(OBB a) {
 	    System.out.printf("C : (%3.1f, %3.1f)  D: %3.1f \n",a.center.x,a.center.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.center));
 	    System.out.printf("TL: (%3.1f, %3.1f)  D: %3.1f \n",a.topLeft.x,a.topLeft.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.topLeft));
         System.out.printf("TR: (%3.1f, %3.1f)  D: %3.1f \n",a.topRight.x,a.topRight.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.topRight));

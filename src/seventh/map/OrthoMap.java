@@ -15,7 +15,7 @@ import seventh.graph.Edge;
 import seventh.graph.GraphNode;
 import seventh.graph.Edges.Directions;
 import seventh.map.Tile.SurfaceType;
-import seventh.math.OOB;
+import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -296,7 +296,7 @@ public class OrthoMap implements Map {
 	 * @see seventh.map.Map#rectCollides(seventh.math.OOB)
 	 */
 	@Override
-	public boolean rectCollides(OOB oob) {
+	public boolean rectCollides(OBB oob) {
 		if(!worldBounds.contains(oob)) {
 			return true;
 		}

@@ -52,6 +52,7 @@ public class Tank extends Vehicle {
 	private float throttle;
 	private float turretOrientation;
 	private float desiredTurretOrientation;		
+	private float lastValidOrientation;
 	
 	private long throttleStartTime;
 	private long throttleWarmupTime;
@@ -490,7 +491,7 @@ public class Tank extends Vehicle {
 				if(collides) {
 					
 					// do a more expensive collision detection
-					if(vehicle.isTouching(this)) {					
+					if(vehicle.isTouching(this)) {	
 						return true;
 					}					
 				}
@@ -505,19 +506,24 @@ public class Tank extends Vehicle {
 	protected void updateOrientation(TimeStep timeStep) {
 		
 		if(this.vel.x > 0 || this.vel.x < 0) {
-			float deltaMove = 0.25f * (float)timeStep.asFraction();
+			float deltaMove = 0.25f * (float)timeStep.asFraction();//0.25
 			if(this.vel.x < 0) {
 				deltaMove *= -1;
 			}
 			
+			this.desiredOrientation = this.orientation;
+			
 			this.desiredOrientation += deltaMove;
 			if(this.desiredOrientation<0) {
-				this.desiredOrientation=FastMath.fullCircle;
+				//float remainder = this.desiredOrientation-FastMath.fullCircle;
+				this.desiredOrientation=FastMath.fullCircle-this.desiredOrientation;
 			}
 			else if(this.desiredOrientation>FastMath.fullCircle) {
-				this.desiredOrientation=0f;
+				float remainder = this.desiredOrientation-FastMath.fullCircle; 
+				this.desiredOrientation=remainder;
 			}
 			
+			//float newOrientation = (float)Math.toRadians(Math.round(Math.toDegrees(this.desiredOrientation)));
 			float newOrientation = this.desiredOrientation;
 			
 			Map map = game.getMap();
@@ -527,21 +533,56 @@ public class Tank extends Vehicle {
 				
 				if(map.rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {
 					newOrientation = orientation;
+					this.vehicleBB.rotateTo(lastValidOrientation);
 					
-					desiredOrientation = orientation;
-					float adjustAmount = 0.001f * ((this.vel.x < 0) ? 1f : -1f);
-					float totalAmountAdjusted = 0f;
-					do {
-						newOrientation += adjustAmount;
-						totalAmountAdjusted += adjustAmount;
-						this.vehicleBB.rotateTo(newOrientation);						
+					if(collidesAgainstVehicle(bounds)) {
+						this.vehicleBB.rotateTo(this.lastValidOrientation);
+						System.out.println("Still collides! " + Math.toDegrees(orientation) + " v " + Math.toDegrees(desiredOrientation) 
+						+ " v " + Math.toDegrees(lastValidOrientation));
 					}
-					while((map.rectCollides(vehicleBB)||collidesAgainstVehicle(bounds)) && (Math.abs(totalAmountAdjusted) < Math.abs(deltaMove)));
+					return;
+					
+					// rewind the move, and let's try to increment
+					// ahead until we collide
+//					desiredOrientation = orientation;
+//					
+//					float adjustAmount = deltaMove / 4.0f;
+//					float totalAmountAdjusted = 0f;
+//					do {
+//
+//						// if we couldn't resolve, do not allow the
+//						// rotation
+//						if( totalAmountAdjusted >= Math.abs(deltaMove) ) {
+//							//newOrientation = this.orientation;
+//							//this.vehicleBB.rotateTo(this.orientation);
+//							System.out.println("Breaking out!!");
+//							break;
+//						}
+//						
+//						this.desiredOrientation += adjustAmount;						
+//						if(this.desiredOrientation<0) {
+//							this.desiredOrientation=FastMath.fullCircle-this.desiredOrientation;
+//						}
+//						else if(this.desiredOrientation>FastMath.fullCircle) {
+//							float remainder = this.desiredOrientation-FastMath.fullCircle; 
+//							this.desiredOrientation=remainder;						
+//						} 
+//											
+//						newOrientation = this.desiredOrientation;
+//						totalAmountAdjusted += Math.abs(adjustAmount);
+//												
+//						this.vehicleBB.rotateTo(this.desiredOrientation);							
+//						System.out.println("Collide: " + Math.toDegrees(this.orientation) + ",  " + Math.toDegrees(this.desiredOrientation));
+//					}
+//					while((map.rectCollides(vehicleBB)||collidesAgainstVehicle(bounds)));
 				}
 			}
 			
+			this.lastValidOrientation = this.orientation;
 			this.orientation = newOrientation;
-	
+			this.desiredOrientation = newOrientation;
+			
+			
 			this.facing.set(1, 0); // make right vector
 			Vector2f.Vector2fRotate(this.facing, orientation, this.facing);
 		}

@@ -15,7 +15,7 @@ import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Weapon;
 import seventh.map.Map;
-import seventh.math.OOB;
+import seventh.math.OBB;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
@@ -39,7 +39,7 @@ public class ClientTank extends ClientVehicle {
 	private ClientGameEffects effects;
 	private Vector2f previousTrackMark;
 	private Vector2f trackMarkOffset;
-	private OOB vehicleOOB;
+	private OBB vehicleOOB;
 	
 	private boolean removeGfx;
 	
@@ -61,7 +61,7 @@ public class ClientTank extends ClientVehicle {
 		this.trackMarkOffset = new Vector2f();
 		this.turretFacing = new Vector2f();
 		
-		this.vehicleOOB = new OOB();
+		this.vehicleOOB = new OBB();
 		this.vehicleOOB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);
 		
 		setOnRemove(new OnRemove() {

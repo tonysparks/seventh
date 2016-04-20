@@ -236,6 +236,7 @@ public class World {
 	 * @return determines if the enemy is in line of fire
 	 */
 	public boolean inLineOfFire(PlayerEntity entity, PlayerEntity target) {
+		// TODO: account for vehicles
 		return !map.lineCollides(entity.getCenterPos(), target.getCenterPos(), entity.getHeightMask());
 	}
 	

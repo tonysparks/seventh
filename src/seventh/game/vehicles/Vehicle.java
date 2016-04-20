@@ -7,7 +7,7 @@ import seventh.game.Controllable;
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.PlayerEntity;
-import seventh.math.OOB;
+import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -23,7 +23,7 @@ import seventh.shared.WeaponConstants;
 public abstract class Vehicle extends Entity implements Controllable {
 	
 	protected final Rectangle operateHitBox;
-	protected final OOB vehicleBB;
+	protected final OBB vehicleBB;
 	
 	private final Vector2f center;
 	protected int aabbWidth, aabbHeight;
@@ -42,7 +42,7 @@ public abstract class Vehicle extends Entity implements Controllable {
 		super(game.getNextPersistantId(), position, speed, game, type);				
 		
 		this.operateHitBox = new Rectangle();
-		this.vehicleBB = new OOB();
+		this.vehicleBB = new OBB();
 		this.center = new Vector2f();
 		
 		this.killTimer = new Timer(false, timeToKill < 0 ? Long.MAX_VALUE : timeToKill);
@@ -89,12 +89,12 @@ public abstract class Vehicle extends Entity implements Controllable {
 	/**
 	 * @return the vehicleBB
 	 */
-	public OOB getOBB() {
+	public OBB getOBB() {
 		return vehicleBB;
 	}
 	
 	/**
-	 * Synchronize the {@link OOB} with the current orientation and position
+	 * Synchronize the {@link OBB} with the current orientation and position
 	 * of the vehicle
 	 * 
 	 * @param orientation

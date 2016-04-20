@@ -16,7 +16,7 @@ import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
-import seventh.math.OOB;
+import seventh.math.OBB;
 import seventh.math.Vector2f;
 import seventh.shared.DebugDraw;
 
@@ -348,7 +348,7 @@ public class PathPlanner<E> {
 						System.out.println("Length: " + tilesToAvoid.size());
 						if(entOnTile.getType().isVehicle()) {
 							Vehicle vehicle = (Vehicle) entOnTile;
-							OOB oob = vehicle.getOBB();
+							OBB oob = vehicle.getOBB();
 							for(int i = 0; i < tilesToAvoid.size(); ) {
 								Tile t = tilesToAvoid.get(i);
 								if(!oob.intersects(t.getBounds())) {
