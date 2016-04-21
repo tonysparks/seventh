@@ -20,6 +20,7 @@ import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
+import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Randomizer;
@@ -644,32 +645,25 @@ public class World {
         
         return this.attackDirections;
     }
-    
-    private void findPath(Zone[] adjacentZones, Vector2f start, Vector2f destination) {
+
+    public void tilesTouchingEntity(Entity entOnTile, List<Tile> tilesToAvoid) {
+    	tilesToAvoid.clear();
     	
-    	Zone targetZone = zones.getZone(destination);
-    	if(targetZone.isHabitable()) {
-    		Zone[] adjacent = zones.getAdjacentZones(targetZone);
-    		if(adjacent != null) {
-	    		for(int i = 0; i < adjacent.length; i++)  {
-	    			Zone zone = adjacent[i];
-	    			if(zone.isHabitable()) {
-	    			//	graph.findPathAvoidZones(searchPath, start, destination, zonesToAvoid)
-	    			}
-	    			
-	    		}
-    		}
-    	}
-    }
-    
-    public void findPath(Vector2f start, Vector2f destination) {
+    	getMap().getTilesInRect(entOnTile.getBounds(), tilesToAvoid);
     	
-    	Zone targetZone = zones.getZone(destination);
-    	if(targetZone.isHabitable()) {
-    		Zone[] adjacent = zones.getAdjacentZones(targetZone);
-    		if(adjacent != null) {
-	    		findPath(adjacent, start, destination);
-    		}
-    	}
+    	if(entOnTile.getType().isVehicle()) {
+			Vehicle vehicle = (Vehicle) entOnTile;
+			OBB oob = vehicle.getOBB();
+			for(int i = 0; i < tilesToAvoid.size(); ) {
+				Tile t = tilesToAvoid.get(i);
+				if(!oob.intersects(t.getBounds())) {
+					tilesToAvoid.remove(i);
+				}
+				else {
+					i++;
+				}
+			}
+		}
     }
+
 }
