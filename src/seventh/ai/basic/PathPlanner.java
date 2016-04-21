@@ -16,9 +16,7 @@ import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
-import seventh.math.OBB;
 import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
 
 
 /**
@@ -39,7 +37,7 @@ public class PathPlanner<E> {
 	private World world;
 	private Brain brain;
 	
-	private List<Tile> tilesToAvoid, dbg;
+	private List<Tile> tilesToAvoid;
 	
 	private Entity isEntityOnTile(Tile tile) {
 		Entity ent = isVehicleOnTile(tile);
@@ -183,7 +181,6 @@ public class PathPlanner<E> {
 		
 		this.path = new ArrayList<GraphNode<Tile, E>>();
 		this.tilesToAvoid = new ArrayList<Tile>();
-		this.dbg = new ArrayList<>();
 		this.currentNode = 0;
 		
 		this.fuzzySearchPath = new SearchPath<E>();
@@ -344,35 +341,11 @@ public class PathPlanner<E> {
 				
 					Entity entOnTile = isEntityOnTile(tile);
 					if(entOnTile != null) {						
-						world.getMap().getTilesInRect(entOnTile.getBounds(), tilesToAvoid);
-						System.out.println("Length: " + tilesToAvoid.size());
-						if(entOnTile.getType().isVehicle()) {
-							Vehicle vehicle = (Vehicle) entOnTile;
-							OBB oob = vehicle.getOBB();
-							for(int i = 0; i < tilesToAvoid.size(); ) {
-								Tile t = tilesToAvoid.get(i);
-								if(!oob.intersects(t.getBounds())) {
-									tilesToAvoid.remove(i);
-								}
-								else {
-									i++;
-								}
-							}
-						}
+						world.tilesTouchingEntity(entOnTile, tilesToAvoid);
 						
-						// TODO: Problem, we are eliminating Orthonogol tiles, which
-						// makes diagnol movement legal, since it is removed, we 
-						// have to figure out how to make the diagnol movement illegal
-						
-						System.out.println("New Length: " + tilesToAvoid.size());
-						
-						dbg.clear();
-						dbg.addAll(tilesToAvoid);
-						
-						
-						//tilesToAvoid.add(tile);
 						findPath(cPos, this.finalDestination, tilesToAvoid);
-						tilesToAvoid.clear();
+
+						
 						return nextWaypoint(ent);
 					}
 				}
