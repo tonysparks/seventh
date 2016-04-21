@@ -256,6 +256,12 @@ public class Tank extends Vehicle {
 		DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
 		DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
 		
+		DebugDraw.drawStringRelative(String.format(" Tracks: %3.2f : %3.2f", Math.toDegrees(this.orientation), Math.toDegrees(this.desiredOrientation)), 
+				(int)getPos().x, (int)getPos().y-20, 0xffff0000);
+		
+		DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.turretOrientation), Math.toDegrees(desiredTurretOrientation)), 
+				getPos(), 0xffff0000);
+		
 		if(isDestroyed()) {
 			return false;
 		}
@@ -506,7 +512,7 @@ public class Tank extends Vehicle {
 	protected void updateOrientation(TimeStep timeStep) {
 		
 		if(this.vel.x > 0 || this.vel.x < 0) {
-			float deltaMove = 0.25f * (float)timeStep.asFraction();//0.25
+			float deltaMove = 0.55f * (float)timeStep.asFraction();
 			if(this.vel.x < 0) {
 				deltaMove *= -1;
 			}
@@ -515,7 +521,6 @@ public class Tank extends Vehicle {
 			
 			this.desiredOrientation += deltaMove;
 			if(this.desiredOrientation<0) {
-				//float remainder = this.desiredOrientation-FastMath.fullCircle;
 				this.desiredOrientation=FastMath.fullCircle-this.desiredOrientation;
 			}
 			else if(this.desiredOrientation>FastMath.fullCircle) {
@@ -523,7 +528,6 @@ public class Tank extends Vehicle {
 				this.desiredOrientation=remainder;
 			}
 			
-			//float newOrientation = (float)Math.toRadians(Math.round(Math.toDegrees(this.desiredOrientation)));
 			float newOrientation = this.desiredOrientation;
 			
 			Map map = game.getMap();
@@ -531,50 +535,10 @@ public class Tank extends Vehicle {
 				
 				this.vehicleBB.rotateTo(newOrientation);
 				
-				if(map.rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {
-					newOrientation = orientation;
-					this.vehicleBB.rotateTo(lastValidOrientation);
-					
-					if(collidesAgainstVehicle(bounds)) {
-						this.vehicleBB.rotateTo(this.lastValidOrientation);
-						System.out.println("Still collides! " + Math.toDegrees(orientation) + " v " + Math.toDegrees(desiredOrientation) 
-						+ " v " + Math.toDegrees(lastValidOrientation));
-					}
+				/* If we collide, then revert back to a valid orientation */
+				if(map.rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {					
+					this.orientation = this.lastValidOrientation;
 					return;
-					
-					// rewind the move, and let's try to increment
-					// ahead until we collide
-//					desiredOrientation = orientation;
-//					
-//					float adjustAmount = deltaMove / 4.0f;
-//					float totalAmountAdjusted = 0f;
-//					do {
-//
-//						// if we couldn't resolve, do not allow the
-//						// rotation
-//						if( totalAmountAdjusted >= Math.abs(deltaMove) ) {
-//							//newOrientation = this.orientation;
-//							//this.vehicleBB.rotateTo(this.orientation);
-//							System.out.println("Breaking out!!");
-//							break;
-//						}
-//						
-//						this.desiredOrientation += adjustAmount;						
-//						if(this.desiredOrientation<0) {
-//							this.desiredOrientation=FastMath.fullCircle-this.desiredOrientation;
-//						}
-//						else if(this.desiredOrientation>FastMath.fullCircle) {
-//							float remainder = this.desiredOrientation-FastMath.fullCircle; 
-//							this.desiredOrientation=remainder;						
-//						} 
-//											
-//						newOrientation = this.desiredOrientation;
-//						totalAmountAdjusted += Math.abs(adjustAmount);
-//												
-//						this.vehicleBB.rotateTo(this.desiredOrientation);							
-//						System.out.println("Collide: " + Math.toDegrees(this.orientation) + ",  " + Math.toDegrees(this.desiredOrientation));
-//					}
-//					while((map.rectCollides(vehicleBB)||collidesAgainstVehicle(bounds)));
 				}
 			}
 			
@@ -613,14 +577,7 @@ public class Tank extends Vehicle {
 			this.turretFacing.set(1, 0); // make right vector
 			Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
 			this.turretRotateSnd.play(game, getId(), SoundType.TANK_TURRET_MOVE, getPos());
-		}
-		
-		
-		DebugDraw.drawStringRelative(String.format(" Tracks: %3.2f : %3.2f", Math.toDegrees(this.orientation), Math.toDegrees(this.desiredOrientation)), 
-				(int)getPos().x, (int)getPos().y-20, 0xffff0000);
-		
-		DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.turretOrientation), Math.toDegrees(desiredTurretOrientation)), 
-				getPos(), 0xffff0000);
+		}		
 	}
 		
 	/**
