@@ -295,6 +295,8 @@ public class Tank extends Vehicle {
 	
 		syncOOB(orientation, pos);
 		
+		game.doesVehicleTouchPlayers(this);
+		
 		return isBlocked;
 	}
 	
@@ -444,9 +446,7 @@ public class Tank extends Vehicle {
 									
 				vel.zeroOut();
 				
-	//			this.walkingTime = WALK_TIME;
-				
-				game.doesVehicleTouchPlayers(this);
+	//			this.walkingTime = WALK_TIME;								
 			}
 		}
 		else {						
