@@ -189,8 +189,11 @@ public class MenuScreen implements Screen {
 				catch (Exception e) {
 					console.println("An error occured with the server: " + e);
 				}
+				finally {
+					console.removeCommand("kill_local_server");
+				}
 			}
-		});
+		}, "local-game-server");
 		
 		gameThread.setDaemon(true);
 		gameThread.start();		

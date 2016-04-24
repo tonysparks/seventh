@@ -118,6 +118,7 @@ public class TestPathing {
 			 */
 			@Override
 			protected int heuristicEstimateDistance(
+					GraphNode<NodeData, EdgeData> startNode,
 					GraphNode<NodeData, EdgeData> currentNode,
 					GraphNode<NodeData, EdgeData> goal) {			
 				int distance = ((currentNode.getValue().x - goal.getValue().x) *

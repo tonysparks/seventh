@@ -89,7 +89,7 @@ public class HeadScanAction extends AdapterAction {
 
 					int numberOfAttackDirs = attackDirections.size();
 					if(this.attackDirectionIndex < 0 || this.attackDirectionIndex>=numberOfAttackDirs 
-							|| this.pickAttackDirectionTime > 2_000) {
+							|| this.pickAttackDirectionTime > 800) {
 
 						int index = this.attackDirectionIndex + this.direction;
 						if(index < 0 || index >= numberOfAttackDirs) {

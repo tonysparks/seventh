@@ -87,21 +87,26 @@ public class PathPlanner<E> {
 		
 		@Override
 		protected int heuristicEstimateDistance(
+				GraphNode<Tile, E> startNode,
 				GraphNode<Tile, E> currentNode,
-				GraphNode<Tile, E> goal) {			
+				GraphNode<Tile, E> goal) {
+			Tile startTile = startNode.getValue();
 			Tile currentTile = currentNode.getValue();
 			Tile goalTile = goal.getValue();
 						
 			int dx = Math.abs(currentTile.getX() - goalTile.getX());
 			int dy = Math.abs(currentTile.getY() - goalTile.getY());						
 			
+			int sdx = Math.abs(startTile.getX() - goalTile.getX());
+			int sdy = Math.abs(startTile.getY() - goalTile.getY());
+			
 			final int D = 1;
 			//final int D2 = 2;
 			
 			//distance = D * (dx+dy) + (D2 - 2 * D) * Math.min(dx, dy);
 			int distance = D * (dx+dy);
-			
-			return distance;//
+			int cross = Math.abs(dx*sdy - sdx*dy);
+			return distance + (cross);//
 		}
 		
 		@Override
@@ -121,6 +126,7 @@ public class PathPlanner<E> {
 		
 		@Override
 		protected int heuristicEstimateDistance(
+				GraphNode<Tile, E> startNode,
 				GraphNode<Tile, E> currentNode,
 				GraphNode<Tile, E> goal) {			
 			Tile currentTile = currentNode.getValue();

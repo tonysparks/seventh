@@ -77,7 +77,7 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
      * @param goal
      * @return
      */
-    protected int heuristicEstimateDistance(GraphNode<E, T> currentNode, GraphNode<E, T> goal) {
+    protected int heuristicEstimateDistance(GraphNode<E, T> startNode, GraphNode<E, T> currentNode, GraphNode<E, T> goal) {
         return 0; /* Make the H value 0, this essentially makes the A* algorithm Dijkstra's algorithm */
     }
     
@@ -175,7 +175,7 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
         openSet.add(start);
         
         gScores.put(start, 0);                                          /* No other possibility, thus 0 to denote optimal path */
-        hScores.put(start, heuristicEstimateDistance(start, goal));     /* Guess the cost from start to goal nodes */
+        hScores.put(start, heuristicEstimateDistance(start, start, goal));     /* Guess the cost from start to goal nodes */
         fScores.put(start, hScores.get(start));                         /* Store the sum of the cost 0 + X = X */
         
         /*
@@ -258,7 +258,7 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
                     openSet.add(y);
                     
                     /* Calculate the heuristic to determine if this direction is the most optimal */
-                    hScores.put(y, heuristicEstimateDistance(y, goal));
+                    hScores.put(y, heuristicEstimateDistance(start, y, goal));
                     tentativeIsBetter = true;
                 }                                   
                 /* The neighbor is waiting to be tested (in the openSet) so test to see if the distance
