@@ -33,6 +33,7 @@ public class BloodParticle extends Particle {
 	public BloodParticle(Vector2f pos, Vector2f vel, int angle, float scale, int timeToLive) {
 		super(pos, vel, timeToLive);
 		
+		this.scale = scale;
 		this.speed = 10;
 		this.angle = (float)angle;
 		this.image = Art.randomBloodspat();
