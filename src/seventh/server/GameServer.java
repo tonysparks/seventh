@@ -754,7 +754,8 @@ public class GameServer {
 			
 			final int maxIterations = 5;
 			final long maxDelta = 250;
-			final long dt = 1000 / serverContext.getConfig().getServerFrameRate();
+			final long frameRate = Math.abs(serverContext.getConfig().getServerFrameRate());
+			final long dt = 1000 / frameRate==0 ? 20 : frameRate;
 
 			final TimeStep timeStep = new TimeStep();
 			
