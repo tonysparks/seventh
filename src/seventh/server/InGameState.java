@@ -71,17 +71,12 @@ import seventh.shared.TimeStep;
  *
  */
 public class InGameState implements State {
-	/**
-	 * Send out game stat updates every 20 seconds
-	 */
-	private static final long GAME_STAT_UPDATE = 20000;
-	private static final long GAME_PARTIAL_STAT_UPDATE = 5000;
 	
 	/**
 	 * When a game ends, lets have a time delay to let the
 	 * score display and players to calm down from the carnage
 	 */
-	private static final long GAME_END_DELAY = 20000;
+	private static final long GAME_END_DELAY = 20_000;
 	
 	private Game game;
 	private GameSession gameSession;
@@ -89,8 +84,13 @@ public class InGameState implements State {
 	
 	private EventDispatcher dispatcher;
 	
+	private final long netFullStatDelay;
+	private final long netPartialStatDelay;
+	private final long netUpdateRate;
+	
 	private long nextGameStatUpdate;
 	private long nextGamePartialStatUpdate;
+	private long nextGameUpdate;
 	private long gameEndTime;
 
 	private boolean gameEnded;
@@ -122,10 +122,16 @@ public class InGameState implements State {
 		this.dispatcher = gameSession.getEventDispatcher();				
 		this.game = gameSession.getGame();
 								
-		//loadProperties(gameSession.getMap(), game);
+		ServerSeventhConfig config = serverContext.getConfig();
+		this.netFullStatDelay = config.getServerNetFullStatDelay();
+		this.netPartialStatDelay = config.getServerNetPartialStatDelay();
 		
-		this.nextGameStatUpdate = GAME_STAT_UPDATE;
-		this.nextGamePartialStatUpdate = GAME_PARTIAL_STAT_UPDATE;
+		final long netRate = Math.abs(config.getServerNetUpdateRate());		
+		this.netUpdateRate = 1000 / netRate==0 ? 20 : netRate;
+		
+		this.nextGameStatUpdate = this.netFullStatDelay;
+		this.nextGamePartialStatUpdate = this.netPartialStatDelay;
+		this.nextGameUpdate = this.netUpdateRate;
 				
 		this.statsMessage = new GameStatsMessage();
 		this.partialStatsMessage = new GamePartialStatsMessage();
@@ -356,7 +362,7 @@ public class InGameState implements State {
 			sendGamePartialStatMessage(timeStep);
 		}
 		
-		this.clients.foreach(this.clientIterator);
+		sendClientGameUpdates(timeStep);
 		
 		this.game.postUpdate();
 		
@@ -375,6 +381,14 @@ public class InGameState implements State {
 		}
 	}
 	
+	private void sendClientGameUpdates(TimeStep timeStep) {
+		this.nextGameUpdate -= timeStep.getDeltaTime();		
+		if(this.nextGameUpdate <= 0) {
+			this.clients.foreach(this.clientIterator);
+			
+			this.nextGameUpdate = this.netUpdateRate;
+		}
+	}
 	
 	/**
 	 * Send out a message to all clients indicating that
@@ -390,8 +404,6 @@ public class InGameState implements State {
 				if(conn != null) {
 					RemoteClient client = clients.getClient(conn.getId());
 					if(client != null && client.isReady()) {
-						// TODO is this a correct replacement? 
-					    // conn.send(Endpoint.FLAG_RELIABLE, msg);
 					    protocol.sendGameReadyMessage(msg, client.getId());
 					}
 				}
@@ -413,7 +425,7 @@ public class InGameState implements State {
 			
 			GameUpdateMessage updateMessage = new GameUpdateMessage();
 			updateMessage.netUpdate = netUpdate;
-			
+						
 			try {
 				protocol.sendGameUpdateMessage(updateMessage, clientId);
 			}
@@ -431,8 +443,8 @@ public class InGameState implements State {
 		nextGamePartialStatUpdate -= timeStep.getDeltaTime();		
 		if(nextGamePartialStatUpdate <= 0) {
 			
-			partialStatsMessage.stats = this.game.getNetGamePartialStats();
-			nextGamePartialStatUpdate = GAME_PARTIAL_STAT_UPDATE;
+			partialStatsMessage.stats = this.game.getNetGamePartialStats();			
+			this.nextGamePartialStatUpdate = this.netPartialStatDelay;
 								
 			try {
 				protocol.sendGamePartialStatsMessage(partialStatsMessage);
@@ -455,10 +467,10 @@ public class InGameState implements State {
 		if(this.nextGameStatUpdate <= 0) {
 						
 			this.statsMessage.stats = this.game.getNetGameStats();
-			
-			this.nextGameStatUpdate = GAME_STAT_UPDATE;
-			this.nextGamePartialStatUpdate = GAME_PARTIAL_STAT_UPDATE;
-								
+		
+			this.nextGameStatUpdate = this.netFullStatDelay;
+			this.nextGamePartialStatUpdate = this.netPartialStatDelay;
+						
 			try {
 				this.protocol.sendGameStatsMessage(this.statsMessage);
 				this.calculatePing = true;

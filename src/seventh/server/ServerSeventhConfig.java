@@ -223,6 +223,18 @@ public class ServerSeventhConfig extends SeventhConfig {
 		this.config.set(fps, "sv_framerate");
 	}
 	
+	public int getServerNetUpdateRate() {
+		return this.config.getInt(20, "sv_netupdaterate");
+	}
+	
+	public int getServerNetFullStatDelay() {
+		return this.config.getInt(20_000, "sv_netfullstatdelay");
+	}
+	
+	public int getServerNetPartialStatDelay() {
+		return this.config.getInt(5_000, "sv_netpartialstatdelay");
+	}
+	
 	public String getStartupScript() {
 		return this.config.getStr(null, "sv_startupscript");
 	}
