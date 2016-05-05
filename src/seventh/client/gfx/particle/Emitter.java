@@ -173,6 +173,10 @@ public abstract class Emitter implements Effect {
 		this.numberOfParticles = 0;
 	}
 	
+	public long getTimeToLive() {
+		return this.timeToLive.getEndTime();
+	}
+	
 	/**
 	 * @return true if this is still active
 	 */
@@ -208,11 +212,13 @@ public abstract class Emitter implements Effect {
 	/**
 	 * Spawns a particle
 	 */
-	protected void spawnParticle() {
+	protected boolean spawnParticle() {
 		if(maxParticles < 0 || numberOfParticles < maxParticles) {
 			this.particles.add(newParticle());		
 			this.numberOfParticles++;
+			return true;
 		}
+		return false;
 	}
 	
 	/**
@@ -230,9 +236,15 @@ public abstract class Emitter implements Effect {
 			this.timeToLive.update(timeStep);
 			this.nextSpawn.update(timeStep);
 			if(this.nextSpawn.isOnFirstTime() && !this.timeToLive.isTime()) {
-				//if(maxParticles < 0 || numberOfParticles < maxParticles) {
+				/** Determine if this emitter wants all of the particles created
+				 * on this frame
+				 */
+				if(maxParticles>0 && this.nextSpawn.getEndTime() == 0) {					
+					while(spawnParticle());
+				}
+				else {
 					spawnParticle();
-				//}
+				}
 			}
 			
 
