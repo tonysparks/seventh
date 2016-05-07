@@ -1273,7 +1273,7 @@ public class ClientGame {
 				case GRENADE: 
 				case ROCKET:
 				case ROCKET_LAUNCHER:		
-					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 1, 50));
+					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));
 					if(random.nextBoolean()) {
 						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
 						

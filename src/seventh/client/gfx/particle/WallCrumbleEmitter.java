@@ -8,8 +8,7 @@ import java.util.Random;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import seventh.client.gfx.Camera;
-import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Art;
 import seventh.client.gfx.TextureUtil;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
@@ -39,12 +38,13 @@ public class WallCrumbleEmitter extends Emitter {
 		this.vel = new Vector2f(1, 0);
 		
 		Random rand = getRandom();
-		this.images = new TextureRegion[12];
-		for(int i = 0; i < images.length; i++) {
+		this.images = new TextureRegion[44];
+		int i = 0;
+		for(; i < images.length-15; i++) {
 			int x = rand.nextInt(image.getRegionWidth());
 			int y = rand.nextInt(image.getRegionHeight());
-			int width = rand.nextInt(image.getRegionWidth());
-			int height = rand.nextInt(image.getRegionHeight());
+			int width = rand.nextInt(image.getRegionWidth()/2);
+			int height = rand.nextInt(image.getRegionHeight()/2);
 			
 			if(x+width > image.getRegionWidth()) {				
 				width = image.getRegionWidth() - x;
@@ -59,6 +59,11 @@ public class WallCrumbleEmitter extends Emitter {
 			sprite.setRegion(sprite, x, y, width, height);
 			
 			images[i] = sprite;					
+		}
+		
+		Sprite sprite = new Sprite(Art.BLACK_IMAGE, 0, 0, 2, 4);
+		for(;i<images.length;i++) {
+			this.images[i] = sprite;
 		}
 		
 		setPersistent(true);
@@ -84,20 +89,4 @@ public class WallCrumbleEmitter extends Emitter {
 		return particle;
 	}
 	
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle.Emitter#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, float)
-	 */
-	@Override
-	public void render(Canvas canvas, Camera camera, float alpha) {
-		
-//		canvas.drawImage(image, 0, 0, null);
-//		
-//		for(int i = 0; i < this.images.length; i++) {
-//			canvas.drawImage(images[i], 100, 300 + images[i].getRegionHeight() + 5, null);
-//			canvas.drawSprite(new Sprite(images[i]), 100, 300 + images[i].getRegionHeight() + 5, null);
-//		}
-		
-		super.render(canvas, camera, alpha);
-	}
-
 }

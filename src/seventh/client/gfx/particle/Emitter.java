@@ -11,6 +11,7 @@ import java.util.Random;
 import seventh.client.ClientEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
@@ -35,6 +36,7 @@ public abstract class Emitter implements Effect {
 	
 	private boolean kill, isPaused, isPersistent;
 	
+	protected Rectangle visibileBounds;
 	/**
 	 * 
 	 */
@@ -46,6 +48,9 @@ public abstract class Emitter implements Effect {
 		
 		this.particles = new ArrayList<Particle>();
 		this.deadParticles = new ArrayList<Particle>();
+		
+		this.visibileBounds = new Rectangle(250, 250);
+		this.visibileBounds.centerAround(pos);
 		
 		this.maxParticles = -1;
 		this.dieInstantly = true;
@@ -99,10 +104,11 @@ public abstract class Emitter implements Effect {
 	 */
 	public void setPos(Vector2f pos) {
 		this.pos.set(pos);
+		this.visibileBounds.centerAround(pos);
 	}
 	
 	public void attachTo(ClientEntity ent) {
-		this.pos = ent.getPos();
+		this.pos = ent.getPos(); // TODO a bug waiting to happen
 	}
 	
 	/**
@@ -265,6 +271,8 @@ public abstract class Emitter implements Effect {
 				}
 			}
 			
+			
+			this.visibileBounds.centerAround(pos);
 		}
 	}
 	
@@ -273,7 +281,7 @@ public abstract class Emitter implements Effect {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {
-		if(isAlive()) {
+		if(isAlive() && this.visibileBounds.intersects(camera.getWorldViewPort())) {
 			int size = this.particles.size();
 			for(int i = 0; i < size; i++) {
 				Particle p = this.particles.get(i);
