@@ -3,8 +3,12 @@
  */
 package seventh.client.gfx;
 
-import java.util.HashMap;
 import java.util.List;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.client.ClientBombTarget;
 import seventh.client.ClientGame;
@@ -18,12 +22,6 @@ import seventh.map.Map;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
-
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * Draws a mini map of the current map
@@ -44,8 +42,6 @@ public class MiniMap implements Renderable {
 		this.game = game;
 		Map map = game.getMap();
 		
-		java.util.Map<TextureRegion, Integer> cache = new HashMap<TextureRegion, Integer>();
-		
 		int size = 10;
 		
 		int ratioWidth = map.getMapWidth()/size;
@@ -62,11 +58,15 @@ public class MiniMap implements Renderable {
 				Tile topTile = null;
 				
 				boolean hasGroundTile = false;
+				boolean hasCollidable = false;
 				for(int i = 0; i < layers.length; i++) {										
 					Tile tile = layers[i].getRow(y)[x]; 
 					if(tile != null) {
 						if(!layers[i].collidable()) {
 							hasGroundTile = true;
+						}
+						else {
+							hasCollidable = true;
 						}
 						
 						topTile = tile;						
@@ -74,41 +74,16 @@ public class MiniMap implements Renderable {
 				}
 				
 				if(topTile != null && hasGroundTile) {
-					TextureRegion tex = topTile.getImage();
-					
-					if(!cache.containsKey(tex)) {
-						TextureData data = tex.getTexture().getTextureData();
-						data.prepare();
-						Pixmap p = data.consumePixmap();
-						
-						
-						int r = 0, g = 0, b = 0;
-						for(int px = 0; px < p.getWidth(); px++) {
-							for(int py = 0; py < p.getHeight(); py++) {
-								int color = p.getPixel(px, py);
-								r += (color >> 24) & 0xff;
-								g += (color >> 16) & 0xff;
-								b += (color >> 8) & 0xff;								
-							}
-						}
-						
-						int numberOfPixels = p.getWidth() * p.getHeight();
-						if(numberOfPixels>0) {
-							r /= numberOfPixels;
-							g /= numberOfPixels;
-							b /= numberOfPixels;
-						}
-												
-						int blendedColor = Color.toIntBits(r, g, b, 100);
-
-						p.dispose();
-						data.disposePixmap();
-						
-						cache.put(tex, blendedColor);
+					int blendedColor = 0;
+					if(hasCollidable) {
+						int r = 150, g = 150, b = 150;
+						blendedColor = Color.toIntBits(r, g, b, 100);
 					}
-					
-					
-					int blendedColor = cache.get(tex);
+					else {
+						int r = 170, g = 200, b = 200;
+						blendedColor = Color.toIntBits(r, g, b, 80);
+					}
+
 					pix.setColor(blendedColor);
 					pix.fillRectangle(x*width, y*height, width, height);
 					
