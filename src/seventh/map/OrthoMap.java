@@ -633,6 +633,22 @@ public class OrthoMap implements Map {
 		return this.backgroundLayers[layer].getRow(y)[x];
 	}
 	
+	@Override
+	public Tile getDestructableTile(int x, int y) {
+		for(int i = 0; i < destructableLayer.length; i++) {
+			if(destructableLayer[i].collidable()) {
+				continue;
+			}
+			
+			Tile tile = destructableLayer[i].getRow(y)[x];
+			if(tile != null) {
+				return tile;
+			}
+		}
+		
+		return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see seventh.map.Map#getCollidableTile(int, int)
 	 */

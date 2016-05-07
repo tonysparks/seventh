@@ -225,7 +225,7 @@ public class MenuScreen implements Screen {
 	 * @see palisma.shared.State#update(leola.live.TimeStep)
 	 */
 	@Override
-	public void update(TimeStep timeStep) {	
+	public void update(TimeStep timeStep) {
 	}
 
 
@@ -288,7 +288,6 @@ public class MenuScreen implements Screen {
 	 */
 	@Override
 	public Inputs getInputs() {
-//		return this.inputs;
 		return this.uiManager;
 	}
 

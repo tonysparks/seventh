@@ -5,10 +5,13 @@ package seventh.client.gfx.particle;
 
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.TextureUtil;
+import seventh.map.Tile;
 import seventh.math.Vector2f;
 
 /**
@@ -25,13 +28,13 @@ public class WallCrumbleEmitter extends Emitter {
 	 * @param timeToLive
 	 * @param timeToNextSpawn
 	 */
-	public WallCrumbleEmitter(TextureRegion image, Vector2f pos) {
+	public WallCrumbleEmitter(Tile tile, Vector2f pos) {
 		super(pos, 100_000, 0);
 		
 		// TODO: fix the flipping business
 		// in tiles, this is driving me nuts!
-		TextureRegion copy = new TextureRegion(image);
-		copy.flip(false, true);
+		Sprite image = new Sprite(tile.getImage());
+		image.flip(false, true);
 		
 		this.vel = new Vector2f(1, 0);
 		
@@ -50,8 +53,12 @@ public class WallCrumbleEmitter extends Emitter {
 			if(y+height > image.getRegionHeight()) {
 				height = image.getRegionHeight() - y;
 			}
+						
+			Sprite sprite = new Sprite(image);
+			TextureUtil.setFlips(sprite, tile.isFlippedHorizontal(), tile.isFlippedVertical(), tile.isFlippedDiagnally());
+			sprite.setRegion(sprite, x, y, width, height);
 			
-			images[i] = new TextureRegion(copy, x, y, width, height);					
+			images[i] = sprite;					
 		}
 		
 		setPersistent(true);

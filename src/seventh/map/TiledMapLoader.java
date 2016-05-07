@@ -193,7 +193,7 @@ public class TiledMapLoader implements MapLoader {
 							mapLayer.setContainsAnimations(true);
 						}
 						else {
-							tile = new Tile(image, tileWidth,tileHeight);
+							tile = new Tile(image, tileWidth, tileHeight);
 						}
 												
 						tile.setPosition( (x%width) * tileWidth, y);

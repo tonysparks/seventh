@@ -237,6 +237,7 @@ public abstract interface Map extends Renderable, Debugable {
 	 * @return
 	 */
 	public abstract Tile getTile( int layer, int x, int y );
+	public abstract Tile getDestructableTile(int x, int y );
 	
 	/**
 	 * Retrieve a Tile.

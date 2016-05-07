@@ -279,4 +279,28 @@ public class TextureUtil {
 //		region.setRegionHeight(height);
 		return sprite;
 	}
+	
+	public static void setFlips(Sprite sprite, boolean isFlippedHorizontal, boolean isFlippedVert, boolean isFlippedDiagnally) {
+    	if(sprite==null) return;
+    	
+    	if(isFlippedDiagnally) {
+    		if(isFlippedHorizontal && isFlippedVert) {
+    			sprite.flip(true, false);
+    			sprite.rotate(-270f);    			    			
+    		}
+    		else if(isFlippedHorizontal) {
+    			sprite.rotate(-270f);
+    		}
+    		else if(isFlippedVert) {
+    			sprite.rotate(-90f);
+    		}
+    		else {
+    			sprite.flip(false, true);
+    			sprite.rotate(-270f);
+    		}
+    	}
+    	else {
+    		sprite.flip(isFlippedHorizontal, isFlippedVert);
+    	}
+    }
 }

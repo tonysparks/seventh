@@ -213,7 +213,8 @@ public class InGameScreen implements Screen {
 		
 		createUI();
 								
-		this.controllerInput = new JoystickGameController();		
+		this.controllerInput = new JoystickGameController();
+		
 	}
 	
 	

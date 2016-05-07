@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
+import seventh.client.gfx.TextureUtil;
 import seventh.math.Circle;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
@@ -1240,15 +1241,20 @@ public class Tile implements Renderable {
 		}
 	}
 	
+	/**
+	 * Flip masks
+	 */
+	private static final int isFlippedHorizontal=(1<<0), isFlippedVert=(1<<1), isFlippedDiagnally=(1<<2);
+	
 	private int x,y;
 	private int width, height;	
 	private int xIndex, yIndex;
-	private TextureRegion image;
 	private Sprite sprite;
 	
 	private int renderX, renderY;
 	private int mask;
 	private int heightMask;
+	private int flipMask;
 	private CollisionMask collisionMask;	
 	private Rectangle bounds;
 	
@@ -1259,7 +1265,6 @@ public class Tile implements Renderable {
 	 * 
 	 */
 	public Tile(TextureRegion image, int width, int height) {
-		this.image = image;
 		this.width = width;
 		this.height = height;
 		this.bounds = new Rectangle();
@@ -1420,40 +1425,26 @@ public class Tile implements Renderable {
         this.isDestroyed = isDestroyed;
     }
     
-    public void setFlippedHorizontally(boolean isFlipped) {
-    	if(this.sprite==null) return;
-    	
-    	this.sprite.setFlip(isFlipped, this.sprite.isFlipY());
+    public boolean isFlippedHorizontal() {
+    	return (this.flipMask & isFlippedHorizontal) != 0;
     }
     
-    public void setFlippedVertially(boolean isFlipped) {
-    	if(this.sprite==null) return;
-    	
-    	this.sprite.setFlip(this.sprite.isFlipX(), !isFlipped);
+    public boolean isFlippedVertical() {
+    	return (this.flipMask & isFlippedVert) != 0;
     }
-            
+    
+    public boolean isFlippedDiagnally()  {
+    	return (this.flipMask & isFlippedDiagnally) != 0;
+    }
+    
+                
     public void setFlips(boolean isFlippedHorizontal, boolean isFlippedVert, boolean isFlippedDiagnally) {
-    	if(this.sprite==null) return;
+    	if(isFlippedDiagnally) this.flipMask |= Tile.isFlippedDiagnally;
+    	if(isFlippedHorizontal)	this.flipMask |= Tile.isFlippedHorizontal;
+		if(isFlippedVert) this.flipMask |= Tile.isFlippedVert;
+		if(this.sprite==null) return;
     	
-    	if(isFlippedDiagnally) {
-    		if(isFlippedHorizontal && isFlippedVert) {
-    			this.sprite.flip(true, false);
-    			this.sprite.rotate(-270f);
-    		}
-    		else if(isFlippedHorizontal) {
-    			this.sprite.rotate(-270f);
-    		}
-    		else if(isFlippedVert) {
-    			this.sprite.rotate(-90f);
-    		}
-    		else {
-    			this.sprite.flip(false, true);
-    			this.sprite.rotate(-270f);
-    		}
-    	}
-    	else {
-    		this.sprite.flip(isFlippedHorizontal, isFlippedVert);
-    	}
+    	TextureUtil.setFlips(this.sprite, isFlippedHorizontal, isFlippedVert, isFlippedDiagnally);    	
     }
     
 	/**
@@ -1525,8 +1516,8 @@ public class Tile implements Renderable {
 	/**
 	 * @return the image
 	 */
-	public TextureRegion getImage() {
-		return image;
+	public Sprite getImage() {
+		return this.sprite;
 	}
 	
 	/* (non-Javadoc)

@@ -24,6 +24,7 @@ import seventh.client.gfx.particle.Effect;
 import seventh.client.gfx.particle.Emitter;
 import seventh.client.gfx.particle.GibEmitter;
 import seventh.client.gfx.particle.RocketTrailEmitter;
+import seventh.client.gfx.particle.WallCrumbleEmitter;
 import seventh.client.screens.InGameScreen.Actions;
 import seventh.client.sfx.Sound;
 import seventh.client.sfx.Sounds;
@@ -45,6 +46,7 @@ import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
 import seventh.map.Map;
+import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.BombDisarmedMessage;
@@ -1644,6 +1646,12 @@ public class ClientGame {
 	}
 	
 	public void removeTile(TileRemovedMessage msg) {
+	    
+	    Tile tile = map.getDestructableTile(msg.x, msg.y);
+	    if(tile!=null) {
+	    	this.gameEffects.addBackgroundEffect(new WallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
+	    }
+	    
 	    map.removeDestructableTileAt(msg.x, msg.y);
 	}
 	
