@@ -105,7 +105,7 @@ public class ServerSeventhConfig extends SeventhConfig {
 		/* this just allows ALL maps that are in the maps
 		 * directory
 		 */
-		return MapList.getMapListing();
+		return MapList.getMapListing(getGameType());
 		
 	}
 	
