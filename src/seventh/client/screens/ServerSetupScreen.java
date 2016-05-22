@@ -425,6 +425,12 @@ public class ServerSetupScreen implements Screen {
 				maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
 				matchTimeLbl.setText(Long.toString(gameSettings.matchTime));
 				
+				// reset the map listing
+				mapListings = MapList.getMapListing(gameSettings.gameType);
+				currentMapIndex = 0;
+				gameSettings.currentMap = mapListings.isEmpty() ? "" : mapListings.get(currentMapIndex);
+				mapBtn.setText(gameSettings.currentMap);
+								
 				event.getButton().setText(gameSettings.gameType.getDisplayName());
 			}
 		});
