@@ -158,7 +158,7 @@ public class Sounds {
 	public static final int[] tankFire = {149};
 	
 	public static final int[] flagCaptured = {150};
-	public static final int[] flagStolen = {1501};
+	public static final int[] flagStolen = {151};
 	public static final int[] flagReturned = {152};
 	public static final int[] enemyFlagCaptured = {153};
 	public static final int[] enemyFlagStolen = {154};
