@@ -51,8 +51,8 @@ public class Art {
 	public static  TextureRegion pistolImage = null;
 	public static  TextureRegion riskerImage = null;
 	
-	public static  TextureRegion bombImage = null;
-	public static  TextureRegion computerImage = null;	
+	public static  TextureRegion bombImage = null;	
+	public static  TextureRegion radioImage = null;
 	
 	public static  Model alliedBodyModel = null;		
 	public static  Model alliedWalkModel = null;
@@ -199,8 +199,8 @@ public class Art {
 		riskerImage = loadImage("./assets/gfx/weapons/risker.bmp", 0xff00ff);
 		
 		bombImage = loadImage("./assets/gfx/weapons/bomb.bmp", 0xff00ff);
-		bombImage.flip(false, true);
-		computerImage = loadImage("./assets/gfx/computer.bmp");
+		bombImage.flip(false, true);		
+		radioImage = loadImage("./assets/gfx/radio.png");
 
 		alliedBodyModel = new Model(loadImage("./assets/gfx/player/allied_positions.png"), 201, 256, 3, 3);	
 		alliedWalkModel = new Model(loadImage("./assets/gfx/player/allied_legs_walk.png"), 372, 196, 2, 4);
