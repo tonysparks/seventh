@@ -54,7 +54,7 @@ public class SeventhScriptingCommonLibrary {
 		return new Rectangle();
 	}
 	
-	public static BombTargetObjective newBombTarget(float x, float y, String name) {
-		return new BombTargetObjective(new Vector2f(x, y), name);
+	public static BombTargetObjective newBombTarget(float x, float y, String name, Boolean rotated) {
+		return new BombTargetObjective(new Vector2f(x, y), name, rotated);
 	}
 }

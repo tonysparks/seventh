@@ -107,13 +107,34 @@ public enum SoundType {
 	
 	MG42_FIRE,
 	
+	RADIO_STATIC(SoundSourceType.REFERENCED),
+	
 	MUTE,
 	;
 	
 	public static enum SoundSourceType {
+		/**
+		 * Played at an X,Y coordinate
+		 */
 		POSITIONAL,
+		
+		/**
+		 * Played at the position of the referenced ID
+		 * of an Entity
+		 */
 		REFERENCED,
+		
+		/**
+		 * Attached to an entity by reference ID
+		 * (i.e., when the entity moves, so does the
+		 * sound)
+		 */
 		REFERENCED_ATTACHED,
+		
+		/**
+		 * Plays in a global channel, that is right
+		 * at the camera location so it is always heard
+		 */
 		GLOBAL,
 	}
 	

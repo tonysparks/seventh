@@ -19,21 +19,23 @@ public class BombTargetObjective implements Objective {
 	private BombTarget target;
 	private Vector2f position;
 	private String name;
+	private boolean rotated;
 	
 	/**
 	 * @param name 
 	 */
 	public BombTargetObjective(Vector2f position) {		
-		this(position, null);
+		this(position, null, false);
 	}
 	
 	/**
 	 * @param position
 	 * @param name 
 	 */
-	public BombTargetObjective(Vector2f position, String name) {		
+	public BombTargetObjective(Vector2f position, String name, Boolean rotated) {		
 		this.position = position;		
 		this.name = name != null ? name : "Bomb Target";
+		this.rotated = rotated != null && rotated;
 	}
 
 	/* (non-Javadoc)
@@ -67,6 +69,9 @@ public class BombTargetObjective implements Objective {
 	@Override
 	public void init(Game game) {
 		target = game.newBombTarget(position);
+		if(rotated) {
+			target.rotate90();
+		}
 	}
 
 	/* (non-Javadoc)

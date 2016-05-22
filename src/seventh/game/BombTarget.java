@@ -4,6 +4,7 @@
  */
 package seventh.game;
 
+import seventh.game.net.NetBombTarget;
 import seventh.game.net.NetEntity;
 import seventh.math.Vector2f;
 
@@ -17,7 +18,7 @@ import seventh.math.Vector2f;
  */
 public class BombTarget extends Entity {
 
-	private NetEntity netBombTarget;
+	private NetBombTarget netBombTarget;
 	private Bomb bomb;
 	
 	
@@ -28,16 +29,28 @@ public class BombTarget extends Entity {
 	public BombTarget(Vector2f position, Game game) {
 		super(game.getNextPersistantId(), position, 0, game, Type.BOMB_TARGET);
 		
-		this.bounds.width = 32;
+		this.bounds.width = 64;
 		this.bounds.height = 32;
 		
 		this.bounds.setLocation(position);
 		
-		this.netBombTarget = new NetEntity();
-		this.netBombTarget.type = Type.BOMB_TARGET.netValue();
+		this.netBombTarget = new NetBombTarget();		
 		setNetEntity(netBombTarget);		
 	}
 
+	/**
+	 * Rotates the bomb target by 90 degrees, this will only
+	 * do it once
+	 */
+	public BombTarget rotate90() {
+		int width = this.bounds.width;
+		this.bounds.width = this.bounds.height;
+		this.bounds.height = width;
+		this.netBombTarget.rotate90();
+		return this;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see seventh.game.Entity#canTakeDamage()
 	 */

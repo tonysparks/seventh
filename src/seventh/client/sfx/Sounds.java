@@ -163,7 +163,8 @@ public class Sounds {
 	public static final int[] enemyFlagCaptured = {153};
 	public static final int[] enemyFlagStolen = {154};
 	
-	public static final int[] mg42Fire = {155,156};
+	public static final int[] mg42Fire = {155,156};	
+	public static final int[] radioStatic = {157,158};
 	
 	public static final int[][] alliedSpeeches = {
 			alliedSpeechAttack,
@@ -398,7 +399,10 @@ public class Sounds {
             loadSound("./assets/sfx/ctf/enemy_flag_stolen.wav") ,   // 154
             
             loadSound("./assets/sfx/mg42/mg42_fire01.wav") ,   // 155
-            loadSound("./assets/sfx/mg42/mg42_fire02.wav") ,   // 155
+            loadSound("./assets/sfx/mg42/mg42_fire02.wav") ,   // 156
+            
+            loadSound("./assets/sfx/radio/static01.wav") ,   // 157
+            loadSound("./assets/sfx/radio/static02.wav") ,   // 158            
 		};
 	};
 
@@ -925,6 +929,9 @@ public class Sounds {
 		    break;
 		case MG42_FIRE:
 			sound = mg42Fire;
+			break;
+		case RADIO_STATIC:
+			sound = radioStatic;
 			break;
 		case MUTE:
 			

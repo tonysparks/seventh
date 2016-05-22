@@ -8,6 +8,7 @@ import harenet.messages.NetMessage;
 import harenet.messages.NetMessageFactory;
 import seventh.game.Entity.Type;
 import seventh.game.net.NetBomb;
+import seventh.game.net.NetBombTarget;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetDroppedItem;
 import seventh.game.net.NetEntity;
@@ -242,7 +243,7 @@ public class BufferIO {
 				break;
 			}
 			case BOMB_TARGET: {
-				result = new NetEntity();
+				result = new NetBombTarget();
 				break;
 			}
 			case PLAYER_PARTIAL: {

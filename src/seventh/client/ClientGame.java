@@ -917,9 +917,8 @@ public class ClientGame {
 			}
 			case BOMB: {
 				entity = new ClientBomb(this, pos);
-				
 				break;
-			}
+			}			
 			case LIGHT_BULB: {
 				entity = new ClientLightBulb(this, pos);
 				break;
