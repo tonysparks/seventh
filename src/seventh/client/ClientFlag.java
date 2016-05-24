@@ -22,6 +22,7 @@ public class ClientFlag extends ClientEntity {
 		
 	private Sprite flagImg;
 	private ClientPlayer carrier;
+	private boolean isFlagVisible;
 	
 	/**
 	 * 
@@ -75,6 +76,13 @@ public class ClientFlag extends ClientEntity {
 	@Override
 	public void update(TimeStep timeStep) {	
 		super.update(timeStep);
+		
+		if(lastUpdate>timeStep.getGameClock()-500) {
+			this.isFlagVisible = true;
+		}
+		else {
+			this.isFlagVisible = false;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -82,7 +90,7 @@ public class ClientFlag extends ClientEntity {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {		
-		if(flagImg != null) {
+		if(flagImg != null && isFlagVisible) {
 			Vector2f cameraPos = camera.getRenderPosition(alpha);
 			Vector2f flagPos = pos;
 			if (carrier != null && carrier.isAlive()) {
