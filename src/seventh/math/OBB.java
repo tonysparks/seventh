@@ -237,6 +237,16 @@ public class OBB {
 	    return contains(p.x, p.y);
 	}
 	
+	private float sign(float px, float py, Vector2f a, Vector2f b) {
+		return (px - b.x) * (a.y - b.y) - (a.x - b.x) * (py - b.y);
+	}
+	private boolean pointInTriangle(float px, float py, Vector2f a, Vector2f b, Vector2f c) {
+		boolean b1 = sign(px, py, a, b) < 0f;
+		boolean b2 = sign(px, py, b, c) < 0f;
+		boolean b3 = sign(px, py, c, a) < 0f;
+		return ((b1==b2) && (b2==b3));
+	}
+	
 	/**
      * Determines if the supplied point is inside the {@link OBB}
      * 
@@ -259,10 +269,24 @@ public class OBB {
 //
 //        return Math.abs(cx-tx) < width/2 && Math.abs(cy-ty) < height/2;
     	
-    	double newy = Math.sin(orientation) * (py-center.y) + Math.cos(orientation) * (px - center.x);
-    	double newx = Math.cos(orientation) * (px-center.x) - Math.sin(orientation) * (py - center.y);
-    	return (newy > center.y - height/2f) && (newy < center.y + height/2f) &&
-    		   (newx > center.x - width/2f)  && (newx < center.x + width/2f);
+//    	double newy = Math.sin(orientation) * (py-center.y) + Math.cos(orientation) * (px - center.x);
+//    	double newx = Math.cos(orientation) * (px-center.x) - Math.sin(orientation) * (py - center.y);
+//    	return (newy > center.y - height/2f) && (newy < center.y + height/2f) &&
+//    		   (newx > center.x - width/2f)  && (newx < center.x + width/2f);
+    	
+//    	float yy = py - center.y;
+//    	float xx = px - center.x;
+//    	
+//    	float hh = height/2f;
+//    	float hw = width/2f;
+//    	
+//    	double newx = (xx*Math.cos(orientation)) - (yy*Math.sin(orientation));
+//    	double newy = (xx*Math.sin(orientation)) + (yy*Math.cos(orientation));
+//    	return (newy > center.y - hh) && (newy < center.y + hh) &&
+//    		   (newx > center.x - hw) && (newx < center.x + hw);
+    	
+    	return pointInTriangle(px, py, topLeft, topRight, bottomLeft) ||
+    		   pointInTriangle(px, py, topLeft, topRight, bottomRight);
     }
 	
     /**
@@ -421,6 +445,24 @@ public class OBB {
 	    printOOB(b);
 	    
 	    System.out.println("A intersects B: " + a.intersects(b));
+	    
+	    OBB tank = new OBB(0, new Vector2f(767.5f, 782.5f), 225, 145);
+	    Rectangle me = new Rectangle(24, 24);
+	    me.setLocation(763, 829);
+	    
+	    System.out.println("Tank intersects: " + tank.expensiveIntersects(me));
+	    
+//	    {  
+//	    	  width: 225.0, 
+//	    	  height: 145.0, 
+//	    	  orientation: 0.0, 
+//	    	  center: { "x": 767.5, "y": 782.5}, 
+//	    	  topLeft: { "x": 655.0, "y": 855.0}, 
+//	    	  topRight: { "x": 880.0, "y": 855.0}, 
+//	    	  bottomLeft: { "x": 655.0, "y": 710.0}, 
+//	    	  bottomRight: { "x": 880.0, "y": 710.0} 
+//	    	}
+//	    	{ "x": 763.0, "y": 829.0}:{ "x" : 763, "y" : 829, "width" : 24, "height" : 24 }
 	}
 	
 	private static void printOOB(OBB a) {
