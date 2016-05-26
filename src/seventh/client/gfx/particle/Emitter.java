@@ -37,6 +37,8 @@ public abstract class Emitter implements Effect {
 	private boolean kill, isPaused, isPersistent;
 	
 	protected Rectangle visibileBounds;
+	private ClientEntity attachedTo;
+	
 	/**
 	 * 
 	 */
@@ -108,7 +110,8 @@ public abstract class Emitter implements Effect {
 	}
 	
 	public void attachTo(ClientEntity ent) {
-		this.pos = ent.getPos(); // TODO a bug waiting to happen
+		this.attachedTo = ent;
+		this.pos = ent.getPos();
 	}
 	
 	/**
@@ -239,6 +242,10 @@ public abstract class Emitter implements Effect {
 	@Override
 	public void update(TimeStep timeStep) {
 		if(isAlive()) {
+			if(this.attachedTo!=null) {
+				this.pos.set(this.attachedTo.getPos());
+			}
+			
 			this.timeToLive.update(timeStep);
 			this.nextSpawn.update(timeStep);
 			if(this.nextSpawn.isOnFirstTime() && !this.timeToLive.isTime()) {
@@ -281,7 +288,7 @@ public abstract class Emitter implements Effect {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {
-		if(isAlive() && this.visibileBounds.intersects(camera.getWorldViewPort())) {
+		if(isAlive() && (this.attachedTo!=null || this.visibileBounds.intersects(camera.getWorldViewPort())) ) {
 			int size = this.particles.size();
 			for(int i = 0; i < size; i++) {
 				Particle p = this.particles.get(i);
