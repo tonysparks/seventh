@@ -446,7 +446,9 @@ public class PlayerEntity extends Entity implements Controllable {
 			else if(currentState == State.EXITING_VEHICLE) {
 				
 				Vehicle vehicle = getVehicle();
-				Vector2f newPos = game.findFreeRandomSpotNotIn(this, vehicle.getBounds(), vehicle.getOBB());
+				Rectangle area = new Rectangle(300, 300);
+				area.centerAround(vehicle.getCenterPos());
+				Vector2f newPos = game.findFreeRandomSpotNotIn(this, area, vehicle.getOBB());
 				
 				/* we can't find an area around the tank to exit it,
 				 * so lets just keep inside the tank
