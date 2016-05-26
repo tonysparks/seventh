@@ -150,31 +150,6 @@ public class ClientTank extends ClientVehicle {
 		else {
 			setOperator(null);
 		}
-		
-		if(prevState != null && nextState != null) {
-			if (prevState.posX != nextState.posX ||
-				prevState.posY != nextState.posY) {
-				
-				float distanceSq = (nextState.posX - previousTrackMark.x) * (nextState.posX - previousTrackMark.x) + 
-					               (nextState.posY - previousTrackMark.y) * (nextState.posY - previousTrackMark.y);
-				
-				if(distanceSq > 12*12) {
-					previousTrackMark.set(nextState.posX, nextState.posY);
-					
-					// left track
-					trackMarkOffset.set(10, -15);
-					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
-					Vector2f.Vector2fAdd(vehicleOOB.topLeft, trackMarkOffset, trackMarkOffset);
-					this.effects.addTankTrackMark(getId(), this.trackMarkOffset, this.orientation);
-
-					// right track mark
-					trackMarkOffset.set(10, 15);
-					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
-					Vector2f.Vector2fAdd(vehicleOOB.bottomLeft, trackMarkOffset, trackMarkOffset);
-					this.effects.addTankTrackMark(getId(), trackMarkOffset, this.orientation);					
-				}
-			}
-		}
 	}
 
 	/* (non-Javadoc)
@@ -276,6 +251,31 @@ public class ClientTank extends ClientVehicle {
 		super.update(timeStep);
 				
 		this.tankSprite.update(timeStep);
+		
+		if(prevState != null && nextState != null) {
+			if (prevState.posX != nextState.posX ||
+				prevState.posY != nextState.posY) {
+				
+				float distanceSq = (nextState.posX - previousTrackMark.x) * (nextState.posX - previousTrackMark.x) + 
+					               (nextState.posY - previousTrackMark.y) * (nextState.posY - previousTrackMark.y);
+				
+				if(distanceSq > 12*12) {
+					previousTrackMark.set(nextState.posX, nextState.posY);
+					
+					// left track
+					trackMarkOffset.set(10, -19);
+					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
+					Vector2f.Vector2fAdd(vehicleOOB.topLeft, trackMarkOffset, trackMarkOffset);
+					this.effects.addTankTrackMark(getId(), this.trackMarkOffset, this.orientation);
+
+					// right track mark
+					trackMarkOffset.set(10, 19);
+					Vector2f.Vector2fRotate(trackMarkOffset, vehicleOOB.orientation, trackMarkOffset);
+					Vector2f.Vector2fAdd(vehicleOOB.bottomLeft, trackMarkOffset, trackMarkOffset);
+					this.effects.addTankTrackMark(getId(), trackMarkOffset, this.orientation);					
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)
