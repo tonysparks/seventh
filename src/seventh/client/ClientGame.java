@@ -1392,6 +1392,8 @@ public class ClientGame {
 		
 		this.hud.getMessageLog().clearLogs();
 		
+		map.restoreDestroyedTiles();
+		
 		showScoreBoard(false);
 		applyFullGameState(msg.gameState);
 		

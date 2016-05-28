@@ -284,6 +284,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 			
 			@Override
 			public void onRoundStarted(RoundStartedEvent event) {
+				map.restoreDestroyedTiles();
 			    loadMapScripts();
 				aiSystem.startOfRound(Game.this);				
 			}

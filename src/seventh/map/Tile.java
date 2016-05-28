@@ -1249,6 +1249,7 @@ public class Tile implements Renderable {
 	private int x,y;
 	private int width, height;	
 	private int xIndex, yIndex;
+	private int layer;
 	private Sprite sprite;
 	
 	private int renderX, renderY;
@@ -1264,7 +1265,8 @@ public class Tile implements Renderable {
 	/**
 	 * 
 	 */
-	public Tile(TextureRegion image, int width, int height) {
+	public Tile(TextureRegion image, int layer, int width, int height) {
+		this.layer = layer;
 		this.width = width;
 		this.height = height;
 		this.bounds = new Rectangle();
@@ -1324,6 +1326,13 @@ public class Tile implements Renderable {
 	 */
 	public void setSurfaceType(SurfaceType surfaceType) {
 		this.surfaceType = surfaceType;
+	}
+	
+	/**
+	 * @return the layer
+	 */
+	public int getLayer() {
+		return layer;
 	}
 
 	/**

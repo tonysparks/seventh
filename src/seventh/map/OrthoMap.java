@@ -68,7 +68,7 @@ public class OrthoMap implements Map {
 	/**
 	 * original destructable layer; used for comparison to get delta
 	 */
-	private boolean[][] originalLayer;
+	//private boolean[][] originalLayer;
 	private List<Tile> destroyedTiles;
 	
 	/**
@@ -725,23 +725,20 @@ public class OrthoMap implements Map {
 		this.worldBounds = new Rectangle(0, 0, this.mapWidth, this.mapHeight);
 		
 
-        this.originalLayer = new boolean[this.maxY][this.maxX];
-//        this.calculatedLayer = new boolean[this.maxY][this.maxX];
-        
-        for(int i = 0; i < this.destructableLayer.length; i++) {
-            Layer layer = this.destructableLayer[i];
-            for(int y = 0; y < layer.numberOfRows(); y++) {
-                Tile[] row = layer.getRow(y);
-                for(int x = 0; x < row.length; x++) {
-                    Tile tile = row[x];
-                    if(tile != null) {
-                        this.originalLayer[y][x] = true;
-//                        this.calculatedLayer[y][x] = true;
-                    }
-                }
-            }
-        }
-//		
+//        this.originalLayer = new boolean[this.maxY][this.maxX];
+//        for(int i = 0; i < this.destructableLayer.length; i++) {
+//            Layer layer = this.destructableLayer[i];
+//            for(int y = 0; y < layer.numberOfRows(); y++) {
+//                Tile[] row = layer.getRow(y);
+//                for(int x = 0; x < row.length; x++) {
+//                    Tile tile = row[x];
+//                    if(tile != null) {
+//                        this.originalLayer[y][x] = true;
+//                    }
+//                }
+//            }
+//        }
+
 //		List<Tile> tiles = getTilesInCircle(200, 400, 250, null);
 //		for(Tile t : tiles) {
 //			t.setMask(1);
@@ -1336,7 +1333,7 @@ public class OrthoMap implements Map {
 	    boolean wasRemoved = false;
 	    for(int i = 0; i < this.destructableLayer.length; i++) {
             Layer layer = this.destructableLayer[i];
-            Tile tile = layer.getRow(tileY)[tileX];
+            Tile tile = layer.getRow(tileY)[tileX];            
             if(tile!=null) {
                 if(!tile.isDestroyed()) {
                     this.destroyedTiles.add(tile);
@@ -1350,6 +1347,20 @@ public class OrthoMap implements Map {
 	    return wasRemoved;
 	}
 	
+	/* (non-Javadoc)
+	 * @see seventh.map.Map#restoreDestroyedTiles()
+	 */
+	@Override
+	public void restoreDestroyedTiles() {
+		for(int index = 0; index < this.destroyedTiles.size(); index++) {
+			Tile tile = this.destroyedTiles.get(index);
+	        Layer layer = this.backgroundLayers[tile.getLayer()];
+	        layer.getRow(tile.getYIndex())[tile.getXIndex()] = tile;
+	        tile.setDestroyed(false);            
+		}
+		
+		this.destroyedTiles.clear();
+	}
 
 	/* (non-Javadoc)
 	 * @see seventh.shared.Debugable#getDebugInformation()

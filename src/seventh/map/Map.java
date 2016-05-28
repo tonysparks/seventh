@@ -491,6 +491,11 @@ public abstract interface Map extends Renderable, Debugable {
 	public abstract void setMask(List<Tile> tiles, int mask);
 	
 	/**
+	 * Restore the tiles that have been destroyed
+	 */
+	public abstract void restoreDestroyedTiles();
+	
+	/**
 	 * Removes a destructable tile at the supplied tile index.
 	 * 
 	 * @param tileX

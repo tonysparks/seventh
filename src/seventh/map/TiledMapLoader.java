@@ -159,10 +159,6 @@ public class TiledMapLoader implements MapLoader {
 					                   heightMask,
 					                   height);
 			mapLayers.add(mapLayer);
-			
-			if(!isForeground) {
-				index++;
-			}													
 						
 			Tile[] row = null; //new Tile[width];
 			
@@ -189,11 +185,11 @@ public class TiledMapLoader implements MapLoader {
 					if(image != null) {
 						Tile tile = null;
 						if( atlas.isAnimatedTile(tileId) ) {
-							tile = new AnimatedTile(atlas.getAnimatedTile(tileId), tileWidth, tileHeight); 
+							tile = new AnimatedTile(atlas.getAnimatedTile(tileId), index, tileWidth, tileHeight); 
 							mapLayer.setContainsAnimations(true);
 						}
 						else {
-							tile = new Tile(image, tileWidth, tileHeight);
+							tile = new Tile(image, index, tileWidth, tileHeight);
 						}
 												
 						tile.setPosition( (x%width) * tileWidth, y);
@@ -213,7 +209,7 @@ public class TiledMapLoader implements MapLoader {
 				// if we are headless...
 				else {
 					if(tileId != 0) {
-						Tile tile = new Tile(null, tileWidth,tileHeight);
+						Tile tile = new Tile(null, index, tileWidth,tileHeight);
 						tile.setPosition( (x%width) * tileWidth, y);
 //						tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
 						
@@ -228,6 +224,11 @@ public class TiledMapLoader implements MapLoader {
 					}
 				}
 			}
+			
+			
+			if(!isForeground) {
+				index++;
+			}	
 			
 			mapLayer.applyHeightMask();
 		}
