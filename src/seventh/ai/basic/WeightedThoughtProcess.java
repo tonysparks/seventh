@@ -7,6 +7,7 @@ import seventh.ai.basic.actions.ConcurrentAction;
 import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.actions.WeightedAction;
 import seventh.ai.basic.actions.evaluators.AttackActionEvaluator;
+import seventh.ai.basic.actions.evaluators.AvoidGrenadeActionEvaluator;
 import seventh.ai.basic.actions.evaluators.CommandActionEvaluator;
 import seventh.ai.basic.actions.evaluators.DefendSelfActionEvaluator;
 import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
@@ -42,6 +43,7 @@ public class WeightedThoughtProcess implements ThoughtProcess {
 		this.currentGoal = new ConcurrentAction( 				
 				// high level goals
 				new WeightedAction(brain.getConfig(), "highLevelGoal",
+										new AvoidGrenadeActionEvaluator(goals, rand.getRandomRange(0.8, 0.9), 0.9),
 										new AttackActionEvaluator(goals, rand.getRandomRangeMin(0.85), 0.82),
 										new DefendSelfActionEvaluator(goals, rand.getRandomRangeMin(0.85), 0.81),
 										new CommandActionEvaluator(goals, rand.getRandomRange(0.7, 0.8), 0.8),
