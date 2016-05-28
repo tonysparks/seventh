@@ -110,8 +110,8 @@ public class AIShortcuts {
         	int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
-                ClientPlayer bot = players.getPlayer(botId);
-                int playerId = findClosestBot(game, bot);
+                ClientPlayer bot = players.getPlayer(botId);                
+                int playerId = game.isLocalPlayerCommander() ? findClosestBot(game, bot) : game.getLocalPlayer().getId();
                 console.execute("ai " + botId + " followMe " + playerId);
                 console.execute("team_say " + bot.getName() + " follow me!" );
                 //console.execute("speech " + 2);

@@ -90,7 +90,7 @@ public abstract class AIShortcut {
         float closestDistance = -1f;
         for(int i = 0; i < players.getMaxNumberOfPlayers(); i++) {
             ClientPlayer player = players.getPlayer(i);
-            if(player != null && player.isAlive() && player.isBot()) {
+            if(player != null && otherPlayer != player && player.isAlive() && player.isBot()) {
                 if(player.getTeam().equals(team)) {
                     Vector2f pos = otherPlayer.getEntity().getPos();
                     Vector2f botPos = player.getEntity().getPos();
