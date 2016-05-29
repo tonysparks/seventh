@@ -286,7 +286,8 @@ public abstract class ClientEntity implements Renderable {
 			 */
 			if(dist > 64 * 64) {
 				this.pos.x = nextState.posX;
-				this.pos.y = nextState.posY;					
+				this.pos.y = nextState.posY;			
+				this.previousPos.set(this.pos);
 			}
 			else {
 			
