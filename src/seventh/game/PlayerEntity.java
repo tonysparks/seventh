@@ -1511,10 +1511,10 @@ public class PlayerEntity extends Entity implements Controllable {
 							entitiesInView.add(ent);
 						}
 						break;
-					case ALLIED_FLAG:
+					/*case ALLIED_FLAG:
 					case AXIS_FLAG:
 						entitiesInView.add(ent);
-						break;
+						break;*/
 					case LIGHT_BULB:
 					case BOMB_TARGET:
 						/* don't add */
