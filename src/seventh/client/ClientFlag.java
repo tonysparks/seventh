@@ -22,7 +22,7 @@ public class ClientFlag extends ClientEntity {
 		
 	private Sprite flagImg;
 	private ClientPlayer carrier;
-	private boolean isFlagVisible;
+	private int fadeAlphaColor;
 	
 	/**
 	 * 
@@ -77,11 +77,21 @@ public class ClientFlag extends ClientEntity {
 	public void update(TimeStep timeStep) {	
 		super.update(timeStep);
 		
-		if(lastUpdate>timeStep.getGameClock()-500) {
-			this.isFlagVisible = true;
+		long clockTime = timeStep.getGameClock();
+		
+		if (carrier != null && carrier.isAlive()) {			
+			long lastUpdate = carrier.getEntity().getLastUpdate(); 
+			
+			if ((lastUpdate+150) < clockTime) {
+				fadeAlphaColor = 255 - ((int)(clockTime-lastUpdate)/3);
+				if (fadeAlphaColor < 0) fadeAlphaColor = 0;						
+			}
+			else {
+				fadeAlphaColor = 255;
+			}
 		}
 		else {
-			this.isFlagVisible = false;
+			fadeAlphaColor = 255;
 		}
 	}
 
@@ -90,10 +100,10 @@ public class ClientFlag extends ClientEntity {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {		
-		if(flagImg != null && isFlagVisible) {
+		if(flagImg != null) {
 			Vector2f cameraPos = camera.getRenderPosition(alpha);
 			Vector2f flagPos = pos;
-			if (carrier != null && carrier.isAlive()) {
+			if (fadeAlphaColor>0 && carrier != null && carrier.isAlive()) {
 				flagPos = carrier.getEntity().getRenderPos(alpha);
 				//flagPos.x = flagPos.x + carrier.getEntity().bounds.width/2;
 				//flagPos.y = flagPos.y + carrier.getEntity().bounds.height/2;
@@ -102,9 +112,8 @@ public class ClientFlag extends ClientEntity {
 			float x = (flagPos.x - cameraPos.x);
 			float y = (flagPos.y - cameraPos.y);
 			flagImg.setPosition(x, y);
-			//flagImg.setBounds(x, y, 52, 52);
-			//flagImg.setCenter(x, y);			
-			canvas.drawSprite(flagImg);			
+			flagImg.setAlpha(fadeAlphaColor/255.0f);			
+			canvas.drawRawSprite(flagImg);			
 		}
 		
 	}
