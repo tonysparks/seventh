@@ -30,6 +30,7 @@ import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.ListBox;
+import seventh.ui.ListBox.ColumnHeaderListener;
 import seventh.ui.ListBox.ItemListener;
 
 /**
@@ -45,12 +46,14 @@ public class ListBoxView<T extends Renderable> implements Renderable {
 	 */
 	private ListBox box;
 	private List<ButtonView> buttonViews;
+	private List<ButtonView> hderButtonViews;
 	
 	/**
 	 * 
 	 */
 	public ListBoxView(ListBox box) {
 		this.buttonViews = new ArrayList<ButtonView>();
+		this.hderButtonViews = new ArrayList<>();
 		
 		this.box = box;
 		this.box.setItemListener(new ItemListener() {
@@ -78,8 +81,25 @@ public class ListBoxView<T extends Renderable> implements Renderable {
 			}
 		});
 		
+		this.box.setHeaderListener(new ColumnHeaderListener() {
+			
+			@Override
+			public void onHeaderRemove(Button button) {
+				hderButtonViews.remove(button);
+			}
+			
+			@Override
+			public void onHeaderAdded(Button button) {
+				hderButtonViews.add(new ButtonView(button));
+			}
+		});
+		
 		for(Button btn : box.getItems()) {
 			buttonViews.add(new ButtonView(btn));
+		}
+		
+		for(Button btn : box.getColumnHeaders()) {
+			hderButtonViews.add(new ButtonView(btn));
 		}
 		
 	}
@@ -99,11 +119,21 @@ public class ListBoxView<T extends Renderable> implements Renderable {
 		
 		Rectangle bounds = box.getBounds();
 		
-		renderer.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, box.getBackgroundColor());
+		renderer.fillRect(bounds.x-1, bounds.y, bounds.width, bounds.height+1, box.getBackgroundColor());
 		renderer.drawRect(bounds.x-1, bounds.y, bounds.width+1, bounds.height+1, 0xff000000);
 		
 		bounds = box.getScreenBounds();
-		int y = 30;
+		int y = 40;
+		
+		
+		renderer.fillRect(bounds.x-1, bounds.y, bounds.width+1, 31, 0xff282c0c);
+		renderer.drawRect(bounds.x-1, bounds.y, bounds.width+1, 30+1, 0xff000000);
+		
+		int hsize = hderButtonViews.size();
+		for(int i = 0; i < hsize; i++) {
+			ButtonView view = hderButtonViews.get(i);
+			view.render(renderer, camera, alpha);
+		}
 		
 		int size = buttonViews.size();
 		for(int i = box.getIndex(); i < size; i++) {

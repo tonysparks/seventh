@@ -8,6 +8,8 @@ import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.Inputs;
+import seventh.math.Vector2f;
+import seventh.ui.Label.TextAlignment;
 
 /**
  * @author Tony
@@ -18,9 +20,16 @@ public class ListBox extends Widget {
 		void onItemAdded(Button button);
 		void onItemRemove(Button button);
 	}
+	public static interface ColumnHeaderListener {
+		void onHeaderAdded(Button button);
+		void onHeaderRemove(Button button);
+	}
 	
 	private List<Button> items;
 	private ItemListener itemListener;
+	private ColumnHeaderListener headerListener;
+	
+	private List<Button> columnHeaders;
 	
 	private int index;
 	
@@ -31,6 +40,7 @@ public class ListBox extends Widget {
 		super(eventDispatcher);
 		
 		this.items = new ArrayList<>();
+		this.columnHeaders = new ArrayList<>();
 		addInputListener(new Inputs() {
 			
 			@Override
@@ -108,16 +118,67 @@ public class ListBox extends Widget {
 	}
 	
 	/**
+	 * @param headerListener the headerListener to set
+	 */
+	public void setHeaderListener(ColumnHeaderListener headerListener) {
+		this.headerListener = headerListener;
+	}
+	
+	/**
+	 * @return the headerListener
+	 */
+	public ColumnHeaderListener getHeaderListener() {
+		return headerListener;
+	}
+	
+	/**
+	 * Adds a button for column header
+	 * 
+	 * @param button
+	 */
+	public ListBox addColumnHeader(String header, int width) {
+		Button button = new Button();
+		button.getBounds().setSize(width, 25);
+		button.setText(header);	
+		button.setTextSize(16);
+		button.setHoverTextSize(17);
+		button.setEnableGradiant(false);			
+		button.getTextLabel().setTextAlignment(TextAlignment.LEFT);
+		button.getTextLabel().setForegroundColor(0xffffffff);
+		this.columnHeaders.add(button);
+		
+		calculateHeaderPositions();
+		
+		addWidget(button);
+		
+		if(this.headerListener!=null) {
+			this.headerListener.onHeaderAdded(button);
+		}
+		
+		return this;
+	}
+	
+	private void calculateHeaderPositions() {
+		Vector2f pos = new Vector2f(10, 20);		
+		
+		for(Button button : this.columnHeaders) {
+			button.getBounds().setLocation(pos);
+			pos.x += button.getBounds().width;
+		}
+	}
+	
+	/**
 	 * Adds an item to the list
 	 * @param button
 	 */
-	public void addItem(Button button) {
+	public ListBox addItem(Button button) {
 		this.items.add(button);
 		addWidget(button);		
 		
 		if(this.itemListener!=null) {
 			this.itemListener.onItemAdded(button);
 		}
+		return this;
 	}
 	
 	
@@ -158,5 +219,12 @@ public class ListBox extends Widget {
 	 */
 	public List<Button> getItems() {
 		return items;
+	}
+	
+	/**
+	 * @return the columnHeaders
+	 */
+	public List<Button> getColumnHeaders() {
+		return columnHeaders;
 	}
 }

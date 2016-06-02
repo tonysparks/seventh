@@ -139,6 +139,15 @@ public class ServerInfo {
 			this.gameType = object.getObject("game_type").toString();
 			this.mapName = object.getObject("map").toString();
 			
+			if(this.mapName != null) {
+				int slashIndex = this.mapName.lastIndexOf("/");
+				int extIndex = this.mapName.lastIndexOf(".");
+				
+				if(slashIndex>-1 && extIndex>-1) {
+					this.mapName = this.mapName.substring(slashIndex+1, extIndex);
+				}
+			}
+			
 			LeoArray leoAxis = object.getObject("axis").as();
 			leoAxis.foreach(new LeoUserFunction() {				
 				@Override

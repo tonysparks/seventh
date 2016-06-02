@@ -176,6 +176,10 @@ public class ServerListingsScreen implements Screen {
 		serverListings = new ListBox();
 		serverListings.setBackgroundColor(0xff383e18);
 		serverListings.setBounds(new Rectangle((int)uiPos.x, (int)uiPos.y, app.getScreenWidth() - 220, 400));
+		serverListings.addColumnHeader("Server Name", 340)
+					  .addColumnHeader("Game Type", 200)
+					  .addColumnHeader("Map", 170)
+					  .addColumnHeader("Players", 150);
 		
 		uiPos.x = 140;
 		uiPos.y = 40;
@@ -210,6 +214,7 @@ public class ServerListingsScreen implements Screen {
 		uiPos.y = 420;
 		
 		Button upArrow = setupButton(uiPos, "", false, false);
+		//upArrow.setForegroundColor(0xff282c0c);
 		upArrow.addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
@@ -221,6 +226,7 @@ public class ServerListingsScreen implements Screen {
 		
 		uiPos.y += yInc*3;
 		Button downArrow = setupButton(uiPos, "", false, false);
+		//downArrow.setForegroundColor(0xff282c0c);
 		downArrow.addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
@@ -256,7 +262,7 @@ public class ServerListingsScreen implements Screen {
 		String[] result = {"Error", ""};
 		try {
 			result = new String[] { 
-					String.format("%-50s %-10s %d/%d", info.getServerName(), info.getGameType(), info.getAxis().size() + info.getAllies().size(), 12), 
+					String.format("%-50s %-20s %-30s %d/%d", info.getServerName(), info.getGameType(), info.getMapName(), info.getAxis().size() + info.getAllies().size(), 12), 
 					info.getAddress() +":"+ info.getPort() 
 			};
 		}
@@ -432,7 +438,8 @@ public class ServerListingsScreen implements Screen {
 		Button btn = setupButton(pos, settings[0], true, false);
 		btn.setBounds(new Rectangle(app.getScreenWidth() - 280, 24));
 		btn.getBounds().x += 20;
-		btn.setHoverTextSize(19);
+		btn.setTextSize(12);
+		btn.setHoverTextSize(12);
 		btn.getTextLabel().setForegroundColor(0xffffffff);
 		btn.getTextLabel().setFont("Courier New");
 		btn.addOnButtonClickedListener(new OnButtonClickedListener() {
