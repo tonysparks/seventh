@@ -552,7 +552,6 @@ public abstract class Entity implements Debugable {
 	public boolean update(TimeStep timeStep) {
 		boolean isBlocked = false;
 		
-//		this.movementDir.set(vel);
 		this.movementDir.zeroOut();
 		if(this.isAlive && !this.vel.isZero()) {
 			if(currentState != State.WALKING && currentState != State.SPRINTING) {
@@ -560,13 +559,14 @@ public abstract class Entity implements Debugable {
 			}
 								
 			int movementSpeed = calculateMovementSpeed();
+			
+			float dt = (float)timeStep.asFraction();			
+			float deltaX = (vel.x * movementSpeed * dt);
+			float deltaY = (vel.y * movementSpeed * dt);
+			
+			float newX = pos.x + deltaX;
+			float newY = pos.y + deltaY;
 						
-			
-			double dt = timeStep.asFraction();
-			int newX = (int)Math.round(pos.x + vel.x * movementSpeed * dt);
-			int newY = (int)Math.round(pos.y + vel.y * movementSpeed * dt);					
-			
-//			this.movementDir.zeroOut();
 			if( Math.abs(pos.x - newX) > 2.5) {
 				this.movementDir.x = vel.x;
 			}
@@ -578,29 +578,33 @@ public abstract class Entity implements Debugable {
 			
 			Map map = game.getMap();
 			
-			bounds.x = newX;
+			bounds.x = (int)newX;
 			if( map.rectCollides(bounds) ) {
-				isBlocked = collideX(newX, bounds.x);
+				isBlocked = collideX((int)newX, bounds.x);
 				if(isBlocked) { 
 					bounds.x = (int)pos.x;
+					newX = pos.x;	
 				}
 								
 			}
 			else if(collidesAgainstVehicle(bounds)) {
-				bounds.x = (int)pos.x;				
+				bounds.x = (int)pos.x;
+				newX = pos.x;
 				isBlocked = true;
 			}
 			
 			
-			bounds.y = newY;
+			bounds.y = (int)newY;
 			if( map.rectCollides(bounds)) {
-				isBlocked = collideY(newY, bounds.y);
+				isBlocked = collideY((int)newY, bounds.y);
 				if(isBlocked) {
 					bounds.y = (int)pos.y;
+					newY = pos.y;
 				}
 			}
 			else if(collidesAgainstVehicle(bounds)) {				
 				bounds.y = (int)pos.y;
+				newY = pos.y;
 				isBlocked = true;
 			}
 			
@@ -609,13 +613,17 @@ public abstract class Entity implements Debugable {
 			 * if a component is blocked
 			 */
 			if(isBlocked && !continueIfBlock()) {
-				bounds.x = (int)pos.x;
-				bounds.y = (int)pos.y;
+				bounds.setLocation(pos);				
+				
+				newX = pos.x;
+				newY = pos.y;
 			}
 						
-			pos.x = bounds.x;
-			pos.y = bounds.y;
+//			pos.x = bounds.x;
+//			pos.y = bounds.y;
 		
+			pos.x = newX;
+			pos.y = newY;
 			vel.zeroOut();
 			
 			this.walkingTime = WALK_TIME;

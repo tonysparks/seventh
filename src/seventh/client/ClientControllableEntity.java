@@ -146,23 +146,26 @@ public abstract class ClientControllableEntity extends ClientEntity {
 		if(isAlive() && !vel.isZero()) {			
 			int movementSpeed = calculateMovementSpeed();
 									
-			double dt = timeStep.asFraction();
-			int newX = (int)Math.round(predictedPos.x + vel.x * movementSpeed * dt);
-			int newY = (int)Math.round(predictedPos.y + vel.y * movementSpeed * dt);
-						
-			bounds.x = newX;
+			float dt = (float)timeStep.asFraction();			
+			float deltaX = (vel.x * movementSpeed * dt);
+			float deltaY = (vel.y * movementSpeed * dt);
+			
+			float newX = predictedPos.x + deltaX;
+			float newY = predictedPos.y + deltaY;
+			
+			bounds.x = (int)newX;
 			if( map.rectCollides(bounds) ) {
 				bounds.x = (int)predictedPos.x;
-						
+				newX = predictedPos.x;
 			}
 			
-			bounds.y = newY;
+			bounds.y = (int)newY;
 			if( map.rectCollides(bounds)) {
-				bounds.y = (int)predictedPos.y;								
+				bounds.y = (int)predictedPos.y;
+				newY = predictedPos.y;
 			}
 			
-			predictedPos.x = bounds.x;
-			predictedPos.y = bounds.y;
+			predictedPos.set(newX, newY);
 			
 			clientSideCorrection(pos, predictedPos, predictedPos, 0.15f);
 			lastMoveTime = timeStep.getGameClock();

@@ -216,13 +216,13 @@ public class Bullet extends Entity {
 		
 		Map map = this.game.getMap();
 		
-		double dt = timeStep.asFraction();
+		float dt = (float)timeStep.asFraction();
 		
 		previousPos.set(pos);
 		
-		int newX = (int)Math.round(pos.x + vel.x * speed * dt);
-		int newY = (int)Math.round(pos.y + vel.y * speed * dt);
-		
+		int newX = Math.round(pos.x + vel.x * speed * dt);
+		int newY = Math.round(pos.y + vel.y * speed * dt);
+				
 		delta.x = newX - previousPos.x;
 		delta.y = newY - previousPos.y;
 		
