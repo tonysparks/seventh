@@ -15,6 +15,7 @@ import seventh.game.type.GameType;
 import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.MapList;
+import seventh.shared.MapList.MapEntry;
 import seventh.shared.SeventhConfig;
 import seventh.shared.SeventhConstants;
 
@@ -87,7 +88,7 @@ public class ServerSeventhConfig extends SeventhConfig {
 	/**
 	 * @return the map listings
 	 */
-	public List<String> getMapListings() {
+	public List<MapEntry> getMapListings() {
 		
 		 
 		/* Allow for a subset of the maps to be
@@ -95,9 +96,11 @@ public class ServerSeventhConfig extends SeventhConfig {
 		 */
 		if(this.config.has("map_list")) {
 			LeoArray mapList = this.config.get("map_list").as();
-			List<String> maps = new ArrayList<String>(mapList.size());
+			List<MapEntry> maps = new ArrayList<MapEntry>(mapList.size());
 			for(LeoObject m : mapList) {
-				maps.add(m.toString());
+				String mapFile = m.toString();
+				MapEntry entry = new MapEntry(MapList.stripFileExtension(mapFile), mapFile);
+				maps.add(entry);
 			}
 			return maps;
 		}

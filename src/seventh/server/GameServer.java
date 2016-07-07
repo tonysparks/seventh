@@ -31,6 +31,7 @@ import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.Debugable.DebugableListener;
 import seventh.shared.LANServerRegistration;
+import seventh.shared.MapList.MapEntry;
 import seventh.shared.State;
 import seventh.shared.StateMachine;
 import seventh.shared.StateMachine.StateMachineListener;
@@ -90,7 +91,7 @@ public class GameServer {
 	 */
 	public static class GameServerSettings {
 		public String serverName;
-		public String currentMap;
+		public MapEntry currentMap;
 		public String startupScript;
 		public String password;
 		public int maxScore;		
@@ -336,7 +337,7 @@ public class GameServer {
 			
 			@Override
 			public void execute(Console console, String... args) {				
-				serverContext.spawnGameSession(mergeArgsDelim(" ", args));
+				serverContext.spawnGameSession(new MapEntry(mergeArgsDelim(" ", args)));
 			}
 		});
 		

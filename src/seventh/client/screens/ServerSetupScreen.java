@@ -18,6 +18,7 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.server.GameServer.GameServerSettings;
 import seventh.shared.MapList;
+import seventh.shared.MapList.MapEntry;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
@@ -63,7 +64,7 @@ public class ServerSetupScreen implements Screen {
 	private PanelView<Renderable> panelView;
 		
 	private GameServerSettings gameSettings;
-	private List<String> mapListings;
+	private List<MapEntry> mapListings;
 	private int currentMapIndex;
 	private int gameTypeIndex;
 	
@@ -263,7 +264,7 @@ public class ServerSetupScreen implements Screen {
 		
 		uiPos.x = toggleX;
 		uiPos.y += yInc;
-		final Button mapBtn = setupButton(uiPos, gameSettings.currentMap, true);
+		final Button mapBtn = setupButton(uiPos, gameSettings.currentMap.getDisplayName(), true);
 		mapBtn.getBounds().setSize(340, 30);
 		mapBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
 			
@@ -274,8 +275,8 @@ public class ServerSetupScreen implements Screen {
 					currentMapIndex = 0;
 				}
 				
-				gameSettings.currentMap = mapListings.isEmpty() ? "" : mapListings.get(currentMapIndex);
-				mapBtn.setText(gameSettings.currentMap);
+				gameSettings.currentMap = mapListings.isEmpty() ? new MapEntry("") : mapListings.get(currentMapIndex); 
+				mapBtn.setText(gameSettings.currentMap.getDisplayName());
 			}
 		}); 
 		
@@ -428,8 +429,8 @@ public class ServerSetupScreen implements Screen {
 				// reset the map listing
 				mapListings = MapList.getMapListing(gameSettings.gameType);
 				currentMapIndex = 0;
-				gameSettings.currentMap = mapListings.isEmpty() ? "" : mapListings.get(currentMapIndex);
-				mapBtn.setText(gameSettings.currentMap);
+				gameSettings.currentMap = mapListings.isEmpty() ? new MapEntry("") : mapListings.get(currentMapIndex);
+				mapBtn.setText(gameSettings.currentMap.getDisplayName());
 								
 				event.getButton().setText(gameSettings.gameType.getDisplayName());
 			}

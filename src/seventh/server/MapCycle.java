@@ -7,7 +7,7 @@ import java.util.List;
 
 import seventh.shared.Command;
 import seventh.shared.Console;
-import seventh.shared.MapList;
+import seventh.shared.MapList.MapEntry;
 
 /**
  * The play list for maps.
@@ -17,13 +17,13 @@ import seventh.shared.MapList;
  */
 public class MapCycle {
 
-	private List<String> maps;
+	private List<MapEntry> maps;
 	private int currentMap;
 	
 	/**
 	 * @param maps
 	 */
-	public MapCycle(List<String> maps) {
+	public MapCycle(List<MapEntry> maps) {
 		this.maps = maps;
 		this.currentMap = 0;
 		
@@ -40,10 +40,10 @@ public class MapCycle {
 			
 			@Override
 			public void execute(Console console, String... args) {
-				String currentMap = getCurrentMap();
+				MapEntry currentMap = getCurrentMap();
 				console.println("\n");
 				console.println("Current map: " + currentMap);
-				for(String map : maps) {
+				for(MapEntry map : maps) {
 					if(currentMap.equals(map)) {
 						console.println(map + "*");
 					}
@@ -85,7 +85,11 @@ public class MapCycle {
 	 * @param map
 	 */
 	public void addMap(String map) {
-		this.maps.add(map);
+		this.maps.add(new MapEntry(map));
+	}
+	
+	public void addMap(MapEntry map) {
+		this.maps.add((map));
 	}
 	
 	/**
@@ -94,17 +98,40 @@ public class MapCycle {
 	 * @param map
 	 */
 	public void removeMap(String map) {
-		this.maps.remove(map);
+		int index = 0;
+		for(MapEntry entry : this.maps) {
+			if(entry.getFileName().equals(map)) {
+				this.maps.remove(index);
+				break;
+			}
+			index++;
+		}
+	}
+
+	/**
+	 * If the supplied map file exists in this cycle
+	 * @param map
+	 * @return true if it exists
+	 */
+	public boolean hasMap(String map) {
+		for(MapEntry entry : this.maps) {
+			if(entry.getFileName().equals(map)) {
+				return true;
+			}			
+		}
+		return false;
+	}
+	
+	public boolean hasMap(MapEntry map) {
+		return hasMap(map.getFileName());
 	}
 	
 	/**
 	 * Sets the current map 
 	 * @param map
 	 */
-	public void setCurrentMap(String map) {
-		map = MapList.addFileExtension(map);
-		
-		if(!maps.contains(map)) {
+	public void setCurrentMap(MapEntry map) {				
+		if(!hasMap(map)) {
 			addMap(map);
 		}
 		
@@ -119,7 +146,7 @@ public class MapCycle {
 	/**
 	 * @return the next map
 	 */
-	public String getNextMap() {
+	public MapEntry getNextMap() {
 		this.currentMap = (this.currentMap + 1) % maps.size();
 		return this.maps.get(currentMap);
 	}
@@ -127,7 +154,7 @@ public class MapCycle {
 	/**
 	 * @return the current map
 	 */
-	public String getCurrentMap() {
+	public MapEntry getCurrentMap() {
 		return this.maps.get(currentMap);
 	}
 }

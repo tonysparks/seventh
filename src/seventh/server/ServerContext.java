@@ -3,18 +3,17 @@
  */
 package seventh.server;
 
-import harenet.api.Server;
-import harenet.api.impl.HareNetServer;
-
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
+import harenet.api.Server;
+import harenet.api.impl.HareNetServer;
 import leola.vm.Leola;
 import seventh.shared.Console;
 import seventh.shared.Debugable.DebugableListener;
-import seventh.shared.MapList;
+import seventh.shared.MapList.MapEntry;
 import seventh.shared.RconHash;
 import seventh.shared.Scripting;
 import seventh.shared.State;
@@ -122,8 +121,7 @@ public class ServerContext {
 	 * 
 	 * @param map - the map to load
 	 */
-	public void spawnGameSession(String map) {
-		map = MapList.addFileExtension(map);				
+	public void spawnGameSession(MapEntry map) {					
 		this.mapCycle.setCurrentMap(map);
 		
 		this.stateMachine.changeState(new LoadingState(this, this.sessionListener, map));

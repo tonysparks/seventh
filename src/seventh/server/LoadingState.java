@@ -14,6 +14,7 @@ import seventh.game.type.TeamDeathMatchScript;
 import seventh.map.Map;
 import seventh.map.MapLoaderUtil;
 import seventh.shared.Cons;
+import seventh.shared.MapList.MapEntry;
 import seventh.shared.State;
 import seventh.shared.TimeStep;
 
@@ -29,7 +30,7 @@ public class LoadingState implements State {
 	private Leola runtime;
 	private GameSession gameSession;
 	private	Players players;
-	private String mapFile;
+	private MapEntry mapFile;
 	
 	private GameSessionListener gameSessionListener;
 	
@@ -38,7 +39,7 @@ public class LoadingState implements State {
 	 * @param gameSessionListener
 	 * @param mapFile
 	 */
-	public LoadingState(ServerContext serverContext, GameSessionListener gameSessionListener, String mapFile) {
+	public LoadingState(ServerContext serverContext, GameSessionListener gameSessionListener, MapEntry mapFile) {
 		this.serverContext = serverContext;
 		this.gameSessionListener = gameSessionListener;
 				
@@ -56,11 +57,11 @@ public class LoadingState implements State {
 	 * @param file
 	 * @throws Exception
 	 */
-	private GameMap loadMap(String file) throws Exception {		
-		Cons.println("Loading " + file + " map...");
+	private GameMap loadMap(MapEntry file) throws Exception {		
+		Cons.println("Loading " + file.getFileName() + " map...");
 		
-		Map map = MapLoaderUtil.loadMap(this.runtime, file, false);
-		GameMap gameMap = new GameMap(file, "Unknown", map);
+		Map map = MapLoaderUtil.loadMap(this.runtime, file.getFileName(), false);
+		GameMap gameMap = new GameMap(file.getFileName(), "Unknown", map);
 		Cons.println("Successfully loaded!");
 		return gameMap;			
 	}
@@ -73,24 +74,24 @@ public class LoadingState implements State {
 	 * @return the {@link GameType}
 	 * @throws Exception
 	 */
-	private GameType loadGameType(String mapFile, AbstractGameTypeScript script) throws Exception {		
+	private GameType loadGameType(MapEntry mapFile, AbstractGameTypeScript script) throws Exception {		
 		ServerSeventhConfig config = this.serverContext.getConfig();
 		
 		int maxKills = config.getMaxScore();
 		long matchTime = config.getMatchTime() * 60L * 1000L;
 		
-		return script.loadGameType(mapFile, maxKills, matchTime);
+		return script.loadGameType(mapFile.getFileName(), maxKills, matchTime);
 	}
 	
-	private GameType loadTDMGameType(String mapFile) throws Exception {
+	private GameType loadTDMGameType(MapEntry mapFile) throws Exception {
 		return loadGameType(mapFile, new TeamDeathMatchScript(runtime));
 	}
 	
-	private GameType loadObjGameType(String mapFile) throws Exception {
+	private GameType loadObjGameType(MapEntry mapFile) throws Exception {
 		return loadGameType(mapFile, new ObjectiveScript(runtime));
 	}
 
-	private GameType loadCTFGameType(String mapFile) throws Exception {
+	private GameType loadCTFGameType(MapEntry mapFile) throws Exception {
 		return loadGameType(mapFile, new CaptureTheFlagScript(runtime));
 	}
 

@@ -170,7 +170,7 @@ public class MasterServerClient {
 		sb.append("&game_type=").append(URLEncoder.encode(config.getGameType().name(), ENCODING));
 		if(serverContext.hasGameSession()) {
 			GameInfo game = serverContext.getGameSession().getGame();
-			sb.append("&map=").append(URLEncoder.encode(serverContext.getMapCycle().getCurrentMap(), ENCODING));
+			sb.append("&map=").append(URLEncoder.encode(serverContext.getMapCycle().getCurrentMap().getFileName(), ENCODING));
 			sb.append("&time=").append(game.getGameType().getRemainingTime());
 			
 			NetTeamStat[] stats = game.getGameType().getNetTeamStats();
