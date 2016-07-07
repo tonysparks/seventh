@@ -26,7 +26,7 @@ public class MP44 extends Weapon {
 	public MP44(Game game, Entity owner) {
 		super(game, owner, Type.MP44);
 		
-		this.damage = 34;
+		this.damage = 30;
 //		this.reloadTime = 1200;
 		this.reloadTime = 3000;
 		this.clipSize = 21;
