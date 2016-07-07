@@ -161,6 +161,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 	private NetGamePartialStats gamePartialStats;
 	
 	private Timers gameTimers;
+	private Triggers gameTriggers;
 	
 	private final float DISTANCE_CHECK;
 	private final int TILE_WIDTH, TILE_HEIGHT;
@@ -195,6 +196,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		
 		this.graph = map.createMapGraph(new NodeData());
 		this.gameTimers = new Timers(MAX_TIMERS);
+		this.gameTriggers = new Triggers(this);
 		
 		this.entities = new Entity[MAX_ENTITIES];
 		this.playerEntities = new PlayerEntity[MAX_PLAYERS];
@@ -295,6 +297,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 			@Override
 			public void onRoundEnded(RoundEndedEvent event) {
 				gameTimers.removeTimers();
+				gameTriggers.removeTriggers();
 				aiSystem.endOfRound(Game.this);
 			}
 		});
@@ -461,6 +464,37 @@ public class Game implements GameInfo, Debugable, Updatable {
 	}
 	
 	/**
+	 * Adds a trigger to the game world
+	 * 
+	 * @param trigger
+	 */
+	public void addTrigger(Trigger trigger) {
+		this.gameTriggers.addTrigger(trigger);
+	}
+	
+	/**
+	 * Adds a trigger to the game world.
+	 * 
+	 * @param function
+	 */
+	public void addTrigger(final LeoObject function) {
+		final LeoObject gameClass = LeoObject.valueOf(this);
+		final LeoObject cond = function.getObject("checkCondition");
+		final LeoObject exe = function.getObject("execute");
+		
+		addTrigger(new Trigger() {			
+			@Override
+			public boolean checkCondition(Game game) {			
+				return LeoObject.isTrue(cond.call(gameClass));
+			}			
+			@Override
+			public void execute(Game game) {
+				exe.call(gameClass);
+			}
+		});
+	}
+	
+	/**
 	 * Adds a {@link Timer}
 	 * 
 	 * @param timer
@@ -620,7 +654,8 @@ public class Game implements GameInfo, Debugable, Updatable {
 		}			
 		
 		this.aiSystem.update(timeStep);
-		this.gameTimers.update(timeStep);		
+		this.gameTimers.update(timeStep);
+		this.gameTriggers.update(timeStep);
 		
 		this.gameType.update(this, timeStep);
 		this.time = this.gameType.getRemainingTime();								
@@ -1675,6 +1710,28 @@ public class Game implements GameInfo, Debugable, Updatable {
 		}
 		
 		return true;
+	}
+	
+	public void foreachEntity(final LeoObject func) {
+		for(int i = 0; i < this.entities.length; i++) {
+			Entity ent = this.entities[i];
+			if(ent!=null) {
+				if (LeoObject.isTrue(func.call(LeoObject.valueOf(ent)))) {
+					break;
+				}
+			}
+		}
+	}
+	
+	public void foreachPlayer(final LeoObject func) {
+		for(int i = 0; i < this.playerEntities.length; i++) {
+			Entity ent = this.playerEntities[i];
+			if(ent!=null) {
+				if (LeoObject.isTrue(func.call(LeoObject.valueOf(ent)))) {
+					break;
+				}
+			}
+		}
 	}
 	
 	/**

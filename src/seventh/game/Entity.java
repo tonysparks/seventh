@@ -389,6 +389,15 @@ public abstract class Entity implements Debugable {
 	}
 	
 	/**
+	 * @param type
+	 * @return true if the supplied type name is of the game {@link Type}.  This
+	 * is used in Leola scripts to type checking
+	 */
+	public boolean isType(String type) {
+		return getType().name().equalsIgnoreCase(type);
+	}
+	
+	/**
 	 * @return the type
 	 */
 	public Type getType() {
