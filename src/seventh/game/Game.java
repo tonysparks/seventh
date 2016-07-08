@@ -1716,7 +1716,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		for(int i = 0; i < this.entities.length; i++) {
 			Entity ent = this.entities[i];
 			if(ent!=null) {
-				if (LeoObject.isTrue(func.call(LeoObject.valueOf(ent)))) {
+				if (LeoObject.isTrue(func.call(ent.asScriptObject()))) {
 					break;
 				}
 			}
@@ -1727,7 +1727,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		for(int i = 0; i < this.playerEntities.length; i++) {
 			Entity ent = this.playerEntities[i];
 			if(ent!=null) {
-				if (LeoObject.isTrue(func.call(LeoObject.valueOf(ent)))) {
+				if (LeoObject.isTrue(func.call(ent.asScriptObject()))) {
 					break;
 				}
 			}

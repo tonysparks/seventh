@@ -5,6 +5,7 @@ package seventh.game;
 
 import java.util.List;
 
+import leola.vm.types.LeoObject;
 import seventh.game.net.NetEntity;
 import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
@@ -273,6 +274,8 @@ public abstract class Entity implements Debugable {
 	protected int id;
 	
 	private int events;
+
+	private LeoObject scriptObj;
 	
 	/* if states become unweidly, convert to EntityStateMachine */
 	private long walkingTime;
@@ -324,6 +327,15 @@ public abstract class Entity implements Debugable {
 		this.bounds = new Rectangle();	
 		this.bounds.setLocation(position);
 		this.centerPos = new Vector2f();
+		
+		this.scriptObj = LeoObject.valueOf(this);
+	}
+	
+	/**
+	 * @return this {@link Entity} as a {@link LeoObject}
+	 */
+	public LeoObject asScriptObject() {
+		return this.scriptObj;
 	}
 	
 	/**
