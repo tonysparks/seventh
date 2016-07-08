@@ -24,14 +24,17 @@ public class TargetingSystem implements Updatable {
 	private PlayerEntity currentTarget;
 	
 	private Timer checkTimer;
-	
+	private Timer reactionTimeTimer;
 	/**
 	 * 
 	 */
 	public TargetingSystem(Brain brain) {
 		this.brain = brain;
-		this.checkTimer = new Timer(true, brain.getConfig().getTriggeringSystemPollTime());
+		AIConfig config = brain.getConfig();
+		this.checkTimer = new Timer(true, config.getTriggeringSystemPollTime());
 		this.checkTimer.start();
+		
+		this.reactionTimeTimer = new Timer(false, config.getReactionTime());
 	}
 
 	public void reset(Brain brain) {
@@ -44,6 +47,7 @@ public class TargetingSystem implements Updatable {
 	@Override
 	public void update(TimeStep timeStep) {
 		checkTimer.update(timeStep);
+		reactionTimeTimer.update(timeStep);
 		
 		if(checkTimer.isTime()) {
 		
@@ -53,6 +57,7 @@ public class TargetingSystem implements Updatable {
 			PlayerEntity closestEnemyInSight = sensors.getSightSensor().getClosestEnemy();
 	//		SoundEmittedEvent closestSound = sensors.getSoundSensor().getClosestSound();
 			
+			PlayerEntity newTarget = this.currentTarget;
 			this.currentTarget = null;
 			
 			/* if we are being attacked, this is fairly high priority */
@@ -91,6 +96,10 @@ public class TargetingSystem implements Updatable {
 				}
 				
 			}
+			
+			if(newTarget != this.currentTarget) {
+				this.reactionTimeTimer.reset();
+			}
 		}
 		
 		/*
@@ -117,7 +126,7 @@ public class TargetingSystem implements Updatable {
 	 * @return
 	 */
 	public boolean hasTarget() {
-		return this.currentTarget != null && this.currentTarget.isAlive();
+		return this.currentTarget != null && this.currentTarget.isAlive() && this.reactionTimeTimer.isTime();
 	}
 	
 	

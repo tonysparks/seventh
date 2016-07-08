@@ -49,4 +49,8 @@ public class AIConfig {
 	public long getEvaluationPollTime() {
 		return this.config.getInt(300, "ai", "evaluationPollTime");
 	}
+	
+	public long getReactionTime() {
+		return this.config.getInt(500, "ai", "reactionTime");
+	}
 }

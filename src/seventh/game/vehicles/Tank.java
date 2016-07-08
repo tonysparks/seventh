@@ -8,6 +8,7 @@ import java.util.List;
 import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.PlayerEntity.Keys;
+import seventh.game.SmoothOrientation;
 import seventh.game.SoundEmitter;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
@@ -63,6 +64,7 @@ public class Tank extends Vehicle {
 	private Weapon secondaryWeapon;
 
 	private Vector2f turretFacing;
+	private SmoothOrientation turretSmoother;
 	
 	private int armor;
 	
@@ -196,6 +198,8 @@ public class Tank extends Vehicle {
 
 		this.orientation = 0;
 		this.desiredOrientation = this.orientation;
+		
+		this.turretSmoother = new SmoothOrientation(Math.toRadians(1.5f));
 		
 		this.armor = 200;
 		
@@ -553,31 +557,15 @@ public class Tank extends Vehicle {
 	}
 	
 	protected void updateTurretOrientation(TimeStep timeStep) {
-		final float fullCircle = FastMath.fullCircle;
-		float deltaOrientation = (this.desiredTurretOrientation-this.turretOrientation);
-		float deltaOrientationAbs = Math.abs(deltaOrientation);
-		
-		if(deltaOrientationAbs > 0.001f) {
-			final double movementSpeed = Math.toRadians(1.5f);
-			
-			if(deltaOrientationAbs > (fullCircle/2) ) {
-				deltaOrientation *= -1;
-			}
-			
-			if(deltaOrientation != 0) {
-				float direction = deltaOrientation / deltaOrientationAbs;
-				
-				this.turretOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));
-				if(this.turretOrientation < 0) {
-					this.turretOrientation = fullCircle + this.turretOrientation;
-				}
-				this.turretOrientation %= fullCircle;
-			}
-		
-			this.turretFacing.set(1, 0); // make right vector
-			Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
+		this.turretSmoother.setDesiredOrientation(this.desiredTurretOrientation);
+		this.turretSmoother.setOrientation(this.turretOrientation);
+		this.turretSmoother.update(timeStep);
+		if(this.turretSmoother.moved()) {
 			this.turretRotateSnd.play(game, getId(), SoundType.TANK_TURRET_MOVE, getPos());
-		}		
+		}
+		
+		this.turretOrientation = this.turretSmoother.getOrientation();
+		this.turretFacing.set(this.turretSmoother.getFacing());
 	}
 		
 	/**

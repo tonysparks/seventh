@@ -11,7 +11,7 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.PathPlanner;
 import seventh.ai.basic.actions.AdapterAction;
 import seventh.game.PlayerEntity;
-import seventh.math.FastMath;
+import seventh.game.SmoothOrientation;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -27,13 +27,16 @@ public class HeadScanAction extends AdapterAction {
 	private int direction;
 	private Vector2f destination;
 	private Vector2f attackDir;
-	
+
+	private SmoothOrientation smoother;
 	/**
 	 */
 	public HeadScanAction() {		
 		this.destination = new Vector2f();
 		this.attackDir = new Vector2f();
 		this.direction = 1;
+		
+		this.smoother = new SmoothOrientation(Math.toRadians(15.0f));
 	}
 
 
@@ -115,36 +118,12 @@ public class HeadScanAction extends AdapterAction {
 			destination.set(dest);
 			this.sampleTime = 800 + (brain.getWorld().getRandom().nextInt(3) * 150);
 		}
-		
-		
-		float currentOrientation = ent.getOrientation();
-		float destinationOrientation = (float)(Math.atan2(destination.y, destination.x));
-		final float fullCircle = FastMath.fullCircle;
-		if(destinationOrientation < 0) {
-			destinationOrientation += fullCircle;
-		}
-		
-		// Thank you: http://dev.bennage.com/blog/2013/03/05/game-dev-03/
-		float deltaOrientation = (destinationOrientation - currentOrientation);
-		float deltaOrientationAbs = Math.abs(deltaOrientation);
 				
-		if(deltaOrientationAbs > Math.PI ) {
-			deltaOrientation *= -1;
-		}
-		
-		final double movementSpeed = Math.toRadians(15.0f);
-		
-		if(deltaOrientationAbs != 0) {
-			float direction = deltaOrientation / deltaOrientationAbs;
-			currentOrientation += (direction * Math.min(movementSpeed, deltaOrientationAbs));
-			
-			if(currentOrientation < 0) {
-				currentOrientation = fullCircle + currentOrientation;
-			}
-			currentOrientation %= fullCircle;
-		}
-		
-		ent.setOrientation( currentOrientation );										
+		this.smoother.setOrientation(ent.getOrientation());
+		float destinationOrientation = (float)(Math.atan2(destination.y, destination.x));	
+		this.smoother.setDesiredOrientation(destinationOrientation);
+		this.smoother.update(timeStep);
+		ent.setOrientation(this.smoother.getOrientation());
 	}
 
 }

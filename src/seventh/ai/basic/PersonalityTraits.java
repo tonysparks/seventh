@@ -22,7 +22,8 @@ public class PersonalityTraits {
 	public double curiosity;
 	
 	public float calculateAccuracy(Brain brain) {
-		double slop = (1.0-brain.getRandomRangeMin(accuracy)) * (MAX_SLOP/3f);
+		double slop = (1.0-brain.getRandomRangeMax(accuracy)) * (MAX_SLOP);
+		slop *= brain.getWorld().getRandom().nextBoolean() ? -1 : 1; 
 		return (float)slop;
 	}
 }

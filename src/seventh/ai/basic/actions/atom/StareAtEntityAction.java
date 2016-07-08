@@ -7,6 +7,7 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.PersonalityTraits;
 import seventh.ai.basic.actions.AdapterAction;
 import seventh.game.Entity;
+import seventh.game.SmoothOrientation;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -18,10 +19,12 @@ public class StareAtEntityAction extends AdapterAction {
 	
 	private Entity stareAtMe;	
 	private final long timeSinceLastSeenExpireMSec;
+	private SmoothOrientation smoother;
 	
 	public StareAtEntityAction(Entity stareAtMe) {
 		reset(stareAtMe);
 		timeSinceLastSeenExpireMSec = 1000_300;
+		this.smoother = new SmoothOrientation(Math.toRadians(5.0f));
 	}
 	
 	/**
@@ -51,8 +54,13 @@ public class StareAtEntityAction extends AdapterAction {
 			/* add some slop value so that the Agent isn't too accurate */
 			PersonalityTraits personality = brain.getPersonality();
 			float slop = personality.calculateAccuracy(brain); 
-			
-			me.setOrientation(Entity.getAngleBetween(entityPos, me.getCenterPos()) + slop );	
+			float desiredOrientation = Entity.getAngleBetween(entityPos, me.getCenterPos()) + slop;			
+						
+			smoother.setDesiredOrientation(desiredOrientation);
+			smoother.setOrientation(me.getOrientation());
+			smoother.update(timeStep);
+			me.setOrientation(smoother.getOrientation());
+			//me.setOrientation(desiredOrientation);
 		}			
 	}
 
