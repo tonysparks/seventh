@@ -1,13 +1,16 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities;
 
 import static seventh.shared.SeventhConstants.PLAYER_MIN_SPEED;
 import static seventh.shared.SeventhConstants.PLAYER_SPEED;
 import static seventh.shared.SeventhConstants.SPRINT_SPEED_FACTOR;
 import static seventh.shared.SeventhConstants.WALK_SPEED_FACTOR;
 
+import seventh.client.ClientGame;
+import seventh.client.ClientPlayer;
+import seventh.client.ClientTeam;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;

@@ -4,8 +4,8 @@
  */
 package seventh.client.weapon;
 
-import seventh.client.ClientEntity;
 import seventh.client.ClientGame;
+import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;

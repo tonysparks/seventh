@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.client.ClientPlayer;
-import seventh.client.ClientPlayerEntity;
-import seventh.client.ClientTank;
+import seventh.client.entities.ClientPlayerEntity;
+import seventh.client.entities.vehicles.ClientTank;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;

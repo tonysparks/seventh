@@ -5,7 +5,7 @@ package seventh.client.gfx;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import seventh.client.ClientTank;
+import seventh.client.entities.vehicles.ClientTank;
 
 /**
  * Represents a Sherman tank

@@ -6,7 +6,7 @@ package seventh.client.gfx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import seventh.client.ClientTank;
+import seventh.client.entities.vehicles.ClientTank;
 
 /**
  * @author Tony

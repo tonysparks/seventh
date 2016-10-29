@@ -1,8 +1,9 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities;
 
+import seventh.client.ClientGame;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;

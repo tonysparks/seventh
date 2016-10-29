@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import seventh.client.entities.ClientBombTarget;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;

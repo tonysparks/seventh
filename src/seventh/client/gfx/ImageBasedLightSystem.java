@@ -6,8 +6,8 @@ package seventh.client.gfx;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.client.ClientEntity;
 import seventh.client.ClientGame.ClientEntityListener;
+import seventh.client.entities.ClientEntity;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.math.Vector3f;

@@ -4,7 +4,7 @@
  */
 package seventh.client.weapon;
 
-import seventh.client.ClientPlayerEntity;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.shared.WeaponConstants;
 

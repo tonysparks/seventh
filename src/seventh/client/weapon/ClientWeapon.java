@@ -5,7 +5,7 @@ package seventh.client.weapon;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import seventh.client.ClientPlayerEntity;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Camera;
 import seventh.game.net.NetWeapon;

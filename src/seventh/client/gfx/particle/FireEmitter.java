@@ -6,7 +6,7 @@ package seventh.client.gfx.particle;
 
 import java.util.Random;
 
-import seventh.client.ClientEntity;
+import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;

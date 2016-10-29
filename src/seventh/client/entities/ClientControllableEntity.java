@@ -1,8 +1,10 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities;
 
+import seventh.client.ClientGame;
+import seventh.client.entities.vehicles.ClientVehicle;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.State;
 import seventh.map.Map;

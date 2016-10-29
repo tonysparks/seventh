@@ -3,6 +3,7 @@
  */
 package seventh.client;
 
+import seventh.client.entities.ClientBullet;
 import seventh.math.Vector2f;
 
 /**
@@ -22,7 +23,7 @@ public class ClientBulletPool {
 		this.bullets = new ClientBullet[maxEntities];
 		for(int i = 0; i < maxEntities; i++) {
 			this.bullets[i] = new ClientBullet(game, new Vector2f());
-			this.bullets[i].id = i;
+			this.bullets[i].setId(i);
 		}
 	}
 		
@@ -57,7 +58,7 @@ public class ClientBulletPool {
 	 * @param e
 	 */
 	public void free(ClientBullet e) {
-		this.bullets[e.id] = e;
+		this.bullets[e.getId()] = e;
 		e.destroy();
 	}
 	

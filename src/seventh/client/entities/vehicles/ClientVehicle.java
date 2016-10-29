@@ -1,8 +1,11 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities.vehicles;
 
+import seventh.client.ClientGame;
+import seventh.client.entities.ClientControllableEntity;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.game.entities.Entity.State;
 import seventh.math.Vector2f;
 

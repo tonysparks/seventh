@@ -3,6 +3,7 @@
  */
 package seventh.client;
 
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.PlayerSprite;
 import seventh.game.entities.Entity;

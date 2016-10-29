@@ -1,8 +1,9 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities.vehicles;
 
+import seventh.client.ClientGame;
 import seventh.client.gfx.ShermanTankSprite;
 import seventh.math.Vector2f;
 

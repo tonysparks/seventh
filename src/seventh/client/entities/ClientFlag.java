@@ -1,10 +1,13 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import seventh.client.ClientGame;
+import seventh.client.ClientPlayer;
+import seventh.client.ClientTeam;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;

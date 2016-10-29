@@ -6,6 +6,7 @@ package seventh.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import seventh.client.entities.ClientControllableEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.sfx.Sounds;
 import seventh.game.entities.PlayerEntity.Keys;

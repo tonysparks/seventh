@@ -3,6 +3,10 @@
  */
 package seventh.client;
 
+import seventh.client.entities.ClientBullet;
+import seventh.client.entities.ClientControllableEntity;
+import seventh.client.entities.ClientEntities;
+import seventh.client.entities.ClientEntity;
 import seventh.client.sfx.Sounds;
 import seventh.shared.TimeStep;
 
@@ -66,9 +70,9 @@ public class Zings {
                 if(ent != null) {
                     if(ent instanceof ClientBullet) {
                     	ClientBullet bullet = (ClientBullet)ent;
-                        if(ent.isAlive() && ent.getLastUpdate()+200 > gameClock && bullet.getOwnerId() != localEntity.id) {
+                        if(ent.isAlive() && ent.getLastUpdate()+200 > gameClock && bullet.getOwnerId() != localEntity.getId()) {
                             if(localEntity.inEarShot(ent)) {
-                                zings[ent.id].playZing(gameClock, localEntity.id, ent);
+                                zings[ent.getId()].playZing(gameClock, localEntity.getId(), ent);
                             }
                         }
                     }

@@ -10,11 +10,11 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import seventh.client.ClientBombTarget;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayers;
 import seventh.client.ClientTeam;
+import seventh.client.entities.ClientBombTarget;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.weapons.Weapon.State;
 import seventh.map.Layer;

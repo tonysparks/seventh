@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.client.ClientPlayer;
-import seventh.client.ClientPlayerEntity;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.particle.Effects;
 import seventh.client.weapon.ClientRocketLauncher;

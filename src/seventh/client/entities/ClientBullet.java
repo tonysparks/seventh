@@ -1,10 +1,11 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities;
 
 import java.util.Random;
 
+import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.particle.BulletImpactEmitter;
@@ -88,6 +89,10 @@ public class ClientBullet extends ClientEntity {
 		
 		Random rand = game.getRandom();
 		tracerLength = 50 + rand.nextInt(30);
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	/**

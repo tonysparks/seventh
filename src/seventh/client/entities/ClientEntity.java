@@ -1,10 +1,11 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities;
 
 import java.util.Random;
 
+import seventh.client.ClientGame;
 import seventh.client.gfx.Renderable;
 import seventh.client.sfx.Sound;
 import seventh.game.entities.Entity.Type;

@@ -3,7 +3,7 @@
  */
 package seventh.client.weapon;
 
-import seventh.client.ClientPlayerEntity;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.game.weapons.Weapon.State;
 import seventh.shared.TimeStep;

@@ -3,6 +3,7 @@
  */
 package seventh.client;
 
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.math.Vector2f;
 import seventh.shared.Console;
 
