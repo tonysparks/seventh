@@ -73,9 +73,10 @@ public class DroppedItem extends Entity {
 				if(ent != null) {
 					if(ent.isAlive() && !ent.getType().isVehicle()) {
 						if(ent.bounds.intersects(bounds)) {
-							ent.pickupItem(droppedItem);
-							softKill(); /* remove this dropped item */
-							break;
+							if(ent.pickupItem(droppedItem)) {
+								softKill(); /* remove this dropped item */
+								break;
+							}
 						}
 					}
 				}

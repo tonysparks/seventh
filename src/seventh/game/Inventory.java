@@ -19,10 +19,12 @@ import seventh.game.weapons.Weapon;
 public class Inventory {
 
 	private List<Weapon> weapons;
+	private final int maxPrimaryWeapons;
 	private int currentItem;
 	private GrenadeBelt grenades;
 	
-	public Inventory() {
+	public Inventory(int maxPrimaryWeapons) {
+		this.maxPrimaryWeapons = maxPrimaryWeapons;
 		this.weapons = new ArrayList<Weapon>();
 		this.currentItem = 0;
 	}
@@ -42,14 +44,20 @@ public class Inventory {
 	 * Adds a Weapon to the inventory
 	 * 
 	 * @param item
+	 * @return true if the weapon was picked up
 	 */
-	public void addItem(Weapon item) {
+	public boolean addItem(Weapon item) {
 		if(item instanceof GrenadeBelt) {
 			this.grenades = (GrenadeBelt)item;
+			return true;
 		}
 		else {
-			this.weapons.add(item);
+			if(numberOfPrimaryItems() < this.maxPrimaryWeapons || !item.isPrimary()) {
+				this.weapons.add(item);
+				return true;
+			}
 		}				
+		return false;
 	}
 	
 	/**
@@ -124,6 +132,16 @@ public class Inventory {
 	 */
 	public int numberOfItems() {
 		return this.weapons.size();
+	}
+	
+	public int numberOfPrimaryItems() {
+		int numberOfPrimary = 0;
+		for(int i = 0; i < weapons.size(); i++) {
+			if(weapons.get(i).isPrimary()) {
+				numberOfPrimary++;
+			}
+		}
+		return numberOfPrimary;
 	}
 	
 	/**

@@ -37,7 +37,12 @@ public class GrenadeBelt extends Weapon {
 		
 		applyScriptAttributes("grenade_belt");
 	}
-		
+	
+	@Override
+	public boolean isPrimary() {	
+		return false;
+	}
+	
 	public int getNumberOfGrenades() {
 		return this.bulletsInClip;
 	}

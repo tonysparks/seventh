@@ -52,9 +52,12 @@ public class Pistol extends Weapon {
 		super.update(timeStep);			
 	}
 	
-	/* (non-Javadoc)
-	 * @see palisma.game.Weapon#reload()
-	 */
+	@Override
+	public boolean isPrimary() {	
+		return false;
+	}
+	
+	
 	@Override
 	public boolean reload() {
 		boolean reloaded = super.reload();

@@ -140,6 +140,14 @@ public abstract class Weapon {
 	}
 	
 	/**
+	 * If this is a primary weapon or not
+	 * @return true if this is a primary weapon
+	 */
+	public boolean isPrimary() {
+		return true;
+	}
+	
+	/**
 	 * @param owner the owner to set
 	 */
 	public void setOwner(Entity owner) {

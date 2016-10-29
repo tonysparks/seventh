@@ -5,6 +5,7 @@ package seventh.game.entities;
 
 import static seventh.shared.SeventhConstants.ENTERING_VEHICLE_TIME;
 import static seventh.shared.SeventhConstants.EXITING_VEHICLE_TIME;
+import static seventh.shared.SeventhConstants.MAX_PRIMARY_WEAPONS;
 import static seventh.shared.SeventhConstants.MAX_STAMINA;
 import static seventh.shared.SeventhConstants.PLAYER_HEARING_RADIUS;
 import static seventh.shared.SeventhConstants.PLAYER_HEIGHT;
@@ -157,7 +158,7 @@ public class PlayerEntity extends Entity implements Controllable {
 		this.inputVel = new Vector2f();
 		this.enemyDir = new Vector2f();
 				
-		this.inventory = new Inventory();						
+		this.inventory = new Inventory(MAX_PRIMARY_WEAPONS);						
 		this.hearingBounds = new Rectangle(PLAYER_HEARING_RADIUS, PLAYER_HEARING_RADIUS);
 		
 		this.stamina = MAX_STAMINA;
@@ -286,19 +287,25 @@ public class PlayerEntity extends Entity implements Controllable {
 	 * Picks up an item
 	 * 
 	 * @param item
+	 * @return true if the item was picked up
 	 */
-	public void pickupItem(Weapon weapon) {		
+	public boolean pickupItem(Weapon weapon) {		
 		Type type = weapon.getType();
 		if(inventory.hasItem(type)) {			
 			Weapon myWeapon = inventory.getItem(type);
 			myWeapon.addAmmo(weapon.getTotalAmmo());
-			game.emitSound(getId(), SoundType.AMMO_PICKUP, getPos());		
+			game.emitSound(getId(), SoundType.AMMO_PICKUP, getPos());
+			return true;
 		}
 		else {				
-			inventory.addItem(weapon);
-			weapon.setOwner(this);
-			game.emitSound(getId(), SoundType.WEAPON_PICKUP, getPos());			
+			if(inventory.addItem(weapon)) {
+				weapon.setOwner(this);
+				game.emitSound(getId(), SoundType.WEAPON_PICKUP, getPos());
+				return true;
+			}
 		}
+		
+		return false;
 	}
 	
 	/**
