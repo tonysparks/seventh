@@ -7,7 +7,7 @@ import java.util.Random;
 
 import seventh.client.gfx.Renderable;
 import seventh.client.sfx.Sound;
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetEntity;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

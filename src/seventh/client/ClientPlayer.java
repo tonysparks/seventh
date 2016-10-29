@@ -5,7 +5,7 @@ package seventh.client;
 
 import seventh.client.gfx.Art;
 import seventh.client.gfx.PlayerSprite;
-import seventh.game.Entity;
+import seventh.game.entities.Entity;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 

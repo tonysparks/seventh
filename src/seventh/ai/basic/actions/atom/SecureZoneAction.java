@@ -9,7 +9,7 @@ import java.util.List;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Zone;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.Vector2f;
 
 /**

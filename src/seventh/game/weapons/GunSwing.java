@@ -3,9 +3,9 @@
  */
 package seventh.game.weapons;
 
-import seventh.game.Entity;
 import seventh.game.Game;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

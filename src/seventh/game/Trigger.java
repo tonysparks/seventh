@@ -3,6 +3,7 @@
  */
 package seventh.game;
 
+import seventh.game.entities.Entity;
 import seventh.map.Tile;
 
 /**

@@ -8,8 +8,8 @@ import java.util.List;
 import seventh.ai.basic.AttackDirection;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.Entity;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

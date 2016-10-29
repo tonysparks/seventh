@@ -4,8 +4,8 @@
 package seventh.game.net;
 
 import harenet.IOBuffer;
-import seventh.game.Entity.State;
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity.State;
+import seventh.game.entities.Entity.Type;
 import seventh.network.messages.BufferIO;
 
 /**

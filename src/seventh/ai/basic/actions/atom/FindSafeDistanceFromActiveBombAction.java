@@ -6,9 +6,9 @@ package seventh.ai.basic.actions.atom;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.World;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.Bomb;
-import seventh.game.BombTarget;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.Bomb;
+import seventh.game.entities.BombTarget;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 

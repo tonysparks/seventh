@@ -4,9 +4,9 @@
  */
 package seventh.game.weapons;
 
-import seventh.game.Entity;
-import seventh.game.Entity.Type;
 import seventh.game.Game;
+import seventh.game.entities.Entity;
+import seventh.game.entities.Entity.Type;
 import seventh.math.Vector2f;
 import seventh.shared.SoundType;
 import seventh.shared.WeaponConstants;

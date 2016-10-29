@@ -3,7 +3,7 @@
  */
 package seventh.game.net;
 
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity.Type;
 import seventh.network.messages.BufferIO;
 import seventh.shared.SeventhConstants;
 import harenet.IOBuffer;

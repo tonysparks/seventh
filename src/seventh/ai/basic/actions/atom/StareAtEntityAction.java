@@ -6,8 +6,8 @@ package seventh.ai.basic.actions.atom;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.PersonalityTraits;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.Entity;
 import seventh.game.SmoothOrientation;
+import seventh.game.entities.Entity;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.BombTarget;
+import seventh.game.entities.BombTarget;
 import seventh.math.Vector2f;
 
 /**

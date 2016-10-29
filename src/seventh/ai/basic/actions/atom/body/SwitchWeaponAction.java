@@ -5,9 +5,9 @@ package seventh.ai.basic.actions.atom.body;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.Entity.Type;
 import seventh.game.Inventory;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.Type;
 import seventh.game.weapons.Weapon;
 import seventh.shared.TimeStep;
 

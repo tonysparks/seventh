@@ -6,6 +6,8 @@ package seventh.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.net.NetTeam;
 import seventh.math.Vector2f;
 import seventh.shared.Debugable;

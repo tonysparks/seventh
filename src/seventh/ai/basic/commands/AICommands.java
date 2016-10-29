@@ -16,9 +16,9 @@ import seventh.ai.basic.actions.SequencedAction;
 import seventh.ai.basic.actions.atom.CoverEntityAction;
 import seventh.ai.basic.actions.atom.GuardAction;
 import seventh.ai.basic.actions.atom.MoveToAction;
-import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
+import seventh.game.entities.BombTarget;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
 

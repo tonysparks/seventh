@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game;
+package seventh.game.entities;
 
 import static seventh.shared.SeventhConstants.ENTERING_VEHICLE_TIME;
 import static seventh.shared.SeventhConstants.EXITING_VEHICLE_TIME;
@@ -21,11 +21,17 @@ import static seventh.shared.SeventhConstants.WALK_SPEED_FACTOR;
 
 import java.util.List;
 
+import seventh.game.Controllable;
+import seventh.game.Game;
+import seventh.game.Inventory;
+import seventh.game.SoundEventPool;
+import seventh.game.SurfaceTypeToSoundType;
+import seventh.game.Team;
+import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
-import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Kar98;
 import seventh.game.weapons.M1Garand;
@@ -1406,10 +1412,10 @@ public class PlayerEntity extends Entity implements Controllable {
 		
 		Vector2f centerPos = getCenterPos();
 		if(isOperatingVehicle()) {
-			getVehicle().calculateLineOfSight(game.aTiles);
+			getVehicle().calculateLineOfSight(game.tilesInLineOfSight);
 		}
 		else {
-			calculateLineOfSight(game.aTiles);						
+			calculateLineOfSight(game.tilesInLineOfSight);						
 		}
 		
 		this.visualBounds.centerAround(centerPos);

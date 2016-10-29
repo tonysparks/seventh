@@ -4,8 +4,8 @@
  */
 package seventh.game.events;
 
-import seventh.game.Bomb;
 import leola.frontend.listener.Event;
+import seventh.game.entities.Bomb;
 
 /**
  * @author Tony

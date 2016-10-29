@@ -3,7 +3,9 @@
  */
 package seventh.game;
 
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.Type;
 import seventh.math.Vector2f;
 
 /**

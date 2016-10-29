@@ -8,7 +8,7 @@ import seventh.ai.basic.PathPlanner;
 import seventh.ai.basic.SightSensor;
 import seventh.ai.basic.actions.AdapterAction;
 import seventh.ai.basic.memory.SightMemory.SightMemoryRecord;
-import seventh.game.Entity;
+import seventh.game.entities.Entity;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

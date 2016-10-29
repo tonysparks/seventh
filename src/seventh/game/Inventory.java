@@ -6,7 +6,7 @@ package seventh.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity.Type;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Weapon;
 

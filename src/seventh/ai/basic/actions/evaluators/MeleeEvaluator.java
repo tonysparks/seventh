@@ -8,7 +8,7 @@ import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.actions.atom.body.MeleeAction;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
 

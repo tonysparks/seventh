@@ -3,8 +3,8 @@
  */
 package seventh.game.weapons;
 
-import seventh.game.Entity;
 import seventh.game.Game;
+import seventh.game.entities.Entity;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetFire;
 import seventh.math.Vector2f;

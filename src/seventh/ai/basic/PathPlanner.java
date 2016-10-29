@@ -7,11 +7,11 @@ package seventh.ai.basic;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.game.Entity;
 import seventh.game.Player;
-import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
-import seventh.game.vehicles.Vehicle;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.vehicles.Vehicle;
 import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.map.MapGraph;

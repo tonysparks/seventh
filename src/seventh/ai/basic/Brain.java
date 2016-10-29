@@ -5,8 +5,8 @@ package seventh.ai.basic;
 
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
-import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
+import seventh.game.entities.PlayerEntity;
 import seventh.graph.GraphNode;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
@@ -163,8 +163,8 @@ public class Brain implements Debugable {
 			
 			this.targetingSystem.update(timeStep);
 			
-			debugDraw();
-			debugDrawPathPlanner();
+			//debugDraw();
+			//debugDrawPathPlanner();
 		}		
 	}
 	

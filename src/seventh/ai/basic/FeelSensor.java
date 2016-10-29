@@ -5,9 +5,9 @@ package seventh.ai.basic;
 
 import seventh.ai.basic.memory.FeelMemory;
 import seventh.ai.basic.memory.FeelMemory.FeelMemoryRecord;
-import seventh.game.Entity;
-import seventh.game.Entity.OnDamageListener;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.OnDamageListener;
 import seventh.shared.TimeStep;
 
 /**

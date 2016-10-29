@@ -9,7 +9,7 @@ import java.util.List;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
-import seventh.game.vehicles.Vehicle;
+import seventh.game.entities.vehicles.Vehicle;
 
 /**
  * @author Tony

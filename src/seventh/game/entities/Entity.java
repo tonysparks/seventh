@@ -1,13 +1,14 @@
 /*
  * see license.txt 
  */
-package seventh.game;
+package seventh.game.entities;
 
 import java.util.List;
 
 import leola.vm.types.LeoObject;
+import seventh.game.Game;
+import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.net.NetEntity;
-import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.map.Tile;
 import seventh.math.Rectangle;

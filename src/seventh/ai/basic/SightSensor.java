@@ -8,9 +8,9 @@ import java.util.List;
 
 import seventh.ai.basic.memory.SightMemory;
 import seventh.ai.basic.memory.SightMemory.SightMemoryRecord;
-import seventh.game.Entity;
-import seventh.game.PlayerEntity;
 import seventh.game.Team;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;

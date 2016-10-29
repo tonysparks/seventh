@@ -5,8 +5,10 @@ package seventh.game;
 
 import java.util.Date;
 
-import seventh.game.Entity.Type;
-import seventh.game.PlayerEntity.Keys;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.Type;
+import seventh.game.entities.PlayerEntity.Keys;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.math.Vector2f;

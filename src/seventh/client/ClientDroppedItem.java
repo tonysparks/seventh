@@ -6,7 +6,7 @@ package seventh.client;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetDroppedItem;
 import seventh.game.net.NetEntity;
 import seventh.math.Vector2f;

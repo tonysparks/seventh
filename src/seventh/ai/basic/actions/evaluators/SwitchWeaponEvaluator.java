@@ -10,8 +10,8 @@ import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.actions.atom.body.SwitchWeaponAction;
-import seventh.game.Entity.Type;
 import seventh.game.Inventory;
+import seventh.game.entities.Entity.Type;
 import seventh.game.weapons.Weapon;
 
 /**

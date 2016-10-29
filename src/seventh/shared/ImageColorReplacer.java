@@ -48,7 +48,7 @@ public class ImageColorReplacer {
 	 */
 	public static void main(String[] args) throws Exception {
 		
-		File imageFile = new File("C:\\Users\\Tony\\git\\seventh\\seventh\\gfx\\player\\axis_positions.png");
+		File imageFile = new File("C:\\Users\\Tony\\Desktop\\SpriteSheetPacker\\GreenKnight\\attack");
 		File replacedFile = new File(imageFile.getParentFile(), imageFile.getName() + ".replaced.png");
 		BufferedImage image = ImageIO.read(imageFile);
 		

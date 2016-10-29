@@ -3,7 +3,7 @@
  */
 package seventh.ai.basic.actions.atom;
 
-import seventh.game.BombTarget;
+import seventh.game.entities.BombTarget;
 
 /**
  * @author Tony

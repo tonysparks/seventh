@@ -22,8 +22,20 @@ import leola.vm.types.LeoObject;
 import seventh.ai.AISystem;
 import seventh.ai.basic.AILeolaLibrary;
 import seventh.ai.basic.DefaultAISystem;
-import seventh.game.Entity.KilledListener;
-import seventh.game.Entity.Type;
+import seventh.game.entities.Bomb;
+import seventh.game.entities.BombTarget;
+import seventh.game.entities.DroppedItem;
+import seventh.game.entities.Entity;
+import seventh.game.entities.Flag;
+import seventh.game.entities.HealthPack;
+import seventh.game.entities.LightBulb;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.KilledListener;
+import seventh.game.entities.Entity.Type;
+import seventh.game.entities.vehicles.PanzerTank;
+import seventh.game.entities.vehicles.ShermanTank;
+import seventh.game.entities.vehicles.Tank;
+import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.PlayerSpawnedEvent;
@@ -46,10 +58,6 @@ import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
-import seventh.game.vehicles.PanzerTank;
-import seventh.game.vehicles.ShermanTank;
-import seventh.game.vehicles.Tank;
-import seventh.game.vehicles.Vehicle;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Fire;
 import seventh.game.weapons.Weapon;
@@ -151,7 +159,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 	
 	// data members that are strictly here for performance
 	// reasons
-	List<Tile> aTiles = new ArrayList<Tile>();
+	public List<Tile> tilesInLineOfSight = new ArrayList<Tile>();
 	List<SoundEmittedEvent> aSoundsHeard = new ArrayList<SoundEmittedEvent>();
 	List<Entity> aEntitiesInView = new ArrayList<Entity>();
 		

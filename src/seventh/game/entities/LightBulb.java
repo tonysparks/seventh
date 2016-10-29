@@ -1,8 +1,9 @@
 /*
  * see license.txt 
  */
-package seventh.game;
+package seventh.game.entities;
 
+import seventh.game.Game;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetLight;
 import seventh.math.Vector2f;

@@ -5,10 +5,9 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.game.entities.Entity;
 
 import java.util.List;
-
-import seventh.game.Entity;
 
 /**
  * @author Tony

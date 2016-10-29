@@ -6,8 +6,8 @@ package seventh.ai.basic;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.game.BombTarget;
-import seventh.game.Entity;
+import seventh.game.entities.BombTarget;
+import seventh.game.entities.Entity;
 import seventh.math.Rectangle;
 import seventh.shared.Debugable;
 

@@ -2,9 +2,10 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.game;
+package seventh.game.entities;
 
 import leola.frontend.listener.EventDispatcher;
+import seventh.game.Game;
 import seventh.game.events.BombDisarmedEvent;
 import seventh.game.events.BombExplodedEvent;
 import seventh.game.events.BombPlantedEvent;

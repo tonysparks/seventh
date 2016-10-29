@@ -5,8 +5,8 @@ package seventh.ai.basic.memory;
 
 import java.util.List;
 
-import seventh.game.PlayerEntity;
 import seventh.game.SoundEventPool;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;

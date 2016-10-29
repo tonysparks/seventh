@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.ClientTeam;
+import seventh.game.entities.Entity.Type;
 import seventh.client.ClientConnection;
-import seventh.game.Entity.Type;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;

@@ -10,7 +10,7 @@ import seventh.client.gfx.TankSprite;
 import seventh.client.gfx.particle.Emitter;
 import seventh.client.gfx.particle.RenderableEffect;
 import seventh.client.gfx.particle.RocketTrailEmitter;
-import seventh.game.Entity.State;
+import seventh.game.entities.Entity.State;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Weapon;

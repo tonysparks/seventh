@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import seventh.ai.basic.Zone;
-import seventh.game.Flag;
+import seventh.game.entities.Flag;
 
 /**
  * @author Tony

@@ -6,7 +6,7 @@ package seventh.network.messages;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import harenet.messages.NetMessageFactory;
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetBomb;
 import seventh.game.net.NetBombTarget;
 import seventh.game.net.NetBullet;

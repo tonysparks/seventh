@@ -10,8 +10,8 @@ import seventh.ai.basic.AttackDirection;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.PathPlanner;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.PlayerEntity;
 import seventh.game.SmoothOrientation;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

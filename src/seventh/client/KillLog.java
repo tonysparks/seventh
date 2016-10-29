@@ -11,7 +11,7 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
-import seventh.game.Entity.Type;
+import seventh.game.entities.Entity.Type;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 

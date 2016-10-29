@@ -8,7 +8,7 @@ import java.util.List;
 
 import seventh.client.gfx.Camera;
 import seventh.client.sfx.Sounds;
-import seventh.game.PlayerEntity.Keys;
+import seventh.game.entities.PlayerEntity.Keys;
 import seventh.map.Map;
 import seventh.map.Tile;
 import seventh.math.Rectangle;

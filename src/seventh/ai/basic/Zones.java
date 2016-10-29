@@ -9,8 +9,8 @@ import static seventh.shared.SeventhConstants.PLAYER_WIDTH;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.game.BombTarget;
 import seventh.game.GameInfo;
+import seventh.game.entities.BombTarget;
 import seventh.map.Map;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

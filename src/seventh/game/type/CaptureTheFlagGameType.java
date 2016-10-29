@@ -8,13 +8,13 @@ import java.util.List;
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
 import leola.vm.Leola;
-import seventh.game.Entity;
-import seventh.game.Entity.OnTouchListener;
-import seventh.game.Flag;
 import seventh.game.Game;
-import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
+import seventh.game.entities.Entity;
+import seventh.game.entities.Flag;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.OnTouchListener;
 import seventh.game.events.FlagCapturedEvent;
 import seventh.game.events.FlagCapturedListener;
 import seventh.game.events.FlagReturnedEvent;
@@ -46,7 +46,7 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 		@Override
 		public void onTouch(Entity me, Entity other) {
 			if(!flag.isBeingCarried()) {
-				if(other.getType()==seventh.game.Entity.Type.PLAYER) {
+				if(other.getType()==seventh.game.entities.Entity.Type.PLAYER) {
 					PlayerEntity otherPlayer = (PlayerEntity)other;
 					if(otherPlayer.isAlive()) {
 						/*
@@ -58,8 +58,8 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 						 */
 						int teamId = otherPlayer.getTeam().getId(); 
 						
-						if( (teamId==Team.ALLIED_TEAM_ID && flag.getType()==seventh.game.Entity.Type.ALLIED_FLAG) || 
-							(teamId==Team.AXIS_TEAM_ID && flag.getType()==seventh.game.Entity.Type.AXIS_FLAG) ) {
+						if( (teamId==Team.ALLIED_TEAM_ID && flag.getType()==seventh.game.entities.Entity.Type.ALLIED_FLAG) || 
+							(teamId==Team.AXIS_TEAM_ID && flag.getType()==seventh.game.entities.Entity.Type.AXIS_FLAG) ) {
 							flag.carriedBy(otherPlayer);
 							getDispatcher().queueEvent(new FlagStolenEvent(this, flag, otherPlayer.getId()));
 						}

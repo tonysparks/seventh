@@ -6,7 +6,7 @@ package seventh.ai.basic.actions.evaluators;
 import java.util.List;
 
 import seventh.ai.basic.Brain;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.weapons.Weapon;
 import seventh.math.Vector2f;
 

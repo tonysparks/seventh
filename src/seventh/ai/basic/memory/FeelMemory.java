@@ -3,7 +3,7 @@
  */
 package seventh.ai.basic.memory;
 
-import seventh.game.Entity;
+import seventh.game.entities.Entity;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.shared.Updatable;

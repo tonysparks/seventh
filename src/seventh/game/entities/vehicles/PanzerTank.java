@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.vehicles;
+package seventh.game.entities.vehicles;
 
 import seventh.game.Game;
 import seventh.math.Vector2f;

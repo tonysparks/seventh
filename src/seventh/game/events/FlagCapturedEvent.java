@@ -4,7 +4,7 @@
 package seventh.game.events;
 
 import leola.frontend.listener.Event;
-import seventh.game.Flag;
+import seventh.game.entities.Flag;
 
 /**
  * @author Tony

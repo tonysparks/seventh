@@ -4,8 +4,8 @@
 package seventh.ai.basic.actions.atom;
 
 import seventh.ai.basic.Brain;
-import seventh.game.Bomb;
-import seventh.game.BombTarget;
+import seventh.game.entities.Bomb;
+import seventh.game.entities.BombTarget;
 
 /**
  * Moves to a bomb target with the intention of planting a {@link Bomb}.  This is slightly different

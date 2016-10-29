@@ -6,8 +6,8 @@ package seventh.ai.basic.actions.atom;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Locomotion;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.PlayerEntity;
-import seventh.game.vehicles.Vehicle;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.vehicles.Vehicle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

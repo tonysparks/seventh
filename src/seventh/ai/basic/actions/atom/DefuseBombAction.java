@@ -6,7 +6,7 @@ package seventh.ai.basic.actions.atom;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.Locomotion;
 import seventh.ai.basic.actions.AdapterAction;
-import seventh.game.BombTarget;
+import seventh.game.entities.BombTarget;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

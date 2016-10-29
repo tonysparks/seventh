@@ -2,8 +2,9 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.game;
+package seventh.game.entities;
 
+import seventh.game.Game;
 import seventh.game.net.NetBombTarget;
 import seventh.game.net.NetEntity;
 import seventh.math.Vector2f;

@@ -15,7 +15,7 @@ import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.particle.Effects;
 import seventh.client.weapon.ClientRocketLauncher;
 import seventh.client.weapon.ClientWeapon;
-import seventh.game.Entity.State;
+import seventh.game.entities.Entity.State;
 import seventh.game.weapons.Weapon;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

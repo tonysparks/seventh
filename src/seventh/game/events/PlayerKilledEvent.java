@@ -4,10 +4,10 @@
 package seventh.game.events;
 
 import leola.frontend.listener.Event;
-import seventh.game.Entity;
-import seventh.game.Entity.Type;
 import seventh.game.Player;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.Type;
 import seventh.game.weapons.Bullet;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Fire;

@@ -7,7 +7,7 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.actions.atom.MoveToAction;
-import seventh.game.Entity;
+import seventh.game.entities.Entity;
 import seventh.game.weapons.Bullet;
 import seventh.math.Vector2f;
 

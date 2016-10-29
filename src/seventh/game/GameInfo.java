@@ -8,8 +8,12 @@ import java.util.Random;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.ai.AISystem;
+import seventh.game.entities.BombTarget;
+import seventh.game.entities.Entity;
+import seventh.game.entities.Flag;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.type.GameType;
-import seventh.game.vehicles.Vehicle;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.math.Rectangle;

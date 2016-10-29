@@ -3,6 +3,7 @@
  */
 package seventh.game;
 
+import seventh.game.entities.Entity;
 
 /**
  * Allows an {@link Entity} to be responsive to {@link UserCommand}'s

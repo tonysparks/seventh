@@ -14,12 +14,12 @@ import seventh.ai.basic.Zone;
 import seventh.ai.basic.Zones;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
-import seventh.game.BombTarget;
 import seventh.game.GameInfo;
 import seventh.game.Player;
-import seventh.game.PlayerEntity;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
+import seventh.game.entities.BombTarget;
+import seventh.game.entities.PlayerEntity;
 import seventh.shared.Randomizer;
 import seventh.shared.TimeStep;
 

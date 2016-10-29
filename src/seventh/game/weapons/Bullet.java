@@ -3,9 +3,9 @@
  */
 package seventh.game.weapons;
 
-import seventh.game.Entity;
 import seventh.game.Game;
 import seventh.game.SurfaceTypeToSoundType;
+import seventh.game.entities.Entity;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
 import seventh.map.Map;

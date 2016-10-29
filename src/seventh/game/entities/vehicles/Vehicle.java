@@ -1,12 +1,12 @@
 /**
  * 
  */
-package seventh.game.vehicles;
+package seventh.game.entities.vehicles;
 
 import seventh.game.Controllable;
-import seventh.game.Entity;
 import seventh.game.Game;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

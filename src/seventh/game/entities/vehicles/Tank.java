@@ -1,15 +1,15 @@
 /**
  * 
  */
-package seventh.game.vehicles;
+package seventh.game.entities.vehicles;
 
 import java.util.List;
 
-import seventh.game.Entity;
 import seventh.game.Game;
-import seventh.game.PlayerEntity.Keys;
 import seventh.game.SmoothOrientation;
 import seventh.game.SoundEmitter;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity.Keys;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Bullet;

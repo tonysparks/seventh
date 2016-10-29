@@ -4,10 +4,10 @@
  */
 package seventh.game.type;
 
-import seventh.game.Bomb;
-import seventh.game.BombTarget;
 import seventh.game.Game;
 import seventh.game.GameInfo;
+import seventh.game.entities.Bomb;
+import seventh.game.entities.BombTarget;
 import seventh.math.Vector2f;
 
 /**

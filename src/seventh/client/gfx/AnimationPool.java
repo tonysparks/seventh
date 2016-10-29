@@ -58,7 +58,7 @@ public class AnimationPool {
 			}
 		}*/	
 		
-		Cons.println("*** WARNING: The animation pool '" + name + "' has been exhausted!");
+		//Cons.println("*** WARNING: The animation pool '" + name + "' has been exhausted!");
 		return factory.newAnimation();
 	}
 	

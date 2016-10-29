@@ -4,9 +4,9 @@
 package seventh.ai.basic;
 
 import seventh.ai.basic.memory.SightMemory.SightMemoryRecord;
-import seventh.game.Entity;
-import seventh.game.Entity.Type;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
+import seventh.game.entities.Entity.Type;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;

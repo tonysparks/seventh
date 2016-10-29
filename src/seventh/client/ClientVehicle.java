@@ -3,7 +3,7 @@
  */
 package seventh.client;
 
-import seventh.game.Entity.State;
+import seventh.game.entities.Entity.State;
 import seventh.math.Vector2f;
 
 /**

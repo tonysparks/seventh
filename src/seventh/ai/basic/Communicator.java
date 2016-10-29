@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
 import seventh.game.Player;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.PlayerEntity;
 import seventh.math.Rectangle;
 
 

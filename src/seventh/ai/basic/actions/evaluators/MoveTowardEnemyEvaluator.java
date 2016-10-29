@@ -7,7 +7,7 @@ import seventh.ai.basic.Brain;
 import seventh.ai.basic.TargetingSystem;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
-import seventh.game.PlayerEntity;
+import seventh.game.entities.PlayerEntity;
 
 /**
  * @author Tony
