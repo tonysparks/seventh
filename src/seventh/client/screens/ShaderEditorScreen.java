@@ -7,7 +7,7 @@ import com.badlogic.gdx.Input.Keys;
 
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.ShaderTest;
+import seventh.client.gfx.effects.ShaderTest;
 import seventh.client.inputs.Inputs;
 import seventh.shared.TimeStep;
 

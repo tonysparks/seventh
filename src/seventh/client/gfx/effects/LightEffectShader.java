@@ -1,8 +1,9 @@
 /*
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.gfx.effects;
 
+import seventh.client.gfx.Shader;
 
 /**
  * @author Tony

@@ -1,12 +1,17 @@
 /*
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.gfx.effects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import seventh.client.ClientGame;
+import seventh.client.gfx.Camera;
+import seventh.client.gfx.Canvas;
+import seventh.client.gfx.FrameBufferRenderable;
+import seventh.client.gfx.ImageBasedLightSystem;
+import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.particle.BloodEmitter;
 import seventh.client.gfx.particle.Effect;
 import seventh.client.gfx.particle.Effects;

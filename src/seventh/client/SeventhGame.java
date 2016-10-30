@@ -27,14 +27,14 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 import seventh.ClientMain;
 import seventh.client.gfx.Art;
-import seventh.client.gfx.BlurEffectShader;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.FireEffectShader;
 import seventh.client.gfx.GdxCanvas;
-import seventh.client.gfx.LightEffectShader;
-import seventh.client.gfx.RippleEffectShader;
 import seventh.client.gfx.Terminal;
 import seventh.client.gfx.Theme;
+import seventh.client.gfx.effects.BlurEffectShader;
+import seventh.client.gfx.effects.FireEffectShader;
+import seventh.client.gfx.effects.LightEffectShader;
+import seventh.client.gfx.effects.RippleEffectShader;
 import seventh.client.inputs.Inputs;
 import seventh.client.inputs.KeyMap;
 import seventh.client.network.ClientConnection;

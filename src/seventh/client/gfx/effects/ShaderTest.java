@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.gfx.effects;
 
 import org.lwjgl.opengl.GL11;
 
@@ -17,6 +17,10 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 
+import seventh.client.gfx.Art;
+import seventh.client.gfx.Camera;
+import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Renderable;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

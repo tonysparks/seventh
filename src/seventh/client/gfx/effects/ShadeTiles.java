@@ -2,10 +2,12 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.gfx.effects;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import seventh.client.gfx.TextureUtil;
 
 /**
  * @author Tony

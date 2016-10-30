@@ -10,7 +10,7 @@ import java.util.List;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.ShadeTiles;
+import seventh.client.gfx.effects.ShadeTiles;
 import seventh.graph.Edge;
 import seventh.graph.GraphNode;
 import seventh.graph.Edges.Directions;

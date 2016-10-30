@@ -1,12 +1,16 @@
 /*
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.gfx.effects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
+import seventh.client.gfx.Art;
+import seventh.client.gfx.Camera;
+import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Renderable;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
