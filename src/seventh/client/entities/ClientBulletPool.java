@@ -1,9 +1,9 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.entities;
 
-import seventh.client.entities.ClientBullet;
+import seventh.client.ClientGame;
 import seventh.math.Vector2f;
 
 /**

@@ -3,6 +3,7 @@
  */
 package seventh.client;
 
+import seventh.client.entities.ClientBulletPool;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.AnimationPool;
 import seventh.client.gfx.Art;
