@@ -1,11 +1,12 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.gfx.hud;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import seventh.client.ClientPlayer;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;

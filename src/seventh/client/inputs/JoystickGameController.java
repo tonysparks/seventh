@@ -1,7 +1,7 @@
 /*
  * see license.txt
  */
-package seventh.client;
+package seventh.client.inputs;
 
 import seventh.client.gfx.Cursor;
 import seventh.client.screens.InGameScreen.Actions;

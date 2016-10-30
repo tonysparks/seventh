@@ -5,11 +5,11 @@
 package seventh.client.entities.vehicles;
 
 import seventh.client.ClientGame;
-import seventh.client.ClientGameEffects;
 import seventh.client.ClientPlayer;
 import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.ClientGameEffects;
 import seventh.client.gfx.TankSprite;
 import seventh.client.gfx.particle.Emitter;
 import seventh.client.gfx.particle.RenderableEffect;

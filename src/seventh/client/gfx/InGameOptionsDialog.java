@@ -5,7 +5,7 @@ package seventh.client.gfx;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.ClientTeam;
-import seventh.client.ClientConnection;
+import seventh.client.network.ClientConnection;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Console;

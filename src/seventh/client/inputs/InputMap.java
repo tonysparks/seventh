@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.inputs;
 
 import java.util.HashMap;
 import java.util.Map;

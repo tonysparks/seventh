@@ -1,8 +1,12 @@
 /*
  * see license.txt
  */
-package seventh.client;
+package seventh.client.gfx.hud;
 
+import seventh.client.ClientGame;
+import seventh.client.ClientPlayer;
+import seventh.client.ClientPlayers;
+import seventh.client.ClientTeam;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.math.Vector2f;
 import seventh.shared.Console;

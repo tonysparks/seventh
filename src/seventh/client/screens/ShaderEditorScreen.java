@@ -5,11 +5,10 @@ package seventh.client.screens;
 
 import com.badlogic.gdx.Input.Keys;
 
-import seventh.client.Inputs;
-import seventh.client.Screen;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.ShaderTest;
+import seventh.client.inputs.Inputs;
 import seventh.shared.TimeStep;
 
 /**

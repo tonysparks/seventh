@@ -5,6 +5,8 @@ package seventh.client;
 
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
+import seventh.client.gfx.VideoConfig;
+import seventh.client.inputs.KeyMap;
 import seventh.shared.Config;
 import seventh.shared.SeventhConfig;
 

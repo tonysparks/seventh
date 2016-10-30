@@ -1,11 +1,13 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.inputs;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import seventh.client.ClientGame;
+import seventh.client.ClientPlayer;
 import seventh.client.entities.ClientControllableEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.sfx.Sounds;

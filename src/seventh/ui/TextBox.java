@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
-import seventh.client.Inputs;
 import seventh.client.gfx.Theme;
+import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.ui.Label.TextAlignment;
 import seventh.ui.events.TextBoxActionEvent;

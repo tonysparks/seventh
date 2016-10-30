@@ -5,16 +5,15 @@ package seventh.client.screens;
 
 import java.io.IOException;
 
-import seventh.client.Inputs;
-import seventh.client.KeyMap;
-import seventh.client.Screen;
 import seventh.client.SeventhGame;
-import seventh.client.VideoConfig;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
+import seventh.client.gfx.VideoConfig;
+import seventh.client.inputs.Inputs;
+import seventh.client.inputs.KeyMap;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

@@ -1,12 +1,14 @@
 /*
  * see license.txt
  */
-package seventh.client;
+package seventh.client.gfx.hud;
 
+import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
+import seventh.client.inputs.KeyMap;
 import seventh.shared.TimeStep;
 
 /**

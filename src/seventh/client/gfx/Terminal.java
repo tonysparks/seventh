@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import seventh.client.ClientSeventhConfig;
-import seventh.client.Inputs;
+import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.shared.Console;

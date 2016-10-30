@@ -21,8 +21,8 @@
 package seventh.ui;
 
 import leola.frontend.listener.EventDispatcher;
-import seventh.client.Inputs;
 import seventh.client.gfx.Theme;
+import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.ui.events.ButtonEvent;

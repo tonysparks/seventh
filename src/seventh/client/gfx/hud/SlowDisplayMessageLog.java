@@ -1,7 +1,7 @@
 /*
  * see license.txt
  */
-package seventh.client;
+package seventh.client.gfx.hud;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;

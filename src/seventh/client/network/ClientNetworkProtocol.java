@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.network;
 
 import harenet.api.Client;
 import harenet.api.Connection;
@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import seventh.client.ClientGame;
+import seventh.client.ClientPlayer;
+import seventh.client.ClientPlayers;
+import seventh.client.SeventhGame;
 import seventh.client.screens.InGameScreen;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetMap;

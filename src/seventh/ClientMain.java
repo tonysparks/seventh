@@ -6,6 +6,10 @@ package seventh;
 import java.io.File;
 import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
@@ -15,7 +19,7 @@ import com.badlogic.gdx.graphics.GL20;
 
 import seventh.client.ClientSeventhConfig;
 import seventh.client.SeventhGame;
-import seventh.client.VideoConfig;
+import seventh.client.gfx.VideoConfig;
 import seventh.shared.Config;
 import seventh.shared.Logger;
 import seventh.shared.PrintStreamLogger;
@@ -78,6 +82,9 @@ public class ClientMain {
 			PrintStream out = new PrintStream(new File("./seventh_error.log"));
 			try {
 				Logger logger = new PrintStreamLogger(out);
+				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+				formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+				logger.println("Date: " + formatter.format(new Date()));
 				logSystemSpecs(logger);
 				logVideoSpecs(logger);
 				

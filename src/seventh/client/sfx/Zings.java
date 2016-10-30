@@ -1,13 +1,13 @@
 /*
  * see license.txt
  */
-package seventh.client;
+package seventh.client.sfx;
 
+import seventh.client.ClientGame;
 import seventh.client.entities.ClientBullet;
 import seventh.client.entities.ClientControllableEntity;
 import seventh.client.entities.ClientEntities;
 import seventh.client.entities.ClientEntity;
-import seventh.client.sfx.Sounds;
 import seventh.shared.TimeStep;
 
 /**

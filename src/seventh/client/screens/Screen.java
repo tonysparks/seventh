@@ -1,9 +1,10 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.screens;
 
 import seventh.client.gfx.Canvas;
+import seventh.client.inputs.Inputs;
 import seventh.shared.State;
 
 /**

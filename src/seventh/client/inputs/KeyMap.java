@@ -1,19 +1,19 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.inputs;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import seventh.client.ControllerInput.ControllerButtons;
+import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
+
 import leola.vm.Leola;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
-
-import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
+import seventh.client.inputs.ControllerInput.ControllerButtons;
 
 /**
  * Handles Player key bindings

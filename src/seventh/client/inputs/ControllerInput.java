@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.inputs;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;

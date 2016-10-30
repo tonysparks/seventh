@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
-import seventh.client.Inputs;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
+import seventh.client.inputs.Inputs;
 import seventh.shared.TimeStep;
 
 /**

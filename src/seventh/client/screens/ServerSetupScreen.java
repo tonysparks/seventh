@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import seventh.client.Inputs;
-import seventh.client.Screen;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
+import seventh.client.inputs.Inputs;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

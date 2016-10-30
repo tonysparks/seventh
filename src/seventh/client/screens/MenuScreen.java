@@ -4,14 +4,13 @@
 package seventh.client.screens;
 
 import leola.vm.Leola;
-import seventh.client.Inputs;
-import seventh.client.Screen;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Colors;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
+import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;

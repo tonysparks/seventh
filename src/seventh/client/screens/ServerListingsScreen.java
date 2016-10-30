@@ -12,14 +12,13 @@ import com.badlogic.gdx.Input.Keys;
 
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoObject;
-import seventh.client.Inputs;
-import seventh.client.Screen;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
+import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;

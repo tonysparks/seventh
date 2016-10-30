@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.network;
 
 import harenet.api.Client;
 import harenet.api.impl.HareNetClient;
@@ -9,7 +9,9 @@ import harenet.api.impl.HareNetClient;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import seventh.client.ClientProtocol.GameCreationListener;
+import seventh.client.ClientSeventhConfig;
+import seventh.client.SeventhGame;
+import seventh.client.network.ClientProtocol.GameCreationListener;
 import seventh.shared.Command;
 import seventh.shared.Console;
 import seventh.shared.TimeStep;

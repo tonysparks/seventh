@@ -2,7 +2,7 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.gfx.hud;
 
 import java.util.ArrayList;
 import java.util.List;

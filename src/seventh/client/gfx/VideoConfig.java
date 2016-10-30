@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.gfx;
 
 import seventh.shared.Config;
 

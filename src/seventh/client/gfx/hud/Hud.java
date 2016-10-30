@@ -2,7 +2,7 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.gfx.hud;
 
 import harenet.api.Client;
 
@@ -12,6 +12,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import seventh.client.ClientGame;
+import seventh.client.ClientPlayer;
+import seventh.client.ClientPlayers;
+import seventh.client.ClientTeam;
+import seventh.client.SeventhGame;
 import seventh.client.entities.ClientBombTarget;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
@@ -20,6 +25,7 @@ import seventh.client.gfx.Canvas;
 import seventh.client.gfx.MiniMap;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
+import seventh.client.inputs.KeyMap;
 import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.Type;

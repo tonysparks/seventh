@@ -1,10 +1,15 @@
 /*
  * see license.txt
  */
-package seventh.client;
+package seventh.client.gfx.hud;
 
 import java.util.List;
 
+import seventh.client.ClientGame;
+import seventh.client.ClientPlayer;
+import seventh.client.ClientPlayers;
+import seventh.client.inputs.Inputs;
+import seventh.client.inputs.KeyMap;
 import seventh.math.Vector2f;
 import seventh.shared.Console;
 

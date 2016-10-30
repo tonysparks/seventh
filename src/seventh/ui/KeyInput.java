@@ -5,8 +5,8 @@ package seventh.ui;
 
 import com.badlogic.gdx.Input.Keys;
 
-import seventh.client.Inputs;
 import leola.frontend.listener.EventDispatcher;
+import seventh.client.inputs.Inputs;
 
 /**
  * @author Tony

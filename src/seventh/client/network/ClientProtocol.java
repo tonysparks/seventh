@@ -1,9 +1,10 @@
 /*
  * see license.txt 
  */
-package seventh.client;
+package seventh.client.network;
 
 import harenet.api.Connection;
+import seventh.client.ClientGame;
 import seventh.network.messages.AICommandMessage;
 import seventh.network.messages.BombDisarmedMessage;
 import seventh.network.messages.BombExplodedMessage;
