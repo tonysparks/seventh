@@ -47,8 +47,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	
 	private final ClientWeapon[] WEAPONS = new ClientWeapon[10];
 	
-	private int health;	
-	private int damageDelta;
+	private int health;		
 	private int stamina;
 		
 	private long invinceableTime;
@@ -70,6 +69,11 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	
 	private boolean isSelected;
 	
+	// buffer the damage done to this 
+	// entity
+	private boolean[] damaged;
+	private int damageBufferIndex;
+	
 	/**
 	 * @param game
 	 * @param player
@@ -90,6 +94,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.bounds.width = 24;//16;
 		this.bounds.height = 24;
 		
+		this.damaged = new boolean[8];
+		this.damageBufferIndex = 0;
 				
 		LightSystem lightSystem = game.getLightSystem();				
 		this.mussleFlash = lightSystem.newPointLight();
@@ -297,7 +303,12 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 			
 			this.currentState = State.fromNetValue(ps.state);
 			int newHealth = ps.health;
-			this.damageDelta = newHealth - this.health;
+			int newDamageDelta = newHealth - this.health;
+			if(newDamageDelta < 0) {
+				this.damaged[this.damageBufferIndex] = true;
+				this.damageBufferIndex = (this.damageBufferIndex + 1) % this.damaged.length;				
+			}
+			
 			this.health = ps.health;
 			this.stamina = ps.stamina;
 			
@@ -318,7 +329,13 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 			NetPlayerPartial ps = (NetPlayerPartial) state;
 			this.currentState = State.fromNetValue(ps.state);
 			int newHealth = ps.health;
-			this.damageDelta = newHealth - this.health;
+			
+			int newDamageDelta = newHealth - this.health;
+			if(newDamageDelta < 0) {
+				this.damaged[this.damageBufferIndex] = true;
+				this.damageBufferIndex = (this.damageBufferIndex + 1) % this.damaged.length;				
+			}
+			
 			this.health = ps.health;
 			
 			if(ps.isOperatingVehicle) {
@@ -474,10 +491,21 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		 * effects.  We do this by making sure our last update was recent, and
 		 * this wasn't just an entity we are seeing again after a while (which
 		 * would cause damageDelta to be < 0)
-		 */
-		if(this.damageDelta < 0 && (previousLastUpdate+400) >= clockTime) {
-			onDamage();
-		}		
+		 */				
+		if((previousNetUpdate+400) >= clockTime) {
+			for(int i = 0; i < this.damaged.length;i++) {
+				if(this.damaged[i]) {
+					onDamage();
+					this.damaged[i] = false;
+				}
+			}
+		}	
+		else {
+			for(int i = 0; i < this.damaged.length;i++) {				
+				this.damaged[i] = false;				
+			}
+		}
+		
 				
 		super.update(timeStep);						
 	}
@@ -485,10 +513,10 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	/**
 	 * The player has taken damage
 	 */
-	protected void onDamage() {
+	protected void onDamage() {		
 		this.bloodEmitter.resetTimeToLive();
 		this.bloodEmitter.setPos(getPos());			
-		this.bloodEmitter.start();		
+		this.bloodEmitter.start();	
 	}
 	
 	/* (non-Javadoc)

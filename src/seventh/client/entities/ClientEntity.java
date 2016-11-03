@@ -32,7 +32,7 @@ public abstract class ClientEntity implements Renderable {
 	protected float orientation;
 		
 	protected long lastUpdate;
-	protected long previousLastUpdate;
+	protected long previousNetUpdate;
 	
 	protected Type type;
 	
@@ -165,7 +165,7 @@ public abstract class ClientEntity implements Renderable {
 		}
 		
 		if(this.updateReceived) {
-		    previousLastUpdate = lastUpdate;
+		    previousNetUpdate = lastUpdate;
 			lastUpdate = timeStep.getGameClock();
 
 			updateReceived = false;

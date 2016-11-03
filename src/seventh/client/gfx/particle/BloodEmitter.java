@@ -64,7 +64,7 @@ public class BloodEmitter extends Emitter {
 			pos.y -= r.nextInt(distance);
 		}
 		
-		float scale = (float)Randomizer.getRandomRangeMin(r, 0.7f);
+		float scale = (float)Randomizer.getRandomRange(r, 0.15f, 1.9f);
 		
 		return new BloodParticle(pos, new Vector2f(), r.nextInt(360), scale, this.particleTimeToLive);
 	}

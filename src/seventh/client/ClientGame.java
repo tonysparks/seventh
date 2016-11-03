@@ -1292,43 +1292,40 @@ public class ClientGame {
 				
 				switch(meansOfDeath) {
 				case EXPLOSION:
-				case GRENADE: 
-				case ROCKET:
-				case ROCKET_LAUNCHER:		
-					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));
-					if(random.nextBoolean()) {
-						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
-						
-					}
-					else {
-						AnimatedImage anim = null;
-						Vector2f pos = new Vector2f(locationOfDeath);
-						Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
-						
-						switch(player.getTeam()) {
-							case ALLIES:
-								anim = Art.newAlliedExplosionDeathAnim();
-								break;
-							case AXIS:
-								anim = Art.newAxisExplosionDeathAnim();
-								break;
-							default:
-								break;
-						}
-						// Objective game type keeps the dead bodies around
-						boolean persist = gameType.equals(GameType.Type.OBJ);
-						
-						// spawn the death animation
-						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));						
-					}
+				case GRENADE: {										
+					AnimatedImage anim = null;
+					Vector2f pos = new Vector2f(locationOfDeath);
+					Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
 					
+					switch(player.getTeam()) {
+						case ALLIES:
+							anim = Art.newAlliedExplosionDeathAnim();
+							break;
+						case AXIS:
+							anim = Art.newAxisExplosionDeathAnim();
+							break;
+						default:
+							break;
+					}
+					// Objective game type keeps the dead bodies around
+					boolean persist = gameType.equals(GameType.Type.OBJ);
+					
+					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));
+					gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath, 3));
+					gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));
+					break;
+				}
+				case ROCKET:
+				case ROCKET_LAUNCHER: 		
+					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));					
+					gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));										
 					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					
 					break;				
 				default:
 					
 					if(meansOfDeath != Type.FIRE) {					
-						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 6, 15200, 14000, 1, 20));
+						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 16, 15200, 14000, 0, 30));
 					}
 					
 					Vector2f pos = new Vector2f(locationOfDeath);
