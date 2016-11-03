@@ -48,21 +48,11 @@ public class BloodEmitter extends Emitter {
 	@Override
 	protected Particle newParticle() {		
 		Random r = getRandom();
-		Vector2f pos = getPos().createClone();
+		//Vector2f pos = getPos().createClone();
 		final int distance = this.maxSpread;
-		if(r.nextBoolean()) {
-			pos.x += r.nextInt(distance);
-		}
-		else {
-			pos.x -= r.nextInt(distance);
-		}
-		
-		if(r.nextBoolean()) {
-			pos.y += r.nextInt(distance);
-		}
-		else {
-			pos.y -= r.nextInt(distance);
-		}
+		Vector2f pos = new Vector2f(1,0);
+		Vector2f.Vector2fRotate(pos, Math.toRadians(r.nextInt(360)), pos);
+		Vector2f.Vector2fMA(getPos(), pos, r.nextInt(distance), pos);
 		
 		float scale = (float)Randomizer.getRandomRange(r, 0.15f, 1.9f);
 		

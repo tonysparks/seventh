@@ -34,21 +34,12 @@ public class GibEmitter extends Emitter {
 	@Override
 	protected Particle newParticle() {
 		Random r = getRandom();
-		Vector2f pos = getPos().createClone();
 		final int maxSpread = 35;
-		if(r.nextBoolean()) {
-			pos.x += r.nextInt(maxSpread);
-		}
-		else {
-			pos.x -= r.nextInt(maxSpread);
-		}
 		
-		if(r.nextBoolean()) {
-			pos.y += r.nextInt(maxSpread);
-		}
-		else {
-			pos.y -= r.nextInt(maxSpread);
-		}
+		Vector2f pos = new Vector2f(1,0);
+		Vector2f.Vector2fRotate(pos, Math.toRadians(r.nextInt(360)), pos);
+		Vector2f.Vector2fMA(getPos(), pos, r.nextInt(maxSpread), pos);
+		
 		Vector2f vel = new Vector2f(1,0);
 		Vector2f.Vector2fRotate(vel, Math.toRadians(r.nextInt(360)), vel);
 		
