@@ -99,6 +99,7 @@ public interface GameType extends Debugable {
 	public void playerLeft(Player player);
 	
 	public Team getTeam(Player player);
+	public Team getEnemyTeam(Player player);
 	public boolean switchTeam(Player player, byte teamId);
 	
 	public long getMatchTime();

@@ -215,8 +215,8 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		for (int i = 0; i < players.length; i++) {
 			Player player = players[i];
 			if (player != null) {
-				if(!player.isPureSpectator() && !player.isCommander()) {						
-					game.spawnPlayerEntity(player.getId());						
+				if(!player.isPureSpectator() && !player.isCommander()) {
+					spawnPlayer(player, game);
 				}
 			}
 		}

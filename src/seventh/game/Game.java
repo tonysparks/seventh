@@ -26,12 +26,12 @@ import seventh.game.entities.Bomb;
 import seventh.game.entities.BombTarget;
 import seventh.game.entities.DroppedItem;
 import seventh.game.entities.Entity;
+import seventh.game.entities.Entity.KilledListener;
+import seventh.game.entities.Entity.Type;
 import seventh.game.entities.Flag;
 import seventh.game.entities.HealthPack;
 import seventh.game.entities.LightBulb;
 import seventh.game.entities.PlayerEntity;
-import seventh.game.entities.Entity.KilledListener;
-import seventh.game.entities.Entity.Type;
 import seventh.game.entities.vehicles.PanzerTank;
 import seventh.game.entities.vehicles.ShermanTank;
 import seventh.game.entities.vehicles.Tank;
@@ -572,6 +572,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		return soundEvents;
 	}
 	
+	
 	/**
 	 * Kick a player
 	 * @param id
@@ -982,36 +983,23 @@ public class Game implements GameInfo, Debugable, Updatable {
 			playerEntities[id] = player;
 		}
 	}
-		
+	
 	
 	/**
-	 * Spawns a {@link PlayerEntity}
+	 * Spawns a {@link PlayerEntity} as the specified location.  If the location is
+	 * valid, it will attempt to find a valid random position
 	 * 
 	 * @param id - the {@link Player#id} 
+	 * @param spawnPosition - the desired spawn location
 	 * @return the {@link PlayerEntity}
 	 */
-	public PlayerEntity spawnPlayerEntity(final int id) {
+	public PlayerEntity spawnPlayerEntity(final int id, Vector2f spawnPosition) {
 		final Player player = this.players.getPlayer(id);
 		if(player == null ) {
 			Cons.println("No player found with id: " + id);
 			return null;
 		}
-		
-	
-		Vector2f spawnPosition = new Vector2f(-1,-1);
-		if( player.getTeamId() == Team.ALLIED_TEAM_ID ) {
-			List<Vector2f> spawnPoints = gameType.getAlliedSpawnPoints();
-			if(!spawnPoints.isEmpty()) {			
-				spawnPosition.set(spawnPoints.get(random.nextInt(spawnPoints.size())));
-			}
-		}
-		else {
-			List<Vector2f> spawnPoints = gameType.getAxisSpawnPoints();
-			if(!spawnPoints.isEmpty()) {
-				spawnPosition.set(spawnPoints.get(random.nextInt(spawnPoints.size())));
-			}
-		}
-					
+							
 		// Spawn a bot (or dummy bot if need-be) or a remote controlled entity
 		final PlayerEntity playerEntity = new PlayerEntity(id, spawnPosition, this);	
 		
@@ -1059,7 +1047,7 @@ public class Game implements GameInfo, Debugable, Updatable {
 		
 		return playerEntity;
 	}
-		
+			
 	/**
 	 * Adds an entity to the game world
 	 * 

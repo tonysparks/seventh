@@ -25,6 +25,7 @@ import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
 import seventh.game.type.GameType.GameState;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
 import seventh.shared.TimeStep;
@@ -66,8 +67,9 @@ public abstract class AbstractTeamGameType implements GameType {
 	private EventDispatcher dispatcher;
 	private Leola runtime;
 	
+	// avoid GC, so we create data members :\
 	private List<Vector2f> alliedSpawnPoints, axisSpawnPoints;
-	
+	private Rectangle spawnBounds;
 	/**
 	 * @param type
 	 * @param runtime
@@ -101,6 +103,7 @@ public abstract class AbstractTeamGameType implements GameType {
 		
 		this.gameState = GameState.IN_PROGRESS;
 		this.random = new Random();
+		this.spawnBounds = new Rectangle(300, 300);
 		
 	}
 	
@@ -380,6 +383,67 @@ public abstract class AbstractTeamGameType implements GameType {
 		}	
 	}
 	
+	
+	/**
+	 * Spawns the player at a random spawn point for their team.
+	 * 
+	 * @param player
+	 * @param game
+	 */
+	protected void spawnPlayer(Player player, Game game) {
+		
+		List<Vector2f> spawnPoints = (player.getTeamId() == Team.ALLIED_TEAM_ID) ?
+											getAlliedSpawnPoints() : getAxisSpawnPoints();
+		
+        Vector2f spawnPosition = findSpawnPosition(player, game, spawnPoints);									
+		game.spawnPlayerEntity(player.getId(), spawnPosition);
+	}
+	
+	private Vector2f findSpawnPosition(Player player, Game game, List<Vector2f> spawnPoints) {
+		Vector2f spawnPosition = new Vector2f(-1,-1);
+		int size = spawnPoints.size();
+		if(size > 0) {
+			int startingPosition = random.nextInt(spawnPoints.size());
+			for(int i = 0; i < size; i++) {
+				spawnPosition.set(spawnPoints.get(startingPosition));
+				if(isSafeSpawnPosition(player, spawnPosition, game)) {
+					return spawnPosition;
+				}
+				
+				startingPosition = (startingPosition + 1) % size;
+			}
+		}
+		return spawnPosition;
+	}
+	
+	/**
+	 * Determines if the supplied spawn point is safe enough to spawn to.
+	 * 
+	 * @param player
+	 * @param spawnPosition
+	 * @param game
+	 * @return true if it's safe
+	 */
+	private boolean isSafeSpawnPosition(Player player, Vector2f spawnPosition, Game game) {
+		Team enemy = getEnemyTeam(player);
+				
+		spawnBounds.centerAround(spawnPosition);
+		
+		if(enemy!=null) {
+			List<Player> players = enemy.getPlayers();
+			for(int i = 0; i < players.size(); i++) {
+				Player p = players.get(i);
+				if(p.isAlive()) {
+					if(spawnBounds.contains(p.getEntity().getBounds())) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Check and see if it's time to respawn players
 	 * 
@@ -394,8 +458,8 @@ public abstract class AbstractTeamGameType implements GameType {
 				if (player != null) {
 					if (player.canSpawn()) {
 						player.updateSpawnTime(timeStep);
-						if (player.readyToSpawn()) {
-							game.spawnPlayerEntity(player.getId());
+						if (player.readyToSpawn()) {							
+							spawnPlayer(player, game);
 						}
 					}
 				}
@@ -485,6 +549,20 @@ public abstract class AbstractTeamGameType implements GameType {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public Team getEnemyTeam(Player player) {
+		Team a = player.getTeam();
+		if(a==null) {
+			return null;
+		}
+		
+		if(a.getId()==this.teams[0].getId()) {
+			return this.teams[1];
+		}
+		
+		return this.teams[0];
 	}
 	
 	/* (non-Javadoc)
