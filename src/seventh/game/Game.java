@@ -294,6 +294,11 @@ public class Game implements GameInfo, Debugable, Updatable {
 			
 			@Override
 			public void onRoundStarted(RoundStartedEvent event) {
+				// remove any nodes we may have created by destructable
+				// terrain
+				for(Tile tile : map.getRemovedTiles()) {
+					graph.removeNode(tile.getXIndex(), tile.getYIndex());
+				}
 				map.restoreDestroyedTiles();
 			    loadMapScripts();
 				aiSystem.startOfRound(Game.this);				
@@ -1268,9 +1273,13 @@ public class Game implements GameInfo, Debugable, Updatable {
 	 * @param y
 	 */
 	public void removeTileAtWorld(int x, int y) {
-	    if(map.removeDestructableTileAtWorld(x, y)) {
+	    if(map.removeDestructableTileAtWorld(x, y)) {	    	
 	        int tileX = map.worldToTileX(x);
 	        int tileY = map.worldToTileY(y);
+	        
+	        // Add in a graph node so this terrain object 
+	        // can be traversed for path finding for bots
+	        this.graph.addNode(tileX, tileY);
 	        this.dispatcher.queueEvent(new TileRemovedEvent(this, tileX, tileY));
 	    }
 	}

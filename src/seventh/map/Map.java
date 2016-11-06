@@ -9,6 +9,7 @@ import java.util.List;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
+import seventh.graph.GraphNode;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
@@ -414,6 +415,8 @@ public abstract interface Map extends Renderable, Debugable {
 	 * @return the new {@link MapGraph}
 	 */
 	public <E> MapGraph<E> createMapGraph(GraphNodeFactory<E> factory);
+	@SuppressWarnings("rawtypes")
+	public <E> void addNode(GraphNodeFactory<E> factory, GraphNode[][] nodes, GraphNode<Tile, E> node, int x, int y);
 	
 	/**
 	 * Convert world coordinates to tile coordinates

@@ -36,6 +36,29 @@ public class Edges<E, T> {
 			return mask;
 		}
 		
+		public Directions invertedDirection() {
+			switch(this) {
+				case E:
+					return W;
+				case N:
+					return S;
+				case NE:
+					return SW;
+				case NW:
+					return SE;
+				case S:
+					return N;
+				case SE:
+					return NW;
+				case SW:
+					return NE;
+				case W:
+					return E;
+				default:
+					return N;			
+			}
+		}
+		
 		public static Directions fromIndex(int index) {
 			return values[index];
 		}
@@ -63,6 +86,17 @@ public class Edges<E, T> {
 	public void addEdge(Directions dir, Edge<E, T> edge) {
 		this.edges[dir.ordinal()] = edge;
 	}
+	public void removeEdge(Directions dir) {
+		this.edges[dir.ordinal()] = null;
+	}
+	public void removeEdge(Edge<E, T> edge) {
+		for(int i = 0; i < this.edges.length; i++) {
+			if(this.edges[i] == edge) {
+				this.edges[i] = null;
+				break;
+			}
+		}
+	}
 	
 	public Edge<E,T> get(int index) {
 		return this.edges[index];
@@ -72,5 +106,14 @@ public class Edges<E, T> {
 		return this.edges[dir.ordinal()];
 	}
 	
+	
+	public void removeEdges() {
+		for(int i = 0; i < this.edges.length; i++) {
+			Edge<E,T> edge = this.edges[i];
+			if(edge!=null) {
+				edge.removeEdge();
+			}
+		}
+	}
 
 }

@@ -96,4 +96,13 @@ public class Edge<E, T> {
     public void setValue(T value) {
         this.value = value;
     }       
+    
+    public void removeEdge() {
+    	if(this.left!=null) {
+    		this.left.removeEdge(this);
+    	}
+    	if(this.right!=null) {
+    		this.right.removeEdge(this);
+    	}
+    }
 }

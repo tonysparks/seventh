@@ -4,11 +4,11 @@
  */
 package seventh.map;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import seventh.ai.basic.Zone;
+import seventh.game.Game;
 import seventh.graph.AStarGraphSearch;
 import seventh.graph.GraphNode;
 import seventh.graph.GraphSearchPath;
@@ -41,6 +41,23 @@ public class MapGraph<T> {
 		this.random = new Random();
 		
 		this.defaultSearchPath = new AStarGraphSearch<>();
+	}
+	
+	public void removeNode(int x, int y) {
+		GraphNode<Tile, T> node = graph[y][x];
+		if(node != null) {
+			node.edges().removeEdges();
+			graph[y][x] = null;
+		}
+	}
+	
+	public void addNode(int x, int y) {
+		Tile tile = this.map.getTile(0, x, y);
+		if(tile != null) {
+			GraphNode<Tile, T> node = new GraphNode<Tile, T>(tile);
+			graph[y][x] = node;
+			this.map.addNode(null, graph, node, x, y);
+		}
 	}
 	
 	/**

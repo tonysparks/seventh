@@ -44,6 +44,13 @@ public class GraphNode<E, T> {
         this.edges.addEdge(dir, edge);
     }
     
+    public void removeEdge(Directions dir) {
+    	this.edges.removeEdge(dir);
+    }
+    public void removeEdge(Edge<E,T> edge) {
+    	this.edges.removeEdge(edge);
+    }
+    
     /**
      * @return the value
      */

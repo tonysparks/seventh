@@ -828,57 +828,82 @@ public class OrthoMap implements Map {
 				GraphNode<Tile, E> node = nodes[y][x];
 				if(node==null) continue;
 				
-				GraphNode<Tile, E> nw = null;
-				if(y>0 && x>0) nw = nodes[y - 1][x - 1];
-				
-				GraphNode<Tile, E> n = null;
-				if(y>0) n = nodes[y - 1][x];
-				
-				GraphNode<Tile, E> ne = null;
-				if(y>0 && x<numberOfColumns-1) ne = nodes[y - 1][x + 1];
-				
-				GraphNode<Tile, E> e = null;
-				if(x<numberOfColumns-1) e = nodes[y][x + 1];
-				
-				GraphNode<Tile, E> se = null;
-				if(y<numberOfRows-1 && x<numberOfColumns-1) se = nodes[y + 1][x + 1];
-				
-				GraphNode<Tile, E> s = null;
-				if(y<numberOfRows-1) s = nodes[y + 1][x];
-				
-				GraphNode<Tile, E> sw = null;
-				if(y<numberOfRows-1 && x>0) sw = nodes[y + 1][x - 1];
-				
-				GraphNode<Tile, E> w = null;
-				if(x>0) w = nodes[y][x - 1];
-				
-				if (n != null) {
-					node.addEdge(Directions.N, new Edge<Tile, E>(node, n, factory.createEdgeData(this, node, n)));
-				}
-				if (ne != null && (n!=null||e!=null)) {
-					node.addEdge(Directions.NE, new Edge<Tile, E>(node, ne, factory.createEdgeData(this, node, ne)));
-				}
-				if (e != null) {
-					node.addEdge(Directions.E, new Edge<Tile, E>(node, e, factory.createEdgeData(this, node, e)));
-				}
-				if (se != null && (s!=null||e!=null)) {
-					node.addEdge(Directions.SE, new Edge<Tile, E>(node, se, factory.createEdgeData(this, node, se)));
-				}
-				if (s != null) {
-					node.addEdge(Directions.S, new Edge<Tile, E>(node, s, factory.createEdgeData(this, node, s)));
-				}
-				if (sw != null && (s!=null||w!=null)) {
-					node.addEdge(Directions.SW, new Edge<Tile, E>(node, sw, factory.createEdgeData(this, node, sw)));
-				}
-				if (w != null) {
-					node.addEdge(Directions.W, new Edge<Tile, E>(node, w, factory.createEdgeData(this, node, w)));
-				}
-				if (nw != null && (n!=null||w!=null) ) {
-					node.addEdge(Directions.NW, new Edge<Tile, E>(node, nw, factory.createEdgeData(this, node, nw)));
-				}
+				addNode(factory, nodes, node, x, y,false);
 			}
 		}			
 		return new MapGraph<E>(this,nodes);
+	}
+	
+	@SuppressWarnings("all")
+	@Override
+	public <E> void addNode(GraphNodeFactory<E> factory, GraphNode[][] nodes, GraphNode<Tile, E> node, int x, int y) {
+		addNode(factory, nodes, node, x, y, true);
+	}
+	
+	@SuppressWarnings("all")
+	private <E> void addNode(GraphNodeFactory<E> factory, GraphNode[][] nodes, GraphNode<Tile, E> node, int x, int y, boolean addAdjacent) {
+		int numberOfRows = backgroundLayers[0].numberOfRows();
+		int numberOfColumns = backgroundLayers[0].getRow(0).length;
+		
+		
+		nodes[y][x] = node;
+		
+		GraphNode<Tile, E> nw = null;
+		if(y>0 && x>0) nw = nodes[y - 1][x - 1];
+		
+		GraphNode<Tile, E> n = null;
+		if(y>0) n = nodes[y - 1][x];
+		
+		GraphNode<Tile, E> ne = null;
+		if(y>0 && x<numberOfColumns-1) ne = nodes[y - 1][x + 1];
+		
+		GraphNode<Tile, E> e = null;
+		if(x<numberOfColumns-1) e = nodes[y][x + 1];
+		
+		GraphNode<Tile, E> se = null;
+		if(y<numberOfRows-1 && x<numberOfColumns-1) se = nodes[y + 1][x + 1];
+		
+		GraphNode<Tile, E> s = null;
+		if(y<numberOfRows-1) s = nodes[y + 1][x];
+		
+		GraphNode<Tile, E> sw = null;
+		if(y<numberOfRows-1 && x>0) sw = nodes[y + 1][x - 1];
+		
+		GraphNode<Tile, E> w = null;
+		if(x>0) w = nodes[y][x - 1];
+		
+		if (n != null) {
+			node.addEdge(Directions.N, new Edge<Tile, E>(node, n, factory==null? null:factory.createEdgeData(this, node, n)));
+			if(addAdjacent) n.addEdge(Directions.N.invertedDirection(), new Edge<Tile, E>(n, node, factory==null? null:factory.createEdgeData(this, n, node)));
+		}
+		if (ne != null && (n!=null||e!=null)) {
+			node.addEdge(Directions.NE, new Edge<Tile, E>(node, ne, factory==null? null:factory.createEdgeData(this, node, ne)));
+			if(addAdjacent) ne.addEdge(Directions.NE.invertedDirection(), new Edge<Tile, E>(ne, node, factory==null? null:factory.createEdgeData(this, ne, node)));
+		}
+		if (e != null) {
+			node.addEdge(Directions.E, new Edge<Tile, E>(node, e, factory==null? null:factory.createEdgeData(this, node, e)));
+			if(addAdjacent) e.addEdge(Directions.E.invertedDirection(), new Edge<Tile, E>(e, node, factory==null? null:factory.createEdgeData(this, e, node)));
+		}
+		if (se != null && (s!=null||e!=null)) {
+			node.addEdge(Directions.SE, new Edge<Tile, E>(node, se, factory==null? null:factory.createEdgeData(this, node, se)));
+			if(addAdjacent) se.addEdge(Directions.SE.invertedDirection(), new Edge<Tile, E>(se, node, factory==null? null:factory.createEdgeData(this, se, node)));
+		}
+		if (s != null) {
+			node.addEdge(Directions.S, new Edge<Tile, E>(node, s, factory==null? null:factory.createEdgeData(this, node, s)));
+			if(addAdjacent) s.addEdge(Directions.S.invertedDirection(), new Edge<Tile, E>(s, node, factory==null? null:factory.createEdgeData(this, s, node)));
+		}
+		if (sw != null && (s!=null||w!=null)) {
+			node.addEdge(Directions.SW, new Edge<Tile, E>(node, sw, factory==null? null:factory.createEdgeData(this, node, sw)));
+			if(addAdjacent) sw.addEdge(Directions.SW.invertedDirection(), new Edge<Tile, E>(sw, node, factory==null? null:factory.createEdgeData(this, sw, node)));
+		}
+		if (w != null) {
+			node.addEdge(Directions.W, new Edge<Tile, E>(node, w, factory==null? null:factory.createEdgeData(this, node, w)));
+			if(addAdjacent) w.addEdge(Directions.W.invertedDirection(), new Edge<Tile, E>(w, node, factory==null? null:factory.createEdgeData(this, w, node)));
+		}
+		if (nw != null && (n!=null||w!=null) ) {
+			node.addEdge(Directions.NW, new Edge<Tile, E>(node, nw, factory==null? null:factory.createEdgeData(this, node, nw)));
+			if(addAdjacent) nw.addEdge(Directions.NW.invertedDirection(), new Edge<Tile, E>(nw, node, factory==null? null:factory.createEdgeData(this, nw, node)));
+		}
 	}
 	
 	/* (non-Javadoc)
