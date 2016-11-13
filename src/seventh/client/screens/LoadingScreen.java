@@ -95,9 +95,17 @@ public class LoadingScreen implements Screen {
 					@Override
 					public void run() {
 						message += host + ":" + port + "...";
-						try {							
+						try {			
 							Cons.println("Connecting to: " + host + ":" + port);
 							connection.disconnect();
+							
+							// make sure the server is
+							// up and running.  Temporary HACK
+							// to fix false starts.  Looks 
+							// like the server isn't actually 
+							// ready to receive connection requests...							
+							Thread.sleep(5_000); 
+							
 							connection.connect(host, port);
 							message += "Success!";
 							

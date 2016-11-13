@@ -11,7 +11,7 @@ import harenet.MessageHeader;
  * @author Tony
  *
  */
-public class ConnectionRequestMessage extends AbstractMessage {
+public class ConnectionRequestMessage extends AbstractReliableMessage {
 
 
 	/**

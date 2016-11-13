@@ -184,7 +184,18 @@ public class HareNetClient extends HareNetEndpoint implements Client {
 		peer=host.connect(address);
 		this.connectionId = peer.getId();
 		
-		update(timeout);
+		// attempt to resend the connection message
+		// until we receive a response
+		int iteration = timeout / 3;
+		while(iteration < timeout*3) {
+			update(iteration);
+			
+			if(peer.isConnected()) {
+				break;
+			}
+			
+			iteration += iteration;
+		}
 		                  			
 		return peer.isConnected();
 	}
