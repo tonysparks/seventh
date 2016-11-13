@@ -5,6 +5,12 @@ package seventh.client.gfx.effects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
@@ -13,16 +19,12 @@ import seventh.client.gfx.FrameBufferRenderable;
 import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.particle.BloodEmitter;
+import seventh.client.gfx.particle.BulletCasingEffect;
 import seventh.client.gfx.particle.Effect;
 import seventh.client.gfx.particle.Effects;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * @author Tony
@@ -42,10 +44,13 @@ public class ClientGameEffects {
 	private final TankTrackMarks[] trackMarks;
 	
 	private final BloodEmitter[] playerBloodEmitters;
+	private final BulletCasingEffect[] bulletCasings;
+	
 	
 	/**
 	 */
-	public ClientGameEffects() {
+	public ClientGameEffects(Random random) {
+		
 		this.frameBufferRenderables = new ArrayList<>();
 		this.hurtEffect = new HurtEffect();
 		
@@ -69,6 +74,21 @@ public class ClientGameEffects {
 		this.frameBufferSprite = new Sprite();
 		
 		this.trackMarks = new TankTrackMarks[SeventhConstants.MAX_ENTITIES];
+		
+		this.bulletCasings = new BulletCasingEffect[256];
+		for(int i = 0; i < this.bulletCasings.length; i++) {
+			this.bulletCasings[i] = new BulletCasingEffect(random);
+		}
+	}
+	
+	public void spawnBulletCasing(Vector2f pos, float orientation) {
+		for(int i = 0; i < this.bulletCasings.length; i++) {
+			if(this.bulletCasings[i].isFree()) {
+				this.bulletCasings[i].respawn(pos, orientation);
+				this.backgroundEffects.addEffect(this.bulletCasings[i]);
+				break;
+			}
+		}
 	}
 	
 	/**

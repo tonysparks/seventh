@@ -9,6 +9,7 @@ import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.particle.BulletImpactEmitter;
+import seventh.client.weapon.ClientWeapon;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
 import seventh.math.Vector2f;
@@ -81,7 +82,7 @@ public class ClientBullet extends ClientEntity {
 		oldPos.zeroOut();
 		vel.zeroOut();
 		
-		ownerId = 0;		
+		ownerId = -1;		
 		lastUpdate = 0;
 
 		prevState = null;
@@ -126,14 +127,29 @@ public class ClientBullet extends ClientEntity {
 		return origin;
 	}
 	
+	private void emitBulletCasing(int ownerId) {
+		ClientEntity ent = game.getEntities().getEntity(ownerId);
+		if(ent instanceof ClientPlayerEntity) {
+			ClientPlayerEntity playerEntity = (ClientPlayerEntity)ent;
+			ClientWeapon weapon = playerEntity.getWeapon();
+			if(weapon!=null && weapon.isAutomatic()) {				
+				playerEntity.emitBulletCasing();
+			}
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see palisma.client.ClientEntity#updateState(palisma.game.net.NetEntity)
 	 */
 	@Override
 	public void updateState(NetEntity state, long time) {		
 		super.updateState(state,time);
-			
+		
 		NetBullet bullet = (NetBullet)state;
+		if(this.ownerId < 0) {
+			emitBulletCasing(bullet.ownerId);
+		}
+		
 		this.ownerId = bullet.ownerId;
 		
 
@@ -147,7 +163,7 @@ public class ClientBullet extends ClientEntity {
 			{
 				Vector2f.Vector2fSubtract(getPos(), getOrigin(), vel);
 				Vector2f.Vector2fNormalize(vel, vel);
-			}
+			}			
 		}
 	}
 	

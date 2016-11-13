@@ -33,6 +33,7 @@ public abstract class ClientEntity implements Renderable {
 		
 	protected long lastUpdate;
 	protected long previousNetUpdate;
+	protected long gameClock;
 	
 	protected Type type;
 	
@@ -159,6 +160,7 @@ public abstract class ClientEntity implements Renderable {
 	@Override
 	public void update(TimeStep timeStep) {
 		Vector2f.Vector2fCopy(this.pos, previousPos);
+		this.gameClock = timeStep.getGameClock();
 		
 		if(attachedSounds != null) {
 			updateSounds(attachedSounds);

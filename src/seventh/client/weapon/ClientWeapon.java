@@ -212,6 +212,10 @@ public class ClientWeapon {
 						this.fireWaitTimer.setEndTime(isBoltAction() ? 50 : 300);
 						this.fireWaitTimer.reset();
 						this.fireWaitTimer.start();
+						
+						if(!isAutomatic() && !(this instanceof ClientRocketLauncher)) {
+							this.owner.emitBulletCasing();
+						}
 					}
 					
 					if(!this.specialReloadActionReloadTimer.isUpdating() && this.fireWaitTimer.isOnFirstTime()) {

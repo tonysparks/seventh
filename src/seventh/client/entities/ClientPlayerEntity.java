@@ -73,6 +73,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	// entity
 	private boolean[] damaged;
 	private int damageBufferIndex;
+	private Vector2f bulletCasingPos;
 	
 	/**
 	 * @param game
@@ -93,6 +94,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 						
 		this.bounds.width = 24;//16;
 		this.bounds.height = 24;
+		
+		this.bulletCasingPos = new Vector2f();
 		
 		this.damaged = new boolean[8];
 		this.damageBufferIndex = 0;
@@ -178,6 +181,13 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	public BloodEmitter getBloodEmitter() {
 		return bloodEmitter;
 	}	
+	
+	public void emitBulletCasing() {
+		if(!this.isOperatingVehicle() && (this.lastUpdate+200 > this.gameClock)) {
+			Vector2f.Vector2fMA(getCenterPos(), getFacing(), 10.0f, this.bulletCasingPos);
+			this.game.getGameEffects().spawnBulletCasing(this.bulletCasingPos, getOrientation());
+		}
+	}
 	
 	/**
 	 * If this has been selected

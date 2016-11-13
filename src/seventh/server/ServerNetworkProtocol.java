@@ -183,6 +183,7 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 	@Override
 	public void onConnected(Connection conn) {				
 		this.clients.addRemoteClient(conn.getId(), new RemoteClient(conn));
+		this.console.println("Negotiating connection with remote client: " + conn.getRemoteAddress());
 	}
 	
 	/* (non-Javadoc)
@@ -265,6 +266,7 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
      */
 	@Override
     public void receiveConnectRequestMessage(Connection conn, ConnectRequestMessage msg) throws IOException {
+		this.console.println(msg.name + " is attempting to connect");
 		RemoteClient client = this.clients.getClient(conn.getId());
 		client.setName(msg.name);
 		
@@ -282,8 +284,7 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 		ConnectAcceptedMessage acceptedMessage = new ConnectAcceptedMessage();
 		acceptedMessage.playerId = conn.getId();
 		acceptedMessage.gameState = this.game.getNetGameState();	
-		sendConnectAcceptedMessage(conn.getId(), acceptedMessage);
-				
+		sendConnectAcceptedMessage(conn.getId(), acceptedMessage);							
 	}
 	
 	/* (non-Javadoc)
@@ -296,6 +297,7 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 			if(!client.isReady()) {
 				client.setReady(true);
 				client.getPlayer().setPing(conn.getReturnTripTime());
+				this.console.println(client.getName() + " has connected.");
 			}
 		}
 		

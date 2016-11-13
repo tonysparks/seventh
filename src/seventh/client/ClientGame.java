@@ -213,7 +213,7 @@ public class ClientGame {
 		this.cacheRect = new Rectangle();
 		this.screenToWorld = new Vector2f();
 
-		this.gameEffects = new ClientGameEffects();
+		this.gameEffects = new ClientGameEffects(this.random);
 		this.entityListener = this.gameEffects.getLightSystem().getClientEntityListener();		
 		
 		this.pools = new Pools(this);
@@ -877,7 +877,7 @@ public class ClientGame {
 				break;
 			}
 			case BULLET: {
-				entity = this.pools.getBulletPool().alloc(ent.id, pos);
+				entity = this.pools.getBulletPool().alloc(ent.id, pos);				
 				break;
 			}
 			case ROCKET: {

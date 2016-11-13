@@ -203,18 +203,25 @@ public class GameServer {
 		/* if this is a dedicated server, we'll contact the 
 		 * master server so that users know about this server
 		 */
+		this.console.print("Initializing MasterServerRegistration...");
 		this.registration = new MasterServerRegistration(this.serverContext);
 		if(settings.isDedicatedServer) {
 			this.registration.start();
+			this.console.println("done!");
 		}
+		else this.console.println("");
 		
+		this.console.print("Initializing LANServerRegistration...");
 		this.lanRegistration = new LANServerRegistration(this.serverContext);
 		if(settings.isLAN) {
 			this.lanRegistration.start();
+			this.console.println("done!");
 		}
-
+		else this.console.println("");
+		
 		/* attempt to attach a debugger */
 		if(config.isDebuggerEnabled()) {
+			this.console.println("Initializing debugger: " + config.getDebuggerClassName());
 			DebugableListener debugableListener = createDebugListener(config);
 			if(debugableListener != null) {
 				setDebugListener(debugableListener);
@@ -228,7 +235,7 @@ public class GameServer {
 		this.serverContext.getStateMachine().setListener(new StateMachineListener<State>() {			
 			@Override
 			public void onEnterState(State state) {
-				
+				console.println("Running startup script...");
 				/* only listen for the first in game state
 				 * transition because we only need to 'wait'
 				 * for the server to be up the first time in.
@@ -283,6 +290,8 @@ public class GameServer {
 		
 		/* load up the map */
 		serverContext.spawnGameSession(settings.currentMap);	
+		
+		console.println("Done initialzing the game server!");
 	}
 	
 	
