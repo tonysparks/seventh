@@ -108,8 +108,9 @@ public class CameraController implements Updatable {
 			Vector2f centerPos = this.localPlayer.getEntity().getCenterPos();
 			cameraShakeBounds.centerAround(centerPos);
 			if(cameraShakeBounds.contains(sourcePosition)) {
-				float force = Vector2f.Vector2fDistanceSq(centerPos, sourcePosition);
-				camera.shake(300, Math.max(900 - force/100, 100));						
+				float force = Vector2f.Vector2fDistance(centerPos, sourcePosition);				
+				force = Math.max(130 - force/10, 10);				
+				camera.addShake(300, force);
 			}
 		}
 	}

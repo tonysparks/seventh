@@ -474,6 +474,7 @@ public class ClientGame {
 		map.renderSolid(canvas, camera, alpha);
 
 		gameEffects.renderLightSystem(canvas, camera, alpha);
+		gameEffects.renderHurtEffect(canvas, camera, alpha);
 	}
 	
 	/**

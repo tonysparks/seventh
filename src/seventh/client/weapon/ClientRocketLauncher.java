@@ -21,10 +21,11 @@ public class ClientRocketLauncher extends ClientWeapon {
 	
 		this.weaponIcon = Art.rocketIcon;
 		this.weaponImage = Art.rpgImage;
-	//	this.muzzleFlash = Art.newRocketMuzzleFlash();
-		
-		this.endFireKick = 280;
 		this.weaponWeight = WeaponConstants.RPG_WEIGHT;
+		
+		this.weaponKickTime = 0; 
+		this.endFireKick = 0f; 
+		this.beginFireKick = 0f; 
 	}
 
 }

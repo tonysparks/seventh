@@ -282,7 +282,7 @@ public class Hud implements Renderable {
 			ClientWeapon weapon = ent.getWeapon();
 			
 			if(!ent.isOperatingVehicle()) {
-				drawWeaponIcons(canvas, weapon);			
+				drawWeaponIcons(canvas, camera, weapon);			
 				drawGrenadeIcons(canvas, ent.getNumberOfGrenades());
 			}
 			
@@ -328,7 +328,7 @@ public class Hud implements Renderable {
 		drawNetworkUsage(canvas);
 	}
 	
-	private void drawWeaponIcons(Canvas canvas, ClientWeapon weapon) {
+	private void drawWeaponIcons(Canvas canvas, Camera camera, ClientWeapon weapon) {
 		if(weapon!=null) {		
 			canvas.setFont("Consola", 14);
 			canvas.boldFont();
@@ -341,7 +341,7 @@ public class Hud implements Renderable {
 				canvas.drawImage(icon, canvas.getWidth() - icon.getRegionWidth() - 10, canvas.getHeight() - icon.getRegionHeight() - 30, null);
 			}
 			
-//			weapon.cameraKick(camera);
+			weapon.cameraKick(camera);
 		}
 	}
 	

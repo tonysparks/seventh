@@ -24,6 +24,10 @@ public class ClientPistol extends ClientWeapon {
 		this.weaponImage = Art.pistolImage;
 		this.muzzleFlash = Art.newThompsonMuzzleFlash();
 		this.weaponWeight = WeaponConstants.PISTOL_WEIGHT;
+		
+		this.weaponKickTime = 0; 
+		this.endFireKick = 0f; 
+		this.beginFireKick = 0f; 
 	}
 
 }

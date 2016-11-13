@@ -34,6 +34,7 @@ public class ClientGameEffects {
 	private final Effects backgroundEffects, foregroundEffects;
 	private final LightSystem lightSystem;
 	private final ExplosionEffect explosions;
+	private final HurtEffect hurtEffect;
 
 	private final List<FrameBufferRenderable> frameBufferRenderables;
 	private final Sprite frameBufferSprite;
@@ -46,6 +47,7 @@ public class ClientGameEffects {
 	 */
 	public ClientGameEffects() {
 		this.frameBufferRenderables = new ArrayList<>();
+		this.hurtEffect = new HurtEffect();
 		
 		this.backgroundEffects = new Effects();
 		this.foregroundEffects = new Effects();
@@ -92,6 +94,13 @@ public class ClientGameEffects {
 	 */
 	public LightSystem getLightSystem() {
 		return lightSystem;
+	}
+	
+	/**
+	 * @return the hurtEffect
+	 */
+	public HurtEffect getHurtEffect() {
+		return hurtEffect;
 	}
 	
 	/**
@@ -198,6 +207,7 @@ public class ClientGameEffects {
 		foregroundEffects.update(timeStep);
 		explosions.update(timeStep);
 				
+		hurtEffect.update(timeStep);
 		
 		int size = frameBufferRenderables.size();
 		for(int i = 0; i < size; i++) {
@@ -290,4 +300,8 @@ public class ClientGameEffects {
 	public void renderLightSystem(Canvas canvas, Camera camera, float alpha) {
 		lightSystem.render(canvas, camera, alpha);
 	}		
+	
+	public void renderHurtEffect(Canvas canvas, Camera camera, float alpha) {
+		this.hurtEffect.render(canvas, camera, alpha);
+	}
 }

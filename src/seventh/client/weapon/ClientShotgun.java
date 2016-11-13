@@ -25,10 +25,12 @@ public class ClientShotgun extends ClientWeapon {
 		super(owner);
 		this.weaponIcon = Art.shotgunIcon;
 		this.weaponImage = Art.shotgunImage;
-		this.muzzleFlash = Art.newShotgunMuzzleFlash();
-		
-		this.endFireKick = 250;		
+		this.muzzleFlash = Art.newShotgunMuzzleFlash();		
 		this.weaponWeight = WeaponConstants.SHOTGUN_WEIGHT;
+		
+		this.weaponKickTime = 200; 
+		this.endFireKick = 18.7f; 
+		this.beginFireKick = 0f; 
 	}
 
 	/* (non-Javadoc)

@@ -22,7 +22,7 @@ public class Zings {
         public void playZing(long gameClock, int id, ClientEntity ent) {
             if(lastTimePlayed + 1_000 < gameClock) {
                 Sounds.playSound(Sounds.bulletZing, id, ent.getCenterPos());
-                lastTimePlayed = gameClock;
+                lastTimePlayed = gameClock;                
             }
         }
     }
@@ -73,6 +73,7 @@ public class Zings {
                         if(ent.isAlive() && ent.getLastUpdate()+200 > gameClock && bullet.getOwnerId() != localEntity.getId()) {
                             if(localEntity.inEarShot(ent)) {
                                 zings[ent.getId()].playZing(gameClock, localEntity.getId(), ent);
+                                game.getCamera().addShake(100, 5.2f);
                             }
                         }
                     }

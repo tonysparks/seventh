@@ -517,6 +517,10 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.bloodEmitter.resetTimeToLive();
 		this.bloodEmitter.setPos(getPos());			
 		this.bloodEmitter.start();	
+		
+		if(isControlledByLocalPlayer()) {
+			this.game.getGameEffects().getHurtEffect().reset();
+		}
 	}
 	
 	/* (non-Javadoc)

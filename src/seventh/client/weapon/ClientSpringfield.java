@@ -26,9 +26,12 @@ public class ClientSpringfield extends ClientWeapon {
 
 		this.weaponIcon = Art.springfieldIcon;
 		this.weaponImage = Art.springfieldImage;
-		this.muzzleFlash = Art.newSpringfieldMuzzleFlash();
-		this.endFireKick = 250;			
+		this.muzzleFlash = Art.newSpringfieldMuzzleFlash();		
 		this.weaponWeight = WeaponConstants.SPRINGFIELD_WEIGHT;
+		
+		this.weaponKickTime = 150; 
+		this.endFireKick = 28.7f; 
+		this.beginFireKick = 0f; 
 	}
 
 	/* (non-Javadoc)

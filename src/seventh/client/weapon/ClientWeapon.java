@@ -22,9 +22,10 @@ public class ClientWeapon {
 	protected final int channelId;
 	private NetWeapon prevState, nextState;
 	
-	protected int beginFireKick, endFireKick;
+	protected float beginFireKick, endFireKick;
+	protected int weaponKickTime;
 	protected int weaponWeight;
-	private boolean startFiring, startReloading, canFireAgain;
+	private boolean startReloading, canFireAgain;
 			
 	private int firstFire;
 	
@@ -49,6 +50,7 @@ public class ClientWeapon {
 		this.firstFire = 0;
 		this.specialReloadActionReloadTimer = new Timer(false, boltActionTime);
 		this.fireWaitTimer = new Timer(false, 100);
+		this.weaponKickTime = 250;
 	}
 	
 	/**
@@ -242,12 +244,17 @@ public class ClientWeapon {
 	 * @param camera
 	 */
 	public void cameraKick(Camera camera) {
-		if(getState() == State.FIRING) {
-			if(startFiring) {
-				camera.shake(250, endFireKick);
+		
+//		this.weaponKickTime = 150; 
+//		this.endFireKick = 18.7f; 
+//		this.beginFireKick = 0f; 
+		
+		if(getState() == State.FIRING && weaponKickTime>0) {
+			if(firstFire==1) {
+				camera.shake(weaponKickTime, endFireKick);
 			}
 			else if (beginFireKick > 0 ) {
-				camera.shake(250, beginFireKick);
+				camera.shake(weaponKickTime, beginFireKick);
 			}
 		}
 	}

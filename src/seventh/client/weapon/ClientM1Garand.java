@@ -22,10 +22,12 @@ public class ClientM1Garand extends ClientWeapon {
 		
 		this.weaponIcon = Art.m1GarandIcon;
 		this.weaponImage = Art.m1GarandImage;
-		this.muzzleFlash = Art.newM1GarandMuzzleFlash();
-		
-		this.beginFireKick = 180;
+		this.muzzleFlash = Art.newM1GarandMuzzleFlash();		
 		this.weaponWeight = WeaponConstants.M1GARAND_WEIGHT;
+		
+		this.weaponKickTime = 1; 
+		this.endFireKick = 0f; 
+		this.beginFireKick = 5.5f; 
 	}
 
 }

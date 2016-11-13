@@ -83,6 +83,7 @@ public abstract interface Camera {
 	 * @param magnitude
 	 */
 	public abstract void shake( long time, float magnitude );
+	public abstract void addShake( long time, float magnitude );
 	
 	/**
 	 * Determine if the camera is shaking

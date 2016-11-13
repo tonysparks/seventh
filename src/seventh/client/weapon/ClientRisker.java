@@ -28,8 +28,11 @@ public class ClientRisker extends ClientWeapon {
 //		this.weaponImage = Art.sniperRifleImage;
 		this.weaponImage = Art.riskerImage;
 		this.muzzleFlash = Art.newRiskerMuzzleFlash();
-		this.endFireKick = 250;
 		this.weaponWeight = WeaponConstants.RISKER_WEIGHT;
+		
+		this.weaponKickTime = 280; 
+		this.endFireKick = 18.7f; 
+		this.beginFireKick = 0f; 
 	}
 
 	/* (non-Javadoc)

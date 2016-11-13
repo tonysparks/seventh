@@ -42,6 +42,11 @@ public class Colors {
 		return Color.rgba8888(v.x, v.y, v.z, alpha);
 	}
 	
+	public static int toColor(float r, float g, float b, float alpha) {
+		int c = Color.rgba8888(r,g,b, alpha);
+		return (c >>> 8) | (c<<24);
+	}
+	
 	/**
 	 * Converts the {@link Vector3f} into a int color
 	 * @param v
