@@ -109,6 +109,9 @@ public enum SoundType {
 	
 	RADIO_STATIC(SoundSourceType.REFERENCED),
 	
+	ALLIED_VICTORY(SoundSourceType.GLOBAL),
+	AXIS_VICTORY(SoundSourceType.GLOBAL),
+	
 	MUTE,
 	;
 	

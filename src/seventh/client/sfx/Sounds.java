@@ -165,6 +165,8 @@ public class Sounds {
 	
 	public static final int[] mg42Fire = {155,156};	
 	public static final int[] radioStatic = {157,158};
+	public static final int[] alliedVictory = {159,160,161};
+	public static final int[] axisVictory = {162,163,164};
 	
 	public static final int[][] alliedSpeeches = {
 			alliedSpeechAttack,
@@ -402,7 +404,15 @@ public class Sounds {
             loadSound("./assets/sfx/mg42/mg42_fire02.wav") ,   // 156
             
             loadSound("./assets/sfx/radio/static01.wav") ,   // 157
-            loadSound("./assets/sfx/radio/static02.wav") ,   // 158            
+            loadSound("./assets/sfx/radio/static02.wav") ,   // 158
+            
+            loadSound("./assets/sfx/obj/allied_mission_accomplished_01.wav") ,   // 159
+            loadSound("./assets/sfx/obj/allied_mission_accomplished_02.wav") ,   // 160
+            loadSound("./assets/sfx/obj/allied_mission_accomplished_03.wav") ,   // 161
+            
+            loadSound("./assets/sfx/obj/axis_mission_accomplished_01.wav") ,   // 162
+            loadSound("./assets/sfx/obj/axis_mission_accomplished_02.wav") ,   // 163
+            loadSound("./assets/sfx/obj/axis_mission_accomplished_03.wav") ,   // 164
 		};
 	};
 
@@ -932,6 +942,12 @@ public class Sounds {
 			break;
 		case RADIO_STATIC:
 			sound = radioStatic;
+			break;
+		case ALLIED_VICTORY:
+			sound = alliedVictory;
+			break;
+		case AXIS_VICTORY:
+			sound = axisVictory;
 			break;
 		case MUTE:
 			

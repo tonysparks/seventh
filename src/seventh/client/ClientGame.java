@@ -1396,8 +1396,16 @@ public class ClientGame {
 		this.roundEnded = true;
 		
 		applyGameStats(msg.stats);
+		ClientTeam winner = ClientTeam.fromId(msg.winnerTeamId);
+		scoreboard.setWinner(winner);
 		
-		scoreboard.setWinner(ClientTeam.fromId(msg.winnerTeamId));
+		if(winner==ClientTeam.ALLIES) {
+			Sounds.playGlobalSound(SoundType.ALLIED_VICTORY);
+		}
+		else if(winner==ClientTeam.AXIS) {
+			Sounds.playGlobalSound(SoundType.AXIS_VICTORY);
+		}
+		
 		showScoreBoard(true);
 		
 		executeCallbackScript("onRoundEnded", this);
