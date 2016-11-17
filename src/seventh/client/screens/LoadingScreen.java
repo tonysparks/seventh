@@ -98,14 +98,7 @@ public class LoadingScreen implements Screen {
 						try {			
 							Cons.println("Connecting to: " + host + ":" + port);
 							connection.disconnect();
-							
-							// make sure the server is
-							// up and running.  Temporary HACK
-							// to fix false starts.  Looks 
-							// like the server isn't actually 
-							// ready to receive connection requests...							
-							Thread.sleep(5_000); 
-							
+														
 							connection.connect(host, port);
 							message += "Success!";
 							
@@ -129,8 +122,9 @@ public class LoadingScreen implements Screen {
 						}
 						catch(Exception e) {
 							Cons.println("*** Unable to connect to the server :: \n" + e);
+							Cons.getImpl().execute("kill_local_server");
 							app.goToMenuScreen();
-						}
+						}						
 					}
 				});
 				

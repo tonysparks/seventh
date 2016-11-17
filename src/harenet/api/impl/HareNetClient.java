@@ -3,6 +3,9 @@
  */
 package harenet.api.impl;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
 import harenet.Host;
 import harenet.Host.MessageListener;
 import harenet.NetConfig;
@@ -10,9 +13,6 @@ import harenet.Peer;
 import harenet.api.Client;
 import harenet.messages.Message;
 import harenet.messages.NetMessage;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
 
 /**
  * Harenet Client implementation
@@ -184,19 +184,11 @@ public class HareNetClient extends HareNetEndpoint implements Client {
 		peer=host.connect(address);
 		this.connectionId = peer.getId();
 		
-		// attempt to resend the connection message
-		// until we receive a response
-		int iteration = timeout / 3;
-		while(iteration < timeout*3) {
-			update(iteration);
-			
-			if(peer.isConnected()) {
-				break;
-			}
-			
-			iteration += iteration;
-		}
-		                  			
+		int attemptsRemaining = 5;
+		do {
+			update(timeout);			
+		} while(!peer.isConnected() && attemptsRemaining-- > 0);
+		
 		return peer.isConnected();
 	}
 

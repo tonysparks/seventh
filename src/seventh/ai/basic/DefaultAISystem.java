@@ -230,7 +230,7 @@ public class DefaultAISystem implements AISystem {
 			return this.axisAIStrategy;
 		}
 		
-		return null;
+		return this.alliedAIStrategy;
 	}
 	
 	private PersonalityTraits getPersonalityTraitsFor(PlayerInfo player) {

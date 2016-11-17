@@ -827,6 +827,9 @@ public class Host {
 			numKeys = (timeout > 0) ? selector.select(timeout) : selector.selectNow();
 		} 
 		catch (IOException e) {
+			if(log.enabled()) {
+				log.error("*** Error in select : " + e);
+			}
 			result = SOCKET_ERROR;
 		}
 		

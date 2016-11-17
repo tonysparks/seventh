@@ -13,6 +13,7 @@ import seventh.client.ClientSeventhConfig;
 import seventh.client.SeventhGame;
 import seventh.client.network.ClientProtocol.GameCreationListener;
 import seventh.shared.Command;
+import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.TimeStep;
 
@@ -110,12 +111,27 @@ public class ClientConnection {
 		disconnect();
 				
 		InetSocketAddress address = new InetSocketAddress(host, port);
-		if(client.connect(12000, address)) {
-			client.start();
+		//client.start();
+		client.connect(5_000, address);
+		
+		int tries = 4;
+		while(tries-- >= 0) {
+			if(client.isConnected()) {
+				client.start();
+				return;
+			}
+			Cons.print(".");
+						
+			try{Thread.sleep(2000);}
+			catch(InterruptedException e) {}
 		}
-		else {
-			throw new IOException("Unable to connect to: " + host + ":" + port);
-		}
+		
+		Cons.println("");
+		
+		//client.stop();
+		
+		throw new IOException("Unable to connect to: " + host + ":" + port);
+		
 	}
 	
 	/**

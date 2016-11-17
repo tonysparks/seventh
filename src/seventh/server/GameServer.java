@@ -768,6 +768,11 @@ public class GameServer {
 			final long dt = 1000 / frameRate==0 ? 20 : frameRate;
 
 			final TimeStep timeStep = new TimeStep();
+			timeStep.setDeltaTime(dt);
+			timeStep.setGameClock(gameClock);
+			
+			// flush pending console commands
+			updateConsole(timeStep);
 			
 			if(this.serverListener != null) {
 				this.serverListener.onServerReady(this);
@@ -817,6 +822,11 @@ public class GameServer {
 		}
 	}
 	
+	private void updateConsole(TimeStep timeStep) {
+		if(!this.isLocal) {
+			this.console.update(timeStep);
+		}
+	}
 	
 	/**
 	 * Executes a server frame
@@ -824,10 +834,7 @@ public class GameServer {
 	 * @param timeStep
 	 */
 	private void serverFrame(StateMachine<State> sm, TimeStep timeStep) {	
-		if(!this.isLocal) {
-			this.console.update(timeStep);
-		}
-		
+		updateConsole(timeStep);		
 		sm.update(timeStep);
 	}
 	
