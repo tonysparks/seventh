@@ -3,6 +3,8 @@ seventh
 
 A top down 2D Shooter game I've been working on in my spare time.  This repository only includes the source.  You can download the BETA version of the game here: http://162.243.250.245:8080/seventh/
 
+[![Seventh Gameplay Video](http://img.youtube.com/vi/JEKWlPJX8V0/0.jpg)](http://youtube.com/watch?v=JEKWlPJX8V0)
+
 ##Features##
 * Three game modes (Team Death Match, Objective Based, Capture the Flag)
 * 9 different weapons
