@@ -136,6 +136,29 @@ public class TextureUtil {
 		return alpha;
 	}
 	
+	public static Pixmap toWhite(Pixmap img) {
+		Pixmap alpha = new Pixmap(img.getWidth(), img.getHeight(), Format.RGBA8888);		
+		//alpha.drawPixmap(img, 0, 0);
+			
+		int width = alpha.getWidth();
+		int height = alpha.getHeight();
+				
+		//alpha.setColor(0xff00009f);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int col = img.getPixel(x, y);
+				Color color = new Color(col);
+				if ( color.a > 0.2f ) {
+					alpha.drawPixel(x, y, Color.WHITE.toIntBits());
+				}
+			}
+		}
+		
+		img.dispose();
+		
+		return alpha;
+	}
+	
 	/**
 	 * Resizes the image
 	 *
