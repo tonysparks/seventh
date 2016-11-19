@@ -138,6 +138,7 @@ public class Art {
 	
 	public static  TextureRegion bullet = null;
 	public static  TextureRegion bulletImage = null;
+	public static  TextureRegion bulletShell = null;
 	
 	public static  TextureRegion tankTrackMarks = null;
 	
@@ -298,6 +299,7 @@ public class Art {
 		
 		bullet = loadImage("./assets/gfx/bullet.png");
 		bulletImage = loadImage("./assets/gfx/weapons/bullet.png");
+		bulletShell = loadImage("./assets/gfx/bullet_shell.png");
 				
 		tankTrackMarks = loadImage("./assets/gfx/vehicles/tank_track_mark.png");
 		
