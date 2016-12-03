@@ -7,6 +7,7 @@ import leola.frontend.listener.EventDispatcher;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
+import seventh.math.Rectangle;
 import seventh.ui.events.OnSliderMovedListener;
 import seventh.ui.events.SliderMovedEvent;
 
@@ -18,10 +19,14 @@ public class Slider extends Widget {
 
 	private static final int MAX_INDEX = 100;	
 	private int index;
+	private int heldX;
 	private Button handle;
 	private boolean isHandleHeld;
 	private boolean isHovering;
 	private SliderMovedEvent event;
+	
+	private Rectangle sliderHitbox;
+	
 	/**
 	 * @param eventDispatcher
 	 */
@@ -31,6 +36,9 @@ public class Slider extends Widget {
 		this.handle = new Button(eventDispatcher);
 		this.handle.getBounds().setSize(15, 18);
 		this.handle.getBounds().setLocation(0, -7);		
+		
+		this.sliderHitbox = new Rectangle();
+		
 		moveHandle(0);
 		
 		addWidget(handle);
@@ -39,6 +47,7 @@ public class Slider extends Widget {
 			@Override
 			public boolean touchUp(int x, int y, int pointer, int button) {
 				isHandleHeld = false;
+				heldX = 0;
 				return false;
 			}
 			
@@ -55,11 +64,18 @@ public class Slider extends Widget {
 			public boolean touchDown(int x, int y, int pointer, int button) {
 				if (handle.getScreenBounds().contains(x, y)) {
 					isHandleHeld = true;
+					heldX = Math.max(x - handle.getBounds().x - getBounds().x, 0);					
 					return true;
 				}
-				else if(getScreenBounds().contains(x, y)) {
-					moveHandleTo(x);
-					return true;
+				else {
+					sliderHitbox.set(getScreenBounds());
+					sliderHitbox.height *= 4;
+					sliderHitbox.y -= (getScreenBounds().height * 2);
+					
+					if(sliderHitbox.contains(x,y)) {
+						moveHandleTo(x);
+						return true;
+					}
 				}
 				return false;
 			}
@@ -137,11 +153,11 @@ public class Slider extends Widget {
 		int maxX = getBounds().x + getBounds().width;// - handle.getBounds().width/2;
 		int minX = getBounds().x;
 		
-		int newIndex = x - minX;
+		int newIndex = (x - minX) - heldX;
 		if(x <= maxX && x >= minX) {
 			handle.getBounds().x = newIndex;
 		}
-		if(newIndex >= 0 && newIndex <= 100) {
+		if(newIndex >= 0 && newIndex <= MAX_INDEX) {
 			index = newIndex;			
 			getEventDispatcher().sendNow(event);
 		}

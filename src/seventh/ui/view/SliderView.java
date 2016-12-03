@@ -61,7 +61,6 @@ public class SliderView implements Renderable {
 		
 		canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, Colors.setAlpha(slider.getForegroundColor(), a));
 		canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff000000);
-		
 	}
 
 }
