@@ -29,6 +29,7 @@ public abstract class Emitter implements Effect {
 	private Random random;
 	
 	protected int maxParticles;
+	protected int particleBatchSize;
 	private int numberOfParticles;	
 	
 	private boolean dieInstantly;
@@ -55,6 +56,7 @@ public abstract class Emitter implements Effect {
 		this.visibileBounds.centerAround(pos);
 		
 		this.maxParticles = -1;
+		this.particleBatchSize = 1;
 		this.dieInstantly = true;
 		this.decrementParticles = false;
 		
@@ -256,7 +258,9 @@ public abstract class Emitter implements Effect {
 					while(spawnParticle());
 				}
 				else {
-					spawnParticle();
+					for(int i = 0; i < this.particleBatchSize; i++) {
+						spawnParticle();
+					}
 				}
 			}
 			
