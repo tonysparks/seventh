@@ -59,8 +59,7 @@ public class CheckboxView implements Renderable {
 		if(checkbox.isHovering()) {
 			canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, checkbox.getForegroundColor());
 		}
-		
-				
+						
 		labelView.render(canvas, camera, alpha);
 	}
 

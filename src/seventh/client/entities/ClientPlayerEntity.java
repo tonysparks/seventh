@@ -10,6 +10,7 @@ import static seventh.shared.SeventhConstants.WALK_SPEED_FACTOR;
 
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
+import seventh.client.ClientSeventhConfig;
 import seventh.client.ClientTeam;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
@@ -75,6 +76,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	private int damageBufferIndex;
 	private Vector2f bulletCasingPos;
 	
+	private ClientSeventhConfig config;
 	/**
 	 * @param game
 	 * @param player
@@ -82,6 +84,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	 */
 	public ClientPlayerEntity(ClientGame game, ClientPlayer player, Vector2f pos) {
 		super(game, pos);
+		
+		this.config = game.getApp().getConfig();
 		
 		this.type = Type.PLAYER;
 			
@@ -524,9 +528,11 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	 * The player has taken damage
 	 */
 	protected void onDamage() {		
-		this.bloodEmitter.resetTimeToLive();
-		this.bloodEmitter.setPos(getPos());			
-		this.bloodEmitter.start();	
+		if(this.config.getBloodEnabled()) {
+			this.bloodEmitter.resetTimeToLive();
+			this.bloodEmitter.setPos(getPos());			
+			this.bloodEmitter.start();	
+		}
 		
 		if(isControlledByLocalPlayer()) {
 			this.game.getGameEffects().getHurtEffect().reset();

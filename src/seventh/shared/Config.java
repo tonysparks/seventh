@@ -133,7 +133,7 @@ public class Config {
 		LeoObject obj = config;
 		for(int i = 0; i < len; i++) {
 			LeoObject nextObj = obj.getObject(LeoString.valueOf(keys[i]));			
-			if(LeoObject.isTrue(nextObj)) {
+			if(!LeoObject.isNull(nextObj)) {
 				obj = nextObj;
 			}
 			else return null;
@@ -208,10 +208,14 @@ public class Config {
 		LeoObject obj = config;
 		for(int i = 0; i < len; i++) {
 			LeoObject nextObj = obj.getObject(keys[i]); 
-			if(LeoObject.isTrue(nextObj)) {
+			if(!LeoObject.isNull(nextObj)) {
 				obj = nextObj;
 			}
-			else return false;
+			else {
+				LeoObject newEntry = new LeoMap();				
+				obj.$sindex(LeoString.valueOf(keys[i]), newEntry);
+				obj = newEntry;
+			}
 		}
 		obj.$sindex(LeoString.valueOf(keys[keys.length-1]), LeoObject.valueOf(value));
 		//obj.setObject(keys[keys.length-1], Leola.toLeoObject(value));

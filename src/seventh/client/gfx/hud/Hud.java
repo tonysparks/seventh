@@ -15,6 +15,7 @@ import java.util.TimeZone;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayers;
+import seventh.client.ClientSeventhConfig;
 import seventh.client.ClientTeam;
 import seventh.client.SeventhGame;
 import seventh.client.entities.ClientBombTarget;
@@ -52,6 +53,7 @@ public class Hud implements Renderable {
 	
 	private ClientGame game;
 	private SeventhGame app;
+	private ClientSeventhConfig config;
 	private KillLog killLog;
 	private MessageLog messageLog, centerLog, objectiveLog;
 	private Scoreboard scoreboard;
@@ -72,6 +74,7 @@ public class Hud implements Renderable {
 	public Hud(ClientGame game) {
 		this.game = game;
 		this.app = game.getApp();
+		this.config = app.getConfig();
 		
 		this.localPlayer = game.getLocalPlayer();				
 		int screenWidth = game.getApp().getScreenWidth();
@@ -341,7 +344,11 @@ public class Hud implements Renderable {
 				canvas.drawImage(icon, canvas.getWidth() - icon.getRegionWidth() - 10, canvas.getHeight() - icon.getRegionHeight() - 30, null);
 			}
 			
-			weapon.cameraKick(camera);
+			// do recoil (shaking the camera)
+			// if this client has it enabled.
+			if(this.config.getWeaponRecoilEnabled()) {
+				weapon.cameraKick(camera);
+			}
 		}
 	}
 	

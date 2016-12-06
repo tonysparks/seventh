@@ -113,6 +113,7 @@ import seventh.shared.Timer;
 public class ClientGame {	
 	
 	private final SeventhGame app;	
+	private final ClientSeventhConfig config;
 	private final Map map;
 	
 	private final ClientPlayer localPlayer;
@@ -190,7 +191,8 @@ public class ClientGame {
 		this.players = players;
 		this.map = map;
 		this.localSession = session;
-														
+
+		this.config = app.getConfig();
 		this.scoreboard = new Scoreboard(this);
 		
 		this.localPlayer = players.getPlayer(session.getSessionPlayerId());		
@@ -1311,21 +1313,25 @@ public class ClientGame {
 					// Objective game type keeps the dead bodies around
 					boolean persist = gameType.equals(GameType.Type.OBJ);
 					
-					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));
-					gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath, 3));
-					gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));
+					if(config.getBloodEnabled()) {
+						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));
+						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath, 3));
+						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));
+					}
 					break;
 				}
 				case ROCKET:
-				case ROCKET_LAUNCHER: 		
-					gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));					
-					gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));										
+				case ROCKET_LAUNCHER:
+					if(config.getBloodEnabled()) {
+						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));					
+						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
+					}
 					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					
 					break;				
 				default:
 					
-					if(meansOfDeath != Type.FIRE) {					
+					if(meansOfDeath != Type.FIRE && config.getBloodEnabled()) {					
 						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 16, 15200, 14000, 0, 30));
 					}
 					

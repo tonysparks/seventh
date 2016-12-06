@@ -21,6 +21,7 @@ import seventh.shared.Cons;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 import seventh.ui.Button;
+import seventh.ui.Checkbox;
 import seventh.ui.KeyInput;
 import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;
@@ -29,10 +30,13 @@ import seventh.ui.Slider;
 import seventh.ui.TextBox;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
+import seventh.ui.events.CheckboxEvent;
 import seventh.ui.events.OnButtonClickedListener;
+import seventh.ui.events.OnCheckboxClickedListener;
 import seventh.ui.events.OnSliderMovedListener;
 import seventh.ui.events.SliderMovedEvent;
 import seventh.ui.view.ButtonView;
+import seventh.ui.view.CheckboxView;
 import seventh.ui.view.LabelView;
 import seventh.ui.view.PanelView;
 import seventh.ui.view.SliderView;
@@ -293,13 +297,13 @@ public class OptionsScreen implements Screen {
 		this.panelView.addElement(new LabelView(controlsLbl));
 		this.panelView.addElement(new TextBoxView(nameTxtBox));
 				
-		final int bottomPanelY = 570;
+		final int bottomPanelY = 600;
 		
 		// ~~~ Video 
 		
 		Label videoLbl = new Label("Video");
 		videoLbl.setTheme(theme);
-		videoLbl.setBounds(new Rectangle(10, bottomPanelY - 70, 470, 40));
+		videoLbl.setBounds(new Rectangle(80, bottomPanelY - 70, 470, 40));
 		videoLbl.setTextAlignment(TextAlignment.LEFT);
 		videoLbl.setFont(theme.getPrimaryFontName());
 		videoLbl.setTextSize(18);
@@ -349,14 +353,14 @@ public class OptionsScreen implements Screen {
 		
 		Label soundLbl = new Label("Sound");
 		soundLbl.setTheme(theme);
-		soundLbl.setBounds(new Rectangle(app.getScreenWidth()/2, bottomPanelY-70, 400, 40));
+		soundLbl.setBounds(new Rectangle(app.getScreenWidth()/2 - 90, bottomPanelY-70, 400, 40));
 		soundLbl.setTextAlignment(TextAlignment.LEFT);
 		soundLbl.setFont(theme.getPrimaryFontName());
 		soundLbl.setTextSize(18);
 				
 		this.panelView.addElement(new LabelView(soundLbl));
 		
-		uiPos.x = app.getScreenWidth()/2 + startX - 25;
+		uiPos.x = app.getScreenWidth()/3 + startX - 25;
 		uiPos.y = bottomPanelY - 5;
 						
 		final Slider slider = new Slider();		
@@ -377,7 +381,7 @@ public class OptionsScreen implements Screen {
 		this.optionsPanel.addWidget(slider);
 		this.panelView.addElement(new SliderView(slider));
 		
-		uiPos.x = app.getScreenWidth()/2 + startX;
+		uiPos.x = app.getScreenWidth()/3 + startX;
 		uiPos.y = bottomPanelY;
 		
 		final Button sndBtn = setupButton(uiPos, "Volume: ", false); uiPos.y += yInc;
@@ -395,6 +399,53 @@ public class OptionsScreen implements Screen {
 				slider.moveHandle(value);
 			}
 		});
+		
+		final int thirdSectionX = app.getScreenWidth() - (app.getScreenWidth() / 3) + 20;
+		
+		Label gameLbl = new Label("Game");
+		gameLbl.setTheme(theme);
+		gameLbl.setBounds(new Rectangle(thirdSectionX + 30, bottomPanelY-70, 400, 40));
+		gameLbl.setTextAlignment(TextAlignment.LEFT);
+		gameLbl.setFont(theme.getPrimaryFontName());
+		gameLbl.setTextSize(18);
+				
+		this.panelView.addElement(new LabelView(gameLbl));
+		
+		uiPos.x = thirdSectionX + 60;
+		uiPos.y = bottomPanelY - 15;
+		
+		Checkbox weaponRecoilEnabledChkBx = new Checkbox(app.getConfig().getWeaponRecoilEnabled());
+		weaponRecoilEnabledChkBx.setTheme(theme);				
+		weaponRecoilEnabledChkBx.setLabelText("Weapon Recoil");
+		weaponRecoilEnabledChkBx.getBounds().setLocation(uiPos);
+		weaponRecoilEnabledChkBx.addCheckboxClickedListener(new OnCheckboxClickedListener() {
+			
+			@Override
+			public void onCheckboxClicked(CheckboxEvent event) {
+				app.getConfig().setWeaponRecoilEnabled(event.getCheckbox().isChecked());				
+			}
+		});
+		
+		this.optionsPanel.addWidget(weaponRecoilEnabledChkBx);
+		this.panelView.addElement(new CheckboxView(weaponRecoilEnabledChkBx));
+		
+				
+		uiPos.y = bottomPanelY + 15;
+		
+		Checkbox bloodEnabledChkBx = new Checkbox(app.getConfig().getBloodEnabled());
+		bloodEnabledChkBx.setTheme(theme);				
+		bloodEnabledChkBx.setLabelText("Blood");
+		bloodEnabledChkBx.getBounds().setLocation(uiPos);
+		bloodEnabledChkBx.addCheckboxClickedListener(new OnCheckboxClickedListener() {
+			
+			@Override
+			public void onCheckboxClicked(CheckboxEvent event) {
+				app.getConfig().setBloodEnabled(event.getCheckbox().isChecked());				
+			}
+		});
+		
+		this.optionsPanel.addWidget(bloodEnabledChkBx);
+		this.panelView.addElement(new CheckboxView(bloodEnabledChkBx));
 		
 	}
 

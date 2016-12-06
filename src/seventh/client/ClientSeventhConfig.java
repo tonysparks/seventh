@@ -128,4 +128,34 @@ public class ClientSeventhConfig extends SeventhConfig {
 	public int getConsoleBackgroundColor() {
 		return this.config.getInt(0x8f0000FF, "console", "background_color");
 	}
+	
+	/**
+	 * @return true if the weapon shows weapon recoiling (camera shaking)
+	 */
+	public boolean getWeaponRecoilEnabled() {
+		return this.config.getBool(true, "game", "weapon_recoil");
+	}
+	
+	/**
+	 * Enables/Disables weapon recoil (camera shaking)
+	 * @param recoilEnabled
+	 */
+	public void setWeaponRecoilEnabled(boolean recoilEnabled) {
+		this.config.set(recoilEnabled, "game", "weapon_recoil");
+	}
+	
+	/**
+	 * @return true if blood is shown
+	 */
+	public boolean getBloodEnabled() {
+		return this.config.getBool(true, "game", "blood");
+	}
+	
+	/**
+	 * Enables/Disables blood/guts
+	 * @param bloodEnabled
+	 */
+	public void setBloodEnabled(boolean bloodEnabled) {
+		this.config.set(bloodEnabled, "game", "blood");
+	}
 }
