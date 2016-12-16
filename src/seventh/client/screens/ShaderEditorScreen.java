@@ -217,7 +217,8 @@ public class ShaderEditorScreen implements Screen {
 		public boolean touchUp(int x, int y, int pointer, int button) {
 			if(button == 1) {
 				//emitters.add(Emitters.newFireEmitter(new Vector2f(x,y)));
-				emitters.add(Emitters.newBloodEmitter(new Vector2f(x,y)));
+				//emitters.add(Emitters.newBloodEmitter(new Vector2f(x,y)));
+				emitters.add(Emitters.newBulletImpactEmitter(new Vector2f(x,y), new Vector2f(1,0)));
 			}
 			return true;
 		}

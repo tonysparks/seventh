@@ -3,8 +3,12 @@
  */
 package seventh.client.gfx.particle_system;
 
+import com.badlogic.gdx.graphics.Color;
+
 import seventh.client.gfx.Art;
+import seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator;
 import seventh.math.Vector2f;
+import seventh.shared.TimeStep;
 
 /**
  * @author Tony
@@ -42,6 +46,37 @@ public class Emitters {
 		emitter.addParticleUpdater(new MovementParticleUpdater(0, 2));
 		emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9878f));
 		emitter.addParticleRenderer(new BlendingParticleRenderer());
+		
+		return emitter;
+	}
+	
+	public static Emitter newBulletImpactEmitter(Vector2f pos, Vector2f targetVel) {
+		// 5, 5200, 4000, 0, 60);
+		// int maxParticles, int emitterTimeToLive, int particleTimeToLive, int timeToNextSpawn, int maxSpread) {
+		
+		Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
+		
+		Emitter emitter = new Emitter(pos, 200, 30).setDieInstantly(false);
+		BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
+		gen.addSingleParticleGenerator(new SingleParticleGenerator() {
+			
+				@Override
+				public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+					particles.speed[index] = 125f;
+				}
+			})
+		   .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
+		   .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0x8B7355ff), new Color(0x8A7355ff)))
+		   .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 30))
+		   .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(200, 250))		   
+		;
+		
+		emitter.addParticleGenerator(gen);
+		
+		emitter.addParticleUpdater(new KillUpdater());
+		emitter.addParticleUpdater(new RandomMovementParticleUpdater(85));
+		emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.72718f));
+		emitter.addParticleRenderer(new CircleParticleRenderer());
 		
 		return emitter;
 	}
