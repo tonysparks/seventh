@@ -15,34 +15,26 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class CircleParticleRenderer implements ParticleRenderer {
+public class RectParticleRenderer implements ParticleRenderer {
 
-	private float radius;
+	private final int width, height;
 	
 	/**
-	 * defaults to a radius of 1
+	 * a default width/height of 1
 	 */
-	public CircleParticleRenderer() {
-		this(1f);
+	public RectParticleRenderer() {
+		this(1,1);
 	}
 	
-	/**
-	 * @param radius
-	 */
-	public CircleParticleRenderer(float radius) {
-		this.radius = radius;
+	public RectParticleRenderer(int width, int height) {
+		this.width = width;
+		this.height = height;
 	}
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.Emitter.ParticleRenderer#update(seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
-	 */
 	@Override
 	public void update(TimeStep timeStep, ParticleData particles) {
 	}
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.Emitter.ParticleRenderer#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, float, seventh.client.gfx.particle_system.ParticleData)
-	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha, ParticleData particles) {
 		
@@ -53,7 +45,7 @@ public class CircleParticleRenderer implements ParticleRenderer {
 			float x = pos.x - cameraPos.x, y = pos.y - cameraPos.y;
 			Color color = particles.color[i];
 			
-			canvas.fillCircle(this.radius, x, y, Color.argb8888(color));			
+			canvas.fillRect(x, y, width, height, Color.argb8888(color));			
 		}				
 	}
 

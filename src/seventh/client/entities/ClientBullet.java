@@ -3,11 +3,10 @@
  */
 package seventh.client.entities;
 
-import java.util.Random;
-
 import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.effects.particle_system.Emitter;
 import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.net.NetBullet;
@@ -21,21 +20,19 @@ import seventh.shared.TimeStep;
  */
 public class ClientBullet extends ClientEntity {
 	
-	private Vector2f oldPos;
 	private Vector2f origin;
 	private int ownerId;
 		
 	private Vector2f vel;
-	private int tracerLength;
-	
-	private Vector2f renderPosStart, renderPosEnd;
-	
+		
 	static class BulletOnRemove implements OnRemove {
 		private Vector2f vel = new Vector2f();
 		
 		@Override
 		public void onRemove(ClientEntity me, ClientGame game) {
-			ClientBullet bullet = (ClientBullet)me;			 
+			ClientBullet bullet = (ClientBullet)me;			
+			bullet.trailEffect.kill();
+			
 			Vector2f.Vector2fSubtract(bullet.getPos(), bullet.getOrigin(), vel);
 			Vector2f.Vector2fNormalize(vel, vel);
 			
@@ -49,6 +46,8 @@ public class ClientBullet extends ClientEntity {
 		}
 	}
 	
+	private Emitter trailEffect;
+	
 	/**
 	 * @param game
 	 * @param pos
@@ -56,15 +55,14 @@ public class ClientBullet extends ClientEntity {
 	public ClientBullet(ClientGame game, Vector2f pos) {
 		super(game, pos);
 		origin = new Vector2f(pos);
-		oldPos = new Vector2f(pos);
 		
 		vel = new Vector2f();
-		
-		renderPosEnd = new Vector2f();
-		renderPosStart = new Vector2f();
-						
+								
 		bounds.width = 5;
 		bounds.height = 5;
+		
+		trailEffect = Emitters.newBulletTracerEmitter(pos.createClone(), 10_000)
+				              .attachTo(this);
 		
 		reset();
 		
@@ -79,7 +77,6 @@ public class ClientBullet extends ClientEntity {
 		super.reset();
 		
 		origin.zeroOut();
-		oldPos.zeroOut();
 		vel.zeroOut();
 		
 		ownerId = -1;		
@@ -87,9 +84,11 @@ public class ClientBullet extends ClientEntity {
 
 		prevState = null;
 		nextState = null;
+				
+		trailEffect.reset();
 		
-		Random rand = game.getRandom();
-		tracerLength = 50 + rand.nextInt(30);
+//		trailEffect = Emitters.newBulletTracerEmitter(pos.createClone(), 10_000)
+//	              .attachTo(this);
 	}
 	
 	public void setId(int id) {
@@ -102,7 +101,6 @@ public class ClientBullet extends ClientEntity {
 	public void setOrigin(Vector2f origin) {
 		this.pos.set(origin);
 		this.origin.set(origin);
-		this.oldPos.set(origin);		
 	}
 	
 	/* (non-Javadoc)
@@ -163,6 +161,8 @@ public class ClientBullet extends ClientEntity {
 			{
 				Vector2f.Vector2fSubtract(getPos(), getOrigin(), vel);
 				Vector2f.Vector2fNormalize(vel, vel);
+				facing.set(vel);
+				movementDir.set(vel);				
 			}			
 		}
 	}
@@ -177,9 +177,14 @@ public class ClientBullet extends ClientEntity {
 		
 		Vector2f.Vector2fSubtract(getPos(), getOrigin(), vel);
 		Vector2f.Vector2fNormalize(vel, vel);
-		if(Vector2f.Vector2fDistanceSq(getOrigin(), getPos()) > 20 ) {
-			Vector2f.Vector2fMS(getPos(), vel, tracerLength, oldPos);
-		}
+		facing.set(vel);
+		movementDir.set(vel);
+		
+//		if(Vector2f.Vector2fDistanceSq(getOrigin(), getPos()) > 20 ) {
+//			Vector2f.Vector2fMS(getPos(), vel, tracerLength, oldPos);
+//		}
+		
+		trailEffect.update(timeStep);
 	}
 
 	/* (non-Javadoc)
@@ -187,26 +192,8 @@ public class ClientBullet extends ClientEntity {
 	 */
 	@Override
 	public void render(Canvas canvas, Camera camera, float alpha) {
-		//if(!oldPos.isZero()) 
-		{
-			Vector2f cameraPos = camera.getRenderPosition(alpha);
-
-			renderPosStart.x = (oldPos.x-cameraPos.x);
-			renderPosStart.y = (oldPos.y-cameraPos.y);
-					
-			renderPosEnd.x = (pos.x-cameraPos.x);
-			renderPosEnd.y = (pos.y-cameraPos.y);
-				
-			canvas.drawLine(renderPosStart.x, renderPosStart.y, renderPosEnd.x, renderPosEnd.y, 0x6fEE9A00);
-			
-			Vector2f.Vector2fSubtract(renderPosStart, 1.0f, renderPosStart);
-			Vector2f.Vector2fSubtract(renderPosEnd, 1.0f, renderPosEnd);
-			canvas.drawLine(renderPosStart.x, renderPosStart.y, renderPosEnd.x, renderPosEnd.y, 0x51ffff00);
-			
-			Vector2f.Vector2fSubtract(renderPosStart, -1.0f, renderPosStart);
-			Vector2f.Vector2fSubtract(renderPosEnd, -1.0f, renderPosEnd);
-			canvas.drawLine(renderPosStart.x, renderPosStart.y, renderPosEnd.x, renderPosEnd.y, 0x51ffff00);
-		}
+		trailEffect.render(canvas, camera, alpha);
+		
 	}
 
 }

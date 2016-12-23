@@ -9,9 +9,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.TextureUtil;
 import seventh.client.gfx.effects.particle_system.BatchedParticleGenerator.SingleParticleGenerator;
+import seventh.client.gfx.effects.particle_system.Emitter.ParticleUpdater;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -90,6 +92,14 @@ public class Emitters {
 								.setName("RocketTrailEmitter")
 								.setDieInstantly(false);
 		BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 7)
+			.addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0x474B48ff),new Color(0x434B43ff)))
+			.addSingleParticleGenerator(new SingleParticleGenerator() {
+				
+				@Override
+				public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+					particles.color[index].a = 0.92f;
+				}
+			})
 		   .addSingleParticleGenerator(new RandomPositionInRadiusSingleParticleGenerator(maxSpread))
 		   .addSingleParticleGenerator(new RandomRotationSingleParticleGenerator())
 		   .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(0.25f, 1.2f))
@@ -142,6 +152,56 @@ public class Emitters {
 		//emitter.addParticleUpdater(new MovementParticleUpdater(0, 40f));
 		emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9898f));
 		emitter.addParticleRenderer(new SpriteParticleRenderer());
+		
+		return emitter;
+	}
+	
+	public static Emitter newBulletTracerEmitter(Vector2f pos, int emitterTimeToLive) {
+		int maxParticles = 68;
+				
+		final Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+									.setName("BulletTracerEmitter")
+									.setDieInstantly(false);
+		BatchedParticleGenerator gen = new BatchedParticleGenerator(0, maxParticles)
+		   .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(/*new Color(0xEE9A00ff),*/new Color(0xffff00ff)))
+		   .addSingleParticleGenerator(new SingleParticleGenerator() {
+				
+				@Override
+				public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {			
+					particles.color[index].a = 0.0f;
+				}
+			})		   		   		   
+		   .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
+		;
+		
+		emitter.addParticleGenerator(gen);
+		emitter.addParticleUpdater(new ParticleUpdater() {
+			
+			@Override
+			public void update(TimeStep timeStep, ParticleData particles) {
+				ClientEntity ent = emitter.attachedTo();
+				if(ent!=null) {
+					for(int index = 0; index < particles.numberOfAliveParticles; index++) {
+						Vector2f pos = ent.getCenterPos();
+						Vector2f vel = ent.getMovementDir();
+						
+						float offset = index;
+						Vector2f.Vector2fMS(pos, vel, offset, particles.pos[index]);
+						
+						float percentange = (float)index / particles.numberOfAliveParticles;
+						particles.color[index].a = 0.9512f * (1f - percentange);
+					}
+				}
+				else {
+					for(int index = 0; index < particles.numberOfAliveParticles; index++) {
+						particles.color[index].a = 0f;
+					}
+				}
+			}
+		});
+		
+		emitter.addParticleUpdater(new KillIfAttachedIsDeadUpdater());	
+		emitter.addParticleRenderer(new RectParticleRenderer(2,1));
 		
 		return emitter;
 	}
@@ -237,7 +297,7 @@ public class Emitters {
 		//emitter.addParticleUpdater(new KillUpdater());
 		emitter.addParticleUpdater(new MovementParticleUpdater(0, 40f));
 		//emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9878f));
-		emitter.addParticleRenderer(new BlendingSpriteParticleRenderer());
+		emitter.addParticleRenderer(new SpriteParticleRenderer());
 		
 		return emitter;
 	}
