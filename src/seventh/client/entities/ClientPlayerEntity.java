@@ -19,7 +19,7 @@ import seventh.client.gfx.Light;
 import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.PlayerSprite;
 import seventh.client.gfx.RenderFont;
-import seventh.client.gfx.particle.BloodEmitter;
+import seventh.client.gfx.effects.ClientGameEffects;
 import seventh.client.weapon.ClientKar98;
 import seventh.client.weapon.ClientM1Garand;
 import seventh.client.weapon.ClientMP40;
@@ -64,9 +64,9 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		
 	private int weaponWeight;
 	
-	private BloodEmitter bloodEmitter;
-		
 	private Light mussleFlash;
+	private ClientGameEffects effects;
+		
 	
 	private boolean isSelected;
 	
@@ -86,15 +86,13 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		super(game, pos);
 		
 		this.config = game.getApp().getConfig();
+		this.effects = game.getGameEffects();
 		
 		this.type = Type.PLAYER;
 			
 		this.currentState = State.IDLE;	
 		this.invinceableTime = 0;		
 		this.lineOfSight = WeaponConstants.DEFAULT_LINE_OF_SIGHT;
-		
-		this.bloodEmitter = game.getGameEffects().getBloodEmitterForPlayer(player.getId());
-		this.bloodEmitter.pause();
 						
 		this.bounds.width = 24;//16;
 		this.bounds.height = 24;
@@ -124,7 +122,6 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	public void destroy() {
 		super.destroy();
 		mussleFlash.destroy();
-		bloodEmitter.pause();
 	}
 	
 	/**
@@ -179,17 +176,11 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		return mussleFlash;
 	}
 	
-	/**
-	 * @return the bloodEmitter
-	 */
-	public BloodEmitter getBloodEmitter() {
-		return bloodEmitter;
-	}	
 	
 	public void emitBulletCasing() {
 		if(!this.isOperatingVehicle() && (this.lastUpdate+200 > this.gameClock)) {
 			Vector2f.Vector2fMA(getCenterPos(), getFacing(), 10.0f, this.bulletCasingPos);
-			this.game.getGameEffects().spawnBulletCasing(this.bulletCasingPos, getOrientation());
+			this.effects.spawnBulletCasing(this.bulletCasingPos, getOrientation());
 		}
 	}
 	
@@ -529,9 +520,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 	 */
 	protected void onDamage() {		
 		if(this.config.getBloodEnabled()) {
-			this.bloodEmitter.resetTimeToLive();
-			this.bloodEmitter.setPos(getPos());			
-			this.bloodEmitter.start();	
+			this.effects.spawnBloodSplatter(getCenterPos());				
 		}
 		
 		if(isControlledByLocalPlayer()) {

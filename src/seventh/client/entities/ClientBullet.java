@@ -8,8 +8,7 @@ import java.util.Random;
 import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.particle.BulletImpactEmitter;
-import seventh.client.gfx.particle_system.Emitters;
+import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
@@ -44,7 +43,6 @@ public class ClientBullet extends ClientEntity {
 			Vector2f.Vector2fMA(pos, vel, 5.0f, pos);
 			
 			if(!game.doesEntityTouchOther(me)) {
-				//game.addBackgroundEffect(new BulletImpactEmitter(pos, vel, 200, 0, false));
 				game.addBackgroundEffect(Emitters.newBulletImpactEmitter(pos, vel));
 			}
 			

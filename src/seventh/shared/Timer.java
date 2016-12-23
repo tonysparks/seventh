@@ -26,6 +26,15 @@ public class Timer implements Updatable {
 		reset();
 	}
 
+	public void set(Timer timer) {
+		this.currentTime = timer.currentTime;
+		this.endTime = timer.endTime;
+		this.update = timer.update;
+		this.loop = timer.loop;
+		this.isTime = timer.isTime;
+		this.onFirstTime = timer.onFirstTime;
+	}
+	
 	/**
 	 * @param endTime the endTime to set
 	 */
@@ -90,6 +99,13 @@ public class Timer implements Updatable {
 
 	public boolean isExpired() {
 		return isTime && !isLooping();
+	}
+	
+	/**
+	 * Move the remaining time to 0
+	 */
+	public void expire() {
+		this.currentTime = this.endTime;
 	}
 	
 	/**

@@ -27,7 +27,7 @@ public class RocketLauncher extends Weapon {
 		
 		this.damage = 120;
 		this.reloadTime = 0;
-		this.clipSize = 50;
+		this.clipSize = 5;
 		this.totalAmmo = 0;
 		this.bulletsInClip = this.clipSize;
 		this.lineOfSight = WeaponConstants.RPG_LINE_OF_SIGHT;

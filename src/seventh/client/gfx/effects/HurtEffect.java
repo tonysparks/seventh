@@ -6,7 +6,6 @@ package seventh.client.gfx.effects;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Colors;
-import seventh.client.gfx.particle.Effect;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 

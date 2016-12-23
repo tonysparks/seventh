@@ -11,9 +11,11 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.TankSprite;
 import seventh.client.gfx.effects.ClientGameEffects;
-import seventh.client.gfx.particle.Emitter;
-import seventh.client.gfx.particle.RenderableEffect;
-import seventh.client.gfx.particle.RocketTrailEmitter;
+import seventh.client.gfx.effects.RenderableEffect;
+import seventh.client.gfx.effects.particle_system.Emitter;
+import seventh.client.gfx.effects.particle_system.Emitters;
+import seventh.client.gfx.effects.particle_system.ParticleData;
+import seventh.client.gfx.effects.particle_system.Emitter.ParticleUpdater;
 import seventh.game.entities.Entity.State;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetTank;
@@ -119,14 +121,24 @@ public class ClientTank extends ClientVehicle {
 						return removeGfx();
 					}
 				});
-				Emitter rocketTrail = new RocketTrailEmitter(getCenterPos(), 40_000, 0) {					
+//				Emitter rocketTrail = new RocketTrailEmitter(getCenterPos(), 40_000, 0) {					
+//					@Override
+//					public boolean isDone() {
+//						return !this.isAlive() || removeGfx();
+//					}
+//				};				
+//				rocketTrail.start();
+				Emitter smoke = Emitters.newSmokeEmitter(getCenterPos(), 40_000).addParticleUpdater(new ParticleUpdater() {
+					
 					@Override
-					public boolean isDone() {
-						return !this.isAlive() || removeGfx();
+					public void update(TimeStep timeStep, ParticleData particles) {
+						Emitter emitter = particles.emitter;
+						if(removeGfx()) {
+							emitter.kill();
+						}
 					}
-				};				
-				rocketTrail.start();
-				game.addForegroundEffect(rocketTrail);
+				});
+				game.addForegroundEffect(smoke);
 			}
 		}
 		

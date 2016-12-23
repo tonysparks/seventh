@@ -16,6 +16,7 @@ import seventh.client.entities.ClientControllableEntity;
 import seventh.client.entities.ClientDroppedItem;
 import seventh.client.entities.ClientEntities;
 import seventh.client.entities.ClientEntity;
+import seventh.client.entities.ClientEntity.OnRemove;
 import seventh.client.entities.ClientExplosion;
 import seventh.client.entities.ClientFire;
 import seventh.client.entities.ClientFlag;
@@ -24,7 +25,6 @@ import seventh.client.entities.ClientHealthPack;
 import seventh.client.entities.ClientLightBulb;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.entities.ClientRocket;
-import seventh.client.entities.ClientEntity.OnRemove;
 import seventh.client.entities.vehicles.ClientPanzerTank;
 import seventh.client.entities.vehicles.ClientShermanTank;
 import seventh.client.entities.vehicles.ClientVehicle;
@@ -34,20 +34,16 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.LightSystem;
+import seventh.client.gfx.effects.AnimationEffect;
 import seventh.client.gfx.effects.ClientGameEffects;
+import seventh.client.gfx.effects.Effect;
+import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.gfx.hud.Hud;
 import seventh.client.gfx.hud.Scoreboard;
-import seventh.client.gfx.particle.AnimationEffect;
-import seventh.client.gfx.particle.BloodEmitter;
-import seventh.client.gfx.particle.Effect;
-import seventh.client.gfx.particle.Emitter;
-import seventh.client.gfx.particle.GibEmitter;
-import seventh.client.gfx.particle.RocketTrailEmitter;
-import seventh.client.gfx.particle.WallCrumbleEmitter;
 import seventh.client.inputs.CameraController;
 import seventh.client.network.LocalSession;
-import seventh.client.screens.Screen;
 import seventh.client.screens.InGameScreen.Actions;
+import seventh.client.screens.Screen;
 import seventh.client.sfx.Sound;
 import seventh.client.sfx.Sounds;
 import seventh.client.sfx.Zings;
@@ -883,13 +879,8 @@ public class ClientGame {
 				break;
 			}
 			case ROCKET: {
-				entity = new ClientRocket(this, pos);
-				
-				Emitter rocketTrail = new RocketTrailEmitter(pos, 4000, 0);				
-				rocketTrail.attachTo(entity);
-				rocketTrail.start();
-				
-				gameEffects.addForegroundEffect(rocketTrail);
+				entity = new ClientRocket(this, pos);				
+				gameEffects.addForegroundEffect(Emitters.newRocketTrailEmitter(pos, 4000).attachTo(entity).start());
 				
 				cameraController.shakeCamera(pos);
 				
@@ -1314,8 +1305,8 @@ public class ClientGame {
 					boolean persist = gameType.equals(GameType.Type.OBJ);
 					
 					if(config.getBloodEnabled()) {
-						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));
-						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath, 3));
+						gameEffects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 18, 15200, 50));
+						gameEffects.addBackgroundEffect(Emitters.newGibEmitter(locationOfDeath, 3));						
 						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));
 					}
 					break;
@@ -1323,16 +1314,16 @@ public class ClientGame {
 				case ROCKET:
 				case ROCKET_LAUNCHER:
 					if(config.getBloodEnabled()) {
-						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 18, 15200, 14000, 0, 50));					
-						gameEffects.addBackgroundEffect(new GibEmitter(locationOfDeath));
+						gameEffects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 18, 15200, 50));
+						gameEffects.addBackgroundEffect(Emitters.newGibEmitter(locationOfDeath, 15));
 					}
 					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
 					
 					break;				
 				default:
 					
-					if(meansOfDeath != Type.FIRE && config.getBloodEnabled()) {					
-						gameEffects.addBackgroundEffect(new BloodEmitter(locationOfDeath, 16, 15200, 14000, 0, 30));
+					if(meansOfDeath != Type.FIRE && config.getBloodEnabled()) {											
+						gameEffects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 16, 15200, 30));
 					}
 					
 					Vector2f pos = new Vector2f(locationOfDeath);
@@ -1685,7 +1676,8 @@ public class ClientGame {
 	    
 	    Tile tile = map.getDestructableTile(msg.x, msg.y);
 	    if(tile!=null) {
-	    	this.gameEffects.addBackgroundEffect(new WallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
+	    	//this.gameEffects.addBackgroundEffect(new WallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
+	    	this.gameEffects.addBackgroundEffect(Emitters.newWallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
 	    }
 	    
 	    map.removeDestructableTileAt(msg.x, msg.y);

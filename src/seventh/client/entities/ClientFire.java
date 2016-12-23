@@ -8,8 +8,8 @@ import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.particle.Emitter;
-import seventh.client.gfx.particle.FireEmitter;
+import seventh.client.gfx.effects.particle_system.Emitter;
+import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.sfx.Sounds;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetFire;
@@ -36,7 +36,7 @@ public class ClientFire extends ClientEntity {
 		
 		bounds.width = 16;
 		bounds.height = 16;
-		smoke = new FireEmitter(pos, 3_900, 0, 500);
+		smoke = Emitters.newFireEmitter(pos);//new FireEmitter(pos, 3_900, 0, 500);
 		smoke.attachTo(this);
 		
 		fireImg = Art.newFireAnim();

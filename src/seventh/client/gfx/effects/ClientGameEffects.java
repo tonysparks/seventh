@@ -18,10 +18,8 @@ import seventh.client.gfx.Canvas;
 import seventh.client.gfx.FrameBufferRenderable;
 import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
-import seventh.client.gfx.particle.BloodEmitter;
-import seventh.client.gfx.particle.BulletCasingEffect;
-import seventh.client.gfx.particle.Effect;
-import seventh.client.gfx.particle.Effects;
+import seventh.client.gfx.effects.particle_system.Emitter;
+import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
@@ -43,7 +41,7 @@ public class ClientGameEffects {
 	
 	private final TankTrackMarks[] trackMarks;
 	
-	private final BloodEmitter[] playerBloodEmitters;
+	private final Emitter[] playerBloodEmitters;
 	private final BulletCasingEffect[] bulletCasings;
 	
 	
@@ -57,13 +55,10 @@ public class ClientGameEffects {
 		this.backgroundEffects = new Effects();
 		this.foregroundEffects = new Effects();
 
-		this.playerBloodEmitters = new BloodEmitter[SeventhConstants.MAX_PLAYERS];
+		this.playerBloodEmitters = new Emitter[SeventhConstants.MAX_PLAYERS*3];
 		for(int i = 0; i < this.playerBloodEmitters.length; i++) {
-		    this.playerBloodEmitters[i] = new BloodEmitter(new Vector2f(), 5, 5200, 4000, 0, 60);
-		    this.playerBloodEmitters[i].setPersistent(true);
-		    this.playerBloodEmitters[i].pause();
-		    
-		    this.backgroundEffects.addEffect(this.playerBloodEmitters[i]);
+		    this.playerBloodEmitters[i] = Emitters.newBloodEmitter(new Vector2f(), 5, 5200, 50) 		    									  
+		    									  .kill(); 		    
 		}
 		
 		
@@ -91,17 +86,16 @@ public class ClientGameEffects {
 		}
 	}
 	
-	/**
-	 * Retrieve the cached {@link BloodEmitter} for a particular player.  Note, this
-	 * assumes the supplied playerId is valid.
-	 * 
-	 * @param playerId
-	 * @return the {@link BloodEmitter} for a player.
-	 */
-	public BloodEmitter getBloodEmitterForPlayer(int playerId) {
-	    return this.playerBloodEmitters[playerId];
+	public void spawnBloodSplatter(Vector2f pos) {
+		for(int i = 0; i < this.playerBloodEmitters.length; i++) {
+			Emitter emitter = this.playerBloodEmitters[i];
+			if(!emitter.isAlive()) {			
+				this.backgroundEffects.addEffect(emitter.reset().setPos(pos));
+				break;
+			}
+		}
 	}
-	
+
 	/**
 	 * @return the explosions
 	 */
@@ -146,10 +140,7 @@ public class ClientGameEffects {
 		}
 		
 		for(int i = 0; i < this.playerBloodEmitters.length; i++) {         
-            this.playerBloodEmitters[i].reset();
-            this.playerBloodEmitters[i].pause();
-            
-            this.backgroundEffects.addEffect(this.playerBloodEmitters[i]);
+            this.playerBloodEmitters[i].kill();
         }
 	}
 	

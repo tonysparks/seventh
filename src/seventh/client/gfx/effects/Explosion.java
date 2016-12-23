@@ -8,7 +8,6 @@ import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.AnimationPool;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.particle.Effect;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

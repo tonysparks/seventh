@@ -7,7 +7,7 @@ import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Light;
-import seventh.client.gfx.particle.ExplosionEmitter;
+import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -26,7 +26,8 @@ public class ClientExplosion extends ClientEntity {
 	public ClientExplosion(ClientGame game, Vector2f pos) {
 		super(game, pos);
 		
-		game.addForegroundEffect(new ExplosionEmitter(pos, 4000, 0,10));
+		//game.addForegroundEffect(new ExplosionEmitter(pos, 4000, 0,10));
+		game.addForegroundEffect(Emitters.newSmokeEmitter(pos, 500));
 		light = game.getLightSystem().newPointLight();
 		light.setColor(0.7f, 0.6f, 0.3f);
 		light.setPos(pos);
