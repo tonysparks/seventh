@@ -40,12 +40,12 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 				score = 0;
 			}
 			else {
-				score = tweaker 
-						+ Evaluators.healthScore(bot) 
-						+ Evaluators.currentWeaponAmmoScore(bot)
-						+ Evaluators.weaponDistanceScore(bot, enemy)
+				score = (tweaker * 0.5) 
+						+ (Evaluators.healthScore(bot) * 0.1) 
+						+ (Evaluators.currentWeaponAmmoScore(bot) * 0.1)
+						+ (Evaluators.weaponDistanceScore(bot, enemy) * 0.3)
 						;
-				score = score / 4.0;
+				score = score / 4.0;				
 			}
 			
 			
@@ -55,8 +55,7 @@ public class MoveTowardEnemyEvaluator extends ActionEvaluator {
 			
 			score *= getCharacterBias();
 		}
-		
-		
+				
 		return score;
 	}
 

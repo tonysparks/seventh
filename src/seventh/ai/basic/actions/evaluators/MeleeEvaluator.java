@@ -45,7 +45,7 @@ public class MeleeEvaluator extends ActionEvaluator {
 				float distanceAwaySq = Vector2f.Vector2fDistanceSq(bot.getCenterPos(), system.getCurrentTarget().getCenterPos());
 				final double MaxMeleeDistance = 1500.0;
 				if(distanceAwaySq < MaxMeleeDistance) {
-					desire = Math.max(0.8 - (distanceAwaySq/MaxMeleeDistance), 0);
+					desire = Math.max(0.9 - (distanceAwaySq/MaxMeleeDistance), 0);
 					desire *= getCharacterBias();
 				}
 			}

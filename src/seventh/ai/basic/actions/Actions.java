@@ -44,6 +44,7 @@ import seventh.ai.basic.actions.evaluators.GrenadeEvaluator;
 import seventh.ai.basic.actions.evaluators.MeleeEvaluator;
 import seventh.ai.basic.actions.evaluators.MoveTowardEnemyEvaluator;
 import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
+import seventh.ai.basic.actions.evaluators.StayStillEvaluator;
 import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
 import seventh.game.entities.BombTarget;
 import seventh.game.entities.Flag;
@@ -253,6 +254,9 @@ public class Actions {
 		return action;
 	}
 	
+	public Action attackEnemy(PlayerEntity enemy) {
+		return decideAttackMethod();
+	}
 	
 	public Action chargeEnemy(PlayerEntity enemy) {
 		return new ConcurrentAction(decideAttackMethod(), new FollowEntityAction(enemy)
@@ -281,8 +285,9 @@ public class Actions {
 	
 	public CompositeAction enemyEncountered() {
 		return new WeightedAction(config, "enemyEncountered",
+				new StayStillEvaluator(this, random.getRandomRangeMin(0.31), 0.3),
 				new MoveTowardEnemyEvaluator(this, random.getRandomRangeMin(0.68), 0.8),
-				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.31), 0.7)
+				new TakeCoverEvaluator(this, random.getRandomRangeMin(0.21), 0.7)
 		);
 	}
 	

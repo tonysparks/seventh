@@ -164,10 +164,11 @@ public class Evaluators {
 				score = 0.75;
 			
 				double distanceScore = distanceAwaySq / bulletRangeSq;
-												
+	
+				
 				/* lower the score if they are too close */
 				if(distanceScore < 0.15) {
-					distanceScore *= 0.60;
+					distanceScore = 0;
 				}
 				
 				/* lower the score if they are too far away */
