@@ -258,6 +258,10 @@ public class TiledMapLoader implements MapLoader {
 					tileset.putByString("image", LeoString.valueOf("./assets/gfx/tiles/cs2dnorm.png"));
 					tileset.putByString("name", LeoString.valueOf("city"));
 				}
+				else if(source.endsWith("surface_types.tsx")) {
+					tileset.putByString("image", LeoString.valueOf("./assets/gfx/tiles/surface_types.png"));
+					tileset.putByString("name", LeoString.valueOf("surfaces"));
+				}
 				
 				tileset.putByString("tilewidth", LeoObject.valueOf(32));
 				tileset.putByString("tileheight", LeoObject.valueOf(32));
