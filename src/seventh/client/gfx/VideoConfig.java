@@ -58,6 +58,13 @@ public class VideoConfig {
 		this.config.set(vsync, "video", "vsync");
 	}
 	
+	public boolean useGL30() {
+		return this.config.getBool("video", "useGL30");
+	}
+	
+	public void setUseGL30(boolean useGL30) {
+		this.config.set(useGL30, "video", "useGL30");		
+	}
 
 	
 	

@@ -136,7 +136,7 @@ public class ClientMain {
 			cfg.title = "The Seventh " + SeventhGame.getVersion();
 			cfg.forceExit = true;
 			cfg.resizable = false;
-			cfg.useGL30 = true;			
+			cfg.useGL30 = vConfig.useGL30();			
 			cfg.vSyncEnabled = vConfig.isVsync();
 						
 			if(!cfg.fullscreen) {
