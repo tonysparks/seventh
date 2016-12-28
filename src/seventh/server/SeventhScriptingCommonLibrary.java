@@ -4,9 +4,16 @@
 package seventh.server;
 
 
+import seventh.game.Game;
+import seventh.game.Trigger;
+import seventh.game.entities.Entity;
 import seventh.game.type.BombTargetObjective;
+import seventh.game.weapons.Bullet;
+import seventh.game.weapons.Explosion;
+import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.Cons;
 
 /**
  * Some common functions exposed to the scripting runtime
@@ -56,5 +63,53 @@ public class SeventhScriptingCommonLibrary {
 	
 	public static BombTargetObjective newBombTarget(float x, float y, String name, Boolean rotated) {
 		return new BombTargetObjective(new Vector2f(x, y), name, rotated);
+	}
+	
+
+	/**
+	 * Binds an explosion to a tile.  If a bullet or an explosion intersects the tile
+	 * at the specified location.
+	 * 
+	 * @param game
+	 * @param x
+	 * @param y
+	 */
+	public static void newExplosiveCrate(Game game, final int x, final int y) {
+		final Tile tile = game.getMap().getWorldTile(0, x, y);
+		if(tile==null) {
+			Cons.println("Invalid tile position: " + x + ", " + y);
+			return;
+		}
+		
+		game.addTrigger(new Trigger() {
+			
+			Entity triggeredEntity = null;
+			
+			@Override
+			public boolean checkCondition(Game game) {
+				Entity[] entities = game.getEntities();
+				for(int i = 0; i < entities.length; i++) {
+					Entity ent = entities[i];
+					if(ent != null) {
+						if(ent instanceof Bullet ||
+						   ent instanceof Explosion) {
+							
+							if(tile.getBounds().intersects(ent.getBounds())) {
+								triggeredEntity = ent;
+								return true;
+							}
+						}
+					}					
+				}
+				return false;
+			}
+			
+			@Override
+			public void execute(Game game) {
+				if(triggeredEntity!=null) {
+					game.newBigExplosion(new Vector2f(x,y), triggeredEntity, 15, 25, 1);
+				}
+			}
+		});
 	}
 }
