@@ -268,7 +268,7 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
 			return 1.0;
 		}
 		
-		return 0.7;
+		return 0.9;
 	}
 	
 	/* (non-Javadoc)
