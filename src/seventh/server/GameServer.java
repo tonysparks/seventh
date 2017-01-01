@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import harenet.api.Server;
 import leola.vm.Leola;
@@ -231,7 +230,6 @@ public class GameServer {
 		/*
 		 * Load up the bots
 		 */
-		final AtomicBoolean isReady = new AtomicBoolean(false);
 		this.serverContext.getStateMachine().setListener(new StateMachineListener<State>() {			
 			@Override
 			public void onEnterState(State state) {
@@ -260,12 +258,14 @@ public class GameServer {
 						}
 					}
 					
+					if(serverListener != null) {
+						serverListener.onServerReady(GameServer.this);
+					}
 					
 					/* clear out this listener because we only want
 					 * to do this once for a game load!
 					 */
-					serverContext.getStateMachine().setListener(null);
-					isReady.set(true);					
+					serverContext.getStateMachine().setListener(null);					
 				}
 			}
 			
@@ -773,11 +773,7 @@ public class GameServer {
 			
 			// flush pending console commands
 			updateConsole(timeStep);
-			
-			if(this.serverListener != null) {
-				this.serverListener.onServerReady(this);
-			}
-			
+						
 			while(this.isRunning) {							
 				long newTime = System.currentTimeMillis();
 				long deltaTime = newTime - currentTime;
