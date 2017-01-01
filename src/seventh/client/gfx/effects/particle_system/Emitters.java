@@ -201,7 +201,7 @@ public class Emitters {
 		});
 		
 		emitter.addParticleUpdater(new KillIfAttachedIsDeadUpdater());	
-		emitter.addParticleRenderer(new RectParticleRenderer(2,1));
+		emitter.addParticleRenderer(new RectParticleRenderer(2,2));
 		
 		return emitter;
 	}
@@ -238,6 +238,40 @@ public class Emitters {
 		
 		return emitter;
 	}
+	
+	public static Emitter newTankTrackSplatterEmitter(Vector2f pos, Vector2f targetVel) {
+		// 5, 5200, 4000, 0, 60);
+		// int maxParticles, int emitterTimeToLive, int particleTimeToLive, int timeToNextSpawn, int maxSpread) {
+		
+		Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
+		
+		Emitter emitter = new Emitter(pos, 200, 30)
+							.setName("BulletImpactEmitter")
+							.setDieInstantly(false);
+		BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
+		gen.addSingleParticleGenerator(new SingleParticleGenerator() {
+			
+				@Override
+				public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+					particles.speed[index] = 125f;
+				}
+			})
+		   .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
+		   .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0x8B7355ff), new Color(0x8A7355ff)))
+		   .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 30))
+		   .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(200, 250))		   
+		;
+		
+		emitter.addParticleGenerator(gen);
+		
+		emitter.addParticleUpdater(new KillUpdater());
+		emitter.addParticleUpdater(new RandomMovementParticleUpdater(85));
+		emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.72718f));
+		emitter.addParticleRenderer(new CircleParticleRenderer());
+		
+		return emitter;
+	}
+	
 	
 	public static Emitter newWallCrumbleEmitter(Tile tile, Vector2f pos) {
 		final int maxParticles = 44;
@@ -297,6 +331,42 @@ public class Emitters {
 		//emitter.addParticleUpdater(new KillUpdater());
 		emitter.addParticleUpdater(new MovementParticleUpdater(0, 40f));
 		//emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9878f));
+		emitter.addParticleRenderer(new SpriteParticleRenderer());
+		
+		return emitter;
+	}
+	
+	public static Emitter newSpawnEmitter(Vector2f pos, int emitterTimeToLive) {
+		int maxParticles = 40;
+		int maxSpread = 45;
+		
+		Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+								.setName("SpawnEmitter")
+								.setDieInstantly(false);
+		BatchedParticleGenerator gen = new BatchedParticleGenerator(100, 2)
+		   .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xffa701ff),new Color(0xeeb803ff),new Color(0xffb805ff)))
+		   .addSingleParticleGenerator(new SingleParticleGenerator() {
+				
+				@Override
+				public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+					particles.color[index].a = 0.82f;
+				}
+			})
+		   .addSingleParticleGenerator(new RandomPositionInRadiusSingleParticleGenerator(maxSpread))		   
+		   .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(0.15f, 0.55f))
+		   .addSingleParticleGenerator(new RandomSpeedSingleParticleGenerator(1, 1))
+		   .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(new Vector2f(1,0), 180))
+		   .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(1800, 2300))
+		   .addSingleParticleGenerator(new RandomSpriteSingleParticleGenerator(Art.smokeImage)) 
+		;
+		
+		emitter.addParticleGenerator(gen);
+		
+		emitter.addParticleUpdater(new KillUpdater());
+		emitter.addParticleUpdater(new KillIfAttachedIsDeadUpdater());		
+		emitter.addParticleUpdater(new RandomMovementParticleUpdater(40));
+		//emitter.addParticleUpdater(new MovementParticleUpdater(0, 40f));
+		emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.96898f));
 		emitter.addParticleRenderer(new SpriteParticleRenderer());
 		
 		return emitter;
