@@ -318,7 +318,7 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public void loadFont(String filename, String alias) throws IOException {
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(filename));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(filename));		
 		this.generators.put(alias, generator);		
 	}
 
@@ -370,7 +370,7 @@ public class GdxCanvas implements Canvas {
 			params.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
 			params.flip = true;
 			
-			this.defaultFont = this.generators.get(alias).generateFont(params);			
+			this.defaultFont = this.generators.get(alias).generateFont(params);		
 			this.fonts.put(mask, defaultFont);
 		}
 		
@@ -383,9 +383,16 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public int getWidth(String str) {
-		this.bounds.setText(font, str.replaceAll(" ", "w"));
-		return (int)this.bounds.width+1;
-//		return (int)font.getBounds(str, bounds).width;
+		this.bounds.setText(font, str);		
+		int textWidth = (int)this.bounds.width+1;
+		
+		// bug in libgdx, doesn't like strings ending with a space,
+		// it ignores it
+		if(str.endsWith(" ")) {						
+			textWidth += font.getSpaceWidth();
+		}
+		
+		return textWidth;
 	}
 
 	/* (non-Javadoc)
