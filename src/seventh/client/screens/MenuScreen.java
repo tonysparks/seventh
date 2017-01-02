@@ -25,7 +25,9 @@ import seventh.ui.Button;
 import seventh.ui.Panel;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
+import seventh.ui.events.OnHoverListener;
 import seventh.ui.view.ButtonView;
 import seventh.ui.view.PanelView;
 
@@ -149,6 +151,13 @@ public class MenuScreen implements Screen {
 		btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
 		btn.setTheme(theme);
 		btn.setEnableGradiant(false);
+		btn.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		return btn;
 	}
 
@@ -225,6 +234,7 @@ public class MenuScreen implements Screen {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		this.uiManager.update(timeStep);
 	}
 
 

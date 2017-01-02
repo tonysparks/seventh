@@ -37,6 +37,7 @@ import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetWeapon;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
@@ -69,6 +70,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		
 	
 	private boolean isSelected;
+	private Rectangle selectionBounds;
 	
 	// buffer the damage done to this 
 	// entity
@@ -97,6 +99,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		this.bounds.width = 24;//16;
 		this.bounds.height = 24;
 		
+		this.selectionBounds = new Rectangle(40,40);
 		this.bulletCasingPos = new Vector2f();
 		
 		this.damaged = new boolean[8];
@@ -182,6 +185,15 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 			Vector2f.Vector2fMA(getCenterPos(), getFacing(), 10.0f, this.bulletCasingPos);
 			this.effects.spawnBulletCasing(this.bulletCasingPos, getOrientation());
 		}
+	}
+	
+
+	/**
+	 * @return the selectionBounds
+	 */
+	public Rectangle getSelectionBounds() {
+		this.selectionBounds.centerAround(getCenterPos());
+		return selectionBounds;
 	}
 	
 	/**

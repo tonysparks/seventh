@@ -94,6 +94,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 	 */
 	@Override
 	public void start(Game game) {
+		setGameState(GameState.IN_PROGRESS);
 		int size = this.outstandingObjectives.size();
 		for(int i = 0; i < size; i++) {
 			this.outstandingObjectives.get(i).init(game);

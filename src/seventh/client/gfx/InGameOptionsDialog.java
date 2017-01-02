@@ -14,7 +14,9 @@ import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;
 import seventh.ui.Widget;
 import seventh.ui.events.ButtonEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
+import seventh.ui.events.OnHoverListener;
 
 /**
  * A dialog box to pick the weapon class.
@@ -196,6 +198,14 @@ public class InGameOptionsDialog extends Widget {
 			@Override
 			public void onButtonClicked(ButtonEvent event) {				
 				hide();
+			}
+		});
+		
+		btn.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				// TODO
 			}
 		});
 		

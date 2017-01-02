@@ -10,6 +10,7 @@ import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.entities.ClientControllableEntity;
 import seventh.client.gfx.Camera;
+import seventh.client.gfx.Cursor;
 import seventh.client.sfx.Sounds;
 import seventh.game.entities.PlayerEntity.Keys;
 import seventh.map.Map;
@@ -54,6 +55,7 @@ public class CameraController implements Updatable {
 	
 	private boolean isCameraRoaming, isFastCamera;
 	private int previousKeys;
+	private Cursor cursor;
 	
 	private ClientGame game;
 	
@@ -65,6 +67,7 @@ public class CameraController implements Updatable {
 		this.camera = game.getCamera();
 		this.map = game.getMap();
 		this.localPlayer = game.getLocalPlayer();
+		this.cursor = game.getApp().getUiManager().getCursor();
 
 		this.fowTiles = new ArrayList<Tile>();
 		
@@ -316,6 +319,31 @@ public class CameraController implements Updatable {
 				}
 				
 				entity.movementPrediction(map, timeStep, playerVelocity);
+								
+				float accuracy = 0f;
+				switch(entity.getCurrentState()) {
+					case CROUCHING:
+						accuracy = 1f;
+						break;										
+					case IDLE:
+						accuracy = .9f;
+						break;
+					case OPERATING_VEHICLE:
+						accuracy = 1f;
+						break;
+					case RUNNING:
+						accuracy = .5f;
+						break;
+					case SPRINTING:
+						accuracy = 0f;
+						break;
+					case WALKING:
+						accuracy = .9f;
+						break;					
+					default: accuracy = 0f;
+				}
+				
+				cursor.setAccuracy(accuracy);
 				
 				cameraCenterAround.set(entity.getPos());
 				Vector2f.Vector2fRound(cameraCenterAround, cameraCenterAround);;

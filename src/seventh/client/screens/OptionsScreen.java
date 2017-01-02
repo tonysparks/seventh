@@ -31,8 +31,10 @@ import seventh.ui.TextBox;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.CheckboxEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.events.OnCheckboxClickedListener;
+import seventh.ui.events.OnHoverListener;
 import seventh.ui.events.OnSliderMovedListener;
 import seventh.ui.events.SliderMovedEvent;
 import seventh.ui.view.ButtonView;
@@ -278,6 +280,13 @@ public class OptionsScreen implements Screen {
 				cursor.setMouseSensitivity(sensitivity);
 			}
 		});
+		mouseSensitivitySlider.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		
 		optionsPanel.addWidget(mouseSensitivitySlider);
 		panelView.addElement(new SliderView(mouseSensitivitySlider));
@@ -375,6 +384,13 @@ public class OptionsScreen implements Screen {
 				Sounds.setVolume(value / 100.0f);
 			}
 		});
+		slider.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		
 		int v = (int)(Sounds.getVolume() * 100.0f);
 		slider.moveHandle(v);
@@ -425,6 +441,13 @@ public class OptionsScreen implements Screen {
 				app.getConfig().setWeaponRecoilEnabled(event.getCheckbox().isChecked());				
 			}
 		});
+		weaponRecoilEnabledChkBx.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		
 		this.optionsPanel.addWidget(weaponRecoilEnabledChkBx);
 		this.panelView.addElement(new CheckboxView(weaponRecoilEnabledChkBx));
@@ -443,7 +466,13 @@ public class OptionsScreen implements Screen {
 				app.getConfig().setBloodEnabled(event.getCheckbox().isChecked());				
 			}
 		});
-		
+		bloodEnabledChkBx.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		this.optionsPanel.addWidget(bloodEnabledChkBx);
 		this.panelView.addElement(new CheckboxView(bloodEnabledChkBx));
 		
@@ -474,7 +503,13 @@ public class OptionsScreen implements Screen {
 		btn.getTextLabel().setFont(theme.getSecondaryFontName());
 		btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
 		btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
-		
+		btn.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		if(configChange) {
 			btn.getTextLabel().setForegroundColor(0xffffffff);
 			btn.addOnButtonClickedListener(new OnButtonClickedListener() {			
@@ -525,6 +560,7 @@ public class OptionsScreen implements Screen {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		this.uiManager.update(timeStep);
 		this.panelView.update(timeStep);
 		
 		if(this.isKeyModifyOn>0) {

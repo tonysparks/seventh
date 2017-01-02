@@ -70,7 +70,7 @@ public class ShaderEditorScreen implements Screen {
 				//emitters.add(Emitters.newFireEmitter(new Vector2f(x,y)));
 				//emitters.add(Emitters.newBloodEmitter(new Vector2f(x,y)));
 				//emitters.add(Emitters.newBulletImpactEmitter(new Vector2f(x,y), new Vector2f(1,0)));
-				emitters.add(Emitters.newSmokeEmitter(new Vector2f(x,y), 10_000));
+				emitters.add(Emitters.newSpawnEmitter(new Vector2f(x,y), 10_000));
 			}
 			return true;
 		}

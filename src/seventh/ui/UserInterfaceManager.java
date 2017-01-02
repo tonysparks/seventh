@@ -27,6 +27,7 @@ import java.util.List;
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
+import seventh.client.gfx.ReticleCursor;
 import seventh.client.inputs.Inputs;
 import seventh.shared.TimeStep;
 
@@ -51,7 +52,7 @@ public class UserInterfaceManager extends Inputs {
 	 */
 	public UserInterfaceManager() {
 		this.widgets = new ArrayList<Widget>();
-		this.cursor = new Cursor();
+		this.cursor = new ReticleCursor();//new ImageCursor();
 	}
 
 	/**
@@ -191,5 +192,6 @@ public class UserInterfaceManager extends Inputs {
 	 * @see org.myriad.render.Renderable#update(org.myriad.core.TimeStep)
 	 */
 	public void update(TimeStep timeStep) {		
+		this.cursor.update(timeStep);
 	}
 }

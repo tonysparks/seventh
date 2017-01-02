@@ -654,6 +654,20 @@ public class GdxCanvas implements Canvas {
 		this.shapes.end();
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
+	
+	@Override
+	public void fillArc(float x, float y, float radius, float start, float degrees, Integer color) {
+		Color c=setTempColor(color);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		this.shapes.setColor(c);
+		
+		this.shapes.begin(ShapeType.Filled);
+		this.shapes.arc(x, y, radius, start, degrees);		
+		this.shapes.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see seventh.client.gfx.Canvas#drawString(java.lang.String, int, int, java.lang.Integer)

@@ -12,9 +12,9 @@ import seventh.game.Game;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.entities.Entity;
+import seventh.game.entities.Entity.OnTouchListener;
 import seventh.game.entities.Flag;
 import seventh.game.entities.PlayerEntity;
-import seventh.game.entities.Entity.OnTouchListener;
 import seventh.game.events.FlagCapturedEvent;
 import seventh.game.events.FlagCapturedListener;
 import seventh.game.events.FlagReturnedEvent;
@@ -191,6 +191,7 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
 	 */
 	@Override
 	public void start(Game game) {
+		setGameState(GameState.IN_PROGRESS);
 		getDispatcher().queueEvent(new RoundStartedEvent(this));
 	}
 

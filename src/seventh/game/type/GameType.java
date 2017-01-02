@@ -78,6 +78,7 @@ public interface GameType extends Debugable {
 	}
 	
 	public static enum GameState {
+		INTERMISSION,
 		IN_PROGRESS,
 		WINNER,
 		TIE,

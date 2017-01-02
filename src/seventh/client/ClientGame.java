@@ -779,8 +779,6 @@ public class ClientGame {
 	 * @return true if hovering over a bomb target
 	 */
 	public boolean isHoveringOverBomb() {
-		
-		
 		if(this.localPlayer != null && this.localPlayer.isAlive()) {
 			boolean isAttacker = this.localPlayer.getTeam().equals(getAttackingTeam());
 			
@@ -795,6 +793,36 @@ public class ClientGame {
 						else {
 							return isAttacker;
 						}												
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Determines if the reticle is hovering over an enemy
+	 * 
+	 * @return true if the cursor is hovering over an enemy
+	 */
+	public boolean isHoveringOverEnemy(float mx, float my) {				
+		if(this.localPlayer != null && this.localPlayer.isAlive()) {			
+			ClientTeam team = this.localPlayer.getTeam();
+			Vector2f cameraPos = camera.getPosition();
+			int reticleX = (int)(mx + cameraPos.x);
+			int reticleY = (int)(my + cameraPos.y);
+			
+			for(int i = 0; i < this.players.getMaxNumberOfPlayers(); i++) {
+				ClientPlayer player = this.players.getPlayer(i);
+				if(player!=null&&player.getId()!=this.localPlayer.getId()&&player.isAlive()) {
+					if(team!=player.getTeam()) {
+						ClientPlayerEntity ent = player.getEntity();
+						if(ent.isRelativelyUpdated()) {
+							if(ent.getSelectionBounds().contains(reticleX, reticleY)) {
+								return true;
+							}
+						}
 					}
 				}
 			}
@@ -1280,9 +1308,9 @@ public class ClientGame {
 			if(entity != null) {
 				entity.setAlive(false);
 				
-//				BloodEmitter emitter = entity.getBloodEmitter();
-//				emitter.resetTimeToLive();
-//				backgroundEffects.addEffect(emitter);
+				if(entity.isControlledByLocalPlayer()) {
+					getGameEffects().getHurtEffect().reset();
+				}
 				
 				switch(meansOfDeath) {
 				case EXPLOSION:

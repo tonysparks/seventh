@@ -31,6 +31,8 @@ import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.ui.events.HoverEvent;
+import seventh.ui.events.OnHoverListener;
 
 /**
  * The bases for all widgets.
@@ -234,6 +236,10 @@ public class Widget {
 	
 	public void removeInputListener(Inputs input) {
 		this.inputListeners.remove(input);
+	}
+	
+	public void addOnHoverListener(OnHoverListener l) {
+		getEventDispatcher().addEventListener(HoverEvent.class, l);
 	}
 	
 	/**

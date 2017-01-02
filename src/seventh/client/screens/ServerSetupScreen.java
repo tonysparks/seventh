@@ -30,8 +30,10 @@ import seventh.ui.TextBox;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.CheckboxEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.events.OnCheckboxClickedListener;
+import seventh.ui.events.OnHoverListener;
 import seventh.ui.view.ButtonView;
 import seventh.ui.view.CheckboxView;
 import seventh.ui.view.LabelView;
@@ -332,16 +334,16 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				if(gameSettings.gameType.equals(GameType.Type.OBJ)) {
-					gameSettings.maxScore--;		
-					if(gameSettings.maxScore < 1) {
-						gameSettings.maxScore = 1;
-					}
-				}
-				else {
+				if(gameSettings.gameType.equals(GameType.Type.TDM)) {
 					gameSettings.maxScore -= 10;		
 					if(gameSettings.maxScore < 1) {
 						gameSettings.maxScore = 0;
+					}
+				}
+				else {
+					gameSettings.maxScore--;		
+					if(gameSettings.maxScore < 1) {
+						gameSettings.maxScore = 1;
 					}
 				}
 				maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
@@ -353,11 +355,12 @@ public class ServerSetupScreen implements Screen {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
-				if(gameSettings.gameType.equals(GameType.Type.OBJ)) {
-					gameSettings.maxScore++;							
+				if(gameSettings.gameType.equals(GameType.Type.TDM)) {
+					gameSettings.maxScore += 10;						
 				}
 				else {
-					gameSettings.maxScore += 10;							
+					gameSettings.maxScore++;					
+								
 				}			
 				maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
 			}
@@ -450,6 +453,13 @@ public class ServerSetupScreen implements Screen {
 				gameSettings.isDedicatedServer = event.getCheckbox().isChecked();				
 			}
 		});
+		isDedicatedServer.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		
 		this.optionsPanel.addWidget(isDedicatedServer);
 		this.panelView.addElement(new CheckboxView(isDedicatedServer));
@@ -466,6 +476,13 @@ public class ServerSetupScreen implements Screen {
 			@Override
 			public void onCheckboxClicked(CheckboxEvent event) {
 				gameSettings.isLAN = event.getCheckbox().isChecked();
+			}
+		});
+		isLAN.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
 			}
 		});
 		
@@ -627,7 +644,14 @@ public class ServerSetupScreen implements Screen {
 		btn.getTextLabel().setFont(theme.getSecondaryFontName());
 		btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
 		btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
-				
+		btn.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
+		
 		this.optionsPanel.addWidget(btn);
 		this.panelView.addElement(new ButtonView(btn));
 		
@@ -706,6 +730,7 @@ public class ServerSetupScreen implements Screen {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		uiManager.update(timeStep);
 		if(load) {
 			menuScreen.startLocalServer(gameSettings);
 			load = false;

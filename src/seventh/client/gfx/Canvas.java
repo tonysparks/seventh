@@ -113,6 +113,8 @@ public interface Canvas {
 	public void fillCircle(float radius, int x, int y, Integer color);
 	public void fillCircle(float radius, float x, float y, Integer color);
 
+	public void fillArc(float x, float y, float radius, float start, float degrees, Integer color);
+	
 	public void drawString(String text, int x, int y, Integer color);
 	public void drawString(String text, float x, float y, Integer color);
 

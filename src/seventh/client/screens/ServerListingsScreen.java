@@ -39,7 +39,9 @@ import seventh.ui.ListBox;
 import seventh.ui.Panel;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
+import seventh.ui.events.OnHoverListener;
 import seventh.ui.view.ButtonView;
 import seventh.ui.view.ImageButtonView;
 import seventh.ui.view.LabelView;
@@ -480,7 +482,13 @@ public class ServerListingsScreen implements Screen {
 		btn.getTextLabel().setFont(theme.getSecondaryFontName());		
 		btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
 		btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
-		
+		btn.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		this.optionsPanel.addWidget(btn);
 		if(setView && addView) {
 			this.panelView.addElement(new ButtonView(btn));
@@ -517,6 +525,7 @@ public class ServerListingsScreen implements Screen {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		this.uiManager.update(timeStep);
 		this.panelView.update(timeStep);
 			
 		if(update.get()) {

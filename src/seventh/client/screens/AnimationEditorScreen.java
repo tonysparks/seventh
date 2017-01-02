@@ -24,7 +24,9 @@ import seventh.ui.Panel;
 import seventh.ui.TextBox;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
+import seventh.ui.events.OnHoverListener;
 import seventh.ui.events.TextBoxActionEvent;
 import seventh.ui.events.TextBoxActionListener;
 import seventh.ui.view.ButtonView;
@@ -344,7 +346,13 @@ public class AnimationEditorScreen implements Screen {
 		btn.getTextLabel().setFont(theme.getPrimaryFontName());		
 		btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
 		btn.getTextLabel().setForegroundColor(theme.getForegroundColor());		
-		
+		btn.addOnHoverListener(new OnHoverListener() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				uiManager.getCursor().touchAccuracy();
+			}
+		});
 		this.optionsPanel.addWidget(btn);
 		this.panelView.addElement(new ButtonView(btn));
 		

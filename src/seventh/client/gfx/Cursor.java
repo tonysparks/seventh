@@ -3,10 +3,11 @@
  */
 package seventh.client.gfx;
 
-import seventh.math.Vector2f;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import seventh.math.Rectangle;
+import seventh.math.Vector2f;
+import seventh.shared.Updatable;
 
 /**
  * Represents the mouse pointer during menu screens, but more importantly acts as the players cursor/reticle in game. 
@@ -14,38 +15,75 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * @author Tony
  *
  */
-public class Cursor {
+public abstract class Cursor implements Updatable {
 
 	private Vector2f cursorPos;
-	private TextureRegion cursorImg;
+	private Rectangle bounds;
 	private boolean isVisible;
 	
 	private float mouseSensitivity;
+	private float accuracy;
 	
+	private int color;
 	private int prevX, prevY;
+
 	
 	/**
+	 * @param bounds
+	 * 			the cursor size
 	 */
-	public Cursor() {
-		this(Art.cursorImg);
-	}
-	
-	/**
-	 * @param image 
-	 * 			the cursor image to use
-	 */
-	public Cursor(TextureRegion image) {
-		this.cursorImg= image;
+	public Cursor(Rectangle bounds) {
+		this.bounds = bounds;
 		this.cursorPos = new Vector2f();
 		this.isVisible = true;
 		this.mouseSensitivity = 1.0f;
+		this.accuracy = 1.0f;
 	}
 
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(int color) {
+		this.color = color;
+	}
+	
+	/**
+	 * @param bounds the bounds to set
+	 */
+	public void setBounds(Rectangle bounds) {
+		this.bounds = bounds;
+	}
+	
+	/**
+	 * Sets the dimensions of the cursor
+	 * 
+	 * @param width
+	 * @param height
+	 */
+	public void setBounds(int width, int height) {
+		this.bounds.setSize(width, height);
+	}
+	
 	/**
 	 * @param mouseSensitivity the mouseSensitivity to set
 	 */
 	public void setMouseSensitivity(float mouseSensitivity) {
 		this.mouseSensitivity = mouseSensitivity;	
+	}
+	
+	/**
+	 * optional method to flex the accuracy
+	 */
+	public void touchAccuracy() {		
+	}
+	
+	/**
+	 * @param accuracy the accuracy to set
+	 */
+	public void setAccuracy(float accuracy) {
+		this.accuracy = accuracy;
+		if(this.accuracy < 0) this.accuracy = 0f;
+		if(this.accuracy > 1f) this.accuracy = 1f;
 	}
 	
 	/**
@@ -95,6 +133,28 @@ public class Cursor {
 	 */
 	public float getMouseSensitivity() {
 		return mouseSensitivity;
+	}
+	
+	/**
+	 * @return the accuracy
+	 */
+	public float getAccuracy() {
+		return accuracy;
+	}
+	
+	/**
+	 * @return the color
+	 */
+	public int getColor() {
+		return color;
+	}
+	
+	/**
+	 * @return the bounds
+	 */
+	public Rectangle getBounds() {
+		bounds.centerAround(getCursorPos());
+		return bounds;
 	}
 	
 	/**
@@ -174,13 +234,14 @@ public class Cursor {
 	
 	/**
 	 * Draws the cursor on the screen
+	 * 
 	 * @param canvas
 	 */
 	public void render(Canvas canvas) {
 		if(isVisible()) {
-			int imageWidth = cursorImg.getRegionWidth();
-			int imageHeight = cursorImg.getRegionHeight();
-			canvas.drawImage(cursorImg, (int)cursorPos.x - imageWidth/2, (int)cursorPos.y - imageHeight/2, null);
+			doRender(canvas);
 		}
 	}
+	
+	protected abstract void doRender(Canvas canvas);
 }

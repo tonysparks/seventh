@@ -101,7 +101,7 @@ public abstract class AbstractTeamGameType implements GameType {
 		
 		this.gameTypeInfo.teams = new NetTeam[2];
 		
-		this.gameState = GameState.IN_PROGRESS;
+		this.gameState = GameState.INTERMISSION;
 		this.random = new Random();
 		this.spawnBounds = new Rectangle(300, 300);
 		

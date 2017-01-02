@@ -28,8 +28,8 @@ public class HurtEffect implements Effect {
 	
 	public void reset() {
 		this.hurtTimer.reset();
-		this.hurtTimer.setEndTime(550);
-		this.alpha = 0.15f;		
+		this.hurtTimer.setEndTime(750);
+		this.alpha = 0.25f;		
 	}
 
 	/* (non-Javadoc)

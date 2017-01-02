@@ -28,7 +28,7 @@ public abstract class ClientEntity implements Renderable {
 	protected ClientGame game;
 	protected Vector2f pos, facing, centerPos, movementDir;
 	protected Vector2f renderPos, previousPos;
-	protected Rectangle bounds;
+	protected Rectangle bounds;	
 	protected float orientation;
 		
 	protected long lastUpdate;
@@ -85,8 +85,7 @@ public abstract class ClientEntity implements Renderable {
 		this.centerPos = new Vector2f();
 		this.movementDir = new Vector2f();
 		
-		this.bounds = new Rectangle();
-		
+		this.bounds = new Rectangle();		
 		this.isAlive = true;
 	}
 	
@@ -384,7 +383,7 @@ public abstract class ClientEntity implements Renderable {
 	public Rectangle getBounds() {
 		return bounds;
 	}
-
+	
 	/**
 	 * @return the orientation
 	 */
@@ -404,6 +403,16 @@ public abstract class ClientEntity implements Renderable {
 	 */
 	public Type getType() {
 		return type;
+	}
+	
+	/**
+	 * Determines if this entity has been updated by the server relatively
+	 * recently
+	 * 
+	 * @return true if it's been updated recently
+	 */
+	public boolean isRelativelyUpdated() {
+		return (gameClock - this.lastUpdate) < 800;
 	}
 	
 	/**

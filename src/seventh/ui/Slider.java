@@ -8,6 +8,7 @@ import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnSliderMovedListener;
 import seventh.ui.events.SliderMovedEvent;
 
@@ -120,6 +121,7 @@ public class Slider extends Widget {
 			
 			if(!this.isHovering) {
 				Sounds.playGlobalSound(Sounds.uiHover);
+				getEventDispatcher().sendNow(new HoverEvent(this, this));
 			}
 		}
 		

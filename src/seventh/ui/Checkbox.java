@@ -9,6 +9,7 @@ import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.ui.Label.TextAlignment;
 import seventh.ui.events.CheckboxEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnCheckboxClickedListener;
 
 /**
@@ -97,6 +98,7 @@ public class Checkbox extends Widget {
 			
 			if(!this.isHovering) {
 				Sounds.playGlobalSound(Sounds.uiHover);
+				getEventDispatcher().sendNow(new HoverEvent(this, this));
 			}
 		}
 		

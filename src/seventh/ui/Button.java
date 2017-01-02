@@ -26,6 +26,7 @@ import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
 import seventh.ui.events.ButtonEvent;
+import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
 
 /**
@@ -250,6 +251,7 @@ public class Button extends Widget {
 			this.label.setTextSize(this.hoverTextSize);
 			if(!this.isHovering) {
 				Sounds.playGlobalSound(Sounds.uiHover);
+				getEventDispatcher().sendNow(new HoverEvent(this, this));
 			}
 		}
 		else {

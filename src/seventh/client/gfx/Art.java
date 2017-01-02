@@ -114,7 +114,8 @@ public class Art {
 	public static  Sprite smallPistolIcon = null;
 	public static  Sprite smallRiskerIcon = null;
 	
-	public static  TextureRegion cursorImg = null;		
+	public static  TextureRegion cursorImg = null;
+	public static  TextureRegion reticleImg = null;
 	
 	public static  TextureRegion[] thompsonMuzzleFlash = null;
 	public static  TextureRegion[] m1GarandMuzzleFlash = null;
@@ -274,6 +275,7 @@ public class Art {
 		smallRiskerIcon = TextureUtil.resizeImage(riskerIcon, smallIconWidth, smallIconHeight);
 
 		cursorImg = loadImage("./assets/gfx/crosshair.png");
+		reticleImg = loadImage("./assets/gfx/reticle.png");
 						
 		thompsonMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/thompson_muzzle_flash.png"), 2, 2);
 		springfieldMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/springfield_muzzle_flash.png"), 2, 2);
