@@ -27,9 +27,13 @@ public class HurtEffect implements Effect {
 	}
 	
 	public void reset() {
+		reset(760);
+	}
+	
+	public void reset(long time) {
 		this.hurtTimer.reset();
-		this.hurtTimer.setEndTime(750);
-		this.alpha = 0.25f;		
+		this.hurtTimer.setEndTime(time);
+		this.alpha = 0.35f;		
 	}
 
 	/* (non-Javadoc)

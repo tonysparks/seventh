@@ -604,14 +604,7 @@ public class InGameScreen implements Screen {
 						
 		game.update(timeStep);
 		game.applyPlayerInput(mousePos.x, mousePos.y, inputKeys);
-		
-		if(game.isHoveringOverEnemy(mousePos.x, mousePos.y)) {
-			cursor.setColor(0xafff0000);
-		}
-		else {
-			cursor.setColor(0xafffff00);
-		}
-		
+				
 		inputKeys = 0;
 		
 		if( isDebugMode ) {

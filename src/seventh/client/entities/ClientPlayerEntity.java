@@ -552,7 +552,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		super.kill(meansOfDeath, locationOfDeath);
 		
 		if(isControlledByLocalPlayer()) {
-			this.effects.getHurtEffect().reset();
+			this.effects.getHurtEffect().reset(1500);
 		}
 		
 		switch(meansOfDeath) {

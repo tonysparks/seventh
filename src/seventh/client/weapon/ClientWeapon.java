@@ -165,6 +165,13 @@ public class ClientWeapon {
 		return this.specialReloadActionReloadTimer.isUpdating();
 	}
 	
+	/**
+	 * @return true if the weapon is currently in the reloading state
+	 */
+	public boolean isReloading() {
+		return getState() == State.RELOADING;
+	}
+	
 	private void startSpecialReloadActionTimer() {
 		if(isBoltAction()) this.specialReloadActionReloadTimer.setEndTime(500);//boltActionTime);
 		else if(isPumpAction()) this.specialReloadActionReloadTimer.setEndTime(pumpActionTime);

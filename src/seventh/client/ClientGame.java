@@ -737,7 +737,7 @@ public class ClientGame {
 	 */
 	public void applyPlayerInput(float mx, float my, int keys) {
 		this.cameraController.applyPlayerInput(mx, my, keys);
-		this.hud.applyPlayerInput(keys);	
+		this.hud.applyPlayerInput(mx, my, keys);	
 		
 		
 		// TODO: Move into selector class

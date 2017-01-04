@@ -4,14 +4,15 @@
  */
 package seventh.client.gfx.hud;
 
-import harenet.api.Client;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import harenet.api.Client;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayers;
@@ -23,6 +24,7 @@ import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Cursor;
 import seventh.client.gfx.MiniMap;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
@@ -35,8 +37,6 @@ import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
 import seventh.ui.ProgressBar;
 import seventh.ui.view.ProgressBarView;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * The players Heads Up Display
@@ -53,6 +53,7 @@ public class Hud implements Renderable {
 	
 	private ClientGame game;
 	private SeventhGame app;
+	private Cursor cursor;
 	private ClientSeventhConfig config;
 	private KillLog killLog;
 	private MessageLog messageLog, centerLog, objectiveLog;
@@ -77,7 +78,8 @@ public class Hud implements Renderable {
 		this.config = app.getConfig();
 		
 		this.localPlayer = game.getLocalPlayer();				
-		int screenWidth = game.getApp().getScreenWidth();
+		this.cursor = app.getUiManager().getCursor();
+		int screenWidth = app.getScreenWidth();
 		
 		this.killLog = new KillLog(screenWidth-260, 30, 5000);
 		this.messageLog = new MessageLog(10, 60, 15000, 6);		
@@ -163,13 +165,16 @@ public class Hud implements Renderable {
 	 * 
 	 * @param keys
 	 */
-	public void applyPlayerInput(int keys) {
+	public void applyPlayerInput(float mx, float my, int keys) {
 	    /* Check to see if the user is planting or disarming
          * a bomb
          */
         setAtBomb(false);
+        
+        boolean hasLocalPlayer = this.localPlayer != null && this.localPlayer.isAlive(); 
+        
         if(Keys.USE.isDown(keys)) {
-            if(this.localPlayer != null && this.localPlayer.isAlive()) {
+            if(hasLocalPlayer) {
                 Rectangle bounds = this.localPlayer.getEntity().getBounds();
                 List<ClientBombTarget> bombTargets = this.game.getBombTargets();
                 for(int i = 0; i < bombTargets.size(); i++) {
@@ -194,6 +199,26 @@ public class Hud implements Renderable {
                 }
             }
         }
+        
+        if(hasLocalPlayer) {
+        	ClientPlayerEntity ent = this.localPlayer.getEntity();
+        	ClientWeapon weapon = ent.getWeapon();
+        	if(weapon!=null && weapon.isReloading()) {
+        		cursor.setAccuracy(0);
+        		cursor.setColor(0x6fffffff);
+        	}
+        	else {
+        		if(game.isHoveringOverEnemy(mx, my)) {
+        			cursor.setColor(0xafff0000);
+        		}
+        		else {
+        			cursor.setColor(0xafffff00);
+        		}
+        	}
+        }
+        else {
+			cursor.setColor(0xafffff00);
+		}
 	}
 	
 	/**

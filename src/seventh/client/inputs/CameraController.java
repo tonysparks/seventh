@@ -319,31 +319,8 @@ public class CameraController implements Updatable {
 				}
 				
 				entity.movementPrediction(map, timeStep, playerVelocity);
-								
-				float accuracy = 0f;
-				switch(entity.getCurrentState()) {
-					case CROUCHING:
-						accuracy = 1f;
-						break;										
-					case IDLE:
-						accuracy = .9f;
-						break;
-					case OPERATING_VEHICLE:
-						accuracy = 1f;
-						break;
-					case RUNNING:
-						accuracy = .5f;
-						break;
-					case SPRINTING:
-						accuracy = 0f;
-						break;
-					case WALKING:
-						accuracy = .9f;
-						break;					
-					default: accuracy = 0f;
-				}
 				
-				cursor.setAccuracy(accuracy);
+				cursor.setAccuracy(entity.getAimingAccuracy());
 				
 				cameraCenterAround.set(entity.getPos());
 				Vector2f.Vector2fRound(cameraCenterAround, cameraCenterAround);;
