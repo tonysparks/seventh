@@ -269,6 +269,16 @@ public abstract class ClientEntity implements Renderable {
 		this.isAlive = isAlive;
 	}
 	
+	/**
+	 * Kill this {@link ClientEntity}
+	 * 
+	 * @param meansOfDeath
+	 * @param locationOfDeath
+	 */
+	public void kill(Type meansOfDeath, Vector2f locationOfDeath) {
+		setAlive(false);
+	}
+	
 	
 	/**
 	 * Interpolates between the previous and current state sent
@@ -412,7 +422,20 @@ public abstract class ClientEntity implements Renderable {
 	 * @return true if it's been updated recently
 	 */
 	public boolean isRelativelyUpdated() {
-		return (gameClock - this.lastUpdate) < 800;
+		return isRelativelyUpdated(800);
+	}
+	
+	
+	/**
+	 * Determines if this entity has been updated by the server relatively
+	 * recently
+	 * 
+	 * @param time the amount of time that is allowed to pass before we consider this
+	 * too old
+	 * @return true if it's been updated recently
+	 */
+	public boolean isRelativelyUpdated(int timeMSec) {
+		return (gameClock - this.lastUpdate) < timeMSec;
 	}
 	
 	/**

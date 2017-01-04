@@ -28,13 +28,10 @@ import seventh.client.entities.ClientRocket;
 import seventh.client.entities.vehicles.ClientPanzerTank;
 import seventh.client.entities.vehicles.ClientShermanTank;
 import seventh.client.entities.vehicles.ClientVehicle;
-import seventh.client.gfx.AnimatedImage;
-import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.LightSystem;
-import seventh.client.gfx.effects.AnimationEffect;
 import seventh.client.gfx.effects.ClientGameEffects;
 import seventh.client.gfx.effects.Effect;
 import seventh.client.gfx.effects.particle_system.Emitters;
@@ -109,7 +106,6 @@ import seventh.shared.Timer;
 public class ClientGame {	
 	
 	private final SeventhGame app;	
-	private final ClientSeventhConfig config;
 	private final Map map;
 	
 	private final ClientPlayer localPlayer;
@@ -188,7 +184,6 @@ public class ClientGame {
 		this.map = map;
 		this.localSession = session;
 
-		this.config = app.getConfig();
 		this.scoreboard = new Scoreboard(this);
 		
 		this.localPlayer = players.getPlayer(session.getSessionPlayerId());		
@@ -1306,110 +1301,7 @@ public class ClientGame {
 			
 			ClientPlayerEntity entity = player.getEntity();
 			if(entity != null) {
-				entity.setAlive(false);
-				
-				if(entity.isControlledByLocalPlayer()) {
-					getGameEffects().getHurtEffect().reset();
-				}
-				
-				switch(meansOfDeath) {
-				case EXPLOSION:
-				case GRENADE: {										
-					AnimatedImage anim = null;
-					Vector2f pos = new Vector2f(locationOfDeath);
-					Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);
-					
-					switch(player.getTeam()) {
-						case ALLIES:
-							anim = Art.newAlliedExplosionDeathAnim();
-							break;
-						case AXIS:
-							anim = Art.newAxisExplosionDeathAnim();
-							break;
-						default:
-							break;
-					}
-					// Objective game type keeps the dead bodies around
-					boolean persist = gameType.equals(GameType.Type.OBJ);
-					
-					if(config.getBloodEnabled()) {
-						gameEffects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 18, 15200, 50));
-						gameEffects.addBackgroundEffect(Emitters.newGibEmitter(locationOfDeath, 3));						
-						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));
-					}
-					break;
-				}
-				case ROCKET:
-				case ROCKET_LAUNCHER:
-					if(config.getBloodEnabled()) {
-						gameEffects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 18, 15200, 50));
-						gameEffects.addBackgroundEffect(Emitters.newGibEmitter(locationOfDeath, 15));
-					}
-					Sounds.startPlaySound(Sounds.gib, msg.playerId, locationOfDeath.x, locationOfDeath.y);
-					
-					break;				
-				default:
-					
-					if(meansOfDeath != Type.FIRE && config.getBloodEnabled()) {											
-						gameEffects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 16, 15200, 30));
-					}
-					
-					Vector2f pos = new Vector2f(locationOfDeath);
-					Vector2f.Vector2fMA(pos, entity.getFacing(), 0, pos);																					
-										
-					AnimatedImage anim = null;
-					//AnimationPool pool = null;
-					switch(player.getTeam()) {
-					// TODO use pool
-						case ALLIES: {
-							switch(random.nextInt(4)) {
-							case 0:
-								anim = Art.newAlliedBackDeathAnim();
-								break;
-							case 1:
-								anim = Art.newAlliedBackDeath2Anim();
-								break;
-							case 2: 
-								anim = Art.newAlliedFrontDeathAnim();
-								break;
-							default:
-								anim = Art.newAlliedFrontDeath2Anim();
-								break;
-							}
-							break;
-						}
-						case AXIS: {
-							switch(random.nextInt(4)) {
-							case 0:
-								anim = Art.newAxisBackDeathAnim();
-								break;
-							case 1:
-								anim = Art.newAxisBackDeath2Anim();
-								break;
-							case 2: 
-								anim = Art.newAxisFrontDeathAnim();
-								break;
-							default:
-								anim = Art.newAxisFrontDeath2Anim();
-								break;
-							}
-							break;
-						}
-						default: { // nothing							
-						}
-					}
-					
-					if(anim!=null) {
-						// Objective game type keeps the dead bodies around
-						boolean persist = gameType.equals(GameType.Type.OBJ);
-						
-						// spawn the death animation
-						gameEffects.addBackgroundEffect(new AnimationEffect(anim, pos, entity.getOrientation(), persist));
-						
-						Sounds.startPlaySound(Sounds.die, msg.playerId, locationOfDeath.x, locationOfDeath.y);
-					}
-				}	
-								
+				entity.kill(meansOfDeath, locationOfDeath);								
 			}
 			
 			hud.postDeathMessage(player, players.getPlayer(msg.killedById), meansOfDeath);
@@ -1452,20 +1344,6 @@ public class ClientGame {
 		applyFullGameState(msg.gameState);
 		
 		executeCallbackScript("onRoundStarted", this);
-		
-		/*
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedBackDeath2Anim().loop(true), new Vector2f(120,320), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedExplosionDeathAnim().loop(true), new Vector2f(220,320), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedFrontDeathAnim().loop(true), new Vector2f(120,420), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedFrontDeath2Anim().loop(true), new Vector2f(220,420), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAlliedBackDeathAnim().loop(true), new Vector2f(120,520), 0f, true));
-		
-		int axisY = 420;
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisBackDeath2Anim().loop(true), new Vector2f(120,320+axisY), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisExplosionDeathAnim().loop(true), new Vector2f(220,320+axisY), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisFrontDeathAnim().loop(true), new Vector2f(120,420+axisY), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisFrontDeath2Anim().loop(true), new Vector2f(220,420+axisY), 0f, true));
-		gameEffects.addForegroundEffect(new AnimationEffect(Art.newAxisBackDeathAnim().loop(true), new Vector2f(120,520+axisY), 0f, true));*/
 	}
 	
 	public void gameEnded(GameEndedMessage msg) {
@@ -1481,39 +1359,39 @@ public class ClientGame {
 		
 		hud.getObjectiveLog().log("Objective: ");
 		switch(this.gameType) {
-        case OBJ:
-            if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
-                hud.getObjectiveLog().log(this.defendingTeam.getName() + " must defend the objectives.");
-            }
-            else {
-                if(this.localPlayer.getTeam().equals(this.defendingTeam)) {
-                    hud.getObjectiveLog().log("You must defend the bomb targets from the " + this.attackingTeam.getName());
-                }
-                else {
-                    hud.getObjectiveLog().log("You must plant bombs on the " + this.defendingTeam.getName() + " protected targets.");
-                }
-            }
-            break;
-        case TDM:
-            if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
-                hud.getObjectiveLog().log("The team with the most kills, wins.");
-            }
-            else {
-                hud.getObjectiveLog().log("You must kill as many " + localPlayer.getTeam().opposingTeam().getName() + " as possible.");
-            }
-            break;
-        case CTF: {
-        	if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
-                hud.getObjectiveLog().log("The team with the most flag captures, wins.");
-            }
-            else {
-                hud.getObjectiveLog().log("You must capture your flag from the " + localPlayer.getTeam().opposingTeam().getName() + " team.");
-            }
-        	break;
-        }
-        default:
-            break;
-		
+	        case OBJ:
+	            if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
+	                hud.getObjectiveLog().log(this.defendingTeam.getName() + " must defend the objectives.");
+	            }
+	            else {
+	                if(this.localPlayer.getTeam().equals(this.defendingTeam)) {
+	                    hud.getObjectiveLog().log("You must defend the bomb targets from the " + this.attackingTeam.getName());
+	                }
+	                else {
+	                    hud.getObjectiveLog().log("You must plant bombs on the " + this.defendingTeam.getName() + " protected targets.");
+	                }
+	            }
+	            break;
+	        case TDM:
+	            if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
+	                hud.getObjectiveLog().log("The team with the most kills, wins.");
+	            }
+	            else {
+	                hud.getObjectiveLog().log("You must kill as many " + localPlayer.getTeam().opposingTeam().getName() + " as possible.");
+	            }
+	            break;
+	        case CTF: {
+	        	if(this.localPlayer==null || this.localPlayer.isPureSpectator()) {
+	                hud.getObjectiveLog().log("The team with the most flag captures, wins.");
+	            }
+	            else {
+	                hud.getObjectiveLog().log("You must capture your flag from the " + localPlayer.getTeam().opposingTeam().getName() + " team.");
+	            }
+	        	break;
+	        }
+	        default:
+	            break;
+			
 		}
 	}
 

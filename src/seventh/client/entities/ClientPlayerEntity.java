@@ -8,10 +8,13 @@ import static seventh.shared.SeventhConstants.PLAYER_SPEED;
 import static seventh.shared.SeventhConstants.SPRINT_SPEED_FACTOR;
 import static seventh.shared.SeventhConstants.WALK_SPEED_FACTOR;
 
+import java.util.Random;
+
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientSeventhConfig;
 import seventh.client.ClientTeam;
+import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
@@ -19,7 +22,10 @@ import seventh.client.gfx.Light;
 import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.PlayerSprite;
 import seventh.client.gfx.RenderFont;
+import seventh.client.gfx.effects.AnimationEffect;
 import seventh.client.gfx.effects.ClientGameEffects;
+import seventh.client.gfx.effects.particle_system.Emitters;
+import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientKar98;
 import seventh.client.weapon.ClientM1Garand;
 import seventh.client.weapon.ClientMP40;
@@ -37,6 +43,7 @@ import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetWeapon;
+import seventh.game.type.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -536,9 +543,122 @@ public class ClientPlayerEntity extends ClientControllableEntity {
 		}
 		
 		if(isControlledByLocalPlayer()) {
-			this.game.getGameEffects().getHurtEffect().reset();
+			this.effects.getHurtEffect().reset();
 		}
 	}
+	
+	@Override
+	public void kill(Type meansOfDeath, Vector2f locationOfDeath) {	
+		super.kill(meansOfDeath, locationOfDeath);
+		
+		if(isControlledByLocalPlayer()) {
+			this.effects.getHurtEffect().reset();
+		}
+		
+		switch(meansOfDeath) {
+			case EXPLOSION:
+			case GRENADE: {										
+				AnimatedImage anim = null;
+				Vector2f pos = new Vector2f(locationOfDeath);
+				Vector2f.Vector2fMA(pos, getFacing(), 0, pos);
+				
+				switch(player.getTeam()) {
+					case ALLIES:
+						anim = Art.newAlliedExplosionDeathAnim();
+						break;
+					case AXIS:
+						anim = Art.newAxisExplosionDeathAnim();
+						break;
+					default:
+						break;
+				}
+				// Objective game type keeps the dead bodies around
+				boolean persist = this.game.getGameType().equals(GameType.Type.OBJ);
+				
+				if(config.getBloodEnabled()) {
+					this.effects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 18, 15200, 50));
+					this.effects.addBackgroundEffect(Emitters.newGibEmitter(locationOfDeath, 3));						
+					this.effects.addBackgroundEffect(new AnimationEffect(anim, pos, getOrientation(), persist));
+				}
+				break;
+			}
+			case ROCKET:
+			case ROCKET_LAUNCHER:
+				if(config.getBloodEnabled()) {
+					this.effects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 18, 15200, 50));
+					this.effects.addBackgroundEffect(Emitters.newGibEmitter(locationOfDeath, 15));
+				}
+				Sounds.startPlaySound(Sounds.gib, getId(), locationOfDeath.x, locationOfDeath.y);
+				
+				break;				
+			default: {
+			
+				if(meansOfDeath != Type.FIRE && config.getBloodEnabled()) {											
+					this.effects.addBackgroundEffect(Emitters.newBloodEmitter(locationOfDeath, 16, 15200, 30));
+				}
+				
+				Vector2f pos = new Vector2f(locationOfDeath);
+				Vector2f.Vector2fMA(pos, getFacing(), 0, pos);																					
+									
+				Random random = this.game.getRandom();			
+				AnimatedImage anim = null;
+				
+				switch(player.getTeam()) {
+				// TODO use pool
+					case ALLIES: {
+						switch(random.nextInt(4)) {
+						case 0:
+							anim = Art.newAlliedBackDeathAnim();
+							break;
+						case 1:
+							anim = Art.newAlliedBackDeath2Anim();
+							break;
+						case 2: 
+							anim = Art.newAlliedFrontDeathAnim();
+							break;
+						default:
+							anim = Art.newAlliedFrontDeath2Anim();
+							break;
+						}
+						break;
+					}
+					case AXIS: {
+						switch(random.nextInt(4)) {
+						case 0:
+							anim = Art.newAxisBackDeathAnim();
+							break;
+						case 1:
+							anim = Art.newAxisBackDeath2Anim();
+							break;
+						case 2: 
+							anim = Art.newAxisFrontDeathAnim();
+							break;
+						default:
+							anim = Art.newAxisFrontDeath2Anim();
+							break;
+						}
+						break;
+					}
+					default: { // nothing							
+					}
+				}
+				
+				if(anim!=null) {
+					// Objective game type keeps the dead bodies around
+					boolean persist = this.game.getGameType().equals(GameType.Type.OBJ);
+					
+					// spawn the death animation
+					this.effects.addBackgroundEffect(new AnimationEffect(anim, pos, getOrientation(), persist));
+					
+					Sounds.startPlaySound(Sounds.die, getId(), locationOfDeath.x, locationOfDeath.y);
+				}
+			}
+		}	
+						
+	
+		
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see palisma.client.ClientEntity#render(leola.live.gfx.Canvas, leola.live.gfx.Camera)
