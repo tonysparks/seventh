@@ -80,7 +80,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 				case M1_GARAND_RELOAD:
 				case KAR98_RELOAD:
 				case KAR98_RECHAMBER:
-					desirability += brain.getRandomRange(0.4, 0.45);
+					desirability += brain.getRandomRange(0.5, 0.65);
 					break;
 					
 					
@@ -92,7 +92,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 										
 				case BOMB_DISARM:
 				case BOMB_PLANT:
-					desirability += brain.getRandomRange(0.2, 0.5);
+					desirability += brain.getRandomRange(0.5, 0.8);
 					break;
 					
 				case TANK_IDLE:
@@ -103,6 +103,18 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
 				case TANK_SHIFT:
 				case TANK_TURRET_MOVE:
 					desirability = 0f; // get the hell out of dodge
+					break;
+				case RUFFLE:
+					desirability += brain.getRandomRange(0.3, 0.5);
+					break;
+				case SURFACE_DIRT:
+				case SURFACE_GRASS:
+				case SURFACE_METAL:
+				case SURFACE_NORMAL:
+				case SURFACE_SAND:
+				case SURFACE_WATER:
+				case SURFACE_WOOD:
+					desirability += brain.getRandomRange(0.3, 0.5);
 					break;
 				default:
 					desirability = 0.1f;

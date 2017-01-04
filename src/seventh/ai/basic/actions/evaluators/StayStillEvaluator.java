@@ -27,7 +27,7 @@ public class StayStillEvaluator extends ActionEvaluator {
 	 */
 	@Override
 	public double calculateDesirability(Brain brain) {
-		double score = brain.getRandomRange(0.2, 0.5);
+		double score = brain.getRandomRange(0.3, 0.6);
 		return score * getCharacterBias();
 	}
 
