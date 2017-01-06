@@ -127,10 +127,11 @@ public abstract class HareNetEndpoint implements Endpoint {
 	public void start() {
 		killNetworkThread();
 		
+		shutdown.set(false);
+		
 		thread = new Thread(this, "Network Thread");
 		thread.setDaemon(true);
 		thread.start();
-		this.shutdown.set(false);
 	}
 
 	/* (non-Javadoc)

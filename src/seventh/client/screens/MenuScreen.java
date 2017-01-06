@@ -18,6 +18,7 @@ import seventh.server.GameServer;
 import seventh.server.GameServer.GameServerSettings;
 import seventh.server.GameServer.OnServerReadyListener;
 import seventh.shared.Command;
+import seventh.shared.Cons;
 import seventh.shared.Console;
 import seventh.shared.Scripting;
 import seventh.shared.TimeStep;
@@ -181,6 +182,7 @@ public class MenuScreen implements Screen {
 						
 						@Override
 						public void onServerReady(GameServer server) {
+							Cons.println("Server is ready, attempting to connect local client");
 							loadingScreen.connectToServer();					
 						}
 					});

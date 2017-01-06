@@ -154,7 +154,7 @@ public class LoadingState implements State {
 	@Override
 	public void update(TimeStep timeStep) {
 		if(this.gameSession != null) {
-			Cons.println("Starting the game...");								
+			Cons.println("Server loading the InGameState...");								
 			this.gameSessionListener.onGameSessionCreated(gameSession);			
 			this.serverContext.getStateMachine().changeState(new InGameState(serverContext, gameSession));
 		}

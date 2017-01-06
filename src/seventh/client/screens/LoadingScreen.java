@@ -96,8 +96,8 @@ public class LoadingScreen implements Screen {
 					public void run() {
 						message += host + ":" + port + "...";
 						try {			
-							Cons.println("Connecting to: " + host + ":" + port);
 							connection.disconnect();
+							Cons.println("Connecting to: " + host + ":" + port);
 														
 							connection.connect(host, port);
 							message += "Success!";
@@ -126,7 +126,7 @@ public class LoadingScreen implements Screen {
 							app.goToMenuScreen();
 						}						
 					}
-				});
+				}, "client-connection-thread");
 				
 				thread.start();
 			}

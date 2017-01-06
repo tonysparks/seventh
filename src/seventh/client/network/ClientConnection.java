@@ -111,7 +111,6 @@ public class ClientConnection {
 		disconnect();
 				
 		InetSocketAddress address = new InetSocketAddress(host, port);
-		//client.start();
 		client.connect(5_000, address);
 		
 		int tries = 4;
@@ -127,8 +126,6 @@ public class ClientConnection {
 		}
 		
 		Cons.println("");
-		
-		//client.stop();
 		
 		throw new IOException("Unable to connect to: " + host + ":" + port);
 		

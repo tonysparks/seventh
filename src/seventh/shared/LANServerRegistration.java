@@ -19,14 +19,33 @@ import seventh.shared.BroadcastListener.OnMessageReceivedListener;
  */
 public class LANServerRegistration implements Runnable {
 
-	private ServerContext serverContext;
+	private BroadcastListener listener;
 	private ExecutorService service;
 	
 	/**
 	 * 
 	 */
-	public LANServerRegistration(ServerContext serverContext) {
-		this.serverContext = serverContext;
+	public LANServerRegistration(final ServerContext serverContext) {
+		
+		final LANServerConfig config = serverContext.getConfig().getLANServerConfig();
+		this.listener = new BroadcastListener(config.getMtu(), config.getBroadcastAddress(), config.getPort());
+		this.listener.addOnMessageReceivedListener(new OnMessageReceivedListener() {
+				
+			@Override
+			public void onMessage(DatagramPacket packet) {
+				String msg = new String(packet.getData(), packet.getOffset(), packet.getLength()).trim();
+				if(msg.equalsIgnoreCase("ping")) {
+					try(Broadcaster caster = new Broadcaster(config.getMtu(), config.getBroadcastAddress(), config.getPort())) {
+						ServerInfo info = new ServerInfo(serverContext);
+						caster.broadcastMessage(info.toString());
+					}
+					catch(Exception e) {
+						Cons.println("*** ERROR: Unable to broadcast response: " + e);
+					}
+				}
+			}
+		});
+		
 	}
 	
 	/**
@@ -55,37 +74,28 @@ public class LANServerRegistration implements Runnable {
 	 * Shuts down the broadcaster
 	 */
 	public void shutdown() {
-		if(this.service != null) {
-			this.service.shutdownNow();
-			this.service = null;
+		try {
+			this.listener.close();
+		}
+		catch(Exception e) {
+			Cons.println("*** ERROR: Closing out lan-server-listener: " + e);
+		}
+		finally {
+			if(this.service != null) {
+				this.service.shutdownNow();
+				this.service = null;
+			}
 		}
 	}
 	
 	@Override
 	public void run() {
-		try {								
-			final LANServerConfig config = serverContext.getConfig().getLANServerConfig();
-			try(BroadcastListener listener = new BroadcastListener(config.getMtu(), config.getBroadcastAddress(), config.getPort())) {
-				listener.addOnMessageReceivedListener(new OnMessageReceivedListener() {
-					
-					@Override
-					public void onMessage(DatagramPacket packet) {
-						String msg = new String(packet.getData(), packet.getOffset(), packet.getLength()).trim();
-						if(msg.equalsIgnoreCase("ping")) {
-							try(Broadcaster caster = new Broadcaster(config.getMtu(), config.getBroadcastAddress(), config.getPort())) {
-								ServerInfo info = new ServerInfo(serverContext);
-								caster.broadcastMessage(info.toString());
-							}
-							catch(Exception e) {
-								Cons.println("*** ERROR: Unable to broadcast response: " + e);
-							}
-						}
-					}
-				});
-				
-				listener.start();
-			}
+		try {														
+			listener.start();			
 		}		
+		catch(InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 		catch(Exception e) {
 			Cons.println("*** ERROR: An exception occurred during LAN BroadcastListner: " + e);
 		}

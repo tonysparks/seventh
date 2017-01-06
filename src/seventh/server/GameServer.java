@@ -233,7 +233,6 @@ public class GameServer {
 		this.serverContext.getStateMachine().setListener(new StateMachineListener<State>() {			
 			@Override
 			public void onEnterState(State state) {
-				console.println("Running startup script...");
 				/* only listen for the first in game state
 				 * transition because we only need to 'wait'
 				 * for the server to be up the first time in.
@@ -242,6 +241,8 @@ public class GameServer {
 				 * Bots not spawning
 				 */
 				if( (state instanceof InGameState) ) {
+					console.println("Running startup script...");
+					
 					if(settings.startupScript != null) {
 						console.execute("run", settings.startupScript);
 					}
@@ -291,7 +292,7 @@ public class GameServer {
 		/* load up the map */
 		serverContext.spawnGameSession(settings.currentMap);	
 		
-		console.println("Done initialzing the game server!");
+		console.println("Done initialzing the game server, ready to launch network...");
 	}
 	
 	
@@ -805,6 +806,7 @@ public class GameServer {
 		}
 		finally {
 			Cons.println("Shutting down the server...");
+			sm.changeState(null); // makes sure the current state is exited
 			server.stop();
 			server.close();
 			this.registration.shutdown();

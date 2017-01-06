@@ -6,6 +6,7 @@ package seventh.shared;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,20 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class BroadcastListener implements AutoCloseable {
     
-    public static void main(String [] args) throws Exception {
-        try(BroadcastListener listener = new BroadcastListener(1500, "224.0.0.44", 4888)) {
-            listener.addOnMessageReceivedListener(new OnMessageReceivedListener() {
-                
-                @Override
-                public void onMessage(DatagramPacket packet) {
-                    String message = new String(packet.getData(), packet.getOffset(), packet.getLength());
-                    System.out.println(packet.getAddress() +" says: " + message);
-                }
-            });
-            
-            listener.start();
-        }
-    }
     
     /**
      * Message was received from a broadcast message
@@ -42,9 +29,10 @@ public class BroadcastListener implements AutoCloseable {
     public static interface OnMessageReceivedListener {
         public void onMessage(DatagramPacket packet);
     }
-    
+        
     private MulticastSocket socket;
     private InetAddress groupAddress;
+    private int port;
     private AtomicBoolean active;
     private final int MTU;
     
@@ -58,14 +46,20 @@ public class BroadcastListener implements AutoCloseable {
      * @param port
      * @throws Exception
      */
-    public BroadcastListener(int mtu, String groupAddress, int port) throws Exception {
-        this.MTU = mtu;
-        this.socket = new MulticastSocket(port);
-        this.groupAddress = InetAddress.getByName(groupAddress);
-        this.socket.joinGroup(this.groupAddress);
+    public BroadcastListener(int mtu, String groupAddress, int port) {
+        this.MTU = mtu;        
+        this.port = port;
         
+                
         this.listeners = new ArrayList<BroadcastListener.OnMessageReceivedListener>();
         this.active = new AtomicBoolean();
+        
+        try {
+        	this.groupAddress = InetAddress.getByName(groupAddress); 
+        }
+        catch(Exception e) {
+        	throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -84,18 +78,35 @@ public class BroadcastListener implements AutoCloseable {
      * @param port
      */
     public void start() throws Exception {
-        if(!this.active.get()) {
+        if(!this.active.get()) {        	
             this.active.set(true);
             
-            byte[] buffer = new byte[this.MTU];
-            while(this.active.get()) {
-                
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);               
-               	this.socket.receive(packet);               
-                
-                for(OnMessageReceivedListener l : this.listeners) {
-                    l.onMessage(packet);
-                }
+            socket = null;
+            try {
+            	socket = new MulticastSocket(this.port);
+	            socket.joinGroup(this.groupAddress);    
+	            
+	            byte[] buffer = new byte[this.MTU];
+	            while(this.active.get()) {
+	                
+	                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);               
+	               	socket.receive(packet);               
+	                
+	                for(OnMessageReceivedListener l : this.listeners) {
+	                    l.onMessage(packet);
+	                }
+	            }
+            }
+            catch(SocketException e) {
+            	if(!e.getMessage().equals("socket closed")) {
+            		throw e;
+            	}
+            }
+            finally {
+            	if(socket != null && !socket.isClosed()) {
+                    socket.leaveGroup(this.groupAddress);
+                    socket.close();
+                }  
             }
         }
     }
@@ -103,10 +114,9 @@ public class BroadcastListener implements AutoCloseable {
     @Override
     public void close() throws Exception {
         this.active.set(false);
-        
-        if(this.socket != null) {
-            this.socket.leaveGroup(this.groupAddress);
-            this.socket.close();
-        }        
+        if(socket != null && !socket.isClosed()) {
+            socket.leaveGroup(this.groupAddress);
+            socket.close();
+        }
     }
 }

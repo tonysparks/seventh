@@ -333,6 +333,8 @@ public class InGameState implements State {
 		this.game.startGame();
 		
 		sendReadyMessage();
+		
+		Cons.println("Server InGameState initialiazed and ready for players");
 	}
 
 	/* (non-Javadoc)
