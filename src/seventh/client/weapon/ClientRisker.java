@@ -57,6 +57,14 @@ public class ClientRisker extends ClientWeapon {
 	}
 	
 	/* (non-Javadoc)
+	 * @see seventh.client.weapon.ClientWeapon#isBurstFire()
+	 */
+	@Override
+	public boolean isBurstFire() {	
+		return true;
+	}
+	
+	/* (non-Javadoc)
 	 * @see palisma.client.weapon.ClientWeapon#onFire()
 	 */
 	@Override

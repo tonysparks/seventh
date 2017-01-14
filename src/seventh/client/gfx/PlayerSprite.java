@@ -13,6 +13,7 @@ import seventh.client.ClientPlayer;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.effects.Effects;
+import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.weapon.ClientRocketLauncher;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.State;
@@ -110,6 +111,8 @@ public class PlayerSprite implements Renderable {
 	private long flashTime;
 	private boolean showFlash, toggleFlash;
 	
+	private long timeSpentFiring;
+	private boolean wasFiring;
 	
 	/**
 	 * Debug class
@@ -241,6 +244,37 @@ public class PlayerSprite implements Renderable {
 		resetLegMovements();
 		effects.clearEffects();
 	}
+	
+	private void updateSmokeEmitter(TimeStep timeStep, ClientWeapon weapon) {
+		if(weapon.isAutomatic()) {
+			if(weapon.getState().equals(Weapon.State.FIRING)) {
+				timeSpentFiring += timeStep.getDeltaTime();
+				wasFiring = true;
+			}
+			else {
+				if(wasFiring) {	
+					// automatic weapons only smoke after
+					// some time firing
+					if(timeSpentFiring > 500) {					
+						effects.addEffect(Emitters.newGunSmokeEmitter(entity, 100));
+						wasFiring = false;					
+					}										
+					timeSpentFiring = 0;
+				}
+			}
+		}		
+		else {
+			if(weapon.getState().equals(Weapon.State.FIRING)) {
+				if(!wasFiring) {
+					effects.addEffect(Emitters.newGunSmokeEmitter(entity, 100));
+				}
+				wasFiring = true;
+			}
+			else {
+				wasFiring = false;
+			}
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see leola.live.gfx.Renderable#update(leola.live.TimeStep)
@@ -328,7 +362,8 @@ public class PlayerSprite implements Renderable {
 		bobMotion.update(timeStep);
 		swayMotion.update(timeStep);
 		
-		if(weapon != null) {
+		if(weapon != null) {			
+			updateSmokeEmitter(timeStep, weapon);
 			
 			this.isReloading = weapon.getState() == seventh.game.weapons.Weapon.State.RELOADING;
 			this.isSwitching = weapon.getState() == seventh.game.weapons.Weapon.State.SWITCHING;
@@ -487,7 +522,7 @@ public class PlayerSprite implements Renderable {
 			debugRenderSprite(canvas, sprite, 0xffffff00);
 		}
 	}
-	
+			
 	/**
 	 * Renders the muzzle flash
 	 * @param canvas
@@ -500,7 +535,7 @@ public class PlayerSprite implements Renderable {
 		AnimatedImage muzzleAnim = weapon.getMuzzleFlash();
 		if(muzzleAnim != null) {
 			if(weapon.getState().equals(Weapon.State.FIRING)) 
-			{								
+			{										
 				/* if the weapon is automatic, we want to show
 				 * the animation
 				 */
