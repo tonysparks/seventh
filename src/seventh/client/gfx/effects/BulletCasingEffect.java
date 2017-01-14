@@ -31,6 +31,7 @@ public class BulletCasingEffect implements Effect {
 	private Random random;
 	private float rotation;
 	private float speed;
+	private float alpha;
 	
 	/**
 	 * 
@@ -38,7 +39,7 @@ public class BulletCasingEffect implements Effect {
 	public BulletCasingEffect(Random random) {
 		this.random = random;
 		
-		this.timeToLive = new Timer(false, 20_000);
+		this.timeToLive = new Timer(false, 25_000);
 		this.timeToLive.stop();
 		
 		this.rotationTimer = new Timer(false, 800);
@@ -49,6 +50,7 @@ public class BulletCasingEffect implements Effect {
 		this.vel = new Vector2f();
 		
 		this.sprite = new Sprite(Art.bulletShell);
+		this.alpha = 0.68f;
 	}
 	
 	public void respawn(Vector2f pos, float orientation) {
@@ -73,6 +75,7 @@ public class BulletCasingEffect implements Effect {
 		
 		this.rotation = 25f;
 		this.speed = 8f + random.nextInt(3);
+		this.alpha = 0.68f;
 	}
 	
 	public boolean isFree() {
@@ -97,7 +100,10 @@ public class BulletCasingEffect implements Effect {
 		
 		if(!this.ejectTimer.isExpired()) {
 			Vector2f.Vector2fMA(pos, vel, speed, pos);
-			this.speed *= .7f;
+			this.speed *= .7f;			
+		}
+		else {
+			this.alpha *= 0.996f;
 		}
 	}
 
@@ -110,6 +116,7 @@ public class BulletCasingEffect implements Effect {
 		
 		this.sprite.setPosition(this.pos.x-cameraPos.x, this.pos.y-cameraPos.y);		
 		this.sprite.rotate(rotation);
+		this.sprite.setAlpha(this.alpha);
 		
 		canvas.drawRawSprite(sprite);
 	}
