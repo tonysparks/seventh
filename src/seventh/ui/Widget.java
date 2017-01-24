@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import leola.frontend.listener.EventDispatcher;
+import seventh.client.gfx.Cursor;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.math.Rectangle;
@@ -385,6 +386,13 @@ public class Widget {
 	}
 	
 	/**
+	 * @return the mouse {@link Cursor}
+	 */
+	public Cursor getCursor() {
+		return globalInputListener.cursor;
+	}
+	
+	/**
 	 * @return the parent
 	 */
 	public Widget getParent() {
@@ -653,6 +661,11 @@ public class Widget {
 	static class WidgetInputListener extends Inputs {
 
 		/**
+		 * The mouse cursor
+		 */
+		public Cursor cursor;
+		
+		/**
 		 * Widgets
 		 */
 		private List<Widget> globalWidgets;
@@ -679,6 +692,13 @@ public class Widget {
 			}			
 			this.globalWidgets.clear();
 			this.isDestroying = false;
+		}
+		
+		/**
+		 * @return the globalWidgets
+		 */
+		public List<Widget> getGlobalWidgets() {
+			return globalWidgets;
 		}
 		
 		/**

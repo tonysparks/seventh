@@ -16,7 +16,6 @@ import seventh.client.SeventhGame;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.RenderFont;
-import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
@@ -64,7 +63,7 @@ public class ServerListingsScreen implements Screen {
 	private Theme theme;
 			
 	private Panel optionsPanel;	
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 	
 	private boolean isServerInternetOptionsDisplayed;
 	private int gameTypeIndex;
@@ -101,7 +100,7 @@ public class ServerListingsScreen implements Screen {
 	
 	
 	private void createUI() {
-		this.panelView = new PanelView<>();
+		this.panelView = new PanelView();
 		this.optionsPanel = new Panel();
 		
 		Vector2f uiPos = new Vector2f(200, app.getScreenHeight() - 30);
@@ -527,7 +526,9 @@ public class ServerListingsScreen implements Screen {
 	public void update(TimeStep timeStep) {
 		this.uiManager.update(timeStep);
 		this.panelView.update(timeStep);
-			
+		
+		uiManager.checkIfCursorIsHovering();
+		
 		if(update.get()) {
 			refreshConfigUI();
 		}

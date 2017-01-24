@@ -16,7 +16,7 @@ import seventh.ui.events.OnCheckboxClickedListener;
  * @author Tony
  *
  */
-public class Checkbox extends Widget {
+public class Checkbox extends Widget implements Hoverable {
 
 	private boolean isHovering;
 	private boolean isChecked;
@@ -108,6 +108,7 @@ public class Checkbox extends Widget {
 	/**
 	 * @return the isHovering
 	 */
+	@Override
 	public boolean isHovering() {
 		return isHovering;
 	}

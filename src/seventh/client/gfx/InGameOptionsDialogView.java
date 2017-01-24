@@ -17,7 +17,7 @@ import seventh.ui.view.PanelView;
 public class InGameOptionsDialogView implements Renderable {
 
 	private InGameOptionsDialog dialog;
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 	private WeaponClassDialogView weaponClassDialogView;
 	private SwitchTeamDialogView switchTeamDialogView;
 	/**
@@ -26,7 +26,7 @@ public class InGameOptionsDialogView implements Renderable {
 	public InGameOptionsDialogView(InGameOptionsDialog dialog) {
 		this.dialog = dialog;
 		
-		this.panelView = new PanelView<Renderable>();
+		this.panelView = new PanelView();
 		this.panelView.addElement(new LabelView(dialog.getTitle()));
 		this.panelView.addElement(new ButtonView(dialog.getWeaponClasses()));
 		this.panelView.addElement(new ButtonView(dialog.getSwitchTeam()));

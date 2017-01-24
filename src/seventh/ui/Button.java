@@ -35,7 +35,7 @@ import seventh.ui.events.OnButtonClickedListener;
  * @author Tony
  *
  */
-public class Button extends Widget {
+public class Button extends Widget implements Hoverable {
 	
 	/**
 	 * Text on the button if 
@@ -263,6 +263,7 @@ public class Button extends Widget {
 	/**
 	 * @return the isHovering
 	 */
+	@Override
 	public boolean isHovering() {
 		return isHovering;
 	}

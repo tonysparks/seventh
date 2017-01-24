@@ -20,13 +20,12 @@
 */
 package seventh.ui.view;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.Renderable;
-import seventh.shared.TimeStep;
+import seventh.math.Rectangle;
+import seventh.ui.ImagePanel;
 
 /**
  * Renders a group of elements
@@ -34,59 +33,31 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class PanelView implements Renderable {
+public class ImagePanelView extends PanelView {
 
-	/**
-	 * Elements
-	 */
-	private List<Renderable> uiElements;
+	private ImagePanel panel;
 	
 	/**
 	 * 
 	 */
-	public PanelView() {
-		this.uiElements = new ArrayList<>();
-	}
-	
-	public void clear() {
-		this.uiElements.clear();
-	}
-	
-	/**
-	 * Adds an element
-	 * @param element
-	 */
-	public void addElement(Renderable element) {
-		this.uiElements.add(element);
-	}
-	
-	/**
-	 * @return the uiElements
-	 */
-	public List<Renderable> getUiElements() {
-		return uiElements;
+	public ImagePanelView(ImagePanel panel) {
+		this.panel = panel;
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
+	 * @see seventh.ui.view.PanelView#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, float)
 	 */
 	@Override
 	public void render(Canvas renderer, Camera camera, float alpha) {
-		int size = this.uiElements.size();
-		for(int i = 0; i < size; i++) {
-			this.uiElements.get(i).render(renderer, camera, alpha);
+		
+		Rectangle bounds = panel.getScreenBounds();
+		renderer.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, panel.getBackgroundColor());
+		renderer.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, panel.getForegroundColor());
+		
+		TextureRegion tex = panel.getImage();
+		if(tex!=null) {
+			renderer.drawScaledImage(tex, bounds.x, bounds.y, bounds.width, bounds.height, null);
 		}
+		super.render(renderer, camera, alpha);
 	}
-
-	/* (non-Javadoc)
-	 * @see org.myriad.render.Renderable#update(org.myriad.core.TimeStep)
-	 */
-	@Override
-	public void update(TimeStep timeStep) {
-		int size = this.uiElements.size();
-		for(int i = 0; i < size; i++) {
-			this.uiElements.get(i).update(timeStep);
-		}
-	}
-
 }

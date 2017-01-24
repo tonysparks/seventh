@@ -8,7 +8,6 @@ import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Colors;
 import seventh.client.gfx.RenderFont;
-import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
@@ -49,7 +48,7 @@ public class MenuScreen implements Screen {
 				, optionsBtn, creditsBtn, exitBtn;	
 	
 	private Panel menuPanel;
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 
 	/**
 	 * 
@@ -59,7 +58,7 @@ public class MenuScreen implements Screen {
 		this.theme = app.getTheme();
 						
 		this.uiManager = app.getUiManager();
-		this.panelView = new PanelView<>();
+		this.panelView = new PanelView();
 		this.menuPanel = new Panel();
 				
 		Vector2f uiPos = new Vector2f(app.getScreenWidth()/2, 300);
@@ -237,6 +236,7 @@ public class MenuScreen implements Screen {
 	@Override
 	public void update(TimeStep timeStep) {
 		this.uiManager.update(timeStep);
+		this.uiManager.checkIfCursorIsHovering();
 	}
 
 

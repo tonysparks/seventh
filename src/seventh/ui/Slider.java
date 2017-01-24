@@ -16,7 +16,7 @@ import seventh.ui.events.SliderMovedEvent;
  * @author Tony
  *
  */
-public class Slider extends Widget {
+public class Slider extends Widget implements Hoverable {
 
 	private static final int MAX_INDEX = 100;	
 	private int index;
@@ -131,6 +131,7 @@ public class Slider extends Widget {
 	/**
 	 * @return the isHovering
 	 */
+	@Override
 	public boolean isHovering() {
 		return isHovering;
 	}

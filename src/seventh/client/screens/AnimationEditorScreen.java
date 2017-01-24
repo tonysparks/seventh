@@ -5,12 +5,15 @@ package seventh.client.screens;
 
 import java.math.BigInteger;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import seventh.client.SeventhGame;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.RenderFont;
-import seventh.client.gfx.Renderable;
 import seventh.client.gfx.TextureUtil;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
@@ -33,10 +36,6 @@ import seventh.ui.view.ButtonView;
 import seventh.ui.view.PanelView;
 import seventh.ui.view.TextBoxView;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 /**
  * Tool for tweaking Animations
  * 
@@ -53,7 +52,7 @@ public class AnimationEditorScreen implements Screen {
 	private Theme theme;
 		
 	private Panel optionsPanel, animationPanel, steppingPanel;	
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 	private Button loadAnimation;
 	
 	private int backgroundColor;
@@ -77,7 +76,7 @@ public class AnimationEditorScreen implements Screen {
 	
 	
 	private void createUI() {
-		this.panelView = new PanelView<>();
+		this.panelView = new PanelView();
 		this.optionsPanel = new Panel();
 		this.animationPanel = new Panel();
 		this.steppingPanel = new Panel();
@@ -391,6 +390,7 @@ public class AnimationEditorScreen implements Screen {
 		this.panelView.update(timeStep);
 				
 		uiManager.update(timeStep);
+		uiManager.checkIfCursorIsHovering();
 		
 		if(uiManager.isKeyDown(Keys.ESCAPE)) {
 			app.popScreen();

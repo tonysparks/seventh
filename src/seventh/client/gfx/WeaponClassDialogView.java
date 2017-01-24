@@ -19,14 +19,14 @@ import seventh.ui.view.PanelView;
 public class WeaponClassDialogView implements Renderable {
 
 	private WeaponClassDialog dialog;
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 	/**
 	 * 
 	 */
 	public WeaponClassDialogView(WeaponClassDialog dialog) {
 		this.dialog = dialog;
 		
-		this.panelView = new PanelView<Renderable>();
+		this.panelView = new PanelView();
 		this.panelView.addElement(new LabelView(dialog.getTitle()));
 		this.panelView.addElement(new ButtonView(dialog.getCancelBtn()));
 		

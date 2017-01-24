@@ -17,14 +17,14 @@ import seventh.ui.view.PanelView;
 public class SwitchTeamDialogView implements Renderable {
 
 	private SwitchTeamDialog dialog;
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 	/**
 	 * 
 	 */
 	public SwitchTeamDialogView(SwitchTeamDialog dialog) {
 		this.dialog = dialog;
 		
-		this.panelView = new PanelView<Renderable>();
+		this.panelView = new PanelView();
 		this.panelView.addElement(new LabelView(dialog.getTitle()));
 		this.panelView.addElement(new ButtonView(dialog.getCancelBtn()));
 		this.panelView.addElement(new ButtonView(dialog.getAllied()));

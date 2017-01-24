@@ -23,7 +23,7 @@ import com.badlogic.gdx.Input.Keys;
  * @author Tony
  *
  */
-public class TextBox extends Widget {
+public class TextBox extends Widget implements Hoverable {
 
 	private StringBuilder inputBuffer;
 	private int cursorIndex;
@@ -260,6 +260,7 @@ public class TextBox extends Widget {
 	/**
 	 * @return the isHovering
 	 */
+	@Override
 	public boolean isHovering() {
 		return isHovering;
 	}

@@ -56,6 +56,7 @@ import seventh.shared.Console;
 import seventh.shared.RconHash;
 import seventh.shared.TimeStep;
 import seventh.ui.TextBox;
+import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.view.TextBoxView;
@@ -123,6 +124,8 @@ public class InGameScreen implements Screen {
 	private TextBoxView sayTxtBxView;
 	private TextBoxView teamSayTxtBxView;
 	
+	private UserInterfaceManager uiManager;
+	
 	private KeyMap keyMap;
 	private AIShortcuts aiShortcuts;
 	private AIShortcutsMenu aiShortcutsMenu;
@@ -187,8 +190,10 @@ public class InGameScreen implements Screen {
 	 */
 	public InGameScreen(final SeventhGame app, final ClientGame game) {
 		this.app = app;
-		this.connection = app.getClientConnection();
 		this.game = game;
+		
+		this.connection = app.getClientConnection();
+		this.uiManager = app.getUiManager();
 				
 		this.inputMessage = new PlayerInputMessage();
 		this.keyMap = app.getKeyMap();
@@ -588,6 +593,10 @@ public class InGameScreen implements Screen {
 			        this.aiShortcutsMenu.hide();
 			    }
 			}
+		}
+		else {
+			this.uiManager.update(timeStep);
+			this.uiManager.checkIfCursorIsHovering();
 		}
 			
 		/* capture the inputs for moving the camera if

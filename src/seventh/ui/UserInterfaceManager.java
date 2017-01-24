@@ -21,7 +21,6 @@
 package seventh.ui;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
@@ -51,17 +50,13 @@ public class UserInterfaceManager extends Inputs {
 	 * @param eventDispatcher
 	 */
 	public UserInterfaceManager() {
-		this.widgets = new ArrayList<Widget>();
 		this.cursor = new ReticleCursor();//new ImageCursor();
+		
+		// pretty big hack, should be passed in a cleaner
+		// manner
+		this.widgets = Widget.globalInputListener.getGlobalWidgets();
+		Widget.globalInputListener.cursor = this.cursor;
 	}
-
-	/**
-	 * Brings the UI to the front of input processing.
-	 * @param inputSystem
-	 */
-//	public void init(MultiplInputProcessor inputs) {
-//		inputs.a
-//	}
 	
 	public void hideMouse() {
 		this.cursor.setVisible(false);
@@ -95,24 +90,24 @@ public class UserInterfaceManager extends Inputs {
 	}
 	
 	/**
-	 * @param w
+	 * Checks to see if the {@link Cursor} is hovering over
+	 * any {@link Widget}s
 	 */
-	public void addWidget(Widget w) {
-		this.widgets.add(w);
-	}
-	
-	/**
-	 * @param w
-	 */
-	public void removeWidget(Widget w) {
-		this.widgets.remove(w);
-	}
-	
-	/**
-	 * @return
-	 */
-	public List<Widget> getWidgets() {
-		return this.widgets;
+	public void checkIfCursorIsHovering() {
+		boolean isHovering = false;
+		int size = this.widgets.size();
+		for(int i = 0; i < size; i++) {
+			Widget w = this.widgets.get(i);
+			if(w instanceof Hoverable && !w.isDisabled()) {
+				Hoverable h = (Hoverable)w;
+				if(h.isHovering()) {
+					isHovering = true;
+					break;
+				}
+			}
+		}
+		
+		getCursor().setColor(isHovering ? 0xafff0000 : 0xafffff00);
 	}
 	
 	/* (non-Javadoc)

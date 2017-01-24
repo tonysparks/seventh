@@ -21,7 +21,7 @@ import seventh.shared.TimeStep;
 public class ReticleCursor extends Cursor {
 
 	private float desiredAccuracy;
-	private boolean isTouched;
+	//private boolean isTouched;
 	private Sprite reticle;
 	
 	/**
@@ -45,7 +45,7 @@ public class ReticleCursor extends Cursor {
 	
 	@Override
 	public void touchAccuracy() {	
-		this.isTouched = true;
+		//this.isTouched = true;
 	}
 	
 	
@@ -59,7 +59,7 @@ public class ReticleCursor extends Cursor {
 	
 	@Override
 	public void update(TimeStep timeStep) {
-		if(this.isTouched) {
+		/*if(this.isTouched) {
 			if(getAccuracy() < 0.501f) {
 				this.isTouched = false;
 				this.desiredAccuracy = 1f;
@@ -67,7 +67,7 @@ public class ReticleCursor extends Cursor {
 			else {
 				this.desiredAccuracy = 0.5f;
 			}			
-		}
+		}*/
 		
 		
 		float delta = this.getAccuracy() - this.desiredAccuracy;

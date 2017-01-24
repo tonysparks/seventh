@@ -3,13 +3,19 @@
  */
 package seventh.client.screens;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import seventh.client.SeventhGame;
+import seventh.client.gfx.Art;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.game.type.GameType;
@@ -22,6 +28,7 @@ import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.Checkbox;
+import seventh.ui.ImagePanel;
 import seventh.ui.KeyInput;
 import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;
@@ -36,11 +43,10 @@ import seventh.ui.events.OnCheckboxClickedListener;
 import seventh.ui.events.OnHoverListener;
 import seventh.ui.view.ButtonView;
 import seventh.ui.view.CheckboxView;
+import seventh.ui.view.ImagePanelView;
 import seventh.ui.view.LabelView;
 import seventh.ui.view.PanelView;
 import seventh.ui.view.TextBoxView;
-
-import com.badlogic.gdx.Input.Keys;
 
 /**
  * Server setup page
@@ -62,10 +68,12 @@ public class ServerSetupScreen implements Screen {
 	private KeyInput keyInput;
 	
 	private Panel optionsPanel;	
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 		
 	private GameServerSettings gameSettings;
 	private List<MapEntry> mapListings;
+	private Map<String, TextureRegion> mapPreviews;
+	
 	private int currentMapIndex;
 	private int gameTypeIndex;
 	
@@ -103,6 +111,7 @@ public class ServerSetupScreen implements Screen {
 		
 
 		this.mapListings = MapList.getMapListing();
+		this.mapPreviews = buildMapPreviews(mapListings);
 		
 		this.gameSettings = new GameServerSettings();
 		this.gameSettings.currentMap = mapListings.isEmpty() ? null : this.mapListings.get(0);
@@ -160,6 +169,19 @@ public class ServerSetupScreen implements Screen {
 		return name;
 	}
 	
+	private Map<String, TextureRegion> buildMapPreviews(List<MapEntry> mapList) {
+		Map<String, TextureRegion> mapPreviews = new HashMap<>();
+		for(MapEntry e : mapList) {			
+			String fileName = MapList.stripFileExtension(e.getFileName()) + ".png";
+			File previewFile = new File(fileName);
+			if(previewFile.exists()) {
+				TextureRegion tex = Art.loadImage(fileName);
+				mapPreviews.put(e.getDisplayName(), tex);
+			}
+		}
+		return mapPreviews;
+	}
+	
 	private void refreshUI() {
 		if(this.panelView!=null) {
 			this.panelView.clear();
@@ -171,8 +193,17 @@ public class ServerSetupScreen implements Screen {
 		createUI();
 	}
 	
+	private TextureRegion getCurrentMapPreview() {
+		if(this.currentMapIndex > -1 && this.currentMapIndex < this.mapListings.size()) {
+			String mapName = this.mapListings.get(this.currentMapIndex).getDisplayName();
+			TextureRegion tex = this.mapPreviews.get(mapName); 
+			return tex;
+		}
+		return null;
+	}
+	
 	private void createUI() {
-		this.panelView = new PanelView<>();
+		this.panelView = new PanelView();
 		this.optionsPanel = new Panel();
 		
 		this.keyInput = new KeyInput();
@@ -230,6 +261,14 @@ public class ServerSetupScreen implements Screen {
 		uiPos.x = startX;
 		uiPos.y = startY;		
 		
+		final ImagePanel previewPanel = new ImagePanel(getCurrentMapPreview());
+		previewPanel.setBounds(new Rectangle(app.getScreenWidth() - 450, startY + 5, 256, 256));		
+		previewPanel.setBackgroundColor(0xff383e18);
+		previewPanel.setForegroundColor(0xff000000);
+//		this.optionsPanel.addWidget(previewPanel);
+//		this.panelView.addElement(new ImagePanelView(previewPanel));
+		
+		
 		setupLabel(uiPos, "Server Name: ", false);
 		
 		uiPos.x = toggleX+95;
@@ -278,6 +317,7 @@ public class ServerSetupScreen implements Screen {
 				
 				gameSettings.currentMap = mapListings.isEmpty() ? new MapEntry("") : mapListings.get(currentMapIndex); 
 				mapBtn.setText(gameSettings.currentMap.getDisplayName());
+				previewPanel.setImage(getCurrentMapPreview());
 			}
 		}); 
 		
@@ -433,7 +473,8 @@ public class ServerSetupScreen implements Screen {
 				currentMapIndex = 0;
 				gameSettings.currentMap = mapListings.isEmpty() ? new MapEntry("") : mapListings.get(currentMapIndex);
 				mapBtn.setText(gameSettings.currentMap.getDisplayName());
-								
+				previewPanel.setImage(getCurrentMapPreview());				
+				
 				event.getButton().setText(gameSettings.gameType.getDisplayName());
 			}
 		});
@@ -565,6 +606,9 @@ public class ServerSetupScreen implements Screen {
 		createBotsPanel(uiPos);
 			
 		this.panelView.addElement(new LabelView(headerLbl));
+		
+		this.optionsPanel.addWidget(previewPanel);
+		this.panelView.addElement(new ImagePanelView(previewPanel));
 				
 	}
 	
@@ -723,6 +767,10 @@ public class ServerSetupScreen implements Screen {
 	public void destroy() {
 		this.optionsPanel.destroy();
 		this.panelView.clear();
+		
+		for(TextureRegion tex : this.mapPreviews.values()) {
+			tex.getTexture().dispose();
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -731,6 +779,8 @@ public class ServerSetupScreen implements Screen {
 	@Override
 	public void update(TimeStep timeStep) {
 		uiManager.update(timeStep);
+		uiManager.checkIfCursorIsHovering();
+		
 		if(load) {
 			menuScreen.startLocalServer(gameSettings);
 			load = false;

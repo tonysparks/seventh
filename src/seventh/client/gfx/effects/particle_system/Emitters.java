@@ -57,6 +57,39 @@ public class Emitters {
 		return emitter;
 	}
 	
+	public static Emitter newBulletImpactFleshEmitter(Vector2f pos, Vector2f targetVel) {
+		// 5, 5200, 4000, 0, 60);
+		// int maxParticles, int emitterTimeToLive, int particleTimeToLive, int timeToNextSpawn, int maxSpread) {
+		
+		Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
+		
+		Emitter emitter = new Emitter(pos, 200, 30)
+							.setName("BulletImpactFleshEmitter")
+							.setDieInstantly(false);
+		BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
+		gen.addSingleParticleGenerator(new SingleParticleGenerator() {
+			
+				@Override
+				public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+					particles.speed[index] = 125f;
+				}
+			})
+		   .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
+		   .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0x660000ff), new Color(0x330000ff)))
+		   .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 120))
+		   .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(600, 950))		   
+		;
+		
+		emitter.addParticleGenerator(gen);
+		
+		emitter.addParticleUpdater(new KillUpdater());
+		emitter.addParticleUpdater(new RandomMovementParticleUpdater(45));
+		emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.82718f));
+		emitter.addParticleRenderer(new CircleParticleRenderer());
+		
+		return emitter;
+	}
+	
 	public static Emitter newGibEmitter(Vector2f pos, int maxParticles) {
 		int emitterTimeToLive = 10_000;
 		int maxSpread = 35;

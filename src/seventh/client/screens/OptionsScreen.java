@@ -5,11 +5,14 @@ package seventh.client.screens;
 
 import java.io.IOException;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.Input.Keys;
+
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.RenderFont;
-import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
 import seventh.client.gfx.VideoConfig;
 import seventh.client.inputs.Inputs;
@@ -44,10 +47,6 @@ import seventh.ui.view.PanelView;
 import seventh.ui.view.SliderView;
 import seventh.ui.view.TextBoxView;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics.DisplayMode;
-import com.badlogic.gdx.Input.Keys;
-
 /**
  * Displays the players options
  * 
@@ -73,7 +72,7 @@ public class OptionsScreen implements Screen {
 	private KeyInput keyInput;
 	
 	private Panel optionsPanel;	
-	private PanelView<Renderable> panelView;
+	private PanelView panelView;
 	
 	private TextBox nameTxtBox;
 	
@@ -105,7 +104,7 @@ public class OptionsScreen implements Screen {
 	
 	
 	private void createUI() {
-		this.panelView = new PanelView<>();
+		this.panelView = new PanelView();
 		this.optionsPanel = new Panel();
 		
 		this.keyInput = new KeyInput();
@@ -562,6 +561,8 @@ public class OptionsScreen implements Screen {
 	public void update(TimeStep timeStep) {
 		this.uiManager.update(timeStep);
 		this.panelView.update(timeStep);
+		
+		this.uiManager.checkIfCursorIsHovering();
 		
 		if(this.isKeyModifyOn>0) {
 			/* skip a frame */
