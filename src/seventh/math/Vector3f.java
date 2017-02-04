@@ -209,4 +209,20 @@ public class Vector3f {
 		dest.y = a.y * scalar;
 		dest.z = a.z * scalar;
 	}
+	
+	
+	/**
+	 * Lerp between the two vectors
+	 *
+	 * @param a
+	 * @param b
+	 * @param alpha
+	 * @param dest
+	 */
+	public static /*strictfp*/ void Vector3fLerp(Vector3f a, Vector3f b, float alpha, Vector3f dest) {
+		final float invAlpha = 1.0f - alpha;
+		dest.x = (a.x * invAlpha) + (b.x * alpha);
+		dest.y = (a.y * invAlpha) + (b.y * alpha);
+		dest.y = (a.z * invAlpha) + (b.z * alpha);
+	}
 }

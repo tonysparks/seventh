@@ -45,7 +45,12 @@ public class UserInterfaceManager extends Inputs {
 	 */
 	private List<Widget> widgets;
 	private Cursor cursor;
-		
+	
+	public UserInterfaceManager(UserInterfaceManager parent) {
+		this.cursor = parent.getCursor();
+		this.widgets = parent.widgets;
+	}
+	
 	/**
 	 * @param eventDispatcher
 	 */

@@ -597,6 +597,7 @@ public class InGameScreen implements Screen {
 		else {
 			this.uiManager.update(timeStep);
 			this.uiManager.checkIfCursorIsHovering();
+			this.dialogView.update(timeStep);
 		}
 			
 		/* capture the inputs for moving the camera if

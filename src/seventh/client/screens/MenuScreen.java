@@ -3,6 +3,11 @@
  */
 package seventh.client.screens;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.Input.Keys;
+
 import leola.vm.Leola;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
@@ -44,12 +49,14 @@ public class MenuScreen implements Screen {
 	
 	private UserInterfaceManager uiManager;
 	
-	private Button singlePlyBtn, multiPlyBtn
-				, optionsBtn, creditsBtn, exitBtn;	
-	
 	private Panel menuPanel;
 	private PanelView panelView;
 
+	private List<Button> menuItems;
+	private int menuIndex;
+	
+	private Inputs inputs;
+	
 	/**
 	 * 
 	 */
@@ -60,23 +67,23 @@ public class MenuScreen implements Screen {
 		this.uiManager = app.getUiManager();
 		this.panelView = new PanelView();
 		this.menuPanel = new Panel();
-				
+		
+		this.menuItems = new ArrayList<>(); 
+		this.menuIndex = 0;		
+		
 		Vector2f uiPos = new Vector2f(app.getScreenWidth()/2, 300);
 		
-		this.singlePlyBtn = setupButton(uiPos, "Single Player");
-		this.singlePlyBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+		setupButton(uiPos, "Single Player").addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
 				app.setScreen(new ServerSetupScreen(MenuScreen.this));
-				
 			}
 		});
 		
 		uiPos.y += 80;
 		
-		this.multiPlyBtn = setupButton(uiPos, "Multiplayer");
-		this.multiPlyBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+		setupButton(uiPos, "Multiplayer").addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
@@ -86,8 +93,7 @@ public class MenuScreen implements Screen {
 		
 		uiPos.y += 80;
 		
-		this.optionsBtn = setupButton(uiPos, "Options");
-		this.optionsBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+		setupButton(uiPos, "Options").addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
@@ -97,8 +103,7 @@ public class MenuScreen implements Screen {
 		
 		uiPos.y += 80;
 		
-		this.creditsBtn = setupButton(uiPos, "Credits");
-		this.creditsBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+		setupButton(uiPos, "Credits").addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
@@ -108,27 +113,14 @@ public class MenuScreen implements Screen {
 		
 		uiPos.y += 80;
 		
-		this.exitBtn = setupButton(uiPos, "Quit");
-		this.exitBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+		setupButton(uiPos, "Quit").addOnButtonClickedListener(new OnButtonClickedListener() {
 			
 			@Override
 			public void onButtonClicked(ButtonEvent event) {
 				app.shutdown();
 			}
 		});
-		
-		this.menuPanel.addWidget(singlePlyBtn);
-		this.menuPanel.addWidget(multiPlyBtn);
-		this.menuPanel.addWidget(optionsBtn);
-		this.menuPanel.addWidget(creditsBtn);
-		this.menuPanel.addWidget(exitBtn);
-		
-		this.panelView.addElement(new ButtonView(singlePlyBtn));
-		this.panelView.addElement(new ButtonView(multiPlyBtn));
-		this.panelView.addElement(new ButtonView(optionsBtn));
-		this.panelView.addElement(new ButtonView(creditsBtn));
-		this.panelView.addElement(new ButtonView(exitBtn));
-		
+			
 		
 		Console console = app.getConsole();
 		console.execute("help");
@@ -140,6 +132,39 @@ public class MenuScreen implements Screen {
 				startLocalServer(null);				
 			}
 		});
+		
+		inputs = new UserInterfaceManager(uiManager) {
+					
+			@Override
+			public boolean keyUp(int key) {
+				if(Keys.DOWN == key) {
+					menuItems.get(menuIndex).setHovering(false);
+					menuIndex += 1;
+					if(menuIndex >= menuItems.size()) {
+						menuIndex = 0;
+					}
+					
+					menuItems.get(menuIndex).setHovering(true);
+					return true;
+				}
+				else if(Keys.UP == key) {
+					menuItems.get(menuIndex).setHovering(false);
+					
+					menuIndex -= 1;
+					if(menuIndex < 0) {
+						menuIndex = menuItems.size() - 1;
+					}
+					
+					menuItems.get(menuIndex).setHovering(true);
+					return true;
+				}
+				else if (Keys.ENTER == key) {
+					menuItems.get(menuIndex).click();
+				}
+				
+				return super.keyUp(key);
+			}
+		};
 	}
 	
 	private Button setupButton(Vector2f uiPos, String text) {
@@ -158,6 +183,12 @@ public class MenuScreen implements Screen {
 				uiManager.getCursor().touchAccuracy();
 			}
 		});
+		
+		this.menuPanel.addWidget(btn);		
+		this.panelView.addElement(new ButtonView(btn));
+		
+		this.menuItems.add(btn);
+		
 		return btn;
 	}
 
@@ -237,6 +268,8 @@ public class MenuScreen implements Screen {
 	public void update(TimeStep timeStep) {
 		this.uiManager.update(timeStep);
 		this.uiManager.checkIfCursorIsHovering();
+		
+		this.panelView.update(timeStep);
 	}
 
 
@@ -299,7 +332,7 @@ public class MenuScreen implements Screen {
 	 */
 	@Override
 	public Inputs getInputs() {
-		return this.uiManager;
+		return this.inputs;
 	}
 
 }

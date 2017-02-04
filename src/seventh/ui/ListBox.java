@@ -143,6 +143,7 @@ public class ListBox extends Widget {
 		button.setTextSize(16);
 		button.setHoverTextSize(17);
 		button.setEnableGradiant(false);			
+		button.setTheme(getTheme());
 		button.getTextLabel().setTextAlignment(TextAlignment.LEFT);
 		button.getTextLabel().setForegroundColor(0xffffffff);
 		this.columnHeaders.add(button);

@@ -145,6 +145,11 @@ public class Widget {
 	private int gradiantColor;
 	
 	/**
+	 * The theme
+	 */
+	private Theme theme;
+	
+	/**
 	 * @param eventDispatcher
 	 */
 	public Widget(EventDispatcher eventDispatcher) {		
@@ -178,8 +183,18 @@ public class Widget {
 	}
 
 	public void setTheme(Theme theme) {
-		setForegroundColor(theme.getForegroundColor());
-		setBackgroundColor(theme.getBackgroundColor());
+		if(theme!=null) {
+			setForegroundColor(theme.getForegroundColor());
+			setBackgroundColor(theme.getBackgroundColor());
+			this.theme = theme;
+		}
+	}
+	
+	/**
+	 * @return the theme
+	 */
+	public Theme getTheme() {
+		return theme;
 	}
 	
 	/**

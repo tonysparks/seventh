@@ -51,6 +51,10 @@ public class LabelView implements Renderable {
 	}
 
 	
+	protected void setColor(Canvas renderer, Label label) {
+		renderer.setColor(label.getForegroundColor(),label.getForegroundAlpha());
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
 	 */
@@ -69,7 +73,7 @@ public class LabelView implements Renderable {
 //			 
 //		}
 		
-		renderer.setColor(this.label.getForegroundColor(),this.label.getForegroundAlpha());
+		setColor(renderer, label);
 		
 		Rectangle bounds = this.label.getScreenBounds(); 
 		if ( this.label.ignoreCR() ) {

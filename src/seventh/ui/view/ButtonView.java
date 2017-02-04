@@ -20,13 +20,17 @@
 */
 package seventh.ui.view;
 
+import com.badlogic.gdx.graphics.Color;
+
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Colors;
 import seventh.client.gfx.Renderable;
+import seventh.client.gfx.Theme;
 import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
+import seventh.ui.Label;
 import seventh.ui.Widget;
 
 /**
@@ -47,14 +51,26 @@ public class ButtonView implements Renderable {
 	 */
 	private LabelView labelView;
 	
+	private Color srcColor, dstColor, currentColor;
+	private float time;
 	
 	/**
 	 * @param button
 	 */
 	public ButtonView(Button button) {
 		this.button = button;
-		
-		this.labelView = new LabelView(this.button.getTextLabel());	
+
+		this.srcColor = new Color();
+		this.dstColor = new Color();
+		this.currentColor = new Color();
+				
+		this.labelView = new LabelView(this.button.getTextLabel()) {			
+			@Override
+			protected void setColor(Canvas renderer, Label label) {
+				renderer.setColor(Color.argb8888(currentColor), (int) (currentColor.a * 255) );
+				//super.setColor(renderer, label);
+			}
+		};
 	}
 
 	/* (non-Javadoc)
@@ -95,7 +111,21 @@ public class ButtonView implements Renderable {
 	/* (non-Javadoc)
 	 * @see org.myriad.render.Renderable#update(org.myriad.core.TimeStep)
 	 */
-	public void update(TimeStep timeStep) {		
+	public void update(TimeStep timeStep) {
+		if(button.isHovering()) {
+			Theme theme = button.getTheme();				
+			Color.argb8888ToColor(this.srcColor, button.getForegroundColor());
+			Color.argb8888ToColor(this.dstColor, (theme!=null) ? theme.getHoverColor() : button.getForegroundColor());
+			
+			time += timeStep.asFraction() * 0.79;						
+			float t = (float)Math.cos(time);
+			this.currentColor.set(this.srcColor.lerp(dstColor, t));
+		}
+		else {
+			time = 0;
+			Color.argb8888ToColor(currentColor, this.button.getForegroundColor());
+			currentColor.a = this.button.getForegroundAlpha() / 255;
+		}
 	}
 
 	/**

@@ -183,7 +183,9 @@ public class Button extends Widget implements Hoverable {
 	@Override
 	public void setTheme(Theme theme) {	
 		super.setTheme(theme);
-		label.setFont(theme.getPrimaryFontName());
+		if(theme!=null) {
+			label.setFont(theme.getPrimaryFontName());
+		}
 	}
 	
 	/**
@@ -245,10 +247,15 @@ public class Button extends Widget implements Hoverable {
 	/**
 	 * @param isHovering the isHovering to set
 	 */
-	private void setHovering(boolean isHovering) {
+	public void setHovering(boolean isHovering) {
 				
 		if(isHovering) {
 			this.label.setTextSize(this.hoverTextSize);
+			Theme theme = getTheme();
+			if(theme!=null) {
+				this.label.setForegroundColor(theme.getHoverColor());
+			}
+			
 			if(!this.isHovering) {
 				Sounds.playGlobalSound(Sounds.uiHover);
 				getEventDispatcher().sendNow(new HoverEvent(this, this));
@@ -256,6 +263,10 @@ public class Button extends Widget implements Hoverable {
 		}
 		else {
 			this.label.setTextSize(this.normalTextSize);
+			Theme theme = getTheme();
+			if(theme!=null) {
+				this.label.setForegroundColor(theme.getForegroundColor());
+			}
 		}
 		this.isHovering = isHovering;
 	}

@@ -175,6 +175,7 @@ public class ServerListingsScreen implements Screen {
 		
 		serverListings = new ListBox();
 		serverListings.setBackgroundColor(0xff383e18);
+		//serverListings.setTheme(theme);
 		serverListings.setBounds(new Rectangle((int)uiPos.x, (int)uiPos.y, app.getScreenWidth() - 220, 400));
 		serverListings.addColumnHeader("Server Name", 340)
 					  .addColumnHeader("Game Type", 200)
@@ -528,7 +529,7 @@ public class ServerListingsScreen implements Screen {
 		this.panelView.update(timeStep);
 		
 		uiManager.checkIfCursorIsHovering();
-		
+				
 		if(update.get()) {
 			refreshConfigUI();
 		}

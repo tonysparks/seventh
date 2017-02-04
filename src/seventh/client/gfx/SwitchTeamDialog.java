@@ -115,6 +115,7 @@ public class SwitchTeamDialog extends Widget {
 		this.cancel.setBounds(new Rectangle(0,0,100,40));
 		this.cancel.getBounds().centerAround(bounds.x+ 200, bounds.y + bounds.height - 20);
 		this.cancel.setEnableGradiant(false);
+		this.cancel.setTheme(theme);
 		this.cancel.getTextLabel().setFont(theme.getSecondaryFontName());
 		this.cancel.getTextLabel().setForegroundColor(theme.getForegroundColor());
 		this.cancel.setTextSize(22);
@@ -139,6 +140,7 @@ public class SwitchTeamDialog extends Widget {
 		btn.setBounds(new Rectangle(200, 30));
 		btn.getBounds().centerAround(pos);
 		btn.setEnableGradiant(false);
+		btn.setTheme(theme.newTheme().setForegroundColor(theme.getHoverColor()).setHoverColor(theme.getForegroundColor()));
 		btn.getTextLabel().setFont(theme.getSecondaryFontName());
 		//btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
 		btn.setTextSize(22);

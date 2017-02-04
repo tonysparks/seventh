@@ -42,6 +42,7 @@ public class SwitchTeamDialogView implements Renderable {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		this.panelView.update(timeStep);
 	}
 
 	/* (non-Javadoc)

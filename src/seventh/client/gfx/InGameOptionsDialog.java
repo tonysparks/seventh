@@ -173,6 +173,7 @@ public class InGameOptionsDialog extends Widget {
 		this.leaveGame.setBounds(new Rectangle(0,0,100,40));
 		this.leaveGame.getBounds().centerAround(bounds.x+ 200, bounds.y + bounds.height - 20);
 		this.leaveGame.setEnableGradiant(false);
+		this.leaveGame.setTheme(theme);
 		this.leaveGame.getTextLabel().setFont(theme.getSecondaryFontName());
 		this.leaveGame.getTextLabel().setForegroundColor(theme.getForegroundColor());
 		this.leaveGame.setTextSize(22);
@@ -188,8 +189,9 @@ public class InGameOptionsDialog extends Widget {
 		btn.setBounds(new Rectangle(200, 30));
 		btn.getBounds().centerAround(pos);
 		btn.setEnableGradiant(false);
+		btn.setTheme(theme.newTheme().setForegroundColor(theme.getHoverColor()).setHoverColor(theme.getForegroundColor()));
 		btn.getTextLabel().setFont(theme.getSecondaryFontName());
-		//btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
+		btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
 		btn.setTextSize(22);
 		btn.setHoverTextSize(26);
 		

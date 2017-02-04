@@ -162,6 +162,11 @@ public class ListBoxView<T extends Renderable> implements Renderable {
 		for(int i = 0; i < size; i++) {
 			this.buttonViews.get(i).update(timeStep);
 		}
+		
+		size = hderButtonViews.size();
+		for(int i = 0; i < size; i++) {
+			this.hderButtonViews.get(i).update(timeStep);
+		}
 	}
 
 }

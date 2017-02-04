@@ -98,6 +98,7 @@ public class WeaponClassDialog extends Widget {
 		this.cancel.setBounds(new Rectangle(0,0,100,40));
 		this.cancel.getBounds().centerAround(bounds.x+ 200, bounds.y + bounds.height - 20);
 		this.cancel.setEnableGradiant(false);
+		this.cancel.setTheme(theme);
 		this.cancel.getTextLabel().setFont(theme.getSecondaryFontName());
 		this.cancel.getTextLabel().setForegroundColor(theme.getForegroundColor());
 		this.cancel.setTextSize(22);

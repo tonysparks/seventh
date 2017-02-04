@@ -47,6 +47,9 @@ public class InGameOptionsDialogView implements Renderable {
 	 */
 	@Override
 	public void update(TimeStep timeStep) {
+		panelView.update(timeStep);
+		weaponClassDialogView.update(timeStep);
+		switchTeamDialogView.update(timeStep);
 	}
 
 	/* (non-Javadoc)
