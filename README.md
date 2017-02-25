@@ -1,9 +1,18 @@
 seventh
 =======
 
-A top down 2D Shooter game I've been working on in my spare time.  This repository only includes the source.  You can download the BETA version of the game here: http://162.243.250.245:8080/seventh/
+A top down 2D Shooter game I've been working on in my spare time.  This repository only includes the source.  
 
+##Download##
+You can download the BETA version of the game [here](https://dl.dropboxusercontent.com/u/11954191/seventh.zip)
+
+
+##Videos/Screenshots##
 [![Seventh Gameplay Video](http://img.youtube.com/vi/JEKWlPJX8V0/0.jpg)](http://youtube.com/watch?v=JEKWlPJX8V0)
+![alt text](http://i.imgur.com/Y8bV3jM.png "Title Screen")
+![alt text](http://i.imgur.com/PgQNj1W.png "In Game")
+![alt text](http://i.imgur.com/BW2Txym.png "In Game #2")
+
 
 ##Features##
 * Three game modes (Team Death Match, Objective Based, Capture the Flag)
@@ -11,6 +20,7 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
 * Melee
 * Grenades
 * Bots
+* Tanks
 * Multiplayer and Single player (Single player vs. Bots)
 
 ##TODO##
@@ -19,7 +29,7 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
 * Create more maps
 * New game types (custom)
 * Flamethrower
-* Tanks/Vehicles
+* More Vehicles
 * Destructable terrain
 * Update HUD
 * Tweak game design
@@ -65,14 +75,5 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
  ```
  java -cp ./lib/*:./lib/libgdx/*:./bin/ -Djava.library.path="./lib/natives" -Xmx1g seventh.ClientMain
  ```
-
-
-
- 
- 
-##Screenshots##
-![alt text](http://i.imgur.com/Y8bV3jM.png "Title Screen")
-![alt text](http://i.imgur.com/PgQNj1W.png "In Game")
-![alt text](http://i.imgur.com/BW2Txym.png "In Game #2")
 
 More to come!
