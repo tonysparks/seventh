@@ -28,9 +28,9 @@ package seventh.ui;
  */
 public class Panel extends Widget {
 
-	/**
-	 */
-	public Panel() {
-	}
+    /**
+     */
+    public Panel() {
+    }
 
 }

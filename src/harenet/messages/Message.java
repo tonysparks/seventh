@@ -18,94 +18,94 @@ import harenet.Transmittable;
  */
 public interface Message extends Transmittable {
 
-	/**
-	 * @return the timeSent
-	 */
-	public long getTimeSent();
-	
-	/**
-	 * @return the message id
-	 */
-	public int getMessageId();
-	
-	/**
-	 * @param messageId
-	 */
-	public void setMessageId(int messageId);
-	
-	/**
-	 * @param timeReceived
-	 */
-	public void setTimeReceived(long timeReceived);
-	
-	/**
-	 * @return the time this message was received
-	 */
-	public long getTimeReceived();
-	
-	/**
-	 * @param timeSent the timeSent to set
-	 */
-	public void setTimeSent(long timeSent);
-	
-	/**
-	 * @return true if this message has been sent at least once
-	 */
-	public boolean hasBeenSent();
-	
-	/**
-	 * @return the sequenceNumberSent
-	 */
-	public int getSequenceNumberSent();
-	
-	/**
-	 * @param sequenceNumberSent the sequenceNumberSent to set
-	 */
-	public void setSequenceNumberSent(int sequenceNumberSent);
-	
-	/**
-	 * Adds the number attempts this was sent
-	 */
-	public void addSequenceNumberSent();
-	
-	/**
-	 * @return the sequencesSent
-	 */
-	public int getSequencesSent();
-	
-	/**
-	 * @return true if a reliable message
-	 */
-	public boolean isReliable();
-	
-	
-	/**
-	 * @return the messages data
-	 */
-	public NetMessage getMessage();
-	
-	/**
-	 * @return the size of this message
-	 */
-	public short getSize();
+    /**
+     * @return the timeSent
+     */
+    public long getTimeSent();
+    
+    /**
+     * @return the message id
+     */
+    public int getMessageId();
+    
+    /**
+     * @param messageId
+     */
+    public void setMessageId(int messageId);
+    
+    /**
+     * @param timeReceived
+     */
+    public void setTimeReceived(long timeReceived);
+    
+    /**
+     * @return the time this message was received
+     */
+    public long getTimeReceived();
+    
+    /**
+     * @param timeSent the timeSent to set
+     */
+    public void setTimeSent(long timeSent);
+    
+    /**
+     * @return true if this message has been sent at least once
+     */
+    public boolean hasBeenSent();
+    
+    /**
+     * @return the sequenceNumberSent
+     */
+    public int getSequenceNumberSent();
+    
+    /**
+     * @param sequenceNumberSent the sequenceNumberSent to set
+     */
+    public void setSequenceNumberSent(int sequenceNumberSent);
+    
+    /**
+     * Adds the number attempts this was sent
+     */
+    public void addSequenceNumberSent();
+    
+    /**
+     * @return the sequencesSent
+     */
+    public int getSequencesSent();
+    
+    /**
+     * @return true if a reliable message
+     */
+    public boolean isReliable();
+    
+    
+    /**
+     * @return the messages data
+     */
+    public NetMessage getMessage();
+    
+    /**
+     * @return the size of this message
+     */
+    public short getSize();
 
-	/**
-	 * @return the number of times this message
-	 * missed transporting because of its size 
-	 * (not fitting into the packet)
-	 */
-	public int getNumberOfDelays();
-	
-	/**
-	 * Delay this message from being sent
-	 * out -- this is due to not fitting
-	 * within the available Packet space.
-	 */
-	public void delay();
-	
-	/**
-	 * @return a copy of this message
-	 */
-	public Message copy();
+    /**
+     * @return the number of times this message
+     * missed transporting because of its size 
+     * (not fitting into the packet)
+     */
+    public int getNumberOfDelays();
+    
+    /**
+     * Delay this message from being sent
+     * out -- this is due to not fitting
+     * within the available Packet space.
+     */
+    public void delay();
+    
+    /**
+     * @return a copy of this message
+     */
+    public Message copy();
 
 }

@@ -13,14 +13,14 @@ import seventh.math.Vector2f;
  */
 public class ClientPanzerTank extends ClientTank {
 
-	/**
-	 * @param game
-	 * @param pos
-	 */
-	public ClientPanzerTank(ClientGame game, Vector2f pos) {
-		super(game, pos);
-		
-		setTankSprite(new PanzerTankSprite(this));
-	}
+    /**
+     * @param game
+     * @param pos
+     */
+    public ClientPanzerTank(ClientGame game, Vector2f pos) {
+        super(game, pos);
+        
+        setTankSprite(new PanzerTankSprite(this));
+    }
 
 }

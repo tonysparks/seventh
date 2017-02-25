@@ -12,6 +12,6 @@ import leola.frontend.listener.EventMethod;
  */
 public interface PlayerKilledListener extends EventListener {
 
-	@EventMethod
-	public void onPlayerKilled(PlayerKilledEvent event);
+    @EventMethod
+    public void onPlayerKilled(PlayerKilledEvent event);
 }

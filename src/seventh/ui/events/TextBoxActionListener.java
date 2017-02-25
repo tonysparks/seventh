@@ -31,10 +31,10 @@ import leola.frontend.listener.EventMethod;
  */
 public interface TextBoxActionListener extends EventListener {
 
-	/**
-	 * The enter key was pressed
-	 * @param event
-	 */
-	@EventMethod
-	public void onEnterPressed(TextBoxActionEvent event);
+    /**
+     * The enter key was pressed
+     * @param event
+     */
+    @EventMethod
+    public void onEnterPressed(TextBoxActionEvent event);
 }

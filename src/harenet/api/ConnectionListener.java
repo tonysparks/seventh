@@ -10,23 +10,23 @@ package harenet.api;
  *
  */
 public interface ConnectionListener {
-	/**
-	 * A connection has been made
-	 * @param conn
-	 */
-	void onConnected(Connection conn);
-	
-	/**
-	 * The connection has been terminated
-	 * @param conn
-	 */
-	void onDisconnected(Connection conn);
-	
-	/**
-	 * A message has been received
-	 * 
-	 * @param conn
-	 * @param msg
-	 */
-	void onReceived(Connection conn, Object msg);
+    /**
+     * A connection has been made
+     * @param conn
+     */
+    void onConnected(Connection conn);
+    
+    /**
+     * The connection has been terminated
+     * @param conn
+     */
+    void onDisconnected(Connection conn);
+    
+    /**
+     * A message has been received
+     * 
+     * @param conn
+     * @param msg
+     */
+    void onReceived(Connection conn, Object msg);
 }

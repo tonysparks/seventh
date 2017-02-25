@@ -15,65 +15,65 @@ import java.net.InetSocketAddress;
  *
  */
 public interface Connection extends Endpoint {
-	
-	/**
-	 * @return this connections ID
-	 */
-	public int getId();
-	
-	/**
-	 * @return true if connected
-	 */
-	public boolean isConnected();
-	
-	/**
-	 * @return the return trip time in msec
-	 */
-	public int getReturnTripTime();
-	
-	/**
-	 * @return the number of bytes sent over the wire to the 
-	 * remote computer
-	 */
-	public long getNumberOfBytesSent();
-	
-	/**
-	 * @return the number of bytes received
-	 */
-	public long getNumberOfBytesReceived();
+    
+    /**
+     * @return this connections ID
+     */
+    public int getId();
+    
+    /**
+     * @return true if connected
+     */
+    public boolean isConnected();
+    
+    /**
+     * @return the return trip time in msec
+     */
+    public int getReturnTripTime();
+    
+    /**
+     * @return the number of bytes sent over the wire to the 
+     * remote computer
+     */
+    public long getNumberOfBytesSent();
+    
+    /**
+     * @return the number of bytes received
+     */
+    public long getNumberOfBytesReceived();
 
-	/**
-	 * @return the average bit rate received
-	 */
-	public long getAvgBitsPerSecRecv();
-	
-	/**
-	 * @return the average bit rate sent
-	 */
-	public long getAvgBitsPerSecSent();
-	
-	
-	/**
-	 * @return the number of dropped packets
-	 */
-	public long getNumberOfDroppedPackets();
-	
-	/**
-	 * @return the number of bytes compressed
-	 */
-	public long getNumberOfBytesCompressed();
-	
-	/**
-	 * Sends a message to the server
-	 * @param protocolFlags
-	 * @param msg
-	 * @throws IOException
-	 */
-	public void send(int protocolFlags, NetMessage msg) throws IOException;
-	
-	/**
-	 * @return the remote address
-	 */
-	public InetSocketAddress getRemoteAddress();
+    /**
+     * @return the average bit rate received
+     */
+    public long getAvgBitsPerSecRecv();
+    
+    /**
+     * @return the average bit rate sent
+     */
+    public long getAvgBitsPerSecSent();
+    
+    
+    /**
+     * @return the number of dropped packets
+     */
+    public long getNumberOfDroppedPackets();
+    
+    /**
+     * @return the number of bytes compressed
+     */
+    public long getNumberOfBytesCompressed();
+    
+    /**
+     * Sends a message to the server
+     * @param protocolFlags
+     * @param msg
+     * @throws IOException
+     */
+    public void send(int protocolFlags, NetMessage msg) throws IOException;
+    
+    /**
+     * @return the remote address
+     */
+    public InetSocketAddress getRemoteAddress();
 
 }

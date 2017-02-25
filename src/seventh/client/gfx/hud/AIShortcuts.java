@@ -33,7 +33,7 @@ public class AIShortcuts {
      * 
      */
     public AIShortcuts(KeyMap keyMap, List<AIShortcut> commands, AIShortcut hotCommand, AIShortcut secondaryHotCommand) {
-    	this.keyMap = keyMap;
+        this.keyMap = keyMap;
         this.commands = commands;
         this.hotCommand = hotCommand;
         this.secondaryHotCommand = secondaryHotCommand;
@@ -83,16 +83,16 @@ public class AIShortcuts {
     }
     
     private boolean checkHotKey(AIShortcut hotCommand, boolean wasDown, boolean isDown, Console console, ClientGame game) {
-    	if(isDown) {
-    		wasDown = true;
+        if(isDown) {
+            wasDown = true;
         }
         
         if(wasDown && !isDown) {
-        	hotCommand.execute(console, game);
+            hotCommand.execute(console, game);
         }
         
         if(!isDown) {
-        	wasDown = false;
+            wasDown = false;
         }
         
         return wasDown;
@@ -112,7 +112,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-        	int botId = getBotId(game);
+            int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 ClientPlayer bot = players.getPlayer(botId);                
@@ -140,7 +140,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-        	int botId = getBotId(game);
+            int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -165,7 +165,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-        	int botId = getBotId(game);
+            int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -189,7 +189,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-        	int botId = getBotId(game);
+            int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " defuseBomb");
@@ -211,7 +211,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-        	int botId = getBotId(game);
+            int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " plantBomb");
@@ -234,7 +234,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-        	int botId = getBotId(game);
+            int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " defendBomb");
@@ -258,7 +258,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game) {
-        	int botId = getBotId(game);
+            int botId = getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);

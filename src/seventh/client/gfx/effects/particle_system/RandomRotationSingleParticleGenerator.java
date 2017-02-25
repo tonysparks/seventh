@@ -16,17 +16,17 @@ import seventh.shared.TimeStep;
  */
 public class RandomRotationSingleParticleGenerator implements SingleParticleGenerator {
 
-	public RandomRotationSingleParticleGenerator() {
-	}
+    public RandomRotationSingleParticleGenerator() {
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
-	 */
-	@Override
-	public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
-		Random rand = particles.emitter.getRandom();
-		float rotation = rand.nextInt(360);
-		particles.rotation[index] = rotation;
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
+     */
+    @Override
+    public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+        Random rand = particles.emitter.getRandom();
+        float rotation = rand.nextInt(360);
+        particles.rotation[index] = rotation;
+    }
 
 }

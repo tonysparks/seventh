@@ -98,11 +98,11 @@ public class Edge<E, T> {
     }       
     
     public void removeEdge() {
-    	if(this.left!=null) {
-    		this.left.removeEdge(this);
-    	}
-    	if(this.right!=null) {
-    		this.right.removeEdge(this);
-    	}
+        if(this.left!=null) {
+            this.left.removeEdge(this);
+        }
+        if(this.right!=null) {
+            this.right.removeEdge(this);
+        }
     }
 }

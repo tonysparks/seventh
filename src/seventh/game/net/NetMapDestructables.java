@@ -15,7 +15,7 @@ public class NetMapDestructables implements NetMessage {
     /** Should be viewed as Unsigned Bytes, they are stored in the form
      * of even index = x, odd index = y, example: [1,0,4,7] => tiles at: (1,0) and (4,7) */
     public int[] tiles;
-	
+    
     @Override
     public void read(IOBuffer buffer) { 
         this.length = buffer.getInt();

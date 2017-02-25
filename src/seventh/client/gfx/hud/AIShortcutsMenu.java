@@ -17,7 +17,7 @@ import seventh.shared.TimeStep;
  */
 public class AIShortcutsMenu implements Renderable {
 
-	private final ClientGame game;
+    private final ClientGame game;
     private AIShortcuts shortcuts;
     private boolean show;
     
@@ -28,7 +28,7 @@ public class AIShortcutsMenu implements Renderable {
      * 
      */
     public AIShortcutsMenu(ClientGame game, KeyMap keyMap, AIShortcuts shortcuts) {
-    	this.game = game;
+        this.game = game;
         this.shortcuts = shortcuts;
         
         this.texts = new String[this.shortcuts.getCommands().size() + 1];

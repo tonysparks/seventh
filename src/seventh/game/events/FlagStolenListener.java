@@ -14,6 +14,6 @@ import leola.frontend.listener.EventMethod;
  */
 public interface FlagStolenListener extends EventListener {
 
-	@EventMethod
-	public void onFlagStolenEvent(FlagStolenEvent event);
+    @EventMethod
+    public void onFlagStolenEvent(FlagStolenEvent event);
 }

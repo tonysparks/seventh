@@ -13,10 +13,10 @@ import seventh.client.gfx.Cursor;
  */
 public interface Hoverable {
 
-	/**
-	 * If the {@link Cursor} is hovering over this {@link Widget}
-	 * 
-	 * @return true if the {@link Cursor} is hovering over this {@link Widget}
-	 */
-	public boolean isHovering();
+    /**
+     * If the {@link Cursor} is hovering over this {@link Widget}
+     * 
+     * @return true if the {@link Cursor} is hovering over this {@link Widget}
+     */
+    public boolean isHovering();
 }

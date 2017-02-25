@@ -9,10 +9,10 @@ package seventh.network.messages;
  *
  */
 public class ClientDisconnectMessage extends AbstractNetMessage {
-	/**
-	 * 
-	 */
-	public ClientDisconnectMessage() {
-		super(BufferIO.CLIENT_DISCONNECTED);
-	}
+    /**
+     * 
+     */
+    public ClientDisconnectMessage() {
+        super(BufferIO.CLIENT_DISCONNECTED);
+    }
 }

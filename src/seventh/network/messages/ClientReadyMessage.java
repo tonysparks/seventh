@@ -9,10 +9,10 @@ package seventh.network.messages;
  *
  */
 public class ClientReadyMessage extends AbstractNetMessage {
-	/**
-	 * 
-	 */
-	public ClientReadyMessage() {
-		super(BufferIO.CLIENT_READY);
-	}
+    /**
+     * 
+     */
+    public ClientReadyMessage() {
+        super(BufferIO.CLIENT_READY);
+    }
 }

@@ -11,20 +11,20 @@ import seventh.client.gfx.Shader;
  */
 public class MarkEffectShader extends Shader {
 
-	private static final Shader INSTANCE = new MarkEffectShader();
-	
-	/**
-	 */
-	private MarkEffectShader() {
-		super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/inprint.frag");
-	}
-	
-	
-	/**
-	 * @return
-	 */
-	public static Shader getInstance() {
-		return INSTANCE;
-	}
+    private static final Shader INSTANCE = new MarkEffectShader();
+    
+    /**
+     */
+    private MarkEffectShader() {
+        super("./assets/gfx/shaders/base.vert", "./assets/gfx/shaders/inprint.frag");
+    }
+    
+    
+    /**
+     * @return
+     */
+    public static Shader getInstance() {
+        return INSTANCE;
+    }
 
 }

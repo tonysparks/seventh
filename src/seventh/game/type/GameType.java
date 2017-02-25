@@ -22,99 +22,99 @@ import seventh.shared.TimeStep;
  */
 public interface GameType extends Debugable {
 
-	public static enum Type {
-		TDM("Team Death Match"),
-		OBJ("Objective Based Match"),
-		CTF("Capture The Flag"),
-		
-		;
-		
-		private String displayName;
-		
-		/**
-		 * 
-		 */
-		private Type(String displayName) {
-			this.displayName = displayName;
-		}
-		
-		/**
-		 * @return the displayName
-		 */
-		public String getDisplayName() {
-			return displayName;
-		}
-		
-		/**
-		 * @return the network value
-		 */
-		public byte netValue() {
-			return (byte)ordinal();
-		}
-		
-		private static final Type[] values = values();
-		
-		public static Type fromNet(byte value) {
-			if(value<0 || value >= values.length) {
-				return TDM;
-			}
-			
-			return values[value];
-		}
-		
-		public static Type toType(String gameType) {
-			Type result = TDM;
-			if(gameType != null) {			
-				if("obj".equalsIgnoreCase(gameType.trim())) {
-					result = OBJ;
-				}
-				else if ("ctf".equalsIgnoreCase(gameType.trim())) {
-					result = CTF;
-				}
-			}
-			
-			return result;
-		}
-	}
-	
-	public static enum GameState {
-		INTERMISSION,
-		IN_PROGRESS,
-		WINNER,
-		TIE,
-		;
-		
-		public byte netValue() {
-			return (byte)ordinal();
-		}
-	}
-	public void start(Game game);
-	public GameState update(Game game, TimeStep timeStep);
-		
-	public void registerListeners(Game game, EventDispatcher dispatcher);
-	
-	public Team getAlliedTeam();
-	public Team getAxisTeam();
-	
-	public void playerJoin(Player player);
-	public void playerLeft(Player player);
-	
-	public Team getTeam(Player player);
-	public Team getEnemyTeam(Player player);
-	public boolean switchTeam(Player player, byte teamId);
-	
-	public long getMatchTime();
-	public int getMaxScore();
-	public long getRemainingTime();
-	public boolean isInProgress();
-	public Type getType();
-		
-	public Player getNextPlayerToSpectate(Players players, Player spectator);
-	public Player getPrevPlayerToSpectate(Players players, Player spectator);
-		
-	public NetGameTypeInfo getNetGameTypeInfo();
-	public NetTeamStat[] getNetTeamStats();
-	
-	public List<Vector2f> getAlliedSpawnPoints();
-	public List<Vector2f> getAxisSpawnPoints();
+    public static enum Type {
+        TDM("Team Death Match"),
+        OBJ("Objective Based Match"),
+        CTF("Capture The Flag"),
+        
+        ;
+        
+        private String displayName;
+        
+        /**
+         * 
+         */
+        private Type(String displayName) {
+            this.displayName = displayName;
+        }
+        
+        /**
+         * @return the displayName
+         */
+        public String getDisplayName() {
+            return displayName;
+        }
+        
+        /**
+         * @return the network value
+         */
+        public byte netValue() {
+            return (byte)ordinal();
+        }
+        
+        private static final Type[] values = values();
+        
+        public static Type fromNet(byte value) {
+            if(value<0 || value >= values.length) {
+                return TDM;
+            }
+            
+            return values[value];
+        }
+        
+        public static Type toType(String gameType) {
+            Type result = TDM;
+            if(gameType != null) {            
+                if("obj".equalsIgnoreCase(gameType.trim())) {
+                    result = OBJ;
+                }
+                else if ("ctf".equalsIgnoreCase(gameType.trim())) {
+                    result = CTF;
+                }
+            }
+            
+            return result;
+        }
+    }
+    
+    public static enum GameState {
+        INTERMISSION,
+        IN_PROGRESS,
+        WINNER,
+        TIE,
+        ;
+        
+        public byte netValue() {
+            return (byte)ordinal();
+        }
+    }
+    public void start(Game game);
+    public GameState update(Game game, TimeStep timeStep);
+        
+    public void registerListeners(Game game, EventDispatcher dispatcher);
+    
+    public Team getAlliedTeam();
+    public Team getAxisTeam();
+    
+    public void playerJoin(Player player);
+    public void playerLeft(Player player);
+    
+    public Team getTeam(Player player);
+    public Team getEnemyTeam(Player player);
+    public boolean switchTeam(Player player, byte teamId);
+    
+    public long getMatchTime();
+    public int getMaxScore();
+    public long getRemainingTime();
+    public boolean isInProgress();
+    public Type getType();
+        
+    public Player getNextPlayerToSpectate(Players players, Player spectator);
+    public Player getPrevPlayerToSpectate(Players players, Player spectator);
+        
+    public NetGameTypeInfo getNetGameTypeInfo();
+    public NetTeamStat[] getNetTeamStats();
+    
+    public List<Vector2f> getAlliedSpawnPoints();
+    public List<Vector2f> getAxisSpawnPoints();
 }

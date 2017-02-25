@@ -17,24 +17,24 @@ import seventh.shared.TimeStep;
  */
 public class RandomScaleSingleParticleGenerator implements SingleParticleGenerator {
 
-	private final float minScale, maxScale;
-	
-	/**
-	 * 
-	 */
-	public RandomScaleSingleParticleGenerator(float minScale, float maxScale) {
-		this.minScale = minScale;
-		this.maxScale = maxScale;
-	}
+    private final float minScale, maxScale;
+    
+    /**
+     * 
+     */
+    public RandomScaleSingleParticleGenerator(float minScale, float maxScale) {
+        this.minScale = minScale;
+        this.maxScale = maxScale;
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
-	 */
-	@Override
-	public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
-		Random rand = particles.emitter.getRandom();
-		float scale = (float)Randomizer.getRandomRange(rand, this.minScale, this.maxScale);
-		particles.scale[index] = scale;
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
+     */
+    @Override
+    public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+        Random rand = particles.emitter.getRandom();
+        float scale = (float)Randomizer.getRandomRange(rand, this.minScale, this.maxScale);
+        particles.scale[index] = scale;
+    }
 
 }

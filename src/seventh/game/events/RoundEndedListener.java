@@ -13,10 +13,10 @@ import leola.frontend.listener.EventMethod;
  */
 public interface RoundEndedListener extends EventListener {
 
-	/**
-	 * A round has ended
-	 * @param event
-	 */
-	@EventMethod
-	public void onRoundEnded(RoundEndedEvent event);
+    /**
+     * A round has ended
+     * @param event
+     */
+    @EventMethod
+    public void onRoundEnded(RoundEndedEvent event);
 }

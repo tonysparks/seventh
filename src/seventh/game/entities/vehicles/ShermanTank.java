@@ -14,12 +14,12 @@ import seventh.math.Vector2f;
  */
 public class ShermanTank extends Tank {
 
-	/**
-	 * @param position
-	 * @param game
-	 */
-	public ShermanTank(Vector2f position, Game game, long timeToKill) {
-		super(Type.SHERMAN_TANK, position, game, timeToKill);
-	}
+    /**
+     * @param position
+     * @param game
+     */
+    public ShermanTank(Vector2f position, Game game, long timeToKill) {
+        super(Type.SHERMAN_TANK, position, game, timeToKill);
+    }
 
 }

@@ -15,22 +15,22 @@ import seventh.shared.TimeStep;
  */
 public class KillIfAttachedIsDeadUpdater implements ParticleUpdater {
 
-	/**
-	 * 
-	 */
-	public KillIfAttachedIsDeadUpdater() {
-	}
+    /**
+     * 
+     */
+    public KillIfAttachedIsDeadUpdater() {
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.Emitter.ParticleUpdater#update(seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
-	 */
-	@Override
-	public void update(TimeStep timeStep, ParticleData particles) {
-		Emitter emitter = particles.emitter;
-		ClientEntity ent = emitter.attachedTo();
-		if(ent!=null && !ent.isAlive()) {
-			emitter.stop();
-		}
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.particle_system.Emitter.ParticleUpdater#update(seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
+     */
+    @Override
+    public void update(TimeStep timeStep, ParticleData particles) {
+        Emitter emitter = particles.emitter;
+        ClientEntity ent = emitter.attachedTo();
+        if(ent!=null && !ent.isAlive()) {
+            emitter.stop();
+        }
+    }
 
 }

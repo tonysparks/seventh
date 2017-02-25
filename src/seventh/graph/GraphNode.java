@@ -45,10 +45,10 @@ public class GraphNode<E, T> {
     }
     
     public void removeEdge(Directions dir) {
-    	this.edges.removeEdge(dir);
+        this.edges.removeEdge(dir);
     }
     public void removeEdge(Edge<E,T> edge) {
-    	this.edges.removeEdge(edge);
+        this.edges.removeEdge(edge);
     }
     
     /**
@@ -92,9 +92,9 @@ public class GraphNode<E, T> {
         for(int i = 0; i < edges.size(); i++) {
             Edge<E,T> edge = edges.get(i);
             if(edge == null) {
-            	continue;
+                continue;
             }
-        	
+            
             /* Notice we check if the REFERENCE equals the right node */
             if (edge.getRight() == rightNode) {
                 result = edge;

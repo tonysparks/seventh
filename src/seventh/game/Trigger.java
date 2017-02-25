@@ -15,19 +15,19 @@ import seventh.map.Tile;
  */
 public interface Trigger {
 
-	
-	/**
-	 * The condition in which a {@link Trigger} is triggered
-	 * 
-	 * @param game
-	 * @return true if the condition is met
-	 */
-	public boolean checkCondition(Game game);
+    
+    /**
+     * The condition in which a {@link Trigger} is triggered
+     * 
+     * @param game
+     * @return true if the condition is met
+     */
+    public boolean checkCondition(Game game);
 
-	/**
-	 * Executes the {@link Trigger}
-	 * 
-	 * @param game
-	 */
-	public void execute(Game game);
+    /**
+     * Executes the {@link Trigger}
+     * 
+     * @param game
+     */
+    public void execute(Game game);
 }

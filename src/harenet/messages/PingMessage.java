@@ -15,23 +15,23 @@ import harenet.MessageHeader;
  *
  */
 public class PingMessage extends AbstractMessage {
-	
-	/**
-	 * Cached instance to reduce GC load
-	 */
-	public static final PingMessage INSTANCE = new PingMessage();
-	
-	/**
-	 */
-	public PingMessage() {
-		super(MessageHeader.PING_MESSAGE);
-	}
-	
-	/* (non-Javadoc)
-	 * @see netspark.messages.Message#copy()
-	 */
-	@Override
-	public Message copy() {	
-		return INSTANCE;
-	}
+    
+    /**
+     * Cached instance to reduce GC load
+     */
+    public static final PingMessage INSTANCE = new PingMessage();
+    
+    /**
+     */
+    public PingMessage() {
+        super(MessageHeader.PING_MESSAGE);
+    }
+    
+    /* (non-Javadoc)
+     * @see netspark.messages.Message#copy()
+     */
+    @Override
+    public Message copy() {    
+        return INSTANCE;
+    }
 }

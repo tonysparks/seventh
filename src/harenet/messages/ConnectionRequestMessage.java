@@ -14,17 +14,17 @@ import harenet.MessageHeader;
 public class ConnectionRequestMessage extends AbstractReliableMessage {
 
 
-	/**
-	 */
-	public ConnectionRequestMessage() {
-		super(MessageHeader.CONNECTION_REQUEST_MESSAGE);
-	}
+    /**
+     */
+    public ConnectionRequestMessage() {
+        super(MessageHeader.CONNECTION_REQUEST_MESSAGE);
+    }
 
-	/* (non-Javadoc)
-	 * @see netspark.messages.Message#copy()
-	 */
-	@Override
-	public Message copy() {	
-		return new ConnectionRequestMessage();
-	}
+    /* (non-Javadoc)
+     * @see netspark.messages.Message#copy()
+     */
+    @Override
+    public Message copy() {    
+        return new ConnectionRequestMessage();
+    }
 }

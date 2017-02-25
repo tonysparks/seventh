@@ -18,19 +18,19 @@ import seventh.shared.TimeStep;
  */
 public class RandomColorSingleParticleGenerator implements SingleParticleGenerator {
 
-	private Color[] colors;
-	
-	public RandomColorSingleParticleGenerator(Color ... colors) {
-		this.colors = colors;
-	} 
+    private Color[] colors;
+    
+    public RandomColorSingleParticleGenerator(Color ... colors) {
+        this.colors = colors;
+    } 
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
-	 */
-	@Override
-	public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
-		Random rand = particles.emitter.getRandom();
-		particles.color[index].set(this.colors[rand.nextInt(this.colors.length)]);				
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
+     */
+    @Override
+    public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+        Random rand = particles.emitter.getRandom();
+        particles.color[index].set(this.colors[rand.nextInt(this.colors.length)]);                
+    }
 
 }

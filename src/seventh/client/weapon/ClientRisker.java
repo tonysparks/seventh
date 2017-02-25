@@ -15,60 +15,60 @@ import seventh.shared.WeaponConstants;
  */
 public class ClientRisker extends ClientWeapon {
 
-	private final long weaponTime = 1300;
-	private long timer;
-	
-	/**
-	 * @param ownerId
-	 */
-	public ClientRisker(ClientPlayerEntity owner) {
-		super(owner);
+    private final long weaponTime = 1300;
+    private long timer;
+    
+    /**
+     * @param ownerId
+     */
+    public ClientRisker(ClientPlayerEntity owner) {
+        super(owner);
 
-		this.weaponIcon = Art.riskerIcon;
-//		this.weaponImage = Art.sniperRifleImage;
-		this.weaponImage = Art.riskerImage;
-		this.muzzleFlash = Art.newRiskerMuzzleFlash();
-		this.weaponWeight = WeaponConstants.RISKER_WEIGHT;
-		
-		this.weaponKickTime = 280; 
-		this.endFireKick = 18.7f; 
-		this.beginFireKick = 0f; 
-	}
+        this.weaponIcon = Art.riskerIcon;
+//        this.weaponImage = Art.sniperRifleImage;
+        this.weaponImage = Art.riskerImage;
+        this.muzzleFlash = Art.newRiskerMuzzleFlash();
+        this.weaponWeight = WeaponConstants.RISKER_WEIGHT;
+        
+        this.weaponKickTime = 280; 
+        this.endFireKick = 18.7f; 
+        this.beginFireKick = 0f; 
+    }
 
-	/* (non-Javadoc)
-	 * @see palisma.client.weapon.ClientWeapon#update(leola.live.TimeStep)
-	 */
-	@Override
-	public void update(TimeStep timeStep) {
-		super.update(timeStep);
-		
-		if(getState() == State.READY) {			
-			timer = -1;			
-		}
-				
-		timer -= timeStep.getDeltaTime();
-		
-		if(getState() == State.FIRING) {
-			if(timer<=0) {
-				timer = weaponTime;
-				//Sounds.startPlaySound(fireSound, channelId);
-			}
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.client.weapon.ClientWeapon#isBurstFire()
-	 */
-	@Override
-	public boolean isBurstFire() {	
-		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see palisma.client.weapon.ClientWeapon#onFire()
-	 */
-	@Override
-	protected boolean onFire() {		
-		return true;
-	}
+    /* (non-Javadoc)
+     * @see palisma.client.weapon.ClientWeapon#update(leola.live.TimeStep)
+     */
+    @Override
+    public void update(TimeStep timeStep) {
+        super.update(timeStep);
+        
+        if(getState() == State.READY) {            
+            timer = -1;            
+        }
+                
+        timer -= timeStep.getDeltaTime();
+        
+        if(getState() == State.FIRING) {
+            if(timer<=0) {
+                timer = weaponTime;
+                //Sounds.startPlaySound(fireSound, channelId);
+            }
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.weapon.ClientWeapon#isBurstFire()
+     */
+    @Override
+    public boolean isBurstFire() {    
+        return true;
+    }
+    
+    /* (non-Javadoc)
+     * @see palisma.client.weapon.ClientWeapon#onFire()
+     */
+    @Override
+    protected boolean onFire() {        
+        return true;
+    }
 }

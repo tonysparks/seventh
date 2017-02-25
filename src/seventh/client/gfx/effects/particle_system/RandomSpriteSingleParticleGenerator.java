@@ -20,24 +20,24 @@ import seventh.shared.TimeStep;
  */
 public class RandomSpriteSingleParticleGenerator implements SingleParticleGenerator {
 
-	private TextureRegion[] regions;
-	/**
-	 * 
-	 */
-	public RandomSpriteSingleParticleGenerator(TextureRegion ... regions) {
-		this.regions = regions;
-	}
+    private TextureRegion[] regions;
+    /**
+     * 
+     */
+    public RandomSpriteSingleParticleGenerator(TextureRegion ... regions) {
+        this.regions = regions;
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
-	 */
-	@Override
-	public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
-		Random rand = particles.emitter.getRandom();
-		particles.sprite[index].set(new Sprite(this.regions[rand.nextInt(this.regions.length)]));
-		particles.sprite[index].setFlip(false, true);
-//		particles.sprite[index] = new Sprite(this.regions[rand.nextInt(this.regions.length)]);
-//		particles.sprite[index].flip(false, true);
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.particle_system.BatchedParticleGenerator.SingleParticleGenerator#onGenerateParticle(int, seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
+     */
+    @Override
+    public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+        Random rand = particles.emitter.getRandom();
+        particles.sprite[index].set(new Sprite(this.regions[rand.nextInt(this.regions.length)]));
+        particles.sprite[index].setFlip(false, true);
+//        particles.sprite[index] = new Sprite(this.regions[rand.nextInt(this.regions.length)]);
+//        particles.sprite[index].flip(false, true);
+    }
 
 }

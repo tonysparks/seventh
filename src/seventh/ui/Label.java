@@ -30,125 +30,125 @@ import seventh.client.gfx.Theme;
  */
 public class Label extends Widget {
 
-	/**
-	 * Text alignment.
-	 * 
-	 * @author Tony
-	 *
-	 */
-	public enum TextAlignment {
-		CENTER
-		, LEFT
-		, RIGHT
-	}
-	
-	/**
-	 * Text alignment
-	 */
-	private TextAlignment textAlignment;
-	
-	/**
-	 * The text on the label
-	 */
-	private String text;
-	private String font;
-	
-	/**
-	 * Text size
-	 */
-	private float textSize;
-	
-	/**
-	 * Ignore carriage return
-	 */
-	private boolean ignoreCR;
-	
-	/**
-	 * @param text
-	 */
-	public Label(String text) {
-		this.text = text;
-		this.textSize = 12;
-		this.ignoreCR = true;
-		
-		this.textAlignment = TextAlignment.CENTER;
-		this.font = Theme.DEFAULT_FONT;
-	}
-	
-	/**
-	 */
-	public Label() {
-		this("");
-	}
+    /**
+     * Text alignment.
+     * 
+     * @author Tony
+     *
+     */
+    public enum TextAlignment {
+        CENTER
+        , LEFT
+        , RIGHT
+    }
+    
+    /**
+     * Text alignment
+     */
+    private TextAlignment textAlignment;
+    
+    /**
+     * The text on the label
+     */
+    private String text;
+    private String font;
+    
+    /**
+     * Text size
+     */
+    private float textSize;
+    
+    /**
+     * Ignore carriage return
+     */
+    private boolean ignoreCR;
+    
+    /**
+     * @param text
+     */
+    public Label(String text) {
+        this.text = text;
+        this.textSize = 12;
+        this.ignoreCR = true;
+        
+        this.textAlignment = TextAlignment.CENTER;
+        this.font = Theme.DEFAULT_FONT;
+    }
+    
+    /**
+     */
+    public Label() {
+        this("");
+    }
 
-	
-	/**
-	 * @return the font
-	 */
-	public String getFont() {
-		return font;
-	}
-	
-	/**
-	 * @param font the font to set
-	 */
-	public void setFont(String font) {
-		this.font = font;
-	}
-	
-	/**
-	 * @return the text
-	 */
-	public String getText() {
-		return text;
-	}
+    
+    /**
+     * @return the font
+     */
+    public String getFont() {
+        return font;
+    }
+    
+    /**
+     * @param font the font to set
+     */
+    public void setFont(String font) {
+        this.font = font;
+    }
+    
+    /**
+     * @return the text
+     */
+    public String getText() {
+        return text;
+    }
 
-	/**
-	 * @param text the text to set
-	 */
-	public void setText(String text) {
-		this.text = text;
-	}
+    /**
+     * @param text the text to set
+     */
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	/**
-	 * @return the textSize
-	 */
-	public float getTextSize() {
-		return textSize;
-	}
+    /**
+     * @return the textSize
+     */
+    public float getTextSize() {
+        return textSize;
+    }
 
-	/**
-	 * @param textSize the textSize to set
-	 */
-	public void setTextSize(float textSize) {
-		this.textSize = textSize;
-	}
+    /**
+     * @param textSize the textSize to set
+     */
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
+    }
 
-	/**
-	 * @return the ignoreCR
-	 */
-	public boolean ignoreCR() {
-		return ignoreCR;
-	}
+    /**
+     * @return the ignoreCR
+     */
+    public boolean ignoreCR() {
+        return ignoreCR;
+    }
 
-	/**
-	 * @param ignoreCR the ignoreCR to set
-	 */
-	public void setIgnoreCR(boolean ignoreCR) {
-		this.ignoreCR = ignoreCR;
-	}		
-	
-	/**
-	 * @param textAlignment the textAlignment to set
-	 */
-	public void setTextAlignment(TextAlignment textAlignment) {
-		this.textAlignment = textAlignment;
-	}
-	
-	/**
-	 * @return the textAlignment
-	 */
-	public TextAlignment getTextAlignment() {
-		return textAlignment;
-	}
+    /**
+     * @param ignoreCR the ignoreCR to set
+     */
+    public void setIgnoreCR(boolean ignoreCR) {
+        this.ignoreCR = ignoreCR;
+    }        
+    
+    /**
+     * @param textAlignment the textAlignment to set
+     */
+    public void setTextAlignment(TextAlignment textAlignment) {
+        this.textAlignment = textAlignment;
+    }
+    
+    /**
+     * @return the textAlignment
+     */
+    public TextAlignment getTextAlignment() {
+        return textAlignment;
+    }
 }

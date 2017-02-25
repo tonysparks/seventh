@@ -17,8 +17,8 @@ import seventh.shared.TimeStep;
  */
 public class HealthPack extends Entity {
 
-	private NetEntity netEntity;
-	
+    private NetEntity netEntity;
+    
     /**
      * @param position
      * @param game
@@ -61,7 +61,7 @@ public class HealthPack extends Entity {
      */
     @Override
     public NetEntity getNetEntity() {
-    	setNetEntity(this.netEntity);
+        setNetEntity(this.netEntity);
         return this.netEntity;
     }
 
@@ -77,8 +77,8 @@ public class HealthPack extends Entity {
      * @see seventh.game.Entity#update(seventh.shared.TimeStep)
      */
     @Override
-    public boolean update(TimeStep timeStep) {    	
-    	game.doesTouchPlayers(this);    	
+    public boolean update(TimeStep timeStep) {        
+        game.doesTouchPlayers(this);        
         return true;
     }
 }

@@ -23,93 +23,93 @@ import seventh.math.Rectangle;
  */
 public class Communicator {
 
-	private Queue<Action> commands;
-	private World world;
-	
-	private Rectangle broadcastBounds;
-	
-	/**
-	 * @param world
-	 */
-	public Communicator(World world) {
-		this.world = world;
-		this.commands = new ConcurrentLinkedQueue<Action>();
-		this.broadcastBounds = new Rectangle(1000, 1000);
-	}
-	
-	/**
-	 * Resets this {@link Communicator}
-	 * 
-	 * @param brain
-	 */
-	public void reset(Brain brain) {
-		this.commands.clear();
-	}
-	
-	/**
-	 * @return true if there are pending {@link Action}s to be processed
-	 */
-	public boolean hasPendingCommands() {
-		return !this.commands.isEmpty();
-	}
-	
-	
-	/**
-	 * @return peeks at the next action
-	 */
-	public Action peek() {
-		Action cmd = commands.peek();
-		return cmd;
-	}
-	
-	/**
-	 * Receives any pending {@link Action}s.
-	 * 
-	 */
-	public Action poll() {
-		Action cmd = commands.poll();
-		return cmd;
-	}
-	
-	/**
-	 * Post a command to this bot
-	 * @param cmd
-	 */
-	public void post(Action cmd) {
-		this.commands.add(cmd);
-	}
-	
-	/**
-	 * Removes all previous posted {@link Action}s and makes the supplied
-	 * Action the only {@link Action}
-	 * @param cmd
-	 */
-	public void makeTopPriority(Action cmd) {
-		this.commands.clear();
-		this.commands.add(cmd);
-	}
-	
-	/**
-	 * Broadcasts an action for another entity to pick up
-	 * 
-	 * @param cmd
-	 */
-	public void broadcastAction(Brain brain, Action cmd) {
-		if(brain.getPlayer().isAlive()) {
-			broadcastBounds.centerAround(brain.getEntityOwner().getCenterPos());
-			List<Player> teammates = world.getTeammates(brain);
-			for(int i = 0; i < teammates.size(); i++) {
-				Player player = teammates.get(i);
-				if(player.isBot() && player.isAlive()) {
-					
-					PlayerEntity ent = player.getEntity();
-					if(broadcastBounds.intersects(ent.getBounds())) {
-						Brain other = world.getBrain(player.getId());
-						other.getCommunicator().post(cmd);
-					}
-					
-				}
-			}
-		}
-	}
+    private Queue<Action> commands;
+    private World world;
+    
+    private Rectangle broadcastBounds;
+    
+    /**
+     * @param world
+     */
+    public Communicator(World world) {
+        this.world = world;
+        this.commands = new ConcurrentLinkedQueue<Action>();
+        this.broadcastBounds = new Rectangle(1000, 1000);
+    }
+    
+    /**
+     * Resets this {@link Communicator}
+     * 
+     * @param brain
+     */
+    public void reset(Brain brain) {
+        this.commands.clear();
+    }
+    
+    /**
+     * @return true if there are pending {@link Action}s to be processed
+     */
+    public boolean hasPendingCommands() {
+        return !this.commands.isEmpty();
+    }
+    
+    
+    /**
+     * @return peeks at the next action
+     */
+    public Action peek() {
+        Action cmd = commands.peek();
+        return cmd;
+    }
+    
+    /**
+     * Receives any pending {@link Action}s.
+     * 
+     */
+    public Action poll() {
+        Action cmd = commands.poll();
+        return cmd;
+    }
+    
+    /**
+     * Post a command to this bot
+     * @param cmd
+     */
+    public void post(Action cmd) {
+        this.commands.add(cmd);
+    }
+    
+    /**
+     * Removes all previous posted {@link Action}s and makes the supplied
+     * Action the only {@link Action}
+     * @param cmd
+     */
+    public void makeTopPriority(Action cmd) {
+        this.commands.clear();
+        this.commands.add(cmd);
+    }
+    
+    /**
+     * Broadcasts an action for another entity to pick up
+     * 
+     * @param cmd
+     */
+    public void broadcastAction(Brain brain, Action cmd) {
+        if(brain.getPlayer().isAlive()) {
+            broadcastBounds.centerAround(brain.getEntityOwner().getCenterPos());
+            List<Player> teammates = world.getTeammates(brain);
+            for(int i = 0; i < teammates.size(); i++) {
+                Player player = teammates.get(i);
+                if(player.isBot() && player.isAlive()) {
+                    
+                    PlayerEntity ent = player.getEntity();
+                    if(broadcastBounds.intersects(ent.getBounds())) {
+                        Brain other = world.getBrain(player.getId());
+                        other.getCommunicator().post(cmd);
+                    }
+                    
+                }
+            }
+        }
+    }
 }

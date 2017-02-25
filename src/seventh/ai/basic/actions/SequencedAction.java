@@ -11,8 +11,8 @@ import seventh.ai.basic.Brain;
  */
 public class SequencedAction extends CompositeAction {
 
-	private boolean started;
-	
+    private boolean started;
+    
     /**
      * @param name
      */
@@ -26,8 +26,8 @@ public class SequencedAction extends CompositeAction {
      */
     @Override
     public void start(Brain brain) {    
-    	super.start(brain);
-    	this.started = true;
+        super.start(brain);
+        this.started = true;
     }
     
     public SequencedAction addNext(Action action) {
@@ -40,10 +40,10 @@ public class SequencedAction extends CompositeAction {
      */
     @Override
     public boolean isFinished(Brain brain) {
-    	if(!this.started) {
-    		return false;
-    	}
-    	
+        if(!this.started) {
+            return false;
+        }
+        
         Action action = this.currentAction();
         if(action!=null && action.isFinished(brain)) {
             if(action.getActionResult().isFailure()) {

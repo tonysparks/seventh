@@ -13,23 +13,23 @@ import harenet.MessageHeader;
  *
  */
 public class PongMessage extends AbstractMessage {
-	
-	/**
-	 * Cached instance to reduce GC load
-	 */
-	public static final PongMessage INSTANCE = new PongMessage();
-	
-	/**
-	 */
-	public PongMessage() {
-		super(MessageHeader.PONG_MESSAGE);		
-	}
-	
-	/* (non-Javadoc)
-	 * @see netspark.messages.Message#copy()
-	 */
-	@Override
-	public Message copy() {	
-		return INSTANCE;
-	}
+    
+    /**
+     * Cached instance to reduce GC load
+     */
+    public static final PongMessage INSTANCE = new PongMessage();
+    
+    /**
+     */
+    public PongMessage() {
+        super(MessageHeader.PONG_MESSAGE);        
+    }
+    
+    /* (non-Javadoc)
+     * @see netspark.messages.Message#copy()
+     */
+    @Override
+    public Message copy() {    
+        return INSTANCE;
+    }
 }

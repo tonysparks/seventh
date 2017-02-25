@@ -12,6 +12,6 @@ import leola.frontend.listener.EventMethod;
  */
 public interface SoundEmitterListener extends EventListener {
 
-	@EventMethod
-	public void onSoundEmitted(SoundEmittedEvent event);
+    @EventMethod
+    public void onSoundEmitted(SoundEmittedEvent event);
 }

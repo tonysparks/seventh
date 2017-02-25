@@ -74,16 +74,16 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      * @author Tony
      *
      */
-	private static class QueuedMessage {
-		int flags;
-		NetMessage msg;
-		
-		public QueuedMessage(int flags, NetMessage msg) {
-			this.flags = flags;
-			this.msg = msg;
-		}
-	}
-	
+    private static class QueuedMessage {
+        int flags;
+        NetMessage msg;
+        
+        public QueuedMessage(int flags, NetMessage msg) {
+            this.flags = flags;
+            this.msg = msg;
+        }
+    }
+    
     
     private SeventhGame app;
     private ClientGame game;
@@ -96,49 +96,49 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     private ClientPlayers players;
     
     private Queue<QueuedMessage> outboundQ;
-	
-		
-	/**
-	 * @param connection
-	 * @param app
-	 */
-	public ClientNetworkProtocol(ClientConnection connection, SeventhGame app) {
-		super(connection.getClient());
-		this.client = connection.getClient();				
-		this.outboundQ = new ConcurrentLinkedQueue<QueuedMessage>();
-		
-	    this.app = app;
-	    this.connection = connection;	        
-	        
-	    this.localPlayer = new LocalSession();
-	    this.players = new ClientPlayers(SeventhConstants.MAX_PLAYERS);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see seventh.shared.NetworkProtocol#postQueuedMessages()
-	 */
-	@Override
-	public void postQueuedMessages() {
-		while(!this.outboundQ.isEmpty()) {
+    
+        
+    /**
+     * @param connection
+     * @param app
+     */
+    public ClientNetworkProtocol(ClientConnection connection, SeventhGame app) {
+        super(connection.getClient());
+        this.client = connection.getClient();                
+        this.outboundQ = new ConcurrentLinkedQueue<QueuedMessage>();
+        
+        this.app = app;
+        this.connection = connection;            
+            
+        this.localPlayer = new LocalSession();
+        this.players = new ClientPlayers(SeventhConstants.MAX_PLAYERS);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see seventh.shared.NetworkProtocol#postQueuedMessages()
+     */
+    @Override
+    public void postQueuedMessages() {
+        while(!this.outboundQ.isEmpty()) {
 
-		    QueuedMessage msg = this.outboundQ.poll();
-			try {
-				this.client.send(msg.flags, msg.msg);
-			} catch (IOException e) {
-				Cons.println("*** Failed to send msg - " + e);
-			}
-		}
-	}
-	
+            QueuedMessage msg = this.outboundQ.poll();
+            try {
+                this.client.send(msg.flags, msg.msg);
+            } catch (IOException e) {
+                Cons.println("*** Failed to send msg - " + e);
+            }
+        }
+    }
+    
 
     /**
      * Queues a reliable {@link NetMessage} for the next available network update.
      * @param msg
      */
-	private void queueSendReliableMessage(NetMessage msg) {
-	    queueSendMessage(Endpoint.FLAG_RELIABLE, msg);
-    }	
+    private void queueSendReliableMessage(NetMessage msg) {
+        queueSendMessage(Endpoint.FLAG_RELIABLE, msg);
+    }    
     
     /**
      * Sends the reliable {@link NetMessage} immediately
@@ -155,7 +155,7 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
             Cons.println("*** Error sending reliable packet - " + e);
         }
     }
-	
+    
     /**
      * Sends the unreliable {@link NetMessage} immediately.
      * 
@@ -170,145 +170,145 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
             Cons.println("*** Error sending unreliable packet - " + e);
         }
     }
-	
-	/**
-	 * @param msg
-	 */
-	private void queueSendMessage(int flags, NetMessage msg) {
-		this.outboundQ.add(new QueuedMessage(flags, msg));
-	}
-	
-	public void sendMessage(int flags, NetMessage msg) throws IOException {
-		this.client.send(flags, msg);
-	}
-		
-	/* (non-Javadoc)
-	 * @see net.ConnectionListener#onConnected(net.Connection)
-	 */
-	@Override
-	public void onConnected(Connection conn) {
-		Cons.println("Client connected");
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.ConnectionListener#onDisconnected(net.Connection)
-	 */
-	@Override
-	public void onDisconnected(Connection conn) {			
-		Cons.println("Client disconnected");
-		this.players.clear();
-		this.outboundQ.clear();
-		
-		this.localPlayer.invalidate();
-		
-		if(game!=null) {
+    
+    /**
+     * @param msg
+     */
+    private void queueSendMessage(int flags, NetMessage msg) {
+        this.outboundQ.add(new QueuedMessage(flags, msg));
+    }
+    
+    public void sendMessage(int flags, NetMessage msg) throws IOException {
+        this.client.send(flags, msg);
+    }
+        
+    /* (non-Javadoc)
+     * @see net.ConnectionListener#onConnected(net.Connection)
+     */
+    @Override
+    public void onConnected(Connection conn) {
+        Cons.println("Client connected");
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see net.ConnectionListener#onDisconnected(net.Connection)
+     */
+    @Override
+    public void onDisconnected(Connection conn) {            
+        Cons.println("Client disconnected");
+        this.players.clear();
+        this.outboundQ.clear();
+        
+        this.localPlayer.invalidate();
+        
+        if(game!=null) {
             game.destroy();
             game=null;
         }
         
         app.goToMenuScreen();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see palisma.shared.NetworkProtocol#processMessage(com.esotericsoftware.kryonet.Connection, palisma.network.messages.Message)
-	 */
-	@Override
-	protected void processMessage(Connection conn, NetMessage message) throws IOException {
-		if(!this.connection.isConnected()) {
-			return;
-		}
-		
-		/* game messages first, from most frequent to least */
-		
-		if(message instanceof GameUpdateMessage) {
-			receiveGameUpdateMessage(conn, (GameUpdateMessage)message);
-		}
-		else if(message instanceof GamePartialStatsMessage) {
-			receiveGamePartialStatsMessage(conn, (GamePartialStatsMessage)message);
-		}
-		else if(message instanceof GameStatsMessage) {
-			receiveGameStatsMessage(conn, (GameStatsMessage)message);
-		}		
-		else if(message instanceof PlayerKilledMessage) {
-			receivePlayerKilledMessage(conn, (PlayerKilledMessage)message);
-		}
-		else if(message instanceof PlayerSpawnedMessage) {
-			receivePlayerSpawnedMessage(conn, (PlayerSpawnedMessage)message);
-		}
-		else if(message instanceof GameEndedMessage) {
-			receiveGameEndedMessage(conn, (GameEndedMessage)message);
-		}
-		else if(message instanceof GameReadyMessage) {
-			receiveGameReadyMessage(conn, (GameReadyMessage)message);
-		}
-		else if(message instanceof PlayerSwitchTeamMessage) {
-			receivePlayerSwitchedTeamMessage(conn, (PlayerSwitchTeamMessage)message);
-		}
-		else if(message instanceof RoundStartedMessage) {
-			receiveRoundStartedMessage(conn, (RoundStartedMessage)message);
-		}
-		else if(message instanceof RoundEndedMessage) {
-			receiveRoundEndedMessage(conn, (RoundEndedMessage)message);
-		}
-		else if(message instanceof BombPlantedMessage) {
-			receiveBombPlantedMessage(conn, (BombPlantedMessage)message);
-		}
-		else if(message instanceof BombDisarmedMessage) {
-			receiveBombDisarmedMessage(conn, (BombDisarmedMessage)message);
-		}
-		else if(message instanceof FlagCapturedMessage) {
-			receiveFlagCapturedMessage(conn, (FlagCapturedMessage)message);
-		}
-		else if(message instanceof FlagReturnedMessage) {
-			receiveFlagReturnedMessage(conn, (FlagReturnedMessage)message);
-		}
-		else if(message instanceof FlagStolenMessage) {
-			receiveFlagStolenMessage(conn, (FlagStolenMessage)message);
-		}
-		else if(message instanceof TileRemovedMessage) {
-		    receiveTileRemovedMessage(conn, (TileRemovedMessage)message);
-		}
-		else if(message instanceof TilesRemovedMessage) {
-		    receiveTilesRemovedMessage(conn, (TilesRemovedMessage)message);
-		}
-		else if(message instanceof PlayerCommanderMessage) {
-			receivePlayerCommanderMessage(conn, (PlayerCommanderMessage)message);
-		}
-		/* None game messages */
-		
-		else if(message instanceof ConnectAcceptedMessage) {
-			receiveConnectAcceptedMessage(conn, (ConnectAcceptedMessage)message);
-		}
-		else if(message instanceof PlayerConnectedMessage) {
-			receivePlayerConnectedMessage(conn, (PlayerConnectedMessage)message);
-		}
-		else if(message instanceof PlayerDisconnectedMessage) {
-			receivePlayerDisconnectedMessage(conn, (PlayerDisconnectedMessage)message);
-		}
-		else if(message instanceof TextMessage) {
-			receiveTextMessage(conn, (TextMessage)message);
-		}		
-		else if(message instanceof TeamTextMessage) {
-			receiveTeamTextMessage(conn, (TeamTextMessage)message);
-		}	
-		else if(message instanceof PlayerSpeechMessage) {
-			receivePlayerSpeechMessage(conn, (PlayerSpeechMessage)message);
-		}
-		else if(message instanceof RconMessage) {
-			receiveRconMessage(conn, (RconMessage)message);
-		}
-		else if(message instanceof RconTokenMessage) {
-			receiveRconTokenMessage(conn, (RconTokenMessage)message);
-		}
-		else {
-			Cons.println("Unknown message: " + message);
-		}
-	}
-			
-	
-	private void applyGameState(NetGameState gameState, boolean sendNotification) {
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see palisma.shared.NetworkProtocol#processMessage(com.esotericsoftware.kryonet.Connection, palisma.network.messages.Message)
+     */
+    @Override
+    protected void processMessage(Connection conn, NetMessage message) throws IOException {
+        if(!this.connection.isConnected()) {
+            return;
+        }
+        
+        /* game messages first, from most frequent to least */
+        
+        if(message instanceof GameUpdateMessage) {
+            receiveGameUpdateMessage(conn, (GameUpdateMessage)message);
+        }
+        else if(message instanceof GamePartialStatsMessage) {
+            receiveGamePartialStatsMessage(conn, (GamePartialStatsMessage)message);
+        }
+        else if(message instanceof GameStatsMessage) {
+            receiveGameStatsMessage(conn, (GameStatsMessage)message);
+        }        
+        else if(message instanceof PlayerKilledMessage) {
+            receivePlayerKilledMessage(conn, (PlayerKilledMessage)message);
+        }
+        else if(message instanceof PlayerSpawnedMessage) {
+            receivePlayerSpawnedMessage(conn, (PlayerSpawnedMessage)message);
+        }
+        else if(message instanceof GameEndedMessage) {
+            receiveGameEndedMessage(conn, (GameEndedMessage)message);
+        }
+        else if(message instanceof GameReadyMessage) {
+            receiveGameReadyMessage(conn, (GameReadyMessage)message);
+        }
+        else if(message instanceof PlayerSwitchTeamMessage) {
+            receivePlayerSwitchedTeamMessage(conn, (PlayerSwitchTeamMessage)message);
+        }
+        else if(message instanceof RoundStartedMessage) {
+            receiveRoundStartedMessage(conn, (RoundStartedMessage)message);
+        }
+        else if(message instanceof RoundEndedMessage) {
+            receiveRoundEndedMessage(conn, (RoundEndedMessage)message);
+        }
+        else if(message instanceof BombPlantedMessage) {
+            receiveBombPlantedMessage(conn, (BombPlantedMessage)message);
+        }
+        else if(message instanceof BombDisarmedMessage) {
+            receiveBombDisarmedMessage(conn, (BombDisarmedMessage)message);
+        }
+        else if(message instanceof FlagCapturedMessage) {
+            receiveFlagCapturedMessage(conn, (FlagCapturedMessage)message);
+        }
+        else if(message instanceof FlagReturnedMessage) {
+            receiveFlagReturnedMessage(conn, (FlagReturnedMessage)message);
+        }
+        else if(message instanceof FlagStolenMessage) {
+            receiveFlagStolenMessage(conn, (FlagStolenMessage)message);
+        }
+        else if(message instanceof TileRemovedMessage) {
+            receiveTileRemovedMessage(conn, (TileRemovedMessage)message);
+        }
+        else if(message instanceof TilesRemovedMessage) {
+            receiveTilesRemovedMessage(conn, (TilesRemovedMessage)message);
+        }
+        else if(message instanceof PlayerCommanderMessage) {
+            receivePlayerCommanderMessage(conn, (PlayerCommanderMessage)message);
+        }
+        /* None game messages */
+        
+        else if(message instanceof ConnectAcceptedMessage) {
+            receiveConnectAcceptedMessage(conn, (ConnectAcceptedMessage)message);
+        }
+        else if(message instanceof PlayerConnectedMessage) {
+            receivePlayerConnectedMessage(conn, (PlayerConnectedMessage)message);
+        }
+        else if(message instanceof PlayerDisconnectedMessage) {
+            receivePlayerDisconnectedMessage(conn, (PlayerDisconnectedMessage)message);
+        }
+        else if(message instanceof TextMessage) {
+            receiveTextMessage(conn, (TextMessage)message);
+        }        
+        else if(message instanceof TeamTextMessage) {
+            receiveTeamTextMessage(conn, (TeamTextMessage)message);
+        }    
+        else if(message instanceof PlayerSpeechMessage) {
+            receivePlayerSpeechMessage(conn, (PlayerSpeechMessage)message);
+        }
+        else if(message instanceof RconMessage) {
+            receiveRconMessage(conn, (RconMessage)message);
+        }
+        else if(message instanceof RconTokenMessage) {
+            receiveRconTokenMessage(conn, (RconTokenMessage)message);
+        }
+        else {
+            Cons.println("Unknown message: " + message);
+        }
+    }
+            
+    
+    private void applyGameState(NetGameState gameState, boolean sendNotification) {
         if(!localPlayer.isValid()) {
             Cons.println("*** Received gameReady message before connectionAccepted message, skipping!");
         }
@@ -491,9 +491,9 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      */
     @Override
     public void receivePlayerCommanderMessage(Connection conn, PlayerCommanderMessage msg) {
-    	if(game!=null) {
-    		game.playerCommander(msg);
-    	}
+        if(game!=null) {
+            game.playerCommander(msg);
+        }
     }
     
     /* (non-Javadoc)
@@ -590,9 +590,9 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      */
     @Override
     public void receiveFlagCapturedMessage(Connection conn, FlagCapturedMessage msg) {
-    	if(game!=null) {
-    		game.flagCaptured(msg);
-    	}
+        if(game!=null) {
+            game.flagCaptured(msg);
+        }
     }
     
     /* (non-Javadoc)
@@ -600,9 +600,9 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      */
     @Override
     public void receiveFlagReturnedMessage(Connection conn, FlagReturnedMessage msg) {
-    	if(game!=null) {
-    		game.flagReturned(msg);
-    	}
+        if(game!=null) {
+            game.flagReturned(msg);
+        }
     }
     
     /* (non-Javadoc)
@@ -610,9 +610,9 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      */
     @Override
     public void receiveFlagStolenMessage(Connection conn, FlagStolenMessage msg) {
-    	if(game!=null) {
-    		game.flagStolen(msg);
-    	}
+        if(game!=null) {
+            game.flagStolen(msg);
+        }
     }
     
     /* (non-Javadoc)
@@ -708,6 +708,6 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      */
     @Override
     public void sendPlayerCommanderMessage(PlayerCommanderMessage msg) {
-    	queueSendReliableMessage(msg);
+        queueSendReliableMessage(msg);
     }
 }

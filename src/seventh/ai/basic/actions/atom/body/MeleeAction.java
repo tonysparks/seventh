@@ -16,49 +16,49 @@ import seventh.shared.TimeStep;
  */
 public class MeleeAction extends AdapterAction {
 
-	/**
-	 */
-	public MeleeAction() {
-	}
+    /**
+     */
+    public MeleeAction() {
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#isFinished(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public boolean isFinished(Brain brain) {	
-		return !brain.getEntityOwner().isMeleeAttacking();
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void start(Brain brain) {
-		PlayerEntity entity = brain.getEntityOwner();
-		if(! entity.meleeAttack() ) {
-			getActionResult().setFailure();
-		}
-		else {
-			getActionResult().setSuccess();
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#end(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void end(Brain brain) {
-		PlayerEntity entity = brain.getEntityOwner();
-		entity.doneMeleeAttack();
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
-	 */
-	@Override
-	public void update(Brain brain, TimeStep timeStep) {
-		PlayerEntity entity = brain.getEntityOwner();
-		entity.doneMeleeAttack();
-		
-	}
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#isFinished(seventh.ai.basic.Brain)
+     */
+    @Override
+    public boolean isFinished(Brain brain) {    
+        return !brain.getEntityOwner().isMeleeAttacking();
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void start(Brain brain) {
+        PlayerEntity entity = brain.getEntityOwner();
+        if(! entity.meleeAttack() ) {
+            getActionResult().setFailure();
+        }
+        else {
+            getActionResult().setSuccess();
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#end(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void end(Brain brain) {
+        PlayerEntity entity = brain.getEntityOwner();
+        entity.doneMeleeAttack();
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
+     */
+    @Override
+    public void update(Brain brain, TimeStep timeStep) {
+        PlayerEntity entity = brain.getEntityOwner();
+        entity.doneMeleeAttack();
+        
+    }
 }

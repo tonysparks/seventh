@@ -14,35 +14,35 @@ import seventh.shared.WeaponConstants;
  */
 public class ClientMP40 extends ClientWeapon {
 
-	/**
-	 * @param owner
-	 */
-	public ClientMP40(ClientPlayerEntity owner) {
-		super(owner);
-		
-		this.weaponIcon = Art.mp40Icon;
-		this.weaponImage = Art.mp40Image;
-		this.muzzleFlash = Art.newMP40MuzzleFlash();
-		this.weaponWeight = WeaponConstants.MP40_WEIGHT;
-		
-		this.weaponKickTime = 1; 
-		this.endFireKick = 0f; 
-		this.beginFireKick = 5.2f; 
-	}
+    /**
+     * @param owner
+     */
+    public ClientMP40(ClientPlayerEntity owner) {
+        super(owner);
+        
+        this.weaponIcon = Art.mp40Icon;
+        this.weaponImage = Art.mp40Image;
+        this.muzzleFlash = Art.newMP40MuzzleFlash();
+        this.weaponWeight = WeaponConstants.MP40_WEIGHT;
+        
+        this.weaponKickTime = 1; 
+        this.endFireKick = 0f; 
+        this.beginFireKick = 5.2f; 
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.client.weapon.ClientWeapon#isAutomatic()
-	 */
-	@Override
-	public boolean isAutomatic() {	
-		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.client.weapon.ClientWeapon#hasLongBarrel()
-	 */
-	@Override
-	public boolean hasLongBarrel() {	
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.weapon.ClientWeapon#isAutomatic()
+     */
+    @Override
+    public boolean isAutomatic() {    
+        return true;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.weapon.ClientWeapon#hasLongBarrel()
+     */
+    @Override
+    public boolean hasLongBarrel() {    
+        return false;
+    }
 }

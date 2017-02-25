@@ -129,12 +129,12 @@ public interface ServerProtocol {
     
 
     /**
-	 * A player has gone to or from Commander
-	 * 
-	 * @param conn
-	 * @param msg
-	 */
-	public void receivePlayerCommanderMessage(Connection conn, PlayerCommanderMessage msg);
+     * A player has gone to or from Commander
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receivePlayerCommanderMessage(Connection conn, PlayerCommanderMessage msg);
     
     /**
      * The client has issued a global text message
@@ -372,9 +372,9 @@ public interface ServerProtocol {
     public void sendFlagStolenMessage(FlagStolenMessage msg);
     
     /**
-	 * Sends a {@link PlayerCommanderMessage}
-	 * 
-	 * @param msg
-	 */
-	public void sendPlayerCommanderMessage(PlayerCommanderMessage msg);
+     * Sends a {@link PlayerCommanderMessage}
+     * 
+     * @param msg
+     */
+    public void sendPlayerCommanderMessage(PlayerCommanderMessage msg);
 }

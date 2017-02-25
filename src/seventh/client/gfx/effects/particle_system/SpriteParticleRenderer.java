@@ -20,22 +20,22 @@ import seventh.shared.TimeStep;
 public class SpriteParticleRenderer implements ParticleRenderer {
 
 
-	@Override
-	public void update(TimeStep timeStep, ParticleData particles) {
-	}
+    @Override
+    public void update(TimeStep timeStep, ParticleData particles) {
+    }
 
-	@Override
-	public void render(Canvas canvas, Camera camera, float alpha, ParticleData particles) {		
-		Vector2f cameraPos = camera.getRenderPosition(alpha);
-		for(int i = 0; i < particles.numberOfAliveParticles; i++) {
-			Sprite sprite = particles.sprite[i];
-			Vector2f pos = particles.pos[i];
-			sprite.setPosition(pos.x - cameraPos.x, pos.y - cameraPos.y);
-			sprite.setScale(particles.scale[i]);
-			sprite.setColor(particles.color[i]);
-			sprite.setRotation(particles.rotation[i]);
-			canvas.drawRawSprite(sprite);
-		}		
-	}
+    @Override
+    public void render(Canvas canvas, Camera camera, float alpha, ParticleData particles) {        
+        Vector2f cameraPos = camera.getRenderPosition(alpha);
+        for(int i = 0; i < particles.numberOfAliveParticles; i++) {
+            Sprite sprite = particles.sprite[i];
+            Vector2f pos = particles.pos[i];
+            sprite.setPosition(pos.x - cameraPos.x, pos.y - cameraPos.y);
+            sprite.setScale(particles.scale[i]);
+            sprite.setColor(particles.color[i]);
+            sprite.setRotation(particles.rotation[i]);
+            canvas.drawRawSprite(sprite);
+        }        
+    }
 
 }

@@ -14,17 +14,17 @@ import seventh.game.entities.Flag;
  *
  */
 public class MoveToFlagAction extends AvoidMoveToAction {
-	
-	private static final List<Zone> emptyZonesToAvoid = Collections.emptyList();
-	
-	/**
-	 * @param target 
-	 */
-	public MoveToFlagAction(Flag target, List<Zone> zonesToAvoid) {
-		super(target.getCenterPos(), zonesToAvoid);		
-	}	
-	
-	public MoveToFlagAction(Flag target) {
-		super(target.getCenterPos(), emptyZonesToAvoid);		
-	}
+    
+    private static final List<Zone> emptyZonesToAvoid = Collections.emptyList();
+    
+    /**
+     * @param target 
+     */
+    public MoveToFlagAction(Flag target, List<Zone> zonesToAvoid) {
+        super(target.getCenterPos(), zonesToAvoid);        
+    }    
+    
+    public MoveToFlagAction(Flag target) {
+        super(target.getCenterPos(), emptyZonesToAvoid);        
+    }
 }

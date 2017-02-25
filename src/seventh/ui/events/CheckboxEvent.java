@@ -31,24 +31,24 @@ import seventh.ui.Checkbox;
  */
 public class CheckboxEvent extends Event {
 
-	/**
-	 * Checkbox
-	 */
-	private Checkbox checkbox;
+    /**
+     * Checkbox
+     */
+    private Checkbox checkbox;
 
-	/**
-	 * @param source
-	 * @param checkbox
-	 */
-	public CheckboxEvent(Object source, Checkbox checkbox) {
-		super(source);
-		this.checkbox = checkbox;
-	}
+    /**
+     * @param source
+     * @param checkbox
+     */
+    public CheckboxEvent(Object source, Checkbox checkbox) {
+        super(source);
+        this.checkbox = checkbox;
+    }
 
-	/**
-	 * @return the checkbox
-	 */
-	public Checkbox getCheckbox() {
-		return checkbox;
-	}			
+    /**
+     * @return the checkbox
+     */
+    public Checkbox getCheckbox() {
+        return checkbox;
+    }            
 }

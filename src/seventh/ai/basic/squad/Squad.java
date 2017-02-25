@@ -36,20 +36,20 @@ public class Squad implements Updatable {
     }
     
     /**
-	 * @return the roles
-	 */
-	public Roles getRoles() {
-		return roles;
-	}
+     * @return the roles
+     */
+    public Roles getRoles() {
+        return roles;
+    }
 
     public void addSquadMember(Brain bot) {
-    	if(bot.getPlayer().isAlive()) {
-    		if(this.members[bot.getPlayer().getId()] == null) {
-    			this.size++;	
-    		}
-    		
-    		this.members[bot.getPlayer().getId()] = bot;
-    	}
+        if(bot.getPlayer().isAlive()) {
+            if(this.members[bot.getPlayer().getId()] == null) {
+                this.size++;    
+            }
+            
+            this.members[bot.getPlayer().getId()] = bot;
+        }
     }
     
     public boolean isInSquad(Brain bot) {
@@ -63,7 +63,7 @@ public class Squad implements Updatable {
     }
     
     public int squadSize() {
-    	return size;
+        return size;
     }
     
     
@@ -108,11 +108,11 @@ public class Squad implements Updatable {
     }
     
     public void onPlayerKilled(PlayerInfo player) {
-    	this.members[player.getId()] = null;
-    	if(this.size>0) {
-    		this.size--;
-    	}
-    	
-    	this.roles.removeDeadPlayer(player);
+        this.members[player.getId()] = null;
+        if(this.size>0) {
+            this.size--;
+        }
+        
+        this.roles.removeDeadPlayer(player);
     }    
 }

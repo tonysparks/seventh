@@ -31,32 +31,32 @@ import seventh.ui.TextBox;
  */
 public class TextBoxActionEvent extends Event {
 
-	/**
-	 * TextBox
-	 */
-	private TextBox textBox;
+    /**
+     * TextBox
+     */
+    private TextBox textBox;
 
-	/**
-	 * @param source
-	 * @param textBox
-	 */
-	public TextBoxActionEvent(Object source, TextBox textBox) {
-		super(source);
-		this.textBox = textBox;
-	}
+    /**
+     * @param source
+     * @param textBox
+     */
+    public TextBoxActionEvent(Object source, TextBox textBox) {
+        super(source);
+        this.textBox = textBox;
+    }
 
-	/**
-	 * @return the TextBox
-	 */
-	public TextBox getTextBox() {
-		return textBox;
-	}
+    /**
+     * @return the TextBox
+     */
+    public TextBox getTextBox() {
+        return textBox;
+    }
 
-	/**
-	 * @param TextBox the TextBox to set
-	 */
-	public void setTextBox(TextBox textBox) {
-		this.textBox = textBox;
-	}
-		
+    /**
+     * @param TextBox the TextBox to set
+     */
+    public void setTextBox(TextBox textBox) {
+        this.textBox = textBox;
+    }
+        
 }

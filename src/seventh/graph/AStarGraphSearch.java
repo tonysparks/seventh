@@ -22,51 +22,51 @@ import seventh.shared.ArrayMap;
 public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
 
     private Map<GraphNode<E,T>, Integer>  gScores   /* Distance from start to optimal path */
-    									, hScores   /* Heuristic scores */
-    									, fScores;  /* Sum of heuristic from node to goal */
+                                        , hScores   /* Heuristic scores */
+                                        , fScores;  /* Sum of heuristic from node to goal */
 
     private Map<GraphNode<E,T>, GraphNode<E,T>> cameFrom;  /* Nodes visited to reach goal node */
 
 
     private Set<GraphNode<E,T>>  closedSet  /* List of nodes we do not care about anymore */
-    						   , openSet;   /* Working set of nodes to be tested */
-	
+                               , openSet;   /* Working set of nodes to be tested */
+    
     /**
-	 * 
-	 */
-	public AStarGraphSearch() {
-		boolean jdk = false;
-		
-		// TODO - Continue testing working on ArrayMap
-		// removing GC from HashMap Entries
-		if(jdk) {
-	        gScores = new HashMap<GraphNode<E,T>, Integer>();    
-	        hScores = new HashMap<GraphNode<E,T>, Integer>();            
-	        fScores = new HashMap<GraphNode<E,T>, Integer>();    
-	        
-	        
-	        cameFrom = new HashMap<GraphNode<E,T>, GraphNode<E,T>>();
-		}
-		else {
-			gScores = new ArrayMap<>();
-			hScores = new ArrayMap<GraphNode<E,T>, Integer>();
-			fScores = new ArrayMap<>();
-			cameFrom = new ArrayMap<GraphNode<E,T>, GraphNode<E,T>>();
-		}
-		
+     * 
+     */
+    public AStarGraphSearch() {
+        boolean jdk = false;
+        
+        // TODO - Continue testing working on ArrayMap
+        // removing GC from HashMap Entries
+        if(jdk) {
+            gScores = new HashMap<GraphNode<E,T>, Integer>();    
+            hScores = new HashMap<GraphNode<E,T>, Integer>();            
+            fScores = new HashMap<GraphNode<E,T>, Integer>();    
+            
+            
+            cameFrom = new HashMap<GraphNode<E,T>, GraphNode<E,T>>();
+        }
+        else {
+            gScores = new ArrayMap<>();
+            hScores = new ArrayMap<GraphNode<E,T>, Integer>();
+            fScores = new ArrayMap<>();
+            cameFrom = new ArrayMap<GraphNode<E,T>, GraphNode<E,T>>();
+        }
+        
         closedSet = new HashSet<GraphNode<E,T>>();
         openSet   = new HashSet<GraphNode<E,T>>();
-	}
+    }
     
-	/*
-	 * (non-Javadoc)
-	 * @see leola.live.game.graph.GraphSearchPath#search(leola.live.game.graph.GraphNode, leola.live.game.graph.GraphNode)
-	 */
+    /*
+     * (non-Javadoc)
+     * @see leola.live.game.graph.GraphSearchPath#search(leola.live.game.graph.GraphNode, leola.live.game.graph.GraphNode)
+     */
     public List<GraphNode<E,T>> search(GraphNode<E, T> start, GraphNode<E, T> goal) {
-    	if(start == null || goal == null) {
-    		return null;
-    	}
-    	
+        if(start == null || goal == null) {
+            return null;
+        }
+        
         return aStar(start, goal);
     }
     
@@ -88,7 +88,7 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
      * @return true if this node should be ignored
      */
     protected boolean shouldIgnore(GraphNode<E, T> node) {
-    	return false;
+        return false;
     }
     
     /**
@@ -169,8 +169,8 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
         cameFrom.clear();        
         closedSet.clear();
         openSet.clear();
-    	
-    	
+        
+        
         /* Push the start node so we have a starting point */
         openSet.add(start);
         
@@ -209,7 +209,7 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
             for(int i = 0; i < edges.size(); i++) {
                 Edge<E,T> edge = edges.get(i);     
                 if(edge == null) {
-                	continue;
+                    continue;
                 }
                 
                 GraphNode<E, T> y = edge.getRight();
@@ -221,32 +221,32 @@ public class AStarGraphSearch<E, T> implements GraphSearchPath<E, T> {
                 
                 Directions dir = Directions.fromIndex(i);
                 if(shouldIgnore(y)) {
-                	if(Directions.isCardinal(i)) {
-                		switch(dir) {
-	                		case N:
-	                			skipMask |= Directions.NE.getMask();
-	                			skipMask |= Directions.NW.getMask();
-	                			break;
-	                		case E:
-	                			skipMask |= Directions.NE.getMask();
-	                			skipMask |= Directions.SE.getMask();
-	                			break;
-	                		case S:
-	                			skipMask |= Directions.SE.getMask();
-	                			skipMask |= Directions.SW.getMask();
-	                			break;
-	                		case W:	                			
-	                			skipMask |= Directions.NW.getMask();
-	                			skipMask |= Directions.SW.getMask();
-	                			break;
-	                		default:
-                		}
-                	}
-                	continue;
+                    if(Directions.isCardinal(i)) {
+                        switch(dir) {
+                            case N:
+                                skipMask |= Directions.NE.getMask();
+                                skipMask |= Directions.NW.getMask();
+                                break;
+                            case E:
+                                skipMask |= Directions.NE.getMask();
+                                skipMask |= Directions.SE.getMask();
+                                break;
+                            case S:
+                                skipMask |= Directions.SE.getMask();
+                                skipMask |= Directions.SW.getMask();
+                                break;
+                            case W:                                
+                                skipMask |= Directions.NW.getMask();
+                                skipMask |= Directions.SW.getMask();
+                                break;
+                            default:
+                        }
+                    }
+                    continue;
                 }
                 
                 if((dir.getMask() & skipMask) != 0) {
-                	continue;
+                    continue;
                 }
                 
                 /* Compile the shortest distance traveled between x and y plus the sum scores*/

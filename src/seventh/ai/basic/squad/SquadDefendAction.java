@@ -44,38 +44,38 @@ public class SquadDefendAction extends SquadAction {
      */
     @Override
     public Action getAction(Squad squad) {
-    	if(squad.squadSize() > 0 ) {
-    		World world = squad.getWorld();
-	        Brain[] members = squad.getMembers();
-//	        Roles roles = squad.getRoles();
-	        
-	        int squadSize = squad.squadSize();
-	        
-	        if(!directionsToDefend.isEmpty() && squadSize>0) {
-	        	int increment = 1;
-	        	if(directionsToDefend.size()> squadSize) {
-	        		increment = directionsToDefend.size() / squadSize;
-	        	}
-	        	
-	            int i = 0;
-	        	for(int j = 0; j < members.length; j++) {
-	        		Brain member = members[j];
-	        		if(member!=null) {
-	        			//if(roles.getAssignedRole(member.getPlayer()) != Role.None) 
-	        			{
-			                AttackDirection dir = directionsToDefend.get( (i += increment) % directionsToDefend.size());
-			                Vector2f position = new Vector2f(dir.getDirection());
-			                //Vector2f.Vector2fMA(defendPosition, dir.getDirection(), 10f + world.getRandom().nextInt(100), position);
-			                
-			                return (world.getGoals().guard(position));
-	        			}
-	        		}
-	            
-	            }
-	        }
-    	}
-    	
-    	return new WaitAction(500);
+        if(squad.squadSize() > 0 ) {
+            World world = squad.getWorld();
+            Brain[] members = squad.getMembers();
+//            Roles roles = squad.getRoles();
+            
+            int squadSize = squad.squadSize();
+            
+            if(!directionsToDefend.isEmpty() && squadSize>0) {
+                int increment = 1;
+                if(directionsToDefend.size()> squadSize) {
+                    increment = directionsToDefend.size() / squadSize;
+                }
+                
+                int i = 0;
+                for(int j = 0; j < members.length; j++) {
+                    Brain member = members[j];
+                    if(member!=null) {
+                        //if(roles.getAssignedRole(member.getPlayer()) != Role.None) 
+                        {
+                            AttackDirection dir = directionsToDefend.get( (i += increment) % directionsToDefend.size());
+                            Vector2f position = new Vector2f(dir.getDirection());
+                            //Vector2f.Vector2fMA(defendPosition, dir.getDirection(), 10f + world.getRandom().nextInt(100), position);
+                            
+                            return (world.getGoals().guard(position));
+                        }
+                    }
+                
+                }
+            }
+        }
+        
+        return new WaitAction(500);
     }
     
     /* (non-Javadoc)
@@ -89,7 +89,7 @@ public class SquadDefendAction extends SquadAction {
      * @see seventh.ai.basic.squad.SquadAction#cancel(seventh.ai.basic.squad.Squad)
      */
     @Override
-    public void cancel(Squad squad) {    	
+    public void cancel(Squad squad) {        
     }
     
     /* (non-Javadoc)

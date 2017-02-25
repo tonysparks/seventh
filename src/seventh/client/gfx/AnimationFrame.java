@@ -1,5 +1,5 @@
 /*
- *	leola-live 
+ *    leola-live 
  *  see license.txt
  */
 package seventh.client.gfx;
@@ -11,40 +11,40 @@ package seventh.client.gfx;
  */
 public class AnimationFrame {
 
-	/**
-	 * Time to spend on this frame
-	 */
-	private long frameTime;
+    /**
+     * Time to spend on this frame
+     */
+    private long frameTime;
 
-	/**
-	 * Frame Number
-	 */
-	private int frameNumber;
+    /**
+     * Frame Number
+     */
+    private int frameNumber;
 
-	/**
-	 * Constructs a new {@link AnimationFrame}.
-	 *
-	 * @param frameTime
-	 * @param frameNumber
-	 */
-	public AnimationFrame(long frameTime, int frameNumber) {
-		this.frameTime = frameTime;
-		this.frameNumber = frameNumber;
-	}
+    /**
+     * Constructs a new {@link AnimationFrame}.
+     *
+     * @param frameTime
+     * @param frameNumber
+     */
+    public AnimationFrame(long frameTime, int frameNumber) {
+        this.frameTime = frameTime;
+        this.frameNumber = frameNumber;
+    }
 
-	/**
-	 * @return the frameTime
-	 */
-	public long getFrameTime() {
-		return frameTime;
-	}
+    /**
+     * @return the frameTime
+     */
+    public long getFrameTime() {
+        return frameTime;
+    }
 
-	/**
-	 * @return the frameNumber
-	 */
-	public int getFrameNumber() {
-		return frameNumber;
-	}
+    /**
+     * @return the frameNumber
+     */
+    public int getFrameNumber() {
+        return frameNumber;
+    }
 
 
 }

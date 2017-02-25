@@ -29,116 +29,116 @@ package seventh.ui;
  *
  */
 public class LevelButton extends Button {
-	
-	/**
-	 * Label
-	 */
-	private Label label;
-	
-	/**
-	 * If its highlighted
-	 */
-	private boolean highlighted;
-	
-	/**
-	 * If the player has completed this level
-	 */
-	private boolean completed;
-	
-	/**
-	 * Score if available
-	 */
-	private int score;		
-	
-	/**
-	 * The levels name
-	 */
-	private String levelName;
+    
+    /**
+     * Label
+     */
+    private Label label;
+    
+    /**
+     * If its highlighted
+     */
+    private boolean highlighted;
+    
+    /**
+     * If the player has completed this level
+     */
+    private boolean completed;
+    
+    /**
+     * Score if available
+     */
+    private int score;        
+    
+    /**
+     * The levels name
+     */
+    private String levelName;
 
-	/**
-	 * @param button
-	 */
-	public LevelButton() {
-//		this.button = button;	
-		this.label = new Label();		
-		
-//		this.addWidget(this.button);
-		this.addWidget(this.label);
-	}
+    /**
+     * @param button
+     */
+    public LevelButton() {
+//        this.button = button;    
+        this.label = new Label();        
+        
+//        this.addWidget(this.button);
+        this.addWidget(this.label);
+    }
 
-		
-	/**
-	 * @return the highlighted
-	 */
-	public boolean isHighlighted() {
-		return highlighted;
-	}
+        
+    /**
+     * @return the highlighted
+     */
+    public boolean isHighlighted() {
+        return highlighted;
+    }
 
-	/**
-	 * @param highlighted the highlighted to set
-	 */
-	public void setHighlighted(boolean highlighted) {
-		this.highlighted = highlighted;
-	}
+    /**
+     * @param highlighted the highlighted to set
+     */
+    public void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+    }
 
-	/**
-	 * @return the completed
-	 */
-	public boolean isCompleted() {
-		return completed;
-	}
+    /**
+     * @return the completed
+     */
+    public boolean isCompleted() {
+        return completed;
+    }
 
-	/**
-	 * @param completed the completed to set
-	 */
-	public void setCompleted(boolean completed) {
-		this.completed = completed;
-	}
+    /**
+     * @param completed the completed to set
+     */
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
-	/**
-	 * @return the score
-	 */
-	public int getScore() {
-		return score;
-	}
+    /**
+     * @return the score
+     */
+    public int getScore() {
+        return score;
+    }
 
-	/**
-	 * @param score the score to set
-	 */
-	public void setScore(int score) {
-		this.score = score;
-	}
+    /**
+     * @param score the score to set
+     */
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-	/**
-	 * @return the button
-	 */
-//	public Button getButton() {
-//		return button;
-//	}
+    /**
+     * @return the button
+     */
+//    public Button getButton() {
+//        return button;
+//    }
 
-	/**
-	 * @return the label
-	 */
-	public Label getLabel() {
-		return label;
-	}
-
-
-	/**
-	 * @return the levelName
-	 */
-	public String getLevelName() {
-		return levelName;
-	}
+    /**
+     * @return the label
+     */
+    public Label getLabel() {
+        return label;
+    }
 
 
-	/**
-	 * @param levelName the levelName to set
-	 */
-	public void setLevelName(String levelName) {
-		this.levelName = levelName;
-	}	
-	
-	
-	
+    /**
+     * @return the levelName
+     */
+    public String getLevelName() {
+        return levelName;
+    }
+
+
+    /**
+     * @param levelName the levelName to set
+     */
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }    
+    
+    
+    
 }

@@ -11,10 +11,10 @@ package harenet;
  */
 public interface Log {
 
-	public boolean enabled();
-	public void setEnabled(boolean enable);
-	
-	public void debug(String msg);
-	public void error(String msg);
-	public void info(String msg);
+    public boolean enabled();
+    public void setEnabled(boolean enable);
+    
+    public void debug(String msg);
+    public void error(String msg);
+    public void info(String msg);
 }

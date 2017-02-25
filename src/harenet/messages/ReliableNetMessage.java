@@ -13,22 +13,22 @@ import harenet.MessageHeader;
  *
  */
 public class ReliableNetMessage extends AbstractReliableMessage {
-		
-	/**
-	 */
-	public ReliableNetMessage() {
-		super(MessageHeader.RELIABLE_NETMESSAGE);	
-	}
+        
+    /**
+     */
+    public ReliableNetMessage() {
+        super(MessageHeader.RELIABLE_NETMESSAGE);    
+    }
 
-	public ReliableNetMessage(NetMessage message, short length) {
-		super(MessageHeader.RELIABLE_NETMESSAGE, message, length);
-	}	
-	
-	/* (non-Javadoc)
-	 * @see netspark.messages.Message#copy()
-	 */
-	@Override
-	public Message copy() {	
-		return new ReliableNetMessage(getMessage(), this.sizeInBytes);
-	}
+    public ReliableNetMessage(NetMessage message, short length) {
+        super(MessageHeader.RELIABLE_NETMESSAGE, message, length);
+    }    
+    
+    /* (non-Javadoc)
+     * @see netspark.messages.Message#copy()
+     */
+    @Override
+    public Message copy() {    
+        return new ReliableNetMessage(getMessage(), this.sizeInBytes);
+    }
 }

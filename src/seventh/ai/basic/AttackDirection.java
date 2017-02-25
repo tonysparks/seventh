@@ -13,20 +13,20 @@ import seventh.math.Vector2f;
  */
 public class AttackDirection {
 
-	private Vector2f direction;
-	
-	/**
-	 * 
-	 */
-	public AttackDirection(Vector2f direction) {
-		this.direction = direction;
-	}
-	
-	/**
-	 * @return the direction
-	 */
-	public Vector2f getDirection() {
-		return direction;
-	}
+    private Vector2f direction;
+    
+    /**
+     * 
+     */
+    public AttackDirection(Vector2f direction) {
+        this.direction = direction;
+    }
+    
+    /**
+     * @return the direction
+     */
+    public Vector2f getDirection() {
+        return direction;
+    }
 
 }

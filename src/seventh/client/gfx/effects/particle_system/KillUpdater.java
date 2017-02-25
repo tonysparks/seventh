@@ -12,23 +12,23 @@ import seventh.shared.TimeStep;
  */
 public class KillUpdater implements ParticleUpdater {
 
-	/**
-	 * 
-	 */
-	public KillUpdater() {
-	}
+    /**
+     * 
+     */
+    public KillUpdater() {
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.particle_system.Emitter.ParticleUpdater#update(seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
-	 */
-	@Override
-	public void update(TimeStep timeStep, ParticleData particles) {		
-		for(int i = 0; i < particles.numberOfAliveParticles; i++) {
-			particles.timeToLive[i].update(timeStep);
-			if(particles.timeToLive[i].isTime()) {				
-				particles.kill(i);
-			}
-		}
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.particle_system.Emitter.ParticleUpdater#update(seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)
+     */
+    @Override
+    public void update(TimeStep timeStep, ParticleData particles) {        
+        for(int i = 0; i < particles.numberOfAliveParticles; i++) {
+            particles.timeToLive[i].update(timeStep);
+            if(particles.timeToLive[i].isTime()) {                
+                particles.kill(i);
+            }
+        }
+    }
 
 }

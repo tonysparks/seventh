@@ -41,12 +41,12 @@ public class DepthFirstGraphSearch<E,T> implements GraphSearch<E,T> {
             
             /* Search each neighbor for the root */
             Edges<E, T> edges = node.edges();
-            for(int i = 0; i < edges.size(); i++) {            	
+            for(int i = 0; i < edges.size(); i++) {                
                 Edge<E,T> edge = edges.get(i);
                 if(edge == null) {
-                	continue;
+                    continue;
                 }
-            	
+                
 
                 /* Search the neighbor node */
                 GraphNode<E,T> rightNode = edge.getRight();

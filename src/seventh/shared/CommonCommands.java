@@ -9,7 +9,7 @@ package seventh.shared;
  */
 public class CommonCommands {
 
-	public static void addCommonCommands(Console console) {
-		console.addCommand(new ExecCommand());
-	}
+    public static void addCommonCommands(Console console) {
+        console.addCommand(new ExecCommand());
+    }
 }

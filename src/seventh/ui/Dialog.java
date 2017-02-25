@@ -31,61 +31,61 @@ import seventh.math.Rectangle;
  */
 public class Dialog extends Widget {
 
-	/**
-	 * The text message
-	 */
-	private Label text;
-	
-	
+    /**
+     * The text message
+     */
+    private Label text;
+    
+    
 
-	/**
-	 * @param eventDispatcher
-	 * @param text
-	 */
-	public Dialog(String text) {		
-		this.text = new Label(text);
-		addWidget(this.text);
-	}
+    /**
+     * @param eventDispatcher
+     * @param text
+     */
+    public Dialog(String text) {        
+        this.text = new Label(text);
+        addWidget(this.text);
+    }
 
-	/**
-	 * 
-	 */
-	public Dialog() {
-		this("");
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.fived.ricochet.ui.Widget#setBounds(org.myriad.shared.math.Rectangle)
-	 */
-	@Override
-	public void setBounds(Rectangle bounds) {
-		super.setBounds(bounds);
-		this.text.getBounds().width = bounds.width;
-		this.text.getBounds().height = bounds.height;
-	}
-	
-	/**
-	 * 
-	 * @return the text label
-	 */
-	public Label getTextLabel() {
-		return this.text;
-	}
-	
-	/**
-	 * @return the text
-	 */
-	public String getText() {
-		return text.getText();
-	}
+    /**
+     * 
+     */
+    public Dialog() {
+        this("");
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see com.fived.ricochet.ui.Widget#setBounds(org.myriad.shared.math.Rectangle)
+     */
+    @Override
+    public void setBounds(Rectangle bounds) {
+        super.setBounds(bounds);
+        this.text.getBounds().width = bounds.width;
+        this.text.getBounds().height = bounds.height;
+    }
+    
+    /**
+     * 
+     * @return the text label
+     */
+    public Label getTextLabel() {
+        return this.text;
+    }
+    
+    /**
+     * @return the text
+     */
+    public String getText() {
+        return text.getText();
+    }
 
-	/**
-	 * @param text the text to set
-	 */
-	public void setText(String text) {
-		this.text.setText(text);
-	}
-	
-	
+    /**
+     * @param text the text to set
+     */
+    public void setText(String text) {
+        this.text.setText(text);
+    }
+    
+    
 }

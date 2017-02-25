@@ -31,11 +31,11 @@ import leola.frontend.listener.EventMethod;
  */
 public interface OnHoverListener extends EventListener {
 
-	/**
-	 * A widget is being hovered over
-	 * 
-	 * @param event
-	 */
-	@EventMethod
-	public void onHover(HoverEvent event);
+    /**
+     * A widget is being hovered over
+     * 
+     * @param event
+     */
+    @EventMethod
+    public void onHover(HoverEvent event);
 }

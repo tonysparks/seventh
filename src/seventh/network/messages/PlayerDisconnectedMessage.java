@@ -11,30 +11,30 @@ import harenet.IOBuffer;
  *
  */
 public class PlayerDisconnectedMessage extends AbstractNetMessage {
-	public int playerId;	
-	
-	/**
-	 * 
-	 */
-	public PlayerDisconnectedMessage() {
-		super(BufferIO.PLAYER_DISCONNECTED);
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.network.messages.AbstractNetMessage#read(java.nio.ByteBuffer)
-	 */
-	@Override
-	public void read(IOBuffer buffer) {	
-		super.read(buffer);
-		playerId = buffer.getUnsignedByte();
-	}
-	
-	 /* (non-Javadoc)
-	 * @see seventh.network.messages.AbstractNetMessage#write(java.nio.ByteBuffer)
-	 */
-	@Override
-	public void write(IOBuffer buffer) {	
-		super.write(buffer);
-		buffer.putUnsignedByte(playerId);
-	}
+    public int playerId;    
+    
+    /**
+     * 
+     */
+    public PlayerDisconnectedMessage() {
+        super(BufferIO.PLAYER_DISCONNECTED);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.network.messages.AbstractNetMessage#read(java.nio.ByteBuffer)
+     */
+    @Override
+    public void read(IOBuffer buffer) {    
+        super.read(buffer);
+        playerId = buffer.getUnsignedByte();
+    }
+    
+     /* (non-Javadoc)
+     * @see seventh.network.messages.AbstractNetMessage#write(java.nio.ByteBuffer)
+     */
+    @Override
+    public void write(IOBuffer buffer) {    
+        super.write(buffer);
+        buffer.putUnsignedByte(playerId);
+    }
 }

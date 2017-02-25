@@ -15,10 +15,10 @@ import seventh.shared.TimeStep;
  */
 public class SetPositionSingleParticleGenerator implements SingleParticleGenerator {
 
-	@Override
-	public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
-		Vector2f pos = particles.pos[index];
-		pos.set(particles.emitter.getPos());;
-	}
+    @Override
+    public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+        Vector2f pos = particles.pos[index];
+        pos.set(particles.emitter.getPos());;
+    }
 
 }

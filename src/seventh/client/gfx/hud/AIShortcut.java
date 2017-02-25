@@ -59,22 +59,22 @@ public abstract class AIShortcut {
      * @return the id of the bot to send the command to
      */
     protected int getBotId(ClientGame game) {
-    	int botId = -1;
-    	if(game.isLocalPlayerCommander()) {
-    		ClientPlayerEntity bot = game.getSelectedEntity();
-    		if(bot != null && bot.isAlive()) {
-    			botId = bot.getId();
-    		}
-    	}
-    	else {
+        int botId = -1;
+        if(game.isLocalPlayerCommander()) {
+            ClientPlayerEntity bot = game.getSelectedEntity();
+            if(bot != null && bot.isAlive()) {
+                botId = bot.getId();
+            }
+        }
+        else {
             ClientPlayer localPlayer = game.getLocalPlayer();
             
             if(localPlayer.isAlive()) {
-            	botId = findClosestBot(game, localPlayer);    
+                botId = findClosestBot(game, localPlayer);    
             }                        
-    	}
-    	
-    	return botId;
+        }
+        
+        return botId;
     }
     
     /**
@@ -120,7 +120,7 @@ public abstract class AIShortcut {
      * @return the mouse position in world coordinates
      */
     protected Vector2f getMouseWorldPosition(ClientGame game) {
-    	Vector2f mouse = game.getApp().getUiManager().getCursor().getCursorPos();
+        Vector2f mouse = game.getApp().getUiManager().getCursor().getCursorPos();
         Vector2f worldPosition = game.screenToWorldCoordinates( (int) mouse.x, (int) mouse.y);
         Vector2f.Vector2fSnap(worldPosition, worldPosition);
         return worldPosition;

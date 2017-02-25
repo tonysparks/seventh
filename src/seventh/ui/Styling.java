@@ -28,22 +28,22 @@ package seventh.ui;
  *
  */
 public interface Styling {
-	
-	public static final int BLACK = 0xFF000000;
-	public static final int WHITE = 0xFFffFFff;
-	public static final int RED   = 0xFFff0000;
-	
-	/**
-	 * Styles a button.
-	 * 
-	 * @param button
-	 */
-	public void styleButton(Button button);
-	
-	/**
-	 * Styles a Dialog
-	 * 
-	 * @param dialog
-	 */
-	public void styleDialog(Dialog dialog);
+    
+    public static final int BLACK = 0xFF000000;
+    public static final int WHITE = 0xFFffFFff;
+    public static final int RED   = 0xFFff0000;
+    
+    /**
+     * Styles a button.
+     * 
+     * @param button
+     */
+    public void styleButton(Button button);
+    
+    /**
+     * Styles a Dialog
+     * 
+     * @param dialog
+     */
+    public void styleDialog(Dialog dialog);
 }

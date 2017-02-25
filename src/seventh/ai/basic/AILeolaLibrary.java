@@ -20,36 +20,36 @@ import seventh.ai.basic.actions.Actions;
  */
 public class AILeolaLibrary implements LeolaLibrary {
 
-	private Leola runtime;
-	private Actions actions;
-	private AISystem aiSystem;
-	
-	/**
-	 * @param aiSystem
-	 */
-	public AILeolaLibrary(AISystem aiSystem) {
-		this.aiSystem = aiSystem;
-	}
+    private Leola runtime;
+    private Actions actions;
+    private AISystem aiSystem;
+    
+    /**
+     * @param aiSystem
+     */
+    public AILeolaLibrary(AISystem aiSystem) {
+        this.aiSystem = aiSystem;
+    }
 
-	/* (non-Javadoc)
-	 * @see leola.vm.lib.LeolaLibrary#init(leola.vm.Leola, leola.vm.types.LeoNamespace)
-	 */
-	@LeolaIgnore
-	@Override
-	public void init(Leola leola, LeoNamespace namespace) throws LeolaRuntimeException {
-		this.runtime = leola;
-		this.runtime.putIntoNamespace(this, namespace);
-		
-		this.actions = new Actions(this.aiSystem, this.runtime);
-		this.runtime.putIntoNamespace(this.actions, namespace);		
-		
-	}
-	
-	/**
-	 * @return the {@link Actions} factory
-	 */
-	@LeolaIgnore
-	public Actions getActionFactory() {
-		return actions;
-	}	
+    /* (non-Javadoc)
+     * @see leola.vm.lib.LeolaLibrary#init(leola.vm.Leola, leola.vm.types.LeoNamespace)
+     */
+    @LeolaIgnore
+    @Override
+    public void init(Leola leola, LeoNamespace namespace) throws LeolaRuntimeException {
+        this.runtime = leola;
+        this.runtime.putIntoNamespace(this, namespace);
+        
+        this.actions = new Actions(this.aiSystem, this.runtime);
+        this.runtime.putIntoNamespace(this.actions, namespace);        
+        
+    }
+    
+    /**
+     * @return the {@link Actions} factory
+     */
+    @LeolaIgnore
+    public Actions getActionFactory() {
+        return actions;
+    }    
 }

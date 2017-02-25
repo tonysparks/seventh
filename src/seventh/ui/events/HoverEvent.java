@@ -31,32 +31,32 @@ import seventh.ui.Widget;
  */
 public class HoverEvent extends Event {
 
-	/**
-	 * Widget
-	 */
-	private Widget widget;
+    /**
+     * Widget
+     */
+    private Widget widget;
 
-	/**
-	 * @param source
-	 * @param button
-	 */
-	public HoverEvent(Object source, Widget widget) {
-		super(source);
-		this.widget = widget;
-	}
+    /**
+     * @param source
+     * @param button
+     */
+    public HoverEvent(Object source, Widget widget) {
+        super(source);
+        this.widget = widget;
+    }
 
-	/**
-	 * @return the widget
-	 */
-	public Widget getWidget() {
-		return widget;
-	}
-	
-	/**
-	 * @param widget the widget to set
-	 */
-	public void setWidget(Widget widget) {
-		this.widget = widget;
-	}
-		
+    /**
+     * @return the widget
+     */
+    public Widget getWidget() {
+        return widget;
+    }
+    
+    /**
+     * @param widget the widget to set
+     */
+    public void setWidget(Widget widget) {
+        this.widget = widget;
+    }
+        
 }

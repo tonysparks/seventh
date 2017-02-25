@@ -41,98 +41,98 @@ import seventh.ui.Widget;
  */
 public class ButtonView implements Renderable {
 
-	/**
-	 * The Button
-	 */
-	private Button button;
-	
-	/**
-	 * Renders a label
-	 */
-	private LabelView labelView;
-	
-	private Color srcColor, dstColor, currentColor;
-	private float time;
-	
-	/**
-	 * @param button
-	 */
-	public ButtonView(Button button) {
-		this.button = button;
+    /**
+     * The Button
+     */
+    private Button button;
+    
+    /**
+     * Renders a label
+     */
+    private LabelView labelView;
+    
+    private Color srcColor, dstColor, currentColor;
+    private float time;
+    
+    /**
+     * @param button
+     */
+    public ButtonView(Button button) {
+        this.button = button;
 
-		this.srcColor = new Color();
-		this.dstColor = new Color();
-		this.currentColor = new Color();
-				
-		this.labelView = new LabelView(this.button.getTextLabel()) {			
-			@Override
-			protected void setColor(Canvas renderer, Label label) {
-				renderer.setColor(Color.argb8888(currentColor), (int) (currentColor.a * 255) );
-				//super.setColor(renderer, label);
-			}
-		};
-	}
+        this.srcColor = new Color();
+        this.dstColor = new Color();
+        this.currentColor = new Color();
+                
+        this.labelView = new LabelView(this.button.getTextLabel()) {            
+            @Override
+            protected void setColor(Canvas renderer, Label label) {
+                renderer.setColor(Color.argb8888(currentColor), (int) (currentColor.a * 255) );
+                //super.setColor(renderer, label);
+            }
+        };
+    }
 
-	/* (non-Javadoc)
-	 * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
-	 */
-	public void render(Canvas renderer, Camera camera, float alpha) {
-		if ( this.button.isVisible() ) {
-			if ( this.button.gradiantEnabled() ) {
-				renderGradiantBackground(this.button, renderer, camera, alpha);
-			}
-			
-			this.labelView.render(renderer, camera, alpha);
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.myriad.render.Renderable#render(org.myriad.render.Renderer, org.myriad.render.Camera, org.myriad.core.TimeUnit)
+     */
+    public void render(Canvas renderer, Camera camera, float alpha) {
+        if ( this.button.isVisible() ) {
+            if ( this.button.gradiantEnabled() ) {
+                renderGradiantBackground(this.button, renderer, camera, alpha);
+            }
+            
+            this.labelView.render(renderer, camera, alpha);
+        }
+    }
 
-	private void renderGradiantBackground(Widget w, Canvas renderer, Camera camera, float alpha) {
-		int gradiant = w.getGradiantColor();
-		int bg = w.getBackgroundColor();
-		
-		Rectangle bounds = w.getScreenBounds();
-		
-		int a = w.getBackgroundAlpha();		
-		for(int i = 0; i < bounds.height; i++ ) {
-//			Vector3f.Vector3fSubtract(bg, gradiant, this.scratch1);
-			int scratch = Colors.subtract(bg, gradiant);
-			
-//			this.scratch1.x *= (1.0f / (bounds.height/1.5f));
-//			this.scratch1.y *= (1.0f / (bounds.height/1.5f));
-//			
-//			Vector3f.Vector3fAdd(scratch2, scratch1, scratch2);
-//			renderer.setColor(scratch2, a);
-			
-			int col = (a << 24) | scratch;
-			renderer.drawLine(bounds.x, bounds.y + i, bounds.x + bounds.width, bounds.y + i, col);
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.myriad.render.Renderable#update(org.myriad.core.TimeStep)
-	 */
-	public void update(TimeStep timeStep) {
-		if(button.isHovering()) {
-			Theme theme = button.getTheme();				
-			Color.argb8888ToColor(this.srcColor, button.getForegroundColor());
-			Color.argb8888ToColor(this.dstColor, (theme!=null) ? theme.getHoverColor() : button.getForegroundColor());
-			
-			time += timeStep.asFraction() * 0.79;						
-			float t = (float)Math.cos(time);
-			this.currentColor.set(this.srcColor.lerp(dstColor, t));
-		}
-		else {
-			time = 0;
-			Color.argb8888ToColor(currentColor, this.button.getForegroundColor());
-			currentColor.a = this.button.getForegroundAlpha() / 255;
-		}
-	}
+    private void renderGradiantBackground(Widget w, Canvas renderer, Camera camera, float alpha) {
+        int gradiant = w.getGradiantColor();
+        int bg = w.getBackgroundColor();
+        
+        Rectangle bounds = w.getScreenBounds();
+        
+        int a = w.getBackgroundAlpha();        
+        for(int i = 0; i < bounds.height; i++ ) {
+//            Vector3f.Vector3fSubtract(bg, gradiant, this.scratch1);
+            int scratch = Colors.subtract(bg, gradiant);
+            
+//            this.scratch1.x *= (1.0f / (bounds.height/1.5f));
+//            this.scratch1.y *= (1.0f / (bounds.height/1.5f));
+//            
+//            Vector3f.Vector3fAdd(scratch2, scratch1, scratch2);
+//            renderer.setColor(scratch2, a);
+            
+            int col = (a << 24) | scratch;
+            renderer.drawLine(bounds.x, bounds.y + i, bounds.x + bounds.width, bounds.y + i, col);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.myriad.render.Renderable#update(org.myriad.core.TimeStep)
+     */
+    public void update(TimeStep timeStep) {
+        if(button.isHovering()) {
+            Theme theme = button.getTheme();                
+            Color.argb8888ToColor(this.srcColor, button.getForegroundColor());
+            Color.argb8888ToColor(this.dstColor, (theme!=null) ? theme.getHoverColor() : button.getForegroundColor());
+            
+            time += timeStep.asFraction() * 0.79;                        
+            float t = (float)Math.cos(time);
+            this.currentColor.set(this.srcColor.lerp(dstColor, t));
+        }
+        else {
+            time = 0;
+            Color.argb8888ToColor(currentColor, this.button.getForegroundColor());
+            currentColor.a = this.button.getForegroundAlpha() / 255;
+        }
+    }
 
-	/**
-	 * @return the button
-	 */
-	public Button getButton() {
-		return button;
-	}
-	
+    /**
+     * @return the button
+     */
+    public Button getButton() {
+        return button;
+    }
+    
 }

@@ -14,20 +14,20 @@ import seventh.shared.WeaponConstants;
  */
 public class ClientM1Garand extends ClientWeapon {
 
-	/**
-	 * @param owner
-	 */
-	public ClientM1Garand(ClientPlayerEntity owner) {
-		super(owner);
-		
-		this.weaponIcon = Art.m1GarandIcon;
-		this.weaponImage = Art.m1GarandImage;
-		this.muzzleFlash = Art.newM1GarandMuzzleFlash();		
-		this.weaponWeight = WeaponConstants.M1GARAND_WEIGHT;
-		
-		this.weaponKickTime = 1; 
-		this.endFireKick = 0f; 
-		this.beginFireKick = 5.5f; 
-	}
+    /**
+     * @param owner
+     */
+    public ClientM1Garand(ClientPlayerEntity owner) {
+        super(owner);
+        
+        this.weaponIcon = Art.m1GarandIcon;
+        this.weaponImage = Art.m1GarandImage;
+        this.muzzleFlash = Art.newM1GarandMuzzleFlash();        
+        this.weaponWeight = WeaponConstants.M1GARAND_WEIGHT;
+        
+        this.weaponKickTime = 1; 
+        this.endFireKick = 0f; 
+        this.beginFireKick = 5.5f; 
+    }
 
 }

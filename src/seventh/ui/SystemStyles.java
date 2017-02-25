@@ -28,8 +28,8 @@ package seventh.ui;
  */
 public class SystemStyles {
 
-	/**
-	 * Default style
-	 */
-	public static final Styling DEFAULT_STYLE = new DefaultStyling();
+    /**
+     * Default style
+     */
+    public static final Styling DEFAULT_STYLE = new DefaultStyling();
 }

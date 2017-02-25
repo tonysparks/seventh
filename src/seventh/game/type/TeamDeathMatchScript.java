@@ -20,40 +20,40 @@ import seventh.shared.Cons;
  */
 public class TeamDeathMatchScript extends AbstractGameTypeScript {
 
-	/**
-	 * 
-	 */
-	public TeamDeathMatchScript(Leola runtime) {
-		super(runtime);
-	}
+    /**
+     * 
+     */
+    public TeamDeathMatchScript(Leola runtime) {
+        super(runtime);
+    }
 
-	/**
-	 * @param mapFile
-	 * @param maxScore
-	 * @param matchTime
-	 * @return
-	 * @throws Exception
-	 */
-	public GameType loadGameType(String mapFile, int maxScore, long matchTime) throws Exception {
-		
-		List<Vector2f> alliedSpawnPoints = new ArrayList<>();
-		List<Vector2f> axisSpawnPoints = new ArrayList<Vector2f>();
-		
-		
-		File scriptFile = new File(mapFile + ".tdm.leola");
-		if(!scriptFile.exists()) {
-			Cons.println("*** ERROR -> No associated script file for team death match game type.  Looking for: " + scriptFile.getName());
-		}
-		else {
-			LeoObject config = getRuntime().eval(scriptFile);
-			if(LeoObject.isTrue(config)) {
-								
-				alliedSpawnPoints = loadSpawnPoint(config, "alliedSpawnPoints");
-				axisSpawnPoints = loadSpawnPoint(config, "axisSpawnPoints");
-			}
-		}
-		
-		GameType gameType = new TeamDeathMatchGameType(getRuntime(), alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
-		return gameType;
-	}
+    /**
+     * @param mapFile
+     * @param maxScore
+     * @param matchTime
+     * @return
+     * @throws Exception
+     */
+    public GameType loadGameType(String mapFile, int maxScore, long matchTime) throws Exception {
+        
+        List<Vector2f> alliedSpawnPoints = new ArrayList<>();
+        List<Vector2f> axisSpawnPoints = new ArrayList<Vector2f>();
+        
+        
+        File scriptFile = new File(mapFile + ".tdm.leola");
+        if(!scriptFile.exists()) {
+            Cons.println("*** ERROR -> No associated script file for team death match game type.  Looking for: " + scriptFile.getName());
+        }
+        else {
+            LeoObject config = getRuntime().eval(scriptFile);
+            if(LeoObject.isTrue(config)) {
+                                
+                alliedSpawnPoints = loadSpawnPoint(config, "alliedSpawnPoints");
+                axisSpawnPoints = loadSpawnPoint(config, "axisSpawnPoints");
+            }
+        }
+        
+        GameType gameType = new TeamDeathMatchGameType(getRuntime(), alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
+        return gameType;
+    }
 }

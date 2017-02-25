@@ -14,29 +14,29 @@ import leola.frontend.listener.Event;
  */
 public class RoundEndedEvent extends Event {
 
-	private Team winner;
-	private NetGameStats stats;
-	
-	/**
-	 * @param source
-	 */
-	public RoundEndedEvent(Object source, Team winner, NetGameStats stats) {
-		super(source);	
-		this.winner = winner;
-		this.stats = stats;
-	}
+    private Team winner;
+    private NetGameStats stats;
+    
+    /**
+     * @param source
+     */
+    public RoundEndedEvent(Object source, Team winner, NetGameStats stats) {
+        super(source);    
+        this.winner = winner;
+        this.stats = stats;
+    }
 
-	/**
-	 * @return the stats
-	 */
-	public NetGameStats getStats() {
-		return stats;
-	}
-	
-	/**
-	 * @return the winner
-	 */
-	public Team getWinner() {
-		return winner;
-	}
+    /**
+     * @return the stats
+     */
+    public NetGameStats getStats() {
+        return stats;
+    }
+    
+    /**
+     * @return the winner
+     */
+    public Team getWinner() {
+        return winner;
+    }
 }

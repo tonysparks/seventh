@@ -31,10 +31,10 @@ import leola.frontend.listener.EventMethod;
  */
 public interface OnButtonClickedListener extends EventListener {
 
-	/**
-	 * A button was clicked.
-	 * @param event
-	 */
-	@EventMethod
-	public void onButtonClicked(ButtonEvent event);
+    /**
+     * A button was clicked.
+     * @param event
+     */
+    @EventMethod
+    public void onButtonClicked(ButtonEvent event);
 }

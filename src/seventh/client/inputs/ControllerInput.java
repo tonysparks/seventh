@@ -88,32 +88,32 @@ public class ControllerInput implements ControllerListener {
         }
     }
     
-	private boolean[] povDirections;
-	private boolean[] buttons;
-	
-	private boolean isConnected;
-	
-	private float triggers;
-	private float triggerSensitivity;
-	
-	private float leftJoystickSensitivity;
-	private float rightJoystickSensitivity;
-	
-	private float[] movements;
-	
-	/**
-	 */
-	public ControllerInput() {
-		this.povDirections = new boolean[PovDirection.values().length];
-		this.buttons = new boolean[64];
-		this.isConnected = Controllers.getControllers().size > 0;
-		this.triggerSensitivity = 0.3f;
-		this.leftJoystickSensitivity = 0.2f;
-		this.rightJoystickSensitivity = 0.3f;
-		
-		this.movements = new float[4];
-	}
-	
+    private boolean[] povDirections;
+    private boolean[] buttons;
+    
+    private boolean isConnected;
+    
+    private float triggers;
+    private float triggerSensitivity;
+    
+    private float leftJoystickSensitivity;
+    private float rightJoystickSensitivity;
+    
+    private float[] movements;
+    
+    /**
+     */
+    public ControllerInput() {
+        this.povDirections = new boolean[PovDirection.values().length];
+        this.buttons = new boolean[64];
+        this.isConnected = Controllers.getControllers().size > 0;
+        this.triggerSensitivity = 0.3f;
+        this.leftJoystickSensitivity = 0.2f;
+        this.rightJoystickSensitivity = 0.3f;
+        
+        this.movements = new float[4];
+    }
+    
     /**
      * @return the leftJoystickSensitivity
      */
@@ -141,68 +141,68 @@ public class ControllerInput implements ControllerListener {
     public void setRightJoystickSensitivity(float rightJoystickSensitivity) {
         this.rightJoystickSensitivity = rightJoystickSensitivity;
     }
-	
-	/**
-	 * @param triggerSensitivity the triggerSensitivity to set
-	 */
-	public void setTriggerSensitivity(float triggerSensitivity) {
-		this.triggerSensitivity = triggerSensitivity;
-	}
-	
-	/**
-	 * @return true if the left trigger is down.
-	 */
-	public boolean isLeftTriggerDown() {
-		return this.triggers > this.triggerSensitivity;
-	}
-	
-	/**
-	 * @return true if the right trigger is down.
-	 */
-	public boolean isRightTriggerDown() {
-		return this.triggers < -this.triggerSensitivity;
-	}
-	
-	/**
-	 * @return the triggerSensitivity
-	 */
-	public float getTriggerSensitivity() {
-		return triggerSensitivity;
-	}
-	
-	/**
-	 * @param dir
-	 * @return true if the supplied {@link PovDirection} is down
-	 */
-	public boolean isPovDirectionDown(PovDirection dir) {
-		return povDirections[dir.ordinal()];
-	}
-	
-	/**
-	 * @param button
-	 * @return true if the supplied button is down
-	 */
-	public boolean isButtonDown(int button) {
-		if(button < 0 || button > buttons.length) {
-			return false;
-		}
-		
-		return this.buttons[button];
-	}
-	
-	
-	/**
-	 * Determines if a particular button is down
-	 * 
-	 * @param button
-	 * @return true if the button is down, false otherwise
-	 */
-	public boolean isButtonDown(ControllerButtons button) {
-	    switch(button) {
-    	    case NORTH_DPAD_BTN:
-    	        return isPovDirectionDown(PovDirection.north);
-    	    case NE_DPAD_BTN:
-    	        return isPovDirectionDown(PovDirection.northEast);
+    
+    /**
+     * @param triggerSensitivity the triggerSensitivity to set
+     */
+    public void setTriggerSensitivity(float triggerSensitivity) {
+        this.triggerSensitivity = triggerSensitivity;
+    }
+    
+    /**
+     * @return true if the left trigger is down.
+     */
+    public boolean isLeftTriggerDown() {
+        return this.triggers > this.triggerSensitivity;
+    }
+    
+    /**
+     * @return true if the right trigger is down.
+     */
+    public boolean isRightTriggerDown() {
+        return this.triggers < -this.triggerSensitivity;
+    }
+    
+    /**
+     * @return the triggerSensitivity
+     */
+    public float getTriggerSensitivity() {
+        return triggerSensitivity;
+    }
+    
+    /**
+     * @param dir
+     * @return true if the supplied {@link PovDirection} is down
+     */
+    public boolean isPovDirectionDown(PovDirection dir) {
+        return povDirections[dir.ordinal()];
+    }
+    
+    /**
+     * @param button
+     * @return true if the supplied button is down
+     */
+    public boolean isButtonDown(int button) {
+        if(button < 0 || button > buttons.length) {
+            return false;
+        }
+        
+        return this.buttons[button];
+    }
+    
+    
+    /**
+     * Determines if a particular button is down
+     * 
+     * @param button
+     * @return true if the button is down, false otherwise
+     */
+    public boolean isButtonDown(ControllerButtons button) {
+        switch(button) {
+            case NORTH_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.north);
+            case NE_DPAD_BTN:
+                return isPovDirectionDown(PovDirection.northEast);
             case EAST_DPAD_BTN:
                 return isPovDirectionDown(PovDirection.east);
             case SE_DPAD_BTN:
@@ -247,23 +247,23 @@ public class ControllerInput implements ControllerListener {
                 return this.buttons[3];                        
             default:
                 return false;
-	    }
-	}
-	
-	public boolean isXAxisMovedLeftOnLeftJoystick() {
-	    return movements[1] < -this.leftJoystickSensitivity;
-	}
-	public boolean isXAxisMovedRightOnLeftJoystick() {
+        }
+    }
+    
+    public boolean isXAxisMovedLeftOnLeftJoystick() {
+        return movements[1] < -this.leftJoystickSensitivity;
+    }
+    public boolean isXAxisMovedRightOnLeftJoystick() {
         return movements[1] > this.leftJoystickSensitivity;
     }
-	
-	public boolean isXAxisMovedLeftOnRightJoystick() {
+    
+    public boolean isXAxisMovedLeftOnRightJoystick() {
         return movements[3] < -this.rightJoystickSensitivity;
     }
     public boolean isXAxisMovedRightOnRightJoystick() {
         return movements[3] > this.rightJoystickSensitivity;
     }
-	
+    
     public boolean isYAxisMovedUpOnLeftJoystick() {
         return movements[0] < -this.leftJoystickSensitivity;
     }    
@@ -291,93 +291,93 @@ public class ControllerInput implements ControllerListener {
     public boolean isYAxisOnLeftJoystickMoved() {
         return Math.abs(movements[0]) > this.leftJoystickSensitivity;
     }
-	
-	public float getLeftJoystickXAxis() {
-	    return movements[1];
-	}
-	public float getLeftJoystickYAxis() {
+    
+    public float getLeftJoystickXAxis() {
+        return movements[1];
+    }
+    public float getLeftJoystickYAxis() {
         return movements[0];
     }
-	
-	public float getRightJoystickXAxis() {
+    
+    public float getRightJoystickXAxis() {
         return movements[3];
     }
     public float getRightJoystickYAxis() {
         return movements[2];
     }
-	
     
     
-	/**
-	 * @return the isConnected
-	 */
-	public boolean isConnected() {
-		return isConnected;
-	}
-	
+    
+    /**
+     * @return the isConnected
+     */
+    public boolean isConnected() {
+        return isConnected;
+    }
+    
 
-	@Override
-	public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {		
-		return false;
-	}
-	
-	@Override
-	public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {		
-		return false;
-	}
-	
-	@Override
-	public boolean povMoved(Controller controller, int povCode, PovDirection dir) {
-		for(int i = 0; i<this.povDirections.length; i++) {
-			this.povDirections[i] = false;
-		}
-		this.povDirections[dir.ordinal()] = true;				
-		return false;
-	}
-	
-	@Override
-	public void disconnected(Controller controller) {
-		this.isConnected = false;
-	}
-	
-	@Override
-	public void connected(Controller controller) {
-		this.isConnected = true;
-	}
-	
-	@Override
-	public boolean buttonUp(Controller controller, int button) {
-	    if(button >-1 && button < this.buttons.length)
-	        this.buttons[button] = false;
-	    
-		System.out.println("ButtonUp:" + button);
-		return false;
-	}
-	
-	@Override
-	public boolean buttonDown(Controller controller, int button) {
-	    if(button >-1 && button < this.buttons.length)
-	        this.buttons[button] = true;
-	    
-//		System.out.println("ButtonDown:" + button);
-		return false;
-	}
-	
-	@Override
-	public boolean axisMoved(Controller controller, int axisCode, float value) {
-		if(axisCode==4) {
-			triggers = value;
-		}
-				        
+    @Override
+    public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {        
+        return false;
+    }
+    
+    @Override
+    public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {        
+        return false;
+    }
+    
+    @Override
+    public boolean povMoved(Controller controller, int povCode, PovDirection dir) {
+        for(int i = 0; i<this.povDirections.length; i++) {
+            this.povDirections[i] = false;
+        }
+        this.povDirections[dir.ordinal()] = true;                
+        return false;
+    }
+    
+    @Override
+    public void disconnected(Controller controller) {
+        this.isConnected = false;
+    }
+    
+    @Override
+    public void connected(Controller controller) {
+        this.isConnected = true;
+    }
+    
+    @Override
+    public boolean buttonUp(Controller controller, int button) {
+        if(button >-1 && button < this.buttons.length)
+            this.buttons[button] = false;
+        
+        System.out.println("ButtonUp:" + button);
+        return false;
+    }
+    
+    @Override
+    public boolean buttonDown(Controller controller, int button) {
+        if(button >-1 && button < this.buttons.length)
+            this.buttons[button] = true;
+        
+//        System.out.println("ButtonDown:" + button);
+        return false;
+    }
+    
+    @Override
+    public boolean axisMoved(Controller controller, int axisCode, float value) {
+        if(axisCode==4) {
+            triggers = value;
+        }
+                        
         if(axisCode<4) {
             movements[axisCode] = value;
         }
                     
         return true;
-	}
-	
-	@Override
-	public boolean accelerometerMoved(Controller controller, int accelCode, Vector3 value) {
-		return false;
-	}	
+    }
+    
+    @Override
+    public boolean accelerometerMoved(Controller controller, int accelCode, Vector3 value) {
+        return false;
+    }    
 }

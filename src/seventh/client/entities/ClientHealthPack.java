@@ -15,31 +15,31 @@ import seventh.math.Vector2f;
  */
 public class ClientHealthPack extends ClientEntity {
 
-	/**
-	 * @param game
-	 * @param pos
-	 */
-	public ClientHealthPack(ClientGame game, Vector2f pos) {
-		super(game, pos);
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.client.ClientEntity#killIfOutdated(long)
-	 */
-	@Override
-	public boolean killIfOutdated(long gameClock) {
-		return false;
-	}
+    /**
+     * @param game
+     * @param pos
+     */
+    public ClientHealthPack(ClientGame game, Vector2f pos) {
+        super(game, pos);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.ClientEntity#killIfOutdated(long)
+     */
+    @Override
+    public boolean killIfOutdated(long gameClock) {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
-	 */
-	@Override
-	public void render(Canvas canvas, Camera camera, float alpha) {
-		Vector2f cameraPos = camera.getRenderPosition(alpha);
-		float x = (pos.x - cameraPos.x);
-		float y = (pos.y - cameraPos.y);
-		canvas.drawImage(Art.healthPack, x, y, null);
-	}
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
+     */
+    @Override
+    public void render(Canvas canvas, Camera camera, float alpha) {
+        Vector2f cameraPos = camera.getRenderPosition(alpha);
+        float x = (pos.x - cameraPos.x);
+        float y = (pos.y - cameraPos.y);
+        canvas.drawImage(Art.healthPack, x, y, null);
+    }
 
 }

@@ -69,7 +69,7 @@ public class Zings {
                 ClientEntity ent = entityList[i];
                 if(ent != null) {
                     if(ent instanceof ClientBullet) {
-                    	ClientBullet bullet = (ClientBullet)ent;
+                        ClientBullet bullet = (ClientBullet)ent;
                         if(ent.isAlive() && ent.isRelativelyUpdated(300) && bullet.getOwnerId() != localEntity.getId()) {
                             if(localEntity.inEarShot(ent)) {
                                 zings[ent.getId()].playZing(gameClock, localEntity.getId(), ent);

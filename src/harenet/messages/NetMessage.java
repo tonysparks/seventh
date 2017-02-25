@@ -15,17 +15,17 @@ import java.nio.ByteBuffer;
  *
  */
 public interface NetMessage {
-	
-	/**
-	 * Reads from the {@link ByteBuffer}
-	 * @param buffer
-	 */
-	public void read(IOBuffer buffer);
-	
-	/**
-	 * Writes to the {@link ByteBuffer}
-	 * @param buffer
-	 */
-	public void write(IOBuffer buffer);
-	
+    
+    /**
+     * Reads from the {@link ByteBuffer}
+     * @param buffer
+     */
+    public void read(IOBuffer buffer);
+    
+    /**
+     * Writes to the {@link ByteBuffer}
+     * @param buffer
+     */
+    public void write(IOBuffer buffer);
+    
 }

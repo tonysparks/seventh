@@ -16,34 +16,34 @@ import java.nio.ReadOnlyBufferException;
  *
  */
 public interface IOBuffer {
-	
-	/**
-	 * Simple factory methods
-	 * 
-	 * @author Tony
-	 *
-	 */
-	public static class Factory {
-		public static IOBuffer allocateDirect(int size) {
-			return new ByteBufferIOBuffer(ByteBuffer.allocateDirect(size));
-		}
-		public static IOBuffer allocate(int size) {
-			return new ByteBufferIOBuffer(ByteBuffer.allocate(size));
-		}
-		public static IOBuffer wrap(byte[] buff) {
-			return new ByteBufferIOBuffer(ByteBuffer.wrap(buff));
-		}
-		public static IOBuffer wrap(byte[] buff, int offset, int len) {
-			return new ByteBufferIOBuffer(ByteBuffer.wrap(buff, offset, len));
-		}
-	}
+    
+    /**
+     * Simple factory methods
+     * 
+     * @author Tony
+     *
+     */
+    public static class Factory {
+        public static IOBuffer allocateDirect(int size) {
+            return new ByteBufferIOBuffer(ByteBuffer.allocateDirect(size));
+        }
+        public static IOBuffer allocate(int size) {
+            return new ByteBufferIOBuffer(ByteBuffer.allocate(size));
+        }
+        public static IOBuffer wrap(byte[] buff) {
+            return new ByteBufferIOBuffer(ByteBuffer.wrap(buff));
+        }
+        public static IOBuffer wrap(byte[] buff, int offset, int len) {
+            return new ByteBufferIOBuffer(ByteBuffer.wrap(buff, offset, len));
+        }
+    }
 
-	/**
-	 * @return the underlying {@link ByteBuffer}
-	 */
-	public ByteBuffer asByteBuffer();
-		
-	 /**
+    /**
+     * @return the underlying {@link ByteBuffer}
+     */
+    public ByteBuffer asByteBuffer();
+        
+     /**
      * Creates a new byte buffer whose content is a shared subsequence of
      * this buffer's content.
      *

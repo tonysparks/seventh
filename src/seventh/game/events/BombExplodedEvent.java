@@ -13,20 +13,20 @@ import seventh.game.entities.Bomb;
  */
 public class BombExplodedEvent extends Event {
 
-	private Bomb bomb;
-	
-	/**
-	 * @param source
-	 */
-	public BombExplodedEvent(Object source, Bomb bomb) {
-		super(source);
-		this.bomb = bomb;
-	}
+    private Bomb bomb;
+    
+    /**
+     * @param source
+     */
+    public BombExplodedEvent(Object source, Bomb bomb) {
+        super(source);
+        this.bomb = bomb;
+    }
 
-	/**
-	 * @return the bomb
-	 */
-	public Bomb getBomb() {
-		return bomb;
-	}
+    /**
+     * @return the bomb
+     */
+    public Bomb getBomb() {
+        return bomb;
+    }
 }

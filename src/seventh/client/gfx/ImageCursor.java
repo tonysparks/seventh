@@ -18,37 +18,37 @@ import seventh.shared.TimeStep;
  */
 public class ImageCursor extends Cursor {
 
-	private TextureRegion cursorImg;
+    private TextureRegion cursorImg;
 
-	/**
-	 */
-	public ImageCursor() {
-		this(Art.cursorImg);
-	}
-	
-	/**
-	 * @param image 
-	 * 			the cursor image to use
-	 */
-	public ImageCursor(TextureRegion image) {
-		super(new Rectangle(image.getRegionWidth(), image.getRegionHeight()));
-		this.cursorImg = image;
-	}
-	
-	@Override
-	public void update(TimeStep timeStep) {			
-	}
-	
-	/**
-	 * Draws the cursor on the screen
-	 * @param canvas
-	 */
-	@Override 
-	protected void doRender(Canvas canvas) {
-		Vector2f cursorPos = getCursorPos();
-		int imageWidth = cursorImg.getRegionWidth();
-		int imageHeight = cursorImg.getRegionHeight();
-		
-		canvas.drawImage(cursorImg, (int)cursorPos.x - imageWidth/2, (int)cursorPos.y - imageHeight/2, null);				
-	}
+    /**
+     */
+    public ImageCursor() {
+        this(Art.cursorImg);
+    }
+    
+    /**
+     * @param image 
+     *             the cursor image to use
+     */
+    public ImageCursor(TextureRegion image) {
+        super(new Rectangle(image.getRegionWidth(), image.getRegionHeight()));
+        this.cursorImg = image;
+    }
+    
+    @Override
+    public void update(TimeStep timeStep) {            
+    }
+    
+    /**
+     * Draws the cursor on the screen
+     * @param canvas
+     */
+    @Override 
+    protected void doRender(Canvas canvas) {
+        Vector2f cursorPos = getCursorPos();
+        int imageWidth = cursorImg.getRegionWidth();
+        int imageHeight = cursorImg.getRegionHeight();
+        
+        canvas.drawImage(cursorImg, (int)cursorPos.x - imageWidth/2, (int)cursorPos.y - imageHeight/2, null);                
+    }
 }

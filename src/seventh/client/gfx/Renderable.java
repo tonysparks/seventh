@@ -1,5 +1,5 @@
 /*
- *	leola-live 
+ *    leola-live 
  *  see license.txt
  */
 package seventh.client.gfx;
@@ -15,19 +15,19 @@ import seventh.shared.TimeStep;
  */
 public interface Renderable {
 
-	/**
-	 * Update this Renderable.  Updates may include moving ahead with animation frames.
-	 * 
-	 * @param timeStep
-	 */
-	public void update(TimeStep timeStep);
-	
-	/**
-	 * Render this object.
-	 * 
-	 * @param renderer
-	 * @param camera
-	 * @param alpha
-	 */
-	public void render(Canvas canvas, Camera camera, float alpha);
+    /**
+     * Update this Renderable.  Updates may include moving ahead with animation frames.
+     * 
+     * @param timeStep
+     */
+    public void update(TimeStep timeStep);
+    
+    /**
+     * Render this object.
+     * 
+     * @param renderer
+     * @param camera
+     * @param alpha
+     */
+    public void render(Canvas canvas, Camera camera, float alpha);
 }

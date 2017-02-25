@@ -35,29 +35,29 @@ import seventh.ui.ImagePanel;
  */
 public class ImagePanelView extends PanelView {
 
-	private ImagePanel panel;
-	
-	/**
-	 * 
-	 */
-	public ImagePanelView(ImagePanel panel) {
-		this.panel = panel;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ui.view.PanelView#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, float)
-	 */
-	@Override
-	public void render(Canvas renderer, Camera camera, float alpha) {
-		
-		Rectangle bounds = panel.getScreenBounds();
-		renderer.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, panel.getBackgroundColor());
-		renderer.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, panel.getForegroundColor());
-		
-		TextureRegion tex = panel.getImage();
-		if(tex!=null) {
-			renderer.drawScaledImage(tex, bounds.x, bounds.y, bounds.width, bounds.height, null);
-		}
-		super.render(renderer, camera, alpha);
-	}
+    private ImagePanel panel;
+    
+    /**
+     * 
+     */
+    public ImagePanelView(ImagePanel panel) {
+        this.panel = panel;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ui.view.PanelView#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, float)
+     */
+    @Override
+    public void render(Canvas renderer, Camera camera, float alpha) {
+        
+        Rectangle bounds = panel.getScreenBounds();
+        renderer.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, panel.getBackgroundColor());
+        renderer.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, panel.getForegroundColor());
+        
+        TextureRegion tex = panel.getImage();
+        if(tex!=null) {
+            renderer.drawScaledImage(tex, bounds.x, bounds.y, bounds.width, bounds.height, null);
+        }
+        super.render(renderer, camera, alpha);
+    }
 }

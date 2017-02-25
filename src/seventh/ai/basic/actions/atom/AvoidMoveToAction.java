@@ -14,21 +14,21 @@ import seventh.math.Vector2f;
  *
  */
 public class AvoidMoveToAction extends MoveToAction {
-	
-	private List<Zone> zonesToAvoid;
-	/**
-	 * 
-	 */
-	public AvoidMoveToAction(Vector2f dest, List<Zone> zonesToAvoid) {		
-		super(dest);
-		this.zonesToAvoid = zonesToAvoid;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void start(Brain brain) {		
-		brain.getMotion().avoidMoveTo(getDestination(), zonesToAvoid);
-	}		
+    
+    private List<Zone> zonesToAvoid;
+    /**
+     * 
+     */
+    public AvoidMoveToAction(Vector2f dest, List<Zone> zonesToAvoid) {        
+        super(dest);
+        this.zonesToAvoid = zonesToAvoid;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void start(Brain brain) {        
+        brain.getMotion().avoidMoveTo(getDestination(), zonesToAvoid);
+    }        
 }

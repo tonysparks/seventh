@@ -36,255 +36,255 @@ import seventh.ui.events.OnButtonClickedListener;
  *
  */
 public class Button extends Widget implements Hoverable {
-	
-	/**
-	 * Text on the button if 
-	 * any.
-	 */
-	private Label label;
-		
-	/**
-	 * If the button is being pressed.
-	 */
-	private boolean isPressed;
-	
-	/**
-	 * If we are hovering over the
-	 * button
-	 */
-	private boolean isHovering;
-	private float hoverTextSize;
-	private float normalTextSize;
-	
-	private boolean border;
-	
-	/**
-	 * Button event to reuse for
-	 * this button.
-	 */
-	private ButtonEvent buttonEvent;			
-	
-	/**
-	 * @param eventDispatcher
-	 */
-	public Button(EventDispatcher eventDispatcher) {
-		super(eventDispatcher);
-		
-		this.label = new Label();
-		addWidget(this.label);
-		
-		this.normalTextSize = 28;
-		this.hoverTextSize = 34;
-		this.label.setTextSize(28);
-		
-		this.border = true;
-		
-		this.buttonEvent = new ButtonEvent(this, this);
-		addInputListener(new Inputs() {
-			
-			/* (non-Javadoc)
-			 * @see seventh.client.Inputs#mouseMoved(int, int)
-			 */
-			@Override
-			public boolean mouseMoved(int x, int y) {						
-				super.mouseMoved(x, y);
-				if ( ! isDisabled() ) {
-					if ( getScreenBounds().contains(x,y)) {																			
-						setHovering(true);		
-						return false;
-					}
-				}
-				setHovering(false);				
-				return false;
-			}
-			
-			@Override
-			public boolean touchDown(int x, int y, int pointer, int button) {
-				if ( ! isDisabled() ) {
-					if ( getScreenBounds().contains(x,y)) {																			
-						setPressed(true);
-						click();
-						return true;																
-					}
-				}
-				
-				setPressed(false);
-				return false;
-			}
+    
+    /**
+     * Text on the button if 
+     * any.
+     */
+    private Label label;
+        
+    /**
+     * If the button is being pressed.
+     */
+    private boolean isPressed;
+    
+    /**
+     * If we are hovering over the
+     * button
+     */
+    private boolean isHovering;
+    private float hoverTextSize;
+    private float normalTextSize;
+    
+    private boolean border;
+    
+    /**
+     * Button event to reuse for
+     * this button.
+     */
+    private ButtonEvent buttonEvent;            
+    
+    /**
+     * @param eventDispatcher
+     */
+    public Button(EventDispatcher eventDispatcher) {
+        super(eventDispatcher);
+        
+        this.label = new Label();
+        addWidget(this.label);
+        
+        this.normalTextSize = 28;
+        this.hoverTextSize = 34;
+        this.label.setTextSize(28);
+        
+        this.border = true;
+        
+        this.buttonEvent = new ButtonEvent(this, this);
+        addInputListener(new Inputs() {
+            
+            /* (non-Javadoc)
+             * @see seventh.client.Inputs#mouseMoved(int, int)
+             */
+            @Override
+            public boolean mouseMoved(int x, int y) {                        
+                super.mouseMoved(x, y);
+                if ( ! isDisabled() ) {
+                    if ( getScreenBounds().contains(x,y)) {                                                                            
+                        setHovering(true);        
+                        return false;
+                    }
+                }
+                setHovering(false);                
+                return false;
+            }
+            
+            @Override
+            public boolean touchDown(int x, int y, int pointer, int button) {
+                if ( ! isDisabled() ) {
+                    if ( getScreenBounds().contains(x,y)) {                                                                            
+                        setPressed(true);
+                        click();
+                        return true;                                                                
+                    }
+                }
+                
+                setPressed(false);
+                return false;
+            }
 
-			/* (non-Javadoc)
-			 * @see seventh.client.Inputs#touchDown(int, int, int, int)
-			 */
-			@Override
-			public boolean touchUp(int x, int y, int pointer, int button) {
-				setPressed(false);
-				if ( ! isDisabled() ) {
-					if ( getScreenBounds().contains(x,y)) {																									
-						return true;																
-					}
-				}
-								
-				return false;				
-			}
-		});
-		
-	}
-	
-	/**
-	 */
-	public Button() {
-		this(new EventDispatcher());
-	}
-	
-	/**
-	 * Adds a listener
-	 * @param l
-	 */
-	public void addOnButtonClickedListener(OnButtonClickedListener l) {
-		this.getEventDispatcher().addEventListener(ButtonEvent.class, l);
-	}
-	
-	/**
-	 * Removes a listener
-	 * @param l
-	 */
-	public void removeOnButtonClickedListener(OnButtonClickedListener l) {
-		this.getEventDispatcher().removeEventListener(ButtonEvent.class, l);
-	}
+            /* (non-Javadoc)
+             * @see seventh.client.Inputs#touchDown(int, int, int, int)
+             */
+            @Override
+            public boolean touchUp(int x, int y, int pointer, int button) {
+                setPressed(false);
+                if ( ! isDisabled() ) {
+                    if ( getScreenBounds().contains(x,y)) {                                                                                                    
+                        return true;                                                                
+                    }
+                }
+                                
+                return false;                
+            }
+        });
+        
+    }
+    
+    /**
+     */
+    public Button() {
+        this(new EventDispatcher());
+    }
+    
+    /**
+     * Adds a listener
+     * @param l
+     */
+    public void addOnButtonClickedListener(OnButtonClickedListener l) {
+        this.getEventDispatcher().addEventListener(ButtonEvent.class, l);
+    }
+    
+    /**
+     * Removes a listener
+     * @param l
+     */
+    public void removeOnButtonClickedListener(OnButtonClickedListener l) {
+        this.getEventDispatcher().removeEventListener(ButtonEvent.class, l);
+    }
 
-	/**
-	 * @param border the border to set
-	 */
-	public void setBorder(boolean border) {
-		this.border = border;
-	}
-	
-	/**
-	 * @return true if there is a border
-	 */
-	public boolean hasBorder() {
-		return this.border;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.fived.ricochet.ui.Widget#setBounds(org.myriad.shared.math.Rectangle)
-	 */
-	@Override
-	public void setBounds(Rectangle bounds) {
-		super.setBounds(bounds);
-		this.label.getBounds().width = bounds.width;
-		this.label.getBounds().height = bounds.height;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ui.Widget#setTheme(seventh.client.gfx.Theme)
-	 */
-	@Override
-	public void setTheme(Theme theme) {	
-		super.setTheme(theme);
-		if(theme!=null) {
-			label.setFont(theme.getPrimaryFontName());
-		}
-	}
-	
-	/**
-	 * @return the text label
-	 */
-	public Label getTextLabel() {
-		return this.label;
-	}
-	
-	/**
-	 * @return the text
-	 */
-	public String getText() {
-		return this.label.getText();
-	}
+    /**
+     * @param border the border to set
+     */
+    public void setBorder(boolean border) {
+        this.border = border;
+    }
+    
+    /**
+     * @return true if there is a border
+     */
+    public boolean hasBorder() {
+        return this.border;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see com.fived.ricochet.ui.Widget#setBounds(org.myriad.shared.math.Rectangle)
+     */
+    @Override
+    public void setBounds(Rectangle bounds) {
+        super.setBounds(bounds);
+        this.label.getBounds().width = bounds.width;
+        this.label.getBounds().height = bounds.height;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ui.Widget#setTheme(seventh.client.gfx.Theme)
+     */
+    @Override
+    public void setTheme(Theme theme) {    
+        super.setTheme(theme);
+        if(theme!=null) {
+            label.setFont(theme.getPrimaryFontName());
+        }
+    }
+    
+    /**
+     * @return the text label
+     */
+    public Label getTextLabel() {
+        return this.label;
+    }
+    
+    /**
+     * @return the text
+     */
+    public String getText() {
+        return this.label.getText();
+    }
 
-	/**
-	 * @param text the text to set
-	 */
-	public void setText(String text) {
-		this.label.setText(text);
-	}
+    /**
+     * @param text the text to set
+     */
+    public void setText(String text) {
+        this.label.setText(text);
+    }
 
-	public void setTextSize(float size) {
-		this.label.setTextSize(size);
-		this.normalTextSize = size;
-	}
-	
-	public void setHoverTextSize(float size) {
-		this.hoverTextSize = size;
-	}
+    public void setTextSize(float size) {
+        this.label.setTextSize(size);
+        this.normalTextSize = size;
+    }
+    
+    public void setHoverTextSize(float size) {
+        this.hoverTextSize = size;
+    }
 
-	/**
-	 * @return the isPressed
-	 */
-	public boolean isPressed() {
-		return isPressed;
-	}
-	
-	/**
-	 * Set if the button was pressed.
-	 * @param pressed
-	 */
-	private void setPressed(boolean pressed) {
-		
-		if ( pressed ) {
-			this.label.getBounds().y = 5;
-			if(!this.isPressed) {
-				Sounds.playGlobalSound(Sounds.uiSelect);
-			}
-		}
-		else {
-			this.label.getBounds().y = 0;
-		}
-		
-		this.isPressed = pressed;
-	}
+    /**
+     * @return the isPressed
+     */
+    public boolean isPressed() {
+        return isPressed;
+    }
+    
+    /**
+     * Set if the button was pressed.
+     * @param pressed
+     */
+    private void setPressed(boolean pressed) {
+        
+        if ( pressed ) {
+            this.label.getBounds().y = 5;
+            if(!this.isPressed) {
+                Sounds.playGlobalSound(Sounds.uiSelect);
+            }
+        }
+        else {
+            this.label.getBounds().y = 0;
+        }
+        
+        this.isPressed = pressed;
+    }
 
-	/**
-	 * @param isHovering the isHovering to set
-	 */
-	public void setHovering(boolean isHovering) {
-				
-		if(isHovering) {
-			this.label.setTextSize(this.hoverTextSize);
-			Theme theme = getTheme();
-			if(theme!=null) {
-				this.label.setForegroundColor(theme.getHoverColor());
-			}
-			
-			if(!this.isHovering) {
-				Sounds.playGlobalSound(Sounds.uiHover);
-				getEventDispatcher().sendNow(new HoverEvent(this, this));
-			}
-		}
-		else {
-			this.label.setTextSize(this.normalTextSize);
-			Theme theme = getTheme();
-			if(theme!=null) {
-				this.label.setForegroundColor(theme.getForegroundColor());
-			}
-		}
-		this.isHovering = isHovering;
-	}
-	
-	/**
-	 * @return the isHovering
-	 */
-	@Override
-	public boolean isHovering() {
-		return isHovering;
-	}
-	
-	/**
-	 * Click the button.
-	 */
-	public void click() {		
-		this.getEventDispatcher().sendNow(this.buttonEvent);				
-	}
-	
+    /**
+     * @param isHovering the isHovering to set
+     */
+    public void setHovering(boolean isHovering) {
+                
+        if(isHovering) {
+            this.label.setTextSize(this.hoverTextSize);
+            Theme theme = getTheme();
+            if(theme!=null) {
+                this.label.setForegroundColor(theme.getHoverColor());
+            }
+            
+            if(!this.isHovering) {
+                Sounds.playGlobalSound(Sounds.uiHover);
+                getEventDispatcher().sendNow(new HoverEvent(this, this));
+            }
+        }
+        else {
+            this.label.setTextSize(this.normalTextSize);
+            Theme theme = getTheme();
+            if(theme!=null) {
+                this.label.setForegroundColor(theme.getForegroundColor());
+            }
+        }
+        this.isHovering = isHovering;
+    }
+    
+    /**
+     * @return the isHovering
+     */
+    @Override
+    public boolean isHovering() {
+        return isHovering;
+    }
+    
+    /**
+     * Click the button.
+     */
+    public void click() {        
+        this.getEventDispatcher().sendNow(this.buttonEvent);                
+    }
+    
 
 }

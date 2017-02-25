@@ -14,12 +14,12 @@ import seventh.math.Vector2f;
  */
 public class PanzerTank extends Tank {
 
-	/**
-	 * @param position
-	 * @param game
-	 */
-	public PanzerTank(Vector2f position, Game game, long timeToKill) {
-		super(Type.PANZER_TANK, position, game, timeToKill);
-	}
+    /**
+     * @param position
+     * @param game
+     */
+    public PanzerTank(Vector2f position, Game game, long timeToKill) {
+        super(Type.PANZER_TANK, position, game, timeToKill);
+    }
 
 }

@@ -55,10 +55,10 @@ public class BroadcastListener implements AutoCloseable {
         this.active = new AtomicBoolean();
         
         try {
-        	this.groupAddress = InetAddress.getByName(groupAddress); 
+            this.groupAddress = InetAddress.getByName(groupAddress); 
         }
         catch(Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -78,32 +78,32 @@ public class BroadcastListener implements AutoCloseable {
      * @param port
      */
     public void start() throws Exception {
-        if(!this.active.get()) {        	
+        if(!this.active.get()) {            
             this.active.set(true);
             
             socket = null;
             try {
-            	socket = new MulticastSocket(this.port);
-	            socket.joinGroup(this.groupAddress);    
-	            
-	            byte[] buffer = new byte[this.MTU];
-	            while(this.active.get()) {
-	                
-	                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);               
-	               	socket.receive(packet);               
-	                
-	                for(OnMessageReceivedListener l : this.listeners) {
-	                    l.onMessage(packet);
-	                }
-	            }
+                socket = new MulticastSocket(this.port);
+                socket.joinGroup(this.groupAddress);    
+                
+                byte[] buffer = new byte[this.MTU];
+                while(this.active.get()) {
+                    
+                    DatagramPacket packet = new DatagramPacket(buffer, buffer.length);               
+                       socket.receive(packet);               
+                    
+                    for(OnMessageReceivedListener l : this.listeners) {
+                        l.onMessage(packet);
+                    }
+                }
             }
             catch(SocketException e) {
-            	if(!e.getMessage().equals("socket closed")) {
-            		throw e;
-            	}
+                if(!e.getMessage().equals("socket closed")) {
+                    throw e;
+                }
             }
             finally {
-            	if(socket != null && !socket.isClosed()) {
+                if(socket != null && !socket.isClosed()) {
                     socket.leaveGroup(this.groupAddress);
                     socket.close();
                 }  

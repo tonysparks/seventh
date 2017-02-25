@@ -17,25 +17,25 @@ import seventh.ai.basic.actions.evaluators.Evaluators;
  */
 public class QuickWeightedAction extends CompositeAction {
 
-	private ActionEvaluator[] evaluators;
-	private ActionEvaluator currentActiveEvaluator;
-		
-	/**
-	 * @param brain
-	 * @param name
-	 * @param evaluators
-	 */
-	public QuickWeightedAction(Brain brain, String name, ActionEvaluator ... evaluators) {
-		super(name);
-		this.evaluators = evaluators;
-	}
+    private ActionEvaluator[] evaluators;
+    private ActionEvaluator currentActiveEvaluator;
+        
+    /**
+     * @param brain
+     * @param name
+     * @param evaluators
+     */
+    public QuickWeightedAction(Brain brain, String name, ActionEvaluator ... evaluators) {
+        super(name);
+        this.evaluators = evaluators;
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.Goal#start(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void start(Brain brain) {
-		this.currentActiveEvaluator = Evaluators.evaluate(brain, evaluators);
-		replace(this.currentActiveEvaluator.getAction(brain));
-	}			
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.Goal#start(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void start(Brain brain) {
+        this.currentActiveEvaluator = Evaluators.evaluate(brain, evaluators);
+        replace(this.currentActiveEvaluator.getAction(brain));
+    }            
 }

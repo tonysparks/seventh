@@ -12,10 +12,10 @@ import leola.frontend.listener.EventMethod;
  */
 public interface GameEndListener extends EventListener {
 
-	/**
-	 * A game has ended
-	 * @param event
-	 */
-	@EventMethod
-	public void onGameEnd(GameEndEvent event);
+    /**
+     * A game has ended
+     * @param event
+     */
+    @EventMethod
+    public void onGameEnd(GameEndEvent event);
 }

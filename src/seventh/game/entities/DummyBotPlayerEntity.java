@@ -14,12 +14,12 @@ import seventh.math.Vector2f;
  */
 public class DummyBotPlayerEntity extends PlayerEntity {
 
-	/**
-	 * @param id
-	 * @param position
-	 * @param game
-	 */
-	public DummyBotPlayerEntity(int id, Vector2f position, Game game) {
-		super(id, position, game);		
-	}
+    /**
+     * @param id
+     * @param position
+     * @param game
+     */
+    public DummyBotPlayerEntity(int id, Vector2f position, Game game) {
+        super(id, position, game);        
+    }
 }

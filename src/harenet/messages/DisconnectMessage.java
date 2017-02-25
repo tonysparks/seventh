@@ -13,18 +13,18 @@ import harenet.MessageHeader;
  */
 public class DisconnectMessage extends AbstractMessage {
 
-	
-	/**
-	 */
-	public DisconnectMessage() {
-		super(MessageHeader.DISCONNECT_MESSAGE);
-	}
+    
+    /**
+     */
+    public DisconnectMessage() {
+        super(MessageHeader.DISCONNECT_MESSAGE);
+    }
 
-	/* (non-Javadoc)
-	 * @see netspark.messages.Message#copy()
-	 */
-	@Override
-	public Message copy() {	
-		return new DisconnectMessage();
-	}
+    /* (non-Javadoc)
+     * @see netspark.messages.Message#copy()
+     */
+    @Override
+    public Message copy() {    
+        return new DisconnectMessage();
+    }
 }

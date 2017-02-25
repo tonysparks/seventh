@@ -12,6 +12,6 @@ import leola.frontend.listener.EventMethod;
  */
 public interface PlayerSpawnedListener extends EventListener {
 
-	@EventMethod
-	public void onPlayerSpawned(PlayerSpawnedEvent event);
+    @EventMethod
+    public void onPlayerSpawned(PlayerSpawnedEvent event);
 }

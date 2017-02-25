@@ -17,36 +17,36 @@ import seventh.shared.TimeStep;
  */
 public class RectParticleRenderer implements ParticleRenderer {
 
-	private final int width, height;
-	
-	/**
-	 * a default width/height of 1
-	 */
-	public RectParticleRenderer() {
-		this(1,1);
-	}
-	
-	public RectParticleRenderer(int width, int height) {
-		this.width = width;
-		this.height = height;
-	}
+    private final int width, height;
+    
+    /**
+     * a default width/height of 1
+     */
+    public RectParticleRenderer() {
+        this(1,1);
+    }
+    
+    public RectParticleRenderer(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 
-	@Override
-	public void update(TimeStep timeStep, ParticleData particles) {
-	}
+    @Override
+    public void update(TimeStep timeStep, ParticleData particles) {
+    }
 
-	@Override
-	public void render(Canvas canvas, Camera camera, float alpha, ParticleData particles) {
-		
-		Vector2f cameraPos = camera.getRenderPosition(alpha);
-		for(int i = 0; i < particles.numberOfAliveParticles; i++) {
-			
-			Vector2f pos = particles.pos[i];
-			float x = pos.x - cameraPos.x, y = pos.y - cameraPos.y;
-			Color color = particles.color[i];
-			
-			canvas.fillRect(x, y, width, height, Color.argb8888(color));			
-		}				
-	}
+    @Override
+    public void render(Canvas canvas, Camera camera, float alpha, ParticleData particles) {
+        
+        Vector2f cameraPos = camera.getRenderPosition(alpha);
+        for(int i = 0; i < particles.numberOfAliveParticles; i++) {
+            
+            Vector2f pos = particles.pos[i];
+            float x = pos.x - cameraPos.x, y = pos.y - cameraPos.y;
+            Color color = particles.color[i];
+            
+            canvas.fillRect(x, y, width, height, Color.argb8888(color));            
+        }                
+    }
 
 }

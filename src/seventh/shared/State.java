@@ -9,7 +9,7 @@ package seventh.shared;
  *
  */
 public interface State {
-	public void enter();
-	public void update(TimeStep timeStep);
-	public void exit();
+    public void enter();
+    public void update(TimeStep timeStep);
+    public void exit();
 }

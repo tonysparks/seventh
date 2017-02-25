@@ -17,33 +17,33 @@ import paulscode.sound.SoundSystem;
  */
 public class SoundBuffer {
 
-	private SoundSystem soundSystem;
-	private String soundFile;
-	private Random random;
-	/**
-	 * 
-	 */
-	public SoundBuffer(SoundSystem soundSystem, String soundFile, Random random) throws Exception {
-		this.soundSystem = soundSystem;
-		this.soundFile = soundFile;
-		this.random = random;
-		this.soundSystem.loadSound(new File(soundFile).toURI().toURL(), soundFile);
-	}
-	
-	/**
-	 * Constructs a new {@link Sound}
-	 * @return the {@link Sound}
-	 * @throws Exception
-	 */
-	public Sound newSound() throws Exception {
-		return new Sound(this.soundSystem, this.soundFile, this.soundFile+this.random.nextLong());
-	}
-	
-	/**
-	 * Destroys this resource, cleaning up any memory allocated
-	 */
-	public void destroy() {
-		this.soundSystem.unloadSound(this.soundFile);
-	}
+    private SoundSystem soundSystem;
+    private String soundFile;
+    private Random random;
+    /**
+     * 
+     */
+    public SoundBuffer(SoundSystem soundSystem, String soundFile, Random random) throws Exception {
+        this.soundSystem = soundSystem;
+        this.soundFile = soundFile;
+        this.random = random;
+        this.soundSystem.loadSound(new File(soundFile).toURI().toURL(), soundFile);
+    }
+    
+    /**
+     * Constructs a new {@link Sound}
+     * @return the {@link Sound}
+     * @throws Exception
+     */
+    public Sound newSound() throws Exception {
+        return new Sound(this.soundSystem, this.soundFile, this.soundFile+this.random.nextLong());
+    }
+    
+    /**
+     * Destroys this resource, cleaning up any memory allocated
+     */
+    public void destroy() {
+        this.soundSystem.unloadSound(this.soundFile);
+    }
 
 }

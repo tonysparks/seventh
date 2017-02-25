@@ -13,16 +13,16 @@ import seventh.shared.TimeStep;
  */
 public interface Sensor {
 
-	/**
-	 * Reset to a starting state
-	 * @param brain
-	 */
-	public void reset(Brain brain);
-	
-	/**
-	 * Updates the Sensor
-	 * 
-	 * @param timeStep
-	 */
-	public void update(TimeStep timeStep);
+    /**
+     * Reset to a starting state
+     * @param brain
+     */
+    public void reset(Brain brain);
+    
+    /**
+     * Updates the Sensor
+     * 
+     * @param timeStep
+     */
+    public void update(TimeStep timeStep);
 }

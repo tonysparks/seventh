@@ -11,14 +11,14 @@ import seventh.client.entities.ClientPlayerEntity;
  */
 public class ClientGrenateBelt extends ClientWeapon {
 
-	/**
-	 * @param ownerId
-	 */
-	public ClientGrenateBelt(ClientPlayerEntity owner) {
-		super(owner);
-	
-		this.weaponIcon = null;		
-		this.weaponImage = null;
-	}
+    /**
+     * @param ownerId
+     */
+    public ClientGrenateBelt(ClientPlayerEntity owner) {
+        super(owner);
+    
+        this.weaponIcon = null;        
+        this.weaponImage = null;
+    }
 
 }

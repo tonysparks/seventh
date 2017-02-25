@@ -31,32 +31,32 @@ import seventh.ui.Button;
  */
 public class ButtonEvent extends Event {
 
-	/**
-	 * Button
-	 */
-	private Button button;
+    /**
+     * Button
+     */
+    private Button button;
 
-	/**
-	 * @param source
-	 * @param button
-	 */
-	public ButtonEvent(Object source, Button button) {
-		super(source);
-		this.button = button;
-	}
+    /**
+     * @param source
+     * @param button
+     */
+    public ButtonEvent(Object source, Button button) {
+        super(source);
+        this.button = button;
+    }
 
-	/**
-	 * @return the button
-	 */
-	public Button getButton() {
-		return button;
-	}
+    /**
+     * @return the button
+     */
+    public Button getButton() {
+        return button;
+    }
 
-	/**
-	 * @param button the button to set
-	 */
-	public void setButton(Button button) {
-		this.button = button;
-	}
-		
+    /**
+     * @param button the button to set
+     */
+    public void setButton(Button button) {
+        this.button = button;
+    }
+        
 }

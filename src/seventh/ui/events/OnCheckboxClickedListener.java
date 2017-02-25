@@ -32,10 +32,10 @@ import leola.frontend.listener.EventMethod;
  */
 public interface OnCheckboxClickedListener extends EventListener {
 
-	/**
-	 * A {@link Checkbox} was toggled
-	 * @param event
-	 */
-	@EventMethod
-	public void onCheckboxClicked(CheckboxEvent event);
+    /**
+     * A {@link Checkbox} was toggled
+     * @param event
+     */
+    @EventMethod
+    public void onCheckboxClicked(CheckboxEvent event);
 }

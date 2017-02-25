@@ -13,11 +13,11 @@ import seventh.game.entities.Entity;
  */
 public interface Controllable {
 
-	/**
-	 * Handles the users input commands
-	 * 
-	 * @param keys
-	 * @param orientation
-	 */
-	public void handleUserCommand(int keys, float orientation);			
+    /**
+     * Handles the users input commands
+     * 
+     * @param keys
+     * @param orientation
+     */
+    public void handleUserCommand(int keys, float orientation);            
 }

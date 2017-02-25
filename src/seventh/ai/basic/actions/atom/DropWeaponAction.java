@@ -16,32 +16,32 @@ import seventh.shared.TimeStep;
  */
 public class DropWeaponAction extends AdapterAction {
 
-	/**
-	 */
-	public DropWeaponAction() {
-	}
+    /**
+     */
+    public DropWeaponAction() {
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#isFinished(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public boolean isFinished(Brain brain) {	
-		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void start(Brain brain) {
-		PlayerEntity entity = brain.getEntityOwner();
-		entity.dropItem(true);
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
-	 */
-	@Override
-	public void update(Brain brain, TimeStep timeStep) {		
-	}
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#isFinished(seventh.ai.basic.Brain)
+     */
+    @Override
+    public boolean isFinished(Brain brain) {    
+        return true;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void start(Brain brain) {
+        PlayerEntity entity = brain.getEntityOwner();
+        entity.dropItem(true);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
+     */
+    @Override
+    public void update(Brain brain, TimeStep timeStep) {        
+    }
 }

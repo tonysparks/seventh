@@ -16,61 +16,61 @@ import seventh.shared.TimeStep;
  *
  */
 public class SupressFireUntilAction extends AdapterAction {
-	
-	private LeoObject isFinished;
-	private LeoObject result;
-	
-	private Vector2f target;
-	
-	/**
-	 * 
-	 */
-	public SupressFireUntilAction(LeoObject isFinished, Vector2f target) {
-		this.isFinished = isFinished;
-		this.target = target;
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void start(Brain brain) {
-		Locomotion motion = brain.getMotion();
-		motion.lookAt(target);
-		
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#resume(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void resume(Brain brain) {
-		start(brain);
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
-	 */
-	@Override
-	public void update(Brain brain, TimeStep timeStep) {
-		result = this.isFinished.xcall(Leola.toLeoObject(timeStep));		
-		
-		Locomotion motion = brain.getMotion();
-		if (brain.getEntityOwner().isFacing(target)) {
-			motion.shoot();
-			//motion.stopShooting();
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#isFinished()
-	 */
-	@Override
-	public boolean isFinished(Brain brain) {
-		if(brain.getTargetingSystem().hasTarget()) {
-			return true;
-		}
-		
-		return LeoObject.isTrue(result);
-	}
+    
+    private LeoObject isFinished;
+    private LeoObject result;
+    
+    private Vector2f target;
+    
+    /**
+     * 
+     */
+    public SupressFireUntilAction(LeoObject isFinished, Vector2f target) {
+        this.isFinished = isFinished;
+        this.target = target;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void start(Brain brain) {
+        Locomotion motion = brain.getMotion();
+        motion.lookAt(target);
+        
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#resume(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void resume(Brain brain) {
+        start(brain);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#update(seventh.ai.basic.Brain, seventh.shared.TimeStep)
+     */
+    @Override
+    public void update(Brain brain, TimeStep timeStep) {
+        result = this.isFinished.xcall(Leola.toLeoObject(timeStep));        
+        
+        Locomotion motion = brain.getMotion();
+        if (brain.getEntityOwner().isFacing(target)) {
+            motion.shoot();
+            //motion.stopShooting();
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#isFinished()
+     */
+    @Override
+    public boolean isFinished(Brain brain) {
+        if(brain.getTargetingSystem().hasTarget()) {
+            return true;
+        }
+        
+        return LeoObject.isTrue(result);
+    }
 }

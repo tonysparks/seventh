@@ -17,90 +17,90 @@ import seventh.network.messages.BufferIO;
  */
 public class NetPlayerPartial extends NetEntity {
 
-	
-	public NetPlayerPartial() {
-		this.type = Type.PLAYER_PARTIAL.netValue();
-	}
+    
+    public NetPlayerPartial() {
+        this.type = Type.PLAYER_PARTIAL.netValue();
+    }
 
-	public byte state;
-	public byte health;
-	public NetWeapon weapon;
-	
-	public boolean isOperatingVehicle;
-	public int vehicleId;
-	
-	/* (non-Javadoc)
-	 * @see seventh.game.net.NetEntity#read(java.nio.ByteBuffer)
-	 */
-	@Override
-	public void read(IOBuffer buffer) {	
-		super.read(buffer);
-				
-		orientation = BufferIO.readAngle(buffer);
-		state = buffer.get();
-		health = buffer.get();
-		
-		/* If this player is in a vehicle,
-		 * send the vehicle ID in lieu of 
-		 * weapon information
-		 */
-		State aState = State.fromNetValue(state);
-		if(aState.isVehicleState()) {
-			isOperatingVehicle = true;
-			vehicleId = buffer.getUnsignedByte();
-		}
-		else {			
-			readWeapon(buffer);
-		}
-	}
-	
-	/**
-	 * Reads in the {@link NetWeapon}
-	 * @param buffer
-	 */
-	protected void readWeapon(IOBuffer buffer) {
-		weapon = new NetWeapon();
-		weapon.type = buffer.get();
-		weapon.state = buffer.get();
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.game.net.NetEntity#write(java.nio.ByteBuffer)
-	 */
-	@Override
-	public void write(IOBuffer buffer) {	
-		super.write(buffer);
-				
-		BufferIO.writeAngle(buffer, orientation);
-		buffer.put(state);		
-		buffer.put(health);
-		
+    public byte state;
+    public byte health;
+    public NetWeapon weapon;
+    
+    public boolean isOperatingVehicle;
+    public int vehicleId;
+    
+    /* (non-Javadoc)
+     * @see seventh.game.net.NetEntity#read(java.nio.ByteBuffer)
+     */
+    @Override
+    public void read(IOBuffer buffer) {    
+        super.read(buffer);
+                
+        orientation = BufferIO.readAngle(buffer);
+        state = buffer.get();
+        health = buffer.get();
+        
+        /* If this player is in a vehicle,
+         * send the vehicle ID in lieu of 
+         * weapon information
+         */
+        State aState = State.fromNetValue(state);
+        if(aState.isVehicleState()) {
+            isOperatingVehicle = true;
+            vehicleId = buffer.getUnsignedByte();
+        }
+        else {            
+            readWeapon(buffer);
+        }
+    }
+    
+    /**
+     * Reads in the {@link NetWeapon}
+     * @param buffer
+     */
+    protected void readWeapon(IOBuffer buffer) {
+        weapon = new NetWeapon();
+        weapon.type = buffer.get();
+        weapon.state = buffer.get();
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.game.net.NetEntity#write(java.nio.ByteBuffer)
+     */
+    @Override
+    public void write(IOBuffer buffer) {    
+        super.write(buffer);
+                
+        BufferIO.writeAngle(buffer, orientation);
+        buffer.put(state);        
+        buffer.put(health);
+        
 
-		/* If this player is in a vehicle,
-		 * send the vehicle ID in lieu of 
-		 * weapon information
-		 */
-		State aState = State.fromNetValue(state);
-		if(aState.isVehicleState()) {
-			buffer.putUnsignedByte(vehicleId);
-		}
-		else {			
-			writeWeapon(buffer);
-		}
-	}
-	
-	/**
-	 * Writes out the {@link NetWeapon}
-	 * @param buffer
-	 */
-	protected void writeWeapon(IOBuffer buffer) {
-		if(weapon != null) {
-			buffer.put(weapon.type);
-			buffer.put(weapon.state);
-		}
-		else {
-			buffer.put( (byte)-1);
-			buffer.put( (byte)0);
-		}
-	}
+        /* If this player is in a vehicle,
+         * send the vehicle ID in lieu of 
+         * weapon information
+         */
+        State aState = State.fromNetValue(state);
+        if(aState.isVehicleState()) {
+            buffer.putUnsignedByte(vehicleId);
+        }
+        else {            
+            writeWeapon(buffer);
+        }
+    }
+    
+    /**
+     * Writes out the {@link NetWeapon}
+     * @param buffer
+     */
+    protected void writeWeapon(IOBuffer buffer) {
+        if(weapon != null) {
+            buffer.put(weapon.type);
+            buffer.put(weapon.state);
+        }
+        else {
+            buffer.put( (byte)-1);
+            buffer.put( (byte)0);
+        }
+    }
 }

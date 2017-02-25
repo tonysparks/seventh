@@ -124,7 +124,7 @@ public class FileSystemAssetWatcher implements AssetWatcher {
                         key.reset();
                     }
                     catch (ClosedWatchServiceException e) {
-                    	break;
+                        break;
                     }
                     catch (InterruptedException e) {
                         break;
@@ -140,7 +140,7 @@ public class FileSystemAssetWatcher implements AssetWatcher {
     
     @Override
     public <T> WatchedAsset<T> loadAsset(String filename, AssetLoader<T> loader) throws IOException {
-    	File file = new File(pathToWatch.toFile(), filename.toString());
+        File file = new File(pathToWatch.toFile(), filename.toString());
         WatchedAsset<T> asset = new WatchedAssetImpl<T>(file, loader);
         this.watchedAssets.put(file, asset);
         
@@ -169,15 +169,15 @@ public class FileSystemAssetWatcher implements AssetWatcher {
     
     @Override
     public void stopWatching() { 
-    	try {
-    		this.isActive.set(false);
-            this.watchThread.interrupt();    		
-    	}
-    	finally {
-    		try {
-    			this.watchService.close();
-    		}
-    		catch(IOException e) {}
-    	}
+        try {
+            this.isActive.set(false);
+            this.watchThread.interrupt();            
+        }
+        finally {
+            try {
+                this.watchService.close();
+            }
+            catch(IOException e) {}
+        }
     }        
 }

@@ -15,29 +15,29 @@ import seventh.game.entities.BombTarget;
  *
  */
 public class MoveToBombTargetToPlantAction extends MoveToAction {
-	
-	private BombTarget target;
-	
-	
-	/**
-	 * @param target
-	 */
-	public MoveToBombTargetToPlantAction(BombTarget target) {
-		super(target.getCenterPos());
-		
-		this.target = target;
-	}	
+    
+    private BombTarget target;
+    
+    
+    /**
+     * @param target
+     */
+    public MoveToBombTargetToPlantAction(BombTarget target) {
+        super(target.getCenterPos());
+        
+        this.target = target;
+    }    
 
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.MoveToAction#isFinished(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public boolean isFinished(Brain brain) {
-		if(this.target.bombPlanting() || this.target.bombActive()) {
-			getActionResult().setFailure();
-			return true;
-		}
-		
-		return super.isFinished(brain);
-	}
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.MoveToAction#isFinished(seventh.ai.basic.Brain)
+     */
+    @Override
+    public boolean isFinished(Brain brain) {
+        if(this.target.bombPlanting() || this.target.bombActive()) {
+            getActionResult().setFailure();
+            return true;
+        }
+        
+        return super.isFinished(brain);
+    }
 }

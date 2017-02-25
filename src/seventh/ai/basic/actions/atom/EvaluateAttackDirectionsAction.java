@@ -16,34 +16,34 @@ import seventh.ai.basic.actions.AdapterAction;
  */
 public class EvaluateAttackDirectionsAction extends AdapterAction {
 
-	/**
-	 * 
-	 */
-	public EvaluateAttackDirectionsAction() {
-	}
+    /**
+     * 
+     */
+    public EvaluateAttackDirectionsAction() {
+    }
 
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void start(Brain brain) {
-		List<AttackDirection> attackDirs = new ArrayList<>(brain.getWorld().getAttackDirections(brain.getEntityOwner()));		
-		this.getActionResult().setSuccess(attackDirs);
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#resume(seventh.ai.basic.Brain)
-	 */
-	@Override
-	public void resume(Brain brain) {
-		start(brain);
-	}
-	
-	/* (non-Javadoc)
-	 * @see seventh.ai.basic.actions.AdapterAction#isFinished()
-	 */
-	@Override
-	public boolean isFinished(Brain brain) {
-		return true;
-	}
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#start(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void start(Brain brain) {
+        List<AttackDirection> attackDirs = new ArrayList<>(brain.getWorld().getAttackDirections(brain.getEntityOwner()));        
+        this.getActionResult().setSuccess(attackDirs);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#resume(seventh.ai.basic.Brain)
+     */
+    @Override
+    public void resume(Brain brain) {
+        start(brain);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ai.basic.actions.AdapterAction#isFinished()
+     */
+    @Override
+    public boolean isFinished(Brain brain) {
+        return true;
+    }
 }

@@ -15,12 +15,12 @@ import seventh.client.entities.vehicles.ClientTank;
  */
 public class ShermanTankSprite extends TankSprite {
 
-	/**
-	 * @param tank
-	 */
-	public ShermanTankSprite(ClientTank tank) {
-		super(tank, Art.newShermanTankTracks(), new Sprite(Art.shermanTankTurret),
-				    Art.newShermanTankTracksDamaged(), new Sprite(Art.shermanTankTurretDamaged));
-	}
+    /**
+     * @param tank
+     */
+    public ShermanTankSprite(ClientTank tank) {
+        super(tank, Art.newShermanTankTracks(), new Sprite(Art.shermanTankTurret),
+                    Art.newShermanTankTracksDamaged(), new Sprite(Art.shermanTankTurretDamaged));
+    }
 
 }

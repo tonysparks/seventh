@@ -30,38 +30,38 @@ package seventh.ui;
  */
 public class DefaultStyling implements Styling {
 
-	/**
-	 * Background color
-	 */
-	private static final int BACKGROUND_COLOR = BLACK;//new Vector3f(0.5f, 0.0f, 0.05f);
-	
-	/* (non-Javadoc)
-	 * @see com.fived.ricochet.ui.Styling#styleButton(com.fived.ricochet.ui.Button)
-	 */
-	public void styleButton(Button button) {
-		button.setBackgroundColor(RED);
-		button.setBackgroundAlpha(80);				
-		button.setGradiantColor(BLACK);
-		button.setEnableGradiant(true);
-	}
+    /**
+     * Background color
+     */
+    private static final int BACKGROUND_COLOR = BLACK;//new Vector3f(0.5f, 0.0f, 0.05f);
+    
+    /* (non-Javadoc)
+     * @see com.fived.ricochet.ui.Styling#styleButton(com.fived.ricochet.ui.Button)
+     */
+    public void styleButton(Button button) {
+        button.setBackgroundColor(RED);
+        button.setBackgroundAlpha(80);                
+        button.setGradiantColor(BLACK);
+        button.setEnableGradiant(true);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.fived.ricochet.ui.Styling#styleDialog(com.fived.ricochet.ui.Dialog)
-	 */
-	public void styleDialog(Dialog dialog) {
-//		dialog.setBackgroundColor(BACKGROUND_COLOR);
-//		dialog.setBackgroundAlpha(0.35f);		
-//		dialog.setForegroundColor(Renderer.WHITE);
-				
-		dialog.setBackgroundColor(BACKGROUND_COLOR);
-		dialog.setBackgroundAlpha(1);		
-		dialog.setForegroundColor(WHITE);
-		
-		for( Widget widget: dialog.getWidgets()) {
-			if ( widget instanceof Button) {
-				styleButton((Button)widget);
-			}
-		}
-	}
+    /* (non-Javadoc)
+     * @see com.fived.ricochet.ui.Styling#styleDialog(com.fived.ricochet.ui.Dialog)
+     */
+    public void styleDialog(Dialog dialog) {
+//        dialog.setBackgroundColor(BACKGROUND_COLOR);
+//        dialog.setBackgroundAlpha(0.35f);        
+//        dialog.setForegroundColor(Renderer.WHITE);
+                
+        dialog.setBackgroundColor(BACKGROUND_COLOR);
+        dialog.setBackgroundAlpha(1);        
+        dialog.setForegroundColor(WHITE);
+        
+        for( Widget widget: dialog.getWidgets()) {
+            if ( widget instanceof Button) {
+                styleButton((Button)widget);
+            }
+        }
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- *	leola-live 
+ *    leola-live 
  *  see license.txt
  */
 package seventh.map;
@@ -14,12 +14,12 @@ import seventh.graph.GraphNode;
  *
  */
 public interface GraphNodeFactory<T> {
-	
-	/**
-	 * @param map
-	 * @param left
-	 * @param right
-	 * @return a new edge data
-	 */
-	public T createEdgeData(Map map, GraphNode<Tile, T> left, GraphNode<Tile, T> right);
+    
+    /**
+     * @param map
+     * @param left
+     * @param right
+     * @return a new edge data
+     */
+    public T createEdgeData(Map map, GraphNode<Tile, T> left, GraphNode<Tile, T> right);
 }

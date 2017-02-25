@@ -12,23 +12,23 @@ import harenet.MessageHeader;
  *
  */
 public class HeartbeatMessage extends AbstractMessage {
-	
-	/**
-	 * Cached instance to reduce GC load
-	 */
-	public static final HeartbeatMessage INSTANCE = new HeartbeatMessage();
-	
-	/**
-	 */
-	public HeartbeatMessage() {
-		super(MessageHeader.HEARTBEAT_MESSAGE);
-	}
-	
-	/* (non-Javadoc)
-	 * @see netspark.messages.Message#copy()
-	 */
-	@Override
-	public Message copy() {	
-		return INSTANCE;
-	}
+    
+    /**
+     * Cached instance to reduce GC load
+     */
+    public static final HeartbeatMessage INSTANCE = new HeartbeatMessage();
+    
+    /**
+     */
+    public HeartbeatMessage() {
+        super(MessageHeader.HEARTBEAT_MESSAGE);
+    }
+    
+    /* (non-Javadoc)
+     * @see netspark.messages.Message#copy()
+     */
+    @Override
+    public Message copy() {    
+        return INSTANCE;
+    }
 }

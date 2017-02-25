@@ -35,24 +35,24 @@ import seventh.ui.Widget;
  */
 public interface WidgetRenderer {
 
-	/**
-	 * Renders a {@link Button}.
-	 * 
-	 * @param button
-	 * @param renderer
-	 * @param camera
-	 * @param alpha
-	 */
-	public void renderButton(Button button, Renderer renderer, Camera camera, long alpha);
-	
-	
-	/**
-	 * Renders a {@link Dialog}.
-	 * 
-	 * @param dialog
-	 * @param renderer
-	 * @param camera
-	 * @param alpha
-	 */
-	public void renderDialog(Dialog dialog, Renderer renderer, Camera camera, long alpha);
+    /**
+     * Renders a {@link Button}.
+     * 
+     * @param button
+     * @param renderer
+     * @param camera
+     * @param alpha
+     */
+    public void renderButton(Button button, Renderer renderer, Camera camera, long alpha);
+    
+    
+    /**
+     * Renders a {@link Dialog}.
+     * 
+     * @param dialog
+     * @param renderer
+     * @param camera
+     * @param alpha
+     */
+    public void renderDialog(Dialog dialog, Renderer renderer, Camera camera, long alpha);
 }

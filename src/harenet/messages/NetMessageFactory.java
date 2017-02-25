@@ -13,11 +13,11 @@ import harenet.IOBuffer;
  */
 public interface NetMessageFactory {
 
-	/**
-	 * Reads the {@link IOBuffer} and creates the corresponding {@link NetMessage}.
-	 * 
-	 * @param buffer
-	 * @return the {@link NetMessage} object
-	 */
-	public NetMessage readNetMessage(IOBuffer buffer);
+    /**
+     * Reads the {@link IOBuffer} and creates the corresponding {@link NetMessage}.
+     * 
+     * @param buffer
+     * @return the {@link NetMessage} object
+     */
+    public NetMessage readNetMessage(IOBuffer buffer);
 }

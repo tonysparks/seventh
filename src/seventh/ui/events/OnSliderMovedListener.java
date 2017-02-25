@@ -32,10 +32,10 @@ import seventh.ui.Slider;
  */
 public interface OnSliderMovedListener extends EventListener {
 
-	/**
-	 * The slider was moved
-	 * @param event
-	 */
-	@EventMethod
-	public void onSliderMoved(SliderMovedEvent event);
+    /**
+     * The slider was moved
+     * @param event
+     */
+    @EventMethod
+    public void onSliderMoved(SliderMovedEvent event);
 }

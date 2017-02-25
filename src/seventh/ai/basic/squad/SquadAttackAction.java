@@ -39,9 +39,9 @@ public class SquadAttackAction extends SquadAction {
         World world = squad.getWorld();
 
         this.attackDirections.addAll(world.getAttackDirections(attackPosition, 150f, squad.squadSize()));        
-    	if(attackDirections.isEmpty()) {
-    		attackDirections.add(new AttackDirection(attackPosition));
-    	}
+        if(attackDirections.isEmpty()) {
+            attackDirections.add(new AttackDirection(attackPosition));
+        }
     }
     
     /* (non-Javadoc)
@@ -50,21 +50,21 @@ public class SquadAttackAction extends SquadAction {
     @Override
     public Action getAction(Squad squad) {
         if(squad.squadSize()>0) {
-        	World world = squad.getWorld();
-        	Brain[] members = squad.getMembers();
-        	Roles roles = squad.getRoles();
-        	
-        	int j = 0;
-        	for(int i = 0; i < members.length; i++) {
-        		Brain member = members[i];
-        		if(member!=null) {
-        			if(roles.getAssignedRole(member.getPlayer()) != Role.None) {        			
-		        		AttackDirection dir = attackDirections.get( (j+=1) % attackDirections.size());
-		        		return new SequencedAction("squadAttack")
-		        					.addNext(world.getGoals().moveToAction(dir.getDirection()));
-        			}
-        		}
-        	}
+            World world = squad.getWorld();
+            Brain[] members = squad.getMembers();
+            Roles roles = squad.getRoles();
+            
+            int j = 0;
+            for(int i = 0; i < members.length; i++) {
+                Brain member = members[i];
+                if(member!=null) {
+                    if(roles.getAssignedRole(member.getPlayer()) != Role.None) {                    
+                        AttackDirection dir = attackDirections.get( (j+=1) % attackDirections.size());
+                        return new SequencedAction("squadAttack")
+                                    .addNext(world.getGoals().moveToAction(dir.getDirection()));
+                    }
+                }
+            }
         }
         
         return new WaitAction(500);
@@ -81,7 +81,7 @@ public class SquadAttackAction extends SquadAction {
      * @see seventh.ai.basic.squad.SquadAction#cancel(seventh.ai.basic.squad.Squad)
      */
     @Override
-    public void cancel(Squad squad) {    	
+    public void cancel(Squad squad) {        
     }
     
     /* (non-Javadoc)

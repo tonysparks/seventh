@@ -13,6 +13,6 @@ import leola.frontend.listener.EventMethod;
  */
 public interface BombPlantedListener extends EventListener {
 
-	@EventMethod
-	public void onBombPlanted(BombPlantedEvent event);
+    @EventMethod
+    public void onBombPlanted(BombPlantedEvent event);
 }
