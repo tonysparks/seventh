@@ -59,6 +59,8 @@ public interface Canvas {
 	public void setFont(String fontName, int size);
 	public void setDefaultFont();
 	public void setDefaultFont(String fontName, int size);
+	public GlythData getGlythData(String font, int size);
+	public GlythData getGlythData();
 	/**
 	 * @param str
 	 * @return the width in pixels that the supplied str takes up

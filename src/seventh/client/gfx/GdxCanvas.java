@@ -75,7 +75,7 @@ public class GdxCanvas implements Canvas {
 		this.generators = new HashMap<String, FreeTypeFontGenerator>();
 		this.fonts = new HashMap<String, BitmapFont>();
 		this.bounds = new GlyphLayout();
-		
+				
 		this.transform = new Matrix4();
 		//this.batch.setTransformMatrix(transform);
 				
@@ -327,6 +327,32 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public void setFont(String alias, int size) {
+		this.font = getFont(alias, size);						
+		this.fontSize = size;
+		this.currentFontName = alias;
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#setDefaultFont(java.lang.String, int)
+	 */
+	@Override
+	public void setDefaultFont(String alias, int size) {
+		this.defaultFont = getFont(alias, size);		
+		this.defaultFontSize = size;
+		this.defaultFontName = alias;
+	}
+	
+	/**
+	 * Retrieve the desired font and size (may load the font
+	 * if not cached).
+	 * 
+	 * @param alias
+	 * @param size
+	 * @return the font
+	 */
+	private BitmapFont getFont(String alias, int size) {
+		BitmapFont font = null;
+		
 		String mask = alias + ":" + size;
 		if(this.fonts.containsKey(mask)) {
 			font = this.fonts.get(mask);
@@ -337,12 +363,11 @@ public class GdxCanvas implements Canvas {
 			params.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
 			params.flip = true;
 			
-			this.font = this.generators.get(alias).generateFont(params);
+			font = this.generators.get(alias).generateFont(params);
 			this.fonts.put(mask, font);
 		}
-						
-		this.fontSize = size;
-		this.currentFontName = alias;
+		
+		return font;
 	}
 	
 	/* (non-Javadoc)
@@ -355,27 +380,23 @@ public class GdxCanvas implements Canvas {
 		this.currentFontName = this.defaultFontName;
 	}
 
+
+	
 	/* (non-Javadoc)
-	 * @see seventh.client.gfx.Canvas#setDefaultFont(java.lang.String, int)
+	 * @see seventh.client.gfx.Canvas#getGlythData(java.lang.String, int)
 	 */
 	@Override
-	public void setDefaultFont(String alias, int size) {
-		String mask = alias + ":" + size;
-		if(this.fonts.containsKey(mask)) {
-			defaultFont = this.fonts.get(mask);
-		}
-		else if(this.generators.containsKey(alias)) {
-			FreeTypeFontParameter params = new FreeTypeFontParameter();
-			params.size = size;
-			params.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
-			params.flip = true;
-			
-			this.defaultFont = this.generators.get(alias).generateFont(params);		
-			this.fonts.put(mask, defaultFont);
-		}
-		
-		this.defaultFontSize = size;
-		this.defaultFontName = alias;
+	public GlythData getGlythData(String alias, int size) {
+		BitmapFont font = getFont(alias, size);
+		return new GlythData(font, bounds);
+	}
+	
+	/* (non-Javadoc)
+	 * @see seventh.client.gfx.Canvas#getGlythData()
+	 */
+	@Override
+	public GlythData getGlythData() {
+		return new GlythData(font, bounds);
 	}
 	
 	/* (non-Javadoc)
@@ -383,16 +404,7 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public int getWidth(String str) {
-		this.bounds.setText(font, str);		
-		int textWidth = (int)this.bounds.width+1;
-		
-		// bug in libgdx, doesn't like strings ending with a space,
-		// it ignores it
-		if(str.endsWith(" ")) {						
-			textWidth += font.getSpaceWidth();
-		}
-		
-		return textWidth;
+		return GlythData.getWidth(font, bounds, str);
 	}
 
 	/* (non-Javadoc)
@@ -400,9 +412,7 @@ public class GdxCanvas implements Canvas {
 	 */
 	@Override
 	public int getHeight(String str) {
-		this.bounds.setText(font, str);
-		return (int)this.bounds.height + 8;
-//		return (int)font.getBounds(str, bounds).height + 8;
+		return GlythData.getHeight(font, bounds, str);
 	}
 
 	/* (non-Javadoc)
