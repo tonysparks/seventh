@@ -24,6 +24,7 @@ import seventh.ai.basic.AILeolaLibrary;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.game.entities.Bomb;
 import seventh.game.entities.BombTarget;
+import seventh.game.entities.Door;
 import seventh.game.entities.DroppedItem;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.KilledListener;
@@ -143,6 +144,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private List<BombTarget> bombTargets;
     private List<Vehicle> vehicles;
     private List<Flag> flags;
+    private List<Door> doors;
     
     private Players players;
                 
@@ -219,6 +221,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.bombTargets = new ArrayList<BombTarget>();
         this.vehicles = new ArrayList<Vehicle>();
         this.flags = new ArrayList<Flag>();
+        this.doors = new ArrayList<Door>();
         
         this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
         this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
@@ -618,6 +621,14 @@ public class Game implements GameInfo, Debugable, Updatable {
         return vehicles;
     }
     
+    /**
+	 * @return the doors
+	 */
+    @Override
+	public List<Door> getDoors() {
+		return doors;
+	}
+    
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getFlags()
      */
@@ -964,6 +975,8 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         this.bombTargets.clear();
         this.vehicles.clear();
+        this.flags.clear();
+        this.doors.clear();
         
         this.players.resetStats();
         this.aiSystem.destroy();
@@ -1264,6 +1277,8 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         this.bombTargets.clear();
         this.vehicles.clear();
+        this.flags.clear();
+        this.doors.clear();
     }
     
     /**
@@ -1450,6 +1465,33 @@ public class Game implements GameInfo, Debugable, Updatable {
     }
     
     /**
+     * Adds a new {@link Door} to the game
+     * 
+     * @param pos
+     * @param facing
+     * @return a new Door
+     */
+    public Door newDoor(Vector2f pos, Vector2f facing) {
+    	Door door = new Door(pos, this, facing);
+    	this.doors.add(door);
+        this.addEntity(door);
+        return door;
+    }
+    
+    /**
+     * Adds a new {@link Door} to the game
+     * 
+     * @param x
+     * @param y
+     * @param facingX
+     * @param facingY
+     * @return a new Door
+     */
+    public Door newDoor(float x, float y, float facingX, float facingY) {
+        return newDoor(new Vector2f(x,y), new Vector2f(facingX, facingY));
+    }
+    
+    /**
      * Adds a new {@link Explosion}
      * @param pos
      * @param owner
@@ -1533,6 +1575,25 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.flags.add(flag);
         
         return flag;
+    }
+
+    /**
+     * If the entity is near enough a door to handle.
+     * 
+     * @param entity
+     * @return the door which the entity is close enough to handle,
+     * otherwise null
+     */
+    public Door getArmsReachDoor(PlayerEntity entity)  {
+    	int size = this.doors.size();
+    	for(int i = 0; i < size; i++) {
+    		Door door = this.doors.get(i);
+    		if(door.canBeHandledBy(entity)) {
+    			return door;
+    		}
+    	}
+    	
+    	return null;
     }
     
     /*
@@ -1648,6 +1709,23 @@ public class Game implements GameInfo, Debugable, Updatable {
     public boolean doesTouchVehicles(Entity ent) {
         for(int i = 0; i < this.vehicles.size(); i++) {
             Entity other = this.vehicles.get(i);
+            if(other != null) {
+                if(other != ent && other.isTouching(ent)) {
+                    if(ent.onTouch != null) {
+                        ent.onTouch.onTouch(ent, other);
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean doesTouchDoors(Entity ent) {
+        for(int i = 0; i < this.doors.size(); i++) {
+            Entity other = this.doors.get(i);
             if(other != null) {
                 if(other != ent && other.isTouching(ent)) {
                     if(ent.onTouch != null) {

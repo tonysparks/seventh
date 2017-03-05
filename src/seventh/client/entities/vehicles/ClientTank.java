@@ -294,6 +294,12 @@ public class ClientTank extends ClientVehicle {
         }
     }
 
+    @Override
+    public boolean touches(ClientEntity other) {
+    	// TODO: Make this pixel accurate by OOB
+    	return super.touches(other);
+    }
+    
     /* (non-Javadoc)
      * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
      */

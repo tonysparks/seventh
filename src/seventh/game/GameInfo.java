@@ -9,6 +9,7 @@ import java.util.Random;
 import leola.frontend.listener.EventDispatcher;
 import seventh.ai.AISystem;
 import seventh.game.entities.BombTarget;
+import seventh.game.entities.Door;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Flag;
 import seventh.game.entities.PlayerEntity;
@@ -148,6 +149,11 @@ public interface GameInfo {
     public abstract List<Vehicle> getVehicles();
     
     /**
+     * @return the doors
+     */
+    public abstract List<Door> getDoors();
+    
+    /**
      * @return the flags
      */
     public abstract List<Flag> getFlags();
@@ -197,6 +203,17 @@ public interface GameInfo {
      * @return true if it does.
      */
     public abstract boolean doesTouchVehicles(Entity ent);
+
+    
+    /**
+     * Determines if the supplied entity touches a
+     * {@link Door}.  If the {@link Entity#onTouch} listener
+     * is implemented, it will invoke it.
+     * 
+     * @param ent
+     * @return true if it does.
+     */
+    public boolean doesTouchDoors(Entity ent);
     
     /**
      * Determines if the supplied entity touches another

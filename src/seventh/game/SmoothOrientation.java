@@ -71,6 +71,8 @@ public class SmoothOrientation implements Updatable {
      */
     public void setOrientation(float orientation) {
         this.orientation = orientation;
+        this.facing.set(1, 0); // make right vector
+        Vector2f.Vector2fRotate(this.facing, this.orientation, this.facing);
     }
     
     /**

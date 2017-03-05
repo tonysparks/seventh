@@ -10,6 +10,7 @@ import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetBomb;
 import seventh.game.net.NetBombTarget;
 import seventh.game.net.NetBullet;
+import seventh.game.net.NetDoor;
 import seventh.game.net.NetDroppedItem;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
@@ -265,6 +266,10 @@ public class BufferIO {
             case LIGHT_BULB: {
                 result = new NetLight();
                 break;
+            }
+            case DOOR: {
+            	result = new NetDoor();
+            	break;
             }
             case SHERMAN_TANK: {
                 result = new NetTank(Type.SHERMAN_TANK);

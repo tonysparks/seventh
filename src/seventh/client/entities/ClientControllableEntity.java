@@ -3,6 +3,8 @@
  */
 package seventh.client.entities;
 
+import java.util.List;
+
 import seventh.client.ClientGame;
 import seventh.client.entities.vehicles.ClientVehicle;
 import seventh.game.entities.Entity;
@@ -156,13 +158,13 @@ public abstract class ClientControllableEntity extends ClientEntity {
             float newY = predictedPos.y + deltaY;
             
             bounds.x = (int)newX;
-            if( map.rectCollides(bounds) ) {
+            if( map.rectCollides(bounds) || collidesAgainstEntity(bounds)) {
                 bounds.x = (int)predictedPos.x;
                 newX = predictedPos.x;
             }
             
             bounds.y = (int)newY;
-            if( map.rectCollides(bounds)) {
+            if( map.rectCollides(bounds) || collidesAgainstEntity(bounds)) {
                 bounds.y = (int)predictedPos.y;
                 newY = predictedPos.y;
             }
@@ -179,6 +181,20 @@ public abstract class ClientControllableEntity extends ClientEntity {
             }
             clientSideCorrection(pos, predictedPos, predictedPos, alpha);
         }
+    }
+    
+    protected boolean collidesAgainstEntity(Rectangle bounds) {
+    	List<ClientVehicle> vehicles = game.getVehicles();
+    	for(int i = 0; i < vehicles.size(); i++) {
+    		ClientVehicle v = vehicles.get(i);
+    		if(v.isRelativelyUpdated()) {
+    			//if(v.touches()
+    		}
+    	}
+    	
+    	// TODO: Doors, vehicles
+    	
+    	return false;
     }
     
     /**

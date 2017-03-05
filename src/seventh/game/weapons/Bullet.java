@@ -52,6 +52,10 @@ public class Bullet extends Entity {
                         bullet.kill(other);        
                         game.emitSound(bullet.getId(), SoundType.IMPACT_METAL, bullet.getCenterPos());
                     }
+                    else if(otherType.isDoor()) {
+                    	bullet.kill(other);        
+                        game.emitSound(bullet.getId(), SoundType.IMPACT_WOOD, bullet.getCenterPos());
+                    }
                     else {
                         
                         if(otherType.isPlayer()) {
@@ -279,6 +283,9 @@ public class Bullet extends Entity {
                     if( game.doesTouchVehicles(this) ) {
                         break;
                     }
+                    if (game.doesTouchDoors(this)) {
+                    	break;
+                    }
                 }
                 
                 /* if this has traveled the max distance, kill it */
@@ -294,7 +301,9 @@ public class Bullet extends Entity {
         }
         else {
             if(!game.doesTouchPlayers(this, origin, targetVel)) {
-                game.doesTouchVehicles(this);                        
+                if(!game.doesTouchVehicles(this)) {
+                	game.doesTouchDoors(this);
+                }
             }
         }
         

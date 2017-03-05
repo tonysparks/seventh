@@ -147,7 +147,8 @@ public abstract class Entity implements Debugable {
         
         LIGHT_BULB,        
         DROPPED_ITEM,
-        HEALTH_PACK,                    
+        HEALTH_PACK,         
+        DOOR,
         
         /* Vehicles */
         SHERMAN_TANK,
@@ -197,11 +198,15 @@ public abstract class Entity implements Debugable {
             return this == PLAYER || this == PLAYER_PARTIAL;
         }
         
+        public boolean isDoor() {
+        	return this == DOOR;
+        }
+        
         /**
          * @return true if this is entity type can take damage
          */
         public boolean isDamagable() {
-            return isPlayer() || isVehicle();
+            return isPlayer() || isVehicle() || isDoor();
         }
         
         /* (non-Javadoc)
@@ -609,7 +614,7 @@ public abstract class Entity implements Debugable {
                 }
                                 
             }
-            else if(collidesAgainstVehicle(bounds)) {
+            else if(collidesAgainstEntity(bounds)) {
                 bounds.x = (int)pos.x;
                 newX = pos.x;
                 isBlocked = true;
@@ -624,7 +629,7 @@ public abstract class Entity implements Debugable {
                     newY = pos.y;
                 }
             }
-            else if(collidesAgainstVehicle(bounds)) {                
+            else if(collidesAgainstEntity(bounds)) {                
                 bounds.y = (int)pos.y;
                 newY = pos.y;
                 isBlocked = true;
@@ -662,6 +667,21 @@ public abstract class Entity implements Debugable {
         
         
         return isBlocked;
+    }
+    
+    protected boolean collidesAgainstEntity(Rectangle bounds) {
+    	return collidesAgainstVehicle(bounds) || collidesAgainstDoor(bounds);
+    }
+    
+    protected boolean collidesAgainstDoor(Rectangle bounds) {
+    	List<Door> doors = game.getDoors();
+    	for(int i = 0; i < doors.size(); i++) {
+    		Door door = doors.get(i);
+    		if(door.isTouching(bounds)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
     
     /**

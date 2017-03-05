@@ -13,6 +13,7 @@ import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.client.entities.ClientBombTarget;
 import seventh.client.entities.ClientControllableEntity;
+import seventh.client.entities.ClientDoor;
 import seventh.client.entities.ClientDroppedItem;
 import seventh.client.entities.ClientEntities;
 import seventh.client.entities.ClientEntity;
@@ -120,6 +121,7 @@ public class ClientGame {
     
     private final List<ClientBombTarget> bombTargets;
     private final List<ClientVehicle> vehicles;
+    private final List<ClientDoor> doors;
     
     private final ClientEntityListener entityListener;
     
@@ -192,7 +194,7 @@ public class ClientGame {
         
         this.bombTargets = new ArrayList<ClientBombTarget>();
         this.vehicles = new ArrayList<ClientVehicle>();
-        
+        this.doors = new ArrayList<ClientDoor>();
                 
         this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
         this.cameraController = new CameraController(this);
@@ -407,7 +409,7 @@ public class ClientGame {
             renderWorld(canvas, camera, alpha);
             
             canvas.setShader(null);
-            DebugDraw.enable(false);
+            DebugDraw.enable(true);
             DebugDraw.render(canvas, camera);
     
             
@@ -504,6 +506,13 @@ public class ClientGame {
     public List<ClientVehicle> getVehicles() {
         return vehicles;
     }
+    
+    /**
+	 * @return the doors
+	 */
+	public List<ClientDoor> getDoors() {
+		return doors;
+	}
     
     /**
      * @return the entities
@@ -962,6 +971,11 @@ public class ClientGame {
             case LIGHT_BULB: {
                 entity = new ClientLightBulb(this, pos);
                 break;
+            }
+            case DOOR: {
+            	entity = new ClientDoor(this, pos);
+            	doors.add((ClientDoor)entity);
+            	break;
             }
             case HEALTH_PACK: {
                 entity = new ClientHealthPack(this, pos);
@@ -1446,6 +1460,7 @@ public class ClientGame {
             
             bombTargets.remove(ent);
             vehicles.remove(ent);
+            doors.remove(ent);
             
             OnRemove onRemove = ent.getOnRemove();
             if(onRemove != null) {

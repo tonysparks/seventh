@@ -1258,6 +1258,15 @@ public class PlayerEntity extends Entity implements Controllable {
         }
     }
     
+    protected void handleDoor(Door door) {
+    	if(door.isOpened()) {
+    		door.close(this);
+    	}
+    	else if(door.isClosed()) {
+    		door.open(this);
+    	}
+    }
+    
     /**
      * Use can be used for either planting a bomb, or disarming it.
      */    
@@ -1268,19 +1277,31 @@ public class PlayerEntity extends Entity implements Controllable {
             }
         }
         else {
-        
+        	boolean useHandled = false;
+        	
             if(this.bombTarget == null) {        
                 this.bombTarget = game.getArmsReachBombTarget(this);
-                handleBombTarget(this.bombTarget);
+                if(this.bombTarget != null) {
+	                handleBombTarget(this.bombTarget);
+	                useHandled = true;
+                }
             }
             
             if(this.bombTarget == null) {
                 Vehicle vehicle = game.getArmsReachOperableVehicle(this);
                 if(vehicle != null) {
+                	useHandled = true;
                     if(vehicleTime <= 0) {
                         operateVehicle(vehicle);
                     }
                 }
+            }
+            
+            if(!useHandled) {
+            	Door door = game.getArmsReachDoor(this);
+            	if(door != null) {
+            		handleDoor(door);
+            	}
             }
         }        
     }
