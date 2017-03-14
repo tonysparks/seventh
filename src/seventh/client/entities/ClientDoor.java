@@ -10,6 +10,8 @@ import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.game.SmoothOrientation;
+import seventh.game.entities.Door.DoorHinge;
+import seventh.game.net.NetDoor;
 import seventh.game.net.NetEntity;
 import seventh.math.Line;
 import seventh.math.Rectangle;
@@ -22,7 +24,11 @@ import seventh.math.Vector2f;
 public class ClientDoor extends ClientEntity {
 
 	private SmoothOrientation rotation;
-	private Vector2f doorHandle;
+	private Vector2f frontDoorHandle,
+					 rearDoorHandle, 
+					 rearHingePos;
+	
+	private DoorHinge hinge;
 	
 	private Sprite sprite;
 	
@@ -35,18 +41,26 @@ public class ClientDoor extends ClientEntity {
 		
 		this.rotation = new SmoothOrientation(0.05);
 		this.rotation.setOrientation(0);
-		this.doorHandle = new Vector2f();
+		this.frontDoorHandle = new Vector2f();
+		this.rearDoorHandle = new Vector2f();
+		this.rearHingePos = new Vector2f();
 		
 		this.sprite = new Sprite(Art.doorImg);
-		this.sprite.setOrigin(0/*Art.doorImg.getRegionWidth()*/, Art.doorImg.getRegionHeight()/2);
+		this.sprite.setOrigin(0, Art.doorImg.getRegionHeight()/2);
 	}
 	
 	@Override
 	public void updateState(NetEntity state, long time) {	
 		super.updateState(state, time);
 		
+		NetDoor door = (NetDoor)state;
+		this.hinge = DoorHinge.fromNetValue(door.hinge);
 		this.rotation.setOrientation(this.getOrientation());
-		Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
+		
+		this.rearHingePos = this.hinge.getRearHandlePosition(getPos(), this.rearHingePos);
+		
+		Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
+		Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
 		
 	}
 	
@@ -61,7 +75,8 @@ public class ClientDoor extends ClientEntity {
     }
     
     public boolean isTouching(Rectangle bounds) {
-		return Line.lineIntersectsRectangle(getPos(), this.doorHandle, bounds);
+		return Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
+			   Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
 	}
 	
 	@Override

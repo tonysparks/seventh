@@ -101,7 +101,7 @@ public abstract class Weapon {
         
         this.gunSwing = new GunSwing(game, owner);        
         
-        this.bulletSpawnDistance = 35.0f;
+        this.bulletSpawnDistance = 15.0f;
         this.rocketSpawnDistance = 40.0f;
         this.grenadeSpawnDistance = 50.0f;
         

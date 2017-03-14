@@ -364,6 +364,17 @@ public class Bullet extends Entity {
 //    }
     
     /* (non-Javadoc)
+     * @see seventh.game.entities.Entity#isTouching(seventh.game.entities.Entity)
+     */
+    @Override
+    public boolean isTouching(Entity other) {
+    	if(other==owner) {
+    		return false;
+    	}
+    	return super.isTouching(other);
+    }
+    
+    /* (non-Javadoc)
      * @see palisma.game.Entity#getNetEntity()
      */
     @Override

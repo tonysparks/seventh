@@ -4,6 +4,8 @@
  */
 package seventh.client.sfx;
 
+import java.util.Random;
+
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
 
@@ -11,7 +13,9 @@ import paulscode.sound.SoundSystemConfig;
  * @author Tony
  *
  */
-public class Sound {    
+public class Sound {
+	private static final Random rand = new Random();
+	
     private String sourceName;    
     private SoundSystem soundSystem;
     /**
@@ -23,9 +27,13 @@ public class Sound {
         this.sourceName = soundName;
         
         this.soundSystem.newSource(true, this.sourceName, soundFile, false, 0, 0, 0, 
-                SoundSystemConfig.ATTENUATION_ROLLOFF, SoundSystemConfig.getDefaultRolloff()); 
+                SoundSystemConfig.ATTENUATION_ROLLOFF, SoundSystemConfig.getDefaultRolloff());                
     }
 
+    private float getFuzzyPitch() {
+    	return (95 + rand.nextInt(5)) / 100.0f;
+    }
+    
     public void setPosition(float x, float y) {
         this.soundSystem.setPosition(sourceName, x, y, 0);
     }
@@ -38,6 +46,7 @@ public class Sound {
         this.soundSystem.setDistOrRoll(sourceName, 0.009f);
         this.soundSystem.setPosition(sourceName, x, y, 0);
         this.soundSystem.setLooping(sourceName, loop);
+        this.soundSystem.setPitch(sourceName, getFuzzyPitch());
         this.soundSystem.play(sourceName);                        
     }
     
