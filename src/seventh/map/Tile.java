@@ -15,6 +15,7 @@ import seventh.math.Circle;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Triangle;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
 /**
@@ -1258,6 +1259,7 @@ public class Tile implements Renderable {
     private int flipMask;
     private CollisionMask collisionMask;    
     private Rectangle bounds;
+    private Vector2f centerPos;
     
     private SurfaceType surfaceType;    
     
@@ -1270,6 +1272,8 @@ public class Tile implements Renderable {
         this.width = width;
         this.height = height;
         this.bounds = new Rectangle();
+        this.centerPos = new Vector2f();
+        
         this.collisionMask = CollisionMask.NO_COLLISION;
         this.surfaceType = SurfaceType.CEMENT;
         this.isDestroyed = false;
@@ -1356,6 +1360,15 @@ public class Tile implements Renderable {
     public int getY() {
         return this.y;
     }
+    
+    /**
+	 * @return the centerPos
+	 */
+	public Vector2f getCenterPos() {
+		this.centerPos.set(this.x + this.width/2, 
+				           this.y + this.height/2);
+		return centerPos;
+	}
     
     /**
      * @return the xIndex

@@ -48,6 +48,7 @@ import seventh.game.weapons.Weapon;
 import seventh.map.Map;
 import seventh.map.Tile;
 import seventh.map.Tile.SurfaceType;
+import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Geom;
@@ -736,10 +737,14 @@ public class PlayerEntity extends Entity implements Controllable {
             }
             
             if(Keys.USE.isDown(keys)) {
-                use();
+                use();                
             }
             else {
-                unuse();    
+                unuse();
+                
+                if(Keys.USE.isDown(previousKeys)) {
+                	useSingle();
+                }
             }
             
             if(Keys.MELEE_ATTACK.isDown(keys)) {
@@ -1259,11 +1264,19 @@ public class PlayerEntity extends Entity implements Controllable {
     }
     
     protected void handleDoor(Door door) {
-    	if(door.isOpened()) {
-    		door.close(this);
-    	}
-    	else if(door.isClosed()) {
-    		door.open(this);
+    	door.handleDoor(this);
+    }
+    
+    /**
+     * For actions that rely on a button press.  This differs
+     * from use() because use() relies on a button being held down,
+     * as this relies on the press (the button is pushed and once
+     *  released this method is activated).
+     */
+    public void useSingle() {
+    	Door door = game.getArmsReachDoor(this);
+    	if(door != null) {
+    		handleDoor(door);
     	}
     }
     
@@ -1277,32 +1290,21 @@ public class PlayerEntity extends Entity implements Controllable {
             }
         }
         else {
-        	boolean useHandled = false;
-        	
             if(this.bombTarget == null) {        
                 this.bombTarget = game.getArmsReachBombTarget(this);
                 if(this.bombTarget != null) {
 	                handleBombTarget(this.bombTarget);
-	                useHandled = true;
                 }
             }
             
             if(this.bombTarget == null) {
                 Vehicle vehicle = game.getArmsReachOperableVehicle(this);
                 if(vehicle != null) {
-                	useHandled = true;
                     if(vehicleTime <= 0) {
                         operateVehicle(vehicle);
                     }
                 }
-            }
-            
-            if(!useHandled) {
-            	Door door = game.getArmsReachDoor(this);
-            	if(door != null) {
-            		handleDoor(door);
-            	}
-            }
+            }            
         }        
     }
     
@@ -1422,6 +1424,26 @@ public class PlayerEntity extends Entity implements Controllable {
     public List<Tile> calculateLineOfSight(List<Tile> tiles) {
         Map map = game.getMap();
         Geom.calculateLineOfSight(tiles, getCenterPos(), getFacing(), getLineOfSight(), map, getHeightMask(), cache);
+        
+        int tileSize = tiles.size();
+        List<Door> doors = game.getDoors();
+        int doorSize = doors.size();
+        
+        
+        for(int j = 0; j < doorSize; j++ ) {
+        	Door door = doors.get(j);
+        	if(this.visualBounds.intersects(door.getBounds())) {        
+        		for(int i = 0; i < tileSize; i++) {
+                	Tile tile = tiles.get(i);
+                	if(Line.lineIntersectLine(getCenterPos(), tile.getCenterPos(), 
+                			               door.getPos(), door.getHandle())) {
+                		tile.setMask(Tile.TILE_INVISIBLE);
+                	}
+                }
+        	}
+        }
+        
+        
         return tiles;
     }
     
@@ -1439,6 +1461,8 @@ public class PlayerEntity extends Entity implements Controllable {
         Entity[] entities = game.getEntities();
         
         Vector2f centerPos = getCenterPos();
+        this.visualBounds.centerAround(centerPos);
+        
         if(isOperatingVehicle()) {
             getVehicle().calculateLineOfSight(game.tilesInLineOfSight);
         }
@@ -1446,7 +1470,6 @@ public class PlayerEntity extends Entity implements Controllable {
             calculateLineOfSight(game.tilesInLineOfSight);                        
         }
         
-        this.visualBounds.centerAround(centerPos);
         
         for(int i = 0; i < entities.length; i++) {
             Entity ent = entities[i];

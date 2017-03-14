@@ -160,6 +160,8 @@ public class Art {
     public static  TextureRegion alliedFlagImg = null;
     public static  TextureRegion axisFlagImg = null;
     
+    public static  TextureRegion doorImg = null;
+    
     /**
      * Reloads the graphics
      */
@@ -325,6 +327,8 @@ public class Art {
         
         alliedIcon = loadImage("./assets/gfx/allied_icon.png");
         axisIcon = loadImage("./assets/gfx/axis_icon.png");
+        
+        doorImg = loadImage("./assets/gfx/door.png");
     }
 
     

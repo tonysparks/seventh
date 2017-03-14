@@ -10,7 +10,7 @@ import seventh.game.net.NetEntity;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 
 /**
@@ -21,7 +21,7 @@ import seventh.shared.TimeStep;
  */
 public class Door extends Entity {
 
-	enum DoorHinge {
+	public static enum DoorHinge {
 		NORTH_END,
 		SOUTH_END,
 		EAST_END,
@@ -29,8 +29,35 @@ public class Door extends Entity {
 		
 		;
 		
+		private static DoorHinge[] values = values();
+		
 		public byte netValue() {
 			return (byte)ordinal();
+		}
+		
+
+		public float getClosedOrientation() {
+			switch(this) {		
+				case NORTH_END:
+					return (float)Math.toRadians(270);
+				case SOUTH_END:					
+					return (float)Math.toRadians(90);			
+				case EAST_END:
+					return (float)Math.toRadians(180);
+				case WEST_END:
+					return (float)Math.toRadians(0);
+				default:
+					return 0;		
+			}
+		}
+		
+		public static DoorHinge fromNetValue(byte value) {
+			for(DoorHinge hinge : values) {
+				if(hinge.netValue() == value) {
+					return hinge;
+				}
+			}
+			return DoorHinge.NORTH_END;
 		}
 		
 		public static DoorHinge fromVector(Vector2f facing) {
@@ -60,7 +87,7 @@ public class Door extends Entity {
 	 * @author Tony
 	 *
 	 */
-	enum DoorState {
+	public static enum DoorState {
 		OPENED,
 		OPENING,
 		CLOSED,
@@ -81,6 +108,7 @@ public class Door extends Entity {
 	
 	private SmoothOrientation rotation;
 	private float targetOrientation;
+	private boolean isBlocked;
 	
 	private NetDoor netDoor;
 	/**
@@ -98,15 +126,19 @@ public class Door extends Entity {
 					
 		this.hinge = DoorHinge.fromVector(facing);
 		this.touchRadius = new Rectangle(64, 64);
+		this.bounds.set(this.touchRadius);
+		//this.bounds.centerAround(position);
 		
 		this.rotation = new SmoothOrientation(0.05);
-		this.rotation.setOrientation(getClosedOrientation());
+		this.rotation.setOrientation(this.hinge.getClosedOrientation());
 		
 		Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
 		
 		this.netDoor = new NetDoor();
 		
 		setCanTakeDamage(true);
+		
+		this.isBlocked = false;
 		
 		this.onTouch = new OnTouchListener() {
 			
@@ -135,11 +167,19 @@ public class Door extends Entity {
 				
 				Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
 				if(this.game.doesTouchPlayers(this)) {
+					if(!this.isBlocked) {
+						this.game.emitSound(getId(), SoundType.DOOR_OPEN_BLOCKED, getPos());
+					}
+					
+					this.isBlocked = true;
+					
 					this.rotation.setOrientation(currentRotation);
 					Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
+					
 				}
 				else if(!this.rotation.moved()) {
 					this.doorState = DoorState.OPENED;
+					this.isBlocked = false;
 				}
 				
 				break;
@@ -150,26 +190,35 @@ public class Door extends Entity {
 
 				Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
 				if(this.game.doesTouchPlayers(this)) {
+					if(!this.isBlocked) {
+						this.game.emitSound(getId(), SoundType.DOOR_CLOSE_BLOCKED, getPos());
+					}
+					
+					this.isBlocked = true;
+					
 					this.rotation.setOrientation(currentRotation);
 					Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
+					
 				}
 				else if(!this.rotation.moved()) {
 					this.doorState = DoorState.CLOSED;
+					this.isBlocked = false;
 				}
 				
 				break;
 			}
 			default: { 
-				/* do nothing */ 
+				this.isBlocked = false;
 			}
 		}
 		
+		setOrientation(this.rotation.getOrientation());
 		
 		//Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
-		DebugDraw.drawLineRelative(getPos(), this.doorHandle, 0xffff00ff);
+		//DebugDraw.drawLineRelative(getPos(), this.doorHandle, 0xffffff00);
 		
-		DebugDraw.drawStringRelative("State: " + this.doorState, (int)getPos().x, (int)getPos().y, 0xffff00ff);
-		DebugDraw.drawStringRelative("Orientation: C:" + (int)Math.toDegrees(this.rotation.getOrientation())  + "   D:" + (int)Math.toDegrees(this.rotation.getDesiredOrientation()) , (int)getPos().x, (int)getPos().y + 20, 0xffff00ff);
+		//DebugDraw.drawStringRelative("State: " + this.doorState, (int)getPos().x, (int)getPos().y, 0xffff00ff);
+		//DebugDraw.drawStringRelative("Orientation: C:" + (int)Math.toDegrees(this.rotation.getOrientation())  + "   D:" + (int)Math.toDegrees(this.rotation.getDesiredOrientation()) , (int)getPos().x, (int)getPos().y + 20, 0xffff00ff);
 		
 		return false;
 	}
@@ -178,8 +227,34 @@ public class Door extends Entity {
 		return this.doorState == DoorState.OPENED;
 	}
 	
+	public boolean isOpening() {
+		return this.doorState == DoorState.OPENING;
+	}
+	
 	public boolean isClosed() {
 		return this.doorState == DoorState.CLOSED;
+	}
+	
+	public boolean isClosing() {
+		return this.doorState == DoorState.CLOSING;
+	}
+	
+	
+	public void handleDoor(Entity ent) {
+		if(isOpened()) {
+			close(ent);
+    	}
+    	else if(isClosed()) {
+    		open(ent);    		
+    	}
+    	else if(this.isBlocked) {
+    		if(isOpening()) {
+    			close(ent);
+			}
+    		else {
+    			open(ent);
+    		}
+    	}
 	}
 	
 	public void open(Entity ent) {
@@ -192,9 +267,10 @@ public class Door extends Entity {
 			}
 			
 			this.doorState = DoorState.OPENING;
+			this.game.emitSound(getId(), SoundType.DOOR_OPEN, getPos());
 			
 			Vector2f entPos = ent.getCenterPos();
-			Vector2f hingePos = getCenterPos();
+			Vector2f hingePos = this.doorHandle;//getPos();
 			// figure out what side the entity is 
 			// of the door hinge, depending on their
 			// side, we set the destinationOrientation
@@ -234,24 +310,11 @@ public class Door extends Entity {
 			}
 			
 			this.doorState = DoorState.CLOSING;			
-			this.targetOrientation = getClosedOrientation();			
+			this.targetOrientation = this.hinge.getClosedOrientation();		
+			this.game.emitSound(getId(), SoundType.DOOR_CLOSE, getPos());
 		}
 	}
 	
-	private float getClosedOrientation() {
-		switch(this.hinge) {		
-			case NORTH_END:
-				return (float)Math.toRadians(270);
-			case SOUTH_END:					
-				return (float)Math.toRadians(90);			
-			case EAST_END:
-				return (float)Math.toRadians(180);
-			case WEST_END:
-				return (float)Math.toRadians(0);
-			default:
-				return 0;		
-		}
-	}
 	
 	@Override
 	public void damage(Entity damager, int amount) {
@@ -266,7 +329,7 @@ public class Door extends Entity {
 	 */	
 	public boolean canBeHandledBy(Entity ent) {
 		Vector2f entPos = ent.getCenterPos();
-		Vector2f hingePos = getCenterPos();
+		Vector2f hingePos = getPos();
 		
 		
 		// figure out what side the entity is 
@@ -310,7 +373,7 @@ public class Door extends Entity {
 				break;			
 		}
 		
-		DebugDraw.fillRectRelative(touchRadius.x, touchRadius.y, touchRadius.width, touchRadius.height, 0xff00ff00);
+		//DebugDraw.fillRectRelative(touchRadius.x, touchRadius.y, touchRadius.width, touchRadius.height, 0xff00ff00);
 		
 		return (this.touchRadius.intersects(ent.getBounds()));
 	}
@@ -330,11 +393,17 @@ public class Door extends Entity {
 		return Line.lineIntersectsRectangle(getPos(), this.doorHandle, bounds);
 	}
 	
+	/**
+	 * @return the doorHandle
+	 */
+	public Vector2f getHandle() {
+		return doorHandle;
+	}
 	
 	
 	@Override
 	public NetEntity getNetEntity() {
-		
+		this.setNetEntity(netDoor);
 		return this.netDoor;
 	}
 

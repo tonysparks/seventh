@@ -168,6 +168,13 @@ public class Sounds {
     public static final int[] alliedVictory = {159,160,161};
     public static final int[] axisVictory = {162,163,164};
     
+    public static final int[] doorOpen = {165,166,167,168};
+    public static final int[] doorClose = {169,170};
+    
+    public static final int[] doorCloseBlocked = {171,172,173};
+    public static final int[] doorOpenBlocked = {174};
+    
+    
     public static final int[][] alliedSpeeches = {
             alliedSpeechAttack,
             alliedSpeechCoverMe,
@@ -413,6 +420,20 @@ public class Sounds {
             loadSound("./assets/sfx/obj/axis_mission_accomplished_01.wav") ,   // 162
             loadSound("./assets/sfx/obj/axis_mission_accomplished_02.wav") ,   // 163
             loadSound("./assets/sfx/obj/axis_mission_accomplished_03.wav") ,   // 164
+            
+            loadSound("./assets/sfx/door/door_open01.wav") ,   // 165
+            loadSound("./assets/sfx/door/door_open02.wav") ,   // 166
+            loadSound("./assets/sfx/door/door_open03.wav") ,   // 167
+            loadSound("./assets/sfx/door/door_open04.wav") ,   // 168
+            
+            loadSound("./assets/sfx/door/door_close01.wav") ,   // 169
+            loadSound("./assets/sfx/door/door_close02.wav") ,   // 170
+            
+            loadSound("./assets/sfx/door/door_close_blocked01.wav") ,   // 171
+            loadSound("./assets/sfx/door/door_close_blocked02.wav") ,   // 172
+            loadSound("./assets/sfx/door/door_close_blocked03.wav") ,   // 173
+            
+            loadSound("./assets/sfx/door/door_open_blocked01.wav") ,   // 174
         };
     };
 
@@ -949,6 +970,18 @@ public class Sounds {
         case AXIS_VICTORY:
             sound = axisVictory;
             break;
+        case DOOR_OPEN:
+        	sound = doorOpen;
+        	break;
+        case DOOR_CLOSE:
+        	sound = doorClose;
+        	break;
+        case DOOR_CLOSE_BLOCKED:
+        	sound = doorCloseBlocked;
+        	break;
+        case DOOR_OPEN_BLOCKED:
+        	sound = doorOpenBlocked;
+        	break;
         case MUTE:
             
         default:

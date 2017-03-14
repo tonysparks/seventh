@@ -14,7 +14,7 @@ import seventh.game.entities.Entity.Type;
  */
 public class NetDoor extends NetEntity {
 	
-	public byte state;
+	//public byte hinge;
 	
     public NetDoor() {
         this.type = Type.DOOR.netValue();
@@ -26,7 +26,8 @@ public class NetDoor extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        state = buffer.get();
+        this.orientation = buffer.getShort();
+        //this.hinge = buffer.get();
     }
     
     /* (non-Javadoc)
@@ -35,6 +36,7 @@ public class NetDoor extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.put(state);
+        buffer.putShort(this.orientation);
+        //buffer.put(hinge);
     }
 }

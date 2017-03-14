@@ -112,6 +112,11 @@ public enum SoundType {
     ALLIED_VICTORY(SoundSourceType.GLOBAL),
     AXIS_VICTORY(SoundSourceType.GLOBAL),
     
+    DOOR_OPEN(SoundSourceType.POSITIONAL),
+    DOOR_CLOSE(SoundSourceType.POSITIONAL),
+    DOOR_CLOSE_BLOCKED(SoundSourceType.POSITIONAL),
+    DOOR_OPEN_BLOCKED(SoundSourceType.POSITIONAL),
+    
     MUTE,
     ;
     
