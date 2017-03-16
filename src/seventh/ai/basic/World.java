@@ -12,6 +12,7 @@ import seventh.game.Player;
 import seventh.game.SoundEventPool;
 import seventh.game.Team;
 import seventh.game.entities.BombTarget;
+import seventh.game.entities.Door;
 import seventh.game.entities.Entity;
 import seventh.game.entities.PlayerEntity;
 import seventh.game.entities.vehicles.Vehicle;
@@ -181,6 +182,13 @@ public class World {
      */
     public List<BombTarget> getBombTargets() {
         return this.game.getBombTargets();
+    }
+    
+    /**
+     * @return the doors
+     */
+    public List<Door> getDoors() {
+    	return this.game.getDoors();
     }
     
     /**

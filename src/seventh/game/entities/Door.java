@@ -431,6 +431,13 @@ public class Door extends Entity {
 	}
 	
 	/**
+	 * @return the isBlocked
+	 */
+	public boolean isBlocked() {
+		return isBlocked;
+	}
+	
+	/**
 	 * @return the frontDoorHandle
 	 */
 	public Vector2f getHandle() {

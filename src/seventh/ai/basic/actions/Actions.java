@@ -28,6 +28,7 @@ import seventh.ai.basic.actions.atom.FindSafeDistanceFromActiveBombAction;
 import seventh.ai.basic.actions.atom.FollowEntityAction;
 import seventh.ai.basic.actions.atom.GuardAction;
 import seventh.ai.basic.actions.atom.GuardUntilAction;
+import seventh.ai.basic.actions.atom.HandleDoorAction;
 import seventh.ai.basic.actions.atom.MoveToAction;
 import seventh.ai.basic.actions.atom.MoveToBombAction;
 import seventh.ai.basic.actions.atom.MoveToBombTargetToPlantAction;
@@ -47,6 +48,7 @@ import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
 import seventh.ai.basic.actions.evaluators.StayStillEvaluator;
 import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
 import seventh.game.entities.BombTarget;
+import seventh.game.entities.Door;
 import seventh.game.entities.Flag;
 import seventh.game.entities.PlayerEntity;
 import seventh.game.entities.vehicles.Vehicle;
@@ -124,6 +126,9 @@ public class Actions {
         return new MoveToBombTargetToPlantAction(bomb);
     }
     
+    public HandleDoorAction handleDoorAction(Door door) {
+    	return new HandleDoorAction(door);
+    }
     
     public PlantBombAction plantBombAction(BombTarget bomb) {
         return new PlantBombAction(bomb);
