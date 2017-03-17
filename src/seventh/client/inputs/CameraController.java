@@ -55,6 +55,7 @@ public class CameraController implements Updatable {
     private int viewportWidth, viewportHeight;
     
     private boolean isCameraRoaming, isFastCamera;
+    private boolean isCameraActive;
     private int previousKeys;
     private Cursor cursor;
     
@@ -86,7 +87,23 @@ public class CameraController implements Updatable {
         this.viewportWidth = this.camera.getViewPort().width;
         this.viewportHeight = this.camera.getViewPort().height;
         
+        this.isCameraActive = true;
+        
         setGameCameraSpeed();
+    }
+    
+    /**
+     * @return the isCameraActive
+     */
+    public boolean isCameraActive() {
+        return isCameraActive;
+    }
+    
+    /**
+     * @param isCameraActive the isCameraActive to set
+     */
+    public void setCameraActive(boolean isCameraActive) {
+        this.isCameraActive = isCameraActive;
     }
     
     /**
@@ -270,7 +287,7 @@ public class CameraController implements Updatable {
      */
     private void updateCameraForRoamingMovements(TimeStep timeStep) {
         final int movementSpeed = isFastCamera ? fastFreeformSpeed : freeformSpeed;
-        if(playerVelocity.lengthSquared() > 0) {
+        if(playerVelocity.lengthSquared() > 0 && isCameraActive) {
             Vector2f pos = cameraDest;        
             
             bounds.set(camera.getViewPort());                    
@@ -326,7 +343,7 @@ public class CameraController implements Updatable {
                 
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 
-                if(this.config.getFollowReticleEnabled()) {
+                if(this.config.getFollowReticleEnabled() && this.isCameraActive) {
                     Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), 80f, cameraCenterAround);
                     
                     // smooth out the camera
@@ -362,13 +379,12 @@ public class CameraController implements Updatable {
      * 
      * @param timeStep
      */
-    private void updateCameraPosition(TimeStep timeStep) {
-        
+    private void updateCameraPosition(TimeStep timeStep) {        
         if(isCameraRoaming()) {
             updateCameraForRoamingMovements(timeStep);
         }
         else {                        
             updateCameraForPlayerMovements(timeStep);
-        }
+        }        
     }
 }

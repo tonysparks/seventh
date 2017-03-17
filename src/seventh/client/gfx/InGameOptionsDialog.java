@@ -26,6 +26,11 @@ import seventh.ui.events.OnHoverListener;
  */
 public class InGameOptionsDialog extends Widget {
 
+    public static interface OnHideListener {
+        void onShow();
+        void onHide();
+    }
+    
     private Label title;
     private Theme theme;
     
@@ -37,21 +42,30 @@ public class InGameOptionsDialog extends Widget {
     private WeaponClassDialog weaponDialog;
     private SwitchTeamDialog switchTeamDialog;
     
+    private OnHideListener onHide;
+    
     /**
      */
     public InGameOptionsDialog(Console console, ClientConnection network, Theme theme) {
         super(new EventDispatcher());
         this.theme = theme;
                 
-        this.weaponDialog = new WeaponClassDialog(network, theme);
+        this.weaponDialog = new WeaponClassDialog(this, network, theme);
         this.weaponDialog.setBounds(new Rectangle(400, 680));
         this.weaponDialog.hide();
         
-        this.switchTeamDialog = new SwitchTeamDialog(console, theme);        
+        this.switchTeamDialog = new SwitchTeamDialog(this, console, theme);        
         this.switchTeamDialog.setBounds(new Rectangle(400, 380));
         this.switchTeamDialog.hide();
         
         createUI();
+    }
+    
+    /**
+     * @param onHide the onHide to set
+     */
+    public void setOnHide(OnHideListener onHide) {
+        this.onHide = onHide;
     }
     
     /* (non-Javadoc)
@@ -79,6 +93,25 @@ public class InGameOptionsDialog extends Widget {
         return !super.isDisabled() || !this.weaponDialog.isDisabled() || !this.switchTeamDialog.isDisabled();
     }
     
+    /* (non-Javadoc)
+     * @see seventh.ui.Widget#hide()
+     */
+    @Override
+    public void hide() {     
+        super.hide();
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.ui.Widget#show()
+     */
+    @Override
+    public void show() {
+        super.show();
+        if(this.onHide!=null) {
+            this.onHide.onShow();
+        }
+    }
+    
     /**
      * Closes this dialog window
      */
@@ -86,6 +119,10 @@ public class InGameOptionsDialog extends Widget {
         hide();
         this.weaponDialog.hide();
         this.switchTeamDialog.hide();
+        
+        if(this.onHide!=null) {
+            this.onHide.onHide();
+        }
     }
     
     /**

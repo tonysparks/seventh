@@ -36,12 +36,13 @@ public class WeaponClassDialog extends Widget {
     private Button cancel;
     
     private ClientConnection connection;
-    
+    private InGameOptionsDialog owner;
     /**
      */
-    public WeaponClassDialog(ClientConnection network, Theme theme) {
+    public WeaponClassDialog(InGameOptionsDialog owner, ClientConnection network, Theme theme) {
         super(new EventDispatcher());
         
+        this.owner = owner;
         this.connection = network;
         
         this.team = ClientTeam.ALLIES;
@@ -107,7 +108,7 @@ public class WeaponClassDialog extends Widget {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
-                hide();
+                owner.close();
             }
         });
                 
@@ -169,7 +170,7 @@ public class WeaponClassDialog extends Widget {
                     connection.getClientProtocol().sendPlayerSwitchWeaponClassMessage(msg);
                 }
                 
-                hide();
+                owner.close();
             }
         });
         
@@ -200,7 +201,7 @@ public class WeaponClassDialog extends Widget {
         refreshButtons();
         
         if(this.isDisabled()) {
-            hide();
+            owner.close();
         }
     }
 }

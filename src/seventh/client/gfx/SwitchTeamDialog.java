@@ -31,11 +31,13 @@ public class SwitchTeamDialog extends Widget {
     private Button allied, axis, spectator;
     private Button cancel;
     private Console console;
+    
+    private InGameOptionsDialog owner;
     /**
      */
-    public SwitchTeamDialog(Console console, Theme theme) {
+    public SwitchTeamDialog(InGameOptionsDialog owner, Console console, Theme theme) {
         super(new EventDispatcher());
-        
+        this.owner = owner;
         this.console = console;
         this.team = ClientTeam.ALLIES;
         this.theme = theme;
@@ -124,7 +126,7 @@ public class SwitchTeamDialog extends Widget {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
-                hide();
+                owner.close();
             }
         });
                 
@@ -152,7 +154,7 @@ public class SwitchTeamDialog extends Widget {
                 if(!getTeam().getName().equalsIgnoreCase(desiredTeam)) {
                     console.execute("change_team " + desiredTeam);
                 }
-                hide();
+                owner.close();
             }
         });
         

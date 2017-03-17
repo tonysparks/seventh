@@ -13,18 +13,18 @@ import seventh.ai.AICommand;
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientTeam;
-import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.SeventhGame;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.InGameOptionsDialog;
+import seventh.client.gfx.InGameOptionsDialog.OnHideListener;
 import seventh.client.gfx.InGameOptionsDialogView;
 import seventh.client.gfx.Theme;
 import seventh.client.gfx.effects.Effects;
 import seventh.client.gfx.hud.AIShortcut;
 import seventh.client.gfx.hud.AIShortcuts;
-import seventh.client.gfx.hud.AIShortcutsMenu;
 import seventh.client.gfx.hud.AIShortcuts.DefendPlantedBombAIShortcut;
 import seventh.client.gfx.hud.AIShortcuts.DefuseBombAIShortcut;
 import seventh.client.gfx.hud.AIShortcuts.FollowMeAIShortcut;
@@ -32,11 +32,12 @@ import seventh.client.gfx.hud.AIShortcuts.MoveToAIShortcut;
 import seventh.client.gfx.hud.AIShortcuts.PlantBombAIShortcut;
 import seventh.client.gfx.hud.AIShortcuts.SurpressFireAIShortcut;
 import seventh.client.gfx.hud.AIShortcuts.TakeCoverAIShortcut;
+import seventh.client.gfx.hud.AIShortcutsMenu;
+import seventh.client.inputs.ControllerInput.ControllerButtons;
 import seventh.client.inputs.Inputs;
 import seventh.client.inputs.JoystickGameController;
 import seventh.client.inputs.KeyMap;
 import seventh.client.inputs.KeyboardGameController;
-import seventh.client.inputs.ControllerInput.ControllerButtons;
 import seventh.client.network.ClientConnection;
 import seventh.client.network.ClientProtocol;
 import seventh.client.sfx.Sounds;
@@ -250,11 +251,27 @@ public class InGameScreen implements Screen {
         
         this.aiShortcutsMenu.hide();
         
-        this.dialog = new InGameOptionsDialog(app.getConsole(), connection, app.getTheme());        
+        this.dialog = new InGameOptionsDialog(app.getConsole(), connection, app.getTheme());
+        this.dialog.setOnHide(new OnHideListener() {
+            
+            @Override
+            public void onShow() {
+                game.activateCamera(false);
+            }
+            
+            @Override
+            public void onHide() {
+                game.activateCamera(true);
+            }
+        });                
+        
         ClientPlayer player = game.getLocalPlayer();
         if(player!=null) {
             this.dialog.setTeam(player.getTeam());
         }
+        
+        this.dialog.show();
+        
         this.dialog.setBounds(new Rectangle(0,0, 400, 380));
         this.dialog.getBounds().centerAround(new Vector2f(app.getScreenWidth()/2, app.getScreenHeight()/2));
         this.dialog.getLeaveGameBtn().addOnButtonClickedListener(new OnButtonClickedListener() {
@@ -381,6 +398,8 @@ public class InGameScreen implements Screen {
         if(this.game != null) {
             this.game.onReloadVideo();
         }
+        
+        game.activateCamera(true);
         
         Controllers.addListener(this.controllerInput);
         final ClientProtocol protocol = connection.getClientProtocol();
@@ -594,10 +613,12 @@ public class InGameScreen implements Screen {
                 }
             }
         }
-        else {
+        else {            
             this.uiManager.update(timeStep);
             this.uiManager.checkIfCursorIsHovering();
             this.dialogView.update(timeStep);
+            
+            inputKeys = 0;
         }
             
         /* capture the inputs for moving the camera if

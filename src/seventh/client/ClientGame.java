@@ -725,6 +725,15 @@ public class ClientGame {
         return camera;
     }
     
+    /**
+     * Toggle if the camera responds to input
+     * 
+     * @param isActivated
+     */
+    public void activateCamera(boolean isActivated) {
+        this.cameraController.setCameraActive(isActivated);
+    }
+    
     
     public void showScoreBoard(boolean showScoreboard) {
         if(!gameEnded && !roundEnded) {            
