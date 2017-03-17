@@ -53,7 +53,7 @@ public class Bullet extends Entity {
                         game.emitSound(bullet.getId(), SoundType.IMPACT_METAL, bullet.getCenterPos());
                     }
                     else if(otherType.isDoor()) {
-                    	bullet.kill(other);        
+                        bullet.kill(other);        
                         game.emitSound(bullet.getId(), SoundType.IMPACT_WOOD, bullet.getCenterPos());
                     }
                     else {
@@ -284,7 +284,7 @@ public class Bullet extends Entity {
                         break;
                     }
                     if (game.doesTouchDoors(this)) {
-                    	break;
+                        break;
                     }
                 }
                 
@@ -302,7 +302,7 @@ public class Bullet extends Entity {
         else {
             if(!game.doesTouchPlayers(this, origin, targetVel)) {
                 if(!game.doesTouchVehicles(this)) {
-                	game.doesTouchDoors(this);
+                    game.doesTouchDoors(this);
                 }
             }
         }
@@ -368,10 +368,10 @@ public class Bullet extends Entity {
      */
     @Override
     public boolean isTouching(Entity other) {
-    	if(other==owner) {
-    		return false;
-    	}
-    	return super.isTouching(other);
+        if(other==owner) {
+            return false;
+        }
+        return super.isTouching(other);
     }
     
     /* (non-Javadoc)

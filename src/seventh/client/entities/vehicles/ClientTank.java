@@ -296,8 +296,8 @@ public class ClientTank extends ClientVehicle {
 
     @Override
     public boolean touches(ClientEntity other) {
-    	// TODO: Make this pixel accurate by OOB
-    	return super.touches(other);
+        // TODO: Make this pixel accurate by OOB
+        return super.touches(other);
     }
     
     /* (non-Javadoc)

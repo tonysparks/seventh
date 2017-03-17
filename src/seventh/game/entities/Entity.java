@@ -199,7 +199,7 @@ public abstract class Entity implements Debugable {
         }
         
         public boolean isDoor() {
-        	return this == DOOR;
+            return this == DOOR;
         }
         
         /**
@@ -670,18 +670,18 @@ public abstract class Entity implements Debugable {
     }
     
     protected boolean collidesAgainstEntity(Rectangle bounds) {
-    	return collidesAgainstVehicle(bounds) || collidesAgainstDoor(bounds);
+        return collidesAgainstVehicle(bounds) || collidesAgainstDoor(bounds);
     }
     
     protected boolean collidesAgainstDoor(Rectangle bounds) {
-    	List<Door> doors = game.getDoors();
-    	for(int i = 0; i < doors.size(); i++) {
-    		Door door = doors.get(i);
-    		if(door.isTouching(bounds)) {
-    			return true;
-    		}
-    	}
-    	return false;
+        List<Door> doors = game.getDoors();
+        for(int i = 0; i < doors.size(); i++) {
+            Door door = doors.get(i);
+            if(door.isTouching(bounds)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**

@@ -475,6 +475,30 @@ public class OptionsScreen implements Screen {
         this.optionsPanel.addWidget(bloodEnabledChkBx);
         this.panelView.addElement(new CheckboxView(bloodEnabledChkBx));
         
+        
+        uiPos.y = bottomPanelY + 45;
+        
+        Checkbox followReticleEnabledChkBx = new Checkbox(app.getConfig().getFollowReticleEnabled());
+        followReticleEnabledChkBx.setTheme(theme);                
+        followReticleEnabledChkBx.setLabelText("Camera Follow Reticle");
+        followReticleEnabledChkBx.getBounds().setLocation(uiPos);
+        followReticleEnabledChkBx.addCheckboxClickedListener(new OnCheckboxClickedListener() {
+            
+            @Override
+            public void onCheckboxClicked(CheckboxEvent event) {
+                app.getConfig().setFollowReticleEnabled(event.getCheckbox().isChecked());                
+            }
+        });
+        followReticleEnabledChkBx.addOnHoverListener(new OnHoverListener() {
+            
+            @Override
+            public void onHover(HoverEvent event) {
+                uiManager.getCursor().touchAccuracy();
+            }
+        });
+        this.optionsPanel.addWidget(followReticleEnabledChkBx);
+        this.panelView.addElement(new CheckboxView(followReticleEnabledChkBx));
+        
     }
 
     private void refreshConfigUI() {

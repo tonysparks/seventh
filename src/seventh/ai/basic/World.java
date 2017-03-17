@@ -188,7 +188,7 @@ public class World {
      * @return the doors
      */
     public List<Door> getDoors() {
-    	return this.game.getDoors();
+        return this.game.getDoors();
     }
     
     /**

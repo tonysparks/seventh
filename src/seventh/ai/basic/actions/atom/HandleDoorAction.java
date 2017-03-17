@@ -23,12 +23,12 @@ public class HandleDoorAction extends AdapterAction {
     private Timer blockCheck;
     
     public HandleDoorAction(Door door) {
-    	this.door = door;
-    	this.operated = false;
+        this.door = door;
+        this.operated = false;
     
-    	this.blockCheck = new Timer(true, 800);
-    	this.blockCheck.start();
-    	
+        this.blockCheck = new Timer(true, 800);
+        this.blockCheck.start();
+        
         getActionResult().setFailure();
     }
     
@@ -48,17 +48,17 @@ public class HandleDoorAction extends AdapterAction {
 
     @Override
     public void update(Brain brain, TimeStep timeStep) {
-    	this.blockCheck.update(timeStep);
-    	
+        this.blockCheck.update(timeStep);
+        
         PlayerEntity player = brain.getEntityOwner();
         if(!this.operated) {
-        	player.useSingle();        	
+            player.useSingle();            
         }
 
         this.operated = true;
         
         if(this.door.isBlocked() && this.blockCheck.isOnFirstTime()) {
-        	this.operated = false;
+            this.operated = false;
         }
         
         

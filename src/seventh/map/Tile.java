@@ -1362,13 +1362,13 @@ public class Tile implements Renderable {
     }
     
     /**
-	 * @return the centerPos
-	 */
-	public Vector2f getCenterPos() {
-		this.centerPos.set(this.x + this.width/2, 
-				           this.y + this.height/2);
-		return centerPos;
-	}
+     * @return the centerPos
+     */
+    public Vector2f getCenterPos() {
+        this.centerPos.set(this.x + this.width/2, 
+                           this.y + this.height/2);
+        return centerPos;
+    }
     
     /**
      * @return the xIndex

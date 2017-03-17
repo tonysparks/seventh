@@ -8,6 +8,7 @@ import java.util.List;
 
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
+import seventh.client.ClientSeventhConfig;
 import seventh.client.entities.ClientControllableEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Cursor;
@@ -39,7 +40,7 @@ public class CameraController implements Updatable {
     private Vector2f cameraCenterAround;
     private Vector2f cameraDest;
     private Vector2f cache;
-    
+    private Vector2f previousCameraPos;
     private ClientPlayer localPlayer;
     
     private Vector2f playerVelocity;
@@ -58,12 +59,14 @@ public class CameraController implements Updatable {
     private Cursor cursor;
     
     private ClientGame game;
+    private ClientSeventhConfig config;
     
     /**
      * @param game
      */
     public CameraController(ClientGame game) {
         this.game = game;
+        this.config = game.getConfig();
         this.camera = game.getCamera();
         this.map = game.getMap();
         this.localPlayer = game.getLocalPlayer();
@@ -71,6 +74,7 @@ public class CameraController implements Updatable {
 
         this.fowTiles = new ArrayList<Tile>();
         
+        this.previousCameraPos = new Vector2f();
         this.cameraCenterAround = new Vector2f();
         this.cameraDest = new Vector2f();        
         this.cameraShakeBounds = new Rectangle(600, 600);
@@ -322,7 +326,18 @@ public class CameraController implements Updatable {
                 
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 
-                cameraCenterAround.set(entity.getPos());
+                if(this.config.getFollowReticleEnabled()) {
+                    Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), 80f, cameraCenterAround);
+                    
+                    // smooth out the camera
+                    previousCameraPos.set(cameraCenterAround);
+                    Vector2f.Vector2fLerp(cameraCenterAround, previousCameraPos, 0.15f, cameraCenterAround);
+                }
+                else {
+                    cameraCenterAround.set(entity.getCenterPos());
+                }
+                
+                //cameraCenterAround.set(entity.getPos());
                 Vector2f.Vector2fRound(cameraCenterAround, cameraCenterAround);;
                 camera.centerAround(cameraCenterAround);
         

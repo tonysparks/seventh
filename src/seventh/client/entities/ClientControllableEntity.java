@@ -184,24 +184,24 @@ public abstract class ClientControllableEntity extends ClientEntity {
     }
     
     protected boolean collidesAgainstEntity(Rectangle bounds) {
-    	List<ClientVehicle> vehicles = game.getVehicles();
-    	for(int i = 0; i < vehicles.size(); i++) {
-    		ClientVehicle v = vehicles.get(i);
-    		if(v.isRelativelyUpdated()) {
-    			//if(v.touches()
-    		}
-    	}
-    	
-    	// TODO: Doors, vehicles
-    	List<ClientDoor> doors = game.getDoors();
-    	for(int i = 0; i < doors.size(); i++) {
-    		ClientDoor door = doors.get(i);
-    		if(door.isTouching(bounds)) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
+        List<ClientVehicle> vehicles = game.getVehicles();
+        for(int i = 0; i < vehicles.size(); i++) {
+            ClientVehicle v = vehicles.get(i);
+            if(v.isRelativelyUpdated()) {
+                //if(v.touches()
+            }
+        }
+        
+        // TODO: Doors, vehicles
+        List<ClientDoor> doors = game.getDoors();
+        for(int i = 0; i < doors.size(); i++) {
+            ClientDoor door = doors.get(i);
+            if(door.isTouching(bounds)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**

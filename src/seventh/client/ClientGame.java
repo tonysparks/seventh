@@ -253,6 +253,13 @@ public class ClientGame {
     }
     
     /**
+     * @return the client configuration
+     */
+    public ClientSeventhConfig getConfig() {
+        return this.app.getConfig();
+    }
+    
+    /**
      * Reloads the HUD graphics 
      */
     public void debugReloadGfx() {
@@ -508,11 +515,11 @@ public class ClientGame {
     }
     
     /**
-	 * @return the doors
-	 */
-	public List<ClientDoor> getDoors() {
-		return doors;
-	}
+     * @return the doors
+     */
+    public List<ClientDoor> getDoors() {
+        return doors;
+    }
     
     /**
      * @return the entities
@@ -973,9 +980,9 @@ public class ClientGame {
                 break;
             }
             case DOOR: {
-            	entity = new ClientDoor(this, pos);
-            	doors.add((ClientDoor)entity);
-            	break;
+                entity = new ClientDoor(this, pos);
+                doors.add((ClientDoor)entity);
+                break;
             }
             case HEALTH_PACK: {
                 entity = new ClientHealthPack(this, pos);

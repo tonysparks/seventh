@@ -743,7 +743,7 @@ public class PlayerEntity extends Entity implements Controllable {
                 unuse();
                 
                 if(Keys.USE.isDown(previousKeys)) {
-                	useSingle();
+                    useSingle();
                 }
             }
             
@@ -1264,7 +1264,7 @@ public class PlayerEntity extends Entity implements Controllable {
     }
     
     protected void handleDoor(Door door) {
-    	door.handleDoor(this);
+        door.handleDoor(this);
     }
     
     /**
@@ -1274,10 +1274,10 @@ public class PlayerEntity extends Entity implements Controllable {
      *  released this method is activated).
      */
     public void useSingle() {
-    	Door door = game.getArmsReachDoor(this);
-    	if(door != null) {
-    		handleDoor(door);
-    	}
+        Door door = game.getArmsReachDoor(this);
+        if(door != null) {
+            handleDoor(door);
+        }
     }
     
     /**
@@ -1293,7 +1293,7 @@ public class PlayerEntity extends Entity implements Controllable {
             if(this.bombTarget == null) {        
                 this.bombTarget = game.getArmsReachBombTarget(this);
                 if(this.bombTarget != null) {
-	                handleBombTarget(this.bombTarget);
+                    handleBombTarget(this.bombTarget);
                 }
             }
             
@@ -1431,16 +1431,16 @@ public class PlayerEntity extends Entity implements Controllable {
         
         
         for(int j = 0; j < doorSize; j++ ) {
-        	Door door = doors.get(j);
-        	if(this.visualBounds.intersects(door.getBounds())) {        
-        		for(int i = 0; i < tileSize; i++) {
-                	Tile tile = tiles.get(i);
-                	if(Line.lineIntersectLine(getCenterPos(), tile.getCenterPos(), 
-                			               door.getPos(), door.getHandle())) {
-                		tile.setMask(Tile.TILE_INVISIBLE);
-                	}
+            Door door = doors.get(j);
+            if(this.visualBounds.intersects(door.getBounds())) {        
+                for(int i = 0; i < tileSize; i++) {
+                    Tile tile = tiles.get(i);
+                    if(Line.lineIntersectLine(getCenterPos(), tile.getCenterPos(), 
+                                           door.getPos(), door.getHandle())) {
+                        tile.setMask(Tile.TILE_INVISIBLE);
+                    }
                 }
-        	}
+            }
         }
         
         

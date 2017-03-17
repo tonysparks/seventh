@@ -158,4 +158,12 @@ public class ClientSeventhConfig extends SeventhConfig {
     public void setBloodEnabled(boolean bloodEnabled) {
         this.config.set(bloodEnabled, "game", "blood");
     }
+    
+    public boolean getFollowReticleEnabled() {
+        return this.config.getBool(true, "game", "follow_reticle");
+    }
+    
+    public void setFollowReticleEnabled(boolean enabled) {
+        this.config.set(enabled, "game", "follow_reticle");
+    }
 }

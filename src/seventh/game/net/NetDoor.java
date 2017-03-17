@@ -13,9 +13,9 @@ import seventh.game.entities.Entity.Type;
  *
  */
 public class NetDoor extends NetEntity {
-	
-	public byte hinge;
-	
+    
+    public byte hinge;
+    
     public NetDoor() {
         this.type = Type.DOOR.netValue();
     }

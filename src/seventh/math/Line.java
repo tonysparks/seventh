@@ -124,12 +124,12 @@ public class Line {
     public static boolean lineIntersectsRectangle(Vector2f v1, Vector2f v2, Rectangle rect) {
         //Line2D line = new Line2D.Float(v1.x, v1.y, v2.x, v2.y);        
         //return line.intersects(new java.awt.Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()));
-    	
-    	// limit GC activity
-    	cacheLine.setLine(v1.x, v1.y, v2.x, v2.y);
-    	cacheRect.setBounds(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-    	return cacheLine.intersects(cacheRect);
-    	
+        
+        // limit GC activity
+        cacheLine.setLine(v1.x, v1.y, v2.x, v2.y);
+        cacheRect.setBounds(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+        return cacheLine.intersects(cacheRect);
+        
 //        
 //        int x = rect.getX();
 //        int y = rect.getY();

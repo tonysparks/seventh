@@ -622,12 +622,12 @@ public class Game implements GameInfo, Debugable, Updatable {
     }
     
     /**
-	 * @return the doors
-	 */
+     * @return the doors
+     */
     @Override
-	public List<Door> getDoors() {
-		return doors;
-	}
+    public List<Door> getDoors() {
+        return doors;
+    }
     
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getFlags()
@@ -1472,8 +1472,8 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @return a new Door
      */
     public Door newDoor(Vector2f pos, Vector2f facing) {
-    	Door door = new Door(pos, this, facing);
-    	this.doors.add(door);
+        Door door = new Door(pos, this, facing);
+        this.doors.add(door);
         this.addEntity(door);
         return door;
     }
@@ -1585,15 +1585,15 @@ public class Game implements GameInfo, Debugable, Updatable {
      * otherwise null
      */
     public Door getArmsReachDoor(PlayerEntity entity)  {
-    	int size = this.doors.size();
-    	for(int i = 0; i < size; i++) {
-    		Door door = this.doors.get(i);
-    		if(door.canBeHandledBy(entity)) {
-    			return door;
-    		}
-    	}
-    	
-    	return null;
+        int size = this.doors.size();
+        for(int i = 0; i < size; i++) {
+            Door door = this.doors.get(i);
+            if(door.canBeHandledBy(entity)) {
+                return door;
+            }
+        }
+        
+        return null;
     }
     
     /*

@@ -14,8 +14,8 @@ import paulscode.sound.SoundSystemConfig;
  *
  */
 public class Sound {
-	private static final Random rand = new Random();
-	
+    private static final Random rand = new Random();
+    
     private String sourceName;    
     private SoundSystem soundSystem;
     /**
@@ -31,7 +31,7 @@ public class Sound {
     }
 
     private float getFuzzyPitch() {
-    	return (95 + rand.nextInt(5)) / 100.0f;
+        return (95 + rand.nextInt(5)) / 100.0f;
     }
     
     public void setPosition(float x, float y) {

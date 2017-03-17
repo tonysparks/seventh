@@ -127,7 +127,7 @@ public class Actions {
     }
     
     public HandleDoorAction handleDoorAction(Door door) {
-    	return new HandleDoorAction(door);
+        return new HandleDoorAction(door);
     }
     
     public PlantBombAction plantBombAction(BombTarget bomb) {

@@ -971,17 +971,17 @@ public class Sounds {
             sound = axisVictory;
             break;
         case DOOR_OPEN:
-        	sound = doorOpen;
-        	break;
+            sound = doorOpen;
+            break;
         case DOOR_CLOSE:
-        	sound = doorClose;
-        	break;
+            sound = doorClose;
+            break;
         case DOOR_CLOSE_BLOCKED:
-        	sound = doorCloseBlocked;
-        	break;
+            sound = doorCloseBlocked;
+            break;
         case DOOR_OPEN_BLOCKED:
-        	sound = doorOpenBlocked;
-        	break;
+            sound = doorOpenBlocked;
+            break;
         case MUTE:
             
         default:

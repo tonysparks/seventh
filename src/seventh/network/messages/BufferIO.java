@@ -268,8 +268,8 @@ public class BufferIO {
                 break;
             }
             case DOOR: {
-            	result = new NetDoor();
-            	break;
+                result = new NetDoor();
+                break;
             }
             case SHERMAN_TANK: {
                 result = new NetTank(Type.SHERMAN_TANK);
