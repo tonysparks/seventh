@@ -9,6 +9,7 @@ import java.util.List;
 
 import seventh.game.Player;
 import seventh.game.PlayerInfo;
+import seventh.game.entities.Door;
 import seventh.game.entities.Entity;
 import seventh.game.entities.PlayerEntity;
 import seventh.game.entities.vehicles.Vehicle;
@@ -31,6 +32,7 @@ public class PathPlanner<E> {
     private MapGraph<E> graph;
     private List<GraphNode<Tile, E>> path;
     private int currentNode;
+    private int currentNodeCount;
     private Vector2f nextWaypoint;
     private Vector2f finalDestination;    
     
@@ -81,7 +83,7 @@ public class PathPlanner<E> {
         
         return null;
     }
-    
+        
     public static class SearchPath<E> extends AStarGraphSearch<Tile, E> {
         public List<Tile> tilesToAvoid = new ArrayList<>();
         
@@ -335,6 +337,7 @@ public class PathPlanner<E> {
                 //tile.getBounds().contains(currentPosition)
                 ) {
                 currentNode++;
+                currentNodeCount = 0;
             
 //                if(ent.isSprinting()) {
 //                    if(currentNode < path.size()) {
@@ -356,7 +359,33 @@ public class PathPlanner<E> {
                     }
                 }
             }
+            else {
+                currentNodeCount++;
+            }
                         
+            // if we get stuck, try to avoid this
+            // area to get to the destination
+            if(currentNodeCount > 50) {
+                currentNodeCount = 0;
+                tilesToAvoid.add(path.get(currentNode).getValue());
+                
+                int size = world.getDoors().size();
+                for(int i = 0; i < size; i++ ) {
+                    Door door = world.getDoors().get(i);
+                    
+                    // we are probably stuck on this door
+                    if(door.canBeHandledBy(ent)) {
+                        Tile hinge = world.getMap().getWorldTile(0, (int)door.getPos().x, (int)door.getPos().y);
+                        Tile handle = world.getMap().getWorldTile(0, (int)door.getHandle().x, (int)door.getHandle().y);
+                        if(hinge!=null) tilesToAvoid.add(hinge);
+                        if(handle!=null) tilesToAvoid.add(handle);
+                    }
+                }
+                
+                findPath(cPos, this.finalDestination, tilesToAvoid);                
+                return nextWaypoint(ent);
+            }
+            
 //            if(tile.getBounds().intersects(bounds)) {
 //                currentNode++;            
 //                
