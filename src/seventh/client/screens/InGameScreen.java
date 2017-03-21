@@ -399,7 +399,9 @@ public class InGameScreen implements Screen {
             this.game.onReloadVideo();
         }
         
-        game.activateCamera(true);
+        if(!this.dialog.isOpen()) {
+            game.activateCamera(true);
+        }
         
         Controllers.addListener(this.controllerInput);
         final ClientProtocol protocol = connection.getClientProtocol();
