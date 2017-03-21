@@ -11,8 +11,6 @@ import seventh.ai.basic.actions.Actions;
 import seventh.game.entities.Door;
 import seventh.game.entities.PlayerEntity;
 import seventh.math.Rectangle;
-import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
 
 /**
  * Determines if a {@link Door} needs to be handled
@@ -23,12 +21,14 @@ import seventh.shared.DebugDraw;
 public class HandleDoorActionEvaluator extends ActionEvaluator {
 
     private Door door;
+    private Rectangle futureBounds;
     
     /**
      * @param characterBias
      */
     public HandleDoorActionEvaluator(Actions goals, double characterBias, double keepBias) {
         super(goals, characterBias, keepBias);
+        this.futureBounds = new Rectangle(64,64);
     }
 
     @Override
@@ -36,7 +36,6 @@ public class HandleDoorActionEvaluator extends ActionEvaluator {
         double desirability = 0;
         PlayerEntity bot = brain.getEntityOwner();
         if(bot.isRunning()||bot.isSprinting()) {
-            Rectangle futureBounds = new Rectangle(64,64);
             //Vector2f newPos = new Vector2f();
             //Vector2f.Vector2fMA(bot.getCenterPos(), bot.getMovementDir(), 35, newPos);
             futureBounds.centerAround(bot.getCenterPos());
