@@ -1066,8 +1066,7 @@ public class ClientGame {
         }
     }
     
-    public void applyFullGameState(NetGameState gs) {
-        
+    private void clearGameState() {
         ClientEntity[] entityList = this.entities.getEntities();
         for(int i = 0; i < entityList.length; i++) {
             ClientEntity ent = entityList[i];
@@ -1082,11 +1081,16 @@ public class ClientGame {
         this.entities.clear();        
         this.bombTargets.clear();
         this.vehicles.clear();
+        this.doors.clear();
         
         this.gameTimers.removeTimers();
         
         this.gameEffects.removeAllLights();
         this.gameEffects.clearEffects();
+    }
+    
+    public void applyFullGameState(NetGameState gs) {
+        clearGameState();
                 
         applyGameStats(gs.stats);
         
@@ -1525,7 +1529,8 @@ public class ClientGame {
         this.entities.clear();        
         this.bombTargets.clear();
         this.vehicles.clear();
-        
+        this.doors.clear();
+                
         this.gameEffects.destroy();
         this.gameTimers.removeTimers();
     }

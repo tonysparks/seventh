@@ -21,6 +21,8 @@ import seventh.shared.TimeStep;
  */
 public class Door extends Entity {
 
+    private static final int DOOR_WIDTH = 10;
+    
     public static enum DoorHinge {
         NORTH_END,
         SOUTH_END,
@@ -53,7 +55,7 @@ public class Door extends Entity {
         
         public Vector2f getRearHandlePosition(Vector2f pos, Vector2f rearHandlePos) {
             rearHandlePos.set(pos);
-            final float doorWidth = 10;
+            final float doorWidth = DOOR_WIDTH;
             switch(this) {        
                 case NORTH_END:
                     rearHandlePos.x += doorWidth;
@@ -71,6 +73,31 @@ public class Door extends Entity {
             }
             
             return rearHandlePos;
+        }
+        
+        public Vector2f getRearHingePosition(Vector2f hingePos, Vector2f facing, Vector2f rearHingePos) {
+            Vector2f hingeFacing = new Vector2f();
+            switch(this) {        
+                case NORTH_END:
+                    Vector2f.Vector2fPerpendicular(facing, hingeFacing);
+                    Vector2f.Vector2fMA(hingePos, hingeFacing, -DOOR_WIDTH, rearHingePos);
+                    break;
+                case SOUTH_END:                    
+                    Vector2f.Vector2fPerpendicular(facing, hingeFacing);
+                    Vector2f.Vector2fMA(hingePos, hingeFacing, DOOR_WIDTH, rearHingePos);
+                    break;            
+                case EAST_END:                    
+                    Vector2f.Vector2fPerpendicular(facing, hingeFacing);
+                    Vector2f.Vector2fMA(hingePos, hingeFacing, DOOR_WIDTH, rearHingePos);
+                    break;
+                case WEST_END:
+                    Vector2f.Vector2fPerpendicular(facing, hingeFacing);
+                    Vector2f.Vector2fMA(hingePos, hingeFacing, -DOOR_WIDTH, rearHingePos);
+                    break;
+                default:                    
+            }
+            
+            return rearHingePos;
         }
         
         public static DoorHinge fromNetValue(byte value) {
@@ -127,7 +154,9 @@ public class Door extends Entity {
     private Vector2f frontDoorHandle, 
                      rearDoorHandle,
                      rearHingePos;
-    private Rectangle touchRadius;
+    
+    private Rectangle handleTouchRadius,
+                      hingeTouchRadius;
     
     
     private SmoothOrientation rotation;
@@ -151,17 +180,18 @@ public class Door extends Entity {
         this.facing.set(facing);
                     
         this.hinge = DoorHinge.fromVector(facing);
-        this.touchRadius = new Rectangle(64, 64);
-        this.bounds.set(this.touchRadius);
+        this.handleTouchRadius = new Rectangle(48, 48);
+        this.hingeTouchRadius = new Rectangle(48,48);
+        
+        this.bounds.set(this.handleTouchRadius);
+        this.hingeTouchRadius.centerAround(getPos());
         //this.bounds.centerAround(position);
         
         this.rotation = new SmoothOrientation(0.05);
         this.rotation.setOrientation(this.hinge.getClosedOrientation());
+        setOrientation(this.rotation.getOrientation());
         
-        this.rearHingePos = this.hinge.getRearHandlePosition(getPos(), this.rearHingePos);
-        
-        Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
-        Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
+        setDoorOrientation();
         
         this.netDoor = new NetDoor();
         
@@ -181,7 +211,10 @@ public class Door extends Entity {
 
     private void setDoorOrientation() {
         Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
+        this.rearHingePos = this.hinge.getRearHingePosition(getPos(), this.rotation.getFacing(), this.rearHingePos);                
         Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
+        
+        this.handleTouchRadius.centerAround(this.frontDoorHandle);
     }
     
     @Override
@@ -250,8 +283,8 @@ public class Door extends Entity {
         setOrientation(this.rotation.getOrientation());
         
         //Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
-        //DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
-        //DebugDraw.drawLineRelative(this.rearHingePos, this.rearDoorHandle, 0xffffff00);
+    //    DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
+     //   DebugDraw.drawLineRelative(this.rearHingePos, this.rearDoorHandle, 0xffffff00);
         
         //DebugDraw.drawStringRelative("State: " + this.doorState, (int)getPos().x, (int)getPos().y, 0xffff00ff);
         //DebugDraw.drawStringRelative("Orientation: C:" + (int)Math.toDegrees(this.rotation.getOrientation())  + "   D:" + (int)Math.toDegrees(this.rotation.getDesiredOrientation()) , (int)getPos().x, (int)getPos().y + 20, 0xffff00ff);
@@ -363,55 +396,12 @@ public class Door extends Entity {
      * @param ent
      * @return true if the Entity is within reach to to close/open this door
      */    
-    public boolean canBeHandledBy(Entity ent) {
-        Vector2f entPos = ent.getCenterPos();
-        Vector2f hingePos = getPos();
+    public boolean canBeHandledBy(Entity ent) {      
+        //DebugDraw.fillRectRelative(handleTouchRadius.x, handleTouchRadius.y, handleTouchRadius.width, handleTouchRadius.height, 0xff00ff00);
+        //DebugDraw.fillRectRelative(hingeTouchRadius.x, hingeTouchRadius.y, hingeTouchRadius.width, hingeTouchRadius.height, 0xff00ff00);
         
-        
-        // figure out what side the entity is 
-        // of the door hinge, depending on their
-        // side, we adjust the door hit box
-        switch(this.hinge) {
-            
-            case NORTH_END:
-                if(entPos.x < hingePos.x) {                    
-                    this.touchRadius.setLocation( (int)hingePos.x - 64, (int)hingePos.y - 64);
-                }
-                else if(entPos.x > hingePos.x) {
-                    this.touchRadius.setLocation( (int)hingePos.x + 0, (int)hingePos.y - 64);
-                }
-                break;
-            case SOUTH_END:
-                if(entPos.x < hingePos.x) {                    
-                    this.touchRadius.setLocation( (int)hingePos.x - 64, (int)hingePos.y);
-                }
-                else if(entPos.x > hingePos.x) {
-                    this.touchRadius.setLocation( (int)hingePos.x + 0, (int)hingePos.y);
-                }
-                break;
-            case EAST_END:
-                if(entPos.y < hingePos.y) {                    
-                    this.touchRadius.setLocation( (int)hingePos.x - 64, (int)hingePos.y - 64);
-                }
-                else if(entPos.y > hingePos.y) {                    
-                    this.touchRadius.setLocation( (int)hingePos.x - 64, (int)hingePos.y + 0);
-                }
-                break;
-            case WEST_END:
-                if(entPos.y < hingePos.y) {                    
-                    this.touchRadius.setLocation( (int)hingePos.x + 0, (int)hingePos.y - 64);
-                }
-                else if(entPos.y > hingePos.y) {                    
-                    this.touchRadius.setLocation( (int)hingePos.x + 0, (int)hingePos.y + 0);
-                }
-                break;
-            default:
-                break;            
-        }
-        
-        //DebugDraw.fillRectRelative(touchRadius.x, touchRadius.y, touchRadius.width, touchRadius.height, 0xff00ff00);
-        
-        return (this.touchRadius.intersects(ent.getBounds()));
+        return this.handleTouchRadius.intersects(ent.getBounds()) ||
+               this.hingeTouchRadius.intersects(ent.getBounds()) ;
     }
     
     /**
@@ -426,8 +416,14 @@ public class Door extends Entity {
     }
     
     public boolean isTouching(Rectangle bounds) {
-        return Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
-               Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
+        boolean isTouching = Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
+                             Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
+//        if(isTouching) {
+//            DebugDraw.fillRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff00);
+//            DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
+//            DebugDraw.drawLineRelative(this.rearHingePos, this.rearDoorHandle, 0xffffff00);
+//        }
+        return isTouching;
     }
     
     /**

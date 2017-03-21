@@ -191,6 +191,7 @@ public class World {
         return this.game.getDoors();
     }
     
+    
     /**
      * @return true if there are bomb targets
      */
@@ -671,7 +672,7 @@ public class World {
                     i++;
                 }
             }
-        }
+        }        
     }
 
 }

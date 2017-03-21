@@ -16,6 +16,7 @@ import seventh.game.net.NetEntity;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.DebugDraw;
 
 /**
  * @author Tony
@@ -56,11 +57,15 @@ public class ClientDoor extends ClientEntity {
         NetDoor door = (NetDoor)state;
         this.hinge = DoorHinge.fromNetValue(door.hinge);
         this.rotation.setOrientation(this.getOrientation());
-        
-        this.rearHingePos = this.hinge.getRearHandlePosition(getPos(), this.rearHingePos);
-        
+
         Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
+        this.rearHingePos = this.hinge.getRearHingePosition(getPos(), this.rotation.getFacing(), this.rearHingePos);                
         Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
+        
+//        this.rearHingePos = this.hinge.getRearHandlePosition(getPos(), this.rearHingePos);
+//        
+//        Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
+//        Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
         
     }
     
@@ -75,8 +80,16 @@ public class ClientDoor extends ClientEntity {
     }
     
     public boolean isTouching(Rectangle bounds) {
-        return Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
-               Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
+//        return Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
+//               Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
+        boolean isTouching = Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
+                Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
+//         if(isTouching) {
+//             DebugDraw.fillRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff00);
+//             DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
+//             DebugDraw.drawLineRelative(this.rearHingePos, this.rearDoorHandle, 0xffffff00);
+//         }
+         return isTouching;
     }
     
     @Override
