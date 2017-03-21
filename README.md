@@ -3,18 +3,21 @@ seventh
 
 A top down 2D Shooter game I've been working on in my spare time.  This repository only includes the source.  
 
-##Download##
+Download
+===
 You can download the BETA version of the game [here](https://dl.dropboxusercontent.com/u/11954191/seventh.zip)
 
 
-##Videos/Screenshots##
+Videos/Screenshots
+===
 [![Seventh Gameplay Video](http://img.youtube.com/vi/JEKWlPJX8V0/0.jpg)](http://youtube.com/watch?v=JEKWlPJX8V0)
 ![alt text](http://i.imgur.com/Y8bV3jM.png "Title Screen")
 ![alt text](http://i.imgur.com/PgQNj1W.png "In Game")
 ![alt text](http://i.imgur.com/BW2Txym.png "In Game #2")
 
 
-##Features##
+Features
+===
 * Three game modes (Team Death Match, Objective Based, Capture the Flag)
 * 9 different weapons
 * Melee
@@ -23,7 +26,8 @@ You can download the BETA version of the game [here](https://dl.dropboxuserconte
 * Tanks
 * Multiplayer and Single player (Single player vs. Bots)
 
-##TODO##
+TODO
+===
 * Update all graphics to WWII
 * Replace temporary sounds
 * Create more maps
@@ -35,7 +39,8 @@ You can download the BETA version of the game [here](https://dl.dropboxuserconte
 * Tweak game design
 * Add more intelligence to Bots
 
-##Technical Stuff##
+Technical Stuff
+===
 * Custom built reliable messaging protocol over UDP
   - Handles out of order packets 
   - Can flag messages as 'reliable' which will guarantee delivery
@@ -47,7 +52,8 @@ You can download the BETA version of the game [here](https://dl.dropboxuserconte
 * SoundSystem is used for 3d sound
 * Tiled is used for the map editor
 
-##Build from Source##
+Build from Source
+===
 * Download the source code from github:
  - git clone https://github.com/tonysparks/seventh
 * Download the game assets from [here](https://dl.dropboxusercontent.com/u/11954191/seventh.zip) 
@@ -65,7 +71,8 @@ You can download the BETA version of the game [here](https://dl.dropboxuserconte
     - Add jars in *lib* folder to classpath
 
 
-##Run from Source##
+Run from Source
+===
 * Run the game by:
  - Windows:
  ```
