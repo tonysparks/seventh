@@ -254,8 +254,9 @@ public class Art {
         axisExplosionDeathImage = TextureUtil.splitImage(
                 TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_04.png"), 0, 0, 330, 290), 2, 4);
         
-        bloodImages = TextureUtil.splitImage(
-                TextureUtil.subImage(loadImage("./assets/gfx/particles/blood.png"), 0, 0, 128, 32), 1, 4);
+//        bloodImages = TextureUtil.splitImage(                
+//                TextureUtil.subImage(loadImage("./assets/gfx/particles/blood.png"), 0, 0, 128, 32), 1, 4);
+        bloodImages = TextureUtil.splitImage(loadImage("./assets/gfx/particles/blood.png"), 2, 3);
         gibImages = TextureUtil.splitImage(loadImage("./assets/gfx/particles/gibs.png"), 2, 2);
 
         smokeImage = loadImage("./assets/gfx/particles/smoke.png");

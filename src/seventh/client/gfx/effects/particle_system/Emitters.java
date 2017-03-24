@@ -41,8 +41,8 @@ public class Emitters {
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, maxParticles)
            .addSingleParticleGenerator(new RandomPositionInRadiusSingleParticleGenerator(maxSpread))
            .addSingleParticleGenerator(new RandomRotationSingleParticleGenerator())
-           .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(0.15f, 1.9f))
-           .addSingleParticleGenerator(new RandomSpeedSingleParticleGenerator(10, 10))
+           .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(0.55f, 1.2f))
+           .addSingleParticleGenerator(new RandomSpeedSingleParticleGenerator(5, 5))
            .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(emitterTimeToLive, emitterTimeToLive))
            .addSingleParticleGenerator(new RandomSpriteSingleParticleGenerator(Art.bloodImages))
         ;

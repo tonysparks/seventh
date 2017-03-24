@@ -7,31 +7,24 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+
 import seventh.client.ClientSeventhConfig;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
-import seventh.math.Vector2f;
 import seventh.shared.Console;
 import seventh.shared.Logger;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 import seventh.shared.Updatable;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-
 /**
  * @author Tony
  *
  */
 public class Terminal implements Updatable, Logger {
-
-    static class Selection {
-        Vector2f start = new Vector2f();
-        Vector2f end = new Vector2f();
-        boolean isSelecting=false;
-    }
     
     private static final int MAX_HEIGHT = 500;
     private static final int MAX_TEXT_HISTORY = 2000;
@@ -57,7 +50,6 @@ public class Terminal implements Updatable, Logger {
     private boolean queuedClear;
     private boolean isCtrlDown;
     
-    private Selection selection;
     private GlythData glythData;
     
     /**
@@ -70,36 +62,7 @@ public class Terminal implements Updatable, Logger {
     }
     
     private Inputs inputs = new Inputs() {
-        
-        @Override
-        public boolean touchDown(int x, int y, int pointer, int button) {
-            if(button == 0) {
-                selection.start.set(x, y);
-                selection.isSelecting = true;
-            }
-            
-            return super.touchDown(x, y, pointer, button);
-        }
-        
-        @Override
-        public boolean touchUp(int x, int y, int pointer, int button) {
-            if(button == 0) {
-                selection.end.set(x, y);
-                selection.isSelecting = false;
-                copySelection(selection);
-            }
-            return super.touchUp(x, y, pointer, button);
-        }
-        
-        @Override
-        public boolean touchDragged(int x, int y, int pointer) {
-            if(selection.isSelecting) {
-                selection.end.set(x, y);
-            }
-            
-            return super.touchDragged(x, y, pointer);
-        }
-        
+                
         @Override
         public boolean scrolled(int amount) {        
             if(!isActive) {
@@ -328,8 +291,6 @@ public class Terminal implements Updatable, Logger {
         this.textBuffer = new LinkedList<String>();
         this.inputBuffer = new StringBuilder();
         this.cmdHistory = new ArrayList<String>();
-        
-        this.selection = new Selection();
     }
 
     /**
@@ -451,52 +412,7 @@ public class Terminal implements Updatable, Logger {
         this.queuedClear = true;
     }
     
-    private void copySelection(Selection selection) {
-        if(this.glythData != null) {
-            int textHeight = this.glythData.getHeight("W");
-            if(textHeight == 0) return;
-            
-            int displayHeight = background.height + textHeight*4;
-
-            int lineStartY = -1;
-            int lineEndY   = -1;
-
-            int bodyTextHeight = this.textBuffer.size() * textHeight;
-            int textNotOnScreenHeight = bodyTextHeight - displayHeight;
-            
-            //if(selection.start.y < displayHeight) 
-            {
-                lineStartY = textNotOnScreenHeight + (int)selection.start.y;
-                lineStartY /= textHeight;
-            }
-            
-            //if(selection.end.y < displayHeight) 
-            {
-                lineEndY = textNotOnScreenHeight + (int)selection.end.y;
-                lineEndY /= textHeight;
-                //lineEndY = this.textBuffer.size() - lineEndY;
-            }
-            
-            System.out.println(this.textBuffer.size() + "::" + lineStartY + ":" + lineEndY + "::" + bodyTextHeight);
-            
-            int bufferSize = this.textBuffer.size();
-            if(lineStartY > -1 && lineStartY < bufferSize && lineEndY > -1 && lineEndY < bufferSize) {
-                int max = Math.max(lineStartY, lineEndY);
-                int min = Math.min(lineStartY, lineEndY);
-                
-                StringBuilder sb = new StringBuilder();
-                while(min < max) {
-                    String line = this.textBuffer.get(min++);
-                    sb.append(line).append("\n");                
-                    
-                }
-                
-                System.out.println(sb);
-            }
-            
-        }
-    }
-    
+   
     /**
      * if we queued up a clear buffer, lets
      * go ahead and do so.
