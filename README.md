@@ -5,7 +5,7 @@ A top down 2D Shooter game I've been working on in my spare time.  This reposito
 
 Download
 ===
-You can download the BETA version of the game [here](https://dl.dropboxusercontent.com/u/11954191/seventh.zip)
+You can download the BETA version of the game [here](https://www.dropbox.com/s/srxcko8c3qvc3m8/seventh.zip?dl=0)
 
 
 Videos/Screenshots
