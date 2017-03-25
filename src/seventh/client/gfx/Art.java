@@ -136,9 +136,7 @@ public class Art {
     public static  TextureRegion fireWeaponLight = null;
     public static  TextureRegion lightMap = null;
     public static  TextureRegion flashLight = null;
-    
-    public static  TextureRegion bullet = null;
-    public static  TextureRegion bulletImage = null;
+            
     public static  TextureRegion bulletShell = null;
     
     public static  TextureRegion tankTrackMarks = null;
@@ -303,8 +301,6 @@ public class Art {
         lightMap = loadImage("./assets/gfx/light.png");
         flashLight = loadImage("./assets/gfx/lightmap_flashlight.png");
         
-        bullet = loadImage("./assets/gfx/bullet.png");
-        bulletImage = loadImage("./assets/gfx/weapons/bullet.png");
         bulletShell = loadImage("./assets/gfx/bullet_shell.png");
                 
         tankTrackMarks = loadImage("./assets/gfx/vehicles/tank_track_mark.png");

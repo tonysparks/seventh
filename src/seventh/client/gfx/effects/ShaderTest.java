@@ -185,7 +185,7 @@ public class ShaderTest implements Renderable {
                 batch.draw(Art.alliedBodyModel.getFrame(0), 120, 200);
                 
                 batch.setShader(horBlur);
-                batch.draw(Art.bulletImage, 200, 200);
+//                batch.draw(Art.bulletImage, 200, 200);
             batch.end();
             fboPing.end();
             
@@ -212,13 +212,13 @@ public class ShaderTest implements Renderable {
                 batch.setShader(null);
                 //batch.setColor(1, 1, 1, 1f);
                 batch.draw(fboPing.getColorBufferTexture(), 0, 0);
-                batch.draw(Art.bulletImage, 300, 200);
+//                batch.draw(Art.bulletImage, 300, 200);
                 batch.setShader(vertBlur);
                 //batch.enableBlending();
                 batch.disableBlending();
                 //batch.draw(Art.bulletImage, 200, 200);
-                int y = fboPing.getHeight()-(200+Art.bulletImage.getRegionHeight());
-                batch.draw(fboPing.getColorBufferTexture(), 200, 300, 200, y, Art.bulletImage.getRegionWidth(), Art.bulletImage.getRegionHeight());
+//                int y = fboPing.getHeight()-(200+Art.bulletImage.getRegionHeight());
+//                batch.draw(fboPing.getColorBufferTexture(), 200, 300, 200, y, Art.bulletImage.getRegionWidth(), Art.bulletImage.getRegionHeight());
     
                 //batch.draw(fboPing.getColorBufferTexture(), 0, 0);
                 batch.setShader(null);
