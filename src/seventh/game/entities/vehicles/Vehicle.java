@@ -13,7 +13,9 @@ import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
-
+/**
+ * @tester Namho
+ */
 /**
  * Something a Player can ride
  * 
