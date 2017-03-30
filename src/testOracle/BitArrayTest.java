@@ -109,9 +109,21 @@ public class BitArrayTest {
 	public void testtoString(){
 		BitArray test = new BitArray(32);
 		test.toString();
-		assertTrue(test.getData()[0]==00000000);
+		assertTrue(test.getData()[0]==0);
 		System.out.println(Integer.toBinaryString(0));
 		
+	}
+	/*
+	 * purpose : test setBit function in BitArray class.
+	 * input : integer 32 on class creation and setBit function each.
+	 * expected output: test.getData()[0]==0 cause data[bitIndex(32)] = 0(00000000) and bitOffset(32) = 0(00000000).
+	 *  
+	 */
+	@Test
+	public void testsetBit(){
+		BitArray test = new BitArray(32);
+		test.setBit(32);
+		assertTrue(test.getData()[0]==0);
 	}
 	
 
