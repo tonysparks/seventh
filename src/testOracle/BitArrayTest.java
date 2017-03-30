@@ -29,7 +29,18 @@ public class BitArrayTest {
 		test.setDataElement(0, 0);
 		assertTrue(test.getData()[0]==0);
 	}
-
+	
+	/* 
+	 * purpose : test getData function coverage in BitArray class.
+	 * input : integer 33
+	 * expected output : data[0]==0 in BitArray class
+	 * 
+	 */
+	@Test
+	public void testgetData(){
+		BitArray test = new BitArray(33);
+		assertTrue(test.getData()[0]==0);
+	}
 	
 
 }
