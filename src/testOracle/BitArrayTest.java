@@ -88,5 +88,16 @@ public class BitArrayTest {
 		assertTrue(test.numberOfBytes()==8);
 	}
 	
+	/*
+	 * purpose : test size function coverage in BitArray class.
+	 * input : integer 32 on class creation.
+	 * output : return value is 2*32 when call size function.
+	 */
+	@Test
+	public void testsize(){
+		BitArray test = new BitArray(32);
+		assertTrue(test.size()==2*32);
+	}
+	
 
 }
