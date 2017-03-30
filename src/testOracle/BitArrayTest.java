@@ -54,5 +54,17 @@ public class BitArrayTest {
 		assertTrue(test.getData()[0]==0);
 	}
 	
+	/*
+	 * purpose : test setAll function coverage in BitArray class.
+	 * input : integer 33 and play the function setAll.
+	 * expected output : data[0]==0xFFffFFff in BitArray class.
+	 */
+	@Test
+	public void testsetAll(){
+		BitArray test = new BitArray(33);
+		test.setAll();
+		assertTrue(test.getData()[0]==0xFFffFFff);
+	}
+	
 
 }
