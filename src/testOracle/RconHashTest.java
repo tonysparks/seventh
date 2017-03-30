@@ -19,7 +19,5 @@ public class RconHashTest {
 		final String expected = "52uLz5GE4rvH/QG44Mjaseol6L3l7eMpWLcIT/58zds=";
 		RconHash rconhash = new RconHash(10);
 		assertEquals(expected,rconhash.hash("hello world"));
-		
 	}
-	
 }
