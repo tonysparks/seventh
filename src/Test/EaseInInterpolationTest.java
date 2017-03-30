@@ -98,10 +98,15 @@ public class EaseInInterpolationTest {
 	public void testGetValue() {
 		
 	}
-
+	/**
+	 * Test getTarget
+	 * @ExpectedOutput EI.target set 0f
+	 */
 	@Test
 	public void testGetTarget() {
-		
+		EaseInInterpolation EI = new EaseInInterpolation(60f,0f,60);
+		final float expected = 0f;
+		Assert.assertEquals(expected, EI.getTarget(), 0.001);
 	}
 
 }
