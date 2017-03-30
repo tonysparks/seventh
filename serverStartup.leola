@@ -1,0 +1,17 @@
+console.execute("seti sv_matchtime 2")
+console.execute("set sv_gametype obj")
+console.execute("seti sv_maxscore 13")
+//console.execute("map_restart")
+console.execute("add_bot AlliedBot1 allies")
+console.execute("add_bot AlliedBot2 allies")
+console.execute("add_bot AxisBot1 axis")
+console.execute("add_bot AxisBot2 axis")
+
+/*
+console.execute("add_bot AxisBot2 axis")
+console.execute("add_bot AxisBot2 axis")
+console.execute("add_bot AxisBot2 axis")
+console.execute("add_bot AxisBot2 axis")
+console.execute("add_bot AxisBot2 axis")
+console.execute("add_bot AxisBot2 axis")
+console.execute("add_bot AxisBot2 axis")*/
