@@ -23,6 +23,21 @@ public class RandomizerTest {
 		assertTrue(rangeMin < randomizer.getRandomRangeMin(rangeMin));
 		assertTrue(rangeMax > randomizer.getRandomRangeMin(rangeMin));
 	}
-
-
+	
+	/*
+	 * Purpose: specify a maximum scope
+	 * Input: getRandomRangeMax maximum scope 0.8
+	 * Expected: 
+	 * 			0.0 < random number
+	 * 			random number < 0.8
+	 * 			
+	 */
+	@Test
+	public void testMaxScope(){
+		final double rangeMin = 0.0;
+		final double rangeMax = 0.8;
+		Randomizer randomizer = new Randomizer(new Random());
+		assertTrue(rangeMin < randomizer.getRandomRangeMax(rangeMax));
+		assertTrue(rangeMax > randomizer.getRandomRangeMax(rangeMax));
+	}
 }
