@@ -102,13 +102,14 @@ public class BitArrayTest {
 	/*
 	 * purpose : test testtoString override function in BitArray class.
 	 * input : integer 32 on class creation and call toString().
-	 * expected output: test.getData()[0]==0 cause of Integer.toBinaryString(0)==0.
+	 * expected output: test.getData()[0]==0 cause Integer.toBinaryString(0)==0.
+	 * 
 	 */
 	@Test
 	public void testtoString(){
 		BitArray test = new BitArray(32);
 		test.toString();
-		assertTrue(test.getData()[0]==0);
+		assertTrue(test.getData()[0]==00000000);
 		System.out.println(Integer.toBinaryString(0));
 		
 	}
