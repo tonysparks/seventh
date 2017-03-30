@@ -77,5 +77,16 @@ public class BitArrayTest {
 		assertTrue(test.numberOfInts()==2);
 	}
 	
+	/*
+	 * purpose : test numberOfBytes function coverage in BitArray class.
+	 * input : integer 32 on class creation.
+	 * output : data.length == 8
+	 */
+	@Test
+	public void testnumberOfBytes(){
+		BitArray test = new BitArray(32);
+		assertTrue(test.numberOfBytes()==8);
+	}
+	
 
 }
