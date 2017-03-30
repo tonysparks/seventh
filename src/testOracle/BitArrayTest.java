@@ -42,5 +42,17 @@ public class BitArrayTest {
 		assertTrue(test.getData()[0]==0);
 	}
 	
+	/*
+	 * purpose : test clear function coverage in BitArray class.
+	 * input : integer 33 and play the function clear.
+	 * expected output : data[0]==0 in BitArray class.
+	 */
+	@Test
+	public void testclear(){
+		BitArray test = new BitArray(33);
+		test.clear();
+		assertTrue(test.getData()[0]==0);
+	}
+	
 
 }
