@@ -19,5 +19,16 @@ public class SeventhConfigTest {
 	@Test(expected=Exception.class)
 	public void testInvalidPath() throws Exception {
 		SeventhConfig seventhconfig = new SeventhConfig(inValidPath,validRootNode);
-	}	
+	}
+	
+	/*
+	 * Purpose: invalid Root node
+	 * Input: SeventhConfig ("./assets/client_config.leola","invalid")
+	 * Expected: 
+	 * 			throw Exception
+	 */
+	@Test(expected=Exception.class)
+	public void testInvalidRootNode() throws Exception {
+		SeventhConfig seventhconfig = new SeventhConfig(validPath,invalidRootNode);
+	}
 }
