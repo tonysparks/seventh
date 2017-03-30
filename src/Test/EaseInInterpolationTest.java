@@ -64,9 +64,13 @@ public class EaseInInterpolationTest {
 		TS.setDeltaTime(40);
 		EI.update(TS);
 		System.out.println(EI.getRemainingTime());
-		Assert.assertTrue(!EI.isExpired());
+		
 	}
-
+	/**
+	 * Test whether time Expired or not
+	 * Input TimeStep(GameClock : 60, DeltaTime : 30)
+	 * ExpectedOutput True
+	 */
 	@Test
 	public void testIsExpired() {
 		EaseInInterpolation EI = new EaseInInterpolation(60f,0f,60);
@@ -77,10 +81,10 @@ public class EaseInInterpolationTest {
 		TS.setDeltaTime(30);
 		EI.update(TS);
 		System.out.println(EI.getRemainingTime());
+		Assert.assertTrue(!EI.isExpired());
 		EI.update(TS);
 		System.out.println(EI.getRemainingTime());
-		EI.update(TS);
-		System.out.println(EI.getRemainingTime());
+		
 		
 		Assert.assertTrue(EI.isExpired());
 	}
