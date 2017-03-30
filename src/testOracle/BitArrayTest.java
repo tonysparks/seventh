@@ -99,5 +99,19 @@ public class BitArrayTest {
 		assertTrue(test.size()==2*32);
 	}
 	
+	/*
+	 * purpose : test testtoString override function in BitArray class.
+	 * input : integer 32 on class creation and call toString().
+	 * expected output: test.getData()[0]==0 cause of Integer.toBinaryString(0)==0.
+	 */
+	@Test
+	public void testtoString(){
+		BitArray test = new BitArray(32);
+		test.toString();
+		assertTrue(test.getData()[0]==0);
+		System.out.println(Integer.toBinaryString(0));
+		
+	}
+	
 
 }
