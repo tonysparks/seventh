@@ -126,5 +126,20 @@ public class BitArrayTest {
 		assertTrue(test.getData()[0]==0);
 	}
 	
+	/*
+	 * purpose : test getBit function in BitArray class.
+	 * input : integer 32 on class creation.
+	 * expected output : getbit(32)=false cause data[bitIndex(32)]=0 and bitOffset(32)=0.
+	 * 					so result is false.
+	 * 					getbit(0)=true cause getData()[0]=1, so data[bitIndex(0)]=1 and bitOffset(0)=0
+	 */
+	@Test
+	public void testgetBit(){
+		BitArray test = new BitArray(32);
+		test.getData()[0]=1;
+		assertTrue(test.getBit(32)==false);
+		assertTrue(test.getBit(0)==true);
+		
+	}
 
 }
