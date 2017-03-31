@@ -12,4 +12,4 @@
 /seventh_server.xml
 /seventh.xml
 /template/
-.DS_Store
+*.DS_Store
