@@ -16,10 +16,9 @@ public class BitsTest {
 
 	@Test
 	public void testIsSignBitSet() {
-		Bits test = new Bits();
-		assertTrue(test.isSignBitSet((byte)-1)==true);
-		assertTrue(test.isSignBitSet((byte)0)==false);
-		assertTrue(test.isSignBitSet((byte)1)==false);
+		assertTrue(Bits.isSignBitSet((byte)-1)==true);
+		assertTrue(Bits.isSignBitSet((byte)0)==false);
+		assertTrue(Bits.isSignBitSet((byte)1)==false);
 	}
 	/*
 	 * purpose : test SetSignBit function in Bits class.
@@ -29,13 +28,17 @@ public class BitsTest {
 
 	@Test
 	public void testSetSignBit() {
-		Bits test = new Bits();
-		assertTrue(test.setSignBit((byte)-1)==-1);
+		assertTrue(Bits.setSignBit((byte)-1)==-1);
 	}
 
-//	@Test
-//	public void testGetWithoutSignBit() {
-//		
-//	}
+	/*
+	 * purpose : test GetWithoutSignBit function in Bits class.
+	 * input : ((byte)0)
+	 * expected output : 0
+	 */
+	@Test
+	public void testGetWithoutSignBit() {
+		assertTrue(Bits.getWithoutSignBit((byte)0)==0);
+	}
 
 }
