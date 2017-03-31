@@ -21,11 +21,17 @@ public class BitsTest {
 		assertTrue(test.isSignBitSet((byte)0)==false);
 		assertTrue(test.isSignBitSet((byte)1)==false);
 	}
+	/*
+	 * purpose : test SetSignBit function in Bits class.
+	 * input : ((byte)-1)
+	 * expected output : -1
+	 */
 
-//	@Test
-//	public void testSetSignBit() {
-//		
-//	}
+	@Test
+	public void testSetSignBit() {
+		Bits test = new Bits();
+		assertTrue(test.setSignBit((byte)-1)==-1);
+	}
 
 //	@Test
 //	public void testGetWithoutSignBit() {
