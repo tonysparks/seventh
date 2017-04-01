@@ -40,5 +40,38 @@ public class StateMachineTest {
 		assertEquals(expectedState,statemachine.getCurrentState());
 		assertNull(statemachine.getListener());
 	}
-	
+
+	/*
+	 * Purpose: change the state and listener to new state
+	 * Input: test state => ServerStartState(Enter) -> ServerStartState(new state)
+	 * 			test Listener => StateMachine<state>(Enter) -> StateMachineLister<State>(new listener)
+	 * Expected: 
+	 * 			first state exit. next state enter.
+	 * 			first listener is exit. next listener enter
+	 */
+	@Test
+	public void testChangeStateAndListener(){
+		StateMachine<State> statemachine = new StateMachine<State>();
+		ServerStartState stateEnter = new ServerStartState();
+		StateMachineListener<State> ListenerEnter = new StateMachineListener<State>(){
+			@Override
+			public void onEnterState(State state) {}
+			@Override
+			public void onExitState(State state) {}
+		};
+		ServerStartState expectedState = new ServerStartState();
+		StateMachineListener<State> expectedListener = new StateMachineListener<State>(){
+			@Override
+			public void onEnterState(State state) {}
+			@Override
+			public void onExitState(State state) {}
+		};
+		
+		statemachine.setListener(ListenerEnter);
+		statemachine.changeState(stateEnter);
+		statemachine.setListener(expectedListener);
+		statemachine.changeState(expectedState);
+		assertEquals(expectedState,statemachine.getCurrentState());
+		assertEquals(expectedListener,statemachine.getListener());
+	}
 }
