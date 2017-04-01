@@ -21,4 +21,16 @@ public class SoundTypeTest {
 		assertEquals(expectedSoundType,SoundType.fromNet((byte) 9));
 	}
 	
+	/*
+	 * Purpose: check M1_GARAND_LAST_FIRE SoundType value number(invalid)
+	 * Input: SoundType.fromNet (byte)14
+	 * Expected: 
+	 * 			M1_GARAND_LAST_FIRE SoundType is (byte)9
+	 * 			(byte)14 is SPRINGFIELD_RECHAMBER
+	 */
+	@Test
+	public void testInvalidSoundType() {
+		final SoundType expectedSoundType = SoundType.M1_GARAND_LAST_FIRE;
+		assertNotEquals(expectedSoundType,SoundType.fromNet((byte) 14));
+	}
 }
