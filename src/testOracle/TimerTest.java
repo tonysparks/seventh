@@ -26,4 +26,19 @@ public class TimerTest {
 		assertTrue(0 < timer.getEndTime());
 	}
 	
+	/*
+	 * Purpose: get remaining time when endTime is valid time
+	 * Input: endTime -> 10
+	 * Expected: 
+	 * 			0 < remain time
+	 */
+	@Test
+	public void testConstructValidTime() {
+		Timer timer = new Timer(true,10);
+		TimeStep timestep = new TimeStep();
+		timestep.setDeltaTime(10);
+		timer.update(timestep);
+		assertTrue(0 < timer.getRemainingTime());
+		assertTrue(0 < timer.getEndTime());
+	}
 }
