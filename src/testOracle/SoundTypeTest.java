@@ -33,4 +33,18 @@ public class SoundTypeTest {
 		final SoundType expectedSoundType = SoundType.M1_GARAND_LAST_FIRE;
 		assertNotEquals(expectedSoundType,SoundType.fromNet((byte) 14));
 	}
+	
+	/*
+	 * Purpose: MUTE Sound Source Type value when number over length of value
+	 * Input: SoundType.fromNet (byte)127 > SoundType value count
+	 * Expected: 
+	 * 			Sound Source Type is MUTE
+	 */
+	@Test
+	public void testMuteOverValueLength() {
+		final SoundType expected = SoundType.MUTE;
+		byte typeSize = (byte) 127;
+		assertTrue(typeSize > SoundType.values().length);
+		assertEquals(expected,SoundType.fromNet(typeSize));
+	}
 }
