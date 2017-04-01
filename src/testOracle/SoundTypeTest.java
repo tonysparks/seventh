@@ -47,4 +47,18 @@ public class SoundTypeTest {
 		assertTrue(typeSize > SoundType.values().length);
 		assertEquals(expected,SoundType.fromNet(typeSize));
 	}
+	
+	/*
+	 * Purpose: MUTE Sound Source Type value when number under 0
+	 * Input: SoundType.fromNet (byte)240 < 0
+	 * Expected: 
+	 * 			Sound Source Type is MUTE
+	 */
+	@Test
+	public void testMuteUnderZero() {
+		final SoundType expected = SoundType.MUTE;
+		byte typeSize = (byte) 240;
+		assertTrue(typeSize < 0);
+		assertEquals(expected,SoundType.fromNet(typeSize));
+	}
 }
