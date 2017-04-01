@@ -97,4 +97,20 @@ public class StateMachineTest {
 		assertEquals(expectedState,statemachine.getCurrentState());
 		assertEquals(expectedListener,statemachine.getListener());
 	}
+	
+	/*
+	 * Purpose: update the state along with time step
+	 * Input: new TimeStep
+	 * Expected: 
+	 * 			Current state is updated to time step
+	 * 			Listener is NULL
+	 */
+	@Test
+	public void testUpdateState(){
+		StateMachine<State> statemachine = new StateMachine<State>();
+		statemachine.changeState(new ServerStartState());
+		statemachine.update(new TimeStep());
+		assertNotNull(statemachine.getCurrentState());
+		assertNull(statemachine.getListener());
+	}
 }
