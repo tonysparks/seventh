@@ -102,5 +102,27 @@ public class DefaultConsoleTest{
 		Command cmd = test.getCommand("test");
 		assertEquals("test",cmd.getName());		
 	}
+	
+	
+	/*
+	 * Purpose: remove command in the Command's map by Command's name
+	 * Input: String
+	 * Expected: 
+	 * 			the removed Command's map
+	 */
+	@Test(expected=NullPointerException.class)
+	public void removeCommandTest() throws NullPointerException {
+		DefaultConsole test = new DefaultConsole();
+		test.addCommand(new Command("test") {            
+            @Override
+            public void execute(Console console, String... args) {
+           	}
+        });
+		Command cmd = test.getCommand("test");
+		assertEquals("test",cmd.getName());
+		test.removeCommand("test");
+		cmd = test.getCommand("test");
+		assertEquals(null,cmd.getName());	
+	}
 }
 
