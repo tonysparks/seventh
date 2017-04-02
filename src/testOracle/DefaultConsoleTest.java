@@ -29,6 +29,20 @@ public class DefaultConsoleTest{
 		DefaultConsole test = new DefaultConsole();
 		test.addCommand(null);		
 	}
-	
+	/*
+	 * Purpose: add command to the Command's map
+	 * Input: Command(null)
+	 * Expected: 
+	 * 			IllegalArgumentException
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void addCommandTest2()  throws IllegalArgumentException {
+		DefaultConsole test = new DefaultConsole();
+		test.addCommand(new Command(null) {            
+            @Override
+            public void execute(Console console, String... args) {
+            }
+        });	
+	}
 }
 
