@@ -90,5 +90,34 @@ public class MapListaddFileExtensionTest {
 		String expected = "#43..json";
 		assertEquals(actual, expected);
 	}
+	
+	/*
+	 * Purpose: test long type's file name
+	 * Input: fileName = "aaabbbcccdddeeeeffffttttttttqewrqerqe"   
+	 * Expected: "aaabbbcccdddeeeeffffttttttttqewrqerqe.json"
+	 */
+	
+	@Test
+	public void longFileNameTest() {
+		String mapName = "aaabbbcccdddeeeeffffttttttttqewrqerqe";
+		String actual = maplist.addFileExtension(mapName);
+		String expected = "aaabbbcccdddeeeeffffttttttttqewrqerqe.json";
+		assertEquals(actual, expected);
+	}
+	
+	/*
+	 * Purpose: test single file name
+	 * Input: fileName = "aaabbbcccdddeeeeffffttttttttqewrqerqe"   
+	 * Expected: "aaabbbcccdddeeeeffffttttttttqewrqerqe.json"
+	 */
+	
+	@Test
+	public void singleFileNameTest() {
+		String mapName = "a";
+		String actual = maplist.addFileExtension(mapName);
+		String expected = "a.json";
+		assertEquals(actual, expected);
+	}
+	
 
 }
