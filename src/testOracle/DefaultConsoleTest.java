@@ -56,5 +56,26 @@ public class DefaultConsoleTest{
 		DefaultConsole test = new DefaultConsole();
 		test.addCommand("test",null);
 	}
+	
+
+	/*
+	 * Purpose: add command to the Command's map
+	 * Input: Command
+	 * Expected: 
+	 * 			the added Command's map
+	 */
+	@Test
+	public void addCommandTest4(){
+		DefaultConsole test = new DefaultConsole();
+		
+		test.addCommand(new Command("test") {            
+        @Override
+        public void execute(Console console, String... args) {
+	            }
+        });
+
+	Command cmd = test.getCommand("test");
+	assertEquals("test",cmd.getName());		
+	}
 }
 
