@@ -31,4 +31,18 @@ public class CommandTest extends Command {
 		assertEquals("expected",test.getName());
 	}
 	
+	/*
+	 * Purpose: Merges the arguments into one string by index and delimiter
+	 * Input: delimiter, index, Strings
+	 * Expected: 
+	 * 			the coalesced string
+	 */
+	@Test
+	public void mergeArgsDelimAtTest() {
+		CommandTest test = new CommandTest();
+		assertEquals("expected",test.mergeArgsDelimAt("@",0,"expected"));
+		assertEquals("expected@test",test.mergeArgsDelimAt("@",0,"expected","test"));
+		assertEquals("test@item",test.mergeArgsDelimAt("@",1,"expected","test","item"));
+		assertEquals("test/item/great",test.mergeArgsDelimAt("/",1,"expected","test","item","great"));
+	}
 }
