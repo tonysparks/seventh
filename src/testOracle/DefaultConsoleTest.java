@@ -146,5 +146,21 @@ public class DefaultConsoleTest{
 		cmd = test.getCommand("test");
 		assertEquals(null,cmd.getName());	
 	}
+	
+
+	/*
+	 * Purpose: find command in the Command's map by partial Command's name
+	 * Input: String
+	 * Expected: 
+	 * 			the command
+	 */
+	@Test
+	public void findTest() {
+		DefaultConsole test = new DefaultConsole();
+		List<String> expected = new ArrayList<String>();
+		expected.addAll(test.find("cmd"));
+		Iterator<String> index = expected.iterator();
+		assertEquals("cmdlist",index.next());		
+	}
 }
 
