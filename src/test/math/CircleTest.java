@@ -25,7 +25,7 @@ public class CircleTest {
 
 	/*
 	 * Purpose: a point is on Circle line
-	 * Input: Circle => (0,0) radius 4, point => (4,0) 
+	 * Input: Circle => (0,0) radius 3, point => (4,0) 
 	 * Expected: 
 	 * 			the point is on the circle line
 	 */
@@ -37,4 +37,19 @@ public class CircleTest {
 		assertTrue(Circle.circleContainsPoint(circle, point));
 	}
 	
+	/*
+	 * Purpose: a point is out of Circle
+	 * Input: Circle => (0,0) radius 3, point => (100,0) 
+	 * Expected: 
+	 * 			return fail
+	 * 			the point is out of the circle line.
+	 * 			but it is error that calculating distance
+	 */
+	@Test
+	public void testPointOutCircle() {
+		Vector2f vector2f = new Vector2f(0,0);
+		Vector2f point = new Vector2f(100,0);
+		Circle circle = new Circle(vector2f,3);
+		assertFalse(Circle.circleContainsPoint(circle, point));
+	}
 }
