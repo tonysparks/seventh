@@ -77,5 +77,30 @@ public class DefaultConsoleTest{
 	Command cmd = test.getCommand("test");
 	assertEquals("test",cmd.getName());		
 	}
+	
+
+	/*
+	 * Purpose: get command in the Command's map by Command's name
+	 * Input: String
+	 * Expected: 
+	 * 			the Command having the name
+	 */
+	@Test
+	public void getCommandTest() {
+		DefaultConsole test = new DefaultConsole();
+		Command DefaultCmd = test.getCommand("cmdlist");
+		assertEquals("cmdlist",DefaultCmd.getName());
+		DefaultCmd = test.getCommand("sleep");
+		assertEquals("sleep",DefaultCmd.getName());
+				
+		test.addCommand(new Command("test") {            
+            @Override
+            public void execute(Console console, String... args) {
+		            }
+	        });
+
+		Command cmd = test.getCommand("test");
+		assertEquals("test",cmd.getName());		
+	}
 }
 
