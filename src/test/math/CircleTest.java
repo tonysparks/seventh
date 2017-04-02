@@ -94,15 +94,28 @@ public class CircleTest {
 	}
 	
 	/*
-	 * Purpose: a circle don't intersect Rectangle
-	 * Input: Circle => (0,0) radius 3, rectangle => (10,10) width 4 height 4 
+	 * Purpose: a circle don't intersect Rectangle on same Y axis
+	 * Input: Circle => (0,0) radius 3, rectangle => (10,0) width 5 height 5 
 	 * Expected: 
 	 * 			the circle don't intersect the rectangle
 	 */
 	@Test
-	public void testCircleNoIntersectRectangle() {
+	public void testCircleNoIntersectRectangleSameYaxis() {
 		Circle circle = new Circle(new Vector2f(0,0),3);
-		Rectangle rectangle = new Rectangle(new Vector2f(10,10),4,4);
+		Rectangle rectangle = new Rectangle(new Vector2f(10,0),5,5);
+		assertFalse(Circle.circleIntersectsRect(circle, rectangle));
+	}
+	
+	/*
+	 * Purpose: a circle don't intersect Rectangle on same X axis
+	 * Input: Circle => (0,0) radius 3, rectangle => (0,10) width 5 height 5 
+	 * Expected: 
+	 * 			the circle don't intersect the rectangle
+	 */
+	@Test
+	public void testCircleNoIntersectRectangleSameXaxis() {
+		Circle circle = new Circle(new Vector2f(0,0),3);
+		Rectangle rectangle = new Rectangle(new Vector2f(0,10),5,5);
 		assertFalse(Circle.circleIntersectsRect(circle, rectangle));
 	}
 }
