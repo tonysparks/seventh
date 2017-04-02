@@ -162,5 +162,22 @@ public class DefaultConsoleTest{
 		Iterator<String> index = expected.iterator();
 		assertEquals("cmdlist",index.next());		
 	}
+	
+
+	/*
+	 * Purpose: find command in the Command's map by partial Command's name
+	 * Input: null
+	 * Expected: 
+	 * 			NoSuchElementException
+	 */
+	@Test(expected=NoSuchElementException.class)
+	public void findTest2() throws NoSuchElementException {
+		DefaultConsole test = new DefaultConsole();
+		List<String> expected = new ArrayList<String>();
+		expected.addAll(test.find(null));
+		Iterator<String> index = expected.iterator();
+		index.next();	
+		
+	}
 }
 
