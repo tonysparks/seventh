@@ -79,6 +79,50 @@ public class MapListFileNameTest {
 		assertEquals(actual, expected);
 	}
 	
+	/*
+	 * Purpose: Test long Filename is correctly changed 
+	 * Input: fileName = "aaabbbbcccddddeeeffffqqqqwerrrrr.json" 
+	 *        
+	 * Expected: "aaabbbbcccddddeeeffffqqqqwerrrrr"
+	 */
+	@Test
+	public void testLongFileName() {
+		final String fileName = "aaabbbbcccddddeeeffffqqqqwerrrrr.json";
+		String actual = maplist.stripFileExtension(fileName);
+		String expected = "aaabbbbcccddddeeeffffqqqqwerrrrr";
+		assertEquals(actual, expected);
+	}
+	
+	
+	/*
+	 * Purpose: Test Single Character Filename is correctly changed 
+	 * Input: fileName = "a.json" 
+	 *        
+	 * Expected: "a"
+	 */
+	@Test
+	public void testSingleFileName() {
+		final String fileName = "a.json";
+		String actual = maplist.stripFileExtension(fileName);
+		String expected = "a";
+		assertEquals(actual, expected);
+	}
+	
+	
+	/*
+	 * Purpose: Test Single integer Filename is correctly changed 
+	 * Input: fileName = "1.json" 
+	 *        
+	 * Expected: "1"
+	 */
+	@Test
+	public void testSingleIntegerFileName() {
+		final String fileName = "1.json";
+		String actual = maplist.stripFileExtension(fileName);
+		String expected = "1";
+		assertEquals(actual, expected);
+	}
+	
 
 
 
