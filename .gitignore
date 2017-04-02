@@ -13,3 +13,6 @@
 /seventh.xml
 /template/
 *.DS_Store
+/*.leola
+/*.leola.back
+
