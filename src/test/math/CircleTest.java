@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import seventh.math.Circle;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
 public class CircleTest {
@@ -51,5 +52,18 @@ public class CircleTest {
 		Vector2f point = new Vector2f(100,0);
 		Circle circle = new Circle(vector2f,3);
 		assertFalse(Circle.circleContainsPoint(circle, point));
+	}
+	
+	/*
+	 * Purpose: a circle is in Rectangle
+	 * Input: Circle => (3,3) radius 1, rectangle => (0,0) width 4 height 4 
+	 * Expected: 
+	 * 			the circle is in the rectangle
+	 */
+	@Test
+	public void testCircleInRectangle() {
+		Circle circle = new Circle(new Vector2f(3,3),1);
+		Rectangle rectangle = new Rectangle(new Vector2f(0,0),4,4);
+		assertTrue(Circle.circleContainsRect(circle, rectangle));
 	}
 }
