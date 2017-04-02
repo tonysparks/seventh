@@ -44,5 +44,17 @@ public class DefaultConsoleTest{
             }
         });	
 	}
+	
+	/*
+	 * Purpose: add command to the Command's map
+	 * Input: String and null
+	 * Expected: 
+	 * 			IllegalArgumentException
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void addCommandTest3()  throws IllegalArgumentException {
+		DefaultConsole test = new DefaultConsole();
+		test.addCommand("test",null);
+	}
 }
 
