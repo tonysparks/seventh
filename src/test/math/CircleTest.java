@@ -80,4 +80,17 @@ public class CircleTest {
 		assertFalse(Circle.circleContainsRect(circle, rectangle));
 	}
 	
+	/*
+	 * Purpose: a circle intersect Rectangle
+	 * Input: Circle => (0,0) radius 3, rectangle => (2,2) width 4 height 4 
+	 * Expected: 
+	 * 			the circle intersect the rectangle
+	 */
+	@Test
+	public void testCircleIntersectRectangle() {
+		Circle circle = new Circle(new Vector2f(0,0),3);
+		Rectangle rectangle = new Rectangle(new Vector2f(2,2),4,4);
+		assertTrue(Circle.circleIntersectsRect(circle, rectangle));
+	}
+	
 }
