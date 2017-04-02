@@ -66,4 +66,18 @@ public class CircleTest {
 		Rectangle rectangle = new Rectangle(new Vector2f(0,0),4,4);
 		assertTrue(Circle.circleContainsRect(circle, rectangle));
 	}
+	
+	/*
+	 * Purpose: a circle is out of Rectangle
+	 * Input: Circle => (10,10) radius 1, rectangle => (0,0) width 4 height 4 
+	 * Expected: 
+	 * 			the circle is out of the rectangle
+	 */
+	@Test
+	public void testCircleOutRectangle() {
+		Circle circle = new Circle(new Vector2f(10,10),1);
+		Rectangle rectangle = new Rectangle(new Vector2f(0,0),4,4);
+		assertFalse(Circle.circleContainsRect(circle, rectangle));
+	}
+	
 }
