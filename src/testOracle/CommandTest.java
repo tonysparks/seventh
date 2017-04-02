@@ -59,4 +59,18 @@ public class CommandTest extends Command {
 		assertEquals("expected@test@item",test.mergeArgsDelim("@","expected","test","item"));
 		assertEquals("expected/test/item/great",test.mergeArgsDelim("/","expected","test","item","great"));
 	}
+	/*
+	 * Purpose: Merges the arguments into one string
+	 * Input: Strings
+	 * Expected: 
+	 * 			the coalesced string
+	 */
+	@Test
+	public void mergeArgsTest() {
+		CommandTest test = new CommandTest();
+		assertEquals("expected",test.mergeArgs("expected"));
+		assertEquals("expectedtest",test.mergeArgs("expected","test"));
+		assertEquals("expectedtestitem",test.mergeArgs("expected","test","item"));
+
+	}
 }
