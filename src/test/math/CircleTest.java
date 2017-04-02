@@ -94,6 +94,19 @@ public class CircleTest {
 	}
 	
 	/*
+	 * Purpose: a circle intersect Rectangle in Rectangle
+	 * Input: Circle => (0,0) radius 10, rectangle => (3,3) width 2 height 2 
+	 * Expected: 
+	 * 			the circle intersect the rectangle
+	 */
+	@Test
+	public void testCircleIntersectInRectangle() {
+		Circle circle = new Circle(new Vector2f(0,0),10);
+		Rectangle rectangle = new Rectangle(new Vector2f(3,3),2,2);
+		assertTrue(Circle.circleIntersectsRect(circle, rectangle));
+	}
+	
+	/*
 	 * Purpose: a circle don't intersect Rectangle on same Y axis
 	 * Input: Circle => (0,0) radius 3, rectangle => (10,0) width 5 height 5 
 	 * Expected: 
