@@ -93,4 +93,16 @@ public class CircleTest {
 		assertTrue(Circle.circleIntersectsRect(circle, rectangle));
 	}
 	
+	/*
+	 * Purpose: a circle don't intersect Rectangle
+	 * Input: Circle => (0,0) radius 3, rectangle => (10,10) width 4 height 4 
+	 * Expected: 
+	 * 			the circle don't intersect the rectangle
+	 */
+	@Test
+	public void testCircleNoIntersectRectangle() {
+		Circle circle = new Circle(new Vector2f(0,0),3);
+		Rectangle rectangle = new Rectangle(new Vector2f(10,10),4,4);
+		assertFalse(Circle.circleIntersectsRect(circle, rectangle));
+	}
 }
