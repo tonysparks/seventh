@@ -233,6 +233,27 @@ public class ArrayMapTest {
 		test.clear();
 		assertEquals(test.size(),0);
 	}
+	/*
+	 * purpose : test KeySet function in ArrayMap class.
+	 * input : Key, Value and call set function.
+	 * output : 
+	 */
+	@Test
+	public <K,V> void testKeySet(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		test.set(Key, Value);
+//		assertEquals(test.keySet(),"Key");
+	}
+	
+//	@Test
+//	public <K,V> void testPutAll(){
+//		ArrayMap<K,V> test = new ArrayMap<K,V>();
+//		K Key = (K)"Key";
+//		V Value = (V)"Value";
+//		
+//	}
 	
 //	@Test
 //	public <K,V> void testNexti(){
