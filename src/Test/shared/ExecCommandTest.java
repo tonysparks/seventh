@@ -23,6 +23,7 @@ public class ExecCommandTest {
 	}
 	/**
 	 * Test case for ExecCommand
+	 * Check the file path and read it 
 	 */
 	@Test
 	public void testExecute() {
