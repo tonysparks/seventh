@@ -38,6 +38,17 @@ public class ArrayMapTest {
 		assertNotNull(test);
 	}
 	
+	/*
+	 * purpose : test length function in ArrayMap class.
+	 * input : class creation.
+	 * expected output : return value is 0. cause nothing in hashEntries.
+	 */	
+	@Test
+	public <K,V> void testLength(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		assertTrue(test.length()==0);
+	}
+	
 
 //	@Test
 //	public <K,V> void testHashset() {
