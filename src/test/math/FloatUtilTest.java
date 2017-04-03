@@ -139,4 +139,28 @@ public class FloatUtilTest {
 		assertEquals(expectd1,dest[0],0.00001f);
 		assertEquals(expectd2,dest[1],0.00001f);
 	}
+	
+
+	/*
+	 * Purpose: multiply two float array's element in same index
+	 * Input: float[], float[], float[]
+	 * Expected: 
+	 * 			the multiplied float array 
+	 */
+	@Test
+	public void Vector2fMultTest() {
+		float[] a={1.234f,2.323f};
+		float[] b={3.432f, 7.544f};
+		float[] dest={0,0};
+		float expectd1 =1.234f*3.432f;
+		float expectd2 =2.323f*7.544f;
+		float expectd3 =1.234f*4.123f;
+		float expectd4 =2.323f*4.123f;
+		FloatUtil.Vector2fMult(a, b, dest);
+		assertEquals(expectd1,dest[0],0.00001f);
+		assertEquals(expectd2,dest[1],0.00001f);
+		FloatUtil.Vector2fMult(a, 4.123f, dest);
+		assertEquals(expectd3,dest[0],0.00001f);
+		assertEquals(expectd4,dest[1],0.00001f);
+	}
 }
