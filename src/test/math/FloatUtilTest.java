@@ -233,4 +233,22 @@ public class FloatUtilTest {
 		assertFalse(FloatUtil.Vector2fApproxEquals(a, c));
 		assertFalse(FloatUtil.Vector2fApproxEquals(a, d));
 	}
+	
+	/*
+	 * Purpose: rotate one float point(x,y) by radians
+	 * Input: float[],float, float[]
+	 * Expected: 
+	 * 			the float array having rotated float point(x,y) 
+	 */
+	@Test
+	public void Vector2fRotateTest() {
+		float[] a={1.234f,2.323f};
+		float[] dest={0,0};
+		float radians = 30.0f;
+		float expectd1 =(float)(1.234f * cos(radians) - 2.323f * sin(radians));
+		float expectd2 =(float)(1.234f * sin(radians) + 2.323f * cos(radians));
+		FloatUtil.Vector2fRotate(a, radians, dest);
+		assertEquals(expectd1,dest[0],0.00001f);
+		assertEquals(expectd2,dest[1],0.00001f);
+	}
 }
