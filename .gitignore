@@ -14,5 +14,5 @@
 /template/
 *.DS_Store
 /*.leola
-/*.leola.back
-
+/*.leola.bac
+*.DS_Store
