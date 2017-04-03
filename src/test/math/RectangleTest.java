@@ -120,4 +120,22 @@ public class RectangleTest {
 		assertNotEquals(noContain,rectangle.contains(new Vector2f(1,1)));
 	}
 	
+	/*
+	 * Purpose: rectangle don't contain point
+	 * Input:
+	 * 		rectangleA => (0,0) width 4 height 4
+	 * 		point => (10,10)
+	 * Expected:
+	 * 		the rectangleA contains the point
+	 */
+	@Test
+	public void testRectangleNoContainPoint() {
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangle = new Rectangle(0,0,4,4);
+		assertEquals(noContain,rectangle.contains(10,10));
+		assertNotEquals(contain,rectangle.contains(10,10));
+		assertEquals(noContain,rectangle.contains(new Vector2f(10,10)));
+		assertNotEquals(contain,rectangle.contains(new Vector2f(10,10)));
+	}
 }
