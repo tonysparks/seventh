@@ -76,6 +76,20 @@ public class ArrayMapTest {
 		assertTrue(test.isEmpty()==false);
 	}
 	
+	/*
+	 * purpose : test Put function in ArrayMap class.
+	 * input : K Key for "Key", V Value for "Value".
+	 * expected output : the return value of calling put function is null.
+	 * 
+	 */
+	@Test
+	public <K,V> void testPut(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		assertEquals(test.put(Key, Value),null);		
+	}
+	
 	
 //	@Test
 //	public <K,V> void testNexti(){
