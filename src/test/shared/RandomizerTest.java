@@ -1,4 +1,4 @@
-package Test;
+package test.shared;
 
 import static org.junit.Assert.*;
 import java.util.Random;
