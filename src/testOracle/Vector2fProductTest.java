@@ -137,4 +137,78 @@ public class Vector2fProductTest {
 		assertTrue(dest.y == 4);
 	}
 	
+	/*
+	 * Purpose: test Vector2fMult(a,b, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(8,6), b(3,5), Vector2fMult(a, 2, dest)
+	 * Expected: dest.x = 24, dest.y = 30
+	 */
+	
+	@Test
+	public void VectorMulTest() {
+		Vector2f a = new Vector2f(8,6);
+		Vector2f b = new Vector2f(3,5);
+		Vector2f dest = new Vector2f();
+		dest.Vector2fMult(a, b, dest);
+		assertTrue(dest.x == 24);
+		assertTrue(dest.y == 30);
+	}
+	
+	/*
+	 * Purpose: test Vector2fMult(a,scalar, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(8,6), scalar = 3, Vector2fMult(a, 3, dest)
+	 * Expected: dest.x = 24, dest.y = 30
+	 */
+	
+	@Test
+	public void ScalarMulTest() {
+		Vector2f a = new Vector2f(8,6);
+		float scalar = 3;
+		Vector2f dest = new Vector2f();
+		dest.Vector2fMult(a, scalar, dest);
+		assertTrue(dest.x == 24);
+		assertTrue(dest.y == 18);
+	}
+	
+	/*
+	 * Purpose: test Vector2fDiv(a,b, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(8,6), b(2,3), Vector2fMult(a, b, dest)
+	 * Expected: dest.x = 4, dest.y = 2
+	 */
+	
+	@Test
+	public void VectorDivTest() {
+		Vector2f a = new Vector2f(8,6);
+		Vector2f b = new Vector2f(2,3);
+		Vector2f dest = new Vector2f();
+		dest.Vector2fDiv(a, b, dest);
+		assertTrue(dest.x == 4);
+		assertTrue(dest.y == 2);
+	}
+	
+	
+	/*
+	 * Purpose: test Scalar2fDiv(a,scalar, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(8,6), scalar = 2, Vector2fMult(a, scalar, dest)
+	 * Expected: dest.x = 4, dest.y = 3
+	 */
+	
+	@Test
+	public void ScalarDivTest() {
+		Vector2f a = new Vector2f(8,6);
+		float scalar = 2;
+		Vector2f dest = new Vector2f();
+		dest.Vector2fDiv(a, 2, dest);
+		assertTrue(dest.x == 4);
+		assertTrue(dest.y == 3);
+	}
+	
+	
 }
