@@ -1168,9 +1168,86 @@ public class Vector2fCoverageTest {
 			assertTrue(dest.y == 12);
 	}
 	
+	/*
+	 * Purpose: test Vector2fSet(Vector2f a, float x, float y)
+	 * Input:  Vector2f a.Vector2fSet(a, 5, 5)
+	 * Expected:  a.x = 5, a.y = 5
+	 */
+	
+	@Test
+	public void Vector2fSetTest() {
+			Vector2f a = new Vector2f(10, 12);
+			a.Vector2fSet(a, 5, 5);
+			assertTrue(a.x == 5);
+			assertTrue(a.y == 5);
+	}
 	
 	
+	/*
+	 * Purpose: test Vector2fNegate(Vector2f a, Vector2f dest)
+	 * Input:  Vector2f a(3,4), dest();
+	 * Expected:  dest.x = -3, dest.y = -4
+	 */
 	
+	@Test
+	public void Vector2fNegateTest() {
+			Vector2f a = new Vector2f(3, 4);
+			Vector2f dest = new Vector2f();
+			a.Vector2fNegate(a, dest);
+			assertTrue(dest.x == -3);
+			assertTrue(dest.y == -4);
+	}
+	
+	/*
+	 * Purpose: test Vector2fWholeNumber(Vector2f a, Vector2f dest)
+	 * Input:  Vector2f a(3.5f, 4.5f), dest(1.5f, 2.5f);
+	 * Expected:  dest.x = 4, dest.y = 5
+	 */
+	
+	@Test
+	public void WholeNumberTest() {
+			Vector2f a = new Vector2f(3.5f, 4.5f);
+			Vector2f dest = new Vector2f(1.5f,2.5f);
+			int t = 3;
+			float delta = 3.5f - (float)t;
+			float expectedX = 4;
+			t = 4;
+			delta = 4.5f - (float)t;
+			float expectedY = 5;
+			a.Vector2fWholeNumber(a, dest);
+			float actualX = dest.x;
+			float actualY = dest.y;
+			assertTrue(actualX == expectedX);
+			assertTrue(actualY == expectedY);
+	}
+	
+	/*
+	 * Purpose: test Vector2fWholeNumber(Vector2f a, Vector2f dest)
+	 * 			test coverage
+	 * Input:  Vector2f a(3,4), dest(1,2)
+	 * Expected:  dest.x = 3, dest.y = 4
+	 */
+	
+	@Test
+	public void WholeNumberTestTwo() {
+			Vector2f a = new Vector2f(3, 4);
+			Vector2f dest = new Vector2f(1,2);
+			a.Vector2fWholeNumber(a, dest);
+	}
+	
+	/*
+	 * Purpose: test Vector2fWholeNumber(Vector2f a, Vector2f dest)
+	 * 			test coverage
+	 * Input:  Vector2f a(-3.2f,-4.4f), dest(-2.2f, -1.8f)
+	 * Expected:  dest.x = -3, dest.y = -4
+	 */
+	
+	@Test
+	public void WholeNumberTestThr() {
+			Vector2f a = new Vector2f(-3.2f, -4.4f);
+			Vector2f dest = new Vector2f(-2.2f, -1.8f);
+			a.Vector2fWholeNumber(a, dest);
+	}
 	
 
 }
