@@ -195,4 +195,23 @@ public class FloatUtilTest {
 		float expectd1 =1.234f*7.544f-2.323f*3.432f;
 		assertEquals(expectd1,FloatUtil.Vector2fCross(a, b),0.00001f);
 	}
+	
+
+	/*
+	 * Purpose: Determine if two float arrays are equal
+	 * Input: float[], float[]
+	 * Expected: 
+	 * 			if two float arrays are Equal, return true
+	 *			if two float arrays aren't Equal, return false  
+	 */
+	@Test
+	public void Vector2fEqualsTest() {
+		float[] a={1.234f,2.323f};
+		float[] b={1.234f,2.323f};
+		float[] c={3.432f, 7.544f};
+		float[] d={1.234f, 7.544f};
+		assertTrue(FloatUtil.Vector2fEquals(a, b));
+		assertFalse(FloatUtil.Vector2fEquals(a, c));
+		assertFalse(FloatUtil.Vector2fEquals(a, d));
+	}
 }
