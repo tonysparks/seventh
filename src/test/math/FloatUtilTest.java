@@ -429,4 +429,21 @@ public class FloatUtilTest {
 		assertEquals(expectd1,dest[0],0.00001f);
 		assertEquals(expectd2,dest[1],0.00001f);
 	}
+	/*
+	 * Purpose: make negated float array with one float array
+	 * Input: float[], float[]
+	 * Expected: 
+	 * 			the negated float array 
+	 */
+	
+	@Test
+	public void Vector2fNegateTest() {
+		float[] a={1.234f,2.323f};
+		float[] dest={0,0};
+		float expectd1 = -1.234f;
+		float expectd2 = -2.323f;
+		FloatUtil.Vector2fNegate(a, dest);		
+		assertEquals(expectd1,dest[0],0.00001f);
+		assertEquals(expectd2,dest[1],0.00001f);
+	}
 }
