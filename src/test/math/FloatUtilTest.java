@@ -364,4 +364,17 @@ public class FloatUtilTest {
 		assertEquals(a[0],b.get(0),0.00001f);
 		assertEquals(a[1],b.get(1),0.00001f);
 	}
+	
+	/*
+	 * Purpose: make one array having zero elements
+	 * Input: 
+	 * Expected: 
+	 * 			the array having zero elements
+	 */
+	@Test
+	public void Vector2fNewTest() {
+		float[] a = FloatUtil.Vector2fNew();
+		assertEquals(0,a[0],0.00001f);
+		assertEquals(0,a[1],0.00001f);
+	}
 }
