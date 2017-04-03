@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import seventh.math.Circle;
+import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
@@ -18,10 +19,13 @@ public class CircleTest {
 	 */
 	@Test
 	public void testPointInCircle() {
+		final boolean contain = true;
+		final boolean noContain = false;
 		Vector2f vector2f = new Vector2f(0,0);
 		Vector2f point = new Vector2f(0,0);
 		Circle circle = new Circle(vector2f,3);
-		assertTrue(Circle.circleContainsPoint(circle, point));
+		assertEquals(contain,Circle.circleContainsPoint(circle, point));
+		assertNotEquals(noContain,Circle.circleContainsPoint(circle, point));
 	}
 
 	/*
@@ -32,10 +36,12 @@ public class CircleTest {
 	 */
 	@Test
 	public void testPointOnCircleLine() {
-		Vector2f vector2f = new Vector2f(0,0);
-		Vector2f point = new Vector2f(4,0);
-		Circle circle = new Circle(vector2f,3);
-		assertTrue(Circle.circleContainsPoint(circle, point));
+		final boolean contain = true;
+		final boolean noContain = false;
+		Vector2f point = new Vector2f(3,0);
+		Circle circle = new Circle(new Vector2f(0,0),3);
+		assertEquals(contain,Circle.circleContainsPoint(circle, point));
+		assertNotEquals(noContain,Circle.circleContainsPoint(circle, point));
 	}
 	
 	/*
@@ -48,10 +54,12 @@ public class CircleTest {
 	 */
 	@Test
 	public void testPointOutCircle() {
-		Vector2f vector2f = new Vector2f(0,0);
+		final boolean contain = true;
+		final boolean noContain = false;
 		Vector2f point = new Vector2f(100,0);
-		Circle circle = new Circle(vector2f,3);
-		assertFalse(Circle.circleContainsPoint(circle, point));
+		Circle circle = new Circle(new Vector2f(0,0),3);
+		assertEquals(noContain,Circle.circleContainsPoint(circle, point));
+		assertNotEquals(contain,Circle.circleContainsPoint(circle, point));
 	}
 	
 	/*
@@ -62,9 +70,12 @@ public class CircleTest {
 	 */
 	@Test
 	public void testCircleInRectangle() {
+		final boolean contain = true;
+		final boolean noContain = false;
 		Circle circle = new Circle(new Vector2f(3,3),1);
 		Rectangle rectangle = new Rectangle(new Vector2f(0,0),4,4);
-		assertTrue(Circle.circleContainsRect(circle, rectangle));
+		assertEquals(contain,Circle.circleContainsRect(circle, rectangle));
+		assertNotEquals(noContain,Circle.circleContainsRect(circle, rectangle));
 	}
 	
 	/*
@@ -75,9 +86,12 @@ public class CircleTest {
 	 */
 	@Test
 	public void testCircleOutRectangle() {
+		final boolean contain = true;
+		final boolean noContain = false;
 		Circle circle = new Circle(new Vector2f(10,10),1);
 		Rectangle rectangle = new Rectangle(new Vector2f(0,0),4,4);
-		assertFalse(Circle.circleContainsRect(circle, rectangle));
+		assertEquals(noContain,Circle.circleContainsRect(circle, rectangle));
+		assertNotEquals(contain,Circle.circleContainsRect(circle, rectangle));
 	}
 	
 	/*
@@ -88,9 +102,12 @@ public class CircleTest {
 	 */
 	@Test
 	public void testCircleIntersectRectangle() {
+		final boolean intersect = true;
+		final boolean noIntersect = false;
 		Circle circle = new Circle(new Vector2f(0,0),3);
 		Rectangle rectangle = new Rectangle(new Vector2f(2,2),4,4);
-		assertTrue(Circle.circleIntersectsRect(circle, rectangle));
+		assertEquals(intersect,Circle.circleIntersectsRect(circle, rectangle));
+		assertNotEquals(noIntersect,Circle.circleIntersectsRect(circle, rectangle));
 	}
 	
 	/*
@@ -98,12 +115,15 @@ public class CircleTest {
 	 * Input: Circle => (0,0) radius 10, rectangle => (3,3) width 2 height 2 
 	 * Expected: 
 	 * 			the circle intersect the rectangle
-	 */
+	 */	
 	@Test
 	public void testCircleIntersectInRectangle() {
+		final boolean intersect = true;
+		final boolean noIntersect = false;
 		Circle circle = new Circle(new Vector2f(0,0),10);
 		Rectangle rectangle = new Rectangle(new Vector2f(3,3),2,2);
-		assertTrue(Circle.circleIntersectsRect(circle, rectangle));
+		assertEquals(intersect,Circle.circleIntersectsRect(circle, rectangle));
+		assertNotEquals(noIntersect,Circle.circleIntersectsRect(circle, rectangle));
 	}
 	
 	/*
@@ -114,9 +134,12 @@ public class CircleTest {
 	 */
 	@Test
 	public void testCircleNoIntersectRectangleSameYaxis() {
+		final boolean intersect = true;
+		final boolean noIntersect = false;
 		Circle circle = new Circle(new Vector2f(0,0),3);
 		Rectangle rectangle = new Rectangle(new Vector2f(10,0),5,5);
-		assertFalse(Circle.circleIntersectsRect(circle, rectangle));
+		assertEquals(noIntersect,Circle.circleIntersectsRect(circle, rectangle));
+		assertNotEquals(intersect,Circle.circleIntersectsRect(circle, rectangle));
 	}
 	
 	/*
@@ -127,8 +150,28 @@ public class CircleTest {
 	 */
 	@Test
 	public void testCircleNoIntersectRectangleSameXaxis() {
+		final boolean intersect = true;
+		final boolean noIntersect = false;
 		Circle circle = new Circle(new Vector2f(0,0),3);
 		Rectangle rectangle = new Rectangle(new Vector2f(0,10),5,5);
-		assertFalse(Circle.circleIntersectsRect(circle, rectangle));
+		assertEquals(noIntersect,Circle.circleIntersectsRect(circle, rectangle));
+		assertNotEquals(intersect,Circle.circleIntersectsRect(circle, rectangle));
 	}
+	
+	/*
+	 * Purpose: a line intersect Circle
+	 * Input: Circle => (0,0) radius 3, line => line(0,0)~(0,10) 
+	 * Expected: 
+	 * 			the line intersect the circle
+	 */
+	@Test
+	public void testCircleIntersectLine(){
+		final boolean intersect = true;
+		final boolean noIntersect = false;
+		Circle circle = new Circle(new Vector2f(0,0),3);
+		Line line = new Line(new Vector2f(0,0),new Vector2f(0,10));
+		assertEquals(intersect,Circle.circleIntersectsLine(circle, line));
+		assertNotEquals(noIntersect,Circle.circleIntersectsLine(circle, line));
+	}
+	
 }
