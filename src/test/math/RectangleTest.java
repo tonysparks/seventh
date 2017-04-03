@@ -99,4 +99,25 @@ public class RectangleTest {
 		assertEquals(noContain,rectangleA.contains(rectangleB));
 		assertNotEquals(contain,rectangleA.contains(rectangleB));
 	}
+	
+	/*
+	 * Purpose: rectangle contain point
+	 * Input:
+	 * 		rectangleA => (0,0) width 4 height 4
+	 * 		point => (1,1)
+	 * Expected:
+	 * 		the rectangleA contains the point
+	 */
+	@Test
+	public void testRectangleContainPoint() {
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangle = new Rectangle(0,0,4,4);
+		assertEquals(contain,rectangle.contains(1,1));
+		assertNotEquals(noContain,rectangle.contains(1,1));
+		
+		assertEquals(contain,rectangle.contains(new Vector2f(1,1)));
+		assertNotEquals(noContain,rectangle.contains(new Vector2f(1,1)));
+	}
+	
 }
