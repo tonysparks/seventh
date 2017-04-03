@@ -27,4 +27,22 @@ public class RectangleTest {
 		assertEquals(intersect,rectangleA.intersects(rectangleB));
 		assertNotEquals(noIntersect,rectangleA.intersects(rectangleB));
 	}
+	
+	/*
+	 * Purpose: rectangleA don't intersect rectangleB 
+	 * Input:
+	 * 		rectangleA => (0,0) width 1 height 1
+	 * 		rectangleB => (10,10) width 5 height 5
+	 * Expected:
+	 * 		the rectangleA don't intersect rectangleB
+	 */
+	@Test
+	public void testRectangleNoIntersectRectangle() {
+		final boolean intersect = true;
+		final boolean noIntersect = false;
+		Rectangle rectangleA = new Rectangle(0,0,1,1);
+		Rectangle rectangleB = new Rectangle(10,10,5,5);
+		assertEquals(noIntersect,rectangleA.intersects(rectangleB));
+		assertNotEquals(intersect,rectangleA.intersects(rectangleB));
+	}
 }
