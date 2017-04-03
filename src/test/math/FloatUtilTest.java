@@ -315,4 +315,21 @@ public class FloatUtilTest {
 		assertEquals(expectd1,dest[0],0.00001f);
 		assertEquals(expectd2,dest[1],0.00001f);
 	}
+	
+
+	/*
+	 * Purpose: change each float array's element to zero
+	 * Input: float[]
+	 * Expected: 
+	 * 			the array having zero element
+	 */
+	@Test
+	public void Vector2fZeroOutTest() {
+		float[] a={1.234f,2.323f};
+		float expectd1 = 0;
+		float expectd2 = 0;
+		FloatUtil.Vector2fZeroOut(a);		
+		assertEquals(expectd1,a[0],0.00001f);
+		assertEquals(expectd2,a[1],0.00001f);
+	}
 }
