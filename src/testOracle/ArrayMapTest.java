@@ -59,6 +59,23 @@ public class ArrayMapTest {
 		ArrayMap<K,V> test = new ArrayMap<K,V>();
 		assertTrue(test.size()==0);
 	}
+
+	/*
+	 * purpose : test IsEmpty function in ArrayMap class.
+	 * input : class creation.
+	 * expected output : return value is true at first. cause nothing in hashEntries.
+	 *					after put one hashset, then isEmpty is false.
+	 */	
+	@Test
+	public <K,V> void testIsEmpty(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		assertTrue(test.isEmpty()==true);
+		test.hashset(Key, Value);
+		assertTrue(test.isEmpty()==false);
+	}
+	
 	
 //	@Test
 //	public <K,V> void testNexti(){
