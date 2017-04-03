@@ -22,7 +22,7 @@ public class ExecCommandTest {
 	public void tearDown() throws Exception {
 	}
 	/**
-	 * Test case for ExecCommand 
+	 * Test case for ExecCommand
 	 */
 	@Test
 	public void testExecute() {
