@@ -350,4 +350,18 @@ public class FloatUtilTest {
 		assertTrue(FloatUtil.Vector2fIsZero(b));
 		assertFalse(FloatUtil.Vector2fIsZero(c));
 	}
+	
+	/*
+	 * Purpose: make one vector2f object with one float array
+	 * Input: float[]
+	 * Expected: 
+	 * 			the one vector2f object
+	 */
+	@Test
+	public void Vector2fToVector2fTest() {
+		float[] a={1.234f,2.323f};
+		Vector2f b = FloatUtil.Vector2fToVector2f(a);
+		assertEquals(a[0],b.get(0),0.00001f);
+		assertEquals(a[1],b.get(1),0.00001f);
+	}
 }
