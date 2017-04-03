@@ -137,6 +137,22 @@ public class ArrayMapTest {
 		assertTrue(test.equal(nullTest)==false);
 	}
 	
+	/*
+	 * purpose : test containsValue function in ArrayMap class.
+	 * input : K Key for "Key", V Value for "Value" and V Values for "Values".
+	 * expected output : return value of containsValue is false.
+	 */
+	@Test
+	public <K,V> void testContainsValue(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		V Values = (V)"Values";
+		assertTrue(test.containsValue(Value)==false);
+		test.set(Key, Value);
+		test.containsValue(Value);
+		test.containsValue(Values);
+	}
 //	@Test
 //	public <K,V> void testNexti(){
 //		ArrayMap<K,V> test = new ArrayMap<K,V>();
