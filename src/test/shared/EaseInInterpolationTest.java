@@ -10,8 +10,6 @@ import junit.framework.Assert;
 import seventh.shared.EaseInInterpolation;
 import seventh.shared.TimeStep;
 
-import seventh.shared.EaseInInterpolati
-import seventh.shared.TimeStep
 
 public class EaseInInterpolationTest {
 
@@ -53,15 +51,6 @@ public class EaseInInterpolationTest {
 		Assert.assertNotSame(expected, EI.getValue());
   }
 
-
-	@Test
-	public void testUpdate() {
-		
-	}
-
-	@Test
-	public void testIsExpired() {
-		
 
 
 	/**	 * Test the update function 
@@ -112,12 +101,6 @@ public class EaseInInterpolationTest {
 	public void testGetValue() {
 	}
 
-
-
-	@Test
-	public void testGetTarget() {
-		
-  }
 	/**
 	 * Test getTarget
 	 * @ExpectedOutput EI.target set 0f
