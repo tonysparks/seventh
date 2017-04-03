@@ -1,4 +1,4 @@
-package test.shared;
+package test.math;
 
 import static org.junit.Assert.*;
 
