@@ -406,4 +406,22 @@ public class RectangleTest {
 		assertEquals(expectedWidth,rectangle.getWidth());
 		assertEquals(expectedheight,rectangle.getHeight());
 	}
+	
+	/*
+	 * Purpose: make (1,2,3,4)rectangle to (0,0,0,0)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 */
+	@Test
+	public void testZeroOut(){
+		final int expected = 0;
+		Rectangle rectangle = new Rectangle(1,2,3,4);
+		rectangle.zeroOut();
+		assertEquals(expected,rectangle.getX());
+		assertEquals(expected,rectangle.getY());
+		assertEquals(expected,rectangle.getWidth());
+		assertEquals(expected,rectangle.getHeight());
+	}
 }
