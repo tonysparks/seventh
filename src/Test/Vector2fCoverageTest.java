@@ -1,4 +1,4 @@
-package testOracle;
+package Test;
 
 import static org.junit.Assert.*;
 
@@ -1102,5 +1102,75 @@ public class Vector2fCoverageTest {
 			assertEquals(expected, actual);
 	}
 
+	
+	/*
+	 * Purpose: test GreaterOrEq(Vector2f a, Vector2f b)
+	 * Input:  Vector2f a(5, 4), b(8, 9)
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void GreaterOrEqFalseTest() {
+			Vector2f a = new Vector2f(5, 4);
+			Vector2f b = new Vector2f(8, 9);
+			boolean expected = false;
+			boolean actual = a.Vector2fGreaterOrEq(a, b);
+			assertEquals(expected, actual);
+	}
+	
+	/*
+	 * Purpose: test GreaterOrEq(Vector2f a, Vector2f b)
+	 * Input:  Vector2f a(10, 12), b(8, 9)
+	 * Expected:  true
+	 */
+	
+	@Test
+	public void GreaterOrEqTrueTest() {
+			Vector2f a = new Vector2f(10, 12);
+			Vector2f b = new Vector2f(8, 9);
+			boolean expected = true;
+			boolean actual = a.Vector2fGreaterOrEq(a, b);
+			assertEquals(expected, actual);
+	}
+	
+	
+	/*
+	 * Purpose: test Vector2fRound(Vector2f a, Vector2f dest)
+	 * Input:  Vector2f a(10, 12), dest()
+	 * Expected:  dest.x = Math.round(10), dest.y = Math.round(12)
+	 */
+	
+	@Test
+	public void Vector2fRoundTest() {
+			Vector2f a = new Vector2f(10, 12);
+			Vector2f dest = new Vector2f();
+			a.Vector2fRound(a, dest);
+			float expectedX  = Math.round(10);
+			float expectedY = Math.round(12);
+			assertTrue(dest.x == expectedX);
+			assertTrue(dest.y == expectedY);
+	}
+	
+	
+	
+	/*
+	 * Purpose: test Vector2fSnap(Vector2f a, Vector2f dest)
+	 * Input:  Vector2f a(10, 12), dest()
+	 * Expected:  dest.x = 10, dest.y = 12
+	 */
+	
+	@Test
+	public void Vector2fSnapTest() {
+			Vector2f a = new Vector2f(10, 12);
+			Vector2f dest = new Vector2f();
+			a.Vector2fSnap(a, dest);
+			assertTrue(dest.x == 10);
+			assertTrue(dest.y == 12);
+	}
+	
+	
+	
+	
+	
 
 }
