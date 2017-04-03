@@ -47,6 +47,7 @@ public class FileSystemAssetWatcherTest {
                 return null;
             }
 		});
+		
 		FSA.stopWatching();
 		FSA.clearWatched();
 		FSA.removeWatchedAsset("new.txt");
