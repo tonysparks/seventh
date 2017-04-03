@@ -971,6 +971,63 @@ public class Vector2fCoverageTest {
 			assertTrue(expected == actual);
 	}
 	
+	/*
+	 * Purpose: test Vector2fNormalize(Vector2f a, Vector2f dest)
+	 * 		    check the return value
+	 *        
+	 * Input:  Vector2f a(6,4) dest(2,2))
+	 * Expected:  x = 6.0f/fLen, y = 4.0f/fLen
+	 */
+	
+	@Test
+	public void Vector2fNormalizeTest() {
+			Vector2f a = new Vector2f(6,4);
+			Vector2f dest = new Vector2f(2, 2);
+			float fLen = (float)Math.sqrt(52);
+			float expectedX = 6.0f/fLen;
+			float expectedY = 4.0f/fLen;
+			a.Vector2fNormalize(a, dest);
+			float actualX = dest.x;
+			float actualY = dest.y;
+			assertTrue(expectedX == actualX);
+			assertTrue(expectedY == actualY);
+	}
+	
+	/*
+	 * Purpose: test Vector2fNormalize(Vector2f a, Vector2f dest)
+	 * 		    fLen = (float)Math.sqrt(x^2 + y^2)
+	 * 			check when fLen == 0
+	 *        
+	 * Input:  Vector2f a(0,0) b(2,2)
+	 * Expected:  return
+	 */
+	
+	@Test
+	public void Vector2fNormalizeZeroTest() {
+			Vector2f a = new Vector2f(0,0);
+			Vector2f dest = new Vector2f(2, 2);
+			a.Vector2fNormalize(a, dest);
+	}
+	
+	/*
+	 * Purpose: test Vector2fPerpendicular(Vector2f a, Vector2f dest)
+	 *          dest.x = a.y, dest.y = -a.x
+	 * Input:  Vector2f a(5,4) dest()
+	 * Expected:  dest.x = 4, dest.y = -5
+	 */
+	
+	@Test
+	public void Vector2fPerpendicularTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f dest = new Vector2f();
+			a.Vector2fPerpendicular(a, dest);
+			float actualX = dest.x;
+			float actualY = dest.y;
+			float expectedX = 4;
+			float expectedY = -5;
+			assertTrue(actualX == expectedX);
+			assertTrue(actualY == expectedY);
+	}
 	
 
 
