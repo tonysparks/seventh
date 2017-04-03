@@ -33,30 +33,41 @@ public class FpsCounterTest {
 		assertEquals(expected,fps.getSampleSize());
 		assertEquals(expected2,fps2.getSampleSize());
 	}
-
-	@Test
-	public void testFpsCounter() {
-		//fail("Not yet implemented");
-	}
-
+	
+	/**
+	 * Testcase for update 
+	 * @Input long
+	 * @ExpectedOutput set all figures except simplesize
+	 */
 	@Test
 	public void testUpdate() {
-		//fail("Not yet implemented");
+		long expectedAvg= 0;
+		long expectedTally = 0;
+		long expectedCS = 0;
+		long expectedFps = 0;
+		
+		FpsCounter fps = new FpsCounter();
+		for(int i = 300;i >=0; i--){
+			
+			fps.update(i);
+			if(i>0){
+				expectedFps = 1000/i;
+			}
+			expectedCS++;
+			if(expectedCS > fps.getSampleSize()) {
+				expectedAvg = expectedTally / fps.getSampleSize();
+				expectedTally = 0;
+				expectedCS = 0;
+			}
+			else{
+				expectedTally += expectedFps;
+			}
+			System.out.println(fps.getAvgFPS());
+			System.out.println(fps.getFps());
+			assertEquals(expectedAvg,fps.getAvgFPS());
+			assertEquals(expectedFps,fps.getFps());
+		}
 	}
-
-	@Test
-	public void testGetSampleSize() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetAvgFPS() {
-		//fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetFps() {
-		//fail("Not yet implemented");
-	}
+	
 
 }
