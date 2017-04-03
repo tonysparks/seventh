@@ -90,6 +90,18 @@ public class ArrayMapTest {
 		assertEquals(test.put(Key, Value),null);		
 	}
 	
+	/*
+	 * purpose : test remove and hashRemove function in ArrayMap class.
+	 * input : class ArrayMap.
+	 * expected output : the return value of calling remove(ArrayMap) is null.
+	 * 					
+	 */
+	@Test
+	public <K,V> void testRemove(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		assertEquals(test.remove(test),null);		
+	}
+	
 	
 //	@Test
 //	public <K,V> void testNexti(){
