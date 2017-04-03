@@ -11,4 +11,5 @@
 /seventh_error.log
 /seventh_server.xml
 /seventh.xml
-/template/
+/template
+*.DS_Store

@@ -31,4 +31,19 @@ public class SeventhConfigTest {
 	public void testInvalidRootNode() throws Exception {
 		SeventhConfig seventhconfig = new SeventhConfig(validPath,invalidRootNode);
 	}
+
+
+	
+	/*
+	 * Purpose: valid seventhConfig construct
+	 * Input: SeventhConfig ("./assets/client_config.leola","client_config")
+	 * Expected: 
+	 * 			new SeventhConfig
+	 */
+	@Test
+	public void testSeventhConfigConstructor() throws Exception{
+		SeventhConfig seventhconfig = new SeventhConfig(validPath,validRootNode);
+		assertTrue(seventhconfig instanceof SeventhConfig);
+	}
+
 }
