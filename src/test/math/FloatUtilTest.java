@@ -392,4 +392,23 @@ public class FloatUtilTest {
 		assertFalse(FloatUtil.Vector2fGreaterOrEq(a,b));
 		assertTrue(FloatUtil.Vector2fGreaterOrEq(b,a));
 	}
+	
+
+
+	/*
+	 * Purpose: round off one float array's each element
+	 * Input: float[], float[]
+	 * Expected: 
+	 * 			the rounded array
+	 */
+	@Test
+	public void Vector2fRoundTest() {
+		float[] a={1.234f,2.323f};
+		float[] dest={0,0};
+		float expectd1 = Math.round(a[0]);
+		float expectd2 = Math.round(a[1]);
+		FloatUtil.Vector2fRound(a, dest);		
+		assertEquals(expectd1,dest[0],0.00001f);
+		assertEquals(expectd2,dest[1],0.00001f);
+	}
 }
