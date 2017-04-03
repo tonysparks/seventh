@@ -218,6 +218,22 @@ public class ArrayMapTest {
 		assertEquals(test.nextValue(Key),"Value");
 	}
 	
+	/*
+	 * purpose : test clear function in ArrayMap class.
+	 * input : K key for "Key", V Value for "Value".
+	 * expected output : after calling clear(), the size value is 0.
+	 */
+	@Test
+	public <K,V> void testClear(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		test.set(Key, Value);
+		assertEquals(test.nextValue(Key),"Value");
+		test.clear();
+		assertEquals(test.size(),0);
+	}
+	
 //	@Test
 //	public <K,V> void testNexti(){
 //		ArrayMap<K,V> test = new ArrayMap<K,V>();
