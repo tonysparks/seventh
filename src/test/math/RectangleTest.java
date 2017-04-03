@@ -263,4 +263,37 @@ public class RectangleTest {
 		assertEquals(0,rectangleA.getWidth());
 		assertEquals(0,rectangleA.getHeight());
 	}
+	
+	/*
+	 * Purpose: rectangle add x,y
+	 * Input:
+	 * 		all rectangles => (1,1) width 2 height 2
+	 * 		add (2,2)
+	 * Expected:
+	 * 		x,y of rectangles are (3,3)
+	 */
+	@Test
+	public void testRectangleAdd(){
+		Rectangle rectangleA = new Rectangle(1,1,2,2);
+		Rectangle rectangleB = new Rectangle(1,1,2,2);
+		Rectangle rectangleC = new Rectangle(1,1,2,2);
+		
+		rectangleA.add(2, 2);
+		assertEquals(3,rectangleA.getX());
+		assertEquals(3,rectangleA.getY());
+		assertEquals(2,rectangleA.getWidth());
+		assertEquals(2,rectangleA.getHeight());
+		
+		rectangleB.add(new Vector2f(2,2));
+		assertEquals(3,rectangleB.getX());
+		assertEquals(3,rectangleB.getY());
+		assertEquals(2,rectangleB.getWidth());
+		assertEquals(2,rectangleB.getHeight());
+		
+		rectangleC.add(new Rectangle(2,2,0,0));
+		assertEquals(3,rectangleC.getX());
+		assertEquals(3,rectangleC.getY());
+		assertEquals(2,rectangleC.getWidth());
+		assertEquals(2,rectangleC.getHeight());
+	}
 }
