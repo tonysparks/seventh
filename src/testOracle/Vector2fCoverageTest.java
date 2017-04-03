@@ -1029,6 +1029,78 @@ public class Vector2fCoverageTest {
 			assertTrue(actualY == expectedY);
 	}
 	
+	
+	/*
+	 * Purpose: test Vector2fZeroOut(Vector2f a)
+	 *          a.x = a.y = 0
+	 * Input:  Vector2f a(5,4)
+	 * Expected:  a.x = a.y = 0
+	 */
+	
+	@Test
+	public void Vector2fZeroOutTest() {
+			Vector2f a = new Vector2f(5,4);
+			a.Vector2fZeroOut(a);
+			assertTrue(a.x == 0);
+			assertTrue(a.y == 0);
+	}
+	
+	
+	/*
+	 * Purpose: test Vector2fIsZero(Vector2f a), True case test
+	 * Input:  Vector2f a(0, 0)
+	 * Expected:  true
+	 */
+	
+	@Test
+	public void Vector2fIsZeroTrueTest() {
+			Vector2f a = new Vector2f(0, 0);
+			boolean expected = true;
+			boolean actual = a.Vector2fIsZero(a);
+			assertEquals(expected, actual);
+	}
+
+	/*
+	 * Purpose: test Vector2fIsZero(Vector2f a), False case test
+	 * Input:  Vector2f a(2, 0)
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void Vector2fIsZeroFalseTest() {
+			Vector2f a = new Vector2f(2, 0);
+			boolean expected = false;
+			boolean actual = a.Vector2fIsZero(a);
+			assertEquals(expected, actual);
+	}
+	
+	/*
+	 * Purpose: test Vector2fIsZero(Vector2f a), False case test
+	 * Input:  Vector2f a(2,4)
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void Vector2fIsZeroFalseTestTwo() {
+			Vector2f a = new Vector2f(2, 4);
+			boolean expected = false;
+			boolean actual = a.Vector2fIsZero(a);
+			assertEquals(expected, actual);
+	}
+	
+	/*
+	 * Purpose: test Vector2fIsZero(Vector2f a), False case test
+	 * Input:  Vector2f a(0, 4)
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void Vector2fIsZeroFalseTestThr() {
+			Vector2f a = new Vector2f(0, 4);
+			boolean expected = false;
+			boolean actual = a.Vector2fIsZero(a);
+			assertEquals(expected, actual);
+	}
 
 
 }
