@@ -214,4 +214,23 @@ public class FloatUtilTest {
 		assertFalse(FloatUtil.Vector2fEquals(a, c));
 		assertFalse(FloatUtil.Vector2fEquals(a, d));
 	}
+	
+
+	/*
+	 * Purpose: Determine if two float arrays are equal by a giving Epsilon
+	 * Input: float[], float[]
+	 * Expected: 
+	 * 			if two float arrays are Equal, return true
+	 *			if two float arrays aren't Equal, return false  
+	 */
+	@Test
+	public void Vector2fApproxEqualsTest() {
+		float[] a={1.234f,2.323f};
+		float[] b={1.234f,2.323f};
+		float[] c={3.432f, 7.544f};
+		float[] d={1.234f, 7.544f};
+		assertTrue(FloatUtil.Vector2fApproxEquals(a, b));
+		assertFalse(FloatUtil.Vector2fApproxEquals(a, c));
+		assertFalse(FloatUtil.Vector2fApproxEquals(a, d));
+	}
 }
