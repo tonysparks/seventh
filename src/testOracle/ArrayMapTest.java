@@ -120,6 +120,22 @@ public class ArrayMapTest {
 //		
 	}
 	
+	/*
+	 * purpose : test Equal function in ArrayMap class.
+	 * input : two classes named ArrayMap.
+	 * expected output : true, false for each class.
+	 * 					can't reach getClass()!= val.getClass() sentence.
+	 * 					
+	 */
+	@Test
+	public <K,V> void testEqual(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		ArrayMap<K,V> tests = new ArrayMap<K,V>(0);
+		ArrayMap<K,V> nullTest = null;
+		assertTrue(test.equal(test));
+		assertTrue(test.equal(tests)==false);
+		assertTrue(test.equal(nullTest)==false);
+	}
 	
 //	@Test
 //	public <K,V> void testNexti(){
