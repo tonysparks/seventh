@@ -181,4 +181,18 @@ public class FloatUtilTest {
 		assertEquals(expectd1,dest[0],0.00001f);
 		assertEquals(expectd2,dest[1],0.00001f);
 	}
+	
+	/*
+	 * Purpose: add two float array's element in different index(0 and 1, 1 and 0)
+	 * Input: float[], float[]
+	 * Expected: 
+	 * 			the cross added float 
+	 */
+	@Test
+	public void Vector2fCrossTest() {
+		float[] a={1.234f,2.323f};
+		float[] b={3.432f, 7.544f};
+		float expectd1 =1.234f*7.544f-2.323f*3.432f;
+		assertEquals(expectd1,FloatUtil.Vector2fCross(a, b),0.00001f);
+	}
 }
