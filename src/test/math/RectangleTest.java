@@ -201,4 +201,22 @@ public class RectangleTest {
 		assertEquals(contain,rectangle.contains(oob));
 		assertNotEquals(noContain,rectangle.contains(oob));
 	}
+	
+	/*
+	 * Purpose: rectangle don't contain OBB
+	 * Input:
+	 * 		rectangle => (0,0) width 20 height 20
+	 * 		obb => center (30,30) width 5 height 5
+	 * Expected:
+	 * 		the rectangle don't contains obb
+	 */
+	@Test
+	public void testContainNoOBB(){
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangle = new Rectangle(0,0,20,20);
+		OBB oob = new OBB(0,30,30,5,5);
+		assertEquals(noContain,rectangle.contains(oob));
+		assertNotEquals(contain,rectangle.contains(oob));
+	}
 }
