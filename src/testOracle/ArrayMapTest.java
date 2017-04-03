@@ -98,8 +98,26 @@ public class ArrayMapTest {
 	 */
 	@Test
 	public <K,V> void testRemove(){
-		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		ArrayMap<K,V> test = new ArrayMap<K,V>(0);
 		assertEquals(test.remove(test),null);		
+	}
+	/*
+	 * purpose : test ContainsKey function in ArrayMap class.
+	 * input : K Key for "Key", V Value for "Value". and class ArrayMap.
+	 * expected output : return value is false.
+	 * 					after calling set function, then return value is true.
+	 * 					but, never true in this case. cause, when erase, set and 
+	 * 					initialize, hashKeys always has value by minimum 1.
+	 */
+	@Test
+	public <K,V> void testContainsKey(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>(0);
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		assertTrue(test.containsKey(test)==false);
+//		test.set(Key, Value);
+//		assertTrue(test.containsKey(test)==true);
+//		
 	}
 	
 	
