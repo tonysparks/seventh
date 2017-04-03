@@ -52,7 +52,7 @@ public class RectangleTest {
 	 * 		rectangleA => (0,0) width 10 height 10
 	 * 		rectangleB => (0,0) width 2 height 2
 	 * Expected:
-	 * 		the rectangleA don't intersect rectangleB
+	 * 		the rectangleA contains rectangleB
 	 */
 	@Test
 	public void testRectangleContainRectangle() {
@@ -63,4 +63,23 @@ public class RectangleTest {
 		assertEquals(contain,rectangleA.contains(rectangleB));
 		assertNotEquals(noContain,rectangleA.contains(rectangleB));
 	}
+	
+	/*
+	 * Purpose: rectangleA is same rectangleB 
+	 * Input:
+	 * 		rectangleA => (0,0) width 10 height 10
+	 * 		rectangleB => (0,0) width 10 height 10
+	 * Expected:
+	 * 		the rectangleA contains same rectangle rectangleB
+	 */
+	@Test
+	public void testRectangleContainSameRectangle() {
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangleA = new Rectangle(0,0,10,10);
+		Rectangle rectangleB = new Rectangle(0,0,10,10);
+		assertEquals(contain,rectangleA.contains(rectangleB));
+		assertNotEquals(noContain,rectangleA.contains(rectangleB));
+	}
+	
 }
