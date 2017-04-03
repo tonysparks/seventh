@@ -332,4 +332,22 @@ public class FloatUtilTest {
 		assertEquals(expectd1,a[0],0.00001f);
 		assertEquals(expectd2,a[1],0.00001f);
 	}
+	
+
+	/*
+	 * Purpose: check whether each float array's element is zero
+	 * Input: float[]
+	 * Expected: 
+	 * 			if all array's elements are zero, return true
+	 * 			unless, return false
+	 */
+	@Test
+	public void Vector2fIsZeroTest() {
+		float[] a={1.234f,2.323f};
+		float[] b={0,0};
+		float[] c={0,0.3232f};
+		assertFalse(FloatUtil.Vector2fIsZero(a));
+		assertTrue(FloatUtil.Vector2fIsZero(b));
+		assertFalse(FloatUtil.Vector2fIsZero(c));
+	}
 }
