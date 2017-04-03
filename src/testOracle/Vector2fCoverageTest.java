@@ -903,6 +903,42 @@ public class Vector2fCoverageTest {
 			assertTrue(expectedResult == actualResult);
 	}
 	
+	/*
+	 * Purpose: test Vector2fLength(Vector2f a)
+	 * 		    check the return value
+	 *        
+	 * Input:  Vector2f a(3,4)
+	 * Expected:  5
+	 */
+	
+	@Test
+	public void Vector2fLengthTest() {
+			Vector2f a = new Vector2f(3,4);
+			float expected = 5;
+			float actual = a.Vector2fLength(a);
+			
+			assertTrue(expected == actual);
+	}
+	
+	/*
+	 * Purpose: test Vector2fLengthSq(Vector2f a)
+	 * 		    check the return value
+	 *        
+	 * Input:  Vector2f a(3,4)
+	 * Expected:  25
+	 */
+	
+	@Test
+	public void Vector2fLengthSqTest() {
+			Vector2f a = new Vector2f(3,4);
+			float expected = 25;
+			float actual = a.Vector2fLengthSq(a);
+			assertTrue(expected == actual);
+	}
+	
+	
+	
+	
 
 
 }
