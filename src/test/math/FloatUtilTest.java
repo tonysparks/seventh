@@ -411,4 +411,22 @@ public class FloatUtilTest {
 		assertEquals(expectd1,dest[0],0.00001f);
 		assertEquals(expectd2,dest[1],0.00001f);
 	}
+	
+
+
+	/*
+	 * Purpose: make one float array with two floats
+	 * Input: float[], float, float
+	 * Expected: 
+	 * 			the float array with two floats
+	 */
+	@Test
+	public void Vector2fSetTest() {
+		float[] dest={0,0};
+		float expectd1 = 1.234f;
+		float expectd2 = 2.323f;
+		FloatUtil.Vector2fSet(dest, expectd1, expectd2);		
+		assertEquals(expectd1,dest[0],0.00001f);
+		assertEquals(expectd2,dest[1],0.00001f);
+	}
 }
