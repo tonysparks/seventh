@@ -190,6 +190,20 @@ public class ArrayMapTest {
 		assertEquals(test.getValue(0),null);
 	}
 	
+	/*
+	 * purpose : test nextKey function in ArrayMap class.
+	 * input : K Key for "Key", V Value for "Value", and call set function.
+	 * expected output : return value of nextKey(Key) is "Key".
+	 */
+	@Test
+	public <K,V> void testNextKey(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		test.set(Key, Value);
+		assertEquals(test.nextKey(Key),"Key");
+	}
+	
 //	@Test
 //	public <K,V> void testNexti(){
 //		ArrayMap<K,V> test = new ArrayMap<K,V>();
