@@ -623,7 +623,49 @@ public class Vector2fCoverageTest {
 		assertTrue(dest.y == 3);
 	}
 	
+	/*
+	 * Purpose: test Vector2fRotate(a, radians, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(8,6), radians = 30, dest()
+	 * Expected: dest.x = (float)(a.x * Math.cos(radians) - a.y * Math.sin(radians))
+	 * 			 dest.y = (float)(a.x * Math.sin(radians) + a.y * Math.cos(radians))
+	 */
 	
+	@Test
+	public void VectorRotateTest () {
+		Vector2f a = new Vector2f(8,6);
+		double radians = 30;
+		Vector2f dest = new Vector2f();
+		float expectedX = (float)(a.x * Math.cos(radians) - a.y * Math.sin(radians));
+		float expectedY = (float)(a.x * Math.sin(radians) + a.y * Math.cos(radians));
+		dest.Vector2fRotate(a, radians, dest);
+		float actualX = dest.x;
+		float actualY = dest.y;
+		assertTrue(actualX == expectedX);
+		assertTrue(actualY == expectedY);
+	}
+	
+	/*
+	 * Purpose: test Vector2fAngle(a,b)
+	 * 		    check the return value
+	 *        
+	 * Input: a(8,6), radians = 30, dest()
+	 * Expected: dest.x = (float)(a.x * Math.cos(radians) - a.y * Math.sin(radians))
+	 * 			 dest.y = (float)(a.x * Math.sin(radians) + a.y * Math.cos(radians))
+	 */
+	
+	@Test
+	public void AngleTest () {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(3,2);
+			Vector2f dest = new Vector2f();
+			double expectedAngle = Math.atan2(2.0f, 3.0f) - Math.atan2(4.0f,5.0f);
+			double actualAngle = dest.Vector2fAngle(a, b);
+			assertTrue(expectedAngle == actualAngle);	
+	}
+	
+
 	
 	
 
