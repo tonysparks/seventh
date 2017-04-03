@@ -251,4 +251,17 @@ public class FloatUtilTest {
 		assertEquals(expectd1,dest[0],0.00001f);
 		assertEquals(expectd2,dest[1],0.00001f);
 	}
+	
+	/*
+	 * Purpose: get the length from zero point(0,0) to one float point(x,y) 
+	 * Input: float[]
+	 * Expected: 
+	 * 			the length from zero point(0,0) to one float point(x,y) 
+	 */
+	@Test
+	public void Vector2fLengthTest() {
+		float[] a={1.234f,2.323f};
+		float expectd1 =(float)Math.sqrt( 1.234f * 1.234f + 2.323f * 2.323f) ;
+		assertEquals(expectd1,FloatUtil.Vector2fLength(a),0.00001f);
+	}
 }
