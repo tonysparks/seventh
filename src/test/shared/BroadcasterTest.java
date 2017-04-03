@@ -44,9 +44,21 @@ public class BroadcasterTest {
 		
 	}
 
-//	@Test
-//	public void testClose() {
-//		fail("Not yet implemented");
-//	}
+	/*
+	 * purpose : test close function in Broadcaster class.
+	 * input : mtu:20, groupAddress:192.168.25.53, port:80
+	 * expected output : X, cause the function is only made for close socket.
+	 */
+	@Test
+	public void testClose() {
+		try {
+			Broadcaster test = new Broadcaster(5,"192.168.25.53",80);
+			test.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 }
