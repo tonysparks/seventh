@@ -244,7 +244,8 @@ public class ArrayMapTest {
 		K Key = (K)"Key";
 		V Value = (V)"Value";
 		test.set(Key, Value);
-//		assertEquals(test.keySet(),"Key");
+		test.keySet();
+
 	}
 	
 	/*
@@ -262,26 +263,20 @@ public class ArrayMapTest {
 		test.values();
 	}
 	
-//	@Test
-//	public <K,V> void testPutAll(){
-//		ArrayMap<K,V> test = new ArrayMap<K,V>();
-//		K Key = (K)"Key";
-//		V Value = (V)"Value";
-//		
-//	}
-	
-//	@Test
-//	public <K,V> void testNexti(){
-//		ArrayMap<K,V> test = new ArrayMap<K,V>();
-//		K Key = (K)"Key";
-//		V Value = (V)"Value";
-//		
-//		K nullKey = null;
-//		V nullValue = null;
-//		test.set(Key, Value);
-//		assertTrue(test.nexti(Key)==-1);
-//		assertTrue(test.nexti(nullKey)==0);
-//	}
+	/*
+	 * purpose : test nexti function in ArrayMap class.
+	 * input : Key, Value for each "Key", "Value".
+	 * expected output : ** do not complete for testing ** 
+	 */
+	@Test
+	public <K,V> void testNexti(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		test.set(Key, Value);
+		assertTrue(test.nexti(Key)==0);		
+		
+	}
 //
 //	@Test
 //	public <K,V> void testHashset() {
