@@ -67,4 +67,22 @@ public class FloatUtilTest {
 		assertFalse(FloatUtil.lt(y,z));
 	}
 
+	/*
+	 * Purpose: Determine if one float is greater than another or equal
+	 * Input: float, float
+	 * Expected: 
+	 * 			if one float is greater than another or equal, return true
+	 *			if one float isn't greater than another or equal, return false  
+	 */
+	@Test
+	public void gteTest() {
+		float x = 1.234f;
+		float y = 1.2450f;
+		float z = 1.24501f;
+		
+		assertTrue(FloatUtil.gte(y,x));
+		assertFalse(FloatUtil.gte(x,y));
+		assertTrue(FloatUtil.gte(y,z));
+
+	}
 }
