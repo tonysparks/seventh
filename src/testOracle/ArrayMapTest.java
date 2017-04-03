@@ -168,15 +168,28 @@ public class ArrayMapTest {
 		test.set(Key, Value);
 		assertEquals(test.get(Key),"Value");
 	}
+	/*
+	 * purpose : test getKey function in ArrayMap class.
+	 * input : ArrayMap class.
+	 * expected output : return value of getKey(0) is null.
+	 */
+	@Test
+	public <K,V> void testGetKey(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		assertEquals(test.getKey(0),null);
+	}
+	
 //	@Test
 //	public <K,V> void testNexti(){
 //		ArrayMap<K,V> test = new ArrayMap<K,V>();
-//		K Key = (K)"key";
-//		V Value = (V)"value";
+//		K Key = (K)"Key";
+//		V Value = (V)"Value";
+//		
 //		K nullKey = null;
-//		test.hashset(Key, Value);
-//		assertTrue(test.nexti(nullKey)==-1);
+//		V nullValue = null;
+//		test.set(Key, Value);
 //		assertTrue(test.nexti(Key)==-1);
+//		assertTrue(test.nexti(nullKey)==0);
 //	}
 //
 //	@Test
