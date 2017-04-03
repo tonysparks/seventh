@@ -650,7 +650,7 @@ public class Vector2fCoverageTest {
 	 * Purpose: test Vector2fAngle(a,b)
 	 * 		    check the return value
 	 *        
-	 * Input: a(8,6), radians = 30, dest()
+	 * Input: a(5,4), b(3,2), dest()
 	 * Expected: dest.x = (float)(a.x * Math.cos(radians) - a.y * Math.sin(radians))
 	 * 			 dest.y = (float)(a.x * Math.sin(radians) + a.y * Math.cos(radians))
 	 */
@@ -665,8 +665,61 @@ public class Vector2fCoverageTest {
 			assertTrue(expectedAngle == actualAngle);	
 	}
 	
-
 	
+	/*
+	 * Purpose: test Vector2fMA(a, b, scalar, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(5,4), b(3,2), scalar = 5, dest();
+	 * Expected: dest.x = 20, dest.y = 14
+	 */
+	
+	@Test
+	public void Vector2fMATest () {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(3,2);
+			float scalar = 5;
+			Vector2f dest = new Vector2f();
+			dest.Vector2fMA(a, b, scalar, dest);
+			assertTrue(dest.x == 20);
+			assertTrue(dest.y == 14);
+	}
+	
+	/*
+	 * Purpose: test Vector2fMS(a, b, scalar, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(5,4), b(3,2), scalar = 5, dest();
+	 * Expected: dest.x = -10, dest.y = -6
+	 */
+	
+	@Test
+	public void Vector2fMSTest () {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(3,2);
+			float scalar = 5;
+			Vector2f dest = new Vector2f();
+			dest.Vector2fMS(a, b, scalar, dest);
+			assertTrue(dest.x == -10);
+			assertTrue(dest.y == -6);
+	}
+	
+	/*
+	 * Purpose: test Vector2fCopy(a, dest)
+	 * 		    check the return value
+	 *        
+	 * Input: a(5,4), dest();
+	 * Expected: dest.x = 5, dest.y = 4
+	 */
+	
+	@Test
+	public void Vector2fCopyTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f dest = new Vector2f();
+			dest.Vector2fCopy(a, dest);
+			assertTrue(dest.x == 5);
+			assertTrue(dest.y == 4);
+	}
 	
 
 }
