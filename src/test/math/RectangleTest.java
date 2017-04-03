@@ -219,4 +219,48 @@ public class RectangleTest {
 		assertEquals(noContain,rectangle.contains(oob));
 		assertNotEquals(contain,rectangle.contains(oob));
 	}
+	
+	/*
+	 * Purpose: construct same rectangle each constructor
+	 * Input:
+	 * 		A => (0,0) width 0 height 0 
+	 * 		B => vector2f(0,0) width 0 height 0
+	 * 		C => width 0 height 0  
+	 * 		D => nothing
+	 * Expected:
+	 * 		all rectangle are same (0,0) width 0 height 0
+	 */
+	@Test
+	public void testConstructRectangle(){
+		final boolean same = true;
+		Rectangle rectangleA = new Rectangle(0,0,0,0);
+		Rectangle rectangleB = new Rectangle(new Vector2f(0,0),0,0);
+		Rectangle rectangleC = new Rectangle(0,0);
+		Rectangle rectangleD = new Rectangle();
+		Rectangle rectangleE = new Rectangle(rectangleA);
+		assertEquals(same,rectangleA.equals(rectangleB));
+		assertEquals(same,rectangleA.equals(rectangleC));
+		assertEquals(same,rectangleA.equals(rectangleD));
+		assertEquals(same,rectangleA.equals(rectangleE));
+		assertEquals(same,rectangleB.equals(rectangleA));
+		assertEquals(same,rectangleB.equals(rectangleC));
+		assertEquals(same,rectangleB.equals(rectangleD));
+		assertEquals(same,rectangleB.equals(rectangleE));
+		assertEquals(same,rectangleC.equals(rectangleA));
+		assertEquals(same,rectangleC.equals(rectangleB));
+		assertEquals(same,rectangleC.equals(rectangleD));
+		assertEquals(same,rectangleC.equals(rectangleE));
+		assertEquals(same,rectangleD.equals(rectangleA));
+		assertEquals(same,rectangleD.equals(rectangleB));
+		assertEquals(same,rectangleD.equals(rectangleC));
+		assertEquals(same,rectangleD.equals(rectangleE));
+		assertEquals(same,rectangleE.equals(rectangleA));
+		assertEquals(same,rectangleE.equals(rectangleB));
+		assertEquals(same,rectangleE.equals(rectangleC));
+		assertEquals(same,rectangleE.equals(rectangleD));
+		assertEquals(0,rectangleA.getX());
+		assertEquals(0,rectangleA.getY());
+		assertEquals(0,rectangleA.getWidth());
+		assertEquals(0,rectangleA.getHeight());
+	}
 }
