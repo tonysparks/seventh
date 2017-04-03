@@ -183,4 +183,22 @@ public class RectangleTest {
 		assertEquals(noContain,rectangleA.contains(intersectedRectangle));
 		assertEquals(noContain,rectangleB.contains(intersectedRectangle));
 	}
+	
+	/*
+	 * Purpose: rectangle contain OBB
+	 * Input:
+	 * 		rectangle => (0,0) width 20 height 20
+	 * 		obb => center (5,5) width 10 height 10
+	 * Expected:
+	 * 		the rectangle contains obb
+	 */
+	@Test
+	public void testContainOBB(){
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangle = new Rectangle(0,0,20,20);
+		OBB oob = new OBB(0,5,5,10,10);
+		assertEquals(contain,rectangle.contains(oob));
+		assertNotEquals(noContain,rectangle.contains(oob));
+	}
 }
