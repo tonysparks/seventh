@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import seventh.math.FloatUtil;
 import seventh.math.Vector2f;
 
 public class Vector2fCoverageTest {
@@ -721,5 +722,187 @@ public class Vector2fCoverageTest {
 			assertTrue(dest.y == 4);
 	}
 	
+	/*
+	 * Purpose: test Vector2fEquals(a, b)
+	 * 		    check the return value
+	 *        
+	 * Input: 1) a(5,4), b(5,4)
+	 * 		  2) a(3,3), b(2,2)
+	 * Expected: 1) true
+	 * 		     2) false
+	 */
+	
+	@Test
+	public void VectorEqualsTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(5,4);
+			boolean expected = true;
+			boolean actual = a.Vector2fEquals(a, b);
+			assertTrue(actual == expected);
+			b.set(2,2);
+			expected = false;
+			actual = a.Vector2fEquals(a,b);
+			assertTrue(actual == expected);
+	}
+	
+	/*
+	 * Purpose: test Vector2fEquals(a, b)
+	 * 		    check the return value
+	 * 			test when a.x == b.x , a.y != b.y
+	 *        
+	 * Input: 1) a(5,4), b(5,2)
+	 * Expected: 1) false
+	 */
+	
+	@Test
+	public void VectorEqualsFalseTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(5,2);
+			boolean expected = false;
+			boolean actual = a.Vector2fEquals(a, b);
+			assertTrue(actual == expected);
+	}
+	
+	
+	/*
+	 * Purpose: test ApproxEquals(a, b)
+	 * 		    check the return value
+	 *        
+	 * Input:  a(5,4), b(5,4)
+	 * Expected:  true
+	 */
+	
+	@Test
+	public void ApproxEqualsTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(5,4);
+			boolean expected = FloatUtil.eq(5, 5) && FloatUtil.eq(4, 4);
+			boolean actual = a.Vector2fApproxEquals(a,b);
+			assertTrue(expected == actual);
+			
+	}
+	
+	
+	/*
+	 * Purpose: test ApproxEquals(a, b)
+	 * 		    check the return value
+	 *        
+	 * Input:  a(5,4), b(5,4)
+	 * Expected:  true
+	 */
+	
+	@Test
+	public void ApproxEqualsFalseFirTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(4,4);
+			boolean expected = FloatUtil.eq(5, 4) && FloatUtil.eq(4, 4);
+			boolean actual = a.Vector2fApproxEquals(a,b);
+			assertTrue(expected == actual);
+			
+	}
+	
+	/*
+	 * Purpose: test ApproxEquals(a, b)
+	 * 		    check the return value
+	 * 			a.x != b.x && a.y != b.y
+	 *        
+	 * Input:  a(5,4), b(4,3)
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void ApproxEqualsFalseSecTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(4,3);
+			boolean expected = FloatUtil.eq(5, 4) && FloatUtil.eq(4, 3);
+			boolean actual = a.Vector2fApproxEquals(a,b);
+			assertTrue(expected == actual);
+			
+	}
+	
+	/*
+	 * Purpose: test ApproxEquals(a, b)
+	 * 		    check the return value
+	 * 			a.x == b.x but a.y != b.y
+	 *        
+	 * Input:  a(5,4), b(5,3)
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void ApproxEqualsFalseThrTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(5,3);
+			boolean expected = FloatUtil.eq(5, 5) && FloatUtil.eq(4, 3);
+			boolean actual = a.Vector2fApproxEquals(a,b);
+			assertTrue(expected == actual);
+			
+	}
+	
+	
+	/*
+	 * Purpose: test ApproxEquals(a, b, epsilon)
+	 * 		    check the return value
+	 *        
+	 * Input:  a(5,4), b(5,4) epsilon = 5
+	 * Expected:  true(FloatUtil.eq(4, 4) && FloatUtil.eq(5, 5))
+	 */
+	
+	@Test
+	public void ApproxEqualsEpsTest() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(5,4);
+			float epsilon = 5;
+			float temp = FloatUtil.epsilon;
+			FloatUtil.epsilon = epsilon;
+			boolean expectedResult = FloatUtil.eq(5, 5) && FloatUtil.eq(4, 4);
+			boolean actualResult = a.Vector2fApproxEquals(a, b, epsilon);
+			assertTrue(expectedResult == actualResult);
+	}
+	
+
+	/*
+	 * Purpose: test ApproxEquals(a, b, epsilon)
+	 * 		    check the return value
+	 * 			a.x != b.x  && a.y == b.y
+	 *        
+	 * Input:  a(5,4), b(4,4) epsilon = 5
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void ApproxEqualsEpsTestSec() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(4,4);
+			float epsilon = 5;
+			float temp = FloatUtil.epsilon;
+			FloatUtil.epsilon = epsilon;
+			boolean expectedResult = FloatUtil.eq(5, 4) && FloatUtil.eq(4, 4);
+			boolean actualResult = a.Vector2fApproxEquals(a, b, epsilon);
+			assertTrue(expectedResult == actualResult);
+	}
+
+	/*
+	 * Purpose: test ApproxEquals(a, b, epsilon)
+	 * 		    check the return value
+	 * 			a.x != b.x && a.y != b.y
+	 *        
+	 * Input:  a(5,4), b(4,3) epsilon = 5
+	 * Expected:  false
+	 */
+	
+	@Test
+	public void ApproxEqualsEpsTestThr() {
+			Vector2f a = new Vector2f(5,4);
+			Vector2f b = new Vector2f(4,3);
+			float epsilon = 5;
+			float temp = FloatUtil.epsilon;
+			FloatUtil.epsilon = epsilon;
+			boolean expectedResult = FloatUtil.eq(5, 4) && FloatUtil.eq(4, 3);
+			boolean actualResult = a.Vector2fApproxEquals(a, b, epsilon);
+			assertTrue(expectedResult == actualResult);
+	}
+	
+
 
 }
