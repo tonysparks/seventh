@@ -153,6 +153,21 @@ public class ArrayMapTest {
 		test.containsValue(Value);
 		test.containsValue(Values);
 	}
+	
+	/*
+	 * purpose : test Get function in ArrayMap class.
+	 * input : K Key for "Key", V Value for "Value". and then call set function.
+	 * expected output: when calls get function for Key, then return value is "Value".
+	 * 
+	 */
+	@Test
+	public <K,V> void testGet(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		test.set(Key, Value);
+		assertEquals(test.get(Key),"Value");
+	}
 //	@Test
 //	public <K,V> void testNexti(){
 //		ArrayMap<K,V> test = new ArrayMap<K,V>();
