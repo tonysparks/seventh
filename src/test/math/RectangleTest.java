@@ -341,4 +341,25 @@ public class RectangleTest {
 		assertEquals(expectedheight,rectangle.getHeight());
 	}
 
+	/*
+	 * Purpose: make (0,0,0,0)rectangle to (1,2,3,4)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 * 		setBounds : Vector2f(1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 */
+	@Test
+	public void testSetBoundVector2f(){
+		final int expectedX = 1;
+		final int expectedY = 2;
+		final int expectedWidth = 3;
+		final int expectedheight = 4;
+		Rectangle rectangle = new Rectangle(0,0,0,0);
+		rectangle.setBounds(new Vector2f(1,2),3,4);
+		assertEquals(expectedX,rectangle.getX());
+		assertEquals(expectedY,rectangle.getY());
+		assertEquals(expectedWidth,rectangle.getWidth());
+		assertEquals(expectedheight,rectangle.getHeight());
+	}
 }
