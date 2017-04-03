@@ -22,9 +22,7 @@ public class ExecCommandTest {
 	public void tearDown() throws Exception {
 	}
 	/**
-	 * Test case for ExecCommand
-	 * @ExpectedOutput
-	 * Check the file path and read it 
+	 * Test case for ExecCommand 
 	 */
 	@Test
 	public void testExecute() {
