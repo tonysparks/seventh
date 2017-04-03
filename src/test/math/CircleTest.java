@@ -174,4 +174,21 @@ public class CircleTest {
 		assertNotEquals(noIntersect,Circle.circleIntersectsLine(circle, line));
 	}
 	
+	/*
+	 * Purpose: a line don't intersect Circle
+	 * Input: Circle => (0,0) radius 3, line => line(9,9)~(10,10) 
+	 * Expected: 
+	 * 			return FAILURE
+	 * 			line shouldn't have intersected the circle
+	 * 			However, the line intersect the circle
+	 */
+	@Test
+	public void testCircleNoIntersectLine(){
+		final boolean intersect = true;
+		final boolean noIntersect = false;
+		Circle circle = new Circle(new Vector2f(0,0),3);
+		Line line = new Line(new Vector2f(9,9),new Vector2f(10,10));
+		assertNotEquals(intersect,Circle.circleIntersectsLine(circle, line));
+		assertEquals(noIntersect,Circle.circleIntersectsLine(circle, line));
+	}
 }
