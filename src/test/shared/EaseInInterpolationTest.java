@@ -7,8 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.Assert;
-import seventh.shared.EaseInInterpolati
-import seventh.shared.TimeStep
+import seventh.shared.EaseInInterpolation;
 
 public class EaseInInterpolationTest {
 
@@ -50,7 +49,6 @@ public class EaseInInterpolationTest {
 		Assert.assertNotSame(expected, EI.getValue());
 	}
 
-
 	@Test
 	public void testUpdate() {
 		
@@ -59,46 +57,6 @@ public class EaseInInterpolationTest {
 	@Test
 	public void testIsExpired() {
 		
-
-	/**
-	 * Test the update function 
-	 * @Input TimeStep(GameClock : 80, DeltaTime : 40)
-	 * @ExpectedOutput EI's properties, RemainingTime is decreased by 40 every calling update()
-	 */
-	@Test
-	public void testUpdate() {
-		EaseInInterpolation EI = new EaseInInterpolation(100f,0f,60);
-		System.out.println(EI.getRemainingTime());
-		TimeStep TS = new TimeStep();
-		
-		TS.setGameClock(80);
-		TS.setDeltaTime(40);
-		EI.update(TS);
-		System.out.println(EI.getRemainingTime());
-		
-	}
-	/**
-	 * Test whether time Expired or not
-	 * Input TimeStep(GameClock : 60, DeltaTime : 30)
-	 * ExpectedOutput True
-	 */
-	@Test
-	public void testIsExpired() {
-		EaseInInterpolation EI = new EaseInInterpolation(60f,0f,60);
-		System.out.println(EI.getRemainingTime());
-		TimeStep TS = new TimeStep();
-		
-		TS.setGameClock(60);
-		TS.setDeltaTime(30);
-		EI.update(TS);
-		System.out.println(EI.getRemainingTime());
-		Assert.assertTrue(!EI.isExpired());
-		EI.update(TS);
-		System.out.println(EI.getRemainingTime());
-		
-		
-		Assert.assertTrue(EI.isExpired());
-
 	}
 
 	@Test
@@ -111,21 +69,9 @@ public class EaseInInterpolationTest {
 		
 	}
 
-
 	@Test
 	public void testGetTarget() {
 		
-    
-	/**
-	 * Test getTarget
-	 * @ExpectedOutput EI.target set 0f
-	 */
-	@Test
-	public void testGetTarget() {
-		EaseInInterpolation EI = new EaseInInterpolation(60f,0f,60);
-		final float expected = 0f;
-		Assert.assertEquals(expected, EI.getTarget(), 0.001);
-
 	}
 
 }
