@@ -24,129 +24,33 @@ public class ArrayMapTest {
 		assertNotNull(testOne);
 	}
 
+	/*
+	 * purpose : test set and rawset function in ArrayMap class.
+	 * input : K for "key", V for "value"
+	 * expected output : none. cause two function invoke another.
+	 */
+	@Test
+	public <K,V> void testSetAndrawSet() {
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		K Key = (K)"key";
+		V Value = (V)"value";
+		test.set(Key, Value);
+		assertNotNull(test);
+	}
+	
+
 //	@Test
-//	public void testHashget() {
-//		fail("Not yet implemented");
+//	public <K,V> void testHashset() {
+//		ArrayMap<K,V> test = new ArrayMap<K,V>();
+//		K Key = (K)"key";
+//		V Value = (V)"value";
+//		V nullValue = null;
+//		
+//		test.hashset(Key, Value);
+//		test.hashset(Key, nullValue);
+//		
 //	}
-//
-//	@Test
-//	public void testSet() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testRawset() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testLength() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testNexti() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testGetKey() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testGetValue() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testNextKey() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testNextValue() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testHashset() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testHashFindSlot() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testHashClearSlot() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testEqual() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testSize() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testIsEmpty() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testContainsKey() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testContainsValue() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testGet() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testPut() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testRemove() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testPutAll() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testClear() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testKeySet() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testValues() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testEntrySet() {
-//		fail("Not yet implemented");
-//	}
+
+
 
 }
