@@ -31,6 +31,8 @@ public class SeventhConfigTest {
 	public void testInvalidRootNode() throws Exception {
 		SeventhConfig seventhconfig = new SeventhConfig(validPath,invalidRootNode);
 	}
+
+
 	
 	/*
 	 * Purpose: valid seventhConfig construct
@@ -43,4 +45,5 @@ public class SeventhConfigTest {
 		SeventhConfig seventhconfig = new SeventhConfig(validPath,validRootNode);
 		assertTrue(seventhconfig instanceof SeventhConfig);
 	}
+
 }
