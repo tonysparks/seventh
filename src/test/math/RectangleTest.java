@@ -163,4 +163,24 @@ public class RectangleTest {
 		assertTrue(expectedRectangle.equals(intersectedRectangle));
 	}
 	
+	/*
+	 * Purpose: there is no rectangle that is intersection of two rectangle
+	 * Input:
+	 * 		rectangleA => (0,0) width 10 height 10
+	 * 		rectangleB => (20,20) width 10 height 10
+	 * Expected:
+	 * 		the rectangleA contains intersectedRectangle
+	 * 		the rectangleB contains intersectedRectangle
+	 * 		intersectedRectangle => (5,5) width 10 height 10
+	 */
+	@Test
+	public void testNoIntersectionRectangle() {
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangleA = new Rectangle(0,0,10,10);
+		Rectangle rectangleB = new Rectangle(20,20,10,10);
+		Rectangle intersectedRectangle = rectangleA.intersection(rectangleB);
+		assertEquals(noContain,rectangleA.contains(intersectedRectangle));
+		assertEquals(noContain,rectangleB.contains(intersectedRectangle));
+	}
 }
