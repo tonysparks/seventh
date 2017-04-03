@@ -7,6 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.Assert;
+import seventh.shared.EaseInInterpolation;
+import seventh.shared.TimeStep;
+
 import seventh.shared.EaseInInterpolati
 import seventh.shared.TimeStep
 
@@ -48,7 +51,7 @@ public class EaseInInterpolationTest {
 	
 		Assert.assertEquals(expected, EI.getValue(),0.0001);
 		Assert.assertNotSame(expected, EI.getValue());
-	}
+  }
 
 
 	@Test
@@ -60,8 +63,8 @@ public class EaseInInterpolationTest {
 	public void testIsExpired() {
 		
 
-	/**
-	 * Test the update function 
+
+	/**	 * Test the update function 
 	 * @Input TimeStep(GameClock : 80, DeltaTime : 40)
 	 * @ExpectedOutput EI's properties, RemainingTime is decreased by 40 every calling update()
 	 */
@@ -98,7 +101,6 @@ public class EaseInInterpolationTest {
 		
 		
 		Assert.assertTrue(EI.isExpired());
-
 	}
 
 	@Test
@@ -108,14 +110,14 @@ public class EaseInInterpolationTest {
 
 	@Test
 	public void testGetValue() {
-		
 	}
+
 
 
 	@Test
 	public void testGetTarget() {
 		
-    
+  }
 	/**
 	 * Test getTarget
 	 * @ExpectedOutput EI.target set 0f
@@ -125,7 +127,6 @@ public class EaseInInterpolationTest {
 		EaseInInterpolation EI = new EaseInInterpolation(60f,0f,60);
 		final float expected = 0f;
 		Assert.assertEquals(expected, EI.getTarget(), 0.001);
-
 	}
 
 }
