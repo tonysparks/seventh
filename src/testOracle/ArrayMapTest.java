@@ -277,19 +277,22 @@ public class ArrayMapTest {
 		assertTrue(test.nexti(Key)==0);		
 		
 	}
-//
-//	@Test
-//	public <K,V> void testHashset() {
-//		ArrayMap<K,V> test = new ArrayMap<K,V>(0);
-//		test.clear();
-//		K Key = (K)"key";
-//		V Value = (V)"value";
-//		V nullValue = null;
-//		test.clear();
-//		test.hashset(Key, Value);
-////		test.hashset(Key, nullValue);
-//		
-//	}
+	/*
+	 * purpose : test Hashset function in ArrayMap class.
+	 * input : Key,Value
+	 * expected output : ** do not complete for testing ** 
+	 */
+	@Test
+	public <K,V> void testHashset() {
+		ArrayMap<K,V> test = new ArrayMap<K,V>(0);
+		K Key = (K)"Key";
+		V Value = (V)"Value";
+		test.set(Key, Value);
+		test.hashset(Key, Value);
+		test.hashset(Key, null);
+		
+		
+	}
 
 
 
