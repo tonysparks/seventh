@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import seventh.math.Circle;
+import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
@@ -138,4 +139,28 @@ public class RectangleTest {
 		assertEquals(noContain,rectangle.contains(new Vector2f(10,10)));
 		assertNotEquals(contain,rectangle.contains(new Vector2f(10,10)));
 	}
+	
+	/*
+	 * Purpose: make rectangle that is intersection of two rectangle
+	 * Input:
+	 * 		rectangleA => (0,0) width 10 height 10
+	 * 		rectangleB => (5,5) width 10 height 10
+	 * Expected:
+	 * 		the rectangleA contains intersectedRectangle
+	 * 		the rectangleB contains intersectedRectangle
+	 * 		intersectedRectangle => (5,5) width 10 height 10
+	 */
+	@Test
+	public void testIntersectionRectangle() {
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangleA = new Rectangle(0,0,10,10);
+		Rectangle rectangleB = new Rectangle(5,5,10,10);
+		Rectangle expectedRectangle = new Rectangle(5,5,5,5);
+		Rectangle intersectedRectangle = rectangleA.intersection(rectangleB);
+		assertEquals(contain,rectangleA.contains(intersectedRectangle));
+		assertEquals(contain,rectangleB.contains(intersectedRectangle));
+		assertTrue(expectedRectangle.equals(intersectedRectangle));
+	}
+	
 }
