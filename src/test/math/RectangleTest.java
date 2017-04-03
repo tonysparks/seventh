@@ -82,4 +82,21 @@ public class RectangleTest {
 		assertNotEquals(noContain,rectangleA.contains(rectangleB));
 	}
 	
+	/*
+	 * Purpose: rectangleA don't contain rectangleB 
+	 * Input:
+	 * 		rectangleA => (0,0) width 2 height 2
+	 * 		rectangleB => (10,10) width 2 height 2
+	 * Expected:
+	 * 		the rectangleA don't contain rectangleB
+	 */
+	@Test
+	public void testRectangleNoContainRectangle() {
+		final boolean contain = true;
+		final boolean noContain = false;
+		Rectangle rectangleA = new Rectangle(0,0,2,2);
+		Rectangle rectangleB = new Rectangle(10,10,2,2);
+		assertEquals(noContain,rectangleA.contains(rectangleB));
+		assertNotEquals(contain,rectangleA.contains(rectangleB));
+	}
 }
