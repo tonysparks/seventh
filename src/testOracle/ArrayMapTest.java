@@ -179,6 +179,17 @@ public class ArrayMapTest {
 		assertEquals(test.getKey(0),null);
 	}
 	
+	/*
+	 * purpose : test getValue function in ArrayMap class.
+	 * input : ArrayMap class.
+	 * expected output: return value of getValue(0) is null.
+	 */
+	@Test
+	public <K,V> void testgetValue(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		assertEquals(test.getValue(0),null);
+	}
+	
 //	@Test
 //	public <K,V> void testNexti(){
 //		ArrayMap<K,V> test = new ArrayMap<K,V>();
