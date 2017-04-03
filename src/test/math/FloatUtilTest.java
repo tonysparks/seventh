@@ -377,4 +377,19 @@ public class FloatUtilTest {
 		assertEquals(0,a[0],0.00001f);
 		assertEquals(0,a[1],0.00001f);
 	}
+	
+	/*
+	 * Purpose:Determine if each array'element in same index is greater than another or equal
+	 * Input: float[], float[]
+	 * Expected: 
+	 * 			one array's all element is greater than another or equal, return true
+	 * 			unless return false
+	 */
+	@Test
+	public void Vector2fGreaterOrEqTest() {
+		float[] a={1.234f,2.323f};
+		float[] b={3.432f, 7.544f};
+		assertFalse(FloatUtil.Vector2fGreaterOrEq(a,b));
+		assertTrue(FloatUtil.Vector2fGreaterOrEq(b,a));
+	}
 }
