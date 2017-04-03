@@ -49,16 +49,38 @@ public class ArrayMapTest {
 		assertTrue(test.length()==0);
 	}
 	
-
+	/*
+	 * purpose : test Size function in ArrayMap class.
+	 * input : class creation.
+	 * expected output : return value is 0. cause nothing in hashEntries.
+	 */	
+	@Test
+	public <K,V> void testSize(){
+		ArrayMap<K,V> test = new ArrayMap<K,V>();
+		assertTrue(test.size()==0);
+	}
+	
 //	@Test
-//	public <K,V> void testHashset() {
+//	public <K,V> void testNexti(){
 //		ArrayMap<K,V> test = new ArrayMap<K,V>();
 //		K Key = (K)"key";
 //		V Value = (V)"value";
-//		V nullValue = null;
-//		
+//		K nullKey = null;
 //		test.hashset(Key, Value);
-//		test.hashset(Key, nullValue);
+//		assertTrue(test.nexti(nullKey)==-1);
+//		assertTrue(test.nexti(Key)==-1);
+//	}
+//
+//	@Test
+//	public <K,V> void testHashset() {
+//		ArrayMap<K,V> test = new ArrayMap<K,V>(0);
+//		test.clear();
+//		K Key = (K)"key";
+//		V Value = (V)"value";
+//		V nullValue = null;
+//		test.clear();
+//		test.hashset(Key, Value);
+////		test.hashset(Key, nullValue);
 //		
 //	}
 
