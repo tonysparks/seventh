@@ -936,7 +936,40 @@ public class Vector2fCoverageTest {
 			assertTrue(expected == actual);
 	}
 	
+	/*
+	 * Purpose: test Vector2fDistanceSq(Vector2f a, Vector2f b)
+	 * 		    check the return value
+	 *        
+	 * Input:  Vector2f a(6,4) b(5,3)
+	 * Expected:  2
+	 */
 	
+	@Test
+	public void Vector2fDistanceSqTest() {
+			Vector2f a = new Vector2f(6,4);
+			Vector2f b = new Vector2f(5,3);
+			float expected = (5 - 6) * (5 - 6) + (3 - 4) * (3 - 4);
+			float actual = Vector2f.Vector2fDistanceSq(a, b);
+			assertTrue(expected == actual);
+	}
+	
+	
+	/*
+	 * Purpose: test Vector2fDistance(Vector2f a, Vector2f b)
+	 * 		    check the return value
+	 *        
+	 * Input:  Vector2f a(6,4) b(5,3)
+	 * Expected:  (float)Math.sqrt(2);
+	 */
+	
+	@Test
+	public void Vector2fDistanceTest() {
+			Vector2f a = new Vector2f(6,4);
+			Vector2f b = new Vector2f(5,3);
+			float expected = (float)Math.sqrt((5 - 6) * (5 - 6) + (3 - 4) * (3 - 4));
+			float actual = Vector2f.Vector2fDistance(a, b);
+			assertTrue(expected == actual);
+	}
 	
 	
 
