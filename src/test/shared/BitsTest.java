@@ -1,4 +1,4 @@
-package testOracle;
+package test.shared;
 
 import static org.junit.Assert.*;
 
