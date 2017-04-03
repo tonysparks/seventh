@@ -28,12 +28,22 @@ public class BroadcastListenerTest {
 		BroadcastListener test = new BroadcastListener(20,"192.168.25.53",80);
 		test.addOnMessageReceivedListener(null);
 	}
+	/*
+	 * purpose : test start function in Broadcaster class.
+	 * input : mtu:20, groupAddress:192.168.25.53, port:80.
+	 * expected output : X, cause the function is only made for creation.
+	 */
+	@Test
+	public void testStart() {
+		BroadcastListener test = new BroadcastListener(20,"192.168.25.53",80);
+		try {
+			test.start();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-//	@Test
-//	public void testStart() {
-//		fail("Not yet implemented");
-//	}
-//
 //	@Test
 //	public void testClose() {
 //		fail("Not yet implemented");
