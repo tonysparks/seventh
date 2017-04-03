@@ -277,4 +277,24 @@ public class FloatUtilTest {
 		float expectd1 =1.234f * 1.234f + 2.323f * 2.323f ;
 		assertEquals(expectd1,FloatUtil.Vector2fLengthSq(a),0.00001f);
 	}
+	
+	/*
+	 * Purpose: get the normalized point(x,y) from one float point(x,y) 
+	 * Input: float[], float[]
+	 * Expected: 
+	 * 			 the normalized point(x,y) from one float point(x,y) 
+	 */
+	@Test
+	public void Vector2fNormalizeTest() {
+		float[] a={1.234f,2.323f};
+		float[] b={0.0f,0.0f};
+		float[] dest={0,0};
+		float fLen = 1.0f / ( (float)Math.sqrt( (1.234f * 1.234f + 2.323f * 2.323f) ));
+		float expectd1 = 1.234f * fLen;
+		float expectd2 = 2.323f * fLen;
+		FloatUtil.Vector2fNormalize(b, dest);
+		FloatUtil.Vector2fNormalize(a, dest);		
+		assertEquals(expectd1,dest[0],0.00001f);
+		assertEquals(expectd2,dest[1],0.00001f);
+	}
 }
