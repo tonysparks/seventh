@@ -1,4 +1,4 @@
-package Test.shared;
+package test.shared;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +22,7 @@ public class GeomTest {
 	@Test
 	public void test() {
 		Geom geom = new Geom();
-		Map map = new
+
 	}
 
 }
