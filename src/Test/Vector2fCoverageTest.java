@@ -1235,6 +1235,8 @@ public class Vector2fCoverageTest {
 			a.Vector2fWholeNumber(a, dest);
 	}
 	
+
+	
 	/*
 	 * Purpose: test Vector2fWholeNumber(Vector2f a, Vector2f dest)
 	 * 			test coverage
@@ -1248,6 +1250,47 @@ public class Vector2fCoverageTest {
 			Vector2f dest = new Vector2f(-2.2f, -1.8f);
 			a.Vector2fWholeNumber(a, dest);
 	}
+	
+	
+	/*
+	 * Purpose: test Vector2fInterpolate(Vector2f a, Vector2f b, float alpha, Vector2f dest)
+	 * 			
+	 * Input:  Vector2f a(3,4), b(4,5), alpha = 2, dest()
+	 * Expected:  dest.x = 5, dest.y = 6
+	 */
+	
+	@Test
+	public void Vector2fInterpolateTest() {
+			Vector2f a = new Vector2f(3,4);
+			Vector2f b = new Vector2f(4,5);
+			float alpha = 2;
+			Vector2f dest = new Vector2f();
+			a.Vector2fInterpolate(a, b, alpha, dest);
+			assertTrue(dest.x == 5);
+			assertTrue(dest.y == 6);
+	}
+	
+	/*
+	 * Purpose: test Vector2fLerp(Vector2f a, Vector2f b, float alpha, Vector2f dest)
+	 * 			
+	 * Input:  Vector2f a(3.0f,4.0f), b(4.0f,5.0f), alpha = 2.0f, dest()
+	 * Expected:  dest.x = 5, dest.y = 6
+	 */
+	
+	@Test
+	public void Vector2fLerpTest() {
+			Vector2f a = new Vector2f(3.0f,4.0f);
+			Vector2f b = new Vector2f(4.0f,5.0f);
+			float alpha = 2.0f;
+			Vector2f dest = new Vector2f();
+			float invAlpha = 1.0f - alpha;
+			float expectedX = (3.0f * invAlpha) + (4.0f * alpha);
+			float expectedY = (4.0f * invAlpha) + (5.0f * alpha);
+			a.Vector2fLerp(a, b, alpha, dest);
+			assertTrue(dest.x == expectedX);
+			assertTrue(dest.y == expectedY);
+	}
+	
 	
 
 }
