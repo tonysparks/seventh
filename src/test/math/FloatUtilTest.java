@@ -264,4 +264,17 @@ public class FloatUtilTest {
 		float expectd1 =(float)Math.sqrt( 1.234f * 1.234f + 2.323f * 2.323f) ;
 		assertEquals(expectd1,FloatUtil.Vector2fLength(a),0.00001f);
 	}
+	
+	/*
+	 * Purpose: get the length'square from zero point(0,0) to one float point(x,y) 
+	 * Input: float[]
+	 * Expected: 
+	 * 			the length'square from zero point(0,0) to one float point(x,y) 
+	 */
+	@Test
+	public void Vector2fLengthSqTest() {
+		float[] a={1.234f,2.323f};
+		float expectd1 =1.234f * 1.234f + 2.323f * 2.323f ;
+		assertEquals(expectd1,FloatUtil.Vector2fLengthSq(a),0.00001f);
+	}
 }
