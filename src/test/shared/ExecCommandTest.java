@@ -23,6 +23,7 @@ public class ExecCommandTest {
 	}
 	/**
 	 * Test case for ExecCommand
+	 * @ExpectedOutput
 	 * Check the file path and read it 
 	 */
 	@Test
