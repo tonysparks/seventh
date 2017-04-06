@@ -524,7 +524,7 @@ public abstract class Weapon {
      * @param timePinPulled the time the pin was pulled (effects distance)
      * @return the {@link Grenade}
      */
-    protected Entity newGrenade(int timePinPulled) {
+    protected Entity newGrenade(Type grenadeType, int timePinPulled) {
         Vector2f ownerDir = owner.getFacing();
         Vector2f ownerPos = owner.getCenterPos();
         Vector2f pos = new Vector2f(ownerPos.x + ownerDir.x * getGenadeSpawnDistance()
@@ -534,33 +534,23 @@ public abstract class Weapon {
         final int maxSpeed = 250;
         int speed = Math.min(120 + (timePinPulled*7), maxSpeed);                
         
-        Entity bullet = new Grenade(pos, speed, game, owner, vel, damage);
+        Entity grenade = null;
+        switch(grenadeType) {
+            case NAPALM_GRENADE: 
+                grenade = new NapalmGrenade(pos, speed, game, owner, vel, damage);
+                break;
+            case SMOKE_GRENADE:
+                grenade = new SmokeGrenade(pos, speed, game, owner, vel);
+                break;
+            default: {
+                grenade = new Grenade(pos, speed, game, owner, vel, damage);
+            }
+        }
                 
-        game.addEntity(bullet);        
-        return bullet;
+        game.addEntity(grenade);        
+        return grenade;
     }
-    
-    /**
-     * Spawns a new grenade
-     * @param timePinPulled the time the pin was pulled (effects distance)
-     * @return the {@link NapalmGrenade}
-     */
-    protected Entity newNapalmGrenade(int timePinPulled) {
-        Vector2f ownerDir = owner.getFacing();
-        Vector2f ownerPos = owner.getCenterPos();
-        Vector2f pos = new Vector2f(ownerPos.x + ownerDir.x * getGenadeSpawnDistance()
-                                  , ownerPos.y + ownerDir.y * getGenadeSpawnDistance());
-        
-        Vector2f vel = calculateVelocity(owner.getFacing());
-        final int maxSpeed = 250;
-        int speed = Math.min(120 + (timePinPulled*7), maxSpeed);                
-        
-        Entity bullet = new NapalmGrenade(pos, speed, game, owner, vel, damage);
-                
-        game.addEntity(bullet);        
-        return bullet;
-    }
-    
+       
     
     /**
      * Adds a new {@link Explosion}

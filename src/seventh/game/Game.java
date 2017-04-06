@@ -61,6 +61,7 @@ import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Fire;
+import seventh.game.weapons.Smoke;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
 import seventh.map.GraphNodeFactory;
@@ -1503,6 +1504,20 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.addEntity(explosion);
         return explosion;
     } 
+
+    /**
+     * Adds a new {@link Smoke}
+     * 
+     * @param pos
+     * @param owner
+     * @param damage
+     * @return the {@link Smoke}
+     */
+    public Smoke newSmoke(Vector2f pos, int speed, Vector2f vel, Entity owner) {
+        Smoke smoke = new Smoke(pos, speed, this, vel);      
+        this.addEntity(smoke);
+        return smoke;
+    }    
     
     /**
      * Adds a new {@link Fire}
