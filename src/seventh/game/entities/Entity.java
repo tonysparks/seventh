@@ -119,6 +119,7 @@ public abstract class Entity implements Debugable {
         BULLET,
         EXPLOSION,
         FIRE,
+        SMOKE,
         AMMO,
         ROCKET,
         
@@ -137,6 +138,7 @@ public abstract class Entity implements Debugable {
         SHOTGUN,
         ROCKET_LAUNCHER,
         GRENADE,
+        SMOKE_GRENADE,
         NAPALM_GRENADE,
         PISTOL,
         

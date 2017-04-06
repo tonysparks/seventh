@@ -227,7 +227,7 @@ public class PlayerEntity extends Entity implements Controllable {
     }
         
     private void setupCommonWeapons() {        
-        this.inventory.addItem(new GrenadeBelt(game, this));
+        this.inventory.addItem(new GrenadeBelt(game, this, Type.SMOKE_GRENADE));
         this.inventory.addItem(new Pistol(game, this));
     }
     

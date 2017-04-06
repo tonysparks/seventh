@@ -16,7 +16,6 @@ import seventh.game.net.NetEntity;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
 
 /**
  * @author Tony
