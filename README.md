@@ -56,7 +56,7 @@ Build from Source
 ===
 * Download the source code from github:
  - git clone https://github.com/tonysparks/seventh
-* Download the game assets from [here](https://dl.dropboxusercontent.com/u/11954191/seventh.zip) 
+* Download the game assets from [here](https://www.dropbox.com/s/srxcko8c3qvc3m8/seventh.zip?dl=0)
 * Open the seventh.zip file and copy the *seventh/assets* folder into your project folder
   - folder structure should look like this:
   ```
