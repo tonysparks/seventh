@@ -38,8 +38,9 @@ public class Timer implements Updatable {
     /**
      * @param endTime the endTime to set
      */
-    public void setEndTime(long endTime) {
+    public Timer setEndTime(long endTime) {
         this.endTime = endTime;
+        return this;
     }
     
     /**
@@ -77,24 +78,28 @@ public class Timer implements Updatable {
         return loop;
     }
     
-    public void reset() {
+    public Timer reset() {
         this.currentTime = 0;
         this.update = true;
         this.isTime = false;
+        return this;
     }
     
-    public void stop() {
+    public Timer stop() {
         this.currentTime = 0;
         this.isTime = false;
         this.update = false;
+        return this;
     }
 
-    public void start() {
+    public Timer start() {
         this.update = true;
+        return this;
     }
 
-    public void pause() {
+    public Timer pause() {
         this.update = false;
+        return this;
     }
 
     public boolean isExpired() {
@@ -104,8 +109,9 @@ public class Timer implements Updatable {
     /**
      * Move the remaining time to 0
      */
-    public void expire() {
+    public Timer expire() {
         this.currentTime = this.endTime;
+        return this;
     }
     
     /**

@@ -156,14 +156,22 @@ public class Emitters {
         return newSmokeEmitter(pos, emitterTimeToLive, 35, 0.55f, 1.2f);        
     }
     
-    public static Emitter newSmokeEmitter(Vector2f pos, int emitterTimeToLive, int maxSpread, float minSize, float maxSize) {
+    public static Emitter newSmokeEmitter(Vector2f pos, int emitterTimeToLive, int colorStart, int colorEnd) {        
+        return newSmokeEmitter(pos, emitterTimeToLive, colorStart, colorEnd, 35, 0.55f, 1.2f);
+    }
+    
+    public static Emitter newSmokeEmitter(Vector2f pos, int emitterTimeToLive, int maxSpread, float minSize, float maxSize) {        
+        return newSmokeEmitter(pos, emitterTimeToLive, 0x838B8Bff, 0x838B83ff, maxSpread, minSize, maxSize);
+    }
+    
+    public static Emitter newSmokeEmitter(Vector2f pos, int emitterTimeToLive, int colorStart, int colorEnd, int maxSpread, float minSize, float maxSize) {
         int maxParticles = 1500;
                 
         Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
                                 .setName("SmokeEmitter")
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(100, 4)
-           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0x838B8Bff),new Color(0x838B83ff)))
+           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(colorStart), new Color(colorEnd)))
            .addSingleParticleGenerator(new SingleParticleGenerator() {
                 
                 @Override

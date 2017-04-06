@@ -58,6 +58,7 @@ public enum SoundType {
     
     GRENADE_PINPULLED,
     GRENADE_THROW,
+    SMOKE_GRENADE,
     
     MELEE_SWING,
     MELEE_HIT,

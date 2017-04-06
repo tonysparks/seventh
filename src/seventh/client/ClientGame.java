@@ -26,6 +26,7 @@ import seventh.client.entities.ClientHealthPack;
 import seventh.client.entities.ClientLightBulb;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.entities.ClientRocket;
+import seventh.client.entities.ClientSmoke;
 import seventh.client.entities.vehicles.ClientPanzerTank;
 import seventh.client.entities.vehicles.ClientShermanTank;
 import seventh.client.entities.vehicles.ClientVehicle;
@@ -934,6 +935,7 @@ public class ClientGame {
                 
                 break;
             }
+            case SMOKE_GRENADE:
             case NAPALM_GRENADE:
             case GRENADE: {
                 entity = new ClientGrenade(this, pos);
@@ -943,7 +945,10 @@ public class ClientGame {
                 entity = new ClientDroppedItem(this, pos);
                 break;
             }
-            
+            case SMOKE: {
+                entity = new ClientSmoke(this, pos);
+                break;
+            }
             case FIRE:             
             case EXPLOSION: {
                 if(type==Type.EXPLOSION) {
