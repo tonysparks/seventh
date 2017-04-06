@@ -7,9 +7,9 @@ import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetSmoke;
+import seventh.map.Map;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
 import seventh.shared.TimeStep;
 
 /**
@@ -33,19 +33,13 @@ public class Smoke extends Entity {
                 
         this.targetVel = targetVel;
         
-        this.bounds.width = 64;
-        this.bounds.height = 64;
+        this.bounds.width = 4;
+        this.bounds.height = 4;
                 
         this.torchTime = 10_000;
         
         this.netEntity = new NetSmoke();
-                
-//        this.onTouch = new OnTouchListener() {
-//            
-//            @Override
-//            public void onTouch(Entity me, Entity other) {                
-//            }
-//        };
+        this.collisionHeightMask = 0;                
     }
     
     
@@ -57,7 +51,28 @@ public class Smoke extends Entity {
         this.vel.set(this.targetVel);
         boolean isBlocked = super.update(timeStep);
                 
-        //game.doesTouchPlayers(this);
+        Map map = game.getMap();
+        
+        // grow the hit box
+        // TODO: Hide players who
+        // are within the bounds of smoke
+        // to prevent cheating!!
+        if(bounds.width < 64) {
+            bounds.width += 1;
+            if( map.rectCollides(bounds, 0) ) {
+                isBlocked = true;
+                bounds.width -= 1;
+                                
+            }        
+        }
+        
+        if(bounds.height < 64) {
+            bounds.height += 1;
+            if( map.rectCollides(bounds, 0)) {
+                isBlocked = true;
+                bounds.height -= 1;
+            }
+        }
         
         torchTime -= timeStep.getDeltaTime();
         if(torchTime <= 0 ) {
@@ -67,12 +82,14 @@ public class Smoke extends Entity {
         if(this.speed > 0) {
             this.speed -= 1;
         }
+        
         int min = 10;
         if(speed < min) {
             speed = min;
         }
         
-        DebugDraw.drawRectRelative(this.bounds, 0xff00ffff);
+        
+        //DebugDraw.drawRectRelative(this.bounds, 0x0a00ffff);
 
         return isBlocked;
     }
