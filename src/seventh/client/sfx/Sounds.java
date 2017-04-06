@@ -174,6 +174,8 @@ public class Sounds {
     public static final int[] doorCloseBlocked = {171,172,173};
     public static final int[] doorOpenBlocked = {174};
     
+    public static final int[] smokeGrenade = {175};
+    
     
     public static final int[][] alliedSpeeches = {
             alliedSpeechAttack,
@@ -434,6 +436,8 @@ public class Sounds {
             loadSound("./assets/sfx/door/door_close_blocked03.wav") ,   // 173
             
             loadSound("./assets/sfx/door/door_open_blocked01.wav") ,   // 174
+            
+            loadSound("./assets/sfx/grenade/smoke_grenade.wav") ,   // 175
         };
     };
 
@@ -757,6 +761,9 @@ public class Sounds {
             break;            
         case GRENADE_THROW:
             sound = grenadeThrow;
+            break;
+        case SMOKE_GRENADE:
+            sound = smokeGrenade;
             break;
             
         case SHOTGUN_FIRE:
