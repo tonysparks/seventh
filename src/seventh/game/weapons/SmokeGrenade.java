@@ -6,6 +6,7 @@ package seventh.game.weapons;
 import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -72,20 +73,14 @@ public class SmokeGrenade extends Grenade {
         if(this.emitSmokeTimer.isOnFirstTime()) {
             Vector2f vel = new Vector2f(1, 0);
             Vector2f.Vector2fRotate(vel, Math.toRadians(game.getRandom().nextInt(360)), vel);            
-            Smoke smoke = game.newSmoke(getPos().createClone(), 50, vel, getOwner());
-            Vector2f center = getPos();
-            int radius = 150;
-            Vector2f spawn = game.findFreeRandomSpot(smoke, (int)center.x - radius, (int)center.y - radius, radius*2, radius*2);
-            if(spawn!=null) {
-                smoke.getPos().set(spawn);
-            }
+            game.newSmoke(getPos().createClone(), 50, vel, getOwner());
         }
         
         if(this.timeToLive.isTime()) {
             kill(this);
         }
         
-        if(!this.timeToLive.isUpdating()) {
+        if(this.isAlive() && !this.timeToLive.isUpdating()) {
             return super.update(timeStep);
         }
         
@@ -96,8 +91,9 @@ public class SmokeGrenade extends Grenade {
     
     @Override
     protected void onBlowUp() {
-        this.emitSmokeTimer.start();
+        this.emitSmokeTimer.expire().start();
         this.timeToLive.start();
+        game.emitSound(getId(), SoundType.SMOKE_GRENADE, getCenterPos());
     }
 
 }
