@@ -5,8 +5,10 @@ package seventh.client.gfx;
 
 
 import seventh.math.Rectangle;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
+import seventh.ui.Label;
 import seventh.ui.view.ButtonView;
 import seventh.ui.view.ImageButtonView;
 import seventh.ui.view.LabelView;
@@ -20,6 +22,10 @@ public class WeaponClassDialogView implements Renderable {
 
     private WeaponClassDialog dialog;
     private PanelView panelView;
+    private Button[] weaponBtns;
+    private Label[] weaponDescriptions;
+    private Vector2f origin;
+    
     /**
      * 
      */
@@ -30,16 +36,23 @@ public class WeaponClassDialogView implements Renderable {
         this.panelView.addElement(new LabelView(dialog.getTitle()));
         this.panelView.addElement(new ButtonView(dialog.getCancelBtn()));
         
-        Button[] btns = dialog.getWeaponClasses();
+        this.origin = new Vector2f();
+        
+        Button[] btns = dialog.getWeaponClasses();                
+        this.weaponBtns = btns;
+        
         if(btns.length != 6) {
             throw new IllegalArgumentException("Don't have all the weapons defined!");
         }
+        
+        this.origin.set(this.weaponBtns[0].getBounds().x, this.weaponBtns[0].getBounds().y);
         
         switch(dialog.getTeam()) {
             case ALLIES:
                 this.panelView.addElement(new ImageButtonView(btns[0], Art.thompsonIcon));                
                 this.panelView.addElement(new ImageButtonView(btns[1], Art.m1GarandIcon));
-                this.panelView.addElement(new ImageButtonView(btns[2], Art.springfieldIcon));            
+                this.panelView.addElement(new ImageButtonView(btns[2], Art.springfieldIcon));
+                
                 break;
             case AXIS:
                 this.panelView.addElement(new ImageButtonView(btns[0], Art.mp40Icon));
@@ -52,10 +65,16 @@ public class WeaponClassDialogView implements Renderable {
         
         this.panelView.addElement(new ImageButtonView(btns[3], Art.riskerIcon));
         this.panelView.addElement(new ImageButtonView(btns[4], Art.shotgunIcon));
-        this.panelView.addElement(new ImageButtonView(btns[5], Art.rocketIcon)); 
+        this.panelView.addElement(new ImageButtonView(btns[5], Art.rocketIcon));
+        
+        this.weaponDescriptions = dialog.getWeaponClassDescriptions();
+        for(Label lbl : this.weaponDescriptions) {
+            this.panelView.addElement(new LabelView(lbl));
+        }
+        
         
     }
-            
+               
     
     public void clear() {
         this.panelView.clear();
@@ -67,6 +86,32 @@ public class WeaponClassDialogView implements Renderable {
     @Override
     public void update(TimeStep timeStep) {
         this.panelView.update(timeStep);
+        
+        final int openSpeed = 15;
+        final int closeSpeed = 9;
+        final int maxMoveBy = 100;
+        
+        for(int i = 0; i < this.weaponBtns.length; i++) {
+            Button btn = this.weaponBtns[i];
+            if(btn.isHovering()) {
+                if( btn.getBounds().x > this.origin.x - maxMoveBy ) {
+                    btn.getBounds().x -= openSpeed;                    
+                }
+                else {
+                    btn.getBounds().x = (int)this.origin.x - maxMoveBy;
+                    this.weaponDescriptions[i].show();
+                }
+            }
+            else {
+                if( btn.getBounds().x < this.origin.x  ) {
+                    btn.getBounds().x += closeSpeed;
+                    this.weaponDescriptions[i].hide();
+                }
+                else {
+                    btn.getBounds().x = (int)this.origin.x;
+                }
+            }
+        }
     }
 
     /* (non-Javadoc)
