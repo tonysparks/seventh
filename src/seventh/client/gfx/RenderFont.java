@@ -10,6 +10,11 @@ package seventh.client.gfx;
  */
 public class RenderFont {
 
+    public static void drawShadedString(Canvas canvas, String str, int x, int y, Integer color, boolean drawShadow) {
+        if(drawShadow) canvas.drawString(str, x-2, y+1, 0xff000000);
+        canvas.drawString(str, x, y, color);
+    }
+    
     /**
      * Draws a shaded string
      * @param canvas

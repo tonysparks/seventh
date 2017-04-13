@@ -18,6 +18,19 @@ import seventh.shared.TimeStep;
  */
 public class GrenadeBelt extends Weapon {
         
+    public static GrenadeBelt newFrag(Game game, Entity owner, int amount) {
+        GrenadeBelt belt = new GrenadeBelt(game, owner, Type.GRENADE);
+        belt.bulletsInClip = amount;
+        return belt;
+    }
+    
+    public static GrenadeBelt newSmoke(Game game, Entity owner, int amount) {
+        GrenadeBelt belt = new GrenadeBelt(game, owner, Type.SMOKE_GRENADE);
+        belt.bulletsInClip = amount;
+        return belt;
+    }
+    
+    
     private final int nextShotTime;
     private int timePinPulled;
     private boolean isPinPulled;
@@ -52,7 +65,7 @@ public class GrenadeBelt extends Weapon {
     public boolean isPrimary() {    
         return false;
     }
-    
+        
     public int getNumberOfGrenades() {
         return this.bulletsInClip;
     }

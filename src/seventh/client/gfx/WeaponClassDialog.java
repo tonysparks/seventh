@@ -3,8 +3,6 @@
  */
 package seventh.client.gfx;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.ClientTeam;
 import seventh.client.network.ClientConnection;
@@ -132,7 +130,7 @@ public class WeaponClassDialog extends Widget {
         pos.x = bounds.x + 120;
         pos.y = bounds.y + 70;
         
-        int yInc = 95;
+        int yInc = 90;
         
         
         for(int i = 0; i < weaponClasses.length; i++) {
@@ -201,7 +199,7 @@ public class WeaponClassDialog extends Widget {
             case SPRINGFIELD:                
                 message = "Springfield | 5/35 rnds\n" +
                           "Pistol | 9/27 rnds \n" +
-                          "2 Frag Grenades";
+                          "1 Frag Grenades";
                 break;
             case MP40:
                 message = "MP40 | 32/160 rnds\n" +
@@ -240,7 +238,7 @@ public class WeaponClassDialog extends Widget {
     
     private Button setupButton(Vector2f pos, final Type type) {
         final Button btn = new Button();
-        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, getBounds().width, 80));
+        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, 320, 80));
         btn.setBorder(false);
 //        btn.setText(getClassDescription(type));
 //        btn.setTextSize(12);
@@ -270,9 +268,11 @@ public class WeaponClassDialog extends Widget {
     
     private Label setupLabel(Vector2f pos, final Type type) {
         Label lbl = new Label(this.getClassDescription(type));
-        lbl.setBounds(new Rectangle((int)pos.x + 130, (int)pos.y, 220, 80));
+        lbl.setBounds(new Rectangle((int)pos.x + 80, (int)pos.y, 220, 80));
         lbl.setTextSize(14);
-        lbl.setForegroundColor(this.theme.getForegroundColor());
+        lbl.setForegroundColor(this.theme.getForegroundColor()); //0xff363e0f
+        lbl.setShadow(false);
+        lbl.setFont("Consola");
         lbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         lbl.setVerticalTextAlignment(TextAlignment.TOP);
         lbl.hide();

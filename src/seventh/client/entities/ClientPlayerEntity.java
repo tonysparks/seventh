@@ -69,6 +69,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     private ClientPlayer player;
     private ClientWeapon weapon;
     private byte numberOfGrenades;
+    private boolean isSmokeGrenades;
         
     private int weaponWeight;
     
@@ -253,6 +254,13 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     }
     
     /**
+     * @return the isSmokeGrenades
+     */
+    public boolean isSmokeGrenades() {
+        return isSmokeGrenades;
+    }
+    
+    /**
      * @return the stamina
      */
     public int getStamina() {
@@ -337,6 +345,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             this.stamina = ps.stamina;
             
             this.numberOfGrenades = ps.grenades;
+            this.isSmokeGrenades = ps.isSmokeGrenades;
             
             if(ps.isOperatingVehicle) {
                 if(this.vehicle == null || this.vehicle.getId() != ps.vehicleId) {

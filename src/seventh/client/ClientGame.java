@@ -947,7 +947,7 @@ public class ClientGame {
             case SMOKE_GRENADE:
             case NAPALM_GRENADE:
             case GRENADE: {
-                entity = new ClientGrenade(this, pos);
+                entity = new ClientGrenade(this, pos, type);
                 break;
             }
             case DROPPED_ITEM: {

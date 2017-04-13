@@ -65,6 +65,7 @@ public class Label extends Widget {
      * Ignore carriage return
      */
     private boolean ignoreCR;
+    private boolean shadow;
     
     /**
      * @param text
@@ -73,6 +74,7 @@ public class Label extends Widget {
         this.text = text;
         this.textSize = 12;
         this.ignoreCR = true;
+        this.shadow = true;
         
         this.horizontalTextAlignment = TextAlignment.CENTER;
         this.verticalTextAlignment = TextAlignment.CENTER;
@@ -126,6 +128,20 @@ public class Label extends Widget {
      */
     public void setTextSize(float textSize) {
         this.textSize = textSize;
+    }
+    
+    /**
+     * @return the shadow
+     */
+    public boolean isShadowed() {
+        return shadow;
+    }
+    
+    /**
+     * @param shadow the shadow to set
+     */
+    public void setShadow(boolean shadow) {
+        this.shadow = shadow;
     }
 
     /**

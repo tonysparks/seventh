@@ -177,58 +177,63 @@ public class PlayerEntity extends Entity implements Controllable {
      * 
      * @param weaponClass
      */
-    public void setWeaponClass(Type weaponClass) {    
-        Weapon weapon = null;
+    public void setWeaponClass(Type weaponClass) {
+        this.inventory.clear();
+        
         switch(weaponClass) {        
             case KAR98:
-                weapon = new Kar98(game, this);
+                this.inventory.addItem(new Kar98(game, this));
+                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 1));
                 break;        
             case MP40:
-                weapon = new MP40(game, this);
+                this.inventory.addItem(new MP40(game, this));
+                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
                 break;
             case MP44:
-                weapon = new MP44(game, this);
+                this.inventory.addItem(new MP44(game, this));
+                this.inventory.addItem(GrenadeBelt.newSmoke(game, this, 2));
                 break;        
             case ROCKET_LAUNCHER:
-                weapon = new RocketLauncher(game, this);
+                this.inventory.addItem(new RocketLauncher(game, this));
+                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 5));
                 break;
             case SHOTGUN:
-                weapon = new Shotgun(game, this);
+                this.inventory.addItem(new Shotgun(game, this));
                 break;
             case SPRINGFIELD:
-                weapon = new Springfield(game, this);
+                this.inventory.addItem(new Springfield(game, this));
+                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 1));
                 break;        
             case M1_GARAND:
-                weapon = new M1Garand(game, this);
+                this.inventory.addItem(new M1Garand(game, this));
+                this.inventory.addItem(GrenadeBelt.newSmoke(game, this, 2));
                 break;
             case THOMPSON:
-                weapon = new Thompson(game, this);
+                this.inventory.addItem(new Thompson(game, this));
+                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
                 break;            
             case RISKER: 
-                weapon = new Risker(game, this);
+                this.inventory.addItem(new Risker(game, this));
                 break;
             default:
                 if(team != null) {
                     if(team.getId() == Team.ALLIED_TEAM_ID) {
-                        weapon = new Thompson(game, this);
+                        this.inventory.addItem(new Thompson(game, this));
                     }
                     else {
-                        weapon = new MP40(game, this);
+                        this.inventory.addItem(new MP40(game, this));
                     }
+                    this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
                 }
                 
                 break;        
         }
-        
-        this.inventory.clear();
-        this.inventory.addItem(weapon);
-        
+                
         setupCommonWeapons();
         checkLineOfSightChange();
     }
         
     private void setupCommonWeapons() {        
-        this.inventory.addItem(new GrenadeBelt(game, this, Type.SMOKE_GRENADE));
         this.inventory.addItem(new Pistol(game, this));
     }
     
@@ -1659,8 +1664,16 @@ public class PlayerEntity extends Entity implements Controllable {
         setNetEntity(player);
         player.orientation = (short) Math.toDegrees(this.orientation);
 
-        player.state = currentState.netValue();                
-        player.grenades = (byte)inventory.getGrenades().getNumberOfGrenades();
+        player.state = currentState.netValue();
+        
+        if(inventory.hasGrenades()) {
+            GrenadeBelt belt = inventory.getGrenades();
+            player.grenades = (byte)belt.getNumberOfGrenades();
+            player.isSmokeGrenades = belt.getType() == Type.SMOKE_GRENADE;
+        }
+        else {
+            player.grenades = 0;
+        }
         
         player.health = (byte)getHealth(); 
 //        player.events = (byte)getEvents();

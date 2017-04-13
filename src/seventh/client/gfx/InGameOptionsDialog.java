@@ -51,7 +51,7 @@ public class InGameOptionsDialog extends Widget {
         this.theme = theme;
                 
         this.weaponDialog = new WeaponClassDialog(this, network, theme);
-        this.weaponDialog.setBounds(new Rectangle(450, 680));
+        this.weaponDialog.setBounds(new Rectangle(400, 680));
         this.weaponDialog.hide();
         
         this.switchTeamDialog = new SwitchTeamDialog(this, console, theme);        

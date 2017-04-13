@@ -133,14 +133,14 @@ public class KillLog implements Renderable {
                     switch(m.mod) {
                         case EXPLOSION: {
                             RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
-                            canvas.drawImage(Art.grenadeImage, startX-killedLength-iconLength+10, y-16, null);
+                            canvas.drawImage(Art.fragGrenadeImage, startX-killedLength-iconLength+10, y-16, null);
                             RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
                             break;
                         }
                         case NAPALM_GRENADE:
                         case GRENADE: {
                             RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
-                            canvas.drawImage(Art.grenadeImage, startX-killedLength-iconLength, y-10, null);
+                            canvas.drawImage(Art.fragGrenadeImage, startX-killedLength-iconLength, y-10, null);
                             RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
                             break;
                         }
