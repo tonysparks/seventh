@@ -68,6 +68,13 @@ public class ClientDoor extends ClientEntity {
         
     }
     
+    /**
+     * @return the frontDoorHandle
+     */
+    public Vector2f getHandle() {
+        return frontDoorHandle;
+    }
+    
     @Override
     public boolean killIfOutdated(long gameClock) {    
         return false;

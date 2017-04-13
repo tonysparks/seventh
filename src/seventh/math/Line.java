@@ -113,8 +113,6 @@ public class Line {
         return lineIntersectsRectangle(l.a, l.b, rect);
     }
     
-    private static Line2D cacheLine = new Line2D.Float();
-    private static java.awt.Rectangle cacheRect = new java.awt.Rectangle();
     /**
      * Determine if a line intersects with a {@link Rectangle}.
      * 
@@ -125,10 +123,7 @@ public class Line {
         //Line2D line = new Line2D.Float(v1.x, v1.y, v2.x, v2.y);        
         //return line.intersects(new java.awt.Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()));
         
-        // limit GC activity
-        cacheLine.setLine(v1.x, v1.y, v2.x, v2.y);
-        cacheRect.setBounds(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-        return cacheLine.intersects(cacheRect);
+        return intersectsLine(rect, v1.x, v1.y, v2.x, v2.y);
         
 //        
 //        int x = rect.getX();
@@ -155,6 +150,112 @@ public class Line {
 //        
 //        // no collision
 //        return false;
+    }
+    
+    /**
+     * The bitmask that indicates that a point lies to the left of
+     * this <code>Rectangle2D</code>.
+     * @since 1.2
+     */
+    private static final int OUT_LEFT = 1;
+
+    /**
+     * The bitmask that indicates that a point lies above
+     * this <code>Rectangle2D</code>.
+     * @since 1.2
+     */
+    private static final int OUT_TOP = 2;
+
+    /**
+     * The bitmask that indicates that a point lies to the right of
+     * this <code>Rectangle2D</code>.
+     * @since 1.2
+     */
+    private static final int OUT_RIGHT = 4;
+
+    /**
+     * The bitmask that indicates that a point lies below
+     * this <code>Rectangle2D</code>.
+     * @since 1.2
+     */
+    private static final int OUT_BOTTOM = 8;
+
+    
+    /**
+     * {@inheritDoc}
+     * @since 1.2
+     */
+    private static int outcode(Rectangle r, float x, float y) {
+        /*
+         * Note on casts to double below.  If the arithmetic of
+         * x+w or y+h is done in int, then we may get integer
+         * overflow. By converting to double before the addition
+         * we force the addition to be carried out in double to
+         * avoid overflow in the comparison.
+         *
+         * See bug 4320890 for problems that this can cause.
+         */
+        int out = 0;
+        if (r.width <= 0) {
+            out |= OUT_LEFT | OUT_RIGHT;
+        } else if (x < r.x) {
+            out |= OUT_LEFT;
+        } else if (x > r.x + (float) r.width) {
+            out |= OUT_RIGHT;
+        }
+        if (r.height <= 0) {
+            out |= OUT_TOP | OUT_BOTTOM;
+        } else if (y < r.y) {
+            out |= OUT_TOP;
+        } else if (y > r.y + (float) r.height) {
+            out |= OUT_BOTTOM;
+        }
+        return out;
+    }
+    
+    /**
+     * Tests if the specified line segment intersects the interior of this
+     * <code>Rectangle2D</code>.
+     *
+     * @param x1 the X coordinate of the start point of the specified
+     *           line segment
+     * @param y1 the Y coordinate of the start point of the specified
+     *           line segment
+     * @param x2 the X coordinate of the end point of the specified
+     *           line segment
+     * @param y2 the Y coordinate of the end point of the specified
+     *           line segment
+     * @return <code>true</code> if the specified line segment intersects
+     * the interior of this <code>Rectangle2D</code>; <code>false</code>
+     * otherwise.
+     * @since 1.2
+     */
+    private static boolean intersectsLine(Rectangle r, float x1, float y1, float x2, float y2) {
+        int out1, out2;
+        if ((out2 = outcode(r, x2, y2)) == 0) {
+            return true;
+        }
+        while ((out1 = outcode(r, x1, y1)) != 0) {
+            if ((out1 & out2) != 0) {
+                return false;
+            }
+            if ((out1 & (OUT_LEFT | OUT_RIGHT)) != 0) {
+                float x = (float)r.x;
+                if ((out1 & OUT_RIGHT) != 0) {
+                    x += r.width;
+                }
+                y1 = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+                x1 = x;
+            } else {
+                float y = (float)r.y;
+                if ((out1 & OUT_BOTTOM) != 0) {
+                    y += r.height;
+                }
+                x1 = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
+                y1 = y;
+            }
+        }
+        return true;
     }
     
     /**

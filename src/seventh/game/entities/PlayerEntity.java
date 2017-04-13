@@ -42,6 +42,7 @@ import seventh.game.weapons.Pistol;
 import seventh.game.weapons.Risker;
 import seventh.game.weapons.RocketLauncher;
 import seventh.game.weapons.Shotgun;
+import seventh.game.weapons.Smoke;
 import seventh.game.weapons.Springfield;
 import seventh.game.weapons.Thompson;
 import seventh.game.weapons.Weapon;
@@ -1429,24 +1430,75 @@ public class PlayerEntity extends Entity implements Controllable {
         List<Door> doors = game.getDoors();
         int doorSize = doors.size();
         
+        Vector2f centerPos = getCenterPos();
         
         for(int j = 0; j < doorSize; j++ ) {
             Door door = doors.get(j);
             if(this.visualBounds.intersects(door.getBounds())) {        
                 for(int i = 0; i < tileSize; i++) {
                     Tile tile = tiles.get(i);
-                    if(Line.lineIntersectLine(getCenterPos(), tile.getCenterPos(), 
-                                           door.getPos(), door.getHandle())) {
+                    if(Line.lineIntersectLine(centerPos, tile.getCenterPos(), 
+                                              door.getPos(), door.getHandle())) {
                         tile.setMask(Tile.TILE_INVISIBLE);
                     }
                 }
             }
         }
         
+        /*
+        List<Smoke> smoke = game.getSmokeEntities();
+        int smokeSize = smoke.size();
+        
+        if(smokeSize > 0) {
+            for(int j = 0; j < smokeSize; j++) {
+                Smoke s = smoke.get(j);
+                if(this.visualBounds.intersects(s.getBounds())) {
+                    for(int i = 0; i < tileSize; i++) {
+                        Tile tile = tiles.get(i);
+                        if(tile.getMask() > 0) {                                                    
+                            if(Line.lineIntersectsRectangle(centerPos, tile.getCenterPos(), s.getBounds())) {
+                                tile.setMask(Tile.TILE_INVISIBLE);
+                            }
+                        }
+                    }                    
+                }
+             
+            }
+        }*/
         
         return tiles;
     }
     
+    /**
+     * Hides players that are behind smoke
+     */
+    protected void pruneEntitiesBehindSmoke(List<Entity> entitiesInView) {
+        int entitySize = entitiesInView.size();
+        List<Smoke> smoke = game.getSmokeEntities();
+        int smokeSize = smoke.size();
+        
+        Vector2f centerPos = getCenterPos();
+        
+        if(entitySize > 0 && smokeSize > 0) {
+            for(int j = 0; j < smokeSize; j++) {
+                Smoke s = smoke.get(j);
+                if(this.visualBounds.intersects(s.getBounds())) {
+                    for(int i = 0; i < entitySize;) {
+                        Entity ent = entitiesInView.get(i);
+                        if(ent.getType()==Type.PLAYER && Line.lineIntersectsRectangle(ent.getCenterPos(), centerPos, s.getBounds())) {
+                            entitiesInView.remove(i);
+                            entitySize--;
+                        }
+                        else {
+                            i++;
+                        }
+                    }
+                }
+             
+            }
+        }
+        
+    }
     
     /**
      * Given the game state, retrieve the {@link Entity}'s in the current entities view.
@@ -1584,6 +1636,8 @@ public class PlayerEntity extends Entity implements Controllable {
                 }
             }                    
         }
+        
+        pruneEntitiesBehindSmoke(entitiesInView);
         
         return entitiesInView;
     }

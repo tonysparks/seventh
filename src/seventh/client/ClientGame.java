@@ -123,6 +123,7 @@ public class ClientGame {
     private final List<ClientBombTarget> bombTargets;
     private final List<ClientVehicle> vehicles;
     private final List<ClientDoor> doors;
+    private final List<ClientSmoke> smokeEntities;
     
     private final ClientEntityListener entityListener;
     
@@ -196,6 +197,7 @@ public class ClientGame {
         this.bombTargets = new ArrayList<ClientBombTarget>();
         this.vehicles = new ArrayList<ClientVehicle>();
         this.doors = new ArrayList<ClientDoor>();
+        this.smokeEntities = new ArrayList<ClientSmoke>();
                 
         this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
         this.cameraController = new CameraController(this);
@@ -520,6 +522,13 @@ public class ClientGame {
      */
     public List<ClientDoor> getDoors() {
         return doors;
+    }
+    
+    /**
+     * @return the smokeEntities
+     */
+    public List<ClientSmoke> getSmokeEntities() {
+        return smokeEntities;
     }
     
     /**
@@ -947,6 +956,7 @@ public class ClientGame {
             }
             case SMOKE: {
                 entity = new ClientSmoke(this, pos);
+                smokeEntities.add((ClientSmoke)entity);
                 break;
             }
             case FIRE:             
@@ -1087,6 +1097,7 @@ public class ClientGame {
         this.bombTargets.clear();
         this.vehicles.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
         
         this.gameTimers.removeTimers();
         
@@ -1486,6 +1497,7 @@ public class ClientGame {
             bombTargets.remove(ent);
             vehicles.remove(ent);
             doors.remove(ent);
+            smokeEntities.remove(ent);
             
             OnRemove onRemove = ent.getOnRemove();
             if(onRemove != null) {
@@ -1535,6 +1547,7 @@ public class ClientGame {
         this.bombTargets.clear();
         this.vehicles.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
                 
         this.gameEffects.destroy();
         this.gameTimers.removeTimers();
