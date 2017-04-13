@@ -146,6 +146,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private List<Vehicle> vehicles;
     private List<Flag> flags;
     private List<Door> doors;
+    private List<Smoke> smokeEntities;
     
     private Players players;
                 
@@ -223,6 +224,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.vehicles = new ArrayList<Vehicle>();
         this.flags = new ArrayList<Flag>();
         this.doors = new ArrayList<Door>();
+        this.smokeEntities = new ArrayList<Smoke>();
         
         this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
         this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
@@ -638,6 +640,13 @@ public class Game implements GameInfo, Debugable, Updatable {
         return this.flags;
     }
     
+    /**
+     * @return the smokeEntities
+     */
+    public List<Smoke> getSmokeEntities() {
+        return smokeEntities;
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getPlayerInfos()
      */
@@ -978,6 +987,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.vehicles.clear();
         this.flags.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
         
         this.players.resetStats();
         this.aiSystem.destroy();
@@ -1280,6 +1290,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.vehicles.clear();
         this.flags.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
     }
     
     /**
@@ -1514,7 +1525,15 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @return the {@link Smoke}
      */
     public Smoke newSmoke(Vector2f pos, int speed, Vector2f vel, Entity owner) {
-        Smoke smoke = new Smoke(pos, speed, this, vel);      
+        final Smoke smoke = new Smoke(pos, speed, this, vel);
+        smoke.onKill = new KilledListener() {
+            
+            @Override
+            public void onKill(Entity entity, Entity killer) {
+                smokeEntities.remove(smoke);
+            }
+        };
+        this.smokeEntities.add(smoke);
         this.addEntity(smoke);
         return smoke;
     }    

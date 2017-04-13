@@ -510,6 +510,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         mussleFlash.setColor(0.7f,.7f,0.5f);
         
         hearingBounds.centerAround(centerPos);
+        visualBounds.centerAround(centerPos);
         
         /* Make sure the player was actually hit before we display any blood 
          * effects.  We do this by making sure our last update was recent, and

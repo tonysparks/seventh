@@ -10,8 +10,11 @@ import seventh.client.entities.vehicles.ClientVehicle;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.State;
 import seventh.map.Map;
+import seventh.map.Tile;
+import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.Geom;
 import seventh.shared.TimeStep;
 
 /**
@@ -25,6 +28,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
     
     protected Vector2f predictedPos;
     protected Vector2f renderPos;
+    protected Vector2f cache;
     
     protected ClientVehicle vehicle;
     
@@ -32,6 +36,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
     private boolean isControlledByLocalPlayer;
     
     protected Rectangle hearingBounds;
+    protected Rectangle visualBounds;
     
     /**
      * @param game
@@ -42,12 +47,16 @@ public abstract class ClientControllableEntity extends ClientEntity {
         
         this.predictedPos = new Vector2f();                
         this.renderPos = new Vector2f(pos);
+        this.cache = new Vector2f();
         
         this.isControlledByLocalPlayer = false;
         
 
         this.hearingBounds = new Rectangle(200, 200);
         this.hearingBounds.centerAround(pos);
+        
+        this.visualBounds = new Rectangle(5000,5000);
+        this.visualBounds.centerAround(pos);
     }
 
     /**
@@ -265,5 +274,52 @@ public abstract class ClientControllableEntity extends ClientEntity {
             default: accuracy = 0f;
         }
         return accuracy;
+    }
+    
+    
+    public List<Tile> calculateLineOfSight(List<Tile> tiles) {
+        Map map = game.getMap();
+        Geom.calculateLineOfSight(tiles, getCenterPos(), getFacing(), getLineOfSight(), map, getHeightMask(), cache);
+        
+        int tileSize = tiles.size();
+        List<ClientDoor> doors = game.getDoors();
+        int doorSize = doors.size();
+        
+        Vector2f centerPos = getCenterPos();
+        
+        for(int j = 0; j < doorSize; j++ ) {
+            ClientDoor door = doors.get(j);
+            if(this.visualBounds.intersects(door.getBounds())) {        
+                for(int i = 0; i < tileSize; i++) {
+                    Tile tile = tiles.get(i);
+                    if(Line.lineIntersectLine(centerPos, tile.getCenterPos(), 
+                                              door.getPos(), door.getHandle())) {
+                        tile.setMask(Tile.TILE_INVISIBLE);
+                    }
+                }
+            }
+        }
+        /*
+        List<ClientSmoke> smoke = game.getSmokeEntities();
+        int smokeSize = smoke.size();
+        
+        if(smokeSize > 0) {
+            for(int j = 0; j < smokeSize; j++) {
+                ClientSmoke s = smoke.get(j);
+                if(this.visualBounds.intersects(s.getBounds())) {
+                    for(int i = 0; i < tileSize; i++) {
+                        Tile tile = tiles.get(i);
+                        if(tile.getMask() > 0) {                                                    
+                            if(Line.lineIntersectsRectangle(centerPos, tile.getCenterPos(), s.getBounds())) {
+                                tile.setMask(Tile.TILE_INVISIBLE);
+                            }
+                        }
+                    }                    
+                }
+             
+            }
+        }*/
+        
+        return tiles;
     }
 }
