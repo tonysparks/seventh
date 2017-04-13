@@ -40,12 +40,15 @@ public class Label extends Widget {
         CENTER
         , LEFT
         , RIGHT
+        , TOP
+        , BOTTOM
     }
     
     /**
      * Text alignment
      */
-    private TextAlignment textAlignment;
+    private TextAlignment horizontalTextAlignment;
+    private TextAlignment verticalTextAlignment;
     
     /**
      * The text on the label
@@ -71,7 +74,8 @@ public class Label extends Widget {
         this.textSize = 12;
         this.ignoreCR = true;
         
-        this.textAlignment = TextAlignment.CENTER;
+        this.horizontalTextAlignment = TextAlignment.CENTER;
+        this.verticalTextAlignment = TextAlignment.CENTER;
         this.font = Theme.DEFAULT_FONT;
     }
     
@@ -139,16 +143,30 @@ public class Label extends Widget {
     }        
     
     /**
-     * @param textAlignment the textAlignment to set
+     * @param horizontalTextAlignment the horizontalTextAlignment to set
      */
-    public void setTextAlignment(TextAlignment textAlignment) {
-        this.textAlignment = textAlignment;
+    public void setHorizontalTextAlignment(TextAlignment textAlignment) {
+        this.horizontalTextAlignment = textAlignment;
     }
     
     /**
-     * @return the textAlignment
+     * @return the horizontalTextAlignment
      */
-    public TextAlignment getTextAlignment() {
-        return textAlignment;
+    public TextAlignment getHorizontalTextAlignment() {
+        return horizontalTextAlignment;
+    }
+    
+    /**
+     * @param verticalTextAlignment the verticalTextAlignment to set
+     */
+    public void setVerticalTextAlignment(TextAlignment verticalTextAlignment) {
+        this.verticalTextAlignment = verticalTextAlignment;
+    }
+    
+    /**
+     * @return the verticalTextAlignment
+     */
+    public TextAlignment getVerticalTextAlignment() {
+        return verticalTextAlignment;
     }
 }

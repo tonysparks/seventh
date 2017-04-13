@@ -14,8 +14,8 @@ import seventh.math.Vector2f;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.ui.Button;
 import seventh.ui.Label;
-import seventh.ui.Widget;
 import seventh.ui.Label.TextAlignment;
+import seventh.ui.Widget;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.OnButtonClickedListener;
 
@@ -33,6 +33,7 @@ public class WeaponClassDialog extends Widget {
     private Theme theme;
     
     private Button[] weaponClasses;
+    private Label[] weaponClassDescriptions;
     private Button cancel;
     
     private ClientConnection connection;
@@ -49,6 +50,7 @@ public class WeaponClassDialog extends Widget {
         this.theme = theme;
 
         this.weaponClasses = new Button[6];
+        this.weaponClassDescriptions = new Label[6];
         
         createUI();
     }
@@ -77,6 +79,13 @@ public class WeaponClassDialog extends Widget {
         return weaponClasses;
     }
     
+    /**
+     * @return the weaponClassDescriptions
+     */
+    public Label[] getWeaponClassDescriptions() {
+        return weaponClassDescriptions;
+    }
+    
     private void createUI() {
         destroyChildren();
         
@@ -89,7 +98,7 @@ public class WeaponClassDialog extends Widget {
         this.title.getBounds().height = 30;
         this.title.getBounds().y += 30;
         this.title.setFont(theme.getSecondaryFontName());
-        this.title.setTextAlignment(TextAlignment.CENTER);
+        this.title.setHorizontalTextAlignment(TextAlignment.CENTER);
         this.title.setTextSize(28);
                     
         refreshButtons();
@@ -97,7 +106,7 @@ public class WeaponClassDialog extends Widget {
         this.cancel = new Button();        
         this.cancel.setText("Cancel");
         this.cancel.setBounds(new Rectangle(0,0,100,40));
-        this.cancel.getBounds().centerAround(bounds.x+ 200, bounds.y + bounds.height - 20);
+        this.cancel.getBounds().centerAround(bounds.x + 225, bounds.y + bounds.height - 20);
         this.cancel.setEnableGradiant(false);
         this.cancel.setTheme(theme);
         this.cancel.getTextLabel().setFont(theme.getSecondaryFontName());
@@ -120,10 +129,10 @@ public class WeaponClassDialog extends Widget {
         Rectangle bounds = getBounds();
         
         Vector2f pos = new Vector2f();
-        pos.x = bounds.x + 100;
-        pos.y = bounds.y + 100;
+        pos.x = bounds.x + 120;
+        pos.y = bounds.y + 70;
         
-        int yInc = 90;
+        int yInc = 95;
         
         
         for(int i = 0; i < weaponClasses.length; i++) {
@@ -131,35 +140,115 @@ public class WeaponClassDialog extends Widget {
                 removeWidget(weaponClasses[i]);
                 this.weaponClasses[i].destroy();
                 this.weaponClasses[i] = null;
+                
+                removeWidget(this.weaponClassDescriptions[i]);
+                this.weaponClassDescriptions[i].destroy();
+                this.weaponClassDescriptions[i] = null;
             }
         }
         
         
         switch(team) {
             case ALLIES:
-                this.weaponClasses[0] =setupButton(pos, Art.thompsonIcon, Type.THOMPSON); pos.y += yInc;
-                this.weaponClasses[1] =setupButton(pos, Art.m1GarandIcon, Type.M1_GARAND); pos.y += yInc;
-                this.weaponClasses[2] =setupButton(pos, Art.springfieldIcon, Type.SPRINGFIELD); pos.y += yInc;
+                this.weaponClasses[0] =setupButton(pos, Type.THOMPSON); 
+                this.weaponClassDescriptions[0] = setupLabel(pos, Type.THOMPSON); pos.y += yInc;
+                
+                this.weaponClasses[1] =setupButton(pos, Type.M1_GARAND); 
+                this.weaponClassDescriptions[1] = setupLabel(pos, Type.M1_GARAND); pos.y += yInc;
+                
+                this.weaponClasses[2] =setupButton(pos, Type.SPRINGFIELD); 
+                this.weaponClassDescriptions[2] = setupLabel(pos, Type.SPRINGFIELD); pos.y += yInc;
                 break;
             case AXIS:
-                this.weaponClasses[0] =setupButton(pos, Art.mp40Icon, Type.MP40); pos.y += yInc;
-                this.weaponClasses[1] =setupButton(pos, Art.mp44Icon, Type.MP44); pos.y += yInc;
-                this.weaponClasses[2] =setupButton(pos, Art.kar98Icon, Type.KAR98); pos.y += yInc;
+                this.weaponClasses[0] =setupButton(pos, Type.MP40); 
+                this.weaponClassDescriptions[0] = setupLabel(pos, Type.MP40); pos.y += yInc;
+                
+                this.weaponClasses[1] =setupButton(pos, Type.MP44);                
+                this.weaponClassDescriptions[1] = setupLabel(pos, Type.MP44); pos.y += yInc;
+                
+                this.weaponClasses[2] =setupButton(pos, Type.KAR98); 
+                this.weaponClassDescriptions[2] = setupLabel(pos, Type.KAR98); pos.y += yInc;
                 break;        
             default:
                 break;
             
         }        
-        this.weaponClasses[3] =setupButton(pos, Art.riskerIcon, Type.RISKER); pos.y += yInc;
-        this.weaponClasses[4] =setupButton(pos, Art.shotgunIcon, Type.SHOTGUN); pos.y += yInc;
-        this.weaponClasses[5] =setupButton(pos, Art.rocketIcon, Type.ROCKET_LAUNCHER);
+        this.weaponClasses[3] =setupButton(pos, Type.RISKER); 
+        this.weaponClassDescriptions[3] = setupLabel(pos, Type.RISKER); pos.y += yInc;
+        
+        this.weaponClasses[4] =setupButton(pos, Type.SHOTGUN); 
+        this.weaponClassDescriptions[4] = setupLabel(pos, Type.SHOTGUN); pos.y += yInc;
+        
+        this.weaponClasses[5] =setupButton(pos, Type.ROCKET_LAUNCHER);
+        this.weaponClassDescriptions[5] = setupLabel(pos, Type.ROCKET_LAUNCHER); 
                 
         return pos;
     }
     
-    private Button setupButton(Vector2f pos, TextureRegion tex, final Type type) {
-        Button btn = new Button();
-        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, 200, 80));
+    private String getClassDescription(Type type) {
+        String message = "";
+        switch(type) {
+            case THOMPSON:
+                message = "Thompson | 30/180 rnds\n" +
+                          "Pistol | 9/27 rnds \n" +
+                          "2 Frag Grenades";
+                break;
+            case M1_GARAND:                
+                message = "M1 Garand | 8/40 rnds\n" +
+                          "Pistol | 9/27 rnds \n" +
+                          "2 Smoke Grenades";
+                break;
+            case SPRINGFIELD:                
+                message = "Springfield | 5/35 rnds\n" +
+                          "Pistol | 9/27 rnds \n" +
+                          "2 Frag Grenades";
+                break;
+            case MP40:
+                message = "MP40 | 32/160 rnds\n" +
+                          "Pistol | 9/27 rnds \n" +
+                          "2 Frag Grenades";
+                break;
+            case MP44:                
+                message = "MP44 | 30/120 rnds\n" +
+                          "Pistol | 9/27 rnds \n" +
+                          "2 Smoke Grenades";
+                break;
+            case KAR98:                
+                message = "KAR-98 | 5/25 rnds\n" +
+                          "Pistol | 9/27 rnds \n" +
+                          "1 Frag Grenade";
+                break;
+            case RISKER:                
+                message = "MG-z | 21/42 rnds\n" +
+                          "Pistol | 9/27 rnds";
+                break;
+            case SHOTGUN:                
+                message = "Shotgun | 5/35 rnds\n" +
+                          "Pistol | 9/27 rnds";
+                break;
+            case ROCKET_LAUNCHER:                
+                message = "M1 | 5 rnds\n" +
+                          "Pistol | 9/27 rnds\n" +
+                          "5 Frag Grenades";
+                break;
+            default:;
+        }
+        
+        return message;
+    }
+    
+    
+    private Button setupButton(Vector2f pos, final Type type) {
+        final Button btn = new Button();
+        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, getBounds().width, 80));
+        btn.setBorder(false);
+//        btn.setText(getClassDescription(type));
+//        btn.setTextSize(12);
+//        btn.setHoverTextSize(12);
+//        btn.getTextLabel().setForegroundColor(this.theme.getForegroundColor());
+//        btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
+//        btn.getTextLabel().setVerticalTextAlignment(TextAlignment.BOTTOM);
+                
         btn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
@@ -177,6 +266,20 @@ public class WeaponClassDialog extends Widget {
         addWidget(btn);
         
         return btn;
+    }
+    
+    private Label setupLabel(Vector2f pos, final Type type) {
+        Label lbl = new Label(this.getClassDescription(type));
+        lbl.setBounds(new Rectangle((int)pos.x + 130, (int)pos.y, 220, 80));
+        lbl.setTextSize(14);
+        lbl.setForegroundColor(this.theme.getForegroundColor());
+        lbl.setHorizontalTextAlignment(TextAlignment.LEFT);
+        lbl.setVerticalTextAlignment(TextAlignment.TOP);
+        lbl.hide();
+        
+        addWidget(lbl);
+        
+        return lbl;
     }
     
     /**
@@ -202,6 +305,15 @@ public class WeaponClassDialog extends Widget {
         
         if(this.isDisabled()) {
             owner.close();
+        }
+    }
+    
+    @Override
+    public void show() {     
+        super.show();
+        
+        for(Label lbl : weaponClassDescriptions) {
+            lbl.hide();
         }
     }
 }
