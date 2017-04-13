@@ -39,8 +39,11 @@ public class Art {
     public static  TextureRegion shotgunImage = null;
     public static  TextureRegion rpgImage = null;            
 
-    public static  Sprite grenadeIcon = null;
-    public static  TextureRegion grenadeImage = null;
+    public static  Sprite fragGrenadeIcon = null;
+    public static  TextureRegion fragGrenadeImage = null;
+    
+    public static  Sprite smokeGrenadeIcon = null;
+    public static  TextureRegion smokeGrenadeImage = null;
     
     public static  TextureRegion springfieldImage = null;
     public static  TextureRegion thompsonImage = null;    
@@ -106,7 +109,8 @@ public class Art {
     public static  Sprite smallRocketIcon = null;
     public static  Sprite smallSniperRifleIcon = null;
     public static  Sprite smallM1GarandIcon = null;
-    public static  Sprite smallGrenadeIcon = null;
+    public static  Sprite smallFragGrenadeIcon = null;
+    public static  Sprite smallSmokeGrenadeIcon = null;
     public static  Sprite smallExplosionIcon = null;
     public static  Sprite smallkar98Icon = null;
     public static  Sprite smallmp44Icon = null;
@@ -188,8 +192,11 @@ public class Art {
 //        grenadeImage = TextureUtil.tex(TextureUtil.resizePixmap(grenadePixmap, 12, 12));
 //        grenadeIcon = TextureUtil.tex(grenadePixmap);
 
-        grenadeImage = loadImage("./assets/gfx/weapons/grenade.png");
-        grenadeIcon = TextureUtil.resizeImage(grenadeImage, 12, 12);
+        fragGrenadeImage = loadImage("./assets/gfx/weapons/frag_grenade.png");
+        fragGrenadeIcon = TextureUtil.resizeImage(fragGrenadeImage, 12, 12);
+        
+        smokeGrenadeImage = loadImage("./assets/gfx/weapons/smoke_grenade.png");
+        smokeGrenadeIcon = TextureUtil.resizeImage(smokeGrenadeImage, 12, 12);
         
         springfieldImage = loadImage("./assets/gfx/weapons/springfield.bmp", 0xff00ff);
         thompsonImage = loadImage("./assets/gfx/weapons/thompson.bmp", 0xff00ff);
@@ -267,7 +274,8 @@ public class Art {
         smallRocketIcon = TextureUtil.resizeImage(rocketIcon, smallIconWidth, smallIconHeight);
         smallSniperRifleIcon = TextureUtil.resizeImage(springfieldIcon, smallIconWidth, smallIconHeight);
         smallM1GarandIcon = TextureUtil.resizeImage(m1GarandIcon, smallIconWidth, smallIconHeight);
-        smallGrenadeIcon = TextureUtil.resizeImage(grenadeImage, smallIconWidth / 3, smallIconHeight / 3);
+        smallFragGrenadeIcon = TextureUtil.resizeImage(fragGrenadeImage, smallIconWidth / 3, smallIconHeight / 3);
+        smallSmokeGrenadeIcon = TextureUtil.resizeImage(fragGrenadeImage, smallIconWidth / 3, smallIconHeight / 3);
         smallExplosionIcon = TextureUtil.resizeImage(explosionImage[0], smallIconWidth / 2, smallIconHeight / 2);
         smallkar98Icon = TextureUtil.resizeImage(kar98Icon, smallIconWidth, smallIconHeight);
         smallmp44Icon = TextureUtil.resizeImage(mp44Icon, smallIconWidth, smallIconHeight);

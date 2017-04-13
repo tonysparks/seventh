@@ -100,21 +100,21 @@ public class LabelView implements Renderable {
     //                renderer.drawString(
                               , buttonTxt
                               , bounds.x + 5
-                              , vertical, null );
+                              , vertical, null, label.isShadowed() );
                     break;
                 case RIGHT:
                     RenderFont.drawShadedString(renderer
     //                renderer.drawString(
                               , buttonTxt
                               , bounds.x + bounds.width - width
-                              , vertical, null );
+                              , vertical, null, label.isShadowed() );
                     break;
                 default:
                     RenderFont.drawShadedString(renderer
     //                renderer.drawString(
                                       , buttonTxt
                                       , bounds.x + (bounds.width/2) - (width/2)
-                                      , vertical, null );
+                                      , vertical, null, label.isShadowed() );
                     break;
             }
 //            font.setSize(textSize);

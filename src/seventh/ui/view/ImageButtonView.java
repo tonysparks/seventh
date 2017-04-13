@@ -168,13 +168,15 @@ public class ImageButtonView extends ButtonView {
                 
                 if ( button.isPressed() ) {
                     if ( this.buttonDownImage != null) {        
-                        renderer.drawImage(this.buttonDownImage, (int)position.x, (int)position.y, color);
+                        renderer.drawScaledImage(this.buttonDownImage, (int)position.x, (int)position.y, uw, uh, color);
                     }            
-                    renderer.drawImage(this.buttonImage, (int)position.x + w, (int)position.y + h + 5, color);
+                    renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h + 5, 
+                            this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
                 }
                 else {
                     //renderer.drawImage(this.buttonUpImage, (int)position.x, (int)position.y, color);
-                    renderer.drawImage(this.buttonImage, (int)position.x + w, (int)position.y + h, color);
+                    renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h, 
+                            this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
                 }
             }
             else {

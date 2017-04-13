@@ -3,14 +3,15 @@
  */
 package seventh.client.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import seventh.client.ClientGame;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.game.entities.Entity.Type;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
-
-import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * @author Tony
@@ -22,16 +23,25 @@ public class ClientGrenade extends ClientEntity {
     private float orientation;
     private int spinDirection = 0;
     private Sprite sprite;
-    
+    private Type grenadeType;
     /**
      * 
      */
-    public ClientGrenade(ClientGame game, Vector2f pos) {
-        super(game, pos);        
-        sprite = new Sprite(Art.grenadeImage);
+    public ClientGrenade(ClientGame game, Vector2f pos, Type grenadeType) {
+        super(game, pos);    
+        this.grenadeType = grenadeType;
+        
+        sprite = new Sprite(grenadeType==Type.SMOKE_GRENADE ? Art.smokeGrenadeImage : Art.fragGrenadeImage);
         sprite.setSize(16, 16);
         sprite.setOrigin(8, 8);
         sprite.flip(false, true);            
+    }
+    
+    /**
+     * @return the grenadeType
+     */
+    public Type getGrenadeType() {
+        return grenadeType;
     }
     
     /* (non-Javadoc)
