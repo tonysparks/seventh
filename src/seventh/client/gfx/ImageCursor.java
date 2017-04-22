@@ -19,11 +19,12 @@ import seventh.shared.TimeStep;
 public class ImageCursor extends Cursor {
 
     private TextureRegion cursorImg;
+    private Vector2f imageOffset;
 
     /**
      */
     public ImageCursor() {
-        this(Art.cursorImg);
+        this(Art.cursorImg);        
     }
     
     /**
@@ -33,6 +34,23 @@ public class ImageCursor extends Cursor {
     public ImageCursor(TextureRegion image) {
         super(new Rectangle(image.getRegionWidth(), image.getRegionHeight()));
         this.cursorImg = image;
+        
+        int imageWidth = cursorImg.getRegionWidth();
+        int imageHeight = cursorImg.getRegionHeight();
+        this.imageOffset = new Vector2f(imageWidth/2, imageHeight/2);
+    }
+    
+    /**
+     * Offset the image so that the image can correctly point
+     * to the correct part of the image
+     * 
+     * @param x
+     * @param y
+     * @return this instance for method chaining
+     */
+    public ImageCursor setImageOffset(float x, float y) {
+        this.imageOffset.set(x, y);
+        return this;
     }
     
     @Override
@@ -45,10 +63,7 @@ public class ImageCursor extends Cursor {
      */
     @Override 
     protected void doRender(Canvas canvas) {
-        Vector2f cursorPos = getCursorPos();
-        int imageWidth = cursorImg.getRegionWidth();
-        int imageHeight = cursorImg.getRegionHeight();
-        
-        canvas.drawImage(cursorImg, (int)cursorPos.x - imageWidth/2, (int)cursorPos.y - imageHeight/2, null);                
+        Vector2f cursorPos = getCursorPos();        
+        canvas.drawImage(cursorImg, (int)cursorPos.x - imageOffset.x, (int)cursorPos.y - imageOffset.y, null);                
     }
 }

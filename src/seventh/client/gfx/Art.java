@@ -283,7 +283,7 @@ public class Art {
         smallPistolIcon = TextureUtil.resizeImage(pistolIcon, smallIconWidth, smallIconHeight);
         smallRiskerIcon = TextureUtil.resizeImage(riskerIcon, smallIconWidth, smallIconHeight);
 
-        cursorImg = loadImage("./assets/gfx/crosshair.png");
+        cursorImg = loadImage("./assets/gfx/menu_cursor.png");
         reticleImg = loadImage("./assets/gfx/reticle.png");
                         
         thompsonMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/thompson_muzzle_flash.png"), 2, 2);

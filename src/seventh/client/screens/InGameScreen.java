@@ -257,11 +257,13 @@ public class InGameScreen implements Screen {
             @Override
             public void onShow() {
                 game.activateCamera(false);
+                uiManager.menuCursor();
             }
             
             @Override
             public void onHide() {
                 game.activateCamera(true);
+                uiManager.gameCursor();
             }
         });                
         
@@ -400,7 +402,8 @@ public class InGameScreen implements Screen {
         }
         
         if(!this.dialog.isOpen()) {
-            game.activateCamera(true);
+            game.activateCamera(true);    
+            uiManager.gameCursor();
         }
         
         Controllers.addListener(this.controllerInput);
