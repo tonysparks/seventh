@@ -157,8 +157,6 @@ public class Art {
     public static  TextureRegion panzerTankBaseDamaged = null;
     public static  TextureRegion panzerTankTurretDamaged = null;
     
-    public static  TextureRegion rippleImg = null;
-    
     public static  TextureRegion alliedFlagImg = null;
     public static  TextureRegion axisFlagImg = null;
     
@@ -209,7 +207,7 @@ public class Art {
         
         bombImage = loadImage("./assets/gfx/weapons/bomb.bmp", 0xff00ff);
         bombImage.flip(false, true);        
-        radioImage = loadImage("./assets/gfx/radio.png");
+        radioImage = loadImage("./assets/gfx/entities/radio.png");
 
         alliedBodyModel = new Model(loadImage("./assets/gfx/player/allied_positions.png"), 201, 256, 3, 3);    
         alliedWalkModel = new Model(loadImage("./assets/gfx/player/allied_legs_walk.png"), 372, 196, 2, 4);
@@ -233,7 +231,7 @@ public class Art {
         pistolIcon = loadImage("./assets/gfx/weapons/pistol_icon.png");
         riskerIcon = loadImage("./assets/gfx/weapons/risker_icon.png");
         
-        explosionImage = TextureUtil.splitImage(loadImage("./assets/gfx/explosion.png"), 4, 4);
+        explosionImage = TextureUtil.splitImage(loadImage("./assets/gfx/particles/explosion.png"), 4, 4);
         TextureRegion tmp = loadImage("./assets/gfx/fire.png");
         tmp.flip(false, false);
         fireImage = TextureUtil.splitImage(tmp, 1, 5);
@@ -283,8 +281,8 @@ public class Art {
         smallPistolIcon = TextureUtil.resizeImage(pistolIcon, smallIconWidth, smallIconHeight);
         smallRiskerIcon = TextureUtil.resizeImage(riskerIcon, smallIconWidth, smallIconHeight);
 
-        cursorImg = loadImage("./assets/gfx/menu_cursor.png");
-        reticleImg = loadImage("./assets/gfx/reticle.png");
+        cursorImg = loadImage("./assets/gfx/ui/menu_cursor.png");
+        reticleImg = loadImage("./assets/gfx/ui/reticle.png");
                         
         thompsonMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/thompson_muzzle_flash.png"), 2, 2);
         springfieldMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/springfield_muzzle_flash.png"), 2, 2);
@@ -296,20 +294,20 @@ public class Art {
         rocketMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/rpg_muzzle_flash.png"), 2, 2);
         riskerMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/risker_muzzle_flash.png"), 2, 2);
         
-        healthPack = TextureUtil.resizeImage(loadImage("./assets/gfx/healthpack.png"), 16, 16);
-        healthIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/health.bmp"), 12, 12);
-        staminaIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/stamina.png"), 12, 12);
+        healthPack = TextureUtil.resizeImage(loadImage("./assets/gfx/entities/healthpack.png"), 16, 16);
+        healthIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/ui/health.bmp"), 12, 12);
+        staminaIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/ui/stamina.png"), 12, 12);
         
-        TextureRegion navArrow = loadImage("./assets/gfx/ui_nav_arrows.png");
+        TextureRegion navArrow = loadImage("./assets/gfx/ui/ui_nav_arrows.png");
         upArrow = new Sprite(navArrow);
         upArrow.flip(false, true);
         downArrow = new Sprite(navArrow);
         
         fireWeaponLight = loadImage("./assets/gfx/weapon_fire.png");
-        lightMap = loadImage("./assets/gfx/light.png");
+        lightMap = loadImage("./assets/gfx/entities/light.png");
         flashLight = loadImage("./assets/gfx/lightmap_flashlight.png");
         
-        bulletShell = loadImage("./assets/gfx/bullet_shell.png");
+        bulletShell = loadImage("./assets/gfx/particles/bullet_shell.png");
                 
         tankTrackMarks = loadImage("./assets/gfx/vehicles/tank_track_mark.png");
         
@@ -325,15 +323,13 @@ public class Art {
         panzerTankBaseDamaged = TextureUtil.subImage(panzerTankImage, 254, 310, 265, 195);        
         panzerTankTurretDamaged = TextureUtil.subImage(panzerTankImage, 35, 168, 273, 125);
         
-        rippleImg = loadImage("./assets/gfx/ripple.png");
+        alliedFlagImg = loadImage("./assets/gfx/entities/allied_flag.png");
+        axisFlagImg = loadImage("./assets/gfx/entities/axis_flag.png");
         
-        alliedFlagImg = loadImage("./assets/gfx/allied_flag.png");
-        axisFlagImg = loadImage("./assets/gfx/axis_flag.png");
+        alliedIcon = loadImage("./assets/gfx/ui/allied_icon.png");
+        axisIcon = loadImage("./assets/gfx/ui/axis_icon.png");
         
-        alliedIcon = loadImage("./assets/gfx/allied_icon.png");
-        axisIcon = loadImage("./assets/gfx/axis_icon.png");
-        
-        doorImg = loadImage("./assets/gfx/door.png");
+        doorImg = loadImage("./assets/gfx/entities/door.png");
     }
 
     
