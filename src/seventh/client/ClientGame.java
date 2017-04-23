@@ -421,7 +421,7 @@ public class ClientGame {
             renderWorld(canvas, camera, alpha);
             
             canvas.setShader(null);
-            DebugDraw.enable(false);
+            DebugDraw.enable(true);
             DebugDraw.render(canvas, camera);
     
             
@@ -981,25 +981,22 @@ public class ClientGame {
                 smokeEntities.add((ClientSmoke)entity);
                 break;
             }
-            case FIRE:             
-            case EXPLOSION: {
-                if(type==Type.EXPLOSION) {
-                    entity = new ClientExplosion(this, pos);
-                    
-                    /* create the explosion effect */
-                    NetExplosion explosion = (NetExplosion)ent;
-                                        
-                    /* limit the explosion per player */
-                    gameEffects.addExplosion(this, explosion.ownerId, pos);
-                }
-                else {
-                    entity = new ClientFire(this, pos);    
-                }
+            case FIRE: {
+                entity = new ClientFire(this, pos);
+                break;
+            }
+            case EXPLOSION: {                
+                entity = new ClientExplosion(this, pos);
+                
+                /* create the explosion effect */
+                NetExplosion explosion = (NetExplosion)ent;
+                                    
+                /* limit the explosion per player */
+                gameEffects.addExplosion(this, explosion.ownerId, pos);
                 
                 // if an explosion happens,
                 // shake the camera
-                cameraController.shakeCamera(pos);
-                
+                cameraController.shakeCamera(pos);                
                 break;
             }
             case SHERMAN_TANK: {

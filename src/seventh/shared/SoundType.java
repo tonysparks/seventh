@@ -56,6 +56,8 @@ public enum SoundType {
     
     RPG_FIRE,
     
+    FLAMETHROWER_SHOOT(SoundSourceType.REFERENCED_ATTACHED),
+    
     GRENADE_PINPULLED,
     GRENADE_THROW,
     SMOKE_GRENADE,
@@ -66,6 +68,7 @@ public enum SoundType {
     BREATH_LITE(SoundSourceType.REFERENCED_ATTACHED),
     BREATH_HEAVY(SoundSourceType.REFERENCED_ATTACHED),
     
+    FIRE(SoundSourceType.REFERENCED_ATTACHED),
     EXPLOSION(SoundSourceType.POSITIONAL),
     WEAPON_SWITCH(SoundSourceType.REFERENCED_ATTACHED),
     WEAPON_PICKUP(SoundSourceType.POSITIONAL),

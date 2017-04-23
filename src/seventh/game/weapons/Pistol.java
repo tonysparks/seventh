@@ -40,7 +40,6 @@ public class Pistol extends Weapon {
     
         this.endFire = true;
         
-        this.netWeapon.type = Type.PISTOL.netValue();
         applyScriptAttributes("pistol");
     }
 

@@ -95,7 +95,7 @@ public abstract class Weapon {
         this.game = game;
         this.owner = owner;
         this.netWeapon = new NetWeapon();
-        this.netWeapon.type = -1;
+        this.netWeapon.type = type.netValue();
         this.random = new Random();
         this.state = State.READY;    
         
@@ -562,6 +562,24 @@ public abstract class Weapon {
     protected Explosion newExplosion(Vector2f pos, int splashDamage) {
         return game.newExplosion(pos, owner, splashDamage);
     } 
+
+    
+    /**
+     * Creates a new {@link Fire}
+     * 
+     * @return the {@link Fire}
+     */
+    protected Fire newFire() {
+        Vector2f pos = newBulletPosition();
+        Vector2f vel = calculateVelocity(owner.getFacing());
+        
+        final int speed = 130 + (random.nextInt(10) * 10);        
+        Fire fire = new Fire(pos, speed, game, owner, vel, damage);
+        
+        game.addEntity(fire);  
+        return fire;
+    }
+    
     
     /**
      * Calculates the accuracy of the shot based on the owner {@link Entity}'s state.

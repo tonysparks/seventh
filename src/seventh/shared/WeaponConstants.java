@@ -44,6 +44,8 @@ public interface WeaponConstants {
     public static final int RISKER_LINE_OF_SIGHT = 250;
     public static final int RISKER_WEIGHT = 25;
     
+    public static final int FLAME_THROWER_LINE_OF_SIGHT = 200;
+    public static final int FLAME_THROWER_WEIGHT = 40;
 
     /*
      * Tank properties

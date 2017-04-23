@@ -38,8 +38,6 @@ public class MP40 extends Weapon {
         this.lineOfSight = WeaponConstants.MP40_LINE_OF_SIGHT;        
         this.weaponWeight = WeaponConstants.MP40_WEIGHT;
         
-        this.netWeapon.type = Type.MP40.netValue();
-        
         applyScriptAttributes("mp40");
     }
 

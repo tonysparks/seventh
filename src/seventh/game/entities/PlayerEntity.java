@@ -33,6 +33,7 @@ import seventh.game.events.SoundEmittedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
+import seventh.game.weapons.FlameThrower;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Kar98;
 import seventh.game.weapons.M1Garand;
@@ -215,6 +216,9 @@ public class PlayerEntity extends Entity implements Controllable {
             case RISKER: 
                 this.inventory.addItem(new Risker(game, this));
                 break;
+            case FLAME_THROWER:
+                this.inventory.addItem(new FlameThrower(game, this));
+                break;
             default:
                 if(team != null) {
                     if(team.getId() == Team.ALLIED_TEAM_ID) {
@@ -234,7 +238,8 @@ public class PlayerEntity extends Entity implements Controllable {
     }
         
     private void setupCommonWeapons() {        
-        this.inventory.addItem(new Pistol(game, this));
+        //this.inventory.addItem(new Pistol(game, this));
+        this.inventory.addItem(new FlameThrower(game, this));
     }
     
     /* (non-Javadoc)
