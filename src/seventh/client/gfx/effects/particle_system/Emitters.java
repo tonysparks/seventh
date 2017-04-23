@@ -257,7 +257,7 @@ public class Emitters {
                                     .setName("BulletTracerEmitter")
                                     .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, maxParticles)
-           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(/*new Color(0xEE9A00ff),*/new Color(0xffff00ff)))
+           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xffbA00ff),new Color(0xffff00ff)))
            .addSingleParticleGenerator(new SingleParticleGenerator() {
                 
                 @Override
@@ -275,16 +275,16 @@ public class Emitters {
             public void update(TimeStep timeStep, ParticleData particles) {
                 ClientEntity ent = emitter.attachedTo();
                 if(ent!=null) {
+                    Vector2f pos = ent.getCenterPos();
+                    Vector2f vel = ent.getMovementDir();
                     for(int index = 0; index < particles.numberOfAliveParticles; index++) {
-                        Vector2f pos = ent.getCenterPos();
-                        Vector2f vel = ent.getMovementDir();
-                        
                         float offset = index;
                         Vector2f.Vector2fMS(pos, vel, offset, particles.pos[index]);
                         
                         float percentange = (float)index / particles.numberOfAliveParticles;
-                        particles.color[index].a = 0.9512f * (1f - percentange);
-                    }
+                        
+                        particles.color[index].a = 0.9512f * (1f - percentange);                        
+                    }                    
                 }
                 else {
                     for(int index = 0; index < particles.numberOfAliveParticles; index++) {
