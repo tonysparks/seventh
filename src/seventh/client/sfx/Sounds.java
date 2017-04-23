@@ -585,6 +585,18 @@ public class Sounds {
     }
     
     
+    /**
+     * Unloads the sound from system memory.
+     * 
+     * @param soundFile
+     */
+    public static synchronized void unloadSound(String soundFile) {        
+        SoundBuffer buffer = loadedSounds.remove(soundFile);
+        if(buffer!=null) {
+            buffer.destroy();
+        }
+    }       
+    
     public static Sound findFreeSound(int soundIndex) {
         for(int i = 0; i < channels.length; i++) {
             Sound[] sounds = channels[i];        

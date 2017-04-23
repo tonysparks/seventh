@@ -217,7 +217,9 @@ public class ClientGame {
         this.pools = new Pools(this);
         this.zings = new Zings(this);
         
-        this.runtime = Scripting.newSandboxedRuntime();        
+        this.runtime = Scripting.newSandboxedRuntime();    
+        
+        executeCallbackScript("onInit", this);
     }    
     
     /**
@@ -637,6 +639,26 @@ public class ClientGame {
     public Sound loadSound(String path) {
         return Sounds.loadSound(path);
     }
+    
+    /**
+     * API for unloading a sound
+     * 
+     * @param path
+     */
+    public void unloadSound(String path) {
+        Sounds.unloadSound(path);
+    }
+    
+    
+    /**
+     * API for unloading a sound
+     * 
+     * @param path
+     */
+    public void unloadSound(Sound snd) {
+        Sounds.unloadSound(snd.getSoundFile());
+    }
+    
     
     /**
      * @param id
@@ -1542,6 +1564,8 @@ public class ClientGame {
      * Cleans up resources
      */
     public void destroy() {
+        executeCallbackScript("onDestroy", this);
+        
         this.pools.destroy();
         this.entities.clear();        
         this.bombTargets.clear();
