@@ -22,7 +22,8 @@ public class ClientBullet extends ClientEntity {
     
     private Vector2f origin;
     private int ownerId;
-        
+    private int iterations;
+    
     private Vector2f vel;
         
     static class BulletOnRemove implements OnRemove {
@@ -84,7 +85,9 @@ public class ClientBullet extends ClientEntity {
 
         prevState = null;
         nextState = null;
-                
+        
+        iterations = 0;
+        
         trailEffect.reset();
         
 //        trailEffect = Emitters.newBulletTracerEmitter(pos.createClone(), 10_000)
@@ -150,7 +153,7 @@ public class ClientBullet extends ClientEntity {
         
         this.ownerId = bullet.ownerId;
         
-
+        this.iterations++;
         
         if(vel.isZero()) {            
             /*ClientPlayer player = game.getPlayers().getPlayer(bullet.ownerId);
@@ -192,7 +195,11 @@ public class ClientBullet extends ClientEntity {
      */
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
-        trailEffect.render(canvas, camera, alpha);
+        // only render if we have enough updates -- otherwise this
+        // will render a single particle out of place, looks stupid
+        if(iterations > 2) {
+            trailEffect.render(canvas, camera, alpha);
+        }
         
     }
 
