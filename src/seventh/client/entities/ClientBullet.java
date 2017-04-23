@@ -197,7 +197,7 @@ public class ClientBullet extends ClientEntity {
     public void render(Canvas canvas, Camera camera, float alpha) {
         // only render if we have enough updates -- otherwise this
         // will render a single particle out of place, looks stupid
-        if(iterations > 2) {
+        if(iterations > 3) {
             trailEffect.render(canvas, camera, alpha);
         }
         
