@@ -38,6 +38,8 @@ public class ClientDoor extends ClientEntity {
      */
     public ClientDoor(ClientGame game, Vector2f pos) {
         super(game, pos);
+
+        this.bounds.setSize(64, 64);
         
         this.rotation = new SmoothOrientation(0.05);
         this.rotation.setOrientation(0);
