@@ -175,6 +175,8 @@ public class Sounds {
     public static final int[] doorOpenBlocked = {174};
     
     public static final int[] smokeGrenade = {175};
+    public static final int[] fire = {176};
+    public static final int[] flameThrowerShoot = {177};
     
     
     public static final int[][] alliedSpeeches = {
@@ -438,6 +440,8 @@ public class Sounds {
             loadSound("./assets/sfx/door/door_open_blocked01.wav") ,   // 174
             
             loadSound("./assets/sfx/grenade/smoke_grenade.wav") ,   // 175
+            loadSound("./assets/sfx/fire01.wav") ,   // 176
+            loadSound("./assets/sfx/flamethrower/start_firing.wav") ,   // 177
         };
     };
 
@@ -659,9 +663,21 @@ public class Sounds {
      * @return
      */
     public static Sound playSound(int[] soundBank, long channelId, Vector2f pos) {
-        return playSound(soundBank, channelId, pos.x, pos.y);
+        return playSound(soundBank, channelId, pos, false);
     }
     
+    /**
+     * Plays a sound at a particular position.
+     * 
+     * @param soundBank
+     * @param channelId
+     * @param pos
+     * @param loop
+     * @return
+     */
+    public static Sound playSound(int[] soundBank, long channelId, Vector2f pos, boolean loop) {
+        return playSound(soundBank, channelId, pos.x, pos.y, loop);
+    }
     
     /**
      * Plays a sound at a particular position.
@@ -673,14 +689,28 @@ public class Sounds {
      * @return
      */
     public static Sound playSound(int[] soundBank, long channelId, float x, float y) {
+        return playSound(soundBank, channelId, x, y, false);
+    }
+    
+    /**
+     * Plays a sound at a particular position.
+     * 
+     * @param soundBank
+     * @param channelId
+     * @param x
+     * @param y
+     * @param loop
+     * @return
+     */
+    public static Sound playSound(int[] soundBank, long channelId, float x, float y, boolean loop) {
         int index = random.nextInt(soundBank.length);
         int soundIndex = soundBank[index];
         
         Sound[] sounds = channels[ (int)channelId % channels.length];        
         Sound sound = sounds[soundIndex];
-        if(!sound.isPlaying()) {
+        if(!sound.isPlaying()) {            
             sound.setVolume(volume); // TODO global config
-            sound.play(x,y);
+            sound.play(x,y, loop);
         }
         
         return sound;
@@ -764,6 +794,9 @@ public class Sounds {
         case EXPLOSION:
             sound = explodeSnd;
             break;        
+        case FIRE:
+            sound = fire;
+            break;
         case RPG_FIRE:
             sound = rocketFire;
             break;
@@ -840,7 +873,11 @@ public class Sounds {
             break;
         case MP40_RELOAD:
             sound = mp40Reload;
-            break;            
+            break;
+            
+        case FLAMETHROWER_SHOOT:
+            sound = flameThrowerShoot;
+            break;
             
         case SURFACE_GRASS:            
             sound = grassWalk;            

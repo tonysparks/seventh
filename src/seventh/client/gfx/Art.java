@@ -53,6 +53,7 @@ public class Art {
     public static  TextureRegion mp40Image = null;
     public static  TextureRegion pistolImage = null;
     public static  TextureRegion riskerImage = null;
+    public static  TextureRegion flameThrowerImage = null;
     
     public static  TextureRegion bombImage = null;    
     public static  TextureRegion radioImage = null;
@@ -80,6 +81,7 @@ public class Art {
     public static  TextureRegion mp40Icon = null;
     public static  TextureRegion pistolIcon = null;
     public static  TextureRegion riskerIcon = null;
+    public static  TextureRegion flameThrowerIcon = null;
     
     private static TextureRegion[] explosionImage = null;
     private static TextureRegion[] fireImage = null;
@@ -117,6 +119,7 @@ public class Art {
     public static  Sprite smallmp40Icon = null;
     public static  Sprite smallPistolIcon = null;
     public static  Sprite smallRiskerIcon = null;
+    public static  Sprite smallFlameThrowerIcon = null;
     
     public static  TextureRegion cursorImg = null;
     public static  TextureRegion reticleImg = null;
@@ -204,6 +207,7 @@ public class Art {
         mp40Image = loadImage("./assets/gfx/weapons/mp40.bmp", 0xff00ff);
         pistolImage = loadImage("./assets/gfx/weapons/pistol.bmp", 0xff00ff);
         riskerImage = loadImage("./assets/gfx/weapons/risker.bmp", 0xff00ff);
+        flameThrowerImage = loadImage("./assets/gfx/weapons/risker.bmp", 0xff00ff); // TODO
         
         bombImage = loadImage("./assets/gfx/weapons/bomb.bmp", 0xff00ff);
         bombImage.flip(false, true);        
@@ -230,6 +234,7 @@ public class Art {
         mp40Icon = loadImage("./assets/gfx/weapons/mp40_icon.png");
         pistolIcon = loadImage("./assets/gfx/weapons/pistol_icon.png");
         riskerIcon = loadImage("./assets/gfx/weapons/risker_icon.png");
+        flameThrowerIcon = loadImage("./assets/gfx/weapons/risker_icon.png"); // TODO
         
         explosionImage = TextureUtil.splitImage(loadImage("./assets/gfx/particles/explosion.png"), 4, 4);
         TextureRegion tmp = loadImage("./assets/gfx/fire.png");
@@ -280,6 +285,7 @@ public class Art {
         smallmp40Icon = TextureUtil.resizeImage(mp40Icon, smallIconWidth, smallIconHeight);
         smallPistolIcon = TextureUtil.resizeImage(pistolIcon, smallIconWidth, smallIconHeight);
         smallRiskerIcon = TextureUtil.resizeImage(riskerIcon, smallIconWidth, smallIconHeight);
+        smallFlameThrowerIcon = TextureUtil.resizeImage(flameThrowerIcon, smallIconWidth, smallIconHeight);
 
         cursorImg = loadImage("./assets/gfx/ui/menu_cursor.png");
         reticleImg = loadImage("./assets/gfx/ui/reticle.png");

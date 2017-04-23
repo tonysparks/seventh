@@ -46,8 +46,6 @@ public class Shotgun extends Weapon {
         this.reloading =false;    
         this.endFire = true;
         
-        this.netWeapon.type = Type.SHOTGUN.netValue();
-        
         applyScriptAttributes("shotgun");
     }
     

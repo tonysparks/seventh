@@ -120,6 +120,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         Type.RISKER,
         Type.ROCKET_LAUNCHER,
+        Type.FLAME_THROWER,
     };
     
     public static final Type[] axisWeapons = {
@@ -131,6 +132,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         Type.RISKER,
         Type.ROCKET_LAUNCHER,
+        Type.FLAME_THROWER,
     };
     
     private Entity[] entities;    
@@ -1131,6 +1133,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                     case SHOTGUN:
                     case ROCKET_LAUNCHER:
                     case RISKER:
+                    case FLAME_THROWER:
                         break;
                         
                     /* make the player use the default weapon */
@@ -1173,6 +1176,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                             case RISKER:
                             case SHOTGUN:
                             case ROCKET_LAUNCHER:
+                            case FLAME_THROWER:
                                 allowed = true;
                                 break;
                             default: allowed = false;
@@ -1186,6 +1190,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                             case RISKER:
                             case SHOTGUN:
                             case ROCKET_LAUNCHER:
+                            case FLAME_THROWER:
                                 allowed = true;
                                 break;
                             default: allowed = false;
