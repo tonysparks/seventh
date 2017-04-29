@@ -83,7 +83,7 @@ public class WeaponClassDialogView implements Renderable {
         Button[] btns = dialog.getWeaponClasses();                
         this.weaponBtns = btns;
         
-        if(btns.length != 6) {
+        if(btns.length != 7) {
             throw new IllegalArgumentException("Don't have all the weapons defined!");
         }
         
@@ -114,6 +114,7 @@ public class WeaponClassDialogView implements Renderable {
         this.panelView.addElement(new ImageButtonView(btns[3], Art.riskerIcon));
         this.panelView.addElement(new ImageButtonView(btns[4], Art.shotgunIcon));
         this.panelView.addElement(new ImageButtonView(btns[5], Art.rocketIcon));
+        this.panelView.addElement(new ImageButtonView(btns[6], Art.flameThrowerIcon));
         
         this.weaponDescriptions = dialog.getWeaponClassDescriptions();
         for(Label lbl : this.weaponDescriptions) {

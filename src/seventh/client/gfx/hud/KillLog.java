@@ -210,6 +210,7 @@ public class KillLog implements Renderable {
                             RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
                             break;
                         }
+                        case FIRE:
                         case FLAME_THROWER: {
                             RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
                             canvas.drawSprite(Art.smallFlameThrowerIcon, startX-killedLength-iconLength, y-yOffset, null);

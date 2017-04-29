@@ -164,7 +164,7 @@ public class ImageButtonView extends ButtonView {
                 int uh = this.buttonUpImage.getRegionHeight();
                 
                 int w = uw / 2 - this.buttonImage.getRegionWidth()/2;
-                int h = uh / 2 - this.buttonImage.getRegionHeight()/2 - 5;
+                int h = uh / 2 - this.buttonImage.getRegionHeight()/2  + 5;
                 
                 if ( button.isPressed() ) {
                     if ( this.buttonDownImage != null) {        

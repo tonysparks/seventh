@@ -35,6 +35,11 @@ public class RocketLauncher extends Weapon {
         
         applyScriptAttributes("rocket_launcher");
     }
+    
+    @Override
+    public boolean isHeavyWeapon() {
+        return true;
+    }
 
     /**
      * Emits the fire rocket sound
