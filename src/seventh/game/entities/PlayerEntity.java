@@ -238,8 +238,7 @@ public class PlayerEntity extends Entity implements Controllable {
     }
         
     private void setupCommonWeapons() {        
-        //this.inventory.addItem(new Pistol(game, this));
-        this.inventory.addItem(new FlameThrower(game, this));
+        this.inventory.addItem(new Pistol(game, this));        
     }
     
     /* (non-Javadoc)
@@ -884,9 +883,12 @@ public class PlayerEntity extends Entity implements Controllable {
      * @see seventh.game.Controllable#crouch()
      */
     public void crouch() { 
-        if(currentState == State.IDLE) {            
-            game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());                                
-            this.currentState = State.CROUCHING;
+        if(currentState == State.IDLE) {
+            Weapon weapon = this.inventory.currentItem();
+            if(weapon==null||!weapon.isHeavyWeapon()) {            
+                game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());                                
+                this.currentState = State.CROUCHING;
+            }
         }
     }
     
@@ -925,7 +927,7 @@ public class PlayerEntity extends Entity implements Controllable {
         
             Weapon weapon = this.inventory.currentItem();
             boolean isReady = weapon != null ? weapon.isReady() : true;
-            if(weapon == null || !weapon.getType().equals(Type.ROCKET_LAUNCHER) && isReady) {            
+            if(weapon == null || !weapon.isHeavyWeapon()  && isReady) {            
                 if(currentState!=State.SPRINTING) {
                     game.emitSound(getId(), SoundType.RUFFLE, getCenterPos());
                 }
@@ -1034,7 +1036,7 @@ public class PlayerEntity extends Entity implements Controllable {
      */
     public boolean meleeAttack() {
         Weapon weapon = this.inventory.currentItem();
-        if(weapon != null) {
+        if(weapon != null && !weapon.isHeavyWeapon()) {
             return weapon.meleeAttack();
         }
         return false;
@@ -1193,6 +1195,9 @@ public class PlayerEntity extends Entity implements Controllable {
         Weapon weapon = inventory.nextItem();
         if(weapon!=null) {
             weapon.setSwitchingWeaponState();
+            if(weapon.isHeavyWeapon()) {
+                standup();
+            }
             checkLineOfSightChange();
         }
         
@@ -1206,6 +1211,9 @@ public class PlayerEntity extends Entity implements Controllable {
         Weapon weapon = inventory.prevItem();
         if(weapon!=null) {
             weapon.setSwitchingWeaponState();
+            if(weapon.isHeavyWeapon()) {
+                standup();
+            }
             checkLineOfSightChange();
         }
         

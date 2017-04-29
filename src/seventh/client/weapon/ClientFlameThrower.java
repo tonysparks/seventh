@@ -27,7 +27,7 @@ public class ClientFlameThrower extends ClientWeapon {
         this.weaponIcon = Art.flameThrowerIcon;
 //        this.weaponImage = Art.sniperRifleImage;
         this.weaponImage = Art.flameThrowerImage;
-        this.muzzleFlash = Art.newRiskerMuzzleFlash(); // TODO
+        this.muzzleFlash = null;//Art.newRiskerMuzzleFlash(); // TODO
         this.weaponWeight = WeaponConstants.FLAME_THROWER_WEIGHT;
         
         this.weaponKickTime = 0; 

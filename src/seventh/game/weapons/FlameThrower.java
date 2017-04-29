@@ -8,6 +8,7 @@ import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
 import seventh.math.Vector2f;
 import seventh.shared.SoundType;
+import seventh.shared.WeaponConstants;
 
 /**
  * @author Tony
@@ -26,12 +27,19 @@ public class FlameThrower extends Weapon {
     public FlameThrower(Game game, Entity owner) {
         super(game, owner, Type.FLAME_THROWER);
         
-        this.bulletsInClip = 1140;
+        this.bulletsInClip = 140;
         this.spread = 1;
         this.emitRatePerSec = 8;
         this.isDoneFiring = true;
+        this.lineOfSight = WeaponConstants.FLAME_THROWER_LINE_OF_SIGHT;
+        this.weaponWeight = WeaponConstants.FLAME_THROWER_WEIGHT;
         
         setBulletSpawnDistance(55);
+    }
+    
+    @Override
+    public boolean isHeavyWeapon() {
+        return true;
     }
     
     protected Vector2f newBulletPosition() {

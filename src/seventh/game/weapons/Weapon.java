@@ -148,6 +148,16 @@ public abstract class Weapon {
     }
     
     /**
+     * If this weapon is huge, which prevents the user
+     * from taking certain actions
+     * 
+     * @return true if this weapon is yuge
+     */
+    public boolean isHeavyWeapon() {
+        return false;
+    }
+    
+    /**
      * @param owner the owner to set
      */
     public void setOwner(Entity owner) {
