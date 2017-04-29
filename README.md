@@ -19,11 +19,12 @@ Videos/Screenshots
 Features
 ===
 * Three game modes (Team Death Match, Objective Based, Capture the Flag)
-* 9 different weapons
+* 10 different weapons
 * Melee
 * Grenades
 * Bots
 * Tanks
+* Destructable terrain
 * Multiplayer and Single player (Single player vs. Bots)
 
 TODO
@@ -32,9 +33,7 @@ TODO
 * Replace temporary sounds
 * Create more maps
 * New game types (custom)
-* Flamethrower
 * More Vehicles
-* Destructable terrain
 * Update HUD
 * Tweak game design
 * Add more intelligence to Bots
