@@ -218,6 +218,7 @@ public class PlayerEntity extends Entity implements Controllable {
                 break;
             case FLAME_THROWER:
                 this.inventory.addItem(new FlameThrower(game, this));
+                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
                 break;
             default:
                 if(team != null) {
