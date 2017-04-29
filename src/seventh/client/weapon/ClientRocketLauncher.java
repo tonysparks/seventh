@@ -28,4 +28,8 @@ public class ClientRocketLauncher extends ClientWeapon {
         this.beginFireKick = 0f; 
     }
 
+    @Override
+    public boolean isHeavyWeapon() {
+        return true;
+    }
 }

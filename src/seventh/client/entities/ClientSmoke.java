@@ -24,7 +24,7 @@ public class ClientSmoke extends ClientEntity {
         
         bounds.width = 16;
         bounds.height = 16;
-        game.addForegroundEffect(Emitters.newSmokeEmitter(pos, 18_000, 0x238261ff, 0x838B83ff, 40, .9f, 1.6f)
+        game.addForegroundEffect(Emitters.newSmokeEmitter(pos, 18_000, 0x238261ff, 0x838B83ff, 40, .9f, 1.6f, true)
                                          .attachTo(this)
                                          .setDieInstantly(false));        
     }

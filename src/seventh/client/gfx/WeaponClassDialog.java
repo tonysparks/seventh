@@ -47,8 +47,8 @@ public class WeaponClassDialog extends Widget {
         this.team = ClientTeam.ALLIES;
         this.theme = theme;
 
-        this.weaponClasses = new Button[6];
-        this.weaponClassDescriptions = new Label[6];
+        this.weaponClasses = new Button[7];
+        this.weaponClassDescriptions = new Label[7];
         
         createUI();
     }
@@ -104,7 +104,7 @@ public class WeaponClassDialog extends Widget {
         this.cancel = new Button();        
         this.cancel.setText("Cancel");
         this.cancel.setBounds(new Rectangle(0,0,100,40));
-        this.cancel.getBounds().centerAround(bounds.x + 225, bounds.y + bounds.height - 20);
+        this.cancel.getBounds().centerAround(bounds.x + 205, bounds.y + bounds.height - 20);
         this.cancel.setEnableGradiant(false);
         this.cancel.setTheme(theme);
         this.cancel.getTextLabel().setFont(theme.getSecondaryFontName());
@@ -130,7 +130,7 @@ public class WeaponClassDialog extends Widget {
         pos.x = bounds.x + 120;
         pos.y = bounds.y + 70;
         
-        int yInc = 90;
+        int yInc = 80;
         
         
         for(int i = 0; i < weaponClasses.length; i++) {
@@ -177,8 +177,11 @@ public class WeaponClassDialog extends Widget {
         this.weaponClasses[4] =setupButton(pos, Type.SHOTGUN); 
         this.weaponClassDescriptions[4] = setupLabel(pos, Type.SHOTGUN); pos.y += yInc;
         
-        this.weaponClasses[5] =setupButton(pos, Type.ROCKET_LAUNCHER);
-        this.weaponClassDescriptions[5] = setupLabel(pos, Type.ROCKET_LAUNCHER); 
+        this.weaponClasses[5] =setupButton(pos, Type.ROCKET_LAUNCHER); 
+        this.weaponClassDescriptions[5] = setupLabel(pos, Type.ROCKET_LAUNCHER); pos.y += yInc;
+        
+        this.weaponClasses[6] =setupButton(pos, Type.FLAME_THROWER);
+        this.weaponClassDescriptions[6] = setupLabel(pos, Type.FLAME_THROWER); 
                 
         return pos;
     }
@@ -229,6 +232,11 @@ public class WeaponClassDialog extends Widget {
                           "Pistol | 9/27 rnds\n" +
                           "5 Frag Grenades";
                 break;
+            case FLAME_THROWER:                
+                message = "Flame Thrower\n" +
+                          "Pistol | 9/27 rnds\n" +
+                          "2 Frag Grenades";
+                break;                
             default:;
         }
         
@@ -238,7 +246,7 @@ public class WeaponClassDialog extends Widget {
     
     private Button setupButton(Vector2f pos, final Type type) {
         final Button btn = new Button();
-        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, 320, 80));
+        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, 320, 70));
         btn.setBorder(false);
 //        btn.setText(getClassDescription(type));
 //        btn.setTextSize(12);
@@ -268,7 +276,7 @@ public class WeaponClassDialog extends Widget {
     
     private Label setupLabel(Vector2f pos, final Type type) {
         Label lbl = new Label(this.getClassDescription(type));
-        lbl.setBounds(new Rectangle((int)pos.x + 80, (int)pos.y, 220, 80));
+        lbl.setBounds(new Rectangle((int)pos.x + 80, (int)pos.y + 5, 220, 80));
         lbl.setTextSize(14);
         lbl.setForegroundColor(this.theme.getForegroundColor()); //0xff363e0f
         lbl.setShadow(false);

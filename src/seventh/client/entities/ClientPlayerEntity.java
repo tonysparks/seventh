@@ -26,6 +26,7 @@ import seventh.client.gfx.effects.AnimationEffect;
 import seventh.client.gfx.effects.ClientGameEffects;
 import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.sfx.Sounds;
+import seventh.client.weapon.ClientFlameThrower;
 import seventh.client.weapon.ClientKar98;
 import seventh.client.weapon.ClientM1Garand;
 import seventh.client.weapon.ClientMP40;
@@ -54,7 +55,7 @@ import seventh.shared.WeaponConstants;
  */
 public class ClientPlayerEntity extends ClientControllableEntity {
     
-    private final ClientWeapon[] WEAPONS = new ClientWeapon[10];
+    private final ClientWeapon[] WEAPONS = new ClientWeapon[11];
     
     private int health;        
     private int stamina;
@@ -167,6 +168,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             WEAPONS[7] = new ClientMP40(this);
             WEAPONS[8] = new ClientPistol(this);
             WEAPONS[9] = new ClientRisker(this);
+            WEAPONS[10] = new ClientFlameThrower(this);
             
             player.setEntity(this);
         }
@@ -456,6 +458,12 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                     weapon = WEAPONS[9];
                     lineOfSight = WeaponConstants.RISKER_LINE_OF_SIGHT;
                     weaponWeight = WeaponConstants.RISKER_WEIGHT;
+                    break;
+                }
+                case FLAME_THROWER: {
+                    weapon = WEAPONS[10];
+                    lineOfSight = WeaponConstants.FLAME_THROWER_LINE_OF_SIGHT;
+                    weaponWeight = WeaponConstants.FLAME_THROWER_WEIGHT;
                     break;
                 }
                 default: {                    

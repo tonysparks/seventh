@@ -141,6 +141,7 @@ public abstract class Entity implements Debugable {
         SMOKE_GRENADE,
         NAPALM_GRENADE,
         PISTOL,
+        FLAME_THROWER,
         
         MG42,
         

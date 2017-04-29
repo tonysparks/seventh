@@ -37,8 +37,6 @@ public class Thompson extends Weapon {
         this.lineOfSight = WeaponConstants.THOMPSON_LINE_OF_SIGHT;
         this.weaponWeight = WeaponConstants.THOMPSON_WEIGHT;
         
-        this.netWeapon.type = Type.THOMPSON.netValue();
-        
         applyScriptAttributes("thompson");        
         this.bulletsInClip = this.clipSize;
     }

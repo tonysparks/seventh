@@ -129,11 +129,11 @@ public class Smoke extends Entity {
      */
     @Override
     public NetEntity getNetEntity() {    
-        return getNetFireEntity();
+        return getNetSmokeEntity();
     }
     
     
-    public NetEntity getNetFireEntity() {
+    public NetEntity getNetSmokeEntity() {
         setNetEntity(netEntity);        
         return this.netEntity;
     }
