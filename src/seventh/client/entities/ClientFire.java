@@ -36,7 +36,7 @@ public class ClientFire extends ClientEntity {
         bounds.width = 16;
         bounds.height = 16;
       //  game.addForegroundEffect(Emitters.newSmokeEmitter(getCenterPos(), 25_000, false).attachTo(this));
-        game.addForegroundEffect(Emitters.newFireEmitter(pos).attachTo(this));        
+        game.addForegroundEffect(Emitters.newFireEmitter(getCenterPos()).attachTo(this));        
         setOnRemove(new OnRemove() {
             
             @Override

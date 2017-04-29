@@ -207,7 +207,7 @@ public class Art {
         mp40Image = loadImage("./assets/gfx/weapons/mp40.bmp", 0xff00ff);
         pistolImage = loadImage("./assets/gfx/weapons/pistol.bmp", 0xff00ff);
         riskerImage = loadImage("./assets/gfx/weapons/risker.bmp", 0xff00ff);
-        flameThrowerImage = loadImage("./assets/gfx/weapons/risker.bmp", 0xff00ff); // TODO
+        flameThrowerImage = loadImage("./assets/gfx/weapons/flame_thrower.bmp", 0xff00ff); 
         
         bombImage = loadImage("./assets/gfx/weapons/bomb.bmp", 0xff00ff);
         bombImage.flip(false, true);        
@@ -234,7 +234,7 @@ public class Art {
         mp40Icon = loadImage("./assets/gfx/weapons/mp40_icon.png");
         pistolIcon = loadImage("./assets/gfx/weapons/pistol_icon.png");
         riskerIcon = loadImage("./assets/gfx/weapons/risker_icon.png");
-        flameThrowerIcon = loadImage("./assets/gfx/weapons/risker_icon.png"); // TODO
+        flameThrowerIcon = loadImage("./assets/gfx/weapons/flame_thrower_icon.png"); 
         
         explosionImage = TextureUtil.splitImage(loadImage("./assets/gfx/particles/explosion.png"), 4, 4);
         TextureRegion tmp = loadImage("./assets/gfx/fire.png");

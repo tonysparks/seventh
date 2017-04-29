@@ -280,7 +280,7 @@ public class PlayerEntity extends Entity implements Controllable {
         }
         else {        
             Weapon weapon = this.inventory.currentItem();
-            if(weapon != null) {
+            if(weapon != null /*&& !weapon.getType().equals(Type.FLAME_THROWER)*/) {
                 this.inventory.removeItem(weapon);
                 this.inventory.nextItem();
                 
