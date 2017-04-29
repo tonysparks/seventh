@@ -573,7 +573,7 @@ public abstract class Weapon {
         Vector2f pos = newBulletPosition();
         Vector2f vel = calculateVelocity(owner.getFacing());
         
-        final int speed = 130 + (random.nextInt(10) * 10);        
+        final int speed = 130 + (random.nextInt(10) * 1);        
         Fire fire = new Fire(pos, speed, game, owner, vel, damage);
         
         game.addEntity(fire);  

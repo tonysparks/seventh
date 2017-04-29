@@ -13,6 +13,7 @@ import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.TextureUtil;
 import seventh.client.gfx.effects.particle_system.BatchedParticleGenerator.SingleParticleGenerator;
+import seventh.client.gfx.effects.particle_system.Emitter.EmitterLifeCycleListener;
 import seventh.client.gfx.effects.particle_system.Emitter.ParticleUpdater;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
@@ -24,16 +25,31 @@ import seventh.shared.TimeStep;
  */
 public class Emitters {
 
-    public static Emitter newFireEmitter(Vector2f pos) {                
-        int emitterTimeToLive = 10_000;
-        int maxParticles = 1040;
+
+
+    private static EmitterPool fireEmitterPool = new EmitterPool(new EmitterPool.EmitterFactory() {
+                
+        @Override
+        public Emitter newEmitter() {           
+            return _newFireEmitter(new Vector2f());
+        }
+    });
+    
+    public static Emitter newFireEmitter(Vector2f pos) {
+        return fireEmitterPool.allocate(pos);
+        //return _newFireEmitter(pos);
+    }
+    
+    private static Emitter _newFireEmitter(Vector2f pos) {                
+        int emitterTimeToLive = 2_400;
+        int maxParticles = 140;
         int maxSpread = 40;
         
         Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
                                 .setName("FireEmitter")                                
                                 .setDieInstantly(false);
-        BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 7)
-            .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xEB502Fff),new Color(0x434B43ff)))
+        BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 5)
+            .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xEB5aaFff), new Color(0xEB502Fff),new Color(0x434B43ff)))
             .addSingleParticleGenerator(new SingleParticleGenerator() {
                 
                 @Override
@@ -41,11 +57,12 @@ public class Emitters {
                     particles.color[index].a = 0.92f;
                 }
             })
-           .addSingleParticleGenerator(new RandomPositionInRadiusSingleParticleGenerator(maxSpread))
-           .addSingleParticleGenerator(new RandomRotationSingleParticleGenerator())
-           .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(0.55f, 2.2f))
-           .addSingleParticleGenerator(new RandomSpeedSingleParticleGenerator(0, 40))
-           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(500, 600))
+           .addSingleParticleGenerator(new RandomPositionInRadiusGrowthSingleParticleGenerator(1, maxSpread))
+         //  .addSingleParticleGenerator(new RandomRotationSingleParticleGenerator())
+           .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(0.355f, 0.362f))
+           .addSingleParticleGenerator(new RandomScaleGrowthSingleParticleGenerator(2.4f))
+           .addSingleParticleGenerator(new RandomSpeedSingleParticleGenerator(80, 140))
+           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(100, 200))
            .addSingleParticleGenerator(new RandomSpriteSingleParticleGenerator(Art.smokeImage)) 
         ;
         
@@ -53,12 +70,21 @@ public class Emitters {
         
         emitter.addParticleUpdater(new KillUpdater());
        // emitter.addParticleUpdater(new KillIfAttachedIsDeadUpdater());        
-        emitter.addParticleUpdater(new RandomMovementParticleUpdater(80));
+        emitter.addParticleUpdater(new RandomMovementParticleUpdater(880));
         emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9498f));
+        //emitter.addParticleUpdater(new ScaleUpdater(2.3f, 0.08f));
         emitter.addParticleRenderer(new BlendingSpriteParticleRenderer());
-        
+        emitter.setLifeCycleListener(new EmitterLifeCycleListener() {
+            
+            @Override
+            public void onKilled(Emitter emitter) {
+                fireEmitterPool.free(emitter);
+            }
+        });
+               
         return emitter;
     }
+
     
     public static Emitter newBloodEmitter(Vector2f pos, int maxParticles, int emitterTimeToLive, int maxSpread) {        
         Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
@@ -136,7 +162,7 @@ public class Emitters {
         
         emitter.addParticleUpdater(new KillUpdater());
         emitter.addParticleUpdater(new MovementParticleUpdater(0, 2));
-        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9898f));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9898f));        
         emitter.addParticleRenderer(new SpriteParticleRenderer());
         
         return emitter;

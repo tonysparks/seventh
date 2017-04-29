@@ -39,7 +39,7 @@ public class Fire extends Entity {
         this.damage = damage;
         this.owner = owner;
         
-        this.torchTime = 10_000;
+        this.torchTime = 3_000;
         this.targetVel = targetVel;
         
         this.collisionHeightMask = 0;                

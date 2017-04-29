@@ -26,12 +26,22 @@ public class FlameThrower extends Weapon {
     public FlameThrower(Game game, Entity owner) {
         super(game, owner, Type.FLAME_THROWER);
         
-        this.bulletsInClip = 40;
-        this.spread = 20;
-        this.emitRatePerSec = 2;
+        this.bulletsInClip = 1140;
+        this.spread = 1;
+        this.emitRatePerSec = 8;
         this.isDoneFiring = true;
         
-        setBulletSpawnDistance(75);
+        setBulletSpawnDistance(55);
+    }
+    
+    protected Vector2f newBulletPosition() {
+        Vector2f ownerDir = owner.getFacing();
+        Vector2f ownerPos = owner.getPos();
+        
+        Vector2f pos = new Vector2f(ownerPos);     
+        Vector2f.Vector2fMA(pos, ownerDir, getBulletSpawnDistance(), pos);
+        
+        return pos;
     }
 
     @Override
@@ -66,7 +76,7 @@ public class FlameThrower extends Weapon {
     
     @Override
     protected Vector2f calculateVelocity(Vector2f facing) {    
-        return spread(facing, spread);
+        return facing.createClone();
     }
 
 }
