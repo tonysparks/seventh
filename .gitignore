@@ -12,3 +12,7 @@
 /seventh_server.xml
 /seventh.xml
 /template/
+*.DS_Store
+/*.leola
+/*.leola.bac
+*.DS_Store

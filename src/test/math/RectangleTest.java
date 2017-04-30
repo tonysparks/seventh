@@ -300,4 +300,132 @@ public class RectangleTest {
 		assertEquals(2,rectangleC.getWidth());
 		assertEquals(2,rectangleC.getHeight());
 	}
+	
+	/*
+	 * Purpose: make (0,0,0,0)rectangle to (1,2,3,4)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 * 		setBounds : (x,y) (1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 */
+	@Test
+	public void testSetBoundintValue(){
+		final int expectedX = 1;
+		final int expectedY = 2;
+		final int expectedWidth = 3;
+		final int expectedheight = 4;
+		Rectangle rectangle = new Rectangle(0,0,0,0);
+		rectangle.setBounds(1,2,3,4);
+		assertEquals(expectedX,rectangle.getX());
+		assertEquals(expectedY,rectangle.getY());
+		assertEquals(expectedWidth,rectangle.getWidth());
+		assertEquals(expectedheight,rectangle.getHeight());
+	}
+	
+	/*
+	 * Purpose: make (0,0,0,0)rectangle to (1,2,3,4)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 * 		set : Vector2f(1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 */
+	@Test
+	public void testSetVector2f(){
+		final int expectedX = 1;
+		final int expectedY = 2;
+		final int expectedWidth = 3;
+		final int expectedheight = 4;
+		Rectangle rectangle = new Rectangle(0,0,0,0);
+		rectangle.set(new Vector2f(1,2),3,4);
+		assertEquals(expectedX,rectangle.getX());
+		assertEquals(expectedY,rectangle.getY());
+		assertEquals(expectedWidth,rectangle.getWidth());
+		assertEquals(expectedheight,rectangle.getHeight());
+	}
+
+	/*
+	 * Purpose: make (0,0,0,0)rectangle to (1,2,3,4)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 * 		setBounds : Vector2f(1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 */
+	@Test
+	public void testSetBoundVector2f(){
+		final int expectedX = 1;
+		final int expectedY = 2;
+		final int expectedWidth = 3;
+		final int expectedheight = 4;
+		Rectangle rectangle = new Rectangle(0,0,0,0);
+		rectangle.setBounds(new Vector2f(1,2),3,4);
+		assertEquals(expectedX,rectangle.getX());
+		assertEquals(expectedY,rectangle.getY());
+		assertEquals(expectedWidth,rectangle.getWidth());
+		assertEquals(expectedheight,rectangle.getHeight());
+	}
+	
+	/*
+	 * Purpose: make (0,0,0,0)rectangle to (1,2,3,4)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 * 		setBounds : Rectangle -> (x,y) (1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 */
+	@Test
+	public void testSetBoundRectangle(){
+		final int expectedX = 1;
+		final int expectedY = 2;
+		final int expectedWidth = 3;
+		final int expectedheight = 4;
+		Rectangle rectangle = new Rectangle(0,0,0,0);
+		rectangle.setBounds(new Rectangle(1,2,3,4));
+		assertEquals(expectedX,rectangle.getX());
+		assertEquals(expectedY,rectangle.getY());
+		assertEquals(expectedWidth,rectangle.getWidth());
+		assertEquals(expectedheight,rectangle.getHeight());
+	}
+	
+	/*
+	 * Purpose: make (0,0,0,0)rectangle to (1,2,3,4)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 * 		set : Rectangle -> (x,y) (1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 */
+	@Test
+	public void testSetRectangle(){
+		final int expectedX = 1;
+		final int expectedY = 2;
+		final int expectedWidth = 3;
+		final int expectedheight = 4;
+		Rectangle rectangle = new Rectangle(0,0,0,0);
+		rectangle.set(new Rectangle(1,2,3,4));
+		assertEquals(expectedX,rectangle.getX());
+		assertEquals(expectedY,rectangle.getY());
+		assertEquals(expectedWidth,rectangle.getWidth());
+		assertEquals(expectedheight,rectangle.getHeight());
+	}
+	
+	/*
+	 * Purpose: make (1,2,3,4)rectangle to (0,0,0,0)rectangle
+	 * Input:
+	 * 		rectangle => (x,y) (1,2) width 3 height 4
+	 * Expected:
+	 * 		rectangle => (x,y) (0,0) width 0 height 0
+	 */
+	@Test
+	public void testZeroOut(){
+		final int expected = 0;
+		Rectangle rectangle = new Rectangle(1,2,3,4);
+		rectangle.zeroOut();
+		assertEquals(expected,rectangle.getX());
+		assertEquals(expected,rectangle.getY());
+		assertEquals(expected,rectangle.getWidth());
+		assertEquals(expected,rectangle.getHeight());
+	}
 }
