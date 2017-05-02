@@ -1581,12 +1581,12 @@ public class Game implements GameInfo, Debugable, Updatable {
         Random random = getRandom();
         final int maxSpread = 360;
         
-        for(int i = 0; i < 25; i++) {            
+        for(int i = 0; i < 8; i++) {            
             Vector2f vel = new Vector2f(1.0f, 0.0f);
             double rd = Math.toRadians(random.nextInt(maxSpread));                        
             Vector2f.Vector2fRotate(vel, rd, vel);
                         
-            int speed = 80 + random.nextInt(150);
+            int speed = 110 + random.nextInt(15);
             
             newFire(position.createClone(), speed, vel, owner, damage);
         }

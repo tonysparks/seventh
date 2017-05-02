@@ -588,6 +588,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                         anim = Art.newAxisExplosionDeathAnim();
                         break;
                     default:
+                        anim = Art.newAlliedExplosionDeathAnim();
                         break;
                 }
                 // Objective game type keeps the dead bodies around

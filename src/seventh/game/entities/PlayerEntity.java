@@ -56,6 +56,7 @@ import seventh.math.Vector2f;
 import seventh.shared.Geom;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -253,7 +254,19 @@ public class PlayerEntity extends Entity implements Controllable {
         
         /* suicides don't leave weapons */
         if(killer != this) {
-            dropItem(false);
+            if(isYielding(Type.FLAME_THROWER)) {
+                game.addGameTimer(new Timer(false, 20) {
+                    public void onFinish(Timer timer) {
+                        game.newBigFire(getCenterPos(), PlayerEntity.this, 1);
+                        game.newBigExplosion(getCenterPos(), PlayerEntity.this, 30, 10, 1);
+                    }
+                });
+                
+               // game.newBigFire(getCenterPos(), this, 1);
+            }
+            else {
+                dropItem(false);
+            }
         }
         
         super.kill(killer);
@@ -1378,6 +1391,18 @@ public class PlayerEntity extends Entity implements Controllable {
         }
         
         return false;
+    }
+    
+    /**
+     * If this {@link PlayerEntity} is currently holding a specific
+     * weapon type.
+     * 
+     * @param weaponType
+     * @return true if the current active weapon is of the supplied type
+     */
+    public boolean isYielding(Type weaponType) {
+        Weapon weapon = this.inventory.currentItem();
+        return (weapon != null && weapon.getType().equals(weaponType));
     }
     
     /**
