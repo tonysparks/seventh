@@ -119,11 +119,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 
 			alliedSpawnPoints = loadSpawnPoint(config, "alliedSpawnPoints");
 			axisSpawnPoints = loadSpawnPoint(config, "axisSpawnPoints");
-			if (config.hasObject("minimumObjectivesToComplete")) {
-				minimumObjectivesToComplete = config.getObject("minimumObjectivesToComplete").asInt();
-			} else {
-				minimumObjectivesToComplete = objectives.size();
-			}
+			minimumObjectivesToComplete = setMinObjToCom(objectives, config);
 		}
 
 		final long timeBetweenRounds = 10_000L;
@@ -133,12 +129,27 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		/*
 		 * Refactoring target : return gameType; 
 		 * Refactoring name : Introduce Assertion 
-		 * Bad smell(reason) : A section of code assumes something
-		 * about the state of the program
+		 * Bad smell(reason) : A section of code assumes something about the state of the program
 		 * 
 		 */
 		Assert.assertTrue(gameType != null);
 		return gameType;
+	}
+
+	/*
+	 * Refactoring target : minimumObjectivesToComplete 
+	 * Refactoring name : extract function 
+	 * Bad smell(reason) : Turn the statements into its own function
+	 * 
+	 */
+	private int setMinObjToCom(List<Objective> objectives, LeoObject config) {
+		int minimumObjectivesToComplete;
+		if (config.hasObject("minimumObjectivesToComplete")) {
+			minimumObjectivesToComplete = config.getObject("minimumObjectivesToComplete").asInt();
+		} else {
+			minimumObjectivesToComplete = objectives.size();
+		}
+		return minimumObjectivesToComplete;
 	}
 	/*
 	 * Refactoring target : scriptFile.exist() 
