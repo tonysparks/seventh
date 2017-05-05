@@ -18,15 +18,38 @@ import seventh.shared.TimeStep;
  */
 public class GrenadeBelt extends Weapon {
         
+    public static GrenadeBelt newFrag(Game game, Entity owner, int amount) {
+        GrenadeBelt belt = new GrenadeBelt(game, owner, Type.GRENADE);
+        belt.bulletsInClip = amount;
+        return belt;
+    }
+    
+    public static GrenadeBelt newSmoke(Game game, Entity owner, int amount) {
+        GrenadeBelt belt = new GrenadeBelt(game, owner, Type.SMOKE_GRENADE);
+        belt.bulletsInClip = amount;
+        return belt;
+    }
+    
+    
     private final int nextShotTime;
     private int timePinPulled;
     private boolean isPinPulled;
+    
     /**
      * @param game
      * @param owner
      */
     public GrenadeBelt(Game game, Entity owner) {
-        super(game, owner, Type.GRENADE);
+        this(game, owner, Type.GRENADE);
+    }
+    
+    /**
+     * @param game
+     * @param owner
+     * @param grenadeType
+     */
+    public GrenadeBelt(Game game, Entity owner, Type grenadeType) {
+        super(game, owner, grenadeType);
             
         this.nextShotTime = 600;
         this.damage = 100;
@@ -42,7 +65,7 @@ public class GrenadeBelt extends Weapon {
     public boolean isPrimary() {    
         return false;
     }
-    
+        
     public int getNumberOfGrenades() {
         return this.bulletsInClip;
     }
@@ -97,8 +120,7 @@ public class GrenadeBelt extends Weapon {
     @Override
     public boolean endFire() {    
         if ( canFire() ) {
-//            newNapalmGrenade(timePinPulled);
-            newGrenade(timePinPulled);
+            newGrenade(getType(), timePinPulled);
             game.emitSound(getOwnerId(), SoundType.GRENADE_THROW, getPos());
             
             bulletsInClip--;

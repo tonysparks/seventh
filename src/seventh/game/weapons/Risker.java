@@ -49,8 +49,6 @@ public class Risker extends Weapon {
         this.reloading = false;    
         this.endFire = true;
         
-        this.netWeapon.type = Type.RISKER.netValue();
-        
         applyScriptAttributes("risker");
         this.burstCount = burst;
     }

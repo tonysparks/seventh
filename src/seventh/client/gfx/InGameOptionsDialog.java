@@ -171,7 +171,7 @@ public class InGameOptionsDialog extends Widget {
         this.title.getBounds().height = 30;
         this.title.getBounds().y += 30;
         this.title.setFont(theme.getSecondaryFontName());
-        this.title.setTextAlignment(TextAlignment.CENTER);
+        this.title.setHorizontalTextAlignment(TextAlignment.CENTER);
         this.title.setTextSize(32);
     
                 

@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.math.OBB;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
 /**
@@ -223,6 +224,10 @@ public class DebugDraw {
             drawCalls.add(new LineDrawable(true, color, oob.bottomRight, oob.bottomLeft));
             drawCalls.add(new LineDrawable(true, color, oob.bottomLeft, oob.topLeft));
         }
+    }
+    
+    public static void drawRectRelative(Rectangle bounds, Integer color) {
+        drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, color);        
     }
     
     /**

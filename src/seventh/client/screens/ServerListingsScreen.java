@@ -205,7 +205,7 @@ public class ServerListingsScreen implements Screen {
         this.noServersFoundLbl.setTextSize(18);
         this.noServersFoundLbl.setBounds(new Rectangle(app.getScreenWidth(), 30));
         this.noServersFoundLbl.getBounds().centerAround(uiPos);
-        this.noServersFoundLbl.setTextAlignment(TextAlignment.CENTER);        
+        this.noServersFoundLbl.setHorizontalTextAlignment(TextAlignment.CENTER);        
         checkServerListingLabel();
         
         optionsPanel.addWidget(noServersFoundLbl);
@@ -223,7 +223,7 @@ public class ServerListingsScreen implements Screen {
                 serverListings.previousIndex();
             }
         });
-        panelView.addElement(new ImageButtonView(upArrow, Art.upArrow));
+        panelView.addElement(new ImageButtonView(upArrow, null, Art.upArrow, null));
         
         uiPos.y += yInc*3;
         Button downArrow = setupButton(uiPos, "", false, false);
@@ -235,7 +235,7 @@ public class ServerListingsScreen implements Screen {
                 serverListings.nextIndex();
             }
         });
-        panelView.addElement(new ImageButtonView(downArrow, Art.downArrow));
+        panelView.addElement(new ImageButtonView(downArrow, null, Art.downArrow, null));
         
         uiPos.x = app.getScreenWidth() - 80;
         uiPos.y = startY;
@@ -480,7 +480,7 @@ public class ServerListingsScreen implements Screen {
         btn.setHoverTextSize(24);
         
         btn.getTextLabel().setFont(theme.getSecondaryFontName());        
-        btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
+        btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
         btn.addOnHoverListener(new OnHoverListener() {
             

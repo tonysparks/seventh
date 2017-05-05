@@ -26,6 +26,7 @@ import seventh.client.gfx.effects.AnimationEffect;
 import seventh.client.gfx.effects.ClientGameEffects;
 import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.sfx.Sounds;
+import seventh.client.weapon.ClientFlameThrower;
 import seventh.client.weapon.ClientKar98;
 import seventh.client.weapon.ClientM1Garand;
 import seventh.client.weapon.ClientMP40;
@@ -54,7 +55,7 @@ import seventh.shared.WeaponConstants;
  */
 public class ClientPlayerEntity extends ClientControllableEntity {
     
-    private final ClientWeapon[] WEAPONS = new ClientWeapon[10];
+    private final ClientWeapon[] WEAPONS = new ClientWeapon[11];
     
     private int health;        
     private int stamina;
@@ -69,6 +70,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     private ClientPlayer player;
     private ClientWeapon weapon;
     private byte numberOfGrenades;
+    private boolean isSmokeGrenades;
         
     private int weaponWeight;
     
@@ -166,6 +168,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             WEAPONS[7] = new ClientMP40(this);
             WEAPONS[8] = new ClientPistol(this);
             WEAPONS[9] = new ClientRisker(this);
+            WEAPONS[10] = new ClientFlameThrower(this);
             
             player.setEntity(this);
         }
@@ -253,6 +256,13 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     }
     
     /**
+     * @return the isSmokeGrenades
+     */
+    public boolean isSmokeGrenades() {
+        return isSmokeGrenades;
+    }
+    
+    /**
      * @return the stamina
      */
     public int getStamina() {
@@ -337,6 +347,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             this.stamina = ps.stamina;
             
             this.numberOfGrenades = ps.grenades;
+            this.isSmokeGrenades = ps.isSmokeGrenades;
             
             if(ps.isOperatingVehicle) {
                 if(this.vehicle == null || this.vehicle.getId() != ps.vehicleId) {
@@ -449,6 +460,12 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                     weaponWeight = WeaponConstants.RISKER_WEIGHT;
                     break;
                 }
+                case FLAME_THROWER: {
+                    weapon = WEAPONS[10];
+                    lineOfSight = WeaponConstants.FLAME_THROWER_LINE_OF_SIGHT;
+                    weaponWeight = WeaponConstants.FLAME_THROWER_WEIGHT;
+                    break;
+                }
                 default: {                    
                     weapon = null;
                     weaponWeight = 0;
@@ -510,6 +527,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         mussleFlash.setColor(0.7f,.7f,0.5f);
         
         hearingBounds.centerAround(centerPos);
+        visualBounds.centerAround(centerPos);
         
         /* Make sure the player was actually hit before we display any blood 
          * effects.  We do this by making sure our last update was recent, and
@@ -570,6 +588,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                         anim = Art.newAxisExplosionDeathAnim();
                         break;
                     default:
+                        anim = Art.newAlliedExplosionDeathAnim();
                         break;
                 }
                 // Objective game type keeps the dead bodies around

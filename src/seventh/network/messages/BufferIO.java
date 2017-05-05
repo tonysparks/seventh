@@ -20,6 +20,7 @@ import seventh.game.net.NetLight;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetRocket;
+import seventh.game.net.NetSmoke;
 import seventh.game.net.NetTank;
 import seventh.math.Vector2f;
 
@@ -229,6 +230,7 @@ public class BufferIO {
             case ROCKET:
                 result = new NetRocket();
                 break;
+            case SMOKE_GRENADE:
             case NAPALM_GRENADE:
             case GRENADE:            
             case BULLET: {
@@ -261,6 +263,10 @@ public class BufferIO {
             }            
             case FIRE: {
                 result = new NetFire();
+                break;
+            }
+            case SMOKE: {
+                result = new NetSmoke();
                 break;
             }
             case LIGHT_BULB: {

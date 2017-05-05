@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
+
 import leola.vm.Leola;
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoNativeClass;
@@ -122,6 +124,13 @@ public class ObjectiveScript extends AbstractGameTypeScript {
         
         GameType gameType = new ObjectiveGameType(getRuntime(), objectives, alliedSpawnPoints, axisSpawnPoints, 
                 minimumObjectivesToComplete, maxScore, matchTime, timeBetweenRounds, defenders);
+        /*
+         * Refactoring target : return gameType;
+         * Refactoring name : Introduce Assertion
+         * Bad smell(reason) : A section of code assumes something about the state of the program
+         * 
+         */
+        Assert.assertTrue(gameType!=null);
         return gameType;
     }
 }

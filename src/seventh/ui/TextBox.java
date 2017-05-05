@@ -49,11 +49,11 @@ public class TextBox extends Widget implements Hoverable {
         this.isCtrlDown = false;
         
         this.label = new Label();
-        this.label.setTextAlignment(TextAlignment.LEFT);
+        this.label.setHorizontalTextAlignment(TextAlignment.LEFT);
 //        addWidget(label);
         
         this.textLbl = new Label();
-        this.textLbl.setTextAlignment(TextAlignment.LEFT);
+        this.textLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
 //        addWidget(textLbl);
         
         this.maxSize = 32;

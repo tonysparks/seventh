@@ -33,7 +33,7 @@ public class Checkbox extends Widget implements Hoverable {
         this.isChecked = isChecked;
         this.label = new Label();
         this.label.getBounds().add(getBounds().width + 8, getBounds().height - 5);
-        this.label.setTextAlignment(TextAlignment.LEFT);
+        this.label.setHorizontalTextAlignment(TextAlignment.LEFT);
         addWidget(label);
         
         addInputListener(new Inputs() {

@@ -12,6 +12,7 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 
 /**
  * A Door in the game world.  It can be opened or closed.
@@ -156,7 +157,8 @@ public class Door extends Entity {
                      rearHingePos;
     
     private Rectangle handleTouchRadius,
-                      hingeTouchRadius;
+                      hingeTouchRadius,
+                      autoCloseRadius;
     
     
     private SmoothOrientation rotation;
@@ -164,6 +166,9 @@ public class Door extends Entity {
     private boolean isBlocked;
     
     private NetDoor netDoor;
+    
+    private Timer autoCloseTimer;
+    
     /**
      * @param id
      * @param position
@@ -182,10 +187,14 @@ public class Door extends Entity {
         this.hinge = DoorHinge.fromVector(facing);
         this.handleTouchRadius = new Rectangle(48, 48);
         this.hingeTouchRadius = new Rectangle(48,48);
+        this.autoCloseRadius = new Rectangle(100, 100);
         
         this.bounds.set(this.handleTouchRadius);
         this.hingeTouchRadius.centerAround(getPos());
-        //this.bounds.centerAround(position);
+        this.autoCloseRadius.centerAround(getPos());
+        
+        this.autoCloseTimer = new Timer(false, 5_000);
+        this.autoCloseTimer.stop();
         
         this.rotation = new SmoothOrientation(0.05);
         this.rotation.setOrientation(this.hinge.getClosedOrientation());
@@ -275,6 +284,22 @@ public class Door extends Entity {
                 
                 break;
             }
+            case OPENED: {
+                // part of the gameplay -- auto close
+                // the door after a few seconds
+                this.autoCloseTimer.update(timeStep);
+                if(this.autoCloseTimer.isOnFirstTime()) {                    
+                    if(!isPlayerNear()) {
+                        close(this);
+                        this.autoCloseTimer.stop();
+                    }
+                    else {
+                        this.autoCloseTimer.reset();
+                    }                    
+                }
+                
+                break;
+            }
             default: { 
                 this.isBlocked = false;
             }
@@ -335,6 +360,8 @@ public class Door extends Entity {
                 return;
             }
             
+            this.autoCloseTimer.reset();
+                        
             this.doorState = DoorState.OPENING;
             this.game.emitSound(getId(), SoundType.DOOR_OPEN, getPos());
             
@@ -383,7 +410,7 @@ public class Door extends Entity {
             this.game.emitSound(getId(), SoundType.DOOR_CLOSE, getPos());
         }
     }
-    
+        
     
     @Override
     public void damage(Entity damager, int amount) {
@@ -400,8 +427,31 @@ public class Door extends Entity {
         //DebugDraw.fillRectRelative(handleTouchRadius.x, handleTouchRadius.y, handleTouchRadius.width, handleTouchRadius.height, 0xff00ff00);
         //DebugDraw.fillRectRelative(hingeTouchRadius.x, hingeTouchRadius.y, hingeTouchRadius.width, hingeTouchRadius.height, 0xff00ff00);
         
+        // we can close our selves :)
+        if(ent==this) {
+            return true;
+        }
+        
         return this.handleTouchRadius.intersects(ent.getBounds()) ||
                this.hingeTouchRadius.intersects(ent.getBounds()) ;
+    }
+    
+    /**
+     * @return true only if there is a player some what near this door (such that
+     * it wouldn't be able to close or open properly)
+     */
+    public boolean isPlayerNear() {
+        PlayerEntity[] playerEntities = game.getPlayerEntities();
+        for(int i = 0; i < playerEntities.length; i++) {
+            Entity other = playerEntities[i];
+            if(other != null) {
+                if(this.autoCloseRadius.contains(other.getBounds())) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
     
     /**

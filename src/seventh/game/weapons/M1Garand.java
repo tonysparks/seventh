@@ -38,8 +38,6 @@ public class M1Garand extends Weapon {
         this.weaponWeight = WeaponConstants.M1GARAND_WEIGHT;
         
         this.endFire = true;
-                    
-        this.netWeapon.type = Type.M1_GARAND.netValue();
         
         applyScriptAttributes("m1_garand");
     }

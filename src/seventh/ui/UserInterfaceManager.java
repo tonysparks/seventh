@@ -25,7 +25,9 @@ import java.util.List;
 
 import leola.frontend.listener.EventDispatcher;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.CompoundCursor;
 import seventh.client.gfx.Cursor;
+import seventh.client.gfx.ImageCursor;
 import seventh.client.gfx.ReticleCursor;
 import seventh.client.inputs.Inputs;
 import seventh.shared.TimeStep;
@@ -44,7 +46,7 @@ public class UserInterfaceManager extends Inputs {
      * Widgets
      */
     private List<Widget> widgets;
-    private Cursor cursor;
+    private CompoundCursor cursor;
     
     public UserInterfaceManager(UserInterfaceManager parent) {
         this.cursor = parent.getCursor();
@@ -55,12 +57,21 @@ public class UserInterfaceManager extends Inputs {
      * @param eventDispatcher
      */
     public UserInterfaceManager() {
-        this.cursor = new ReticleCursor();//new ImageCursor();
+        this.cursor = new CompoundCursor(new ImageCursor().setImageOffset(4, 4),
+                                         new ReticleCursor());
         
         // pretty big hack, should be passed in a cleaner
         // manner
         this.widgets = Widget.globalInputListener.getGlobalWidgets();
         Widget.globalInputListener.cursor = this.cursor;
+    }
+    
+    public void menuCursor() {
+        this.cursor.activateA();
+    }
+    
+    public void gameCursor() {
+        this.cursor.activateB();
     }
     
     public void hideMouse() {
@@ -74,14 +85,14 @@ public class UserInterfaceManager extends Inputs {
     /**
      * @return the cursor
      */
-    public Cursor getCursor() {
+    public CompoundCursor getCursor() {
         return cursor;
     }
     
     /**
      * @param cursor the cursor to set
      */
-    public void setCursor(Cursor cursor) {
+    public void setCursor(CompoundCursor cursor) {
         this.cursor = cursor;
     }
     
@@ -99,7 +110,7 @@ public class UserInterfaceManager extends Inputs {
      * any {@link Widget}s
      */
     public void checkIfCursorIsHovering() {
-        boolean isHovering = false;
+        /*boolean isHovering = false;
         int size = this.widgets.size();
         for(int i = 0; i < size; i++) {
             Widget w = this.widgets.get(i);
@@ -112,7 +123,7 @@ public class UserInterfaceManager extends Inputs {
             }
         }
         
-        getCursor().setColor(isHovering ? 0xafff0000 : 0xafffff00);
+        getCursor().setColor(isHovering ? 0xafff0000 : 0xafffff00);*/
     }
     
     /* (non-Javadoc)

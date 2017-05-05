@@ -82,6 +82,7 @@ public class Inventory {
     }
     
     public void clear() {
+        this.grenades = null;
         this.weapons.clear();
     }
     

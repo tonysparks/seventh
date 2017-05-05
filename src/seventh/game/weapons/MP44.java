@@ -36,8 +36,7 @@ public class MP44 extends Weapon {
         
         this.lineOfSight = WeaponConstants.MP44_LINE_OF_SIGHT;    
         this.weaponWeight = WeaponConstants.MP44_WEIGHT;
-        this.netWeapon.type = Type.MP44.netValue();
-        
+
         applyScriptAttributes("mp44");
     }
 

@@ -14,6 +14,7 @@ import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.effects.Effects;
 import seventh.client.gfx.effects.particle_system.Emitters;
+import seventh.client.weapon.ClientFlameThrower;
 import seventh.client.weapon.ClientRocketLauncher;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.State;
@@ -460,6 +461,7 @@ public class PlayerSprite implements Renderable {
             sprite.setScale(1.0f);                    
             
             boolean isRocketLauncher = weapon instanceof ClientRocketLauncher;
+            boolean isFlameThrower   = weapon instanceof ClientFlameThrower;
             
             switch(this.entity.getCurrentState()) {
                 case SPRINTING: {
@@ -516,6 +518,10 @@ public class PlayerSprite implements Renderable {
                 
 //                sprite.setPosition(rx-adjustments.xOffset, ry-adjustments.yOffset);
 //                sprite.setOrigin(adjustments.x, adjustments.y);
+            }
+            else if(isFlameThrower) {
+                sprite.setPosition(rx-15.0f, ry-34.0f);
+                sprite.setOrigin(17.0f, 35.0f);  
             }
             
             canvas.drawSprite(sprite);

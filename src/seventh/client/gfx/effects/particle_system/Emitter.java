@@ -23,6 +23,10 @@ import seventh.shared.Timer;
  */
 public class Emitter implements Effect {
 
+    public static interface EmitterLifeCycleListener {
+        public void onKilled(Emitter emitter);
+    }
+    
     /**
      * Spawns and setup particles
      * 
@@ -100,6 +104,8 @@ public class Emitter implements Effect {
     private ParticleData particles;
     private String name;
     
+    private EmitterLifeCycleListener lifeCycleListener;
+    
     /**
      * 
      */
@@ -124,6 +130,11 @@ public class Emitter implements Effect {
         this.kill = false;
         this.isPersistent = false;
         this.name = ""; // used for debugging purposes
+    }
+    
+    public Emitter setLifeCycleListener(EmitterLifeCycleListener listener) {
+        this.lifeCycleListener = listener;
+        return this;
     }
     
     public Emitter addParticleGenerator(ParticleGenerator generator) {
@@ -225,6 +236,10 @@ public class Emitter implements Effect {
     
     public Emitter kill() {
         this.kill = true;
+        if(this.lifeCycleListener!=null) {
+            this.lifeCycleListener.onKilled(this);
+        }
+        
         return this;
     }
     

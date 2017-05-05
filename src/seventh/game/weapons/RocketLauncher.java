@@ -33,9 +33,12 @@ public class RocketLauncher extends Weapon {
         this.lineOfSight = WeaponConstants.RPG_LINE_OF_SIGHT;
         this.weaponWeight = WeaponConstants.RPG_WEIGHT;
         
-        this.netWeapon.type = Type.ROCKET_LAUNCHER.netValue();
-        
         applyScriptAttributes("rocket_launcher");
+    }
+    
+    @Override
+    public boolean isHeavyWeapon() {
+        return true;
     }
 
     /**
