@@ -11,4 +11,7 @@
 /seventh_error.log
 /seventh_server.xml
 /seventh.xml
-/template/
+/template
+/*.leola
+/*.leola.bac
+*.DS_Store
