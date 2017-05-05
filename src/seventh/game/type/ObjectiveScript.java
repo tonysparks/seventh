@@ -55,7 +55,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
          */
         Assert.assertTrue(scriptFile!=null);
         if(!scriptFile.exists()) {
-            Cons.println("*** ERROR -> No associated script file for objective game type.  Looking for: " + scriptFile.getName());
+            FileNotExist(scriptFile);
         }
         else {
             LeoObject config = getRuntime().eval(scriptFile);
@@ -140,4 +140,14 @@ public class ObjectiveScript extends AbstractGameTypeScript {
         Assert.assertTrue(gameType!=null);
         return gameType;
     }
+    /*
+     * Refactoring target : scriptFile.exist()
+     * Refactoring name : Replace Error Code with function
+     * Bad smell(reason) : "If statement" returns a special code to indicate an error
+     * 
+     */
+
+	private void FileNotExist(File scriptFile) {
+		Cons.println("*** ERROR -> No associated script file for objective game type.  Looking for: " + scriptFile.getName());
+	}
 }
