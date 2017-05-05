@@ -73,13 +73,64 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		checkLeoObject(config);
 		LeoObject scriptedObjectives = config.getObject("objectives");
 		checkLeoObject(scriptedObjectives);
+
+		/*
+		 * Refactoring target : from the statement
+		 * "if (o.getValue() instanceof Objective)" to statement "else"
+		 * Refactoring name : extract function Bad smell(reason) : duplicated
+		 * statement in switch sentence
+		 */
 		
 		/*
-		 * Refactoring target : from the statement "if (o.getValue() instanceof Objective)" to statement "else"
-		 * Refactoring name : extract function
-		 * Bad smell(reason) : duplicated statement in switch sentence
+		 * Refactoring target : switch statements about getType
+		 * Refactoring name : extract function 
+		 * Bad smell(reason) : code complexity
 		 */
 
+		checkObjectivesType(objectives, scriptedObjectives);
+		LeoObject scriptedDefenders = config.getObject("defenders");
+		checkLeoObject(scriptedDefenders);
+		defenders = checkDefendersType(defenders, scriptedDefenders);
+
+		alliedSpawnPoints = loadSpawnPoint(config, "alliedSpawnPoints");
+		axisSpawnPoints = loadSpawnPoint(config, "axisSpawnPoints");
+		minimumObjectivesToComplete = setMinObjToCom(objectives, config);
+
+		final long timeBetweenRounds = 10_000L;
+
+		GameType gameType = new ObjectiveGameType(getRuntime(), objectives, alliedSpawnPoints, axisSpawnPoints,
+				minimumObjectivesToComplete, maxScore, matchTime, timeBetweenRounds, defenders);
+		/*
+		 * Refactoring target : return gameType; Refactoring name : Introduce
+		 * Assertion Bad smell(reason) : A section of code assumes something
+		 * about the state of the program
+		 * 
+		 */
+		Assert.assertTrue(gameType != null);
+		return gameType;
+	}
+
+	private byte checkDefendersType(byte defenders, LeoObject scriptedDefenders) {
+		switch (scriptedDefenders.getType()) {
+		case INTEGER:
+		case LONG:
+		case REAL:
+			defenders = (byte) scriptedDefenders.asInt();
+			break;
+		case STRING:
+			if (Team.ALLIED_TEAM_NAME.equalsIgnoreCase(scriptedDefenders.toString())) {
+				defenders = Team.ALLIED_TEAM_ID;
+			}
+			break;
+		default: {
+			Cons.println(
+					"*** ERROR -> defenders must either be a 2(for allies) or 4(for axis) or 'allies' or 'axis' values");
+		}
+		}
+		return defenders;
+	}
+
+	private void checkObjectivesType(List<Objective> objectives, LeoObject scriptedObjectives) {
 		switch (scriptedObjectives.getType()) {
 		case ARRAY: {
 			LeoArray array = scriptedObjectives.as();
@@ -101,43 +152,6 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 					"*** ERROR -> objectives must either be an Array of objectives or a Java class or custom Leola class");
 		}
 		}
-
-		LeoObject scriptedDefenders = config.getObject("defenders");
-		if (LeoObject.isTrue(scriptedDefenders)) {
-			switch (scriptedDefenders.getType()) {
-			case INTEGER:
-			case LONG:
-			case REAL:
-				defenders = (byte) scriptedDefenders.asInt();
-				break;
-			case STRING:
-				if (Team.ALLIED_TEAM_NAME.equalsIgnoreCase(scriptedDefenders.toString())) {
-					defenders = Team.ALLIED_TEAM_ID;
-				}
-				break;
-			default: {
-				Cons.println(
-						"*** ERROR -> defenders must either be a 2(for allies) or 4(for axis) or 'allies' or 'axis' values");
-			}
-			}
-		}
-
-		alliedSpawnPoints = loadSpawnPoint(config, "alliedSpawnPoints");
-		axisSpawnPoints = loadSpawnPoint(config, "axisSpawnPoints");
-		minimumObjectivesToComplete = setMinObjToCom(objectives, config);
-
-		final long timeBetweenRounds = 10_000L;
-
-		GameType gameType = new ObjectiveGameType(getRuntime(), objectives, alliedSpawnPoints, axisSpawnPoints,
-				minimumObjectivesToComplete, maxScore, matchTime, timeBetweenRounds, defenders);
-		/*
-		 * Refactoring target : return gameType; Refactoring name : Introduce
-		 * Assertion Bad smell(reason) : A section of code assumes something
-		 * about the state of the program
-		 * 
-		 */
-		Assert.assertTrue(gameType != null);
-		return gameType;
 	}
 
 	private void setObjective(List<Objective> objectives, LeoObject o) {
@@ -145,8 +159,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 			Objective objective = (Objective) o.getValue();
 			objectives.add(objective);
 		} else {
-			Cons.println(((LeoNativeClass) o).getNativeClass() + " is not of type: "
-					+ Objective.class.getName());
+			Cons.println(((LeoNativeClass) o).getNativeClass() + " is not of type: " + Objective.class.getName());
 		}
 	}
 
@@ -184,9 +197,13 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 				throw new Exception();
 			}
 		} catch (Exception e) {
-			System.out.println("ERROR");
+			Cons.println("ERROR");
 		}
 
+	}
+	
+	private void checkLeoObjectType(LeoObject Leo){
+		
 	}
 
 }
