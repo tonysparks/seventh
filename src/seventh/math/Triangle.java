@@ -38,20 +38,16 @@ public class Triangle {
      * @param pointZ
      */
     public void translate(Vector2f pointZ) {
-        Vector2f.Vector2fAdd(this.getPointA(), pointZ, this.getPointA());
-        Vector2f.Vector2fAdd(this.getPointB(), pointZ, this.getPointB());
-        Vector2f.Vector2fAdd(this.getPointC(), pointZ, this.getPointC());
+        TriangleTranslate(this,pointZ,this);
     }
     
     /**
      * Translates the {@link Triangle} to a new location.
      * 
-     * @param pointZ
+     * @param scalar
      */
-    public void translate(float pointZ) {
-        Vector2f.Vector2fAdd(this.getPointA(), pointZ, this.getPointA());
-        Vector2f.Vector2fAdd(this.getPointB(), pointZ, this.getPointB());
-        Vector2f.Vector2fAdd(this.getPointC(), pointZ, this.getPointC());
+    public void translate(float scalar) {
+        TriangleTranslate(this,scalar,this);
     }
     
     /**
@@ -71,13 +67,13 @@ public class Triangle {
      * Translates the {@link Triangle} to a new location.
      * 
      * @param triangle
-     * @param a
+     * @param scalar
      * @param dest
      */
-    public static void TriangleTranslate(Triangle triangle, float a, Triangle dest) {
-        Vector2f.Vector2fAdd(triangle.getPointA(), a, dest.getPointA());
-        Vector2f.Vector2fAdd(triangle.getPointB(), a, dest.getPointB());
-        Vector2f.Vector2fAdd(triangle.getPointC(), a, dest.getPointC());
+    public static void TriangleTranslate(Triangle triangle, float scalar, Triangle dest) {
+        Vector2f.Vector2fAdd(triangle.getPointA(), scalar, dest.getPointA());
+        Vector2f.Vector2fAdd(triangle.getPointB(), scalar, dest.getPointB());
+        Vector2f.Vector2fAdd(triangle.getPointC(), scalar, dest.getPointC());
     }
     
     /**
@@ -88,13 +84,8 @@ public class Triangle {
      * @return true if the point is in the {@link Triangle}
      */
     public static boolean pointIntersectsTriangle(Vector2f pointZ, Triangle triangle) {
-        float x0 = triangle.getPointA().x; 
-        float y0 = triangle.getPointA().y; 
-        float x1 = triangle.getPointB().x; 
-        float y1 = triangle.getPointB().y; 
-        float x2 = triangle.getPointC().x; 
-        float y2 = triangle.getPointC().y; 
-        return pointIntersectsTriangle(pointZ.x, pointZ.y, x0, y0, x1, y1, x2, y2);
+        return pointIntersectsTriangle(pointZ.x, pointZ.y, triangle.getPointA().x, triangle.getPointA().y, 
+        		triangle.getPointB().x, triangle.getPointB().y, triangle.getPointC().x, triangle.getPointC().y);
     }
 
     /**
@@ -110,7 +101,8 @@ public class Triangle {
      * @param pointCy
      * @return true if the point is in the {@link Triangle}
      */
-    public static boolean pointIntersectsTriangle(float pointZx, float pointZy, float pointAx, float pointAy, float pointBx, float pointBy, float pointCx, float pointCy) {
+    public static boolean pointIntersectsTriangle(float pointZx, float pointZy, float pointAx, float pointAy, 
+    		float pointBx, float pointBy, float pointCx, float pointCy) {
         
         float v0x = pointCx - pointAx;
         float v0y = pointCy - pointAy;
