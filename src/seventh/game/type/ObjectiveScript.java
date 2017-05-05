@@ -55,50 +55,45 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		 */
 		Assert.assertTrue(scriptFile != null);
 		/*
-		 * Refactoring target : scriptFile.exist() Refactoring name : Replace Error
-		 * Code with exception, Erase nested if statement Bad smell(reason) :
-		 * "If statement" returns a special code to indicate an error and check only
-		 * file exist
+		 * Refactoring target : scriptFile.exist() Refactoring name : Replace
+		 * Error Code with exception, Erase nested if statement Bad
+		 * smell(reason) : "If statement" returns a special code to indicate an
+		 * error and check only file exist
 		 * 
 		 */
 		FileExist(scriptFile);
 
 		/*
-		 * Refactoring target : LeoObject.isTrue(config), LeoObject.isTrue(scriptedobjectives)
-		 * Refactoring name : Replace Error Code with exception, Erase nested if statement 
-		 * Bad smell(reason) : "If statement" check only instance of LeoObject existed or not
+		 * Refactoring target : LeoObject.isTrue(config),
+		 * LeoObject.isTrue(scriptedobjectives) Refactoring name : Replace Error
+		 * Code with exception, Erase nested if statement Bad smell(reason) :
+		 * "If statement" check only instance of LeoObject existed or not
 		 */
 		LeoObject config = getRuntime().eval(scriptFile);
 		checkLeoObject(config);
 		LeoObject scriptedObjectives = config.getObject("objectives");
 		checkLeoObject(scriptedObjectives);
 		
+		/*
+		 * Refactoring target : from the statement "if (o.getValue() instanceof Objective)" to statement "else"
+		 * Refactoring name : extract function
+		 * Bad smell(reason) : duplicated statement in switch sentence
+		 */
+
 		switch (scriptedObjectives.getType()) {
 		case ARRAY: {
 			LeoArray array = scriptedObjectives.as();
 			for (int i = 0; i < array.size(); i++) {
 				LeoObject o = array.get(i);
 				if (o instanceof LeoNativeClass) {
-					if (o.getValue() instanceof Objective) {
-						Objective objective = (Objective) o.getValue();
-						objectives.add(objective);
-					} else {
-						Cons.println(((LeoNativeClass) o).getNativeClass() + " is not of type: "
-								+ Objective.class.getName());
-					}
-
+					setObjective(objectives, o);
 				}
 			}
 			break;
 		}
 		case NATIVE_CLASS: {
 			LeoObject o = scriptedObjectives;
-			if (o.getValue() instanceof Objective) {
-				Objective objective = (Objective) o.getValue();
-				objectives.add(objective);
-			} else {
-				Cons.println(((LeoNativeClass) o).getNativeClass() + " is not of type: " + Objective.class.getName());
-			}
+			setObjective(objectives, o);
 			break;
 		}
 		default: {
@@ -145,6 +140,16 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		return gameType;
 	}
 
+	private void setObjective(List<Objective> objectives, LeoObject o) {
+		if (o.getValue() instanceof Objective) {
+			Objective objective = (Objective) o.getValue();
+			objectives.add(objective);
+		} else {
+			Cons.println(((LeoNativeClass) o).getNativeClass() + " is not of type: "
+					+ Objective.class.getName());
+		}
+	}
+
 	/*
 	 * Refactoring target : minimumObjectivesToComplete Refactoring name :
 	 * extract function Bad smell(reason) : Turn the statements into its own
@@ -160,7 +165,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		}
 		return minimumObjectivesToComplete;
 	}
-	
+
 	private void FileExist(File scriptFile) {
 		try {
 			if (!scriptFile.exists()) {
@@ -183,4 +188,5 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		}
 
 	}
+
 }
