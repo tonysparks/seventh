@@ -47,6 +47,13 @@ public class ObjectiveScript extends AbstractGameTypeScript {
         int minimumObjectivesToComplete = 1;
         
         File scriptFile = new File(mapFile + ".obj.leola");
+        /*
+         * Refactoring target : scriptFile.exist()
+         * Refactoring name : Introduce Assertion
+         * Bad smell(reason) : A section of code assumes something about the state of the program
+         * 
+         */
+        Assert.assertTrue(scriptFile!=null);
         if(!scriptFile.exists()) {
             Cons.println("*** ERROR -> No associated script file for objective game type.  Looking for: " + scriptFile.getName());
         }
