@@ -296,8 +296,11 @@ public class Hud implements Renderable {
      */
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {    
-        canvas.setFont("Consola", 12);
-        canvas.drawString("FPS: " + app.getFps(), canvas.getWidth() - 60, 10, 0xff10f0ef);
+        if(this.config.showFps()) {
+            canvas.setFont("Consola", 12);
+            canvas.drawString("FPS: " + app.getFps(), canvas.getWidth() - 60, 10, 0xff10f0ef);
+        }
+        
         miniMap.render(canvas, camera, alpha);
         
         killLog.render(canvas, camera, 0);
@@ -353,8 +356,10 @@ public class Hud implements Renderable {
         
         drawBombProgressBar(canvas, camera);
             
-        drawMemoryUsage(canvas);
-        drawNetworkUsage(canvas);
+        if(this.config.showDebugInfo()) {
+            drawMemoryUsage(canvas);
+            drawNetworkUsage(canvas);
+        }
     }
     
     private void drawWeaponIcons(Canvas canvas, Camera camera, ClientWeapon weapon) {
