@@ -178,35 +178,35 @@ public class Door extends Entity {
      */
     public Door(Vector2f position, Game game, Vector2f facing) {
         super(game.getNextPersistantId(), position, 0, game, Type.DOOR);
-        this.doorState = DoorState.CLOSED;
-        this.frontDoorHandle = new Vector2f(facing);
-        this.rearDoorHandle = new Vector2f(facing);
-        this.rearHingePos = new Vector2f();
+        this.setDoorState(DoorState.CLOSED);
+        this.setFrontDoorHandle(new Vector2f(facing));
+        this.setRearDoorHandle(new Vector2f(facing));
+        this.setRearHingePos(new Vector2f());
         this.facing.set(facing);
                     
-        this.hinge = DoorHinge.fromVector(facing);
-        this.handleTouchRadius = new Rectangle(48, 48);
-        this.hingeTouchRadius = new Rectangle(48,48);
-        this.autoCloseRadius = new Rectangle(100, 100);
+        this.setHinge(DoorHinge.fromVector(facing));
+        this.setHandleTouchRadius(new Rectangle(48, 48));
+        this.setHingeTouchRadius(new Rectangle(48,48));
+        this.setAutoCloseRadius(new Rectangle(100, 100));
         
-        this.bounds.set(this.handleTouchRadius);
-        this.hingeTouchRadius.centerAround(getPos());
-        this.autoCloseRadius.centerAround(getPos());
+        this.bounds.set(this.getHandleTouchRadius());
+        this.getHingeTouchRadius().centerAround(getPos());
+        this.getAutoCloseRadius().centerAround(getPos());
         
-        this.autoCloseTimer = new Timer(false, 5_000);
-        this.autoCloseTimer.stop();
+        this.setAutoCloseTimer(new Timer(false, 5_000));
+        this.getAutoCloseTimer().stop();
         
-        this.rotation = new SmoothOrientation(0.05);
-        this.rotation.setOrientation(this.hinge.getClosedOrientation());
-        setOrientation(this.rotation.getOrientation());
+        this.setRotation(new SmoothOrientation(0.05));
+        this.getRotation().setOrientation(this.getHinge().getClosedOrientation());
+        setOrientation(this.getRotation().getOrientation());
         
         setDoorOrientation();
         
-        this.netDoor = new NetDoor();
+        this.setNetDoor(new NetDoor());
         
         setCanTakeDamage(true);
         
-        this.isBlocked = false;
+        this.setBlocked(false);
         
         this.onTouch = new OnTouchListener() {
             
@@ -219,11 +219,11 @@ public class Door extends Entity {
     }
 
     private void setDoorOrientation() {
-        Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
-        this.rearHingePos = this.hinge.getRearHingePosition(getPos(), this.rotation.getFacing(), this.rearHingePos);                
-        Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
+        Vector2f.Vector2fMA(getPos(), this.getRotation().getFacing(), 64, this.getFrontDoorHandle());
+        this.setRearHingePos(this.getHinge().getRearHingePosition(getPos(), this.getRotation().getFacing(), this.getRearHingePos()));                
+        Vector2f.Vector2fMA(this.getRearHingePos(), this.getRotation().getFacing(), 64, this.getRearDoorHandle());
         
-        this.handleTouchRadius.centerAround(this.frontDoorHandle);
+        this.getHandleTouchRadius().centerAround(this.getFrontDoorHandle());
     }
     
     @Override
@@ -234,52 +234,52 @@ public class Door extends Entity {
         // we continue opening the door.
         
         // The door can act as a shield to the entity
-        float currentRotation = this.rotation.getOrientation();
+        float currentRotation = this.getRotation().getOrientation();
         
-        switch(this.doorState) {
+        switch(this.getDoorState()) {
             case OPENING: {
-                this.rotation.setDesiredOrientation(this.targetOrientation);
-                this.rotation.update(timeStep);
+                this.getRotation().setDesiredOrientation(this.getTargetOrientation());
+                this.getRotation().update(timeStep);
                 
                 setDoorOrientation();
                 
                 if(this.game.doesTouchPlayers(this)) {
-                    if(!this.isBlocked) {
+                    if(!this.isBlocked()) {
                         this.game.emitSound(getId(), SoundType.DOOR_OPEN_BLOCKED, getPos());
                     }
                     
-                    this.isBlocked = true;
+                    this.setBlocked(true);
                     
-                    this.rotation.setOrientation(currentRotation);
+                    this.getRotation().setOrientation(currentRotation);
                     setDoorOrientation();
                     
                 }
-                else if(!this.rotation.moved()) {
-                    this.doorState = DoorState.OPENED;
-                    this.isBlocked = false;
+                else if(!this.getRotation().moved()) {
+                    this.setDoorState(DoorState.OPENED);
+                    this.setBlocked(false);
                 }
                 
                 break;
             }
             case CLOSING: {
-                this.rotation.setDesiredOrientation(this.targetOrientation);
-                this.rotation.update(timeStep);
+                this.getRotation().setDesiredOrientation(this.getTargetOrientation());
+                this.getRotation().update(timeStep);
 
                 setDoorOrientation();
                 if(this.game.doesTouchPlayers(this)) {
-                    if(!this.isBlocked) {
+                    if(!this.isBlocked()) {
                         this.game.emitSound(getId(), SoundType.DOOR_CLOSE_BLOCKED, getPos());
                     }
                     
-                    this.isBlocked = true;
+                    this.setBlocked(true);
                     
-                    this.rotation.setOrientation(currentRotation);
+                    this.getRotation().setOrientation(currentRotation);
                     setDoorOrientation();
                     
                 }
-                else if(!this.rotation.moved()) {
-                    this.doorState = DoorState.CLOSED;
-                    this.isBlocked = false;
+                else if(!this.getRotation().moved()) {
+                    this.setDoorState(DoorState.CLOSED);
+                    this.setBlocked(false);
                 }
                 
                 break;
@@ -287,25 +287,25 @@ public class Door extends Entity {
             case OPENED: {
                 // part of the gameplay -- auto close
                 // the door after a few seconds
-                this.autoCloseTimer.update(timeStep);
-                if(this.autoCloseTimer.isOnFirstTime()) {                    
+                this.getAutoCloseTimer().update(timeStep);
+                if(this.getAutoCloseTimer().isOnFirstTime()) {                    
                     if(!isPlayerNear()) {
                         close(this);
-                        this.autoCloseTimer.stop();
+                        this.getAutoCloseTimer().stop();
                     }
                     else {
-                        this.autoCloseTimer.reset();
+                        this.getAutoCloseTimer().reset();
                     }                    
                 }
                 
                 break;
             }
             default: { 
-                this.isBlocked = false;
+                this.setBlocked(false);
             }
         }
         
-        setOrientation(this.rotation.getOrientation());
+        setOrientation(this.getRotation().getOrientation());
         
         //Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
     //    DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
@@ -318,19 +318,19 @@ public class Door extends Entity {
     }
     
     public boolean isOpened() {
-        return this.doorState == DoorState.OPENED;
+        return this.getDoorState() == DoorState.OPENED;
     }
     
     public boolean isOpening() {
-        return this.doorState == DoorState.OPENING;
+        return this.getDoorState() == DoorState.OPENING;
     }
     
     public boolean isClosed() {
-        return this.doorState == DoorState.CLOSED;
+        return this.getDoorState() == DoorState.CLOSED;
     }
     
     public boolean isClosing() {
-        return this.doorState == DoorState.CLOSING;
+        return this.getDoorState() == DoorState.CLOSING;
     }
     
     
@@ -341,7 +341,7 @@ public class Door extends Entity {
         else if(isClosed()) {
             open(ent);            
         }
-        else if(this.isBlocked) {
+        else if(this.isBlocked()) {
             if(isOpening()) {
                 close(ent);
             }
@@ -352,42 +352,42 @@ public class Door extends Entity {
     }
     
     public void open(Entity ent) {
-        if(this.doorState != DoorState.OPENED  ||
-           this.doorState != DoorState.OPENING ||
-           this.doorState != DoorState.CLOSING) {
+        if(this.getDoorState() != DoorState.OPENED  ||
+           this.getDoorState() != DoorState.OPENING ||
+           this.getDoorState() != DoorState.CLOSING) {
             
             if(!canBeHandledBy(ent)) {
                 return;
             }
             
-            this.autoCloseTimer.reset();
+            this.getAutoCloseTimer().reset();
                         
-            this.doorState = DoorState.OPENING;
+            this.setDoorState(DoorState.OPENING);
             this.game.emitSound(getId(), SoundType.DOOR_OPEN, getPos());
             
             Vector2f entPos = ent.getCenterPos();
-            Vector2f hingePos = this.frontDoorHandle;//getPos();
+            Vector2f hingePos = this.getFrontDoorHandle();//getPos();
             // figure out what side the entity is 
             // of the door hinge, depending on their
             // side, we set the destinationOrientation
-            switch(this.hinge) {
+            switch(this.getHinge()) {
                 
                 case NORTH_END:
                 case SOUTH_END:
                     if(entPos.x < hingePos.x) {
-                        this.targetOrientation = (float)Math.toRadians(0);
+                        this.setTargetOrientation((float)Math.toRadians(0));
                     }
                     else if(entPos.x > hingePos.x) {
-                        this.targetOrientation = (float)Math.toRadians(180);
+                        this.setTargetOrientation((float)Math.toRadians(180));
                     }
                     break;
                 case EAST_END:                    
                 case WEST_END:
                     if(entPos.y < hingePos.y) {
-                        this.targetOrientation = (float)Math.toRadians(90);
+                        this.setTargetOrientation((float)Math.toRadians(90));
                     }
                     else if(entPos.y > hingePos.y) {
-                        this.targetOrientation = (float)Math.toRadians(270);
+                        this.setTargetOrientation((float)Math.toRadians(270));
                     }
                     break;
                 default:
@@ -397,16 +397,16 @@ public class Door extends Entity {
     }
     
     public void close(Entity ent) {
-        if(this.doorState != DoorState.CLOSED  ||
-           this.doorState != DoorState.OPENING ||
-           this.doorState != DoorState.CLOSING) {
+        if(this.getDoorState() != DoorState.CLOSED  ||
+           this.getDoorState() != DoorState.OPENING ||
+           this.getDoorState() != DoorState.CLOSING) {
             
             if(!canBeHandledBy(ent)) {
                 return;
             }
             
-            this.doorState = DoorState.CLOSING;            
-            this.targetOrientation = this.hinge.getClosedOrientation();        
+            this.setDoorState(DoorState.CLOSING);            
+            this.setTargetOrientation(this.getHinge().getClosedOrientation());        
             this.game.emitSound(getId(), SoundType.DOOR_CLOSE, getPos());
         }
     }
@@ -432,8 +432,8 @@ public class Door extends Entity {
             return true;
         }
         
-        return this.handleTouchRadius.intersects(ent.getBounds()) ||
-               this.hingeTouchRadius.intersects(ent.getBounds()) ;
+        return this.getHandleTouchRadius().intersects(ent.getBounds()) ||
+               this.getHingeTouchRadius().intersects(ent.getBounds()) ;
     }
     
     /**
@@ -445,7 +445,7 @@ public class Door extends Entity {
         for(int i = 0; i < playerEntities.length; i++) {
             Entity other = playerEntities[i];
             if(other != null) {
-                if(this.autoCloseRadius.contains(other.getBounds())) {
+                if(this.getAutoCloseRadius().contains(other.getBounds())) {
                     return true;
                 }
             }
@@ -466,8 +466,8 @@ public class Door extends Entity {
     }
     
     public boolean isTouching(Rectangle bounds) {
-        boolean isTouching = Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
-                             Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
+        boolean isTouching = Line.lineIntersectsRectangle(getPos(), this.getFrontDoorHandle(), bounds) ||
+                             Line.lineIntersectsRectangle(this.getRearHingePos(), this.getRearDoorHandle(), bounds);
 //        if(isTouching) {
 //            DebugDraw.fillRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff00);
 //            DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
@@ -487,15 +487,115 @@ public class Door extends Entity {
      * @return the frontDoorHandle
      */
     public Vector2f getHandle() {
-        return frontDoorHandle;
+        return getFrontDoorHandle();
     }
     
     
     @Override
     public NetEntity getNetEntity() {
-        this.setNetEntity(netDoor);
-        this.netDoor.hinge = this.hinge.netValue();
-        return this.netDoor;
+        this.setNetEntity(getNetDoor());
+        this.getNetDoor().hinge = this.getHinge().netValue();
+        return this.getNetDoor();
     }
+
+	private DoorState getDoorState() {
+		return doorState;
+	}
+
+	private void setDoorState(DoorState doorState) {
+		this.doorState = doorState;
+	}
+
+	private DoorHinge getHinge() {
+		return hinge;
+	}
+
+	private void setHinge(DoorHinge hinge) {
+		this.hinge = hinge;
+	}
+
+	private Vector2f getFrontDoorHandle() {
+		return frontDoorHandle;
+	}
+
+	private void setFrontDoorHandle(Vector2f frontDoorHandle) {
+		this.frontDoorHandle = frontDoorHandle;
+	}
+
+	private Vector2f getRearDoorHandle() {
+		return rearDoorHandle;
+	}
+
+	private void setRearDoorHandle(Vector2f rearDoorHandle) {
+		this.rearDoorHandle = rearDoorHandle;
+	}
+
+	private Vector2f getRearHingePos() {
+		return rearHingePos;
+	}
+
+	private void setRearHingePos(Vector2f rearHingePos) {
+		this.rearHingePos = rearHingePos;
+	}
+
+	private Rectangle getHandleTouchRadius() {
+		return handleTouchRadius;
+	}
+
+	private void setHandleTouchRadius(Rectangle handleTouchRadius) {
+		this.handleTouchRadius = handleTouchRadius;
+	}
+
+	private Rectangle getHingeTouchRadius() {
+		return hingeTouchRadius;
+	}
+
+	private void setHingeTouchRadius(Rectangle hingeTouchRadius) {
+		this.hingeTouchRadius = hingeTouchRadius;
+	}
+
+	private Rectangle getAutoCloseRadius() {
+		return autoCloseRadius;
+	}
+
+	private void setAutoCloseRadius(Rectangle autoCloseRadius) {
+		this.autoCloseRadius = autoCloseRadius;
+	}
+
+	private SmoothOrientation getRotation() {
+		return rotation;
+	}
+
+	private void setRotation(SmoothOrientation rotation) {
+		this.rotation = rotation;
+	}
+
+	private float getTargetOrientation() {
+		return targetOrientation;
+	}
+
+	private void setTargetOrientation(float targetOrientation) {
+		this.targetOrientation = targetOrientation;
+	}
+
+	private void setBlocked(boolean isBlocked) {
+		this.isBlocked = isBlocked;
+	}
+
+	private NetDoor getNetDoor() {
+		return netDoor;
+	}
+
+	private void setNetDoor(NetDoor netDoor) {
+		this.netDoor = netDoor;
+	}
+
+	private Timer getAutoCloseTimer() {
+		return autoCloseTimer;
+	}
+
+	private void setAutoCloseTimer(Timer autoCloseTimer) {
+		this.autoCloseTimer = autoCloseTimer;
+	}
 
 }
