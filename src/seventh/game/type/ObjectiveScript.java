@@ -202,8 +202,6 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 
 	}
 	
-	private void checkLeoObjectType(LeoObject Leo){
-		
-	}
+	
 
 }
