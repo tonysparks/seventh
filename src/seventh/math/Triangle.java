@@ -84,8 +84,8 @@ public class Triangle {
      * @return true if the point is in the {@link Triangle}
      */
     public static boolean pointIntersectsTriangle(Vector2f pointZ, Triangle triangle) {
-        return barycentricTechnique(pointZ.x, pointZ.y, triangle.getPointA().x, triangle.getPointA().y, 
-        		triangle.getPointB().x, triangle.getPointB().y, triangle.getPointC().x, triangle.getPointC().y);
+        return barycentricTechnique(pointZ,new Vector2f(triangle.getPointA().x, triangle.getPointA().y), 
+        		new Vector2f(triangle.getPointB().x, triangle.getPointB().y), new Vector2f(triangle.getPointC().x, triangle.getPointC().y));
     }
 
     /**
@@ -103,14 +103,13 @@ public class Triangle {
      */
     public static boolean pointIntersectsTriangle(float pointZx, float pointZy, float pointAx, float pointAy, 
     		float pointBx, float pointBy, float pointCx, float pointCy) {
-    	return barycentricTechnique(pointZx, pointZy, pointAx, pointAy, pointBx, pointBy, pointCx, pointCy);
+    	return barycentricTechnique(new Vector2f(pointZx, pointZy),new Vector2f(pointAx, pointAy), new Vector2f(pointBx, pointBy), new Vector2f(pointCx, pointCy));
     }
 
-	private static boolean barycentricTechnique(float pointZx, float pointZy, float pointAx, float pointAy,
-			float pointBx, float pointBy, float pointCx, float pointCy) {
-		Vector2f v0 = new Vector2f(pointCx-pointAx, pointCy-pointAy);
-    	Vector2f v1 = new Vector2f(pointBx-pointAx, pointBy-pointAy);
-    	Vector2f v2 = new Vector2f(pointZx-pointAx, pointZy-pointAy);
+	private static boolean barycentricTechnique(Vector2f pointZ,Vector2f pointA,Vector2f pointB,Vector2f pointC) {
+		Vector2f v0 = new Vector2f(pointC.x-pointA.x, pointC.y-pointA.y);
+    	Vector2f v1 = new Vector2f(pointB.x-pointA.x, pointB.y-pointA.y);
+    	Vector2f v2 = new Vector2f(pointZ.x-pointA.x, pointZ.y-pointA.y);
         
         float dot00 = dotProducts(v0,v0);
         float dot01 = dotProducts(v0,v1);
@@ -175,14 +174,8 @@ public class Triangle {
      * @return true if the rectangle intersects the triangle
      */
     public static boolean rectangleIntersectsTriangle(Rectangle rectangle, Triangle triangle) {          
-        float x0 = triangle.getPointA().x; 
-        float y0 = triangle.getPointA().y; 
-        float x1 = triangle.getPointB().x; 
-        float y1 = triangle.getPointB().y; 
-        float x2 = triangle.getPointC().x; 
-        float y2 = triangle.getPointC().y; 
-        
-        return rectangleIntersectsTriangle(rectangle, x0, y0, x1, y1, x2, y2);
+        return rectangleIntersectsTriangle(rectangle, triangle.getPointA().x, triangle.getPointA().y, 
+        		triangle.getPointB().x, triangle.getPointB().y, triangle.getPointC().x, triangle.getPointC().y);
     }
     
     /**
@@ -200,72 +193,62 @@ public class Triangle {
      * @param pointCy
      * @return true if the rectangle intersects the triangle
      */
-    public static boolean rectangleIntersectsTriangle(Rectangle rectangle, float pointAx, float pointAy, float pointBx, float pointBy, float pointCx, float pointCy) {          
-        int l = rectangle.x; 
-        int r = rectangle.x + rectangle.width; 
-        int t = rectangle.y; 
-        int b = rectangle.y + rectangle.height; 
+    public static boolean rectangleIntersectsTriangle(Rectangle rectangle, float pointAx, float pointAy, float pointBx, float pointBy, float pointCx, float pointCy) {
+    	final int isInRectangle = 3;
+        int locationA = pointLocationWithRectangle(new Vector2f(pointAx,pointAy), rectangle);
+        if ( locationA == isInRectangle ) return true;
         
+        int locationB = pointLocationWithRectangle(new Vector2f(pointBx,pointBy), rectangle);
+        if ( locationB == isInRectangle ) return true;
         
-        int b0 = 0;
-        if ( pointAx > l ) b0=1;
-        if ( pointAy > t ) b0 |= (b0<<1);
-        if ( pointAx > r ) b0 |= (b0<<2);
-        if ( pointAy > b ) b0 |= (b0<<3);
-         
-        if ( b0 == 3 ) return true;
-         
-        int b1 = 0;
-        if ( pointBx > l ) b1=1;
-        if ( pointBy > t ) b1 |= (b1<<1);
-        if ( pointBx > r ) b1 |= (b1<<2);
-        if ( pointBy > b ) b1 |= (b1<<3);
-         
-        if ( b1 == 3 ) return true;
-         
-        int b2 = 0;
-        if ( pointCx > l ) b2=1;
-        if ( pointCy > t ) b2 |= (b2<<1);
-        if ( pointCx > r ) b2 |= (b2<<2);
-        if ( pointCy > b ) b2 |= (b2<<3);
-         
-        if ( b2 == 3 ) return true;
+        int locationC = pointLocationWithRectangle(new Vector2f(pointCx,pointCy), rectangle);
+        if ( locationC == isInRectangle ) return true;
 
-        int i0 = b0 ^ b1;
-        if (i0 != 0)
-        {
-            float m = (pointBy-pointAy) / (pointBx-pointAx); 
-            float c = pointAy -(m * pointAx);
-            if ( (i0 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
-            if ( (i0 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
-            if ( (i0 & 4) > 0 ) { float s = m * r + c; if ( s > t && s < b) return true; }
-            if ( (i0 & 8) > 0 ) { float s = (b - c) / m; if ( s > l && s < r) return true; }
+        if(checkLineIntersection(new Vector2f(pointAx, pointAy), new Vector2f(pointBx, pointBy), rectangle, locationA^locationB)){
+        	return true;
         }
-        
-        int i1 = b1 ^ b2;
-        if (i1 != 0)
-        {
-            float m = (pointCy-pointBy) / (pointCx-pointBx); 
-            float c = pointBy -(m * pointBx);
-            if ( (i1 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
-            if ( (i1 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
-            if ( (i1 & 4) > 0 ) { float s = m * r + c; if ( s > t && s < b) return true; }
-            if ( (i1 & 8) > 0 ) { float s = (b - c) / m; if ( s > l && s < r) return true; }
+        if(checkLineIntersection(new Vector2f(pointBx, pointBy),new Vector2f( pointCx, pointCy), rectangle, locationB^locationC)){
+        	return true;
         }
-        
-        int i2 = b0 ^ b2;
-        if (i2 != 0)
-        {
-            float m = (pointCy-pointAy) / (pointCx-pointAx); 
-            float c = pointAy -(m * pointAx);
-            if ( (i2 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
-            if ( (i2 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
-            if ( (i2 & 4) > 0 ) { float s = m * r + c; if ( s > t && s < b) return true; }
-            if ( (i2 & 8) > 0 ) { float s = (b - c) / m; if ( s > l && s < r) return true; }
+        if(checkLineIntersection(new Vector2f(pointAx, pointAy),new Vector2f( pointCx, pointCy), rectangle, locationA^locationC)){
+        	return true;
         }
-        
         return false;
     }
+
+	private static boolean checkLineIntersection(Vector2f pointA, Vector2f pointB, Rectangle rectangle, int relationTwoPoints) {
+		if(relationTwoPoints == 0)	return false;
+		int recStartX = rectangle.x; 
+        int recEndX = rectangle.x + rectangle.width; 
+        int recStartY = rectangle.y; 
+        int recEndY = rectangle.y + rectangle.height;
+        
+        float gradient = (pointB.y-pointA.y) / (pointB.x-pointA.x); 
+        float yIntercept = pointA.y -(gradient * pointA.x);
+        if(relationTwoPoints > 1 && isCoordIntersect(gradient * recStartX + yIntercept,recStartY,recEndY)) return true;
+        if(relationTwoPoints > 2 && isCoordIntersect((recStartY - yIntercept) / gradient,recStartX,recEndX)) return true;
+        if(relationTwoPoints > 4 && isCoordIntersect(gradient * recEndX + yIntercept,recStartY,recEndY)) return true;
+        if(relationTwoPoints > 8 && isCoordIntersect((recEndY - yIntercept) / gradient,recStartX,recEndX)) return true;
+        return false;
+	}
+	
+	private static boolean isCoordIntersect(float checkCoord, int recStartCoord, int recEndCoord){
+		if(recStartCoord < checkCoord && checkCoord < recEndCoord) return true;
+		return false;
+	}
+
+	private static int pointLocationWithRectangle(Vector2f point, Rectangle rectangle) {
+        int recStartX = rectangle.x; 
+        int recEndX = rectangle.x + rectangle.width; 
+        int recStartY = rectangle.y; 
+        int recEndY = rectangle.y + rectangle.height; 
+		int locationValue = 0;
+        if ( point.x > recStartX ) locationValue = 1;
+        if ( point.y > recStartY ) locationValue |= (locationValue<<1);
+        if ( point.x > recEndX ) locationValue |= (locationValue<<2);
+        if ( point.y > recEndY ) locationValue |= (locationValue<<3);
+		return locationValue;
+	}
 
 	public Vector2f getPointA() {
 		return pointA;
