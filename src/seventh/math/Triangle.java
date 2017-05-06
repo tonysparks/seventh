@@ -84,8 +84,7 @@ public class Triangle {
      * @return true if the point is in the {@link Triangle}
      */
     public static boolean pointIntersectsTriangle(Vector2f pointZ, Triangle triangle) {
-        return barycentricTechnique(pointZ,new Vector2f(triangle.getPointA().x, triangle.getPointA().y), 
-        		new Vector2f(triangle.getPointB().x, triangle.getPointB().y), new Vector2f(triangle.getPointC().x, triangle.getPointC().y));
+        return barycentricTechnique(pointZ,triangle);
     }
 
     /**
@@ -103,28 +102,23 @@ public class Triangle {
      */
     public static boolean pointIntersectsTriangle(float pointZx, float pointZy, float pointAx, float pointAy, 
     		float pointBx, float pointBy, float pointCx, float pointCy) {
-    	return barycentricTechnique(new Vector2f(pointZx, pointZy),new Vector2f(pointAx, pointAy), new Vector2f(pointBx, pointBy), new Vector2f(pointCx, pointCy));
+    	return barycentricTechnique(new Vector2f(pointZx, pointZy),
+    			new Triangle(new Vector2f(pointAx, pointAy), new Vector2f(pointBx, pointBy), new Vector2f(pointCx, pointCy)));
     }
 
-	private static boolean barycentricTechnique(Vector2f pointZ,Vector2f pointA,Vector2f pointB,Vector2f pointC) {
-		Vector2f v0 = new Vector2f(pointC.x-pointA.x, pointC.y-pointA.y);
-    	Vector2f v1 = new Vector2f(pointB.x-pointA.x, pointB.y-pointA.y);
-    	Vector2f v2 = new Vector2f(pointZ.x-pointA.x, pointZ.y-pointA.y);
+	private static boolean barycentricTechnique(Vector2f pointZ,Triangle triangle) {
+		Vector2f v0 = new Vector2f(triangle.getPointC().x-triangle.getPointA().x, triangle.getPointC().y-triangle.getPointA().y);
+    	Vector2f v1 = new Vector2f(triangle.getPointB().x-triangle.getPointA().x, triangle.getPointB().y-triangle.getPointA().y);
+    	Vector2f v2 = new Vector2f(pointZ.x-triangle.getPointA().x, pointZ.y-triangle.getPointA().y);
         
-        float dot00 = dotProducts(v0,v0);
-        float dot01 = dotProducts(v0,v1);
-        float dot02 = dotProducts(v0,v2);
-        float dot11 = dotProducts(v1,v1);
-        float dot12 = dotProducts(v1,v2);
-        
-        float det = dot00 * dot11 - dot01 * dot01;
+        float det = dotProducts(v0,v0) * dotProducts(v1,v1) - dotProducts(v0,v1) * dotProducts(v0,v1);
         if(det == 0) {
             return false;
         }
         
         float invDenom = 1f / det;
-        float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-        float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+        float u = (dotProducts(v1,v1) * dotProducts(v0,v2) - dotProducts(v0,v1) * dotProducts(v1,v2)) * invDenom;
+        float v = (dotProducts(v0,v0) * dotProducts(v1,v2) - dotProducts(v0,v1) * dotProducts(v0,v2)) * invDenom;
         
         final boolean isOutOfAB = (u >= 0);
 		final boolean isOutOfAC = (v >= 0);
