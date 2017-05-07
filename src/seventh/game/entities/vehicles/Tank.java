@@ -40,7 +40,9 @@ import seventh.shared.WeaponConstants;
  */
 public class Tank extends Vehicle {
     
-    private final NetTank netTank;
+    private static final int THROTTLE_WARMUP_THRESHOLD_TIME = 600;
+
+	private final NetTank netTank;
     
     private int previousKeys;
     private float previousOrientation;
@@ -336,125 +338,28 @@ public class Tank extends Vehicle {
             return false;
         }
         
+        checkNoThrottleMovingTank();
+        
         boolean isBlocked = false;
         
-        boolean hasThrottle = ! this.vel.isZero();
-        
-        if(!hasThrottle && !this.isStopped()) {
-            this.setStopping(true);
-            //game.emitSound(getId(), SoundType.TANK_REV_DOWN, getCenterPos());
-        }
-        
-        
-        if(isAlive() && (hasThrottle || this.isStopping()) ) {
+        final boolean isTankActivate = isAlive() && (! this.vel.isZero() || this.isStopping());
+		if(isTankActivate ) {
             if(currentState != State.WALKING && currentState != State.SPRINTING) {
                 currentState = State.RUNNING;
             }
             
-            if(this.getThrottleWarmupTime() < 600) {
-                this.setThrottleWarmupTime(this.getThrottleWarmupTime() + timeStep.getDeltaTime());
-                
-                if(hasOperator() && this.getThrottleWarmupTime() > 590) {
-                    game.emitSound(getOperator().getId(), SoundType.TANK_REV_UP, getCenterPos());
-                }
+            if(this.getThrottleWarmupTime() < THROTTLE_WARMUP_THRESHOLD_TIME) {
+                throttleWarmingUp(timeStep);
             }
             else {
                 
                 this.setThrottleStartTime(this.getThrottleStartTime() - timeStep.getDeltaTime());
                 
-                if(this.isStopping()) {
-                    this.vel.set(this.getPreviousVel());
-                    this.getStopEase().update(timeStep);
-                    if(this.getStopEase().isExpired()) {
-                        this.setStopping(false);
-                        this.setStopped(true);
-                        return isBlocked;
-                    }
-                }
-                else {
-                    this.getStopEase().reset(90f, 0f, 800);
-                    this.setStopped(false);
-                    this.getPreviousVel().set(this.vel);
-                    
-                    if(hasOperator()) {
-                //        game.emitSound(getOperator().getId(), SoundType.TANK_MOVE1, getCenterPos());
-                    }
+                if(checkTankStopping(timeStep)){
+                	return isBlocked;
                 }
                 
-                float normalSpeed = this.isStopping() ? this.getStopEase().getValue() : 90f;                                
-                final float movementSpeed = 
-                            this.getThrottleStartTime() > 0 ? 160f : normalSpeed;
-                            
-                float dt = (float)timeStep.asFraction();
-                float newX = pos.x + vel.x * movementSpeed * dt;
-                float newY = pos.y + vel.y * movementSpeed * dt;                    
-                
-                
-                Map map = game.getMap();
-                
-                boolean isXBlocked = false;
-                boolean isYBlocked = false;
-                            
-                bounds.x = (int)newX;
-                if( map.rectCollides(bounds) ) {
-                    vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
-                    isBlocked = map.rectCollides(vehicleBB);
-                    if(isBlocked) { 
-                        bounds.x = (int)pos.x;
-                        isXBlocked = true;
-                    }
-                                    
-                }
-                
-                if(!isBlocked) {
-                    vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
-                    if(collidesAgainstVehicle(bounds)) {                
-                        bounds.x = (int)pos.x;                
-                        isBlocked = true;
-                        isXBlocked = true;
-                    }
-                }
-                
-                
-                
-                bounds.y = (int)newY;
-                if( map.rectCollides(bounds)) {
-                    vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
-                    isBlocked = map.rectCollides(vehicleBB);
-                    if(isBlocked) {
-                        bounds.y = (int)pos.y;
-                        isYBlocked = true;
-                    }
-                }
-                                
-                if(!isBlocked) {
-                    vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
-                    if(collidesAgainstVehicle(bounds)) {                
-                        bounds.y = (int)pos.y;                
-                        isBlocked = true;
-                        isYBlocked = true;
-                    }
-                }
-                
-    
-                /* some things want to stop dead it their tracks
-                 * if a component is blocked
-                 */
-                if(isBlocked && !continueIfBlock()) {
-                    bounds.x = (int)pos.x;
-                    bounds.y = (int)pos.y;
-                    isXBlocked = isYBlocked = true;
-                }
-                            
-    //            pos.x = bounds.x;
-    //            pos.y = bounds.y;
-                
-                pos.x = isXBlocked ? pos.x : newX;
-                pos.y = isYBlocked ? pos.y : newY;
-                                    
-                vel.zeroOut();
-                
-    //            this.walkingTime = WALK_TIME;                                
+                isBlocked = checkBlockedAfterMove(timeStep);
             }
         }
         else {                        
@@ -470,10 +375,127 @@ public class Tank extends Vehicle {
             this.setThrottleStartTime(200);            
         }
         
-        
-        
         return isBlocked;
     }
+
+	private void checkNoThrottleMovingTank() {
+		if(this.vel.isZero() && !this.isStopped()) {
+            this.setStopping(true);
+            //game.emitSound(getId(), SoundType.TANK_REV_DOWN, getCenterPos());
+        }
+	}
+
+	private void throttleWarmingUp(TimeStep timeStep) {
+		this.setThrottleWarmupTime(this.getThrottleWarmupTime() + timeStep.getDeltaTime());
+		
+		if(hasOperator() && this.getThrottleWarmupTime() > 590) {
+		    game.emitSound(getOperator().getId(), SoundType.TANK_REV_UP, getCenterPos());
+		}
+	}
+
+	private boolean checkBlockedAfterMove(TimeStep timeStep) {
+		float normalSpeed = this.isStopping() ? this.getStopEase().getValue() : 90f;                                
+		final float movementSpeed = 
+		            this.getThrottleStartTime() > 0 ? 160f : normalSpeed;
+		            
+		float dt = (float)timeStep.asFraction();
+		float newX = pos.x + vel.x * movementSpeed * dt;
+		float newY = pos.y + vel.y * movementSpeed * dt;  
+		
+		boolean isBlocked = false;
+		boolean isXBlocked = false;            
+		bounds.x = (int)newX;
+		if( game.getMap().rectCollides(bounds) ) {
+		    isXBlocked = checkCollisionNewX(newX, isXBlocked);		   
+		    isBlocked = game.getMap().rectCollides(vehicleBB);
+		}
+		
+		if(!isBlocked) {
+		    vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
+		    if(collidesAgainstVehicle(bounds)) {                
+		        bounds.x = (int)pos.x;                
+		        isBlocked = true;
+		        isXBlocked = true;
+		    }
+		}
+		
+		boolean isYBlocked = false;
+		bounds.y = (int)newY;
+		if( game.getMap().rectCollides(bounds)) {
+		    isYBlocked = checkCollisionNewY(newY, isYBlocked);
+		    isBlocked = game.getMap().rectCollides(vehicleBB);
+		}
+		                
+		if(!isBlocked) {
+		    vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
+		    if(collidesAgainstVehicle(bounds)) {                
+		        bounds.y = (int)pos.y;                
+		        isBlocked = true;
+		        isYBlocked = true;
+		    }
+		}
+		
+   
+		/* some things want to stop dead it their tracks
+		 * if a component is blocked
+		 */
+		if(isBlocked && !continueIfBlock()) {
+		    bounds.x = (int)pos.x;
+		    bounds.y = (int)pos.y;
+		    isXBlocked = isYBlocked = true;
+		}
+		            
+   //            pos.x = bounds.x;
+   //            pos.y = bounds.y;
+		
+		pos.x = isXBlocked ? pos.x : newX;
+		pos.y = isYBlocked ? pos.y : newY;
+		                    
+		vel.zeroOut();
+		
+   //            this.walkingTime = WALK_TIME;                                
+		return isBlocked;
+	}
+
+	private boolean checkCollisionNewY(float newY, boolean isYBlocked) {
+		vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
+		if(game.getMap().rectCollides(vehicleBB)) {
+		    bounds.y = (int)pos.y;
+		    isYBlocked = true;
+		}
+		return isYBlocked;
+	}
+
+	private boolean checkCollisionNewX(float newX, boolean isXBlocked) {
+		vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
+		if(game.getMap().rectCollides(vehicleBB)) { 
+		    bounds.x = (int)pos.x;
+		    isXBlocked = true;
+		}
+		return isXBlocked;
+	}
+
+	private boolean checkTankStopping(TimeStep timeStep) {
+		if(this.isStopping()) {
+		    this.vel.set(this.getPreviousVel());
+		    this.getStopEase().update(timeStep);
+		    if(this.getStopEase().isExpired()) {
+		        this.setStopping(false);
+		        this.setStopped(true);
+		        return true;
+		    }
+		}
+		else {
+		    this.getStopEase().reset(90f, 0f, 800);
+		    this.setStopped(false);
+		    this.getPreviousVel().set(this.vel);
+		    
+		    if(hasOperator()) {
+		//        game.emitSound(getOperator().getId(), SoundType.TANK_MOVE1, getCenterPos());
+		    }
+		}
+		return false;
+	}
     
     /* (non-Javadoc)
      * @see seventh.game.Entity#continueIfBlock()
