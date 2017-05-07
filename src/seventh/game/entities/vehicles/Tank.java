@@ -249,39 +249,24 @@ public class Tank extends Vehicle {
     @Override
     public boolean update(TimeStep timeStep) {
 
-        DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
-        DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
-        DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
-        DebugDraw.fillRectRelative((int)vehicleBB.topLeft.x, (int)vehicleBB.topLeft.y, 5, 5, 0xff1f0000);
-        DebugDraw.fillRectRelative((int)vehicleBB.topRight.x, (int)vehicleBB.topRight.y, 5, 5, 0xffff0000);
-        DebugDraw.fillRectRelative((int)vehicleBB.bottomLeft.x, (int)vehicleBB.bottomLeft.y, 5, 5, 0xff001f00);
-        DebugDraw.fillRectRelative((int)vehicleBB.bottomRight.x, (int)vehicleBB.bottomRight.y, 5, 5, 0xff00ff00);
-        
-        DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
-        DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
-        
-        DebugDraw.drawStringRelative(String.format(" Tracks: %3.2f : %3.2f", Math.toDegrees(this.orientation), Math.toDegrees(this.getDesiredOrientation())), 
-                (int)getPos().x, (int)getPos().y-20, 0xffff0000);
-        
-        DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.getTurretOrientation()), Math.toDegrees(getDesiredTurretOrientation())), 
-                getPos(), 0xffff0000);
+        debugDrawTank();
         
         if(isDestroyed()) {
             return false;
         }
         
-        if( checkIfDying(timeStep) ) {
+        if(checkIfDying(timeStep) ) {
             return false;
         }
         
-        boolean isBlocked = false;
+        
         if(hasOperator()) {
 //            this.primaryWeapon.setOwner(getOperator());
 //            this.secondaryWeapon.setOwner(getOperator());
             
             makeMovementSounds(timeStep);
         }
-        
+        boolean isBlocked = false;
         {
             updateOrientation(timeStep);
             updateTurretOrientation(timeStep);
@@ -303,6 +288,25 @@ public class Tank extends Vehicle {
         
         return isBlocked;
     }
+
+	private void debugDrawTank() {
+		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
+        DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
+        DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
+        DebugDraw.fillRectRelative((int)vehicleBB.topLeft.x, (int)vehicleBB.topLeft.y, 5, 5, 0xff1f0000);
+        DebugDraw.fillRectRelative((int)vehicleBB.topRight.x, (int)vehicleBB.topRight.y, 5, 5, 0xffff0000);
+        DebugDraw.fillRectRelative((int)vehicleBB.bottomLeft.x, (int)vehicleBB.bottomLeft.y, 5, 5, 0xff001f00);
+        DebugDraw.fillRectRelative((int)vehicleBB.bottomRight.x, (int)vehicleBB.bottomRight.y, 5, 5, 0xff00ff00);
+        
+        DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
+        DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
+        
+        DebugDraw.drawStringRelative(String.format(" Tracks: %3.2f : %3.2f", Math.toDegrees(this.orientation), Math.toDegrees(this.getDesiredOrientation())), 
+                (int)getPos().x, (int)getPos().y-20, 0xffff0000);
+        
+        DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.getTurretOrientation()), Math.toDegrees(getDesiredTurretOrientation())), 
+                getPos(), 0xffff0000);
+	}
     
     private boolean checkIfDying(TimeStep timeStep) {
         if(this.isDying()) {
