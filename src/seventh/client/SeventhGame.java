@@ -70,7 +70,7 @@ public class SeventhGame implements ApplicationListener {
             "                                                                             \n" 
             ;
     
-    private static final String VERSION = "v0.1.3.0-BETA";
+    private static final String VERSION = "v0.1.5.0-BETA";
     public static final int DEFAULT_MINIMIZED_SCREEN_WIDTH = 1024;
     public static final int DEFAULT_MINIMIZED_SCREEN_HEIGHT = 768;
     
@@ -392,6 +392,13 @@ public class SeventhGame implements ApplicationListener {
         catch (IOException e) {
             Cons.println("*** Unable to load font: " + e);
         }
+        
+        float viewPortSize = 600;
+        
+        int width = getScreenWidth();
+        int height = getScreenWidth();
+        this.canvas.getCamera().setToOrtho(true, viewPortSize, viewPortSize * (height / width));
+        this.canvas.getCamera().update();
 
         setHWCursorVisible(false);
     }
@@ -553,7 +560,7 @@ public class SeventhGame implements ApplicationListener {
     /**
      * @return the screenHeight
      */
-    public int getScreenHeight() {
+    public int getScreenHeight() {        
         return Gdx.graphics.getHeight();
     }
     
@@ -561,7 +568,17 @@ public class SeventhGame implements ApplicationListener {
      * @return the screenWidth
      */
     public int getScreenWidth() {
+        //return (int)this.canvas.getCamera().viewportWidth;
         return Gdx.graphics.getWidth();
+    }
+    
+    
+    public float getViewPortWidth() {
+        return (int)this.canvas.getCamera().viewportWidth;
+    }
+    
+    public float getViewPortHeight() {
+        return (int)this.canvas.getCamera().viewportHeight;
     }
     
     /**

@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Input.Keys;
 
+import seventh.client.ClientSeventhConfig;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
@@ -84,7 +85,7 @@ public class OptionsScreen implements Screen {
     private boolean isFullscreen;
     private int displayModeIndex;
     
-     
+    private boolean requiresVideoRestart;   
     
     /**
      * 
@@ -102,6 +103,44 @@ public class OptionsScreen implements Screen {
         createUI();
     }
     
+    private void handleVideoChanges() {
+        VideoConfig vConfig = app.getConfig().getVideo();
+        
+        if(isFullscreen != app.isFullscreen()) {
+            vConfig.setFullscreen(isFullscreen);                        
+        }
+
+        if(isFullscreen) {
+            if (mode!=null) {
+                vConfig.setWidth(mode.width);
+                vConfig.setHeight(mode.height);
+                Gdx.graphics.setDisplayMode(mode.width, mode.height, true);        
+            }
+            else {                                                        
+                Gdx.graphics.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
+            }   
+        }
+        else {
+            int displayWidth = SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH;
+            int displayHeight = SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT;
+            if(mode!=null) {
+                if(mode.width <= SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH &&
+                   mode.height <= SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT) {
+                    displayWidth = mode.width;
+                    displayHeight = mode.height;
+                }
+            }
+            
+            vConfig.setWidth(displayWidth);
+            vConfig.setHeight(displayHeight);
+            Gdx.graphics.setDisplayMode(displayWidth, displayHeight, false);
+        }                
+        
+        if(requiresVideoRestart) {
+            requiresVideoRestart = false;
+            app.restartVideo();
+        }
+    }
     
     private void createUI() {
         this.panelView = new PanelView();
@@ -123,53 +162,29 @@ public class OptionsScreen implements Screen {
             @Override
             public void onButtonClicked(ButtonEvent event) {
                 try {
-                    VideoConfig vConfig = app.getConfig().getVideo();
-                    if(isFullscreen != app.isFullscreen()) {
-                        vConfig.setFullscreen(isFullscreen);
-                        
-                        if(!isFullscreen) {
-                            vConfig.setWidth(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH);
-                            vConfig.setHeight(SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);                        
-                            Gdx.graphics.setDisplayMode(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT, isFullscreen);                            
-                        }
-                        else if (mode!=null) {
-                            vConfig.setWidth(mode.width);
-                            vConfig.setHeight(mode.height);
-                            Gdx.graphics.setDisplayMode(mode.width, mode.height, true);        
-                        }
-                        else {                                                        
-                            Gdx.graphics.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
-                        }
-                        app.restartVideo();
-                    }
-                    else if(mode!=null) {
-                        if(app.isFullscreen()) {                            
-                            vConfig.setWidth(mode.width);
-                            vConfig.setHeight(mode.height);
-                            Gdx.graphics.setDisplayMode(mode.width, mode.height, true);
-                            app.restartVideo();
-                        }
-                    }
+                    handleVideoChanges();
+                    
+                    ClientSeventhConfig config = app.getConfig();
                     
                     if(nameTxtBox!=null) {
                         String name = nameTxtBox.getText();
-                        String cfgName = app.getConfig().getPlayerName(); 
+                        String cfgName = config.getPlayerName(); 
                         if(name != null && cfgName != null) {
                             if(!name.equals(cfgName)) {
-                                app.getConfig().setPlayerName(name);
+                                config.setPlayerName(name);
                             }
                         }
                     }
                     
-                    app.getConfig().setMouseSensitivity(uiManager.getCursor().getMouseSensitivity());
-                    
-                    app.getConfig().save();
+                    config.setMouseSensitivity(uiManager.getCursor().getMouseSensitivity());                        
+                    config.save();
                 } catch (IOException e) {
                     Cons.println("Unable to save the configuration file:");
                     Cons.println(e);
                     
                     app.getTerminal().open();
                 }
+                
                 app.popScreen();
                 Sounds.playGlobalSound(Sounds.uiNavigate);
             }
@@ -328,6 +343,7 @@ public class OptionsScreen implements Screen {
                 mode = displayModes[displayModeIndex];
                                 
                 resBtn.setText("Resolution: '" +  mode.width+"x" + mode.height + "'");
+                requiresVideoRestart = true;
             }
         });
         
@@ -339,6 +355,7 @@ public class OptionsScreen implements Screen {
             public void onButtonClicked(ButtonEvent event) {
                 isFullscreen = !app.isFullscreen();                        
                 fullscreenBtn.setText("Fullscreen: '" +  isFullscreen + "'");
+                requiresVideoRestart = true;
             }
         });
         
@@ -350,7 +367,8 @@ public class OptionsScreen implements Screen {
             public void onButtonClicked(ButtonEvent event) {
                 app.setVSync(!app.isVSync());
                 app.getConfig().getVideo().setVsync(app.isVSync());
-                vsyncBtn.setText("VSync: '" +  app.isVSync() + "'");                
+                vsyncBtn.setText("VSync: '" +  app.isVSync() + "'");
+                requiresVideoRestart = true;
             }
         });
         
@@ -437,7 +455,7 @@ public class OptionsScreen implements Screen {
             
             @Override
             public void onCheckboxClicked(CheckboxEvent event) {
-                app.getConfig().setWeaponRecoilEnabled(event.getCheckbox().isChecked());                
+                app.getConfig().setWeaponRecoilEnabled(event.getCheckbox().isChecked());       
             }
         });
         weaponRecoilEnabledChkBx.addOnHoverListener(new OnHoverListener() {
@@ -462,7 +480,7 @@ public class OptionsScreen implements Screen {
             
             @Override
             public void onCheckboxClicked(CheckboxEvent event) {
-                app.getConfig().setBloodEnabled(event.getCheckbox().isChecked());                
+                app.getConfig().setBloodEnabled(event.getCheckbox().isChecked());   
             }
         });
         bloodEnabledChkBx.addOnHoverListener(new OnHoverListener() {
@@ -486,7 +504,7 @@ public class OptionsScreen implements Screen {
             
             @Override
             public void onCheckboxClicked(CheckboxEvent event) {
-                app.getConfig().setFollowReticleEnabled(event.getCheckbox().isChecked());                
+                app.getConfig().setFollowReticleEnabled(event.getCheckbox().isChecked());      
             }
         });
         followReticleEnabledChkBx.addOnHoverListener(new OnHoverListener() {

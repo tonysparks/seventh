@@ -421,7 +421,7 @@ public class ClientGame {
             renderWorld(canvas, camera, alpha);
             
             canvas.setShader(null);
-            DebugDraw.enable(true);
+            DebugDraw.enable(false);
             DebugDraw.render(canvas, camera);
     
             
@@ -912,8 +912,10 @@ public class ClientGame {
     private Camera newCamera(int mapWidth, int mapHeight) {
         Camera camera = new Camera2d();        
         camera.setWorldBounds(new Vector2f(mapWidth, mapHeight));        
-        camera.setViewPort(new Rectangle(this.app.getScreenWidth(), this.app.getScreenHeight()));
-//        camera.setMovementSpeed(new Vector2f(4000, 4000));
+        
+        //camera.setViewPort(new Rectangle(this.app.getScreenWidth(), this.app.getScreenHeight()));
+        camera.setViewPort(new Rectangle( (int) this.app.getViewPortWidth(), (int) this.app.getViewPortHeight()));
+
         camera.setMovementSpeed(new Vector2f(130, 130));
                 
         return camera;
