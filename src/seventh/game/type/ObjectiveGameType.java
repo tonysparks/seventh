@@ -114,14 +114,17 @@ public class ObjectiveGameType extends AbstractTeamGameType {
 		 * in a temporary variable with a name that explains the purpose
 		 * 
 		 */
-    	boolean objectiveSize = this.completedObjectives.size() >= this.minimumObjectivesToComplete;
+    	// If there are objectives that are in progress
+        // we must force the attackers to disarm them,
+        // even if all the attackers are dead
+    	int numberOfObjectivesInProgress = 0;
+    	boolean overMinimumSize = this.completedObjectives.size() >= this.minimumObjectivesToComplete;
     	boolean isEmpty = this.outstandingObjectives.isEmpty() && this.completedObjectives.size()>0;
     	boolean defenderDead = defender.isTeamDead() && defender.teamSize()>0;
     	boolean getTime = getRemainingTime()<=0;
     	boolean attackerDead = (attacker.isTeamDead() && attacker.teamSize()>0);
-    			
-    	
-        
+    	boolean checkMin = numberOfObjectivesInProgress+this.completedObjectives.size() < this.minimumObjectivesToComplete;
+            
         if(this.inIntermission) {
             this.currentDelayTime -= timeStep.getDeltaTime();
             
@@ -130,12 +133,6 @@ public class ObjectiveGameType extends AbstractTeamGameType {
             }
         }
         else {
-
-            // If there are objectives that are in progress
-            // we must force the attackers to disarm them,
-            // even if all the attackers are dead
-            int numberOfObjectivesInProgress = 0;
-            
             // if we are currently playing, check
             // and see if the objectives have been completed        
             int size = this.outstandingObjectives.size();
@@ -150,29 +147,18 @@ public class ObjectiveGameType extends AbstractTeamGameType {
             }
             
             this.outstandingObjectives.removeAll(this.completedObjectives);
-            
-            
-            
-            if(this.completedObjectives.size() >= this.minimumObjectivesToComplete) {
-                endRound(attacker, game);
-            }
-            else if(this.outstandingObjectives.isEmpty() && this.completedObjectives.size() > 0) {
-                endRound(attacker, game);
-            }
-            else if( defender.isTeamDead() && defender.teamSize() > 0) {
-                endRound(attacker, game);
-            }    
-            else if(getRemainingTime() <= 0 ) {
-                endRound(defender, game);
-            }
-            else if( (attacker.isTeamDead() && attacker.teamSize() > 0)
-                && (numberOfObjectivesInProgress+this.completedObjectives.size() < this.minimumObjectivesToComplete) ) {
-                //&& (!this.outstandingObjectives.isEmpty() ? numberOfObjectivesInProgress < this.outstandingObjectives.size() : true) ) {
-                endRound(defender, game);
-            }            
-            else {
+            /*
+    		 * Refactoring target : if and else if statements
+    		 * Refactoring name : erase duplicated statement
+    		 * Bad smell(reason) : needless duplicated statement
+    		 */
+            if(overMinimumSize || isEmpty || defenderDead)
+            	endRound(attacker, game);
+            else if(getTime || (attackerDead&&checkMin))
+            	endRound(defender, game);                
+            else 
                 checkSpectating(timeStep, game);
-            }                
+                          
         }
         
         return this.currentRound >= this.getMaxScore() ? GameState.WINNER : GameState.IN_PROGRESS;
