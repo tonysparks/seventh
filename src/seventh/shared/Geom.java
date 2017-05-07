@@ -86,49 +86,55 @@ public class Geom {
                 
                 if(mask > TILE_INVISIBLE) 
                 {
-                    mask = tile.getMask();
-                    
-                    Tile north = getTile(map, x, y - height, width, height);
-                    if(north==null || north.getMask() == TILE_INVISIBLE) {
-                        tile.setMask( mask | TILE_NORTH_INVISIBLE);
-                    }
-                    
-                    mask = tile.getMask();
-                    
-//                    Tile ne = map.getTile(0, x + width, y + height);
-//                    if(ne == null || ne.getMask() == TILE_INVISIBLE) {
-//                        tile.setMask(mask | Tile.TILE_NE_CORNER_INVISIBLE);
-//                    }
-//                    
-//                    mask = tile.getMask();
-                    
-                    Tile east = getTile(map, x + width, y, width, height);
-                    if(east==null || east.getMask() == TILE_INVISIBLE) {
-                        tile.setMask( mask | TILE_EAST_INVISIBLE);
-                    }
-                    
-                    mask = tile.getMask();
-                    
-//                    Tile se = map.getTile(0, x + width, y - height);
-                    Tile south = getTile(map, x, y + height, width, height);
-                    if(south==null || south.getMask() == TILE_INVISIBLE) {
-                        tile.setMask( mask | TILE_SOUTH_INVISIBLE);
-                    }
-                    
-                    mask = tile.getMask();
-                    
-//                    Tile sw = map.getTile(0, x - width, y - height);
-                    Tile west = getTile(map, x - width, y, width, height);
-                    if(west==null || west.getMask() == TILE_INVISIBLE) {
-                        tile.setMask( mask | TILE_WEST_INVISIBLE);
-                    }
-//                    Tile nw = map.getTile(0, x - width, y + height);
+                    fadeEffect(mask, map, tile, width, height, x, y);
                 }
             }
         }
         
         return tiles;
     }
+
+	private static void fadeEffect(int mask, Map map, Tile tile, int width, int height, int x, int y) {
+		
+		mask = tile.getMask();
+		
+		Tile north = getTile(map, x, y - height, width, height);
+		if(north==null || north.getMask() == TILE_INVISIBLE) {
+		    tile.setMask( mask | TILE_NORTH_INVISIBLE);
+		}
+		
+		
+		mask = tile.getMask();
+		
+//                    Tile ne = map.getTile(0, x + width, y + height);
+//                    if(ne == null || ne.getMask() == TILE_INVISIBLE) {
+//                        tile.setMask(mask | Tile.TILE_NE_CORNER_INVISIBLE);
+//                    }
+//                    
+//                    mask = tile.getMask();
+		
+		Tile east = getTile(map, x + width, y, width, height);
+		if(east==null || east.getMask() == TILE_INVISIBLE) {
+		    tile.setMask( mask | TILE_EAST_INVISIBLE);
+		}
+		
+		mask = tile.getMask();
+		
+//                    Tile se = map.getTile(0, x + width, y - height);
+		Tile south = getTile(map, x, y + height, width, height);
+		if(south==null || south.getMask() == TILE_INVISIBLE) {
+		    tile.setMask( mask | TILE_SOUTH_INVISIBLE);
+		}
+		
+		mask = tile.getMask();
+		
+//                    Tile sw = map.getTile(0, x - width, y - height);
+		Tile west = getTile(map, x - width, y, width, height);
+		if(west==null || west.getMask() == TILE_INVISIBLE) {
+		    tile.setMask( mask | TILE_WEST_INVISIBLE);
+		}
+//                    Tile nw = map.getTile(0, x - width, y + height);
+	}
     
     private static Tile getTile(Map map, int worldX, int worldY, int tileWidth, int tileHeight) {
         
