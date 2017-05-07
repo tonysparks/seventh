@@ -296,7 +296,7 @@ public class Line {
         
         float t[] = {0,0};    /* parametric values corresponding to the points where the line intersects the AABB. */
         boolean result = intersectLineAABB(O, D, C, E, t, FloatUtil.epsilon);
-        
+        System.out.println(t);
         Vector2f tmp = new Vector2f();
                 
         // near = O + t0 * D
@@ -354,60 +354,66 @@ public class Line {
      * Great thanks to jvk on this article:
      *     http://www.gamedev.net/community/forums/topic.asp?topic_id=433699
      * 
-     * @param O
-     * @param D
-     * @param C
-     * @param e
-     * @param t
+     * @param origin
+     * @param direction
+     * @param center
+     * @param extent
+     * @param slab[]
      * @param epsilon
-     * @return
+     * @return boolean
      */
     private static boolean intersectLineAABB(
-            Vector2f O, // Line origin
-            Vector2f D, // Line direction (unit length)
-            Vector2f C, // AABB center
-            Vector2f e, // AABB extents
-            float t[],               // Parametric points of intersection on output
+            Vector2f origin, // Line origin
+            Vector2f direction, // Line direction (unit length)
+            Vector2f center, // AABB center
+            Vector2f extent, // AABB extents
+            float slab[],               // Parametric points of intersection on output
             float epsilon)           // Threshold for epsilon test
     {
-        int parallel = 0;
-        boolean found = false;
-        Vector2f d = new Vector2f(); 
-        Vector2f.Vector2fSubtract(C,O, d);
-        
+        int parallelStatement = 0;
+        boolean storeSlab = false;
+        Vector2f dest = new Vector2f(); 
+        Vector2f.Vector2fSubtract(center,origin, dest);
+
         for (int i = 0; i < 2; ++i)
         {
-            if (Math.abs(D.get(i)) < epsilon)
-                parallel |= 1 << i;
+            boolean isDirParallel = Math.abs(direction.get(i)) < epsilon;
+			if (isDirParallel)
+                parallelStatement |= 1 << i;
             else
             {
-                float es = (D.get(i) > 0.0f) ? e.get(i) : -e.get(i);
-                float invDi = 1.0f / D.get(i);
+                boolean isDirPositive = direction.get(i) > 0.0f;
+				float extentSlab = isDirPositive ? extent.get(i) : -extent.get(i); 
+                float invDir = 1.0f / direction.get(i); 
 
-                if (!found)
+                if (!storeSlab)
                 {
-                    t[0] = (d.get(i) - es) * invDi;
-                    t[1] = (d.get(i) + es) * invDi;
-                    found = true;
+                    slab[0] = (dest.get(i) - extentSlab) * invDir;
+                    slab[1] = (dest.get(i) + extentSlab) * invDir;
+                    storeSlab = true;
                 }
                 else
                 {
-                    float s = (d.get(i) - es) * invDi;
-                    if (s > t[0])
-                        t[0] = s;
-                    s = (d.get(i) + es) * invDi;
-                    if (s < t[1])
-                        t[1] = s;
-                    if (t[0] > t[1])
+                    float yAxisSlab = (dest.get(i) - extentSlab) * invDir;
+                    if (yAxisSlab > slab[0]){
+                        slab[0] = yAxisSlab;
+                    }
+                    yAxisSlab = (dest.get(i) + extentSlab) * invDir; 
+                    if (yAxisSlab < slab[1]){
+                        slab[1] = yAxisSlab;
+                    }
+                    if (slab[0] > slab[1])
                         return false;
                 }
             }
         }
         
-        if (parallel != 0) {
+        if (parallelStatement != 0) {
             for (int i = 0; i < 2; ++i) {
-                if ((parallel & (1 << i)) != 0 ) {
-                    if (Math.abs(d.get(i) - t[0] * D.get(i)) > e.get(i) || Math.abs(d.get(i) - t[1] * D.get(i)) > e.get(i)) {
+                if ((parallelStatement & (1 << i)) != 0 ) {
+                    boolean isIntersectedWithMinSlab = Math.abs(dest.get(i) - slab[0] * direction.get(i)) > extent.get(i);
+					boolean isIntersectWithMaxSlab = Math.abs(dest.get(i) - slab[1] * direction.get(i)) > extent.get(i);
+					if (isIntersectedWithMinSlab || isIntersectWithMaxSlab) {
                         return false;
                     }
                 }
@@ -431,20 +437,18 @@ public class Line {
 //        l.SegmentIntersectBox(l, C, R, D, Pnear, Pfar);
         
         float [] t = {0,0};
-        intersectLineAABB(l.a, l.b, C, E, t, FloatUtil.epsilon);
-        
+        boolean a = intersectLineAABB(l.a, l.b, C, E, t, FloatUtil.epsilon);
+        System.out.println(a);
         Vector2f tmp = new Vector2f();
         
         Vector2f near = new Vector2f();
         Vector2f far = new Vector2f();
-                
+       
         Vector2f.Vector2fMult(l.b, t[0], tmp);
         Vector2f.Vector2fAdd(l.a, tmp, near);
 
         Vector2f.Vector2fMult(l.b, t[1], tmp);
         Vector2f.Vector2fAdd(l.a, tmp, far);
-        
-        System.out.println();
         
     }
     
