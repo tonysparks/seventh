@@ -441,42 +441,7 @@ public class Team implements Debugable {
 	 * @param old
 	 * @return the next alive bot, or null if no bot is alive
 	 */
-	
-	/*
-	public Player getNextAliveBotFrom(Player old) {
-		if (old == null) {
-			return getAliveBot();
-		}
-
-		boolean found = false;
-		boolean firstIteration = true;
-
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			if (firstIteration) {
-				if (old.getId() == player.getId()) {
-					found = true;
-				} else if (found) {
-
-					if (player.isAlive() && player.isBot()) {
-						return player;
-					}
-				}
-
-				if (i >= this.players.size() - 1) {
-					i = 0;
-					firstIteration = false;
-				}
-			} else {
-				if (player.isAlive() && player.isBot()) {
-					return player;
-				}
-			}
-		}
-		return null;
-	}
-	*/
-	
+		
 	public Player getNextAliveBotFrom(Player old) {
 		if (old == null) {
 			return getAliveBot();
