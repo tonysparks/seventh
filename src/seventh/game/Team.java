@@ -384,23 +384,26 @@ public class Team implements Debugable {
 		if (oldPlayer == null)
 			return getAlivePlayer();
 
-		int nextPlayerIndex = players.indexOf(oldPlayer);
-		if (nextPlayerIndex < 0) {
-			nextPlayerIndex = 0;
-		}
+		int nextPlayerIndex = NextPlayerIndex(players.indexOf(oldPlayer));
 
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(nextPlayerIndex);
-			if (player != null) {
-				if (player.isAlive() && player != oldPlayer) {
+			if (IsPrevAlivePlayer(player, oldPlayer)) {
 					return player;
-				}
 			}
 
 			nextPlayerIndex = (nextPlayerIndex + 1) % players.size();
 		}
 
 		return null;
+	}
+	
+	
+	
+	public int NextPlayerIndex(int oldPlayerIndex){
+		if(oldPlayerIndex < 0)
+			return 0;
+		return oldPlayerIndex;
 	}
 
 	/**
