@@ -158,18 +158,18 @@ public class Team implements Debugable {
 		int sum = 0;
 
 		for (int i = 0; i < players.size(); i++) {
-
-			PlayerEntity player = players.get(i);
-			Team team = player.getTeam();
-			boolean isPlayer = player != null;
-			boolean isTeam = team != null;
-			boolean isId = team.getId() == getId();
-			
-			if (isPlayer && isTeam && isId) {
+			if(CheckPlayerOnTeam(players, i))
 				sum++;
-			}
 		}
 		return sum;
+	}
+	
+	public boolean CheckPlayerOnTeam(List<PlayerEntity> players, int i){
+		PlayerEntity player = players.get(i);
+		Team team = player.getTeam();
+		if((player != null) && (team != null) && (team.getId() == getId()))
+			return true;
+		return false;
 	}
 	
 
