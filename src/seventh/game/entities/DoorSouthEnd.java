@@ -22,5 +22,15 @@ public class DoorSouthEnd extends DoorHingeEnd{
         Vector2f.Vector2fMA(hingePos, hingeFacing, Door.getDoorWidth(), rearHingePos);
 		return rearHingePos;
 	}
+	@Override
+	public void doorOpen(Door door, Entity ent) {
+        if(ent.getCenterPos().x < door.getFrontDoorHandle().x) {
+            door.setTargetOrientation((float)Math.toRadians(0));
+        }
+        else if(ent.getCenterPos().x > door.getFrontDoorHandle().x) {
+            door.setTargetOrientation((float)Math.toRadians(180));
+        }
+	}
+
 
 }
