@@ -409,33 +409,7 @@ public class Team implements Debugable {
 	 * @param oldPlayer
 	 * @return the previous {@link Player} or null if none
 	 */
-	/*
-	public Player getPrevAlivePlayerFrom(Player oldPlayer) {
-		if (oldPlayer == null)
-			return getAlivePlayer();
 
-		int nextPlayerIndex = players.indexOf(oldPlayer);
-		if (nextPlayerIndex < 0) {
-			nextPlayerIndex = Math.max(players.size() - 1, 0);
-		}
-
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(nextPlayerIndex);
-			if (player != null) {
-				if (player.isAlive() && player != oldPlayer) {
-					return player;
-				}
-			}
-
-			nextPlayerIndex = (nextPlayerIndex - 1) % players.size();
-			if (nextPlayerIndex < 0) {
-				nextPlayerIndex = Math.max(players.size() - 1, 0);
-			}
-		}
-
-		return null;
-	}
-	*/
 	
 	public Player getPrevAlivePlayerFrom(Player oldPlayer) {
 		if (oldPlayer == null)
