@@ -102,12 +102,74 @@ public class Door extends Entity {
      *
      */
     public static enum DoorState {
-        OPENED,
-        OPENING,
+        OPENED {
+        	public void update(Door door,TimeStep timeStep){
+                // part of the gameplay -- auto close
+                // the door after a few seconds
+        		door.autoCloseTimer.update(timeStep);
+                if(door.autoCloseTimer.isOnFirstTime()) {                    
+                    if(!door.isPlayerNear()) {
+                    	door.close(door);
+                    	door.autoCloseTimer.stop();
+                    }
+                    else {
+                    	door.autoCloseTimer.reset();
+                    }                    
+                }
+        	}
+        },
+        OPENING {
+        	public void update(Door door,TimeStep timeStep){
+        		door.getRotation().setDesiredOrientation(door.getTargetOrientation());
+        		door.getRotation().update(timeStep);
+                
+        		door.setDoorOrientation();
+                
+                if(door.game.doesTouchPlayers(door)) {
+                    if(!door.isBlocked()) {
+                    	door.game.emitSound(door.getId(), SoundType.DOOR_OPEN_BLOCKED, door.getPos());
+                    }
+                    
+                    door.setBlocked(true);
+                    
+                    door.getRotation().setOrientation(door.getRotation().getOrientation());
+                    door.setDoorOrientation();
+                    
+                }
+                else if(!door.getRotation().moved()) {
+                	door.setDoorState(DoorState.OPENED);
+                	door.setBlocked(false);
+                }
+        	}
+        },
         CLOSED,
-        CLOSING,
+        CLOSING {
+        	public void update(Door door,TimeStep timeStep){
+				door.getRotation().setDesiredOrientation(door.getTargetOrientation());
+				door.getRotation().update(timeStep);
+
+				door.setDoorOrientation();
+                if(door.game.doesTouchPlayers(door)) {
+                    if(!door.isBlocked()) {
+                    	door.game.emitSound(door.getId(), SoundType.DOOR_CLOSE_BLOCKED, door.getPos());
+                    }
+                    
+                    door.setBlocked(true);
+                    
+                    door.getRotation().setOrientation(door.getRotation().getOrientation());
+                    door.setDoorOrientation();
+                    
+                }
+                else if(!door.getRotation().moved()) {
+                	door.setDoorState(DoorState.CLOSED);
+                	door.setBlocked(false);
+                }
+        	}
+        },
         ;
-        
+        public void update(Door door,TimeStep timeStep) {
+        	door.setBlocked(false);
+		}
         public byte netValue() {
             return (byte)ordinal();
         }
@@ -192,82 +254,12 @@ public class Door extends Entity {
     
     @Override
     public boolean update(TimeStep timeStep) {
-        
         // if the door gets blocked by an Entity,
         // we stop the door.  Once the Entity moves
         // we continue opening the door.
         
         // The door can act as a shield to the entity
-        float currentRotation = this.getRotation().getOrientation();
-        
-        switch(this.getDoorState()) {
-            case OPENING: {
-                this.getRotation().setDesiredOrientation(this.getTargetOrientation());
-                this.getRotation().update(timeStep);
-                
-                setDoorOrientation();
-                
-                if(this.game.doesTouchPlayers(this)) {
-                    if(!this.isBlocked()) {
-                        this.game.emitSound(getId(), SoundType.DOOR_OPEN_BLOCKED, getPos());
-                    }
-                    
-                    this.setBlocked(true);
-                    
-                    this.getRotation().setOrientation(currentRotation);
-                    setDoorOrientation();
-                    
-                }
-                else if(!this.getRotation().moved()) {
-                    this.setDoorState(DoorState.OPENED);
-                    this.setBlocked(false);
-                }
-                
-                break;
-            }
-            case CLOSING: {
-                this.getRotation().setDesiredOrientation(this.getTargetOrientation());
-                this.getRotation().update(timeStep);
-
-                setDoorOrientation();
-                if(this.game.doesTouchPlayers(this)) {
-                    if(!this.isBlocked()) {
-                        this.game.emitSound(getId(), SoundType.DOOR_CLOSE_BLOCKED, getPos());
-                    }
-                    
-                    this.setBlocked(true);
-                    
-                    this.getRotation().setOrientation(currentRotation);
-                    setDoorOrientation();
-                    
-                }
-                else if(!this.getRotation().moved()) {
-                    this.setDoorState(DoorState.CLOSED);
-                    this.setBlocked(false);
-                }
-                
-                break;
-            }
-            case OPENED: {
-                // part of the gameplay -- auto close
-                // the door after a few seconds
-                this.autoCloseTimer.update(timeStep);
-                if(this.autoCloseTimer.isOnFirstTime()) {                    
-                    if(!isPlayerNear()) {
-                        close(this);
-                        this.autoCloseTimer.stop();
-                    }
-                    else {
-                        this.autoCloseTimer.reset();
-                    }                    
-                }
-                
-                break;
-            }
-            default: { 
-                this.setBlocked(false);
-            }
-        }
+        getDoorState().update(this,timeStep);
         
         setOrientation(this.getRotation().getOrientation());
         
