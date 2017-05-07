@@ -356,23 +356,36 @@ public class Team implements Debugable {
 	 * @param other
 	 * @return the closest bot or null if no alive players
 	 */
+	
+	
+
+	
 	public Player getClosestBotTo(Entity other) {
 		Player closest = null;
 		float distance = -1;
-
+		closest = findClosestBot(closest, distance, other);
+		return closest;	
+	}
+	
+	public Player findClosestBot(Player closest, float distance, Entity other){
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(i);
-			if (player.isAlive() && player.isBot()) {
-				PlayerEntity ent = player.getEntity();
-				float dist = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
-				if (closest != null || dist < distance) {
+			PlayerEntity ent = player.getEntity();
+			float dist = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
+			if (IsAliveAndBot(player) && IsClosestOrDist(closest, dist, distance)) {
 					closest = player;
 					distance = dist;
-				}
 			}
 		}
-		return closest;
+		return closest;	
 	}
+	
+	
+	public boolean IsClosestOrDist(Player closest, float dist, float distance){
+		return (closest != null) || (dist<distance);
+	}
+	
+	
 
 	/**
 	 * The next available alive player on this team from the 'oldPlayer'
