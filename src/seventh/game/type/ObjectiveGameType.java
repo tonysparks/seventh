@@ -217,11 +217,13 @@ public class ObjectiveGameType extends AbstractTeamGameType {
         Player[] players = game.getPlayers().getPlayers();
         for (int i = 0; i < players.length; i++) {
             Player player = players[i];
-            if (player != null) {
-                if(!player.isPureSpectator() && !player.isCommander()) {
+            /*
+    		 * Refactoring target : nested if statements
+    		 * Refactoring name : erase needless if statement
+    		 * Bad smell(reason) : nested if statements
+    		 */
+            if (player != null&&(!player.isPureSpectator() && !player.isCommander()))                 
                     spawnPlayer(player, game);
-                }
-            }
         }
         
         resetRemainingTime();
