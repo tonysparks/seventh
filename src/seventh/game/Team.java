@@ -363,11 +363,11 @@ public class Team implements Debugable {
 	public Player getClosestBotTo(Entity other) {
 		Player closest = null;
 		float distance = -1;
-		closest = findClosestBot(closest, distance, other);
+		closest = findClosest(closest, distance, other);
 		return closest;	
 	}
 	
-	public Player findClosestBot(Player closest, float distance, Entity other){
+	public Player findClosest(Player closest, float distance, Entity other){
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(i);
 			PlayerEntity ent = player.getEntity();
