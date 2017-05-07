@@ -148,23 +148,38 @@ public class Team implements Debugable {
 	 * @param players
 	 * @return the number of players in the list on this team
 	 */
-	public int getNumberOfPlayersOnTeam(List<PlayerEntity> players) {
-		int sum = 0;
-		for (int i = 0; i < players.size(); i++) {
-			PlayerEntity player = players.get(i);
-			if (player != null) {
-				Team team = player.getTeam();
+	/*
+	 * public int getNumberOfPlayersOnTeam(List<PlayerEntity> players) { int sum
+	 * = 0; for (int i = 0; i < players.size(); i++) { PlayerEntity player =
+	 * players.get(i); if (player != null) { Team team = player.getTeam();
+	 * 
+	 * if (team != null) { if (team.getId() == getId()) { sum++; } } } }
+	 * 
+	 * return sum; }
+	 */
 
-				if (team != null) {
-					if (team.getId() == getId()) {
-						sum++;
-					}
-				}
+	public int getNumberOfPlayersOnTeam(List<PlayerEntity> players) {
+		return CalculateNumberOfPlayerOnTeam(players);
+	}
+	
+	public int CalculateNumberOfPlayerOnTeam(List<PlayerEntity> players){
+		int sum = 0;
+
+		for (int i = 0; i < players.size(); i++) {
+
+			PlayerEntity player = players.get(i);
+			Team team = player.getTeam();
+			boolean isPlayer = player != null;
+			boolean isTeam = team != null;
+			boolean isId = team.getId() == getId();
+			
+			if (isPlayer && isTeam && isId) {
+				sum++;
 			}
 		}
-
 		return sum;
 	}
+	
 
 	/**
 	 * @return the team name
