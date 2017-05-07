@@ -24,4 +24,10 @@ public class DoorNorthEnd extends DoorHingeEnd{
 		return rearHingePos;
 	}
 
+	@Override
+	public void doorOpen(Door door, Entity ent) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

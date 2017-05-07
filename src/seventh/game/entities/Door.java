@@ -329,36 +329,30 @@ public class Door extends Entity {
             this.setDoorState(DoorState.OPENING);
             this.game.emitSound(getId(), SoundType.DOOR_OPEN, getPos());
             
-            Vector2f entPos = ent.getCenterPos();
-            Vector2f hingePos = this.getFrontDoorHandle();//getPos();
-            // figure out what side the entity is 
-            // of the door hinge, depending on their
-            // side, we set the destinationOrientation
-            switch(this.getHinge()) {
-                
-                case NORTH_END:
-                case SOUTH_END:
-                    if(entPos.x < hingePos.x) {
-                        this.setTargetOrientation((float)Math.toRadians(0));
-                    }
-                    else if(entPos.x > hingePos.x) {
-                        this.setTargetOrientation((float)Math.toRadians(180));
-                    }
-                    break;
-                case EAST_END:                    
-                case WEST_END:
-                    if(entPos.y < hingePos.y) {
-                        this.setTargetOrientation((float)Math.toRadians(90));
-                    }
-                    else if(entPos.y > hingePos.y) {
-                        this.setTargetOrientation((float)Math.toRadians(270));
-                    }
-                    break;
-                default:
-                    break;            
-            }
+            setDoorDestinationOrientation(ent);
         }
     }
+
+	private void setDoorDestinationOrientation(Entity ent) {
+		//getPos();
+		// figure out what side the entity is 
+		// of the door hinge, depending on their
+		// side, we set the destinationOrientation
+		switch(this.getHinge()){
+		    case NORTH_END:
+		    	new DoorNorthEnd().doorOpen(this,ent);
+		    case SOUTH_END:
+		        new DoorSouthEnd().doorOpen(this,ent);
+		        break;
+		    case EAST_END:
+		    	new DoorEastEnd().doorOpen(this,ent);
+		    case WEST_END:
+		    	new DoorSouthEnd().doorOpen(this,ent);
+		        break;
+		    default:
+		        break;   
+		}
+	}
     
     public void close(Entity ent) {
         if(this.getDoorState() != DoorState.CLOSED  ||
@@ -478,7 +472,7 @@ public class Door extends Entity {
 		this.hinge = hinge;
 	}
 
-	private Vector2f getFrontDoorHandle() {
+	public Vector2f getFrontDoorHandle() {
 		return frontDoorHandle;
 	}
 
@@ -538,7 +532,7 @@ public class Door extends Entity {
 		return targetOrientation;
 	}
 
-	private void setTargetOrientation(float targetOrientation) {
+	public void setTargetOrientation(float targetOrientation) {
 		this.targetOrientation = targetOrientation;
 	}
 
