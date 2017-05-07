@@ -185,16 +185,23 @@ public class Players implements PlayerInfos {
      */
     @Override
     public Player getRandomAlivePlayer() {        
-        int size = players.length;
-        int startingIndex = random.nextInt(size);
-        
-        for(int i = 0; i < size; i++) {
-            Player player = players[(startingIndex + i) % size];
-            if(player != null && player.isAlive()) {
+        int startingIndex = random.nextInt(players.length);
+        return FindAlivePlayer(startingIndex);
+    }
+    
+    public Player FindAlivePlayer(int start){
+    	int PlayerSize = players.length;
+        for(int i = 0; i < PlayerSize; i++) {
+            Player player = players[(start + i) % PlayerSize];
+            if(IsAlivePlayer(player)) {
                 return player;
             }
         }
         return null;
+    }
+    
+    public boolean IsAlivePlayer(Player player){
+    	return player != null && player.isAlive();
     }
     
     /* (non-Javadoc)
