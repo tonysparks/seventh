@@ -541,7 +541,7 @@ public class Tank extends Vehicle {
     
     protected void updateOrientation(TimeStep timeStep) {
         
-        if(this.vel.x > 0 || this.vel.x < 0) {
+        if(this.vel.x != 0) {
             float deltaMove = 0.55f * (float)timeStep.asFraction();
             if(this.vel.x < 0) {
                 deltaMove *= -1;
@@ -560,13 +560,12 @@ public class Tank extends Vehicle {
             
             float newOrientation = this.getDesiredOrientation();
             
-            Map map = game.getMap();
-            if(map.rectCollides(bounds) || collidesAgainstVehicle(bounds)) {
+            if(game.getMap().rectCollides(bounds) || collidesAgainstVehicle(bounds)) {
                 
                 this.vehicleBB.rotateTo(newOrientation);
                 
                 /* If we collide, then revert back to a valid orientation */
-                if(map.rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {                    
+                if(game.getMap().rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {                    
                     this.orientation = this.getLastValidOrientation();
                     return;
                 }
@@ -659,8 +658,7 @@ public class Tank extends Vehicle {
         
         if (damager instanceof Explosion) {
             amount = 1;
-        } 
-        else if(damager instanceof Rocket) {
+        } else if(damager instanceof Rocket) {
             //amount /= 2;
         } else if (damager instanceof Bullet) {
             amount = 0;
@@ -740,25 +738,20 @@ public class Tank extends Vehicle {
     public void handleUserCommand(int keys, float orientation) {
                 
         
-        if( Keys.FIRE.isDown(keys) ) {
-            setFiringPrimary(true);
-        }
-        else if(Keys.FIRE.isDown(getPreviousKeys())) {
-            endPrimaryFire();
-            setFiringPrimary(false);
-        }        
+        primaryFire(keys);        
         
         
-        if(Keys.THROW_GRENADE.isDown(keys)) {
-            setFiringSecondary(true);
-        }
-        else if(Keys.THROW_GRENADE.isDown(getPreviousKeys())) {
-            endSecondaryFire();    
-            setFiringSecondary(false);
-        }
+        secondaryFire(keys);
         
         
-        /* ============================================
+        tankMovement(keys, orientation);
+        
+        this.setPreviousKeys(keys);
+        this.setPreviousOrientation(orientation);
+    }
+
+	private void tankMovement(int keys, float orientation) {
+		/* ============================================
          * Handles the movement of the tank
          * ============================================
          */
@@ -787,10 +780,27 @@ public class Tank extends Vehicle {
         if(getPreviousOrientation() != orientation) {
             setTurretOrientation(orientation);
         }
-        
-        this.setPreviousKeys(keys);
-        this.setPreviousOrientation(orientation);
-    }
+	}
+
+	private void secondaryFire(int keys) {
+		if(Keys.THROW_GRENADE.isDown(keys)) {
+            setFiringSecondary(true);
+        }
+        else if(Keys.THROW_GRENADE.isDown(getPreviousKeys())) {
+            endSecondaryFire();    
+            setFiringSecondary(false);
+        }
+	}
+
+	private void primaryFire(int keys) {
+		if( Keys.FIRE.isDown(keys) ) {
+            setFiringPrimary(true);
+        }
+        else if(Keys.FIRE.isDown(getPreviousKeys())) {
+            endPrimaryFire();
+            setFiringPrimary(false);
+        }
+	}
 
     /* (non-Javadoc)
      * @see seventh.game.Entity#calculateLineOfSight()
