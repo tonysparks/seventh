@@ -478,7 +478,11 @@ public class Team implements Debugable {
 		if (old == null) {
 			return getAliveBot();
 		}
-
+		return findNextAliveBot(old); 
+	}
+	
+	
+	public Player findNextAliveBot(Player old){
 		boolean found = false;
 		boolean firstIteration = true;
 
