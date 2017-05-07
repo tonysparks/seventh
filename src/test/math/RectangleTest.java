@@ -312,7 +312,7 @@ public class RectangleTest {
 		final int expectedWidth = 3;
 		final int expectedheight = 4;
 		Rectangle rectangle = new Rectangle(0,0,0,0);
-		rectangle.setBounds(1,2,3,4);
+		rectangle.set(1,2,3,4);
 		assertEquals(expectedX,rectangle.getX());
 		assertEquals(expectedY,rectangle.getY());
 		assertEquals(expectedWidth,rectangle.getWidth());
