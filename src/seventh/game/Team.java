@@ -441,6 +441,8 @@ public class Team implements Debugable {
 	 * @param old
 	 * @return the next alive bot, or null if no bot is alive
 	 */
+	
+	/*
 	public Player getNextAliveBotFrom(Player old) {
 		if (old == null) {
 			return getAliveBot();
@@ -473,6 +475,48 @@ public class Team implements Debugable {
 		}
 		return null;
 	}
+	*/
+	
+	public Player getNextAliveBotFrom(Player old) {
+		if (old == null) {
+			return getAliveBot();
+		}
+
+		boolean found = false;
+		boolean firstIteration = true;
+
+		for (int i = 0; i < this.players.size(); i++) {
+			Player player = this.players.get(i);
+			found = IsFoundId(firstIteration, old, player);
+			if(OverPlayersSize(i)){
+				i = 0;
+				firstIteration = false;
+			}
+			if(FoundOrAliveAndBot(found, player))
+				return player;
+		}
+		return null;
+	}
+	
+	public boolean FoundOrAliveAndBot(boolean found, Player player){
+		return (found && IsAliveAndBot(player)||IsAliveAndBot(player));
+		
+	}
+	
+	public boolean OverPlayersSize(int i){
+		return i>= this.players.size()-1;
+	}
+	
+	public boolean IsAliveAndBot(Player player){
+		return player.isAlive() && player.isBot();
+	}
+	
+	public boolean IsFoundId(boolean firstIteration, Player old, Player player){
+		if(firstIteration && (old.getId() == player.getId()))
+				return true;
+		return false;
+	}
+	
 
 	/**
 	 * @return the total number of deaths accrued on this team
