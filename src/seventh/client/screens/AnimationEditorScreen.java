@@ -343,7 +343,7 @@ public class AnimationEditorScreen implements Screen {
         btn.setTextSize(18);
         btn.setHoverTextSize(22);        
         btn.getTextLabel().setFont(theme.getPrimaryFontName());        
-        btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
+        btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());        
         btn.addOnHoverListener(new OnHoverListener() {
             

@@ -10,6 +10,7 @@ import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
 import seventh.map.Map;
 import seventh.map.Tile.SurfaceType;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
@@ -277,13 +278,7 @@ public class Bullet extends Entity {
                     break;
                 }
                 else {
-                    if ( game.doesTouchPlayers(this, origin, targetVel) && !this.piercing ) {
-                        break;
-                    }            
-                    if( game.doesTouchVehicles(this) ) {
-                        break;
-                    }
-                    if (game.doesTouchDoors(this)) {
+                    if(collidesAgainstEntity(bounds)) {
                         break;
                     }
                 }
@@ -300,16 +295,26 @@ public class Bullet extends Entity {
             } while(!isBlocked && (bounds.x != newX || bounds.y != newY));
         }
         else {
-            if(!game.doesTouchPlayers(this, origin, targetVel)) {
-                if(!game.doesTouchVehicles(this)) {
-                    game.doesTouchDoors(this);
-                }
-            }
+            collidesAgainstEntity(bounds);
         }
         
         getPos().set(bounds.x, bounds.y);        
         
         return isBlocked;
+    }
+    
+    @Override
+    protected boolean collidesAgainstEntity(Rectangle bounds) {
+        if ( game.doesTouchPlayers(this, origin, targetVel) && !this.piercing ) {
+            return true;
+        }            
+        if( game.doesTouchVehicles(this) ) {
+            return true;
+        }
+        if (game.doesTouchDoors(this)) {
+            return true;
+        }
+        return false;
     }
     
 //    /* (non-Javadoc)

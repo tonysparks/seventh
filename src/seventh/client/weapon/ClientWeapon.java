@@ -141,6 +141,10 @@ public class ClientWeapon {
         return false;
     }
     
+    public boolean isHeavyWeapon() {
+        return false;
+    }
+    
     public boolean isAutomatic() {
         return false;
     }
@@ -220,7 +224,7 @@ public class ClientWeapon {
                         this.fireWaitTimer.reset();
                         this.fireWaitTimer.start();
                         
-                        if(!isAutomatic() && !(this instanceof ClientRocketLauncher)) {
+                        if(!isAutomatic() && !isHeavyWeapon()) {
                             this.owner.emitBulletCasing();
                         }
                     }

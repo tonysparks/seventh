@@ -79,29 +79,43 @@ public class LabelView implements Renderable {
         if ( this.label.ignoreCR() ) {
     
             renderer.setFont(label.getFont(), (int)label.getTextSize());
-            int width = renderer.getWidth(buttonTxt);    
-            switch(this.label.getTextAlignment()) {
-            case LEFT:
-                RenderFont.drawShadedString(renderer
-//                renderer.drawString(
-                          , buttonTxt
-                          , bounds.x
-                          , bounds.y + (bounds.height/2), null );
-                break;
-            case RIGHT:
-                RenderFont.drawShadedString(renderer
-//                renderer.drawString(
-                          , buttonTxt
-                          , bounds.x + bounds.width - width
-                          , bounds.y + (bounds.height/2), null );
-                break;
-            case CENTER:
-                RenderFont.drawShadedString(renderer
-//                renderer.drawString(
-                                  , buttonTxt
-                                  , bounds.x + (bounds.width/2) - (width/2)
-                                  , bounds.y + (bounds.height/2), null );
-                break;
+            int width = renderer.getWidth(buttonTxt);
+            int height = renderer.getHeight("W");
+            
+            int vertical = bounds.y + (bounds.height/2);
+            switch(this.label.getVerticalTextAlignment()) {
+                case BOTTOM:
+                    vertical = bounds.y + (bounds.height - 5);
+                    break;
+                case TOP:
+                    vertical = bounds.y + height;
+                    break;
+                default:
+                    vertical = bounds.y + (bounds.height/2);
+            }
+            
+            switch(this.label.getHorizontalTextAlignment()) {
+                case LEFT:
+                    RenderFont.drawShadedString(renderer
+    //                renderer.drawString(
+                              , buttonTxt
+                              , bounds.x + 5
+                              , vertical, null, label.isShadowed() );
+                    break;
+                case RIGHT:
+                    RenderFont.drawShadedString(renderer
+    //                renderer.drawString(
+                              , buttonTxt
+                              , bounds.x + bounds.width - width
+                              , vertical, null, label.isShadowed() );
+                    break;
+                default:
+                    RenderFont.drawShadedString(renderer
+    //                renderer.drawString(
+                                      , buttonTxt
+                                      , bounds.x + (bounds.width/2) - (width/2)
+                                      , vertical, null, label.isShadowed() );
+                    break;
             }
 //            font.setSize(textSize);
         }

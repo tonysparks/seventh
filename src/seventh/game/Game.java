@@ -61,6 +61,7 @@ import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Fire;
+import seventh.game.weapons.Smoke;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
 import seventh.map.GraphNodeFactory;
@@ -119,6 +120,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         Type.RISKER,
         Type.ROCKET_LAUNCHER,
+        Type.FLAME_THROWER,
     };
     
     public static final Type[] axisWeapons = {
@@ -130,6 +132,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         Type.RISKER,
         Type.ROCKET_LAUNCHER,
+        Type.FLAME_THROWER,
     };
     
     private Entity[] entities;    
@@ -145,6 +148,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private List<Vehicle> vehicles;
     private List<Flag> flags;
     private List<Door> doors;
+    private List<Smoke> smokeEntities;
     
     private Players players;
                 
@@ -222,6 +226,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.vehicles = new ArrayList<Vehicle>();
         this.flags = new ArrayList<Flag>();
         this.doors = new ArrayList<Door>();
+        this.smokeEntities = new ArrayList<Smoke>();
         
         this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
         this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
@@ -637,6 +642,13 @@ public class Game implements GameInfo, Debugable, Updatable {
         return this.flags;
     }
     
+    /**
+     * @return the smokeEntities
+     */
+    public List<Smoke> getSmokeEntities() {
+        return smokeEntities;
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getPlayerInfos()
      */
@@ -977,6 +989,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.vehicles.clear();
         this.flags.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
         
         this.players.resetStats();
         this.aiSystem.destroy();
@@ -1120,6 +1133,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                     case SHOTGUN:
                     case ROCKET_LAUNCHER:
                     case RISKER:
+                    case FLAME_THROWER:
                         break;
                         
                     /* make the player use the default weapon */
@@ -1162,6 +1176,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                             case RISKER:
                             case SHOTGUN:
                             case ROCKET_LAUNCHER:
+                            case FLAME_THROWER:
                                 allowed = true;
                                 break;
                             default: allowed = false;
@@ -1175,6 +1190,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                             case RISKER:
                             case SHOTGUN:
                             case ROCKET_LAUNCHER:
+                            case FLAME_THROWER:
                                 allowed = true;
                                 break;
                             default: allowed = false;
@@ -1279,6 +1295,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.vehicles.clear();
         this.flags.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
     }
     
     /**
@@ -1503,6 +1520,28 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.addEntity(explosion);
         return explosion;
     } 
+
+    /**
+     * Adds a new {@link Smoke}
+     * 
+     * @param pos
+     * @param owner
+     * @param damage
+     * @return the {@link Smoke}
+     */
+    public Smoke newSmoke(Vector2f pos, int speed, Vector2f vel, Entity owner) {
+        final Smoke smoke = new Smoke(pos, speed, this, vel);
+        smoke.onKill = new KilledListener() {
+            
+            @Override
+            public void onKill(Entity entity, Entity killer) {
+                smokeEntities.remove(smoke);
+            }
+        };
+        this.smokeEntities.add(smoke);
+        this.addEntity(smoke);
+        return smoke;
+    }    
     
     /**
      * Adds a new {@link Fire}
@@ -1542,12 +1581,12 @@ public class Game implements GameInfo, Debugable, Updatable {
         Random random = getRandom();
         final int maxSpread = 360;
         
-        for(int i = 0; i < 25; i++) {            
+        for(int i = 0; i < 8; i++) {            
             Vector2f vel = new Vector2f(1.0f, 0.0f);
             double rd = Math.toRadians(random.nextInt(maxSpread));                        
             Vector2f.Vector2fRotate(vel, rd, vel);
                         
-            int speed = 80 + random.nextInt(150);
+            int speed = 110 + random.nextInt(15);
             
             newFire(position.createClone(), speed, vel, owner, damage);
         }

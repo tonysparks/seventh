@@ -119,6 +119,7 @@ public abstract class Entity implements Debugable {
         BULLET,
         EXPLOSION,
         FIRE,
+        SMOKE,
         AMMO,
         ROCKET,
         
@@ -137,8 +138,10 @@ public abstract class Entity implements Debugable {
         SHOTGUN,
         ROCKET_LAUNCHER,
         GRENADE,
+        SMOKE_GRENADE,
         NAPALM_GRENADE,
         PISTOL,
+        FLAME_THROWER,
         
         MG42,
         
@@ -268,6 +271,7 @@ public abstract class Entity implements Debugable {
     
     protected State currentState;
     protected int speed;
+    protected int collisionHeightMask;
     
     private boolean canTakeDamage;
     private boolean isAlive;
@@ -317,6 +321,7 @@ public abstract class Entity implements Debugable {
         this.speed = speed;
         this.game = game;
         
+        this.collisionHeightMask = 1;
         this.currentState = State.IDLE;
         this.facing = new Vector2f(1,0);
         this.setOrientation(0);
@@ -606,7 +611,7 @@ public abstract class Entity implements Debugable {
             Map map = game.getMap();
             
             bounds.x = (int)newX;
-            if( map.rectCollides(bounds) ) {
+            if( map.rectCollides(bounds, collisionHeightMask) ) {
                 isBlocked = collideX((int)newX, bounds.x);
                 if(isBlocked) { 
                     bounds.x = (int)pos.x;
@@ -622,7 +627,7 @@ public abstract class Entity implements Debugable {
             
             
             bounds.y = (int)newY;
-            if( map.rectCollides(bounds)) {
+            if( map.rectCollides(bounds, collisionHeightMask)) {
                 isBlocked = collideY((int)newY, bounds.y);
                 if(isBlocked) {
                     bounds.y = (int)pos.y;

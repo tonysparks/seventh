@@ -17,6 +17,7 @@ public class Sound {
     private static final Random rand = new Random();
     
     private String sourceName;    
+    private String soundFile;
     private SoundSystem soundSystem;
     /**
      * @param soundFile
@@ -25,6 +26,7 @@ public class Sound {
     public Sound(SoundSystem soundSystem, String soundFile, String soundName) throws Exception {        
         this.soundSystem = soundSystem;
         this.sourceName = soundName;
+        this.soundFile = soundFile;
         
         this.soundSystem.newSource(true, this.sourceName, soundFile, false, 0, 0, 0, 
                 SoundSystemConfig.ATTENUATION_ROLLOFF, SoundSystemConfig.getDefaultRolloff());                
@@ -32,6 +34,20 @@ public class Sound {
 
     private float getFuzzyPitch() {
         return (95 + rand.nextInt(5)) / 100.0f;
+    }
+    
+    /**
+     * @return the sourceName
+     */
+    public String getSourceName() {
+        return sourceName;
+    }
+    
+    /**
+     * @return the soundFile
+     */
+    public String getSoundFile() {
+        return soundFile;
     }
     
     public void setPosition(float x, float y) {

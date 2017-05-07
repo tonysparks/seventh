@@ -42,8 +42,6 @@ public class Springfield extends Weapon {
         this.reloading = false;    
         this.endFire = true;
         
-        this.netWeapon.type = Type.SPRINGFIELD.netValue();
-        
         applyScriptAttributes("springfield");
     }
 

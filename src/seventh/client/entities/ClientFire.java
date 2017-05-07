@@ -4,12 +4,11 @@
 package seventh.client.entities;
 
 import seventh.client.ClientGame;
-import seventh.client.gfx.AnimatedImage;
-import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
-import seventh.client.gfx.effects.particle_system.Emitter;
+import seventh.client.gfx.effects.Effect;
 import seventh.client.gfx.effects.particle_system.Emitters;
+import seventh.client.sfx.Sound;
 import seventh.client.sfx.Sounds;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetFire;
@@ -24,8 +23,8 @@ public class ClientFire extends ClientEntity {
     
     private boolean soundPlayed;    
     private long ownerId;    
-    private Emitter smoke;    
-    private AnimatedImage fireImg;
+    
+    private Sound sound;
     /**
      * 
      */
@@ -36,15 +35,42 @@ public class ClientFire extends ClientEntity {
         
         bounds.width = 16;
         bounds.height = 16;
-        smoke = Emitters.newFireEmitter(pos);//new FireEmitter(pos, 3_900, 0, 500);
-        smoke.attachTo(this);
-        
-        fireImg = Art.newFireAnim();
+      //  game.addForegroundEffect(Emitters.newSmokeEmitter(getCenterPos(), 25_000, false).attachTo(this));
+        game.addForegroundEffect(Emitters.newFireEmitter(getCenterPos()).attachTo(this));        
+        setOnRemove(new OnRemove() {
+            
+            @Override
+            public void onRemove(ClientEntity me, ClientGame game) {
+                                
+                // fade the fire sound off
+                if(sound!=null) {
+                    game.addForegroundEffect(new Effect() {   
+                        float volume = sound.getVolume();
+                        
+                        @Override
+                        public void destroy() {
+                            sound.stop();  
+                        }
+                        
+                        @Override
+                        public boolean isDone() {                    
+                            return volume <= 0.01f;
+                        }
+                        @Override
+                        public void update(TimeStep timeStep) {
+                            volume *= 0.875f;
+                            sound.setVolume(volume);
+                        }
+                        @Override
+                        public void render(Canvas canvas, Camera camera, float alpha) {                        
+                        }
+                    });
+                }
+            }
+        });
+                
     }
-    
-    /* (non-Javadoc)
-     * @see palisma.client.ClientEntity#updateState(palisma.game.net.NetEntity, long)
-     */
+        
     @Override
     public void updateState(NetEntity state, long time) {    
         super.updateState(state, time);
@@ -52,37 +78,19 @@ public class ClientFire extends ClientEntity {
         NetFire fire = (NetFire)state;
         ownerId = fire.ownerId;        
     }
-    
-    
         
-    /* (non-Javadoc)
-     * @see palisma.client.ClientEntity#update(leola.live.TimeStep)
-     */
     @Override
     public void update(TimeStep timeStep) {    
         super.update(timeStep);
-        
+                
         if(!soundPlayed) {
-            Sounds.playSound(Sounds.explodeSnd, ownerId, pos);
+            sound = Sounds.playSound(Sounds.fire, ownerId, pos, true);
             this.soundPlayed = true;
-        }        
-        
-        smoke.update(timeStep);
-        fireImg.update(timeStep);
+        }
     }
 
-    /* (non-Javadoc)
-     * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
-     */
     @Override
-    public void render(Canvas canvas, Camera camera, float alpha) {        
-        
-//        Vector2f cameraPos = camera.getPosition();
-//        int x = (int)(pos.x - cameraPos.x);
-//        int y = (int)(pos.y - cameraPos.y);
-        
-        //canvas.drawScaledImage(fireImg.getCurrentImage(), x-bounds.width/4, y-bounds.height/4, 32, 32, 0x3fffffff);
-        smoke.render(canvas, camera, alpha);
+    public void render(Canvas canvas, Camera camera, float alpha) {                
     }
 
 }

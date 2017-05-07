@@ -211,7 +211,7 @@ public class OptionsScreen implements Screen {
         Label controlsLbl = new Label("Controls");
         controlsLbl.setTheme(theme);
         controlsLbl.setBounds(new Rectangle(10, 200, 400, 40));
-        controlsLbl.setTextAlignment(TextAlignment.LEFT);
+        controlsLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         controlsLbl.setFont(theme.getPrimaryFontName());
         controlsLbl.setTextSize(18);
         
@@ -247,7 +247,7 @@ public class OptionsScreen implements Screen {
         mouseSensitivityLbl.setBounds(new Rectangle(80, 20));
         mouseSensitivityLbl.getBounds().x = 110;
         mouseSensitivityLbl.getBounds().y = (int)uiPos.y;
-        mouseSensitivityLbl.setTextAlignment(TextAlignment.LEFT);
+        mouseSensitivityLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         mouseSensitivityLbl.setFont(theme.getSecondaryFontName());
         mouseSensitivityLbl.setTextSize(18);
         mouseSensitivityLbl.setForegroundColor(0xffffffff);
@@ -296,7 +296,7 @@ public class OptionsScreen implements Screen {
         keyOverwriteLbl.setTheme(theme);
         keyOverwriteLbl.setBounds(new Rectangle(app.getScreenWidth(), 40));
         keyOverwriteLbl.getBounds().y = app.getScreenHeight() - 120;
-        keyOverwriteLbl.setTextAlignment(TextAlignment.CENTER);
+        keyOverwriteLbl.setHorizontalTextAlignment(TextAlignment.CENTER);
         keyOverwriteLbl.setFont(theme.getPrimaryFontName());
         keyOverwriteLbl.setTextSize(18);
         
@@ -312,7 +312,7 @@ public class OptionsScreen implements Screen {
         Label videoLbl = new Label("Video");
         videoLbl.setTheme(theme);
         videoLbl.setBounds(new Rectangle(80, bottomPanelY - 70, 470, 40));
-        videoLbl.setTextAlignment(TextAlignment.LEFT);
+        videoLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         videoLbl.setFont(theme.getPrimaryFontName());
         videoLbl.setTextSize(18);
         
@@ -362,7 +362,7 @@ public class OptionsScreen implements Screen {
         Label soundLbl = new Label("Sound");
         soundLbl.setTheme(theme);
         soundLbl.setBounds(new Rectangle(app.getScreenWidth()/2 - 90, bottomPanelY-70, 400, 40));
-        soundLbl.setTextAlignment(TextAlignment.LEFT);
+        soundLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         soundLbl.setFont(theme.getPrimaryFontName());
         soundLbl.setTextSize(18);
                 
@@ -420,7 +420,7 @@ public class OptionsScreen implements Screen {
         Label gameLbl = new Label("Game");
         gameLbl.setTheme(theme);
         gameLbl.setBounds(new Rectangle(thirdSectionX + 30, bottomPanelY-70, 400, 40));
-        gameLbl.setTextAlignment(TextAlignment.LEFT);
+        gameLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         gameLbl.setFont(theme.getPrimaryFontName());
         gameLbl.setTextSize(18);
                 
@@ -524,7 +524,7 @@ public class OptionsScreen implements Screen {
         btn.setTextSize(18);
         btn.setHoverTextSize(22);        
         btn.getTextLabel().setFont(theme.getSecondaryFontName());
-        btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
+        btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
         btn.addOnHoverListener(new OnHoverListener() {
             

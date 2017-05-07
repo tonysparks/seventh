@@ -125,9 +125,13 @@ public class Grenade extends Bullet {
         }
         
         if(this.blowUpTime <= 0) {
-            kill(this);
+            onBlowUp();
         }
         
         return isBlocked;
+    }
+    
+    protected void onBlowUp() {
+        kill(this);
     }
 }

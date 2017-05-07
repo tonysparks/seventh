@@ -46,8 +46,6 @@ public class MG42 extends Weapon {
         this.lineOfSight = WeaponConstants.THOMPSON_LINE_OF_SIGHT;
         this.weaponWeight = WeaponConstants.THOMPSON_WEIGHT;
         
-        this.netWeapon.type = Type.MG42.netValue();
-        
         applyScriptAttributes("railgun");
     }
     

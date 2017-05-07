@@ -26,6 +26,7 @@ import seventh.client.entities.ClientHealthPack;
 import seventh.client.entities.ClientLightBulb;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.entities.ClientRocket;
+import seventh.client.entities.ClientSmoke;
 import seventh.client.entities.vehicles.ClientPanzerTank;
 import seventh.client.entities.vehicles.ClientShermanTank;
 import seventh.client.entities.vehicles.ClientVehicle;
@@ -122,6 +123,7 @@ public class ClientGame {
     private final List<ClientBombTarget> bombTargets;
     private final List<ClientVehicle> vehicles;
     private final List<ClientDoor> doors;
+    private final List<ClientSmoke> smokeEntities;
     
     private final ClientEntityListener entityListener;
     
@@ -195,6 +197,7 @@ public class ClientGame {
         this.bombTargets = new ArrayList<ClientBombTarget>();
         this.vehicles = new ArrayList<ClientVehicle>();
         this.doors = new ArrayList<ClientDoor>();
+        this.smokeEntities = new ArrayList<ClientSmoke>();
                 
         this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
         this.cameraController = new CameraController(this);
@@ -214,7 +217,9 @@ public class ClientGame {
         this.pools = new Pools(this);
         this.zings = new Zings(this);
         
-        this.runtime = Scripting.newSandboxedRuntime();        
+        this.runtime = Scripting.newSandboxedRuntime();    
+        
+        executeCallbackScript("onInit", this);
     }    
     
     /**
@@ -416,7 +421,7 @@ public class ClientGame {
             renderWorld(canvas, camera, alpha);
             
             canvas.setShader(null);
-            DebugDraw.enable(false);
+            DebugDraw.enable(true);
             DebugDraw.render(canvas, camera);
     
             
@@ -519,6 +524,13 @@ public class ClientGame {
      */
     public List<ClientDoor> getDoors() {
         return doors;
+    }
+    
+    /**
+     * @return the smokeEntities
+     */
+    public List<ClientSmoke> getSmokeEntities() {
+        return smokeEntities;
     }
     
     /**
@@ -627,6 +639,26 @@ public class ClientGame {
     public Sound loadSound(String path) {
         return Sounds.loadSound(path);
     }
+    
+    /**
+     * API for unloading a sound
+     * 
+     * @param path
+     */
+    public void unloadSound(String path) {
+        Sounds.unloadSound(path);
+    }
+    
+    
+    /**
+     * API for unloading a sound
+     * 
+     * @param path
+     */
+    public void unloadSound(Sound snd) {
+        Sounds.unloadSound(snd.getSoundFile());
+    }
+    
     
     /**
      * @param id
@@ -934,35 +966,37 @@ public class ClientGame {
                 
                 break;
             }
+            case SMOKE_GRENADE:
             case NAPALM_GRENADE:
             case GRENADE: {
-                entity = new ClientGrenade(this, pos);
+                entity = new ClientGrenade(this, pos, type);
                 break;
             }
             case DROPPED_ITEM: {
                 entity = new ClientDroppedItem(this, pos);
                 break;
             }
-            
-            case FIRE:             
-            case EXPLOSION: {
-                if(type==Type.EXPLOSION) {
-                    entity = new ClientExplosion(this, pos);
-                    
-                    /* create the explosion effect */
-                    NetExplosion explosion = (NetExplosion)ent;
-                                        
-                    /* limit the explosion per player */
-                    gameEffects.addExplosion(this, explosion.ownerId, pos);
-                }
-                else {
-                    entity = new ClientFire(this, pos);    
-                }
+            case SMOKE: {
+                entity = new ClientSmoke(this, pos);
+                smokeEntities.add((ClientSmoke)entity);
+                break;
+            }
+            case FIRE: {
+                entity = new ClientFire(this, pos);
+                break;
+            }
+            case EXPLOSION: {                
+                entity = new ClientExplosion(this, pos);
+                
+                /* create the explosion effect */
+                NetExplosion explosion = (NetExplosion)ent;
+                                    
+                /* limit the explosion per player */
+                gameEffects.addExplosion(this, explosion.ownerId, pos);
                 
                 // if an explosion happens,
                 // shake the camera
-                cameraController.shakeCamera(pos);
-                
+                cameraController.shakeCamera(pos);                
                 break;
             }
             case SHERMAN_TANK: {
@@ -1082,6 +1116,7 @@ public class ClientGame {
         this.bombTargets.clear();
         this.vehicles.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
         
         this.gameTimers.removeTimers();
         
@@ -1481,6 +1516,7 @@ public class ClientGame {
             bombTargets.remove(ent);
             vehicles.remove(ent);
             doors.remove(ent);
+            smokeEntities.remove(ent);
             
             OnRemove onRemove = ent.getOnRemove();
             if(onRemove != null) {
@@ -1525,11 +1561,14 @@ public class ClientGame {
      * Cleans up resources
      */
     public void destroy() {
+        executeCallbackScript("onDestroy", this);
+        
         this.pools.destroy();
         this.entities.clear();        
         this.bombTargets.clear();
         this.vehicles.clear();
         this.doors.clear();
+        this.smokeEntities.clear();
                 
         this.gameEffects.destroy();
         this.gameTimers.removeTimers();

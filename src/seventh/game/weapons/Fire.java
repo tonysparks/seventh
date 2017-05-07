@@ -7,6 +7,8 @@ import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetFire;
+import seventh.map.Map;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -14,13 +16,13 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class Fire extends Bullet {
+public class Fire extends Entity {
     
     private int damage;
     private Entity owner;
     private NetFire netEntity;
     private long torchTime;
-    
+    private Vector2f targetVel;
     
     /**
      * @param position
@@ -29,17 +31,18 @@ public class Fire extends Bullet {
      * @param type
      */
     public Fire(Vector2f position, int speed, Game game, Entity owner, final Vector2f targetVel, final int damage) {
-        super(position, speed, game, owner, targetVel, damage, false);
-                
-        setType(Type.FIRE);
+        super(position, speed, game, Type.FIRE);                
         
-        bounds.width = 16;
-        bounds.height = 16;
+        bounds.width = 8;
+        bounds.height = 8;        
         
         this.damage = damage;
         this.owner = owner;
         
-        this.torchTime = 10_000;
+        this.torchTime = 3_000;
+        this.targetVel = targetVel;
+        
+        this.collisionHeightMask = 0;                
         
         this.netEntity = new NetFire();
                 
@@ -73,19 +76,42 @@ public class Fire extends Bullet {
     /* (non-Javadoc)
      * @see seventh.game.weapons.Bullet#getOwnerHeightMask()
      */
-    @Override
-    protected int getOwnerHeightMask() {    
-        return 1;
-    }
+//    @Override
+//    protected int getOwnerHeightMask() {    
+//        return 1;
+//    }
 
     /* (non-Javadoc)
      * @see palisma.game.Entity#update(leola.live.TimeStep)
      */
     @Override
     public boolean update(TimeStep timeStep) {
+        this.vel.set(this.targetVel);
         boolean isBlocked = super.update(timeStep);
                 
-        //game.doesTouchPlayers(this);
+        Map map = game.getMap();
+        
+        // grow the hit box
+        // TODO: Hide players who
+        // are within the bounds of smoke
+        // to prevent cheating!!
+        if(bounds.width < 64) {
+            bounds.width += 1;
+            if( map.rectCollides(bounds, 0) ) {
+                isBlocked = true;
+                bounds.width -= 1;
+                                
+            }        
+        }
+        
+        if(bounds.height < 64) {
+            bounds.height += 1;
+            if( map.rectCollides(bounds, 0)) {
+                isBlocked = true;
+                bounds.height -= 1;
+            }
+        }
+        
         
         torchTime -= timeStep.getDeltaTime();
         if(torchTime <= 0 ) {
@@ -93,13 +119,22 @@ public class Fire extends Bullet {
         }
         
         if(this.speed > 0) {
-            this.speed -= 5;
+            this.speed -= 1;
         }
         if(speed < 0) {
             speed = 0;
         }
+        
+        game.doesTouchPlayers(this);
 
+       // DebugDraw.drawRectRelative(this.bounds, 0x0a00ffff);
+        
         return isBlocked;
+    }
+    
+    @Override
+    protected boolean collidesAgainstEntity(Rectangle bounds) {
+        return collidesAgainstDoor(bounds) || collidesAgainstVehicle(bounds);
     }
     
     protected void decreaseSpeed(float factor) {
@@ -112,7 +147,7 @@ public class Fire extends Bullet {
      */
     @Override
     protected boolean collideX(int newX, int oldX) {            
-        this.targetVel.x = -this.targetVel.x;
+       // this.targetVel.x = -this.targetVel.x;
         this.speed = (int)(this.speed * 0.7f);
         return true;
     }
@@ -122,7 +157,7 @@ public class Fire extends Bullet {
      */
     @Override
     protected boolean collideY(int newY, int oldY) {
-        this.targetVel.y = -this.targetVel.y;
+     //   this.targetVel.y = -this.targetVel.y;
         this.speed = (int)(this.speed * 0.7f);
         return true;        
     }

@@ -16,7 +16,6 @@ import seventh.game.net.NetEntity;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-import seventh.shared.DebugDraw;
 
 /**
  * @author Tony
@@ -39,6 +38,8 @@ public class ClientDoor extends ClientEntity {
      */
     public ClientDoor(ClientGame game, Vector2f pos) {
         super(game, pos);
+
+        this.bounds.setSize(64, 64);
         
         this.rotation = new SmoothOrientation(0.05);
         this.rotation.setOrientation(0);
@@ -67,6 +68,13 @@ public class ClientDoor extends ClientEntity {
 //        Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
 //        Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
         
+    }
+    
+    /**
+     * @return the frontDoorHandle
+     */
+    public Vector2f getHandle() {
+        return frontDoorHandle;
     }
     
     @Override
