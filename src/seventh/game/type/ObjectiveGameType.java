@@ -106,6 +106,21 @@ public class ObjectiveGameType extends AbstractTeamGameType {
      */
     @Override
     protected GameState doUpdate(Game game, TimeStep timeStep) {
+    	/*
+		 * Refactoring target : if and else if statements
+		 * Refactoring name : Introduce explaining variable 
+		 * Bad smell(reason) : Put the result of the expression, 
+		 * or parts of the expression, 
+		 * in a temporary variable with a name that explains the purpose
+		 * 
+		 */
+    	boolean objectiveSize = this.completedObjectives.size() >= this.minimumObjectivesToComplete;
+    	boolean isEmpty = this.outstandingObjectives.isEmpty() && this.completedObjectives.size()>0;
+    	boolean defenderDead = defender.isTeamDead() && defender.teamSize()>0;
+    	boolean getTime = getRemainingTime()<=0;
+    	boolean attackerDead = (attacker.isTeamDead() && attacker.teamSize()>0);
+    			
+    	
         
         if(this.inIntermission) {
             this.currentDelayTime -= timeStep.getDeltaTime();
@@ -135,6 +150,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
             }
             
             this.outstandingObjectives.removeAll(this.completedObjectives);
+            
             
             
             if(this.completedObjectives.size() >= this.minimumObjectivesToComplete) {
