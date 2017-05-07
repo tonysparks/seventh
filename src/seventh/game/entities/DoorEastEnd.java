@@ -24,8 +24,7 @@ public class DoorEastEnd extends DoorHingeEnd{
 	}
 	@Override
 	public void doorOpen(Door door, Entity ent) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }

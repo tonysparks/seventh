@@ -332,12 +332,10 @@ public class Door extends Entity {
 		// side, we set the destinationOrientation
 		switch(this.getHinge()){
 		    case NORTH_END:
-		    	new DoorNorthEnd().doorOpen(this,ent);
 		    case SOUTH_END:
 		        new DoorSouthEnd().doorOpen(this,ent);
 		        break;
 		    case EAST_END:
-		    	new DoorEastEnd().doorOpen(this,ent);
 		    case WEST_END:
 		    	new DoorSouthEnd().doorOpen(this,ent);
 		        break;
@@ -373,7 +371,7 @@ public class Door extends Entity {
      * @param ent
      * @return true if the Entity is within reach to to close/open this door
      */    
-    public boolean canBeHandledBy(Entity ent) {      
+    public boolean canBeHandledBy(Entity ent) {
         //DebugDraw.fillRectRelative(handleTouchRadius.x, handleTouchRadius.y, handleTouchRadius.width, handleTouchRadius.height, 0xff00ff00);
         //DebugDraw.fillRectRelative(hingeTouchRadius.x, hingeTouchRadius.y, hingeTouchRadius.width, hingeTouchRadius.height, 0xff00ff00);
         
@@ -391,9 +389,8 @@ public class Door extends Entity {
      * it wouldn't be able to close or open properly)
      */
     public boolean isPlayerNear() {
-        PlayerEntity[] playerEntities = game.getPlayerEntities();
-        for(int i = 0; i < playerEntities.length; i++) {
-            Entity other = playerEntities[i];
+        for(int i = 0; i < game.getPlayerEntities().length; i++) {
+            Entity other = game.getPlayerEntities()[i];
             if(other != null) {
                 if(this.getAutoCloseRadius().contains(other.getBounds())) {
                     return true;
