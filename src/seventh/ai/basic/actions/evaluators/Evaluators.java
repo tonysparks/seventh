@@ -109,7 +109,10 @@ public class Evaluators {
                     break;
                 case SPRINGFIELD:
                     score = 0.8;
-                    break;                        
+                    break;          
+                case FLAME_THROWER:
+                    score = 0.75;
+                    break;
                 default:
                     break;        
             }

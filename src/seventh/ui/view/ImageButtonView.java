@@ -57,7 +57,7 @@ public class ImageButtonView extends ButtonView {
      * @param buttonImage
      */
     public ImageButtonView(Button button, TextureRegion buttonImage) {
-        this(button, buttonImage, null, null);
+        this(button, buttonImage, buttonImage, buttonImage);
     }
     
 
@@ -67,7 +67,7 @@ public class ImageButtonView extends ButtonView {
      * @param buttonImage
      * @param buttonDownImg
      */
-    public ImageButtonView(Button button, TextureRegion buttonUpImg, TextureRegion buttonDownImg, TextureRegion buttonImage) {
+    public ImageButtonView(Button button, TextureRegion buttonImage, TextureRegion buttonUpImg, TextureRegion buttonDownImg) {
         super(button);
         
         this.buttonImage = buttonImage;
@@ -164,17 +164,19 @@ public class ImageButtonView extends ButtonView {
                 int uh = this.buttonUpImage.getRegionHeight();
                 
                 int w = uw / 2 - this.buttonImage.getRegionWidth()/2;
-                int h = uh / 2 - this.buttonImage.getRegionHeight()/2 - 5;
+                int h = uh / 2 - this.buttonImage.getRegionHeight()/2  + 5;
                 
                 if ( button.isPressed() ) {
                     if ( this.buttonDownImage != null) {        
-                        renderer.drawImage(this.buttonDownImage, (int)position.x, (int)position.y, color);
+                        renderer.drawScaledImage(this.buttonDownImage, (int)position.x, (int)position.y, uw, uh, color);
                     }            
-                    renderer.drawImage(this.buttonImage, (int)position.x + w, (int)position.y + h + 5, color);
+                    renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h + 5, 
+                            this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
                 }
                 else {
-                    renderer.drawImage(this.buttonUpImage, (int)position.x, (int)position.y, color);
-                    renderer.drawImage(this.buttonImage, (int)position.x + w, (int)position.y + h, color);
+                    //renderer.drawImage(this.buttonUpImage, (int)position.x, (int)position.y, color);
+                    renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h, 
+                            this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
                 }
             }
             else {

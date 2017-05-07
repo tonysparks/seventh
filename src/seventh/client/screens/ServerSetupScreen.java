@@ -242,7 +242,7 @@ public class ServerSetupScreen implements Screen {
         Label headerLbl = new Label("Game Setup");
         headerLbl.setTheme(theme);
         headerLbl.setBounds(new Rectangle(0,50, app.getScreenWidth(), 80));
-        headerLbl.setTextAlignment(TextAlignment.CENTER);
+        headerLbl.setHorizontalTextAlignment(TextAlignment.CENTER);
         headerLbl.setFont(theme.getPrimaryFontName());
         headerLbl.setTextSize(45);
                 
@@ -686,7 +686,7 @@ public class ServerSetupScreen implements Screen {
         btn.setForegroundColor(theme.getForegroundColor());
         btn.setEnableGradiant(false);            
         btn.getTextLabel().setFont(theme.getSecondaryFontName());
-        btn.getTextLabel().setTextAlignment(TextAlignment.LEFT);
+        btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
         btn.addOnHoverListener(new OnHoverListener() {
             
@@ -706,7 +706,7 @@ public class ServerSetupScreen implements Screen {
         Label lbl = new Label(text);
         lbl.setTheme(theme);
         lbl.setBounds(new Rectangle((int)pos.x, (int)pos.y, 400, 40));
-        lbl.setTextAlignment(TextAlignment.LEFT);
+        lbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         if(header) {
             lbl.setForegroundColor(theme.getForegroundColor());
             lbl.setFont(theme.getSecondaryFontName());

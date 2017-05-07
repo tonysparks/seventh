@@ -17,6 +17,7 @@ public class NetPlayer extends NetEntity {
 
     public static final int HAS_WEAPON = 2;
     public static final int IS_OPERATING_VEHICLE = 4;    
+    public static final int IS_SMOKE_GRENADES = 8;
     
     public NetPlayer() {
         this.type = Type.PLAYER.netValue();
@@ -27,7 +28,9 @@ public class NetPlayer extends NetEntity {
     public byte health;    
     public byte stamina;
     
-    public boolean isOperatingVehicle;    
+    public boolean isOperatingVehicle;
+    public boolean isSmokeGrenades;
+    
     public int vehicleId;
     
     protected byte bits;
@@ -46,6 +49,10 @@ public class NetPlayer extends NetEntity {
             bits = 0; /* clear the weapon bits */
             bits |= IS_OPERATING_VEHICLE;
         }                
+        
+        if(isSmokeGrenades) {
+            bits |= IS_SMOKE_GRENADES;
+        }
     }
     
     /* (non-Javadoc)
@@ -71,6 +78,10 @@ public class NetPlayer extends NetEntity {
             isOperatingVehicle = true;
             vehicleId = buffer.getUnsignedByte();
         }        
+        
+        if((bits & IS_SMOKE_GRENADES) != 0) {
+            isSmokeGrenades = true;
+        }
     }
     
     /* (non-Javadoc)

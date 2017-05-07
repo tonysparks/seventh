@@ -39,7 +39,6 @@ public class CameraController implements Updatable {
     private Camera camera;
     private Vector2f cameraCenterAround;
     private Vector2f cameraDest;
-    private Vector2f cache;
     private Vector2f previousCameraPos;
     private ClientPlayer localPlayer;
     
@@ -81,7 +80,6 @@ public class CameraController implements Updatable {
         this.cameraShakeBounds = new Rectangle(600, 600);
         
         this.playerVelocity = new Vector2f();
-        this.cache = new Vector2f();
 
         this.bounds = new Rectangle();
         this.viewportWidth = this.camera.getViewPort().width;
@@ -343,7 +341,7 @@ public class CameraController implements Updatable {
                 
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 
-                if(this.config.getFollowReticleEnabled() && this.isCameraActive) {
+                if(!this.localPlayer.isSpectating() && this.config.getFollowReticleEnabled() && this.isCameraActive) {
                     Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), 80f, cameraCenterAround);
                     
                     // smooth out the camera
@@ -364,7 +362,7 @@ public class CameraController implements Updatable {
                  */
                 nextFOWUpdate -= timeStep.getDeltaTime();
                 if(nextFOWUpdate <= 0) {
-                    Geom.calculateLineOfSight(fowTiles, entity.getCenterPos(), entity.getFacing(), entity.getLineOfSight(), map, entity.getHeightMask(), cache);
+                    entity.calculateLineOfSight(fowTiles);                    
                     Geom.addFadeEffect(map, fowTiles);
                     
                     /* only calculate every 100 ms */

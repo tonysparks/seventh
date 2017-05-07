@@ -8,171 +8,153 @@ package seventh.math;
 /**
  * A triangle defined by 3 vectors of each corner.  The vectors are connected by:
  * <pre>
- *    b
+ *    B
  *   / \
- *  a---c
+ *  A---C
  * </pre>
  * 
  * @author Tony
  *
  */
 public class Triangle {
-    public Vector2f a;
-    public Vector2f b;
-    public Vector2f c;
+    private Vector2f pointA;
+    private Vector2f pointB;
+    private Vector2f pointC;
     
     /**
-     * @param a
-     * @param b
-     * @param c
+     * @param pointA
+     * @param pointB
+     * @param pointC
      */
-    public Triangle(Vector2f a, Vector2f b, Vector2f c) {
-        this.a = a; this.b = b; this.c = c;
+    public Triangle(Vector2f pointA, Vector2f pointB, Vector2f pointC) {
+        setPointA(pointA); 
+        setPointB(pointB); 
+        setPointC(pointC);
     }
     
     /**
      * Translates the {@link Triangle} to a new location.
      * 
-     * @param a
+     * @param pointZ
      */
-    public void translate(Vector2f a) {
-        Vector2f.Vector2fAdd(this.a, a, this.a);
-        Vector2f.Vector2fAdd(this.b, a, this.b);
-        Vector2f.Vector2fAdd(this.c, a, this.c);
+    public void translate(Vector2f pointZ) {
+        TriangleTranslate(this,pointZ,this);
     }
     
     /**
      * Translates the {@link Triangle} to a new location.
      * 
-     * @param a
+     * @param scalar
      */
-    public void translate(float a) {
-        Vector2f.Vector2fAdd(this.a, a, this.a);
-        Vector2f.Vector2fAdd(this.b, a, this.b);
-        Vector2f.Vector2fAdd(this.c, a, this.c);
-    }
-    
-    /**
-     * Translates the {@link Triangle} to a new location.
-     * 
-     * @param triangle
-     * @param a
-     * @param dest
-     */
-    public static void TriangleTranslate(Triangle triangle, Vector2f a, Triangle dest) {
-        Vector2f.Vector2fAdd(triangle.a, a, dest.a);
-        Vector2f.Vector2fAdd(triangle.b, a, dest.b);
-        Vector2f.Vector2fAdd(triangle.c, a, dest.c);
+    public void translate(float scalar) {
+        TriangleTranslate(this,scalar,this);
     }
     
     /**
      * Translates the {@link Triangle} to a new location.
      * 
      * @param triangle
-     * @param a
+     * @param pointZ
      * @param dest
      */
-    public static void TriangleTranslate(Triangle triangle, float a, Triangle dest) {
-        Vector2f.Vector2fAdd(triangle.a, a, dest.a);
-        Vector2f.Vector2fAdd(triangle.b, a, dest.b);
-        Vector2f.Vector2fAdd(triangle.c, a, dest.c);
+    public static void TriangleTranslate(Triangle triangle, Vector2f pointZ, Triangle dest) {
+        Vector2f.Vector2fAdd(triangle.getPointA(), pointZ, dest.getPointA());
+        Vector2f.Vector2fAdd(triangle.getPointB(), pointZ, dest.getPointB());
+        Vector2f.Vector2fAdd(triangle.getPointC(), pointZ, dest.getPointC());
+    }
+    
+    /**
+     * Translates the {@link Triangle} to a new location.
+     * 
+     * @param triangle
+     * @param scalar
+     * @param dest
+     */
+    public static void TriangleTranslate(Triangle triangle, float scalar, Triangle dest) {
+        Vector2f.Vector2fAdd(triangle.getPointA(), scalar, dest.getPointA());
+        Vector2f.Vector2fAdd(triangle.getPointB(), scalar, dest.getPointB());
+        Vector2f.Vector2fAdd(triangle.getPointC(), scalar, dest.getPointC());
     }
     
     /**
      * Determine if the supplied point is within (contains or intersects) the supplied {@link Triangle}.
      * 
-     * @param a
+     * @param pointZ
      * @param triangle
      * @return true if the point is in the {@link Triangle}
      */
-    public static boolean pointIntersectsTriangle(Vector2f a, Triangle triangle) {
-        float x0 = triangle.a.x; 
-        float y0 = triangle.a.y; 
-        float x1 = triangle.b.x; 
-        float y1 = triangle.b.y; 
-        float x2 = triangle.c.x; 
-        float y2 = triangle.c.y; 
-        return pointIntersectsTriangle(a.x, a.y, x0, y0, x1, y1, x2, y2);
+    public static boolean pointIntersectsTriangle(Vector2f pointZ, Triangle triangle) {
+        return barycentricTechnique(pointZ,triangle);
     }
 
     /**
      * Determine if the supplied point is within (contains or intersects) the supplied {@link Triangle}.
      * 
-     * @param px
-     * @param py
-     * @param x0
-     * @param y0
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+     * @param pointZx
+     * @param pointZy
+     * @param pointAx
+     * @param pointAy
+     * @param pointBx
+     * @param pointBy
+     * @param pointCx
+     * @param pointCy
      * @return true if the point is in the {@link Triangle}
      */
-    public static boolean pointIntersectsTriangle(float px, float py, float x0, float y0, float x1, float y1, float x2, float y2) {
+    public static boolean pointIntersectsTriangle(float pointZx, float pointZy, float pointAx, float pointAy, 
+    		float pointBx, float pointBy, float pointCx, float pointCy) {
+    	return barycentricTechnique(new Vector2f(pointZx, pointZy),
+    			new Triangle(new Vector2f(pointAx, pointAy), new Vector2f(pointBx, pointBy), new Vector2f(pointCx, pointCy)));
+    }
+
+	private static boolean barycentricTechnique(Vector2f pointZ,Triangle triangle) {
+		Vector2f v0 = new Vector2f(triangle.getPointC().x-triangle.getPointA().x, triangle.getPointC().y-triangle.getPointA().y);
+    	Vector2f v1 = new Vector2f(triangle.getPointB().x-triangle.getPointA().x, triangle.getPointB().y-triangle.getPointA().y);
+    	Vector2f v2 = new Vector2f(pointZ.x-triangle.getPointA().x, pointZ.y-triangle.getPointA().y);
         
-        float v0x = x2 - x0;
-        float v0y = y2 - y0;
-        
-        float v1x = x1 - x0;
-        float v1y = y1 - y0;
-        
-        float v2x = px - x0;
-        float v2y = py - y0;
-        
-        // dot(v1.x * v2.x + v1.y * v2.y)
-        
-        // dot(v0,v0)
-        float dot00 = v0x * v0x + v0y * v0y;
-        
-        // dot(v0,v1)
-        float dot01 = v0x * v1x + v0y * v1y;
-        
-        // dot(v0,v2)
-        float dot02 = v0x * v2x + v0y * v2y;
-        
-        // dot(v1, v1)
-        float dot11 = v1x * v1x + v1y * v1y;
-        
-        // dot(v1, v2)
-        float dot12 = v1x * v2x + v1y * v2y;
-        
-        float det = dot00 * dot11 - dot01 * dot01;
+        float det = dotProducts(v0,v0) * dotProducts(v1,v1) - dotProducts(v0,v1) * dotProducts(v0,v1);
         if(det == 0) {
             return false;
         }
         
-        float invDet = 1f / det;
-        float u = (dot11 * dot02 - dot01 * dot12) * invDet;
-        float v = (dot00 * dot12 - dot01 * dot02) * invDet;
+        float invDenom = 1f / det;
+        float u = (dotProducts(v1,v1) * dotProducts(v0,v2) - dotProducts(v0,v1) * dotProducts(v1,v2)) * invDenom;
+        float v = (dotProducts(v0,v0) * dotProducts(v1,v2) - dotProducts(v0,v1) * dotProducts(v0,v2)) * invDenom;
         
-        return (u >= 0) && (v >= 0) && (u + v < 1f);
+        final boolean isOutOfAB = (u >= 0);
+		final boolean isOutOfAC = (v >= 0);
+		final boolean isOutofBC = (u + v < 1f);
+		return isOutOfAB && isOutOfAC && isOutofBC;
+	}
+    
+    private static float dotProducts(Vector2f v1,Vector2f v2){
+    	return v1.x * v2.x + v2.y * v2.y;
     }
     
     /**
      * Determine if the supplied {@link Line} intersects with the supplied {@link Triangle}.
      * 
-     * @param L
+     * @param line
      * @param triangle
      * @return
      */
-    public static boolean lineIntersectsTriangle(Line L, Triangle triangle) {
-        return Line.lineIntersectLine(L.a, L.b, triangle.a, triangle.b) || 
-               Line.lineIntersectLine(L.a, L.b, triangle.b, triangle.c) ||
-               Line.lineIntersectLine(L.a, L.b, triangle.c, triangle.a);
+    public static boolean lineIntersectsTriangle(Line line, Triangle triangle) {
+        return Line.lineIntersectLine(line.a, line.b, triangle.getPointA(), triangle.getPointB()) || 
+               Line.lineIntersectLine(line.a, line.b, triangle.getPointB(), triangle.getPointC()) ||
+               Line.lineIntersectLine(line.a, line.b, triangle.getPointC(), triangle.getPointA());
     }
     
     /**
      * Determine if the supplied {@link Line} intersects with the supplied {@link Triangle}.
      * 
-     * @param a
-     * @param b
+     * @param pointA
+     * @param pointB
      * @param triangle
      * @return
      */
-    public static boolean lineIntersectsTriangle(Vector2f a, Vector2f b, Triangle triangle) {
-        return Line.lineIntersectLine(a, b, triangle.a, triangle.b) || 
-               Line.lineIntersectLine(a, b, triangle.b, triangle.c) ||
-               Line.lineIntersectLine(a, b, triangle.c, triangle.a);
+    public static boolean lineIntersectsTriangle(Vector2f pointA, Vector2f pointB, Triangle triangle) {
+        return Line.lineIntersectLine(pointA, pointB, triangle.getPointA(), triangle.getPointB()) || 
+               Line.lineIntersectLine(pointA, pointB, triangle.getPointB(), triangle.getPointC()) ||
+               Line.lineIntersectLine(pointA, pointB, triangle.getPointC(), triangle.getPointA());
     }
 
     /**
@@ -186,14 +168,8 @@ public class Triangle {
      * @return true if the rectangle intersects the triangle
      */
     public static boolean rectangleIntersectsTriangle(Rectangle rectangle, Triangle triangle) {          
-        float x0 = triangle.a.x; 
-        float y0 = triangle.a.y; 
-        float x1 = triangle.b.x; 
-        float y1 = triangle.b.y; 
-        float x2 = triangle.c.x; 
-        float y2 = triangle.c.y; 
-        
-        return rectangleIntersectsTriangle(rectangle, x0, y0, x1, y1, x2, y2);
+        return rectangleIntersectsTriangle(rectangle, triangle.getPointA().x, triangle.getPointA().y, 
+        		triangle.getPointB().x, triangle.getPointB().y, triangle.getPointC().x, triangle.getPointC().y);
     }
     
     /**
@@ -203,79 +179,93 @@ public class Triangle {
      * The algorithm used is from <a>http://www.sebleedelisle.com/2009/05/super-fast-trianglerectangle-intersection-test/</a>
      * 
      * @param rectangle
-     * @param x0
-     * @param y0
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+     * @param pointAx
+     * @param pointAy
+     * @param pointBx
+     * @param pointBy
+     * @param pointCx
+     * @param pointCy
      * @return true if the rectangle intersects the triangle
      */
-    public static boolean rectangleIntersectsTriangle(Rectangle rectangle, float x0, float y0, float x1, float y1, float x2, float y2) {          
-        int l = rectangle.x; 
-        int r = rectangle.x + rectangle.width; 
-        int t = rectangle.y; 
-        int b = rectangle.y + rectangle.height; 
+    public static boolean rectangleIntersectsTriangle(Rectangle rectangle, float pointAx, float pointAy, float pointBx, float pointBy, float pointCx, float pointCy) {
+    	final int isInRectangle = 3;
+        int locationA = pointLocationWithRectangle(new Vector2f(pointAx,pointAy), rectangle);
+        if ( locationA == isInRectangle ) return true;
         
+        int locationB = pointLocationWithRectangle(new Vector2f(pointBx,pointBy), rectangle);
+        if ( locationB == isInRectangle ) return true;
         
-        int b0 = 0;
-        if ( x0 > l ) b0=1;
-        if ( y0 > t ) b0 |= (b0<<1);
-        if ( x0 > r ) b0 |= (b0<<2);
-        if ( y0 > b ) b0 |= (b0<<3);
-         
-        if ( b0 == 3 ) return true;
-         
-        int b1 = 0;
-        if ( x1 > l ) b1=1;
-        if ( y1 > t ) b1 |= (b1<<1);
-        if ( x1 > r ) b1 |= (b1<<2);
-        if ( y1 > b ) b1 |= (b1<<3);
-         
-        if ( b1 == 3 ) return true;
-         
-        int b2 = 0;
-        if ( x2 > l ) b2=1;
-        if ( y2 > t ) b2 |= (b2<<1);
-        if ( x2 > r ) b2 |= (b2<<2);
-        if ( y2 > b ) b2 |= (b2<<3);
-         
-        if ( b2 == 3 ) return true;
+        int locationC = pointLocationWithRectangle(new Vector2f(pointCx,pointCy), rectangle);
+        if ( locationC == isInRectangle ) return true;
 
-        int i0 = b0 ^ b1;
-        if (i0 != 0)
-        {
-            float m = (y1-y0) / (x1-x0); 
-            float c = y0 -(m * x0);
-            if ( (i0 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
-            if ( (i0 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
-            if ( (i0 & 4) > 0 ) { float s = m * r + c; if ( s > t && s < b) return true; }
-            if ( (i0 & 8) > 0 ) { float s = (b - c) / m; if ( s > l && s < r) return true; }
+        if(checkLineIntersection(new Vector2f(pointAx, pointAy), new Vector2f(pointBx, pointBy), rectangle, locationA^locationB)){
+        	return true;
         }
-        
-        int i1 = b1 ^ b2;
-        if (i1 != 0)
-        {
-            float m = (y2-y1) / (x2-x1); 
-            float c = y1 -(m * x1);
-            if ( (i1 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
-            if ( (i1 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
-            if ( (i1 & 4) > 0 ) { float s = m * r + c; if ( s > t && s < b) return true; }
-            if ( (i1 & 8) > 0 ) { float s = (b - c) / m; if ( s > l && s < r) return true; }
+        if(checkLineIntersection(new Vector2f(pointBx, pointBy),new Vector2f( pointCx, pointCy), rectangle, locationB^locationC)){
+        	return true;
         }
-        
-        int i2 = b0 ^ b2;
-        if (i2 != 0)
-        {
-            float m = (y2-y0) / (x2-x0); 
-            float c = y0 -(m * x0);
-            if ( (i2 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
-            if ( (i2 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
-            if ( (i2 & 4) > 0 ) { float s = m * r + c; if ( s > t && s < b) return true; }
-            if ( (i2 & 8) > 0 ) { float s = (b - c) / m; if ( s > l && s < r) return true; }
+        if(checkLineIntersection(new Vector2f(pointAx, pointAy),new Vector2f( pointCx, pointCy), rectangle, locationA^locationC)){
+        	return true;
         }
-        
         return false;
     }
+
+	private static boolean checkLineIntersection(Vector2f pointA, Vector2f pointB, Rectangle rectangle, int relationTwoPoints) {
+		if(relationTwoPoints == 0)	return false;
+		int recStartX = rectangle.x; 
+        int recEndX = rectangle.x + rectangle.width; 
+        int recStartY = rectangle.y; 
+        int recEndY = rectangle.y + rectangle.height;
+        
+        float gradient = (pointB.y-pointA.y) / (pointB.x-pointA.x); 
+        float yIntercept = pointA.y -(gradient * pointA.x);
+        if(relationTwoPoints > 1 && isCoordIntersect(gradient * recStartX + yIntercept,recStartY,recEndY)) return true;
+        if(relationTwoPoints > 2 && isCoordIntersect((recStartY - yIntercept) / gradient,recStartX,recEndX)) return true;
+        if(relationTwoPoints > 4 && isCoordIntersect(gradient * recEndX + yIntercept,recStartY,recEndY)) return true;
+        if(relationTwoPoints > 8 && isCoordIntersect((recEndY - yIntercept) / gradient,recStartX,recEndX)) return true;
+        return false;
+	}
+	
+	private static boolean isCoordIntersect(float checkCoord, int recStartCoord, int recEndCoord){
+		if(recStartCoord < checkCoord && checkCoord < recEndCoord) return true;
+		return false;
+	}
+
+	private static int pointLocationWithRectangle(Vector2f point, Rectangle rectangle) {
+        int recStartX = rectangle.x; 
+        int recEndX = rectangle.x + rectangle.width; 
+        int recStartY = rectangle.y; 
+        int recEndY = rectangle.y + rectangle.height; 
+		int locationValue = 0;
+        if ( point.x > recStartX ) locationValue = 1;
+        if ( point.y > recStartY ) locationValue |= (locationValue<<1);
+        if ( point.x > recEndX ) locationValue |= (locationValue<<2);
+        if ( point.y > recEndY ) locationValue |= (locationValue<<3);
+		return locationValue;
+	}
+
+	public Vector2f getPointA() {
+		return pointA;
+	}
+
+	public void setPointA(Vector2f a) {
+		this.pointA = a;
+	}
+
+	public Vector2f getPointB() {
+		return pointB;
+	}
+
+	public void setPointB(Vector2f b) {
+		this.pointB = b;
+	}
+
+	public Vector2f getPointC() {
+		return pointC;
+	}
+
+	public void setPointC(Vector2f c) {
+		this.pointC = c;
+	}
     
 }

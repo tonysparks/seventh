@@ -40,9 +40,7 @@ public class Kar98 extends Weapon {
         this.lineOfSight = WeaponConstants.KAR98_LINE_OF_SIGHT;
     
         this.endFire = true;
-        
-        this.netWeapon.type = Type.KAR98.netValue();
-        
+                
         applyScriptAttributes("kar98");
     }
     

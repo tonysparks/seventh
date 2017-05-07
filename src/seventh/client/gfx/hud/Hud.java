@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import harenet.api.Client;
@@ -378,12 +379,11 @@ public class Hud implements Renderable {
     }
     
     private void drawGrenadeIcons(Canvas canvas, int numberOfGrenades) {
-        int imageWidth = Art.grenadeIcon.getRegionWidth();
-//        for(int i = 0; i< ent.getNumberOfGrenades();i++) {
-//            canvas.drawImage(Art.grenadeIcon, 20 + (i*imageWidth+10), canvas.getHeight() - 40, 0xffffff00);
-//        }
+        Sprite sprite = this.localPlayer.getEntity().isSmokeGrenades() ? Art.smokeGrenadeIcon : Art.fragGrenadeIcon;
         
-        canvas.drawImage(Art.grenadeIcon, 10, canvas.getHeight() - Art.grenadeIcon.getRegionHeight() - 40, 0xffffff00);
+        int imageWidth = sprite.getRegionWidth();
+
+        canvas.drawImage(sprite, 10, canvas.getHeight() - sprite.getRegionHeight() - 40, 0xffffff00);
         canvas.setFont("Consola", 14);
         canvas.boldFont();                
         RenderFont.drawShadedString(canvas, "x " + numberOfGrenades, imageWidth+20, canvas.getHeight() - 50, 0xffffff00);
