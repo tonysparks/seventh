@@ -149,29 +149,27 @@ public class Team implements Debugable {
 	 * @return the number of players in the list on this team
 	 */
 
-
 	public int getNumberOfPlayersOnTeam(List<PlayerEntity> players) {
 		return CalculateNumberOfPlayerOnTeam(players);
 	}
-	
-	public int CalculateNumberOfPlayerOnTeam(List<PlayerEntity> players){
+
+	public int CalculateNumberOfPlayerOnTeam(List<PlayerEntity> players) {
 		int sum = 0;
 
 		for (int i = 0; i < players.size(); i++) {
-			if(CheckPlayerOnTeam(players, i))
+			if (CheckPlayerOnTeam(players, i))
 				sum++;
 		}
 		return sum;
 	}
-	
-	public boolean CheckPlayerOnTeam(List<PlayerEntity> players, int i){
+
+	public boolean CheckPlayerOnTeam(List<PlayerEntity> players, int i) {
 		PlayerEntity player = players.get(i);
 		Team team = player.getTeam();
-		if((player != null) && (team != null) && (team.getId() == getId()))
+		if ((player != null) && (team != null) && (team.getId() == getId()))
 			return true;
 		return false;
 	}
-	
 
 	/**
 	 * @return the team name
@@ -203,22 +201,26 @@ public class Team implements Debugable {
 		return id;
 	}
 
+
 	public void addPlayer(Player p) {
+		if (!IsAlreadyOnTeam(p)) {
+			p.setTeam(this);
+		}
+	}
+
+	public boolean IsAlreadyOnTeam(Player p) {
 		boolean isAlreadyOnTeam = false;
 		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			if (player != null) {
-				if (player.getId() == p.getId()) {
+			if ((getPlayer(i) != null) && (getPlayer(i).getId() == p.getId())) {
 					isAlreadyOnTeam = true;
 					break;
-				}
 			}
 		}
-
-		if (!isAlreadyOnTeam) {
-			this.players.add(p);
-		}
-		p.setTeam(this);
+		return isAlreadyOnTeam;
+	}
+	
+	public Player getPlayer(int i){
+		return this.players.get(i);
 	}
 
 	public void removePlayer(Player p) {
