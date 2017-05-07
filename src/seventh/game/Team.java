@@ -345,18 +345,18 @@ public class Team implements Debugable {
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(i);
 			PlayerEntity ent = player.getEntity();
-			float dist = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
+			float VectorDistance = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
 			
-			if (FindCondition(player, closest, dist, distance)) {
+			if (FindCondition(player, closest, VectorDistance, distance)) {
 					closest = player;
-					distance = dist;
+					distance = VectorDistance;
 			}
 		}
 		return closest;
 	}
 	
-	public boolean FindCondition(Player player, Player closest, float dist, float distance){
-		return player.isAlive() && (closest != null || dist < distance);
+	public boolean FindCondition(Player player, Player closest, float VectorDistance, float distance){
+		return player.isAlive() && (closest != null || VectorDistance < distance);
 	}
 	
 	/**
