@@ -148,15 +148,7 @@ public class Team implements Debugable {
 	 * @param players
 	 * @return the number of players in the list on this team
 	 */
-	/*
-	 * public int getNumberOfPlayersOnTeam(List<PlayerEntity> players) { int sum
-	 * = 0; for (int i = 0; i < players.size(); i++) { PlayerEntity player =
-	 * players.get(i); if (player != null) { Team team = player.getTeam();
-	 * 
-	 * if (team != null) { if (team.getId() == getId()) { sum++; } } } }
-	 * 
-	 * return sum; }
-	 */
+
 
 	public int getNumberOfPlayersOnTeam(List<PlayerEntity> players) {
 		return CalculateNumberOfPlayerOnTeam(players);
