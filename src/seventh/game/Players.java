@@ -207,6 +207,9 @@ public class Players implements PlayerInfos {
     /* (non-Javadoc)
      * @see seventh.game.PlayerInfos#getPrevAlivePlayerFrom(seventh.game.Player)
      */
+    
+    
+    /*
     @Override
     public Player getPrevAlivePlayerFrom(Player oldPlayer) {
         if(oldPlayer == null ) return getRandomAlivePlayer();
@@ -234,6 +237,50 @@ public class Players implements PlayerInfos {
         return null;
     
     }
+
+    */
+    
+    
+    @Override
+    public Player getPrevAlivePlayerFrom(Player oldPlayer) {
+        if(oldPlayer == null ) return getRandomAlivePlayer();
+        int PlayerSize = players.length;
+        int nextPlayerIndex = SetNextPlayerIndex(oldPlayer, PlayerSize);
+        return FindPrevAlivePlayer(nextPlayerIndex, oldPlayer, PlayerSize);
+    }
+    
+    public Player FindPrevAlivePlayer(int nextPlayerIndex, Player oldPlayer, int PlayerSize){
+        for(int i = 0; i < this.players.length; i++) {
+            Player player = this.players[nextPlayerIndex];
+            if(IsAlivePlayer(player, oldPlayer)) {
+                    return player;
+            }
+            nextPlayerIndex = ChangePlayerIndex(nextPlayerIndex, PlayerSize);
+        }
+        return null;
+    }
+    
+    public boolean IsAlivePlayer(Player player, Player oldPlayer){
+    	return player != null && player.isAlive() && player != oldPlayer;
+    }
+    
+    
+    public int SetNextPlayerIndex(Player oldPlayer, int PlayerSize){
+    	int nextPlayerIndex = (oldPlayer.getId() -1) % PlayerSize;
+    	return IsUnderPlayerIndex(nextPlayerIndex, PlayerSize);
+    }
+    
+    public int ChangePlayerIndex(int nextPlayerIndex, int PlayerSize){
+    	int nextIndex = nextPlayerIndex;
+    	return IsUnderPlayerIndex(nextIndex, PlayerSize);
+    }
+    
+    public int IsUnderPlayerIndex(int nextPlayerIndex, int PlayerSize){
+    	if(nextPlayerIndex < 0)
+    		return Math.max(PlayerSize-1, 0);
+    	return nextPlayerIndex;
+    }
+    
     
     /* (non-Javadoc)
      * @see seventh.game.PlayerInfos#getNextAlivePlayerFrom(seventh.game.Player)
