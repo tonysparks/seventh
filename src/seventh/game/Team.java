@@ -332,24 +332,33 @@ public class Team implements Debugable {
 	 * @param other
 	 * @return the closest player or null if no alive players
 	 */
+	
+
 	public Player getClosestPlayerTo(Entity other) {
 		Player closest = null;
 		float distance = -1;
-
+		closest = findClosestPlayer(closest, distance, other);
+		return closest;
+	}
+	
+	public Player findClosestPlayer(Player closest, float distance, Entity other){
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(i);
-			if (player.isAlive()) {
-				PlayerEntity ent = player.getEntity();
-				float dist = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
-				if (closest != null || dist < distance) {
+			PlayerEntity ent = player.getEntity();
+			float dist = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
+			
+			if (FindCondition(player, closest, dist, distance)) {
 					closest = player;
 					distance = dist;
-				}
 			}
 		}
 		return closest;
 	}
-
+	
+	public boolean FindCondition(Player player, Player closest, float dist, float distance){
+		return player.isAlive() && (closest != null || dist < distance);
+	}
+	
 	/**
 	 * Gets the closest alive bot to the supplied entity
 	 * 
@@ -363,11 +372,11 @@ public class Team implements Debugable {
 	public Player getClosestBotTo(Entity other) {
 		Player closest = null;
 		float distance = -1;
-		closest = findClosest(closest, distance, other);
+		closest = findClosestBot(closest, distance, other);
 		return closest;	
 	}
 	
-	public Player findClosest(Player closest, float distance, Entity other){
+	public Player findClosestBot(Player closest, float distance, Entity other){
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(i);
 			PlayerEntity ent = player.getEntity();
@@ -379,7 +388,7 @@ public class Team implements Debugable {
 		}
 		return closest;	
 	}
-	
+
 	
 	public boolean IsClosestOrDist(Player closest, float dist, float distance){
 		return (closest != null) || (dist<distance);
