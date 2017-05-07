@@ -409,6 +409,7 @@ public class Team implements Debugable {
 	 * @param oldPlayer
 	 * @return the previous {@link Player} or null if none
 	 */
+	/*
 	public Player getPrevAlivePlayerFrom(Player oldPlayer) {
 		if (oldPlayer == null)
 			return getAlivePlayer();
@@ -434,6 +435,38 @@ public class Team implements Debugable {
 
 		return null;
 	}
+	*/
+	
+	public Player getPrevAlivePlayerFrom(Player oldPlayer) {
+		if (oldPlayer == null)
+			return getAlivePlayer();
+
+		int nextPlayerIndex = players.indexOf(oldPlayer);
+		nextPlayerIndex = IsUnderIndex(nextPlayerIndex);
+
+		for (int i = 0; i < this.players.size(); i++) {
+			Player player = this.players.get(nextPlayerIndex);
+			if (IsPrevAlivePlayer(player, oldPlayer)) {
+					return player;
+			}
+
+			nextPlayerIndex = (nextPlayerIndex - 1) % players.size();
+			nextPlayerIndex = IsUnderIndex(nextPlayerIndex);
+		}
+		return null;
+	}
+	
+	public boolean IsPrevAlivePlayer(Player player, Player oldPlayer){
+		return player != null && player.isAlive() && player != oldPlayer;
+	}
+	
+	public int IsUnderIndex(int nextPlayerIndex){
+		if(nextPlayerIndex <0)
+			return Math.max(players.size()-1, 0);
+		return nextPlayerIndex;
+	}
+	
+	
 
 	/**
 	 * The next alive bot from the supplied Player slot
