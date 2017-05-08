@@ -47,11 +47,10 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
                     PlayerInfo killer = game.getPlayerById(Integer.valueOf((int)(event.getKillerId())));
                     if(killer!=null) {
                         Player killed = event.getPlayer();
-                        if(killed != null) {
-                            if(killer.getId() == killed.getId()) {
+                        if(killed != null && (killer.getId() == killed.getId())) {
                                 killed.getTeam().score(-1);
                                 return;
-                            }
+                            
                         }
                         
                         killer.getTeam().score(1);
@@ -75,15 +74,25 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
      * @see palisma.game.type.GameType#update(leola.live.TimeStep)
      */
     @Override
-    protected GameState doUpdate(Game game, TimeStep timeStep) {                
-        if(GameState.IN_PROGRESS == getGameState()) {
-            List<Team> leaders = getTeamsWithHighScore();
-            
-            boolean isUnlimitedScore = getMaxScore() <= 0;
-            
-            if(this.getRemainingTime() <= 0 || (leaders.get(0).getScore() >= getMaxScore() && !isUnlimitedScore) ) {
+    protected GameState doUpdate(Game game, TimeStep timeStep) {
+    	/*
+		 * Refactoring target : if and else if statements
+		 * Refactoring name : Introduce explaining variable 
+		 * Bad smell(reason) : Put the result of the expression, 
+		 * or parts of the expression, 
+		 * in a temporary variable with a name that explains the purpose
+		 * 
+		 */
+    	List<Team> leaders = getTeamsWithHighScore();
+    	boolean leadersSize = leaders.size()>1;
+    	boolean remainTime = this.getRemainingTime()<=0;
+    	boolean isUnlimitedScore = getMaxScore() <= 0;
+    	boolean whatScore = leaders.get(0).getScore() >= getMaxScore();
+    	if(GameState.IN_PROGRESS == getGameState()) {
+                             
+            if(remainTime || (whatScore && !isUnlimitedScore) ) {
                 
-                if(leaders.size() > 1) {
+                if(leadersSize) {
                     setGameState(GameState.TIE);
                     getDispatcher().queueEvent(new RoundEndedEvent(this, null, game.getNetGameStats()));
                 }
