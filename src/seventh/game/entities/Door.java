@@ -317,7 +317,7 @@ public class Door extends Entity {
             }
             
             this.autoCloseTimer.reset();
-                        
+                       
             this.setDoorState(DoorState.OPENING);
             this.game.emitSound(getId(), SoundType.DOOR_OPEN, getPos());
             
@@ -379,7 +379,6 @@ public class Door extends Entity {
         if(ent==this) {
             return true;
         }
-        
         return this.getHandleTouchRadius().intersects(ent.getBounds()) ||
                this.getHingeTouchRadius().intersects(ent.getBounds()) ;
     }
@@ -393,6 +392,24 @@ public class Door extends Entity {
             Entity other = game.getPlayerEntities()[i];
             if(other != null) {
                 if(this.getAutoCloseRadius().contains(other.getBounds())) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * @return true only if there is a player some what near this door (such that
+     * it wouldn't be able to close or open properly)
+     */
+    public boolean isPlayerNear() {
+        PlayerEntity[] playerEntities = game.getPlayerEntities();
+        for(int i = 0; i < playerEntities.length; i++) {
+            Entity other = playerEntities[i];
+            if(other != null) {
+                if(this.autoCloseRadius.contains(other.getBounds())) {
                     return true;
                 }
             }

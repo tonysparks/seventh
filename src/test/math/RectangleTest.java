@@ -1,4 +1,3 @@
-
 package test.math;
 
 import static org.junit.Assert.*;
@@ -7,11 +6,9 @@ import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
-
 
 public class RectangleTest {
 

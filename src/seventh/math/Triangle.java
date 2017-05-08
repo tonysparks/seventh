@@ -38,6 +38,7 @@ public class Triangle {
      * @param pointZ
      */
     public void translate(Vector2f pointZ) {
+
         TriangleTranslate(this,pointZ,this);
     }
     

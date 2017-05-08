@@ -47,11 +47,10 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
                     PlayerInfo killer = game.getPlayerById(Integer.valueOf((int)(event.getKillerId())));
                     if(killer!=null) {
                         Player killed = event.getPlayer();
-                        if(killed != null) {
-                            if(killer.getId() == killed.getId()) {
+                        if(killed != null && (killer.getId() == killed.getId())) {
                                 killed.getTeam().score(-1);
                                 return;
-                            }
+                            
                         }
                         
                         killer.getTeam().score(1);
@@ -64,7 +63,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
     /* (non-Javadoc)
      * @see seventh.game.type.GameType#start(seventh.game.Game)
      */
-    @Override
+        @Override
     public void start(Game game) {
         setGameState(GameState.IN_PROGRESS);
         getDispatcher().queueEvent(new RoundStartedEvent(this));
@@ -75,15 +74,24 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
      * @see palisma.game.type.GameType#update(leola.live.TimeStep)
      */
     @Override
-    protected GameState doUpdate(Game game, TimeStep timeStep) {                
-        if(GameState.IN_PROGRESS == getGameState()) {
-            List<Team> leaders = getTeamsWithHighScore();
-            
-            boolean isUnlimitedScore = getMaxScore() <= 0;
-            
-            if(this.getRemainingTime() <= 0 || (leaders.get(0).getScore() >= getMaxScore() && !isUnlimitedScore) ) {
-                
-                if(leaders.size() > 1) {
+    protected GameState doUpdate(Game game, TimeStep timeStep) {
+    	/*
+		 * Refactoring target : if and else if statements
+		 * Refactoring name : Introduce explaining variable, erase nested if statements 
+		 * Bad smell(reason) : Put the result of the expression, 
+		 * or parts of the expression, 
+		 * in a temporary variable with a name that explains the purpose,
+		 * exist needless nested statements 
+		 * 
+		 */
+    	List<Team> leaders = getTeamsWithHighScore();
+    	boolean leadersSize = leaders.size()>1;
+    	boolean remainTime = this.getRemainingTime()<=0;
+    	boolean isUnlimitedScore = getMaxScore() <= 0;
+    	boolean whatScore = leaders.get(0).getScore() >= getMaxScore();
+    	boolean inProgress = GameState.IN_PROGRESS ==getGameState();
+    	if(inProgress && remainTime || (whatScore && !isUnlimitedScore)) {
+                if(leadersSize) {
                     setGameState(GameState.TIE);
                     getDispatcher().queueEvent(new RoundEndedEvent(this, null, game.getNetGameStats()));
                 }
@@ -91,9 +99,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
                     setGameState(GameState.WINNER);
                     getDispatcher().queueEvent(new RoundEndedEvent(this, leaders.get(0), game.getNetGameStats()));
                 }
-            }
         }
-        
         
         checkRespawns(timeStep, game);
         

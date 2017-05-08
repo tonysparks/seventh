@@ -106,62 +106,77 @@ public class ObjectiveGameType extends AbstractTeamGameType {
      */
     @Override
     protected GameState doUpdate(Game game, TimeStep timeStep) {
+    	/*
+		 * Refactoring target : if and else if statements
+		 * Refactoring name : Introduce explaining variable 
+		 * Bad smell(reason) : Put the result of the expression, 
+		 * or parts of the expression, 
+		 * in a temporary variable with a name that explains the purpose
+		 * 
+		 */
+    	// If there are objectives that are in progress
+        // we must force the attackers to disarm them,
+        // even if all the attackers are dead
+    	int numberOfObjectivesInProgress = 0;
+    	boolean overMinimumSize = this.completedObjectives.size() >= this.minimumObjectivesToComplete;
+    	boolean isEmpty = this.outstandingObjectives.isEmpty() && this.completedObjectives.size()>0;
+    	boolean defenderDead = defender.isTeamDead() && defender.teamSize()>0;
+    	boolean getTime = getRemainingTime()<=0;
+    	boolean attackerDead = (attacker.isTeamDead() && attacker.teamSize()>0);
+    	boolean checkMin = numberOfObjectivesInProgress+this.completedObjectives.size() < this.minimumObjectivesToComplete;
         
-        if(this.inIntermission) {
-            this.currentDelayTime -= timeStep.getDeltaTime();
-            
-            if(this.currentDelayTime <= 0) {
-                startRound(game);
-            }
-        }
-        else {
-
-            // If there are objectives that are in progress
-            // we must force the attackers to disarm them,
-            // even if all the attackers are dead
-            int numberOfObjectivesInProgress = 0;
-            
-            // if we are currently playing, check
+    	boolean intermission = this.inIntermission;
+    	/*
+		 * Refactoring target : if else statements
+		 * Refactoring name : erase nesting if statement, extract function
+		 * Bad smell(reason) : nesting if statement
+		 * 
+		 */
+    	if(!intermission){
+    		// if we are currently playing, check
             // and see if the objectives have been completed        
-            int size = this.outstandingObjectives.size();
-            for(int i = 0; i < size; i++) {
-                Objective obj = this.outstandingObjectives.get(i); 
-                if (obj.isCompleted(game)) {
-                    this.completedObjectives.add(obj);
-                }
-                else if(obj.isInProgress(game)) {
-                    numberOfObjectivesInProgress++;
-                }
-            }
+            calculateObj(game, numberOfObjectivesInProgress);
             
             this.outstandingObjectives.removeAll(this.completedObjectives);
-            
-            
-            if(this.completedObjectives.size() >= this.minimumObjectivesToComplete) {
-                endRound(attacker, game);
-            }
-            else if(this.outstandingObjectives.isEmpty() && this.completedObjectives.size() > 0) {
-                endRound(attacker, game);
-            }
-            else if( defender.isTeamDead() && defender.teamSize() > 0) {
-                endRound(attacker, game);
-            }    
-            else if(getRemainingTime() <= 0 ) {
-                endRound(defender, game);
-            }
-            else if( (attacker.isTeamDead() && attacker.teamSize() > 0)
-                && (numberOfObjectivesInProgress+this.completedObjectives.size() < this.minimumObjectivesToComplete) ) {
-                //&& (!this.outstandingObjectives.isEmpty() ? numberOfObjectivesInProgress < this.outstandingObjectives.size() : true) ) {
-                endRound(defender, game);
-            }            
-            else {
+            /*
+    		 * Refactoring target : if and else if statements
+    		 * Refactoring name : erase duplicated statement
+    		 * Bad smell(reason) : needless duplicated statement
+    		 */
+            if(overMinimumSize || isEmpty || defenderDead)
+            	endRound(attacker, game);
+            else if(getTime || (attackerDead&&checkMin))
+            	endRound(defender, game);                
+            else 
                 checkSpectating(timeStep, game);
-            }                
+            return this.currentRound >= this.getMaxScore() ? GameState.WINNER : GameState.IN_PROGRESS;
+    	}    	
+    	
+    	
+    	this.currentDelayTime -= timeStep.getDeltaTime();
+        
+        if(this.currentDelayTime <= 0) {
+            startRound(game);
         }
+    	
+       
         
         return this.currentRound >= this.getMaxScore() ? GameState.WINNER : GameState.IN_PROGRESS;
         
     }
+
+	private void calculateObj(Game game, int numberOfObjectivesInProgress) {
+		int size = this.outstandingObjectives.size();
+		for(int i = 0; i < size; i++) {
+		    Objective obj = this.outstandingObjectives.get(i); 
+		    if (obj.isCompleted(game)) {
+		        this.completedObjectives.add(obj);
+		    }
+		    else if(obj.isInProgress(game)) {
+		        numberOfObjectivesInProgress++;
+		    }
+		}
+	}
     
     /* (non-Javadoc)
      * @see seventh.game.type.AbstractTeamGameType#isInProgress()
@@ -215,11 +230,13 @@ public class ObjectiveGameType extends AbstractTeamGameType {
         Player[] players = game.getPlayers().getPlayers();
         for (int i = 0; i < players.length; i++) {
             Player player = players[i];
-            if (player != null) {
-                if(!player.isPureSpectator() && !player.isCommander()) {
+            /*
+    		 * Refactoring target : nested if statements
+    		 * Refactoring name : erase needless if statement
+    		 * Bad smell(reason) : nested if statements
+    		 */
+            if (player != null&&(!player.isPureSpectator() && !player.isCommander()))                 
                     spawnPlayer(player, game);
-                }
-            }
         }
         
         resetRemainingTime();

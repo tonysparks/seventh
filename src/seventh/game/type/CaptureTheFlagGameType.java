@@ -45,34 +45,55 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
         
         @Override
         public void onTouch(Entity me, Entity other) {
-            if(!flag.isBeingCarried()) {
-                if(other.getType()==seventh.game.entities.Entity.Type.PLAYER) {
-                    PlayerEntity otherPlayer = (PlayerEntity)other;
-                    if(otherPlayer.isAlive()) {
-                        /*
-                         * Now, based on which team the player is on,
-                         * we determine what to do with the flag.
-                         * 
-                         * If the player is on an opposing team, they
-                         * force the flag back to their home base
-                         */
-                        int teamId = otherPlayer.getTeam().getId(); 
-                        
-                        if( (teamId==Team.ALLIED_TEAM_ID && flag.getType()==seventh.game.entities.Entity.Type.ALLIED_FLAG) || 
-                            (teamId==Team.AXIS_TEAM_ID && flag.getType()==seventh.game.entities.Entity.Type.AXIS_FLAG) ) {
-                            flag.carriedBy(otherPlayer);
-                            getDispatcher().queueEvent(new FlagStolenEvent(this, flag, otherPlayer.getId()));
-                        }
-                        else {
-                            if(!flag.isAtHomeBase()) {
-                                flag.returnHome();
-                                getDispatcher().queueEvent(new FlagReturnedEvent(this, flag, otherPlayer.getId()));
-                            }
-                        }                
-                    }
-                }
-            }
-        }    
+        	/*
+        	 * Refactoring target : if else statement
+    		 * Refactoring name : refactoring deeply nested block statement
+    		 * Bad smell(reason) : nested block 
+        	 */
+        	boolean typeName = !flag.isBeingCarried()&& other.getType()==seventh.game.entities.Entity.Type.PLAYER;
+        	
+        	if(!typeName)
+        		return;
+        	
+        	PlayerEntity otherPlayer = (PlayerEntity)other; 
+        	boolean playerAlive = otherPlayer.isAlive();
+        	
+        	if(!playerAlive)
+        		return;
+        	
+        	 /*
+             * Now, based on which team the player is on,
+             * we determine what to do with the flag.
+             * 
+             * If the player is on an opposing team, they
+             * force the flag back to their home base
+             */
+        	int teamId = otherPlayer.getTeam().getId(); 
+        	boolean typeCheck = (teamId==Team.ALLIED_TEAM_ID && flag.getType()==seventh.game.entities.Entity.Type.ALLIED_FLAG) || 
+                    (teamId==Team.AXIS_TEAM_ID && flag.getType()==seventh.game.entities.Entity.Type.AXIS_FLAG);
+        	
+        	if(!typeCheck){
+        		 isAtHomeBase(otherPlayer);
+        		 return;
+        	}
+        	
+        	flag.carriedBy(otherPlayer);
+            getDispatcher().queueEvent(new FlagStolenEvent(this, flag, otherPlayer.getId()));            
+            
+        }
+
+     	/*
+    		 * Refactoring target : else statement
+    		 * Refactoring name : extract method
+    		 * Bad smell(reason) : Create a new method and move the relevant fields 
+    		 * into the new function
+    		 */
+		private void isAtHomeBase(PlayerEntity otherPlayer) {
+			if(!flag.isAtHomeBase()) {
+			    flag.returnHome();
+			    getDispatcher().queueEvent(new FlagReturnedEvent(this, flag, otherPlayer.getId()));
+			}
+		}    
     }
     
     
