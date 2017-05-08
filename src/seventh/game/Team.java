@@ -560,6 +560,7 @@ public class Team implements Debugable {
 
 		return numberOfBots;
 	}
+	
 
 	/**
 	 * @return the current team size
