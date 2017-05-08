@@ -45,8 +45,8 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
         
         @Override
         public void onTouch(Entity me, Entity other) {
-            if(!flag.isBeingCarried()) {
-                if(other.getType()==seventh.game.entities.Entity.Type.PLAYER) {
+        	
+            if(!flag.isBeingCarried()&& other.getType()==seventh.game.entities.Entity.Type.PLAYER) {                
                     PlayerEntity otherPlayer = (PlayerEntity)other;
                     if(otherPlayer.isAlive()) {
                         /*
@@ -64,15 +64,25 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
                             getDispatcher().queueEvent(new FlagStolenEvent(this, flag, otherPlayer.getId()));
                         }
                         else {
-                            if(!flag.isAtHomeBase()) {
-                                flag.returnHome();
-                                getDispatcher().queueEvent(new FlagReturnedEvent(this, flag, otherPlayer.getId()));
-                            }
+                            isAtHomeBase(otherPlayer);
                         }                
                     }
-                }
+                
             }
-        }    
+        }
+
+     	/*
+    		 * Refactoring target : else statement
+    		 * Refactoring name : extract method
+    		 * Bad smell(reason) : Create a new method and move the relevant fields 
+    		 * into the new function
+    		 */
+		private void isAtHomeBase(PlayerEntity otherPlayer) {
+			if(!flag.isAtHomeBase()) {
+			    flag.returnHome();
+			    getDispatcher().queueEvent(new FlagReturnedEvent(this, flag, otherPlayer.getId()));
+			}
+		}    
     }
     
     

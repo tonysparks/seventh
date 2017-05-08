@@ -63,7 +63,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
     /* (non-Javadoc)
      * @see seventh.game.type.GameType#start(seventh.game.Game)
      */
-    @Override
+        @Override
     public void start(Game game) {
         setGameState(GameState.IN_PROGRESS);
         getDispatcher().queueEvent(new RoundStartedEvent(this));
