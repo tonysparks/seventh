@@ -124,27 +124,18 @@ public class ObjectiveGameType extends AbstractTeamGameType {
     	boolean getTime = getRemainingTime()<=0;
     	boolean attackerDead = (attacker.isTeamDead() && attacker.teamSize()>0);
     	boolean checkMin = numberOfObjectivesInProgress+this.completedObjectives.size() < this.minimumObjectivesToComplete;
-            
-        if(this.inIntermission) {
-            this.currentDelayTime -= timeStep.getDeltaTime();
-            
-            if(this.currentDelayTime <= 0) {
-                startRound(game);
-            }
-        }
-        else {
-            // if we are currently playing, check
+        
+    	boolean intermission = this.inIntermission;
+    	/*
+		 * Refactoring target : if else statements
+		 * Refactoring name : erase nesting if statement, extract function
+		 * Bad smell(reason) : nesting if statement
+		 * 
+		 */
+    	if(!intermission){
+    		// if we are currently playing, check
             // and see if the objectives have been completed        
-            int size = this.outstandingObjectives.size();
-            for(int i = 0; i < size; i++) {
-                Objective obj = this.outstandingObjectives.get(i); 
-                if (obj.isCompleted(game)) {
-                    this.completedObjectives.add(obj);
-                }
-                else if(obj.isInProgress(game)) {
-                    numberOfObjectivesInProgress++;
-                }
-            }
+            calculateObj(game, numberOfObjectivesInProgress);
             
             this.outstandingObjectives.removeAll(this.completedObjectives);
             /*
@@ -158,12 +149,34 @@ public class ObjectiveGameType extends AbstractTeamGameType {
             	endRound(defender, game);                
             else 
                 checkSpectating(timeStep, game);
-                          
+            return this.currentRound >= this.getMaxScore() ? GameState.WINNER : GameState.IN_PROGRESS;
+    	}    	
+    	
+    	
+    	this.currentDelayTime -= timeStep.getDeltaTime();
+        
+        if(this.currentDelayTime <= 0) {
+            startRound(game);
         }
+    	
+       
         
         return this.currentRound >= this.getMaxScore() ? GameState.WINNER : GameState.IN_PROGRESS;
         
     }
+
+	private void calculateObj(Game game, int numberOfObjectivesInProgress) {
+		int size = this.outstandingObjectives.size();
+		for(int i = 0; i < size; i++) {
+		    Objective obj = this.outstandingObjectives.get(i); 
+		    if (obj.isCompleted(game)) {
+		        this.completedObjectives.add(obj);
+		    }
+		    else if(obj.isInProgress(game)) {
+		        numberOfObjectivesInProgress++;
+		    }
+		}
+	}
     
     /* (non-Javadoc)
      * @see seventh.game.type.AbstractTeamGameType#isInProgress()
