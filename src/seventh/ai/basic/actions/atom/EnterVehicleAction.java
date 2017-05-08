@@ -64,20 +64,23 @@ public class EnterVehicleAction extends AdapterAction {
         if(isInVehicle(bot)) {
             this.getActionResult().setSuccess();
         }
-        else {
+        else if(!vehicle.canOperate(brain.getEntityOwner())) {                        
             Locomotion motion = brain.getMotion();
-            if(!vehicle.canOperate(brain.getEntityOwner())) {
-                Vector2f dest = motion.getDestination();
-                if(dest == null || !dest.equals(vehicle.getCenterPos())) {
-                    motion.moveTo(vehicle.getCenterPos());
-                }
+            Vector2f dest = motion.getDestination();
+            if(dest == null || !dest.equals(vehicle.getCenterPos())) {
+                motion.moveTo(vehicle.getCenterPos());
             }
-            else if( !bot.isEnteringVehicle() ) {
-                bot.use();
-            }
-            
             getActionResult().setFailure();
-        }
+        }    
+        else if( !bot.isEnteringVehicle() ) {
+        	Locomotion motion = brain.getMotion();
+            bot.use();
+            getActionResult().setFailure();
+        }            
+        else{
+        	Locomotion motion = brain.getMotion();
+        	getActionResult().setFailure();
+        }        
     }
     
 
