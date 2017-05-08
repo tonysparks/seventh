@@ -67,17 +67,14 @@ public class SecureZoneAction extends AdapterAction {
         
         for(int i = 0; i < playersInZone.size(); i++) {
             PlayerEntity ent = playersInZone.get(i);
-            if(ent.isAlive()) {
-                if(!brain.getEntityOwner().isOnTeamWith(ent)) {
-                    isClear = false;
-                    break;
-                }
+            if(ent.isAlive()&&!brain.getEntityOwner().isOnTeamWith(ent)) {
+                isClear = false;
+                return isClear;                
             }
         }
-        
-        if(isClear) {
-            getActionResult().setSuccess();
-        }
+
+        getActionResult().setSuccess();
+
                 
         return isClear;
         
