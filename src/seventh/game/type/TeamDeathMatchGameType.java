@@ -77,10 +77,11 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
     protected GameState doUpdate(Game game, TimeStep timeStep) {
     	/*
 		 * Refactoring target : if and else if statements
-		 * Refactoring name : Introduce explaining variable 
+		 * Refactoring name : Introduce explaining variable, erase nested if statements 
 		 * Bad smell(reason) : Put the result of the expression, 
 		 * or parts of the expression, 
-		 * in a temporary variable with a name that explains the purpose
+		 * in a temporary variable with a name that explains the purpose,
+		 * exist needless nested statements 
 		 * 
 		 */
     	List<Team> leaders = getTeamsWithHighScore();
@@ -88,10 +89,8 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
     	boolean remainTime = this.getRemainingTime()<=0;
     	boolean isUnlimitedScore = getMaxScore() <= 0;
     	boolean whatScore = leaders.get(0).getScore() >= getMaxScore();
-    	if(GameState.IN_PROGRESS == getGameState()) {
-                             
-            if(remainTime || (whatScore && !isUnlimitedScore) ) {
-                
+    	boolean inProgress = GameState.IN_PROGRESS ==getGameState();
+    	if(inProgress && remainTime || (whatScore && !isUnlimitedScore)) {
                 if(leadersSize) {
                     setGameState(GameState.TIE);
                     getDispatcher().queueEvent(new RoundEndedEvent(this, null, game.getNetGameStats()));
@@ -100,9 +99,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
                     setGameState(GameState.WINNER);
                     getDispatcher().queueEvent(new RoundEndedEvent(this, leaders.get(0), game.getNetGameStats()));
                 }
-            }
         }
-        
         
         checkRespawns(timeStep, game);
         
