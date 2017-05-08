@@ -49,23 +49,24 @@ public class InputMap extends Inputs {
     @Override
     public boolean scrolled(int notches) {    
         if(notches < 0) {
-            if(this.scroller[0] != null) {
-                Action action = this.actions.get(scroller[0]);
-                if(action!=null) {
-                    action.action();                    
-                }
-            }
+        	scrollerAction(0);
         }
         else {
-            if(this.scroller[1] != null) {
-                Action action = this.actions.get(scroller[1]);
-                if(action!=null) {
-                    action.action();                    
-                }
-            }
+        	scrollerAction(1);
         }
         return true;
     }
+    
+   
+    public void scrollerAction(int i){
+        if(this.scroller[i] != null) {
+            Action action = this.actions.get(scroller[i]);
+            if(action!=null) {
+                action.action();                    
+            }
+        }
+    }
+    
 
     public void addAction(String name, Action action) {
         this.actions.put(name, action);
