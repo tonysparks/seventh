@@ -166,9 +166,11 @@ public class Team implements Debugable {
 	public boolean CheckPlayerOnTeam(List<PlayerEntity> players, int i) {
 		PlayerEntity player = players.get(i);
 		Team team = player.getTeam();
-		if ((player != null) && (team != null) && (team.getId() == getId()))
-			return true;
-		return false;
+		return IsValidPlayerTeam(player,team);
+	}
+	
+	public boolean IsValidPlayerTeam(PlayerEntity player, Team team){
+		return player != null && team != null &&(team.getId() == getId());
 	}
 
 	/**
@@ -355,6 +357,7 @@ public class Team implements Debugable {
 		return closest;
 	}
 	
+	
 	public boolean FindCondition(Player player, Player closest, float VectorDistance, float distance){
 		return player.isAlive() && (closest != null || VectorDistance < distance);
 	}
@@ -403,8 +406,7 @@ public class Team implements Debugable {
 	 * @return the next {@link Player} or null if none
 	 */
 	public Player getNextAlivePlayerFrom(Player oldPlayer) {
-		if (oldPlayer == null)
-			return getAlivePlayer();
+		if (oldPlayer == null) return getAlivePlayer();
 
 		int nextPlayerIndex = NextPlayerIndex(players.indexOf(oldPlayer));
 
@@ -440,8 +442,7 @@ public class Team implements Debugable {
 		if (oldPlayer == null)
 			return getAlivePlayer();
 
-		int nextPlayerIndex = players.indexOf(oldPlayer);
-		nextPlayerIndex = IsUnderIndex(nextPlayerIndex);
+		int nextPlayerIndex = SetOldPlayerIndex(oldPlayer);
 
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = this.players.get(nextPlayerIndex);
@@ -449,11 +450,21 @@ public class Team implements Debugable {
 					return player;
 			}
 
-			nextPlayerIndex = (nextPlayerIndex - 1) % players.size();
-			nextPlayerIndex = IsUnderIndex(nextPlayerIndex);
+			nextPlayerIndex = AdjustPlayerIndex(nextPlayerIndex);
 		}
 		return null;
 	}
+	
+	public int AdjustPlayerIndex(int nextPlayerIndex){
+		int nextIndex = (nextPlayerIndex -1) % players.size();
+		return IsUnderIndex(nextIndex);
+	}
+	
+	public int SetOldPlayerIndex(Player oldPlayer){
+		int nextplayerIndex = players.indexOf(oldPlayer);
+		return IsUnderIndex(nextplayerIndex);
+	}
+	
 	
 	public boolean IsPrevAlivePlayer(Player player, Player oldPlayer){
 		return player != null && player.isAlive() && player != oldPlayer;
