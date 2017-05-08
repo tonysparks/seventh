@@ -208,30 +208,7 @@ public class ClientWeapon {
                     break;
                 }
                 case FIRING: {
-                    firstFire++;
-                    if(!onFire()) {
-                        
-                        if(canFireAgain) {                                    
-                            canFireAgain = false;
-                        }
-                        else {
-                                
-                        }
-                    }
-                    
-                    if(!this.fireWaitTimer.isUpdating() && firstFire == 1) {                        
-                        this.fireWaitTimer.setEndTime(isBoltAction() ? 50 : 300);
-                        this.fireWaitTimer.reset();
-                        this.fireWaitTimer.start();
-                        
-                        if(!isAutomatic() && !isHeavyWeapon()) {
-                            this.owner.emitBulletCasing();
-                        }
-                    }
-                    
-                    if(!this.specialReloadActionReloadTimer.isUpdating() && this.fireWaitTimer.isOnFirstTime()) {
-                        startSpecialReloadActionTimer();
-                    }
+                    firingUpdate();
                     
                     break;
                 }
@@ -253,6 +230,31 @@ public class ClientWeapon {
             }
         }
     }
+
+	private void firingUpdate() {
+		firstFire++;
+		if(!onFire()) {           
+		    if(canFireAgain) {                                    
+		        canFireAgain = false;
+		    }
+		    else {
+		    }
+		}
+		
+		if(!this.fireWaitTimer.isUpdating() && firstFire == 1) {                        
+		    this.fireWaitTimer.setEndTime(isBoltAction() ? 50 : 300);
+		    this.fireWaitTimer.reset();
+		    this.fireWaitTimer.start();
+		    
+		    if(!isAutomatic() && !isHeavyWeapon()) {
+		        this.owner.emitBulletCasing();
+		    }
+		}
+		
+		if(!this.specialReloadActionReloadTimer.isUpdating() && this.fireWaitTimer.isOnFirstTime()) {
+		    startSpecialReloadActionTimer();
+		}
+	}
     
     /**
      * Kicks the camera if firing
