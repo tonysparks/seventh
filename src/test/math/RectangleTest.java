@@ -2,9 +2,10 @@ package test.math;
 
 import static org.junit.Assert.*;
 
+import org.easymock.EasyMock;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-
-import seventh.math.Circle;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -312,7 +313,7 @@ public class RectangleTest {
 		final int expectedWidth = 3;
 		final int expectedheight = 4;
 		Rectangle rectangle = new Rectangle(0,0,0,0);
-		rectangle.setBounds(1,2,3,4);
+		rectangle.set(1,2,3,4);
 		assertEquals(expectedX,rectangle.getX());
 		assertEquals(expectedY,rectangle.getY());
 		assertEquals(expectedWidth,rectangle.getWidth());

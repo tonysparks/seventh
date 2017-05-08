@@ -185,48 +185,70 @@ public class Players implements PlayerInfos {
      */
     @Override
     public Player getRandomAlivePlayer() {        
-        int size = players.length;
-        int startingIndex = random.nextInt(size);
-        
-        for(int i = 0; i < size; i++) {
-            Player player = players[(startingIndex + i) % size];
-            if(player != null && player.isAlive()) {
+        int startingIndex = random.nextInt(players.length);
+        return FindAlivePlayer(startingIndex);
+    }
+    
+    public Player FindAlivePlayer(int start){
+    	int PlayerSize = players.length;
+        for(int i = 0; i < PlayerSize; i++) {
+            Player player = players[(start + i) % PlayerSize];
+            if(IsAlivePlayer(player)) {
                 return player;
             }
         }
         return null;
     }
     
+    public boolean IsAlivePlayer(Player player){
+    	return player != null && player.isAlive();
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.PlayerInfos#getPrevAlivePlayerFrom(seventh.game.Player)
      */
+    
+    
     @Override
     public Player getPrevAlivePlayerFrom(Player oldPlayer) {
         if(oldPlayer == null ) return getRandomAlivePlayer();
-        
-        int nextPlayerIndex = (oldPlayer.getId() - 1) % players.length;
-        if(nextPlayerIndex < 0) {
-            nextPlayerIndex = Math.max(players.length - 1, 0);
-        }
-        
+        int PlayerSize = players.length;
+        int nextPlayerIndex = SetNextPlayerIndex(oldPlayer, PlayerSize);
+        return FindPrevAlivePlayer(nextPlayerIndex, oldPlayer, PlayerSize);
+    }
+    
+    public Player FindPrevAlivePlayer(int nextPlayerIndex, Player oldPlayer, int PlayerSize){
         for(int i = 0; i < this.players.length; i++) {
             Player player = this.players[nextPlayerIndex];
-            if(player != null) {
-                if(player.isAlive() && player != oldPlayer) {
+            if(IsAlivePlayer(player, oldPlayer)) {
                     return player;
-                }
             }
-            
-            nextPlayerIndex = (nextPlayerIndex - 1) % players.length;
-            if(nextPlayerIndex < 0) {
-                nextPlayerIndex = Math.max(players.length - 1, 0);
-            }
+            nextPlayerIndex = ChangePlayerIndex(nextPlayerIndex, PlayerSize);
         }
-        
-        
         return null;
-    
     }
+    
+    public boolean IsAlivePlayer(Player player, Player oldPlayer){
+    	return player != null && player.isAlive() && player != oldPlayer;
+    }
+    
+    
+    public int SetNextPlayerIndex(Player oldPlayer, int PlayerSize){
+    	int nextPlayerIndex = (oldPlayer.getId() -1) % PlayerSize;
+    	return IsUnderPlayerIndex(nextPlayerIndex, PlayerSize);
+    }
+    
+    public int ChangePlayerIndex(int nextPlayerIndex, int PlayerSize){
+    	int nextIndex = nextPlayerIndex;
+    	return IsUnderPlayerIndex(nextIndex, PlayerSize);
+    }
+    
+    public int IsUnderPlayerIndex(int nextPlayerIndex, int PlayerSize){
+    	if(nextPlayerIndex < 0)
+    		return Math.max(PlayerSize-1, 0);
+    	return nextPlayerIndex;
+    }
+    
     
     /* (non-Javadoc)
      * @see seventh.game.PlayerInfos#getNextAlivePlayerFrom(seventh.game.Player)
@@ -236,20 +258,18 @@ public class Players implements PlayerInfos {
         if(oldPlayer == null ) return getRandomAlivePlayer();
         
         int nextPlayerIndex = (oldPlayer.getId() + 1) % players.length;
-        
+        return findNextAlivePlayerFrom(nextPlayerIndex, oldPlayer);
+    }
+    
+    
+    public Player findNextAlivePlayerFrom(int nextPlayerIndex, Player oldPlayer){
         for(int i = 0; i < this.players.length; i++) {
             Player player = this.players[nextPlayerIndex];
-            if(player != null) {
-                        
-                if(player.isAlive() && player != oldPlayer) {
+            if(IsAlivePlayer(player, oldPlayer)) {
                     return player;
-                }
             }    
-            
             nextPlayerIndex = (nextPlayerIndex + 1) % players.length;
-        }
-        
-        
+        } 
         return null;
     }
     

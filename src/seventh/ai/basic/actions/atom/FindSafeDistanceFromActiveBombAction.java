@@ -46,7 +46,7 @@ public class FindSafeDistanceFromActiveBombAction extends AdapterAction {
         Rectangle coverBounds = new Rectangle(300, 300);
         coverBounds.centerAround(target.getCenterPos());
         
-        Vector2f moveTo = world.getRandomSpotNotIn(bot, coverBounds.x, coverBounds.y, coverBounds.width, coverBounds.height, bomb.getBlastRadius());
+        Vector2f moveTo = world.getRandomSpotNotIn(bot, coverBounds.x, coverBounds.y, coverBounds.width, coverBounds.height, bomb.getCalculateBlastRectangle());
         getActionResult().setSuccess(moveTo);
     }
     

@@ -40,7 +40,9 @@ import seventh.shared.WeaponConstants;
  */
 public class Tank extends Vehicle {
     
-    private final NetTank netTank;
+    private static final int THROTTLE_WARMUP_THRESHOLD_TIME = 600;
+
+	private final NetTank netTank;
     
     private int previousKeys;
     private float previousOrientation;
@@ -90,23 +92,23 @@ public class Tank extends Vehicle {
     protected Tank(Type type, Vector2f position, final Game game, long timeToKill) {
         super(position, WeaponConstants.TANK_MOVEMENT_SPEED, game, type, timeToKill);
 
-        this.turretFacing = new Vector2f();
+        this.setTurretFacing(new Vector2f());
         this.netTank = new NetTank(type);
-        this.netTank.id = getId();
+        this.getNetTank().id = getId();
         
-        this.blowupTimer = new Timer(false, 3_000);
-        this.explosionTimer = new Timer(true, 500);
-        this.isDying = false;
+        this.setBlowupTimer(new Timer(false, 3_000));
+        this.setExplosionTimer(new Timer(true, 500));
+        this.setDying(false);
         
-        this.stopEase = new EaseInInterpolation(WeaponConstants.TANK_MOVEMENT_SPEED, 0f, 800);
-        this.previousVel = new Vector2f();
+        this.setStopEase(new EaseInInterpolation(WeaponConstants.TANK_MOVEMENT_SPEED, 0f, 800));
+        this.setPreviousVel(new Vector2f());
         
-        this.idleEngineSnd = new SoundEmitter(8_500, true);
-        this.moveSnd = new SoundEmitter(5_800, true);
-        this.turretRotateSnd = new SoundEmitter(800, true);
-        this.refDownSnd = new SoundEmitter(1_500, true);
+        this.setIdleEngineSnd(new SoundEmitter(8_500, true));
+        this.setMoveSnd(new SoundEmitter(5_800, true));
+        this.setTurretRotateSnd(new SoundEmitter(800, true));
+        this.setRefDownSnd(new SoundEmitter(1_500, true));
         
-        this.primaryWeapon = new RocketLauncher(game, this) {
+        this.setPrimaryWeapon(new RocketLauncher(game, this) {
 
             @Override
             protected void emitFireSound() {
@@ -149,14 +151,14 @@ public class Tank extends Vehicle {
             @Override
             protected Rocket newRocket() {
                 Rocket rocket = super.newRocket();
-                rocket.setOrientation(turretOrientation);
+                rocket.setOrientation(getTurretOrientation());
                 rocket.setOwner(getOperator());
                 
                 return rocket;
             }
-        };
+        });
         
-        this.secondaryWeapon = new MG42(game, this) {
+        this.setSecondaryWeapon(new MG42(game, this) {
 
             @Override
             protected Vector2f newBulletPosition() {                
@@ -188,7 +190,7 @@ public class Tank extends Vehicle {
             }
             
             
-        };
+        });
 
         bounds.width = WeaponConstants.TANK_AABB_WIDTH;
         bounds.height = WeaponConstants.TANK_AABB_HEIGHT;
@@ -197,11 +199,11 @@ public class Tank extends Vehicle {
         aabbHeight = bounds.height;
 
         this.orientation = 0;
-        this.desiredOrientation = this.orientation;
+        this.setDesiredOrientation(this.orientation);
         
-        this.turretSmoother = new SmoothOrientation(Math.toRadians(1.5f));
+        this.setTurretSmoother(new SmoothOrientation(Math.toRadians(1.5f)));
         
-        this.armor = 200;
+        this.setArmor(200);
         
         vehicleBB.setBounds(WeaponConstants.TANK_WIDTH, WeaponConstants.TANK_HEIGHT);        
         syncOOB(getOrientation(), position);
@@ -249,39 +251,24 @@ public class Tank extends Vehicle {
     @Override
     public boolean update(TimeStep timeStep) {
 
-        DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
-        DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
-        DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
-        DebugDraw.fillRectRelative((int)vehicleBB.topLeft.x, (int)vehicleBB.topLeft.y, 5, 5, 0xff1f0000);
-        DebugDraw.fillRectRelative((int)vehicleBB.topRight.x, (int)vehicleBB.topRight.y, 5, 5, 0xffff0000);
-        DebugDraw.fillRectRelative((int)vehicleBB.bottomLeft.x, (int)vehicleBB.bottomLeft.y, 5, 5, 0xff001f00);
-        DebugDraw.fillRectRelative((int)vehicleBB.bottomRight.x, (int)vehicleBB.bottomRight.y, 5, 5, 0xff00ff00);
-        
-        DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
-        DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
-        
-        DebugDraw.drawStringRelative(String.format(" Tracks: %3.2f : %3.2f", Math.toDegrees(this.orientation), Math.toDegrees(this.desiredOrientation)), 
-                (int)getPos().x, (int)getPos().y-20, 0xffff0000);
-        
-        DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.turretOrientation), Math.toDegrees(desiredTurretOrientation)), 
-                getPos(), 0xffff0000);
+        debugDrawTank();
         
         if(isDestroyed()) {
             return false;
         }
         
-        if( checkIfDying(timeStep) ) {
+        if(checkIfDying(timeStep) ) {
             return false;
         }
         
-        boolean isBlocked = false;
+        
         if(hasOperator()) {
 //            this.primaryWeapon.setOwner(getOperator());
 //            this.secondaryWeapon.setOwner(getOperator());
             
             makeMovementSounds(timeStep);
         }
-        
+        boolean isBlocked = false;
         {
             updateOrientation(timeStep);
             updateTurretOrientation(timeStep);
@@ -290,7 +277,7 @@ public class Tank extends Vehicle {
         
         
             this.vel.set(this.facing);
-            Vector2f.Vector2fMult(vel, this.throttle, vel);
+            Vector2f.Vector2fMult(vel, this.getThrottle(), vel);
             Vector2f.Vector2fNormalize(vel, vel);
             
             isBlocked = movementUpdate(timeStep);
@@ -303,24 +290,43 @@ public class Tank extends Vehicle {
         
         return isBlocked;
     }
+
+	private void debugDrawTank() {
+		DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
+        DebugDraw.drawOOBRelative(vehicleBB, 0xff00ff00);
+        DebugDraw.fillRectRelative((int)pos.x, (int)pos.y, 5, 5, 0xffff0000);
+        DebugDraw.fillRectRelative((int)vehicleBB.topLeft.x, (int)vehicleBB.topLeft.y, 5, 5, 0xff1f0000);
+        DebugDraw.fillRectRelative((int)vehicleBB.topRight.x, (int)vehicleBB.topRight.y, 5, 5, 0xffff0000);
+        DebugDraw.fillRectRelative((int)vehicleBB.bottomLeft.x, (int)vehicleBB.bottomLeft.y, 5, 5, 0xff001f00);
+        DebugDraw.fillRectRelative((int)vehicleBB.bottomRight.x, (int)vehicleBB.bottomRight.y, 5, 5, 0xff00ff00);
+        
+        DebugDraw.drawStringRelative("" + vehicleBB.topLeft, bounds.x, bounds.y+240, 0xffff0000);
+        DebugDraw.drawStringRelative("" + vehicleBB.bottomLeft, bounds.x, bounds.y+220, 0xffff0000);
+        
+        DebugDraw.drawStringRelative(String.format(" Tracks: %3.2f : %3.2f", Math.toDegrees(this.orientation), Math.toDegrees(this.getDesiredOrientation())), 
+                (int)getPos().x, (int)getPos().y-20, 0xffff0000);
+        
+        DebugDraw.drawStringRelative(String.format(" Current: %3.2f : %3.2f", Math.toDegrees(this.getTurretOrientation()), Math.toDegrees(getDesiredTurretOrientation())), 
+                getPos(), 0xffff0000);
+	}
     
     private boolean checkIfDying(TimeStep timeStep) {
-        if(this.isDying) {
-            this.blowupTimer.update(timeStep);
-            this.explosionTimer.update(timeStep);
+        if(this.isDying()) {
+            this.getBlowupTimer().update(timeStep);
+            this.getExplosionTimer().update(timeStep);
             
-            if(this.explosionTimer.isTime()) {
+            if(this.getExplosionTimer().isTime()) {
                 game.newBigExplosion(getCenterPos(), this, 20, 50, 100);
                 game.newBigExplosion(getPos(), this, 20, 50, 100);
             }
             
-            if(this.blowupTimer.isTime()) {
-                super.kill(killer);
-                this.isDying = false;
+            if(this.getBlowupTimer().isTime()) {
+                super.kill(getKiller());
+                this.setDying(false);
             }
         }
         
-        return this.isDying;
+        return this.isDying();
     }
     
     /**
@@ -332,125 +338,28 @@ public class Tank extends Vehicle {
             return false;
         }
         
+        checkNoThrottleMovingTank();
+        
         boolean isBlocked = false;
         
-        boolean hasThrottle = ! this.vel.isZero();
-        
-        if(!hasThrottle && !this.isStopped) {
-            this.isStopping = true;
-            //game.emitSound(getId(), SoundType.TANK_REV_DOWN, getCenterPos());
-        }
-        
-        
-        if(isAlive() && (hasThrottle || this.isStopping) ) {
+        final boolean isTankActivate = isAlive() && (! this.vel.isZero() || this.isStopping());
+		if(isTankActivate ) {
             if(currentState != State.WALKING && currentState != State.SPRINTING) {
                 currentState = State.RUNNING;
             }
             
-            if(this.throttleWarmupTime < 600) {
-                this.throttleWarmupTime += timeStep.getDeltaTime();
-                
-                if(hasOperator() && this.throttleWarmupTime > 590) {
-                    game.emitSound(getOperator().getId(), SoundType.TANK_REV_UP, getCenterPos());
-                }
+            if(this.getThrottleWarmupTime() < THROTTLE_WARMUP_THRESHOLD_TIME) {
+                throttleWarmingUp(timeStep);
             }
             else {
                 
-                this.throttleStartTime -= timeStep.getDeltaTime();
+                this.setThrottleStartTime(this.getThrottleStartTime() - timeStep.getDeltaTime());
                 
-                if(this.isStopping) {
-                    this.vel.set(this.previousVel);
-                    this.stopEase.update(timeStep);
-                    if(this.stopEase.isExpired()) {
-                        this.isStopping = false;
-                        this.isStopped = true;
-                        return isBlocked;
-                    }
-                }
-                else {
-                    this.stopEase.reset(90f, 0f, 800);
-                    this.isStopped = false;
-                    this.previousVel.set(this.vel);
-                    
-                    if(hasOperator()) {
-                //        game.emitSound(getOperator().getId(), SoundType.TANK_MOVE1, getCenterPos());
-                    }
+                if(checkTankStopping(timeStep)){
+                	return isBlocked;
                 }
                 
-                float normalSpeed = this.isStopping ? this.stopEase.getValue() : 90f;                                
-                final float movementSpeed = 
-                            this.throttleStartTime > 0 ? 160f : normalSpeed;
-                            
-                float dt = (float)timeStep.asFraction();
-                float newX = pos.x + vel.x * movementSpeed * dt;
-                float newY = pos.y + vel.y * movementSpeed * dt;                    
-                
-                
-                Map map = game.getMap();
-                
-                boolean isXBlocked = false;
-                boolean isYBlocked = false;
-                            
-                bounds.x = (int)newX;
-                if( map.rectCollides(bounds) ) {
-                    vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
-                    isBlocked = map.rectCollides(vehicleBB);
-                    if(isBlocked) { 
-                        bounds.x = (int)pos.x;
-                        isXBlocked = true;
-                    }
-                                    
-                }
-                
-                if(!isBlocked) {
-                    vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
-                    if(collidesAgainstVehicle(bounds)) {                
-                        bounds.x = (int)pos.x;                
-                        isBlocked = true;
-                        isXBlocked = true;
-                    }
-                }
-                
-                
-                
-                bounds.y = (int)newY;
-                if( map.rectCollides(bounds)) {
-                    vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
-                    isBlocked = map.rectCollides(vehicleBB);
-                    if(isBlocked) {
-                        bounds.y = (int)pos.y;
-                        isYBlocked = true;
-                    }
-                }
-                                
-                if(!isBlocked) {
-                    vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
-                    if(collidesAgainstVehicle(bounds)) {                
-                        bounds.y = (int)pos.y;                
-                        isBlocked = true;
-                        isYBlocked = true;
-                    }
-                }
-                
-    
-                /* some things want to stop dead it their tracks
-                 * if a component is blocked
-                 */
-                if(isBlocked && !continueIfBlock()) {
-                    bounds.x = (int)pos.x;
-                    bounds.y = (int)pos.y;
-                    isXBlocked = isYBlocked = true;
-                }
-                            
-    //            pos.x = bounds.x;
-    //            pos.y = bounds.y;
-                
-                pos.x = isXBlocked ? pos.x : newX;
-                pos.y = isYBlocked ? pos.y : newY;
-                                    
-                vel.zeroOut();
-                
-    //            this.walkingTime = WALK_TIME;                                
+                isBlocked = checkBlockedAfterMove(timeStep);
             }
         }
         else {                        
@@ -462,14 +371,131 @@ public class Tank extends Vehicle {
 
             this.currentState = State.IDLE;
             
-            this.throttleWarmupTime = 0;
-            this.throttleStartTime = 200;            
+            this.setThrottleWarmupTime(0);
+            this.setThrottleStartTime(200);            
         }
-        
-        
         
         return isBlocked;
     }
+
+	private void checkNoThrottleMovingTank() {
+		if(this.vel.isZero() && !this.isStopped()) {
+            this.setStopping(true);
+            //game.emitSound(getId(), SoundType.TANK_REV_DOWN, getCenterPos());
+        }
+	}
+
+	private void throttleWarmingUp(TimeStep timeStep) {
+		this.setThrottleWarmupTime(this.getThrottleWarmupTime() + timeStep.getDeltaTime());
+		
+		if(hasOperator() && this.getThrottleWarmupTime() > 590) {
+		    game.emitSound(getOperator().getId(), SoundType.TANK_REV_UP, getCenterPos());
+		}
+	}
+
+	private boolean checkBlockedAfterMove(TimeStep timeStep) {
+		float normalSpeed = this.isStopping() ? this.getStopEase().getValue() : 90f;                                
+		final float movementSpeed = 
+		            this.getThrottleStartTime() > 0 ? 160f : normalSpeed;
+		            
+		float dt = (float)timeStep.asFraction();
+		float newX = pos.x + vel.x * movementSpeed * dt;
+		float newY = pos.y + vel.y * movementSpeed * dt;  
+		
+		boolean isBlocked = false;
+		boolean isXBlocked = false;            
+		bounds.x = (int)newX;
+		if( game.getMap().rectCollides(bounds) ) {
+		    isXBlocked = checkCollisionNewX(newX, isXBlocked);		   
+		    isBlocked = game.getMap().rectCollides(vehicleBB);
+		}
+		
+		if(!isBlocked) {
+		    vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
+		    if(collidesAgainstVehicle(bounds)) {                
+		        bounds.x = (int)pos.x;                
+		        isBlocked = true;
+		        isXBlocked = true;
+		    }
+		}
+		
+		boolean isYBlocked = false;
+		bounds.y = (int)newY;
+		if( game.getMap().rectCollides(bounds)) {
+		    isYBlocked = checkCollisionNewY(newY, isYBlocked);
+		    isBlocked = game.getMap().rectCollides(vehicleBB);
+		}
+		                
+		if(!isBlocked) {
+		    vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
+		    if(collidesAgainstVehicle(bounds)) {                
+		        bounds.y = (int)pos.y;                
+		        isBlocked = true;
+		        isYBlocked = true;
+		    }
+		}
+		
+   
+		/* some things want to stop dead it their tracks
+		 * if a component is blocked
+		 */
+		if(isBlocked && !continueIfBlock()) {
+		    bounds.x = (int)pos.x;
+		    bounds.y = (int)pos.y;
+		    isXBlocked = isYBlocked = true;
+		}
+		            
+   //            pos.x = bounds.x;
+   //            pos.y = bounds.y;
+		
+		pos.x = isXBlocked ? pos.x : newX;
+		pos.y = isYBlocked ? pos.y : newY;
+		                    
+		vel.zeroOut();
+		
+   //            this.walkingTime = WALK_TIME;                                
+		return isBlocked;
+	}
+
+	private boolean checkCollisionNewY(float newY, boolean isYBlocked) {
+		vehicleBB.setLocation(vehicleBB.center.x, newY+WeaponConstants.TANK_AABB_HEIGHT/2f);
+		if(game.getMap().rectCollides(vehicleBB)) {
+		    bounds.y = (int)pos.y;
+		    isYBlocked = true;
+		}
+		return isYBlocked;
+	}
+
+	private boolean checkCollisionNewX(float newX, boolean isXBlocked) {
+		vehicleBB.setLocation(newX+WeaponConstants.TANK_AABB_WIDTH/2f, vehicleBB.center.y);
+		if(game.getMap().rectCollides(vehicleBB)) { 
+		    bounds.x = (int)pos.x;
+		    isXBlocked = true;
+		}
+		return isXBlocked;
+	}
+
+	private boolean checkTankStopping(TimeStep timeStep) {
+		if(this.isStopping()) {
+		    this.vel.set(this.getPreviousVel());
+		    this.getStopEase().update(timeStep);
+		    if(this.getStopEase().isExpired()) {
+		        this.setStopping(false);
+		        this.setStopped(true);
+		        return true;
+		    }
+		}
+		else {
+		    this.getStopEase().reset(90f, 0f, 800);
+		    this.setStopped(false);
+		    this.getPreviousVel().set(this.vel);
+		    
+		    if(hasOperator()) {
+		//        game.emitSound(getOperator().getId(), SoundType.TANK_MOVE1, getCenterPos());
+		    }
+		}
+		return false;
+	}
     
     /* (non-Javadoc)
      * @see seventh.game.Entity#continueIfBlock()
@@ -515,40 +541,39 @@ public class Tank extends Vehicle {
     
     protected void updateOrientation(TimeStep timeStep) {
         
-        if(this.vel.x > 0 || this.vel.x < 0) {
+        if(this.vel.x != 0) {
             float deltaMove = 0.55f * (float)timeStep.asFraction();
             if(this.vel.x < 0) {
                 deltaMove *= -1;
             }
             
-            this.desiredOrientation = this.orientation;
+            this.setDesiredOrientation(this.orientation);
             
-            this.desiredOrientation += deltaMove;
-            if(this.desiredOrientation<0) {
-                this.desiredOrientation=FastMath.fullCircle-this.desiredOrientation;
+            this.setDesiredOrientation(this.getDesiredOrientation() + deltaMove);
+            if(this.getDesiredOrientation()<0) {
+                this.setDesiredOrientation(FastMath.fullCircle-this.getDesiredOrientation());
             }
-            else if(this.desiredOrientation>FastMath.fullCircle) {
-                float remainder = this.desiredOrientation-FastMath.fullCircle; 
-                this.desiredOrientation=remainder;
+            else if(this.getDesiredOrientation()>FastMath.fullCircle) {
+                float remainder = this.getDesiredOrientation()-FastMath.fullCircle; 
+                this.setDesiredOrientation(remainder);
             }
             
-            float newOrientation = this.desiredOrientation;
+            float newOrientation = this.getDesiredOrientation();
             
-            Map map = game.getMap();
-            if(map.rectCollides(bounds) || collidesAgainstVehicle(bounds)) {
+            if(game.getMap().rectCollides(bounds) || collidesAgainstVehicle(bounds)) {
                 
                 this.vehicleBB.rotateTo(newOrientation);
                 
                 /* If we collide, then revert back to a valid orientation */
-                if(map.rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {                    
-                    this.orientation = this.lastValidOrientation;
+                if(game.getMap().rectCollides(vehicleBB)|| collidesAgainstVehicle(bounds)) {                    
+                    this.orientation = this.getLastValidOrientation();
                     return;
                 }
             }
             
-            this.lastValidOrientation = this.orientation;
+            this.setLastValidOrientation(this.orientation);
             this.orientation = newOrientation;
-            this.desiredOrientation = newOrientation;
+            this.setDesiredOrientation(newOrientation);
             
             
             this.facing.set(1, 0); // make right vector
@@ -557,15 +582,15 @@ public class Tank extends Vehicle {
     }
     
     protected void updateTurretOrientation(TimeStep timeStep) {
-        this.turretSmoother.setDesiredOrientation(this.desiredTurretOrientation);
-        this.turretSmoother.setOrientation(this.turretOrientation);
-        this.turretSmoother.update(timeStep);
-        if(this.turretSmoother.moved()) {
-            this.turretRotateSnd.play(game, getId(), SoundType.TANK_TURRET_MOVE, getPos());
+        this.getTurretSmoother().setDesiredOrientation(this.getDesiredTurretOrientation());
+        this.getTurretSmoother().setOrientation(this.getTurretOrientation());
+        this.getTurretSmoother().update(timeStep);
+        if(this.getTurretSmoother().moved()) {
+            this.getTurretRotateSnd().play(game, getId(), SoundType.TANK_TURRET_MOVE, getPos());
         }
         
-        this.turretOrientation = this.turretSmoother.getOrientation();
-        this.turretFacing.set(this.turretSmoother.getFacing());
+        this.setTurretOrientation(this.getTurretSmoother().getOrientation());
+        this.getTurretFacing().set(this.getTurretSmoother().getFacing());
     }
         
     /**
@@ -573,29 +598,29 @@ public class Tank extends Vehicle {
      * @param timeStep
      */
     protected void updateWeapons(TimeStep timeStep) {
-        if(this.isFiringPrimary) {
-            this.primaryWeapon.beginFire();
+        if(this.isFiringPrimary()) {
+            this.getPrimaryWeapon().beginFire();
         }
-        this.primaryWeapon.update(timeStep);
+        this.getPrimaryWeapon().update(timeStep);
         
-        if(this.isFiringSecondary) {
-            this.secondaryWeapon.beginFire();
+        if(this.isFiringSecondary()) {
+            this.getSecondaryWeapon().beginFire();
         }
-        this.secondaryWeapon.update(timeStep);
+        this.getSecondaryWeapon().update(timeStep);
     }
 
     protected void makeMovementSounds(TimeStep timeStep) {
-        if (nextMovementSound <= 0) {
+        if (getNextMovementSound() <= 0) {
 //            SoundType snd = SoundType.TANK_MOVE1;
 //            if (isRetracting) {
 //                snd = SoundType.TANK_START_MOVE;
 //            }
 
-            isRetracting = !isRetracting;
+            setRetracting(!isRetracting());
 //            game.emitSound(getId(), snd, getCenterPos());
-            nextMovementSound = 700;// 1500;
+            setNextMovementSound(700);// 1500;
         } else {
-            nextMovementSound -= timeStep.getDeltaTime();
+            setNextMovementSound(getNextMovementSound() - timeStep.getDeltaTime());
             /*
             if ((currentState == State.RUNNING || currentState == State.SPRINTING)) {
                 nextMovementSound -= timeStep.getDeltaTime();
@@ -605,19 +630,19 @@ public class Tank extends Vehicle {
         }
         
         
-        this.idleEngineSnd.update(timeStep);
-        this.moveSnd.update(timeStep);
-        this.turretRotateSnd.update(timeStep);
-        this.refDownSnd.update(timeStep);
+        this.getIdleEngineSnd().update(timeStep);
+        this.getMoveSnd().update(timeStep);
+        this.getTurretRotateSnd().update(timeStep);
+        this.getRefDownSnd().update(timeStep);
         
         if(currentState==State.IDLE) 
         {
-            this.idleEngineSnd.play(game, getId(), SoundType.TANK_IDLE, getCenterPos());
-            this.moveSnd.reset();
+            this.getIdleEngineSnd().play(game, getId(), SoundType.TANK_IDLE, getCenterPos());
+            this.getMoveSnd().reset();
         }
         else {
-            this.moveSnd.play(game, getId(), SoundType.TANK_MOVE, getCenterPos());
-            this.idleEngineSnd.reset();
+            this.getMoveSnd().play(game, getId(), SoundType.TANK_MOVE, getCenterPos());
+            this.getIdleEngineSnd().reset();
         }
 
         
@@ -633,8 +658,7 @@ public class Tank extends Vehicle {
         
         if (damager instanceof Explosion) {
             amount = 1;
-        } 
-        else if(damager instanceof Rocket) {
+        } else if(damager instanceof Rocket) {
             //amount /= 2;
         } else if (damager instanceof Bullet) {
             amount = 0;
@@ -643,9 +667,9 @@ public class Tank extends Vehicle {
             amount /= 10;
         }
         
-        armor -= amount;
+        setArmor(getArmor() - amount);
         
-        if(armor < 0) {                
+        if(getArmor() < 0) {                
             super.damage(damager, amount);
         }
         
@@ -665,10 +689,10 @@ public class Tank extends Vehicle {
      */
     @Override
     public void kill(Entity killer) {
-        this.killer = killer;
-        this.isDying = true;
-        this.explosionTimer.start();
-        this.blowupTimer.start();
+        this.setKiller(killer);
+        this.setDying(true);
+        this.getExplosionTimer().start();
+        this.getBlowupTimer().start();
         
         if(hasOperator()) {
             getOperator().kill(killer);
@@ -690,7 +714,7 @@ public class Tank extends Vehicle {
         if(desiredOrientation < 0) {
             desiredOrientation += fullCircle;
         }
-        this.turretOrientation = desiredOrientation;
+        this.setTurretOrientation(desiredOrientation);
     }
     
     /*
@@ -701,10 +725,10 @@ public class Tank extends Vehicle {
     @Override
     public void setOrientation(float orientation) {
         final float fullCircle = FastMath.fullCircle;
-        if(desiredOrientation < 0) {
-            desiredOrientation += fullCircle;
+        if(getDesiredOrientation() < 0) {
+            setDesiredOrientation(getDesiredOrientation() + fullCircle);
         }
-        this.desiredOrientation = orientation;
+        this.setDesiredOrientation(orientation);
     }
 
     /* (non-Javadoc)
@@ -714,25 +738,20 @@ public class Tank extends Vehicle {
     public void handleUserCommand(int keys, float orientation) {
                 
         
-        if( Keys.FIRE.isDown(keys) ) {
-            isFiringPrimary = true;
-        }
-        else if(Keys.FIRE.isDown(previousKeys)) {
-            endPrimaryFire();
-            isFiringPrimary = false;
-        }        
+        primaryFire(keys);        
         
         
-        if(Keys.THROW_GRENADE.isDown(keys)) {
-            isFiringSecondary = true;
-        }
-        else if(Keys.THROW_GRENADE.isDown(previousKeys)) {
-            endSecondaryFire();    
-            isFiringSecondary = false;
-        }
+        secondaryFire(keys);
         
         
-        /* ============================================
+        tankMovement(keys, orientation);
+        
+        this.setPreviousKeys(keys);
+        this.setPreviousOrientation(orientation);
+    }
+
+	private void tankMovement(int keys, float orientation) {
+		/* ============================================
          * Handles the movement of the tank
          * ============================================
          */
@@ -758,13 +777,30 @@ public class Tank extends Vehicle {
         }
         
                 
-        if(previousOrientation != orientation) {
+        if(getPreviousOrientation() != orientation) {
             setTurretOrientation(orientation);
         }
-        
-        this.previousKeys = keys;
-        this.previousOrientation = orientation;
-    }
+	}
+
+	private void secondaryFire(int keys) {
+		if(Keys.THROW_GRENADE.isDown(keys)) {
+            setFiringSecondary(true);
+        }
+        else if(Keys.THROW_GRENADE.isDown(getPreviousKeys())) {
+            endSecondaryFire();    
+            setFiringSecondary(false);
+        }
+	}
+
+	private void primaryFire(int keys) {
+		if( Keys.FIRE.isDown(keys) ) {
+            setFiringPrimary(true);
+        }
+        else if(Keys.FIRE.isDown(getPreviousKeys())) {
+            endPrimaryFire();
+            setFiringPrimary(false);
+        }
+	}
 
     /* (non-Javadoc)
      * @see seventh.game.Entity#calculateLineOfSight()
@@ -781,7 +817,7 @@ public class Tank extends Vehicle {
      * @return
      */
     public boolean beginPrimaryFire() {
-        return this.primaryWeapon.beginFire();        
+        return this.getPrimaryWeapon().beginFire();        
     }
     
     
@@ -790,7 +826,7 @@ public class Tank extends Vehicle {
      * @return
      */
     public boolean endPrimaryFire() {
-        return this.primaryWeapon.endFire();
+        return this.getPrimaryWeapon().endFire();
     }
     
     
@@ -799,7 +835,7 @@ public class Tank extends Vehicle {
      * @return
      */
     public boolean beginSecondaryFire() {
-        return this.secondaryWeapon.beginFire();
+        return this.getSecondaryWeapon().beginFire();
     }
     
     /**
@@ -807,7 +843,7 @@ public class Tank extends Vehicle {
      * @return
      */
     public boolean endSecondaryFire() {
-        return this.secondaryWeapon.endFire();
+        return this.getSecondaryWeapon().endFire();
     }
     
     
@@ -815,21 +851,21 @@ public class Tank extends Vehicle {
      * Adds throttle
      */
     public void forwardThrottle() {
-        this.throttle = 1;
+        this.setThrottle(1);
     }
     
     /**
      * Reverse throttle
      */
     public void backwardThrottle() {
-        this.throttle = -1;
+        this.setThrottle(-1);
     }
     
     /**
      * Stops the throttle
      */
     public void stopThrottle() {
-        this.throttle = 0;
+        this.setThrottle(0);
     }
     
     /**
@@ -839,7 +875,7 @@ public class Tank extends Vehicle {
         this.vel.x = -1;
         
         if(game.getRandom().nextInt(5)==4)
-            this.turretRotateSnd.play(game, getId(), SoundType.TANK_SHIFT, getCenterPos());
+            this.getTurretRotateSnd().play(game, getId(), SoundType.TANK_SHIFT, getCenterPos());
         //this.refDownSnd.play(game, getId(), SoundType.TANK_REV_UP, getCenterPos());
     }
     
@@ -849,7 +885,7 @@ public class Tank extends Vehicle {
     public void maneuverRight() {
         this.vel.x = 1;
         if(game.getRandom().nextInt(5)==4)
-            this.turretRotateSnd.play(game, getId(), SoundType.TANK_SHIFT, getCenterPos());
+            this.getTurretRotateSnd().play(game, getId(), SoundType.TANK_SHIFT, getCenterPos());
         //this.refDownSnd.play(game, getId(), SoundType.TANK_REV_UP, getCenterPos());
     }
     
@@ -879,7 +915,7 @@ public class Tank extends Vehicle {
         if(desiredOrientation < 0) {
             desiredOrientation += fullCircle;
         }
-        this.desiredTurretOrientation = desiredOrientation;
+        this.setDesiredTurretOrientation(desiredOrientation);
     }
     
     /**
@@ -901,13 +937,245 @@ public class Tank extends Vehicle {
      */
     @Override
     public NetEntity getNetEntity() {
-        super.setNetEntity(netTank);
-        netTank.state = getCurrentState().netValue();
-        netTank.operatorId = hasOperator() ? this.getOperator().getId() : SeventhConstants.INVALID_PLAYER_ID;
-        netTank.turretOrientation = (short)Math.toDegrees(turretOrientation);
-        netTank.primaryWeaponState = primaryWeapon.getState().netValue();
-        netTank.secondaryWeaponState = secondaryWeapon.getState().netValue();
+        super.setNetEntity(getNetTank());
+        getNetTank().state = getCurrentState().netValue();
+        getNetTank().operatorId = hasOperator() ? this.getOperator().getId() : SeventhConstants.INVALID_PLAYER_ID;
+        getNetTank().turretOrientation = (short)Math.toDegrees(getTurretOrientation());
+        getNetTank().primaryWeaponState = getPrimaryWeapon().getState().netValue();
+        getNetTank().secondaryWeaponState = getSecondaryWeapon().getState().netValue();
         
-        return netTank;
+        return getNetTank();
     }
+
+	private NetTank getNetTank() {
+		return netTank;
+	}
+
+	private int getPreviousKeys() {
+		return previousKeys;
+	}
+
+	private void setPreviousKeys(int previousKeys) {
+		this.previousKeys = previousKeys;
+	}
+
+	private float getPreviousOrientation() {
+		return previousOrientation;
+	}
+
+	private void setPreviousOrientation(float previousOrientation) {
+		this.previousOrientation = previousOrientation;
+	}
+
+	private long getNextMovementSound() {
+		return nextMovementSound;
+	}
+
+	private void setNextMovementSound(long nextMovementSound) {
+		this.nextMovementSound = nextMovementSound;
+	}
+
+	private boolean isFiringPrimary() {
+		return isFiringPrimary;
+	}
+
+	private void setFiringPrimary(boolean isFiringPrimary) {
+		this.isFiringPrimary = isFiringPrimary;
+	}
+
+	private boolean isFiringSecondary() {
+		return isFiringSecondary;
+	}
+
+	private void setFiringSecondary(boolean isFiringSecondary) {
+		this.isFiringSecondary = isFiringSecondary;
+	}
+
+	private boolean isRetracting() {
+		return isRetracting;
+	}
+
+	private void setRetracting(boolean isRetracting) {
+		this.isRetracting = isRetracting;
+	}
+
+	private float getThrottle() {
+		return throttle;
+	}
+
+	private void setThrottle(float throttle) {
+		this.throttle = throttle;
+	}
+
+	private float getDesiredTurretOrientation() {
+		return desiredTurretOrientation;
+	}
+
+	private void setDesiredTurretOrientation(float desiredTurretOrientation) {
+		this.desiredTurretOrientation = desiredTurretOrientation;
+	}
+
+	private float getLastValidOrientation() {
+		return lastValidOrientation;
+	}
+
+	private void setLastValidOrientation(float lastValidOrientation) {
+		this.lastValidOrientation = lastValidOrientation;
+	}
+
+	private long getThrottleStartTime() {
+		return throttleStartTime;
+	}
+
+	private void setThrottleStartTime(long throttleStartTime) {
+		this.throttleStartTime = throttleStartTime;
+	}
+
+	private long getThrottleWarmupTime() {
+		return throttleWarmupTime;
+	}
+
+	private void setThrottleWarmupTime(long throttleWarmupTime) {
+		this.throttleWarmupTime = throttleWarmupTime;
+	}
+
+	private float getDesiredOrientation() {
+		return desiredOrientation;
+	}
+
+	private void setDesiredOrientation(float desiredOrientation) {
+		this.desiredOrientation = desiredOrientation;
+	}
+
+	private Weapon getPrimaryWeapon() {
+		return primaryWeapon;
+	}
+
+	private void setPrimaryWeapon(Weapon primaryWeapon) {
+		this.primaryWeapon = primaryWeapon;
+	}
+
+	private Weapon getSecondaryWeapon() {
+		return secondaryWeapon;
+	}
+
+	private void setSecondaryWeapon(Weapon secondaryWeapon) {
+		this.secondaryWeapon = secondaryWeapon;
+	}
+
+	private void setTurretFacing(Vector2f turretFacing) {
+		this.turretFacing = turretFacing;
+	}
+
+	private SmoothOrientation getTurretSmoother() {
+		return turretSmoother;
+	}
+
+	private void setTurretSmoother(SmoothOrientation turretSmoother) {
+		this.turretSmoother = turretSmoother;
+	}
+
+	private int getArmor() {
+		return armor;
+	}
+
+	private void setArmor(int armor) {
+		this.armor = armor;
+	}
+
+	private Timer getBlowupTimer() {
+		return blowupTimer;
+	}
+
+	private void setBlowupTimer(Timer blowupTimer) {
+		this.blowupTimer = blowupTimer;
+	}
+
+	private Timer getExplosionTimer() {
+		return explosionTimer;
+	}
+
+	private void setExplosionTimer(Timer explosionTimer) {
+		this.explosionTimer = explosionTimer;
+	}
+
+	private boolean isDying() {
+		return isDying;
+	}
+
+	private void setDying(boolean isDying) {
+		this.isDying = isDying;
+	}
+
+	private boolean isStopping() {
+		return isStopping;
+	}
+
+	private void setStopping(boolean isStopping) {
+		this.isStopping = isStopping;
+	}
+
+	private boolean isStopped() {
+		return isStopped;
+	}
+
+	private void setStopped(boolean isStopped) {
+		this.isStopped = isStopped;
+	}
+
+	private Entity getKiller() {
+		return killer;
+	}
+
+	private void setKiller(Entity killer) {
+		this.killer = killer;
+	}
+
+	private EaseInInterpolation getStopEase() {
+		return stopEase;
+	}
+
+	private void setStopEase(EaseInInterpolation stopEase) {
+		this.stopEase = stopEase;
+	}
+
+	private Vector2f getPreviousVel() {
+		return previousVel;
+	}
+
+	private void setPreviousVel(Vector2f previousVel) {
+		this.previousVel = previousVel;
+	}
+
+	private SoundEmitter getIdleEngineSnd() {
+		return idleEngineSnd;
+	}
+
+	private void setIdleEngineSnd(SoundEmitter idleEngineSnd) {
+		this.idleEngineSnd = idleEngineSnd;
+	}
+
+	private SoundEmitter getMoveSnd() {
+		return moveSnd;
+	}
+
+	private void setMoveSnd(SoundEmitter moveSnd) {
+		this.moveSnd = moveSnd;
+	}
+
+	private SoundEmitter getTurretRotateSnd() {
+		return turretRotateSnd;
+	}
+
+	private void setTurretRotateSnd(SoundEmitter turretRotateSnd) {
+		this.turretRotateSnd = turretRotateSnd;
+	}
+
+	private SoundEmitter getRefDownSnd() {
+		return refDownSnd;
+	}
+
+	private void setRefDownSnd(SoundEmitter refDownSnd) {
+		this.refDownSnd = refDownSnd;
+	}
 }
