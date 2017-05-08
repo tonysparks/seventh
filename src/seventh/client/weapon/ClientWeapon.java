@@ -209,7 +209,6 @@ public class ClientWeapon {
                 }
                 case FIRING: {
                     firingUpdate();
-                    
                     break;
                 }
                 case RELOADING: {
@@ -237,8 +236,6 @@ public class ClientWeapon {
 		    if(canFireAgain) {                                    
 		        canFireAgain = false;
 		    }
-		    else {
-		    }
 		}
 		
 		if(!this.fireWaitTimer.isUpdating() && firstFire == 1) {                        
@@ -250,7 +247,6 @@ public class ClientWeapon {
 		        this.owner.emitBulletCasing();
 		    }
 		}
-		
 		if(!this.specialReloadActionReloadTimer.isUpdating() && this.fireWaitTimer.isOnFirstTime()) {
 		    startSpecialReloadActionTimer();
 		}
