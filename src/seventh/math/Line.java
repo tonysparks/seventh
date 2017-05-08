@@ -370,7 +370,7 @@ public class Line {
             float slab[],               // Parametric points of intersection on output
             float epsilon)           // Threshold for epsilon test
     {
-        int parallelStatement = 0;
+        int parallelStatement = 0; // 01 : parallel with x axis, 10 : parallel with y axis.
         boolean storeSlab = false;
         Vector2f dest = new Vector2f(); 
         Vector2f.Vector2fSubtract(center,origin, dest);
