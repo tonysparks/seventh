@@ -258,20 +258,18 @@ public class Players implements PlayerInfos {
         if(oldPlayer == null ) return getRandomAlivePlayer();
         
         int nextPlayerIndex = (oldPlayer.getId() + 1) % players.length;
-        
+        return findNextAlivePlayerFrom(nextPlayerIndex, oldPlayer);
+    }
+    
+    
+    public Player findNextAlivePlayerFrom(int nextPlayerIndex, Player oldPlayer){
         for(int i = 0; i < this.players.length; i++) {
             Player player = this.players[nextPlayerIndex];
-            if(player != null) {
-                        
-                if(player.isAlive() && player != oldPlayer) {
+            if(IsAlivePlayer(player, oldPlayer)) {
                     return player;
-                }
             }    
-            
             nextPlayerIndex = (nextPlayerIndex + 1) % players.length;
-        }
-        
-        
+        } 
         return null;
     }
     
