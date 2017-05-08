@@ -61,10 +61,13 @@ public class InputMap extends Inputs {
     public void scrollerAction(int i){
         if(this.scroller[i] != null) {
             Action action = this.actions.get(scroller[i]);
-            if(action!=null) {
-                action.action();                    
-            }
+            IsActionNull(action);
         }
+    }
+    
+    public void IsActionNull(Action action){
+    	if(action != null)
+    		action.action();
     }
     
 
