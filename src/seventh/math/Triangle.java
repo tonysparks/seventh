@@ -27,9 +27,9 @@ public class Triangle {
      * @param pointC
      */
     public Triangle(Vector2f pointA, Vector2f pointB, Vector2f pointC) {
-        setPointA(pointA); 
-        setPointB(pointB); 
-        setPointC(pointC);
+        this.pointA = pointA; 
+        this.pointB = pointB; 
+        this.pointC = pointC;
     }
     
     /**
@@ -59,9 +59,9 @@ public class Triangle {
      * @param dest
      */
     public static void TriangleTranslate(Triangle triangle, Vector2f pointZ, Triangle dest) {
-        Vector2f.Vector2fAdd(triangle.getPointA(), pointZ, dest.getPointA());
-        Vector2f.Vector2fAdd(triangle.getPointB(), pointZ, dest.getPointB());
-        Vector2f.Vector2fAdd(triangle.getPointC(), pointZ, dest.getPointC());
+        Vector2f.Vector2fAdd(triangle.pointA, pointZ, dest.pointA);
+        Vector2f.Vector2fAdd(triangle.pointB, pointZ, dest.pointB);
+        Vector2f.Vector2fAdd(triangle.pointC, pointZ, dest.pointC);
     }
     
     /**
@@ -72,9 +72,9 @@ public class Triangle {
      * @param dest
      */
     public static void TriangleTranslate(Triangle triangle, float scalar, Triangle dest) {
-        Vector2f.Vector2fAdd(triangle.getPointA(), scalar, dest.getPointA());
-        Vector2f.Vector2fAdd(triangle.getPointB(), scalar, dest.getPointB());
-        Vector2f.Vector2fAdd(triangle.getPointC(), scalar, dest.getPointC());
+        Vector2f.Vector2fAdd(triangle.pointA, scalar, dest.pointA);
+        Vector2f.Vector2fAdd(triangle.pointB, scalar, dest.pointB);
+        Vector2f.Vector2fAdd(triangle.pointC, scalar, dest.pointC);
     }
     
     /**
@@ -108,9 +108,9 @@ public class Triangle {
     }
 
 	private static boolean barycentricTechnique(Vector2f pointZ,Triangle triangle) {
-		Vector2f v0 = new Vector2f(triangle.getPointC().x-triangle.getPointA().x, triangle.getPointC().y-triangle.getPointA().y);
-    	Vector2f v1 = new Vector2f(triangle.getPointB().x-triangle.getPointA().x, triangle.getPointB().y-triangle.getPointA().y);
-    	Vector2f v2 = new Vector2f(pointZ.x-triangle.getPointA().x, pointZ.y-triangle.getPointA().y);
+		Vector2f v0 = new Vector2f(triangle.pointC.x-triangle.pointA.x, triangle.pointC.y-triangle.pointA.y);
+    	Vector2f v1 = new Vector2f(triangle.pointB.x-triangle.pointA.x, triangle.pointB.y-triangle.pointA.y);
+    	Vector2f v2 = new Vector2f(pointZ.x-triangle.pointA.x, pointZ.y-triangle.pointA.y);
         
         float det = dotProducts(v0,v0) * dotProducts(v1,v1) - dotProducts(v0,v1) * dotProducts(v0,v1);
         if(det == 0) {
@@ -139,9 +139,9 @@ public class Triangle {
      * @return
      */
     public static boolean lineIntersectsTriangle(Line line, Triangle triangle) {
-        return Line.lineIntersectLine(line.a, line.b, triangle.getPointA(), triangle.getPointB()) || 
-               Line.lineIntersectLine(line.a, line.b, triangle.getPointB(), triangle.getPointC()) ||
-               Line.lineIntersectLine(line.a, line.b, triangle.getPointC(), triangle.getPointA());
+        return Line.lineIntersectLine(line.a, line.b, triangle.pointA, triangle.pointB) || 
+               Line.lineIntersectLine(line.a, line.b, triangle.pointB, triangle.pointC) ||
+               Line.lineIntersectLine(line.a, line.b, triangle.pointC, triangle.pointA);
     }
     
     /**
@@ -153,9 +153,9 @@ public class Triangle {
      * @return
      */
     public static boolean lineIntersectsTriangle(Vector2f pointA, Vector2f pointB, Triangle triangle) {
-        return Line.lineIntersectLine(pointA, pointB, triangle.getPointA(), triangle.getPointB()) || 
-               Line.lineIntersectLine(pointA, pointB, triangle.getPointB(), triangle.getPointC()) ||
-               Line.lineIntersectLine(pointA, pointB, triangle.getPointC(), triangle.getPointA());
+        return Line.lineIntersectLine(pointA, pointB, triangle.pointA, triangle.pointB) || 
+               Line.lineIntersectLine(pointA, pointB, triangle.pointB, triangle.pointC) ||
+               Line.lineIntersectLine(pointA, pointB, triangle.pointC, triangle.pointA);
     }
 
     /**
@@ -169,8 +169,8 @@ public class Triangle {
      * @return true if the rectangle intersects the triangle
      */
     public static boolean rectangleIntersectsTriangle(Rectangle rectangle, Triangle triangle) {          
-        return rectangleIntersectsTriangle(rectangle, triangle.getPointA().x, triangle.getPointA().y, 
-        		triangle.getPointB().x, triangle.getPointB().y, triangle.getPointC().x, triangle.getPointC().y);
+        return rectangleIntersectsTriangle(rectangle, triangle.pointA.x, triangle.pointA.y, 
+        		triangle.pointB.x, triangle.pointB.y, triangle.pointC.x, triangle.pointC.y);
     }
     
     /**
@@ -243,30 +243,6 @@ public class Triangle {
         if ( point.x > recEndX ) locationValue |= (locationValue<<2);
         if ( point.y > recEndY ) locationValue |= (locationValue<<3);
 		return locationValue;
-	}
-
-	public Vector2f getPointA() {
-		return pointA;
-	}
-
-	public void setPointA(Vector2f a) {
-		this.pointA = a;
-	}
-
-	public Vector2f getPointB() {
-		return pointB;
-	}
-
-	public void setPointB(Vector2f b) {
-		this.pointB = b;
-	}
-
-	public Vector2f getPointC() {
-		return pointC;
-	}
-
-	public void setPointC(Vector2f c) {
-		this.pointC = c;
 	}
     
 }

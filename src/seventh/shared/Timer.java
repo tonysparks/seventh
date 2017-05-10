@@ -22,17 +22,17 @@ public class Timer implements Updatable {
     public Timer(boolean loop, long endTime) {
         this.setLoop(loop);
         this.setEndTime(endTime);                
-        this.setOnFirstTime(false);
+        this.onFirstTime = false;
         reset();
     }
 
     public void set(Timer timer) {
-        this.setCurrentTime(timer.getCurrentTime());
+        this.currentTime = timer.currentTime;
         this.setEndTime(timer.getEndTime());
-        this.setUpdate(timer.isUpdate());
-        this.setLoop(timer.isLoop());
-        this.setTime(timer.isTime());
-        this.setOnFirstTime(timer.isOnFirstTime());
+        this.update = timer.update;
+        this.setLoop(timer.loop);
+        this.isTime = timer.isTime();
+        this.onFirstTime = timer.isOnFirstTime();
     }
 
 	/**
@@ -53,14 +53,14 @@ public class Timer implements Updatable {
      * @return the remaining time
      */
     public long getRemainingTime() {
-        return this.getEndTime() - this.getCurrentTime();
+        return this.getEndTime() - this.currentTime;
     }
     
     /**
      * @return true if this timer is currently being updated
      */
     public boolean isUpdating() {
-        return isUpdate();
+        return update;
     }
     
     /**
@@ -74,30 +74,30 @@ public class Timer implements Updatable {
      * @return true if set to loop
      */
     public boolean isLooping() {
-        return isLoop();
+        return loop;
     }
     
     public Timer reset() {
-        this.setCurrentTime(0);
-        this.setUpdate(true);
-        this.setTime(false);
+        this.currentTime = (long) 0;
+        this.update = true;
+        this.isTime = false;
         return this;
     }
     
     public Timer stop() {
-        this.setCurrentTime(0);
-        this.setTime(false);
-        this.setUpdate(false);
+        this.currentTime = (long) 0;
+        this.isTime = false;
+        this.update = false;
         return this;
     }
 
     public Timer start() {
-        this.setUpdate(true);
+        this.update = true;
         return this;
     }
 
     public Timer pause() {
-        this.setUpdate(false);
+        this.update = false;
         return this;
     }
 
@@ -109,7 +109,7 @@ public class Timer implements Updatable {
      * Move the remaining time to 0
      */
     public Timer expire() {
-        this.setCurrentTime(this.getEndTime());
+        this.currentTime = this.getEndTime();
         return this;
     }
     
@@ -139,54 +139,26 @@ public class Timer implements Updatable {
      * @param timeStep
      */
     public void update(TimeStep timeStep) {
-        this.setOnFirstTime(false);
-        if (this.isUpdate()) {            
-            this.setCurrentTime(this.getCurrentTime() + timeStep.getDeltaTime());
-            if (this.getCurrentTime() >= this.getEndTime()) {
+        this.onFirstTime = false;
+        if (this.update) {            
+            this.currentTime = this.currentTime + timeStep.getDeltaTime();
+            if (this.currentTime >= this.getEndTime()) {
                 if(this.isLooping()) {
                     reset();
                 }
                 else {
-                    this.setUpdate(false);
+                    this.update = false;
                 }
                 
-                this.setTime(true);
-                this.setOnFirstTime(true);
+                this.isTime = true;
+                this.onFirstTime = true;
                 
                 onFinish(this);
                 
             }
             else {
-                this.setTime(false);
+                this.isTime = false;
             }
         }
     }
-
-	private boolean isUpdate() {
-		return update;
-	}
-
-	private void setUpdate(boolean update) {
-		this.update = update;
-	}
-
-	private boolean isLoop() {
-		return loop;
-	}
-
-	private void setTime(boolean isTime) {
-		this.isTime = isTime;
-	}
-
-	private void setOnFirstTime(boolean onFirstTime) {
-		this.onFirstTime = onFirstTime;
-	}
-
-	private long getCurrentTime() {
-		return currentTime;
-	}
-
-	private void setCurrentTime(long currentTime) {
-		this.currentTime = currentTime;
-	}
 }

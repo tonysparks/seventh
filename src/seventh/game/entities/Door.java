@@ -120,8 +120,8 @@ public class Door extends Entity {
         },
         OPENING {
         	public void update(Door door,TimeStep timeStep){
-        		door.getRotation().setDesiredOrientation(door.getTargetOrientation());
-        		door.getRotation().update(timeStep);
+        		door.rotation.setDesiredOrientation(door.getTargetOrientation());
+        		door.rotation.update(timeStep);
                 
         		door.setDoorOrientation();
                 
@@ -130,23 +130,23 @@ public class Door extends Entity {
                     	door.game.emitSound(door.getId(), SoundType.DOOR_OPEN_BLOCKED, door.getPos());
                     }
                     
-                    door.setBlocked(true);
+                    door.isBlocked = true;
                     
-                    door.getRotation().setOrientation(door.getRotation().getOrientation());
+                    door.rotation.setOrientation(door.rotation.getOrientation());
                     door.setDoorOrientation();
                     
                 }
-                else if(!door.getRotation().moved()) {
-                	door.setDoorState(DoorState.OPENED);
-                	door.setBlocked(false);
+                else if(!door.rotation.moved()) {
+                	door.doorState = DoorState.OPENED;
+                	door.isBlocked = false;
                 }
         	}
         },
         CLOSED,
         CLOSING {
         	public void update(Door door,TimeStep timeStep){
-				door.getRotation().setDesiredOrientation(door.getTargetOrientation());
-				door.getRotation().update(timeStep);
+				door.rotation.setDesiredOrientation(door.getTargetOrientation());
+				door.rotation.update(timeStep);
 
 				door.setDoorOrientation();
                 if(door.game.doesTouchPlayers(door)) {
@@ -154,21 +154,21 @@ public class Door extends Entity {
                     	door.game.emitSound(door.getId(), SoundType.DOOR_CLOSE_BLOCKED, door.getPos());
                     }
                     
-                    door.setBlocked(true);
+                    door.isBlocked = true;
                     
-                    door.getRotation().setOrientation(door.getRotation().getOrientation());
+                    door.rotation.setOrientation(door.rotation.getOrientation());
                     door.setDoorOrientation();
                     
                 }
-                else if(!door.getRotation().moved()) {
-                	door.setDoorState(DoorState.CLOSED);
-                	door.setBlocked(false);
+                else if(!door.rotation.moved()) {
+                	door.doorState = DoorState.CLOSED;
+                	door.isBlocked = false;
                 }
         	}
         },
         ;
         public void update(Door door,TimeStep timeStep) {
-        	door.setBlocked(false);
+        	door.isBlocked = false;
 		}
         public byte netValue() {
             return (byte)ordinal();
@@ -204,35 +204,35 @@ public class Door extends Entity {
      */
     public Door(Vector2f position, Game game, Vector2f facing) {
         super(game.getNextPersistantId(), position, 0, game, Type.DOOR);
-        this.setDoorState(DoorState.CLOSED);
+        this.doorState = DoorState.CLOSED;
         this.setFrontDoorHandle(new Vector2f(facing));
-        this.setRearDoorHandle(new Vector2f(facing));
-        this.setRearHingePos(new Vector2f());
+        this.rearDoorHandle = new Vector2f(facing);
+        this.rearHingePos = new Vector2f();
         this.facing.set(facing);
         
-        this.setHinge(DoorHinge.fromVector(facing));
-        this.setHandleTouchRadius(new Rectangle(48, 48));
-        this.setHingeTouchRadius(new Rectangle(48,48));
-        this.setAutoCloseRadius(new Rectangle(100, 100));
+        this.hinge = DoorHinge.fromVector(facing);
+        this.handleTouchRadius = new Rectangle(48, 48);
+        this.hingeTouchRadius = new Rectangle(48,48);
+        this.autoCloseRadius = new Rectangle(100, 100);
         
-        this.bounds.set(this.getHandleTouchRadius());
-        this.getHingeTouchRadius().centerAround(getPos());
-        this.getAutoCloseRadius().centerAround(getPos());
+        this.bounds.set(this.handleTouchRadius);
+        this.hingeTouchRadius.centerAround(getPos());
+        this.autoCloseRadius.centerAround(getPos());
         
         this.autoCloseTimer = new Timer(false, 5_000);
         this.autoCloseTimer.stop();
         
-        this.setRotation(new SmoothOrientation(0.05));
-        this.getRotation().setOrientation(this.getHinge().getClosedOrientation());
-        setOrientation(this.getRotation().getOrientation());
+        this.rotation = new SmoothOrientation(0.05);
+        this.rotation.setOrientation(this.hinge.getClosedOrientation());
+        setOrientation(this.rotation.getOrientation());
         
         setDoorOrientation();
         
-        this.setNetDoor(new NetDoor());
+        this.netDoor = new NetDoor();
         
         setCanTakeDamage(true);
         
-        this.setBlocked(false);
+        this.isBlocked = false;
         
         this.onTouch = new OnTouchListener() {
             
@@ -245,11 +245,11 @@ public class Door extends Entity {
     }
 
     private void setDoorOrientation() {
-        Vector2f.Vector2fMA(getPos(), this.getRotation().getFacing(), 64, this.getFrontDoorHandle());
-        this.setRearHingePos(this.getHinge().getRearHingePosition(getPos(), this.getRotation().getFacing(), this.getRearHingePos()));                
-        Vector2f.Vector2fMA(this.getRearHingePos(), this.getRotation().getFacing(), 64, this.getRearDoorHandle());
+        Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.getFrontDoorHandle());
+        this.rearHingePos = this.hinge.getRearHingePosition(getPos(), this.rotation.getFacing(), this.rearHingePos);                
+        Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
         
-        this.getHandleTouchRadius().centerAround(this.getFrontDoorHandle());
+        this.handleTouchRadius.centerAround(this.getFrontDoorHandle());
     }
     
     @Override
@@ -259,9 +259,9 @@ public class Door extends Entity {
         // we continue opening the door.
         
         // The door can act as a shield to the entity
-        getDoorState().update(this,timeStep);
+        doorState.update(this,timeStep);
         
-        setOrientation(this.getRotation().getOrientation());
+        setOrientation(this.rotation.getOrientation());
         
         //Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.doorHandle);
     //    DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
@@ -274,19 +274,19 @@ public class Door extends Entity {
     }
     
     public boolean isOpened() {
-        return this.getDoorState() == DoorState.OPENED;
+        return this.doorState == DoorState.OPENED;
     }
     
     public boolean isOpening() {
-        return this.getDoorState() == DoorState.OPENING;
+        return this.doorState == DoorState.OPENING;
     }
     
     public boolean isClosed() {
-        return this.getDoorState() == DoorState.CLOSED;
+        return this.doorState == DoorState.CLOSED;
     }
     
     public boolean isClosing() {
-        return this.getDoorState() == DoorState.CLOSING;
+        return this.doorState == DoorState.CLOSING;
     }
     
     
@@ -308,9 +308,9 @@ public class Door extends Entity {
     }
     
     public void open(Entity ent) {
-        if(this.getDoorState() != DoorState.OPENED  ||
-           this.getDoorState() != DoorState.OPENING ||
-           this.getDoorState() != DoorState.CLOSING) {
+        if(this.doorState != DoorState.OPENED  ||
+           this.doorState != DoorState.OPENING ||
+           this.doorState != DoorState.CLOSING) {
             
             if(!canBeHandledBy(ent)) {
                 return;
@@ -318,7 +318,7 @@ public class Door extends Entity {
             
             this.autoCloseTimer.reset();
                        
-            this.setDoorState(DoorState.OPENING);
+            this.doorState = DoorState.OPENING;
             this.game.emitSound(getId(), SoundType.DOOR_OPEN, getPos());
             
             setDoorDestinationOrientation(ent);
@@ -330,7 +330,7 @@ public class Door extends Entity {
 		// figure out what side the entity is 
 		// of the door hinge, depending on their
 		// side, we set the destinationOrientation
-		switch(this.getHinge()){
+		switch(this.hinge){
 		    case NORTH_END:
 		    case SOUTH_END:
 		        new DoorSouthEnd().doorOpen(this,ent);
@@ -345,16 +345,16 @@ public class Door extends Entity {
 	}
     
     public void close(Entity ent) {
-        if(this.getDoorState() != DoorState.CLOSED  ||
-           this.getDoorState() != DoorState.OPENING ||
-           this.getDoorState() != DoorState.CLOSING) {
+        if(this.doorState != DoorState.CLOSED  ||
+           this.doorState != DoorState.OPENING ||
+           this.doorState != DoorState.CLOSING) {
             
             if(!canBeHandledBy(ent)) {
                 return;
             }
             
-            this.setDoorState(DoorState.CLOSING);            
-            this.setTargetOrientation(this.getHinge().getClosedOrientation());        
+            this.doorState = DoorState.CLOSING;            
+            this.setTargetOrientation(this.hinge.getClosedOrientation());        
             this.game.emitSound(getId(), SoundType.DOOR_CLOSE, getPos());
         }
     }
@@ -379,8 +379,8 @@ public class Door extends Entity {
         if(ent==this) {
             return true;
         }
-        return this.getHandleTouchRadius().intersects(ent.getBounds()) ||
-               this.getHingeTouchRadius().intersects(ent.getBounds()) ;
+        return this.handleTouchRadius.intersects(ent.getBounds()) ||
+               this.hingeTouchRadius.intersects(ent.getBounds()) ;
     }
     
     /**
@@ -390,24 +390,6 @@ public class Door extends Entity {
     public boolean isPlayerNear() {
         for(int i = 0; i < game.getPlayerEntities().length; i++) {
             Entity other = game.getPlayerEntities()[i];
-            if(other != null) {
-                if(this.getAutoCloseRadius().contains(other.getBounds())) {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
-    }
-    
-    /**
-     * @return true only if there is a player some what near this door (such that
-     * it wouldn't be able to close or open properly)
-     */
-    public boolean isPlayerNear() {
-        PlayerEntity[] playerEntities = game.getPlayerEntities();
-        for(int i = 0; i < playerEntities.length; i++) {
-            Entity other = playerEntities[i];
             if(other != null) {
                 if(this.autoCloseRadius.contains(other.getBounds())) {
                     return true;
@@ -431,7 +413,7 @@ public class Door extends Entity {
     
     public boolean isTouching(Rectangle bounds) {
         boolean isTouching = Line.lineIntersectsRectangle(getPos(), this.getFrontDoorHandle(), bounds) ||
-                             Line.lineIntersectsRectangle(this.getRearHingePos(), this.getRearDoorHandle(), bounds);
+                             Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
 //        if(isTouching) {
 //            DebugDraw.fillRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff00);
 //            DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
@@ -457,84 +439,12 @@ public class Door extends Entity {
     
     @Override
     public NetEntity getNetEntity() {
-        this.setNetEntity(getNetDoor());
-        this.getNetDoor().hinge = this.getHinge().netValue();
-        return this.getNetDoor();
+        this.setNetEntity(netDoor);
+        this.netDoor.hinge = this.hinge.netValue();
+        return this.netDoor;
     }
 
-	private DoorState getDoorState() {
-		return doorState;
-	}
-
-	private void setDoorState(DoorState doorState) {
-		this.doorState = doorState;
-	}
-
-	private DoorHinge getHinge() {
-		return hinge;
-	}
-
-	private void setHinge(DoorHinge hinge) {
-		this.hinge = hinge;
-	}
-
-	public Vector2f getFrontDoorHandle() {
-		return frontDoorHandle;
-	}
-
-	private void setFrontDoorHandle(Vector2f frontDoorHandle) {
-		this.frontDoorHandle = frontDoorHandle;
-	}
-
-	private Vector2f getRearDoorHandle() {
-		return rearDoorHandle;
-	}
-
-	private void setRearDoorHandle(Vector2f rearDoorHandle) {
-		this.rearDoorHandle = rearDoorHandle;
-	}
-
-	private Vector2f getRearHingePos() {
-		return rearHingePos;
-	}
-
-	private void setRearHingePos(Vector2f rearHingePos) {
-		this.rearHingePos = rearHingePos;
-	}
-
-	private Rectangle getHandleTouchRadius() {
-		return handleTouchRadius;
-	}
-
-	private void setHandleTouchRadius(Rectangle handleTouchRadius) {
-		this.handleTouchRadius = handleTouchRadius;
-	}
-
-	private Rectangle getHingeTouchRadius() {
-		return hingeTouchRadius;
-	}
-
-	private void setHingeTouchRadius(Rectangle hingeTouchRadius) {
-		this.hingeTouchRadius = hingeTouchRadius;
-	}
-
-	private Rectangle getAutoCloseRadius() {
-		return autoCloseRadius;
-	}
-
-	private void setAutoCloseRadius(Rectangle autoCloseRadius) {
-		this.autoCloseRadius = autoCloseRadius;
-	}
-
-	private SmoothOrientation getRotation() {
-		return rotation;
-	}
-
-	private void setRotation(SmoothOrientation rotation) {
-		this.rotation = rotation;
-	}
-
-	private float getTargetOrientation() {
+	public float getTargetOrientation() {
 		return targetOrientation;
 	}
 
@@ -542,16 +452,12 @@ public class Door extends Entity {
 		this.targetOrientation = targetOrientation;
 	}
 
-	private void setBlocked(boolean isBlocked) {
-		this.isBlocked = isBlocked;
+	public Vector2f getFrontDoorHandle() {
+		return frontDoorHandle;
 	}
 
-	private NetDoor getNetDoor() {
-		return netDoor;
-	}
-
-	private void setNetDoor(NetDoor netDoor) {
-		this.netDoor = netDoor;
+	public void setFrontDoorHandle(Vector2f frontDoorHandle) {
+		this.frontDoorHandle = frontDoorHandle;
 	}
 
 }

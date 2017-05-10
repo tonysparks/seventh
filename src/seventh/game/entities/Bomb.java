@@ -54,33 +54,33 @@ public class Bomb extends Entity {
         this.bounds.height = 5;
                 
         
-        this.setNetBomb(new NetBomb());
-        this.getNetBomb().id = getId();
-        setNetEntity(getNetBomb());
+        this.netBomb = new NetBomb();
+        this.netBomb.id = getId();
+        setNetEntity(netBomb);
         
         // 30 second timer
-        this.setTimer(new Timer(false, 30_000));
-        this.getTimer().stop();        
+        this.timer = new Timer(false, 30_000);
+        this.timer.stop();        
         
-        this.setPlantTimer(new Timer(false, 3_000));
-        this.getPlantTimer().stop();
+        this.plantTimer = new Timer(false, 3_000);
+        this.plantTimer.stop();
         
-        this.setDisarmTimer(new Timer(false, 5_000));
-        this.getDisarmTimer().stop();
+        this.disarmTimer = new Timer(false, 5_000);
+        this.disarmTimer.stop();
         
-        this.setBlowingupTimer(new Timer(false, 3_000));
-        this.getBlowingupTimer().stop();
+        this.blowingupTimer = new Timer(false, 3_000);
+        this.blowingupTimer.stop();
         
-        this.setNextExplosionTimer(new Timer(true, 300));
-        this.getNextExplosionTimer().start();
+        this.nextExplosionTimer = new Timer(true, 300);
+        this.nextExplosionTimer.start();
         
-        this.setDispatcher(game.getDispatcher());        
+        this.dispatcher = game.getDispatcher();        
         
-        this.setBlastRectangle(new Rectangle());
+        this.blastRectangle = new Rectangle();
         
-        this.setSplashWidth(20);
-        this.setMaxSpread(40);
-        this.setTickMarker(10);
+        this.splashWidth = 20;
+        this.maxSpread = 40;
+        this.tickMarker = 10;
     }
     
     /* (non-Javadoc)
@@ -90,12 +90,12 @@ public class Bomb extends Entity {
     public boolean update(TimeStep timeStep) {
         super.update(timeStep);
         
-        this.getTimer().update(timeStep);
-        this.getPlantTimer().update(timeStep);
-        this.getDisarmTimer().update(timeStep);
+        this.timer.update(timeStep);
+        this.plantTimer.update(timeStep);
+        this.disarmTimer.update(timeStep);
         
-        this.getBlowingupTimer().update(timeStep);;
-        this.getNextExplosionTimer().update(timeStep);
+        this.blowingupTimer.update(timeStep);;
+        this.nextExplosionTimer.update(timeStep);
                 
         /* check and see if the bomb timer has expired,
          * if so the bomb goes boom
@@ -125,8 +125,8 @@ public class Bomb extends Entity {
     }
 
 	private void bombKill() {
-		if(this.getBlowingupTimer().isTime()) {
-            this.getTimer().stop();
+		if(this.blowingupTimer.isTime()) {
+            this.timer.stop();
             
             // ka-bom
             if(this.getBombTarget()!=null) {
@@ -138,11 +138,11 @@ public class Bomb extends Entity {
 	}
 
 	private void checkDisarmedBomb() {
-		if(this.getDisarmTimer().isTime()) {
-            this.getTimer().stop();
+		if(this.disarmTimer.isTime()) {
+            this.timer.stop();
             
-            getDispatcher().queueEvent(new BombDisarmedEvent(this, Bomb.this));
-            this.getDisarmTimer().stop();
+            dispatcher.queueEvent(new BombDisarmedEvent(this, Bomb.this));
+            this.disarmTimer.stop();
             
             softKill();
             
@@ -154,37 +154,37 @@ public class Bomb extends Entity {
 	}
 
 	private void checkPlantedBomb() {
-		if(this.getPlantTimer().isTime()) {            
-            this.getTimer().start();            
-            getDispatcher().queueEvent(new BombPlantedEvent(this, Bomb.this));
-            this.getPlantTimer().stop();
+		if(this.plantTimer.isTime()) {            
+            this.timer.start();            
+            dispatcher.queueEvent(new BombPlantedEvent(this, Bomb.this));
+            this.plantTimer.stop();
         }
 	}
 
 	private void bombTimeCount() {
-		if(this.getTimer().isUpdating()) {
-            if(this.getTimer().getRemainingTime() < 10_000) {
-                long trSec = this.getTimer().getRemainingTime()/1_000;
-                if(trSec <= getTickMarker()) {
+		if(this.timer.isUpdating()) {
+            if(this.timer.getRemainingTime() < 10_000) {
+                long trSec = this.timer.getRemainingTime()/1_000;
+                if(trSec <= tickMarker) {
                     game.emitSound(getId(), SoundType.BOMB_TICK, getPos());                    
-                    setTickMarker(getTickMarker() - 1);
+                    this.tickMarker = tickMarker - 1;
                 }            
             }
         }
         else {
-            setTickMarker(10);
+            this.tickMarker = 10;
         }
 	}
 
 	private void checkBombExplode() {
-		if(this.getTimer().isTime()) {
-            if(!this.getBlowingupTimer().isUpdating()) {
-                this.getBlowingupTimer().start();
-                getDispatcher().queueEvent(new BombExplodedEvent(this, Bomb.this));
+		if(this.timer.isTime()) {
+            if(!this.blowingupTimer.isUpdating()) {
+                this.blowingupTimer.start();
+                dispatcher.queueEvent(new BombExplodedEvent(this, Bomb.this));
             }
                             
-            if(this.getNextExplosionTimer().isTime()) {
-                game.newBigExplosion(getCenterPos(), this.getPlanter(), this.getSplashWidth(), this.getMaxSpread(), 200);
+            if(this.nextExplosionTimer.isTime()) {
+                game.newBigExplosion(getCenterPos(), this.getPlanter(), this.splashWidth, this.maxSpread, 200);
             }
         }
 	}
@@ -196,11 +196,11 @@ public class Bomb extends Entity {
         /* the max spread of the blast could contain a splash width at either end,
          * so therefore we add the splashWidth twice
          */
-        int maxWidth = (this.getSplashWidth() + this.getMaxSpread()) * 4;
+        int maxWidth = (this.splashWidth + this.maxSpread) * 4;
         
-        this.getBlastRectangle().setSize(maxWidth, maxWidth);
-        this.getBlastRectangle().centerAround(getCenterPos());
-        return this.getBlastRectangle();
+        this.blastRectangle.setSize(maxWidth, maxWidth);
+        this.blastRectangle.centerAround(getCenterPos());
+        return this.blastRectangle;
     }
 
 	/**
@@ -230,10 +230,10 @@ public class Bomb extends Entity {
         
         
         if(this.getPlanter() != null) {
-            this.getPlantTimer().start();
+            this.plantTimer.start();
         }
         else {
-            this.getPlantTimer().stop();
+            this.plantTimer.stop();
         }                
     }
     
@@ -241,21 +241,21 @@ public class Bomb extends Entity {
      * @return true if this bomb is being planted
      */
     public boolean isPlanting() {
-        return this.getPlanter() != null && this.getPlantTimer().isUpdating();
+        return this.getPlanter() != null && this.plantTimer.isUpdating();
     }
     
     /**
      * @return true if this bomb is being disarmed
      */
     public boolean isDisarming() {
-        return this.getDisarmer() != null && this.getDisarmTimer().isUpdating();
+        return this.getDisarmer() != null && this.disarmTimer.isUpdating();
     }
     
     /**
      * @return true if this bomb is blowing up right now
      */
     public boolean isBlowingUp() {
-        return this.getBlowingupTimer().isUpdating();
+        return this.blowingupTimer.isUpdating();
     }
     
     /**
@@ -263,14 +263,14 @@ public class Bomb extends Entity {
      */
     public void stopPlanting() {
         this.setPlanter(null);
-        this.getPlantTimer().stop();
+        this.plantTimer.stop();
     }
     
     /**
      * @return true if this bomb is planted on a bomb target
      */
     public boolean isPlanted() {
-        return this.getTimer().isUpdating();
+        return this.timer.isUpdating();
     }
     
     /**
@@ -304,10 +304,10 @@ public class Bomb extends Entity {
         }
         
         if(this.getDisarmer()!=null) {
-            this.getDisarmTimer().start();
+            this.disarmTimer.start();
         }
         else {
-            this.getDisarmTimer().stop();
+            this.disarmTimer.stop();
         }        
     }
     
@@ -316,7 +316,7 @@ public class Bomb extends Entity {
      */
     public void stopDisarming() {
         this.setDisarmer(null);
-        this.getDisarmTimer().stop();
+        this.disarmTimer.stop();
     }
     
     /* (non-Javadoc)
@@ -332,95 +332,7 @@ public class Bomb extends Entity {
      */
     @Override
     public NetEntity getNetEntity() {
-        this.getNetBomb().timeRemaining = (int) this.getTimer().getRemainingTime();
-        return this.getNetBomb();
-    }
-
-	private Timer getTimer() {
-		return timer;
-	}
-
-	private void setTimer(Timer timer) {
-		this.timer = timer;
-	}
-
-	private Timer getPlantTimer() {
-		return plantTimer;
-	}
-
-	private void setPlantTimer(Timer plantTimer) {
-		this.plantTimer = plantTimer;
-	}
-
-	private Timer getDisarmTimer() {
-		return disarmTimer;
-	}
-
-	private void setDisarmTimer(Timer disarmTimer) {
-		this.disarmTimer = disarmTimer;
-	}
-
-	private Timer getBlowingupTimer() {
-		return blowingupTimer;
-	}
-
-	private void setBlowingupTimer(Timer blowingupTimer) {
-		this.blowingupTimer = blowingupTimer;
-	}
-
-	private Timer getNextExplosionTimer() {
-		return nextExplosionTimer;
-	}
-
-	private void setNextExplosionTimer(Timer nextExplosionTimer) {
-		this.nextExplosionTimer = nextExplosionTimer;
-	}
-
-	private NetBomb getNetBomb() {
-		return netBomb;
-	}
-
-	private void setNetBomb(NetBomb netBomb) {
-		this.netBomb = netBomb;
-	}
-
-	private EventDispatcher getDispatcher() {
-		return dispatcher;
-	}
-
-	private void setDispatcher(EventDispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-	}
-
-	private int getSplashWidth() {
-		return splashWidth;
-	}
-
-	private void setSplashWidth(int splashWidth) {
-		this.splashWidth = splashWidth;
-	}
-
-	private int getMaxSpread() {
-		return maxSpread;
-	}
-
-	private void setMaxSpread(int maxSpread) {
-		this.maxSpread = maxSpread;
-	}
-
-	private int getTickMarker() {
-		return tickMarker;
-	}
-
-	private void setTickMarker(int tickMarker) {
-		this.tickMarker = tickMarker;
-	}
-	
-    private Rectangle getBlastRectangle(){
-    	return this.blastRectangle;
-    }
-    
-    private void setBlastRectangle(Rectangle blastRectangle){
-    	this.blastRectangle = blastRectangle;
+        this.netBomb.timeRemaining = (int) this.timer.getRemainingTime();
+        return this.netBomb;
     }
 }
