@@ -146,17 +146,7 @@ public class WeaponClassDialog extends Widget {
         }
         
         
-        switch(team) {
-            case ALLIES:
-                this.weaponClasses[0] =setupButton(pos, Type.THOMPSON); 
-                this.weaponClassDescriptions[0] = setupLabel(pos, Type.THOMPSON); pos.y += yInc;
-                
-                this.weaponClasses[1] =setupButton(pos, Type.M1_GARAND); 
-                this.weaponClassDescriptions[1] = setupLabel(pos, Type.M1_GARAND); pos.y += yInc;
-                
-                this.weaponClasses[2] =setupButton(pos, Type.SPRINGFIELD); 
-                this.weaponClassDescriptions[2] = setupLabel(pos, Type.SPRINGFIELD); pos.y += yInc;
-                break;
+        switch(team) {            
             case AXIS:
                 this.weaponClasses[0] =setupButton(pos, Type.MP40); 
                 this.weaponClassDescriptions[0] = setupLabel(pos, Type.MP40); pos.y += yInc;
@@ -167,7 +157,16 @@ public class WeaponClassDialog extends Widget {
                 this.weaponClasses[2] =setupButton(pos, Type.KAR98); 
                 this.weaponClassDescriptions[2] = setupLabel(pos, Type.KAR98); pos.y += yInc;
                 break;        
+            case ALLIES:
             default:
+                this.weaponClasses[0] =setupButton(pos, Type.THOMPSON); 
+                this.weaponClassDescriptions[0] = setupLabel(pos, Type.THOMPSON); pos.y += yInc;
+                
+                this.weaponClasses[1] =setupButton(pos, Type.M1_GARAND); 
+                this.weaponClassDescriptions[1] = setupLabel(pos, Type.M1_GARAND); pos.y += yInc;
+                
+                this.weaponClasses[2] =setupButton(pos, Type.SPRINGFIELD); 
+                this.weaponClassDescriptions[2] = setupLabel(pos, Type.SPRINGFIELD); pos.y += yInc;
                 break;
             
         }        
