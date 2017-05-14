@@ -86,7 +86,7 @@ public class Hud implements Renderable {
         this.messageLog = new MessageLog(10, 60, 15000, 6);        
         this.objectiveLog = new SlowDisplayMessageLog(10, 120, 8000, 3);
         this.objectiveLog.setFont(app.getTheme().getSecondaryFontName());
-        this.objectiveLog.setFontSize(14);
+        this.objectiveLog.setFontSize(24);
         
         this.centerLog = new MessageLog(screenWidth/2, 90, 3000, 2) {
             @Override
@@ -338,23 +338,27 @@ public class Hud implements Renderable {
         
         drawSpectating(canvas);
         
-        if(isHoveringOverBomb) {
+        if(game.getGameType()==seventh.game.type.GameType.Type.OBJ) {
             ClientTeam attackingTeam = game.getAttackingTeam();
-            if(attackingTeam != null) {
-                if(this.localPlayer.getTeam().equals(attackingTeam)) {
+            boolean isAttacker = false; 
+            
+            if(attackingTeam!=null) {
+                isAttacker = this.localPlayer.getTeam().equals(attackingTeam);
+            }
+            
+            if(isHoveringOverBomb) {                
+                if(isAttacker) {
                     drawPlantBombNotification(canvas);        
                 }
                 else {
                     drawDefuseBombNotification(canvas);
                 }
             }
-            
+        
+            //drawObjectiveStance(canvas, isAttacker);           
+            drawBombProgressBar(canvas, camera);
         }
         
-        
-        
-        
-        drawBombProgressBar(canvas, camera);
             
         if(this.config.showDebugInfo()) {
             drawMemoryUsage(canvas);
@@ -623,4 +627,15 @@ public class Hud implements Renderable {
         int width = canvas.getWidth(text);
         RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);
     }
+    
+//    private void drawObjectiveStance(Canvas canvas, boolean isAttacking) {
+//        int defaultColor = 0xffffffff;
+//        ClientTeam localTeam = game.getLocalPlayer().getTeam();
+//        int teamColor = (localTeam!=null) ? localTeam.getColor() : defaultColor;
+//        
+//        //isAttacking = false;
+//        TextureRegion tex = isAttacking ? Art.attackerIcon : Art.defenderIcon;
+//        canvas.drawScaledImage(tex, 380 - (tex.getRegionWidth()/2), canvas.getHeight() - tex.getRegionHeight() + 15, 45, 45, teamColor);
+//        
+//    }
 }
