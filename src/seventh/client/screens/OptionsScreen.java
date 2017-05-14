@@ -156,7 +156,10 @@ public class OptionsScreen implements Screen {
                         String cfgName = app.getConfig().getPlayerName(); 
                         if(name != null && cfgName != null) {
                             if(!name.equals(cfgName)) {
-                                app.getConfig().setPlayerName(name);
+                                // change the configuration file
+                                // and if we are connected to a server,
+                                // let the server know we changed our name                                
+                                Cons.getImpl().execute("name", name);
                             }
                         }
                     }
@@ -201,6 +204,7 @@ public class OptionsScreen implements Screen {
         nameTxtBox.setMaxSize(16);
         nameTxtBox.setText(app.getConfig().getPlayerName());
         nameTxtBox.getTextLabel().setForegroundColor(0xffffffff);
+        
         
         this.optionsPanel.addWidget(nameTxtBox);
         
