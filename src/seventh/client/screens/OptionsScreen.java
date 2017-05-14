@@ -572,7 +572,7 @@ public class OptionsScreen implements Screen {
      */
     @Override
     public void exit() {
-        this.optionsPanel.hide();
+        this.optionsPanel.destroy();
     }
     
     /* (non-Javadoc)
@@ -580,6 +580,7 @@ public class OptionsScreen implements Screen {
      */
     @Override
     public void destroy() {
+        this.optionsPanel.destroy();
     }
     
     /* (non-Javadoc)
