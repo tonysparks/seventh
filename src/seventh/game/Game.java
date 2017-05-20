@@ -61,7 +61,17 @@ import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Fire;
+import seventh.game.weapons.FlameThrower;
+import seventh.game.weapons.Kar98;
+import seventh.game.weapons.M1Garand;
+import seventh.game.weapons.MP40;
+import seventh.game.weapons.MP44;
+import seventh.game.weapons.Risker;
+import seventh.game.weapons.RocketLauncher;
+import seventh.game.weapons.Shotgun;
 import seventh.game.weapons.Smoke;
+import seventh.game.weapons.Springfield;
+import seventh.game.weapons.Thompson;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
 import seventh.map.GraphNodeFactory;
@@ -352,7 +362,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         for(int i = MAX_PLAYERS + MAX_PERSISTANT_ENTITIES + lastValidId; i < MAX_ENTITIES; i++) {
             int index = i;// + (lastValidId % (MAX_ENTITIES-MAX_PLAYERS));
-            if(entities[index] == null && deadFrames[i] > 10) {
+            if(entities[index] == null && deadFrames[i] > 0) { // was 10
                 lastValidId++;                
                 return i;
             }
@@ -1404,6 +1414,56 @@ public class Game implements GameInfo, Debugable, Updatable {
         return droppedItem;
     }
     
+    /**
+     * Spawns a new {@link DroppedItem}
+     * 
+     * @param pos
+     * @param item
+     * @return the item
+     */
+    public DroppedItem newDroppedItem(Vector2f pos, String type) {
+        Type weaponType = Type.valueOf(type.toUpperCase());
+        Weapon weapon = null;
+        switch(weaponType) {
+            case THOMPSON:
+                weapon = new Thompson(this, null);
+                break;
+            case MP40:
+                weapon = new MP40(this, null);
+                break;
+            case M1_GARAND:
+                weapon = new M1Garand(this, null);
+                break;
+            case MP44:
+                weapon = new MP44(this, null);
+                break;
+            case KAR98:
+                weapon = new Kar98(this, null);
+                break;
+            case SPRINGFIELD:
+                weapon = new Springfield(this, null);
+                break;
+            case RISKER:
+                weapon = new Risker(this, null);
+                break;
+            case SHOTGUN:
+                weapon = new Shotgun(this, null);
+                break;
+            case ROCKET_LAUNCHER:
+                weapon = new RocketLauncher(this, null);
+                break;
+            case FLAME_THROWER:
+                weapon = new FlameThrower(this, null);
+                break;            
+            default:
+        }
+        
+        if(weapon!=null) {
+            return newDroppedItem(pos, weapon);
+        }
+        
+        return null;
+    }
     
     /**
      * Spawns a new {@link Bomb}
