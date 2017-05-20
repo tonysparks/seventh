@@ -166,11 +166,11 @@ public class Team implements Debugable {
 	public boolean CheckPlayerOnTeam(List<PlayerEntity> players, int i) {
 		PlayerEntity player = players.get(i);
 		Team team = player.getTeam();
-		return IsValidPlayerTeam(player,team);
+		return IsValidPlayerTeam(player, team);
 	}
-	
-	public boolean IsValidPlayerTeam(PlayerEntity player, Team team){
-		return player != null && team != null &&(team.getId() == getId());
+
+	public boolean IsValidPlayerTeam(PlayerEntity player, Team team) {
+		return player != null && team != null && (team.getId() == getId());
 	}
 
 	/**
@@ -203,25 +203,24 @@ public class Team implements Debugable {
 		return id;
 	}
 
-
 	public void addPlayer(Player p) {
-		if (!IsAlreadyOnTeam(p)) {
+		if (!isAlreadyOnTeam(p)) {
 			p.setTeam(this);
 		}
 	}
 
-	public boolean IsAlreadyOnTeam(Player p) {
-		boolean isAlreadyOnTeam = false;
-		for (int i = 0; i < this.players.size(); i++) {
-			if ((getPlayer(i) != null) && (getPlayer(i).getId() == p.getId())) {
-					isAlreadyOnTeam = true;
-					break;
-			}
-		}
-		return isAlreadyOnTeam;
+	public boolean isAlreadyOnTeam(Player p) {
+	    boolean isAlreadyOnTeam = false;
+	    for (int i = 0; i < this.players.size(); i++) {
+	        if ((getPlayer(i) != null) && (getPlayer(i).getId() == p.getId())) {
+		        isAlreadyOnTeam = true;
+			    break;
+		    }
+	    }
+	    return isAlreadyOnTeam;
 	}
-	
-	public Player getPlayer(int i){
+
+	public Player getPlayer(int i) {
 		return this.players.get(i);
 	}
 
@@ -241,14 +240,13 @@ public class Team implements Debugable {
 	}
 
 	public boolean onTeam(int playerId) {
-		int size = this.players.size();
-		for (int i = 0; i < size; i++) {
-			if (this.players.get(i).getId() == playerId) {
-				return true;
-			}
-		}
-
-		return false;
+	    int size = this.players.size();
+	    for (int i = 0; i < size; i++) {
+	        if (this.players.get(i).getId() == playerId) {
+		        return true;
+		    }
+	    }
+	    return false;
 	}
 
 	/**
@@ -274,23 +272,23 @@ public class Team implements Debugable {
 	 * @return true if and only if each team member is dead
 	 */
 	public boolean isTeamDead() {
-		boolean isDead = true;
-		for (int i = 0; i < this.players.size(); i++) {
-			isDead &= this.players.get(i).isDead();
-		}
-		return isDead;
+	    boolean isDead = true;
+	    for (int i = 0; i < this.players.size(); i++) {
+	        isDead &= this.players.get(i).isDead();
+	    }
+	    return isDead;
 	}
 
 	/**
 	 * @return true if there is a commander on this team
 	 */
 	public boolean hasCommander() {
-		for (int i = 0; i < this.players.size(); i++) {
-			if (this.players.get(i).isCommander()) {
-				return true;
-			}
-		}
-		return false;
+	   for (int i = 0; i < this.players.size(); i++) {
+	      if (this.players.get(i).isCommander()) {
+		     return true;
+		  }
+	   }
+	   return false;
 	}
 
 	/**
@@ -298,13 +296,13 @@ public class Team implements Debugable {
 	 *         player is alive
 	 */
 	public Player getAlivePlayer() {
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			if (player.isAlive()) {
-				return player;
-			}
-		}
-		return null;
+	for (int i = 0; i < this.players.size(); i++) {
+	   Player player = this.players.get(i);
+	      if (player.isAlive()) {
+	         return player;
+	      }
+	   }
+	   return null;
 	}
 
 	/**
@@ -312,13 +310,13 @@ public class Team implements Debugable {
 	 *         null if no player is alive
 	 */
 	public Player getAliveBot() {
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			if (player.isAlive() && player.isBot()) {
-				return player;
-			}
-		}
-		return null;
+	   for (int i = 0; i < this.players.size(); i++) {
+	      Player player = this.players.get(i);
+	      if (player.isAlive() && player.isBot()) {
+		     return player;
+		  }
+	   }
+       return null;
 	}
 
 	/**
@@ -334,70 +332,62 @@ public class Team implements Debugable {
 	 * @param other
 	 * @return the closest player or null if no alive players
 	 */
-	
 
 	public Player getClosestPlayerTo(Entity other) {
-		Player closest = null;
-		float distance = -1;
-		closest = findClosestPlayer(closest, distance, other);
-		return closest;
+	   Player closest = null;
+	   float distance = -1;
+	   closest = findClosestPlayer(closest, distance, other);
+	   return closest;
 	}
-	
-	public Player findClosestPlayer(Player closest, float distance, Entity other){
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			PlayerEntity ent = player.getEntity();
-			float VectorDistance = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
-			
-			if (FindCondition(player, closest, VectorDistance, distance)) {
-					closest = player;
-					distance = VectorDistance;
-			}
-		}
-		return closest;
+
+	public Player findClosestPlayer(Player closest, float distance, Entity other) {
+	   for (int i = 0; i < this.players.size(); i++) {
+	      Player player = this.players.get(i);
+	      PlayerEntity ent = player.getEntity();
+	      float VectorDistance = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
+
+	      if (findCondition(player, closest, VectorDistance, distance)) {
+	         closest = player;
+	         distance = VectorDistance;
+	      }
+	   }
+	   return closest;
 	}
-	
-	
-	public boolean FindCondition(Player player, Player closest, float VectorDistance, float distance){
+
+	public boolean findCondition(Player player, Player closest, float VectorDistance, float distance) {
 		return player.isAlive() && (closest != null || VectorDistance < distance);
 	}
-	
+
 	/**
 	 * Gets the closest alive bot to the supplied entity
 	 * 
 	 * @param other
 	 * @return the closest bot or null if no alive players
 	 */
-	
-	
 
-	
 	public Player getClosestBotTo(Entity other) {
-		Player closest = null;
-		float distance = -1;
-		closest = findClosestBot(closest, distance, other);
-		return closest;	
-	}
-	
-	public Player findClosestBot(Player closest, float distance, Entity other){
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			PlayerEntity ent = player.getEntity();
-			float dist = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
-			if (IsAliveAndBot(player) && IsClosestOrDist(closest, dist, distance)) {
-					closest = player;
-					distance = dist;
-			}
-		}
-		return closest;	
+	   Player closest = null;
+	   float distance = -1;
+	   closest = findClosestBot(closest, distance, other);
+	   return closest;
 	}
 
-	
-	public boolean IsClosestOrDist(Player closest, float dist, float distance){
-		return (closest != null) || (dist<distance);
+	public Player findClosestBot(Player closest, float distance, Entity other) {
+	   for (int i = 0; i < this.players.size(); i++) {
+	      Player player = this.players.get(i);
+	      PlayerEntity ent = player.getEntity();
+	      float dist = Vector2f.Vector2fDistanceSq(ent.getPos(), other.getPos());
+	      if (isAliveAndBot(player) && isClosestOrDist(closest, dist, distance)) {
+	         closest = player;
+	         distance = dist;
+	      }
+	   }
+	   return closest;
 	}
-	
-	
+
+	public boolean isClosestOrDist(Player closest, float dist, float distance) {
+	   return (closest != null) || (dist < distance);
+	}
 
 	/**
 	 * The next available alive player on this team from the 'oldPlayer'
@@ -406,28 +396,25 @@ public class Team implements Debugable {
 	 * @return the next {@link Player} or null if none
 	 */
 	public Player getNextAlivePlayerFrom(Player oldPlayer) {
-		if (oldPlayer == null) return getAlivePlayer();
+	   if (oldPlayer == null)
+	      return getAlivePlayer();
+	   
+	   int nextPlayerIndex = nextPlayerIndex(players.indexOf(oldPlayer));
 
-		int nextPlayerIndex = NextPlayerIndex(players.indexOf(oldPlayer));
-
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(nextPlayerIndex);
-			if (IsPrevAlivePlayer(player, oldPlayer)) {
-					return player;
-			}
-
-			nextPlayerIndex = (nextPlayerIndex + 1) % players.size();
-		}
-
-		return null;
+       for (int i = 0; i < this.players.size(); i++) {
+	      Player player = this.players.get(nextPlayerIndex);
+	      if (isPrevAlivePlayer(player, oldPlayer)) {
+		     return player;
+		  }
+		  nextPlayerIndex = (nextPlayerIndex + 1) % players.size();
+	   }
+       return null;
 	}
-	
-	
-	
-	public int NextPlayerIndex(int oldPlayerIndex){
-		if(oldPlayerIndex < 0)
-			return 0;
-		return oldPlayerIndex;
+
+	public int nextPlayerIndex(int oldPlayerIndex) {
+	   if (oldPlayerIndex < 0)
+	      return 0;
+	   return oldPlayerIndex;
 	}
 
 	/**
@@ -437,46 +424,41 @@ public class Team implements Debugable {
 	 * @return the previous {@link Player} or null if none
 	 */
 
-	
 	public Player getPrevAlivePlayerFrom(Player oldPlayer) {
-		if (oldPlayer == null)
-			return getAlivePlayer();
+	   if (oldPlayer == null)
+	      return getAlivePlayer();
 
-		int nextPlayerIndex = SetOldPlayerIndex(oldPlayer);
+	   int nextPlayerIndex = setOldPlayerIndex(oldPlayer);
 
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(nextPlayerIndex);
-			if (IsPrevAlivePlayer(player, oldPlayer)) {
-					return player;
-			}
+	   for (int i = 0; i < this.players.size(); i++) {
+	      Player player = this.players.get(nextPlayerIndex);
+	      if (isPrevAlivePlayer(player, oldPlayer)) {
+		     return player;
+		  }
+		  nextPlayerIndex = adjustPlayerIndex(nextPlayerIndex);
+	   }
+	   return null;
+	}
 
-			nextPlayerIndex = AdjustPlayerIndex(nextPlayerIndex);
-		}
-		return null;
+	public int adjustPlayerIndex(int nextPlayerIndex) {
+	   int nextIndex = (nextPlayerIndex - 1) % players.size();
+	   return isUnderIndex(nextIndex);
 	}
-	
-	public int AdjustPlayerIndex(int nextPlayerIndex){
-		int nextIndex = (nextPlayerIndex -1) % players.size();
-		return IsUnderIndex(nextIndex);
+
+	public int setOldPlayerIndex(Player oldPlayer) {
+	   int nextplayerIndex = players.indexOf(oldPlayer);
+	   return isUnderIndex(nextplayerIndex);
 	}
-	
-	public int SetOldPlayerIndex(Player oldPlayer){
-		int nextplayerIndex = players.indexOf(oldPlayer);
-		return IsUnderIndex(nextplayerIndex);
+
+	public boolean isPrevAlivePlayer(Player player, Player oldPlayer) {
+	   return player != null && player.isAlive() && player != oldPlayer;
 	}
-	
-	
-	public boolean IsPrevAlivePlayer(Player player, Player oldPlayer){
-		return player != null && player.isAlive() && player != oldPlayer;
+
+	public int isUnderIndex(int nextPlayerIndex) {
+	   if (nextPlayerIndex < 0)
+	      return Math.max(players.size() - 1, 0);
+	   return nextPlayerIndex;
 	}
-	
-	public int IsUnderIndex(int nextPlayerIndex){
-		if(nextPlayerIndex <0)
-			return Math.max(players.size()-1, 0);
-		return nextPlayerIndex;
-	}
-	
-	
 
 	/**
 	 * The next alive bot from the supplied Player slot
@@ -484,51 +466,49 @@ public class Team implements Debugable {
 	 * @param old
 	 * @return the next alive bot, or null if no bot is alive
 	 */
-		
+
 	public Player getNextAliveBotFrom(Player old) {
 		if (old == null) {
 			return getAliveBot();
 		}
-		return findNextAliveBot(old); 
+		return findNextAliveBot(old);
 	}
-	
-	
-	public Player findNextAliveBot(Player old){
-		boolean found = false;
-		boolean firstIteration = true;
 
-		for (int i = 0; i < this.players.size(); i++) {
-			Player player = this.players.get(i);
-			found = IsFoundId(firstIteration, old, player);
-			if(OverPlayersSize(i)){
-				i = 0;
-				firstIteration = false;
-			}
-			if(FoundOrAliveAndBot(found, player))
-				return player;
-		}
-		return null;
+	public Player findNextAliveBot(Player old) {
+	   boolean found = false;
+	   boolean firstIteration = true;
+
+       for (int i = 0; i < this.players.size(); i++) {
+	      Player player = this.players.get(i);
+		  found = isFoundId(firstIteration, old, player);
+		  if (overPlayersSize(i)) {
+		     i = 0;
+		     firstIteration = false;
+		  }
+		  if (foundOrAliveAndBot(found, player))
+		     return player;
+		  }
+	   return null;
 	}
-	
-	public boolean FoundOrAliveAndBot(boolean found, Player player){
-		return (found && IsAliveAndBot(player)||IsAliveAndBot(player));
-		
+
+	public boolean foundOrAliveAndBot(boolean found, Player player) {
+	   return (found && isAliveAndBot(player) || isAliveAndBot(player));
+
 	}
-	
-	public boolean OverPlayersSize(int i){
-		return i>= this.players.size()-1;
+
+	public boolean overPlayersSize(int i) {
+	   return i >= this.players.size() - 1;
 	}
-	
-	public boolean IsAliveAndBot(Player player){
-		return player.isAlive() && player.isBot();
+
+	public boolean isAliveAndBot(Player player) {
+	   return player.isAlive() && player.isBot();
 	}
-	
-	public boolean IsFoundId(boolean firstIteration, Player old, Player player){
-		if(firstIteration && (old.getId() == player.getId()))
-				return true;
-		return false;
+
+	public boolean isFoundId(boolean firstIteration, Player old, Player player) {
+	   if (firstIteration && (old.getId() == player.getId()))
+	      return true;
+	   return false;
 	}
-	
 
 	/**
 	 * @return the total number of deaths accrued on this team
@@ -562,16 +542,14 @@ public class Team implements Debugable {
 	 * @return the number of bots on this team
 	 */
 	public int getNumberOfBots() {
-		int numberOfBots = 0;
-		for (int i = 0; i < this.players.size(); i++) {
-			if (this.players.get(i).isBot()) {
-				numberOfBots++;
-			}
-		}
-
-		return numberOfBots;
+	   int numberOfBots = 0;
+	   for (int i = 0; i < this.players.size(); i++) {
+	      if (this.players.get(i).isBot()) {
+		     numberOfBots++;
+		  }
+	   }
+	   return numberOfBots;
 	}
-	
 
 	/**
 	 * @return the current team size

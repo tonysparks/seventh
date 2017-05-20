@@ -61,13 +61,13 @@ public class InputMap extends Inputs {
     public void scrollerAction(int i){
         if(this.scroller[i] != null) {
             Action action = this.actions.get(scroller[i]);
-            IsActionNull(action);
+            isActionNull(action);
         }
     }
     
-    public void IsActionNull(Action action){
-    	if(action != null)
-    		action.action();
+    public void isActionNull(Action action){
+        if(action != null)
+            action.action();
     }
     
 
@@ -114,19 +114,19 @@ public class InputMap extends Inputs {
         this.povButtons[pov.ordinal()] = null;
     }
     
-    public void KeyDownAction(Keys keys){
+    public void keyDownAction(Keys keys){
         int key = keys.next();
         if(isKeyDown(keys.next())) {
             Action action = this.actions.get(this.keymap.get(key));
-            IsActionNull(action);
+            isActionNull(action);
         }
     }
     
-    public void IsButtonDownAction(Keys keys){
+    public void isButtonDownAction(Keys keys){
         int button = keys.next();
         if(isButtonDown(keys.next())) {
             Action action = this.actions.get(this.buttonmap.get(button));
-            IsActionNull(action);
+            isActionNull(action);
         }
     }
     
@@ -134,7 +134,7 @@ public class InputMap extends Inputs {
         int button = keys.next();
         if(controllerInput.isButtonDown(keys.next())) {
             Action action = this.actions.get(this.controllermap.get(button));
-            IsActionNull(action);
+            isActionNull(action);
         }
     }
     
@@ -144,12 +144,12 @@ public class InputMap extends Inputs {
     public void pollInput() {
         Keys keys = this.keymap.keys();
         while(keys.hasNext) {
-        	KeyDownAction(keys);
+        	keyDownAction(keys);
         }
         
         keys = this.buttonmap.keys();
         while(keys.hasNext) {
-        	IsButtonDownAction(keys);
+        	isButtonDownAction(keys);
         }
         
         if(this.controllerInput.isConnected()) {
