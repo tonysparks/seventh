@@ -42,7 +42,7 @@ public class HealthPack extends Entity {
             
             @Override
             public void onTouch(Entity me, Entity other) {
-                if(other.isAlive() && other.getType().equals(Type.PLAYER)) {
+                if(other.isAlive() && other.getType().equals(Type.PLAYER) && !other.isAtMaxHealth()) {
                     other.setHealth(other.getMaxHealth());
                     game.emitSound(getId(), SoundType.HEALTH_PACK_PICKUP, getCenterPos());
                     softKill();
