@@ -456,4 +456,7 @@ public abstract class ClientEntity implements Renderable {
         return this.bounds.intersects(other.getBounds());
     }
     
+    public boolean isTouching(Rectangle bounds) {
+        return this.bounds.intersects(bounds);
+    }
 }

@@ -158,7 +158,8 @@ public class OptionsScreen implements Screen {
                             if(!name.equals(cfgName)) {
                                 // change the configuration file
                                 // and if we are connected to a server,
-                                // let the server know we changed our name                                
+                                // let the server know we changed our name 
+                                app.getConfig().setPlayerName(name);
                                 Cons.getImpl().execute("name", name);
                             }
                         }

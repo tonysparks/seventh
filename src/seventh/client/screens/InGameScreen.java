@@ -687,8 +687,10 @@ public class InGameScreen implements Screen {
         this.teamSayTxtBxView.render(canvas, camera, alpha);
         
         this.aiShortcutsMenu.render(canvas, camera, alpha);
-        
-        this.cursor.render(canvas);    
+               
+        if(dialog.isOpen() || game.showCursor()) {
+            this.cursor.render(canvas);    
+        }
         
         if(isDebugMode) {
             String message = "" + game.screenToWorldCoordinates(cursor.getX(), cursor.getY());

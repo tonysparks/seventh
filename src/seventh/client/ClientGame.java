@@ -421,7 +421,7 @@ public class ClientGame {
             renderWorld(canvas, camera, alpha);
             
             canvas.setShader(null);
-            DebugDraw.enable(true);
+            DebugDraw.enable(false);
             DebugDraw.render(canvas, camera);
     
             
@@ -785,6 +785,13 @@ public class ClientGame {
     }
     
     /**
+     * @return If the UI should show the cursor
+     */
+    public boolean showCursor() {
+        return !this.localPlayer.isOperatingVehicle();
+    }
+    
+    /**
      * Applies the players input.  This is used for
      * client side prediction.
      * 
@@ -880,6 +887,26 @@ public class ClientGame {
             }
         }
         
+        return false;
+    }
+    
+    /**
+     * Determines if there is a vehicle near the supplied entity
+     * that they could operate
+     * 
+     * @param ent
+     * @return true if there is a vehicle near the entity
+     */
+    public boolean isNearVehicle(ClientEntity ent) {
+        if(ent!=null && ent.isAlive()) {
+            int size = this.vehicles.size();
+            for(int i = 0; i < size; i++) {
+                ClientVehicle vehicle = this.vehicles.get(i);
+                if(vehicle.canOperate(ent)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
     

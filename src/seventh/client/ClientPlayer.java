@@ -149,6 +149,13 @@ public class ClientPlayer {
     }
     
     /**
+     * @return if this player is operating a vehicle
+     */
+    public boolean isOperatingVehicle() {
+        return isAlive() && entity.isOperatingVehicle();
+    }
+    
+    /**
      * @return true if this player is spectating
      */
     public boolean isSpectating() {

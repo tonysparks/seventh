@@ -42,8 +42,8 @@ public interface SeventhConstants {
     public static final float WALK_SPEED_FACTOR = 0.584f;
     public static final float SPRINT_SPEED_FACTOR = 1.60f; // 1.95f
     
-    public static final int ENTERING_VEHICLE_TIME = 2500;
-    public static final int EXITING_VEHICLE_TIME = 2000;
+    public static final int ENTERING_VEHICLE_TIME = 1000;
+    public static final int EXITING_VEHICLE_TIME = 700;
     
     public static final int RECOVERY_TIME = 2000;
     

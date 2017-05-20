@@ -22,6 +22,7 @@ import seventh.game.net.NetTank;
 import seventh.game.weapons.Weapon;
 import seventh.map.Map;
 import seventh.math.OBB;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
@@ -61,7 +62,9 @@ public class ClientTank extends ClientVehicle {
 
         this.bounds.width = WeaponConstants.TANK_AABB_WIDTH;
         this.bounds.height = WeaponConstants.TANK_AABB_HEIGHT;
-        
+       
+        this.operateHitBox.width = bounds.width + WeaponConstants.VEHICLE_HITBOX_THRESHOLD;
+        this.operateHitBox.height = bounds.height + WeaponConstants.VEHICLE_HITBOX_THRESHOLD;
                 
         this.previousTrackMark = new Vector2f();
         this.trackMarkOffset = new Vector2f();
@@ -294,6 +297,14 @@ public class ClientTank extends ClientVehicle {
         }
     }
 
+    @Override
+    public boolean isTouching(Rectangle bounds) {    
+        if(this.operateHitBox.intersects(bounds)) {
+            return this.vehicleOOB.intersects(bounds);
+        }
+        return false;
+    }
+    
     @Override
     public boolean touches(ClientEntity other) {
         // TODO: Make this pixel accurate by OOB

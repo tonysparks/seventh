@@ -215,7 +215,7 @@ public class Hud implements Renderable {
                 else {
                     cursor.setColor(0xafffff00);
                 }
-            }
+            }            
         }
         else {
             cursor.setColor(0xafffff00);
@@ -308,8 +308,8 @@ public class Hud implements Renderable {
         centerLog.render(canvas, camera, 0);
         objectiveLog.render(canvas, camera, 0);
                 
-        
-        if(localPlayer.isAlive()) {
+        boolean isPlayerAlive = localPlayer.isAlive();
+        if(isPlayerAlive) {
             ClientPlayerEntity ent = localPlayer.getEntity();
             ClientWeapon weapon = ent.getWeapon();
             
@@ -338,27 +338,31 @@ public class Hud implements Renderable {
         
         drawSpectating(canvas);
         
-        if(game.getGameType()==seventh.game.type.GameType.Type.OBJ) {
-            ClientTeam attackingTeam = game.getAttackingTeam();
-            boolean isAttacker = false; 
-            
-            if(attackingTeam!=null) {
-                isAttacker = this.localPlayer.getTeam().equals(attackingTeam);
-            }
-            
-            if(isHoveringOverBomb) {                
-                if(isAttacker) {
-                    drawPlantBombNotification(canvas);        
+        if(game.getGameType()==seventh.game.type.GameType.Type.OBJ && isPlayerAlive) {
+            ClientPlayerEntity ent = localPlayer.getEntity();
+            if(!ent.isOperatingVehicle()) {
+                ClientTeam attackingTeam = game.getAttackingTeam();
+                boolean isAttacker = false; 
+                
+                if(attackingTeam!=null) {
+                    isAttacker = this.localPlayer.getTeam().equals(attackingTeam);
                 }
-                else {
-                    drawDefuseBombNotification(canvas);
+                
+                if(isHoveringOverBomb) {                
+                    if(isAttacker) {
+                        drawPlantBombNotification(canvas);        
+                    }
+                    else {
+                        drawDefuseBombNotification(canvas);
+                    }
                 }
+            
+                //drawObjectiveStance(canvas, isAttacker);           
+                drawBombProgressBar(canvas, camera);
             }
-        
-            //drawObjectiveStance(canvas, isAttacker);           
-            drawBombProgressBar(canvas, camera);
         }
         
+        drawEnterVehicleNotication(canvas);
             
         if(this.config.showDebugInfo()) {
             drawMemoryUsage(canvas);
@@ -626,6 +630,18 @@ public class Hud implements Renderable {
         canvas.setFont("Consola", 18);
         int width = canvas.getWidth(text);
         RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);
+    }
+    
+    private void drawEnterVehicleNotication(Canvas canvas) {
+
+        if(game.isNearVehicle(this.localPlayer.getEntity())) {
+            KeyMap keyMap = app.getKeyMap();            
+            String text = "Hold the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to enter the vehicle";
+            
+            canvas.setFont("Consola", 18);
+            int width = canvas.getWidth(text);
+            RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);    
+        }
     }
     
 //    private void drawObjectiveStance(Canvas canvas, boolean isAttacking) {
