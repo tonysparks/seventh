@@ -61,7 +61,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		 * error and check only file exist
 		 * 
 		 */
-		FileExist(scriptFile);
+		fileExist(scriptFile);
 
 		/*
 		 * Refactoring target : LeoObject.isTrue(config),
@@ -80,11 +80,10 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		 * Refactoring name : extract function Bad smell(reason) : duplicated
 		 * statement in switch sentence
 		 */
-		
+
 		/*
-		 * Refactoring target : switch statements about getType
-		 * Refactoring name : extract function 
-		 * Bad smell(reason) : code complexity
+		 * Refactoring target : switch statements about getType Refactoring name
+		 * : extract function Bad smell(reason) : code complexity
 		 */
 
 		checkObjectivesType(objectives, scriptedObjectives);
@@ -179,7 +178,7 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		return minimumObjectivesToComplete;
 	}
 
-	private void FileExist(File scriptFile) {
+	private void fileExist(File scriptFile) {
 		try {
 			if (!scriptFile.exists()) {
 				throw new Exception();
@@ -201,7 +200,5 @@ public class ObjectiveScript extends AbstractGameTypeScript {
 		}
 
 	}
-	
-	
 
 }
