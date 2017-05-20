@@ -35,6 +35,7 @@ import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.Type;
 import seventh.game.entities.PlayerEntity.Keys;
 import seventh.math.Rectangle;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.ui.ProgressBar;
 import seventh.ui.view.ProgressBarView;
@@ -283,8 +284,23 @@ public class Hud implements Renderable {
         centerLog.update(timeStep);
         objectiveLog.update(timeStep);
         
-        miniMap.update(timeStep);        
-        miniMap.setMapAlpha( scoreboard.isVisible() ? 0x3f : 0x8f);
+        miniMap.update(timeStep);
+        
+        // if the player is under the mini-map, hide it
+        int miniMapAlpha = scoreboard.isVisible() ? 0x3f : 0x8f;
+        ClientPlayer player = game.getLocalPlayer();
+        if(player.isAlive()) {
+            Vector2f cameraPos = game.getCamera().getPosition();
+            Vector2f playerPos = player.getEntity().getCenterPos();
+            float x = playerPos.x - cameraPos.x;
+            float y = playerPos.y - cameraPos.y;
+            
+            if(miniMap.intersectsMiniMap(x, y)) {
+                miniMapAlpha = 0x0a;
+            }
+        }
+        
+        miniMap.setMapAlpha(miniMapAlpha);
         
         updateProgressBar(timeStep);
         
@@ -362,6 +378,7 @@ public class Hud implements Renderable {
             }
         }
         
+        drawPickupWeaponNotication(canvas);
         drawEnterVehicleNotication(canvas);
             
         if(this.config.showDebugInfo()) {
@@ -626,10 +643,7 @@ public class Hud implements Renderable {
         KeyMap keyMap = app.getKeyMap();
         String action = isAttacking ? "plant" : "defuse";
         String text = "Hold the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to " + action + " the bomb.";
-        
-        canvas.setFont("Consola", 18);
-        int width = canvas.getWidth(text);
-        RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);
+        drawMessage(canvas, text);
     }
     
     private void drawEnterVehicleNotication(Canvas canvas) {
@@ -637,11 +651,23 @@ public class Hud implements Renderable {
         if(game.isNearVehicle(this.localPlayer.getEntity())) {
             KeyMap keyMap = app.getKeyMap();            
             String text = "Hold the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to enter the vehicle";
-            
-            canvas.setFont("Consola", 18);
-            int width = canvas.getWidth(text);
-            RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);    
+            drawMessage(canvas, text);    
         }
+    }
+    
+    private void drawPickupWeaponNotication(Canvas canvas) {
+
+        if(game.isNearDroppedItem(this.localPlayer.getEntity())) {
+            KeyMap keyMap = app.getKeyMap();            
+            String text = "Press the '" + keyMap.keyString(keyMap.getDropWeaponKey()) +"' key to swap weapons";
+            drawMessage(canvas, text);    
+        }
+    }
+    
+    private void drawMessage(Canvas canvas, String text) {
+        canvas.setFont("Consola", 18);
+        int width = canvas.getWidth(text);
+        RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);
     }
     
 //    private void drawObjectiveStance(Canvas canvas, boolean isAttacking) {

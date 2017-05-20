@@ -30,6 +30,9 @@ public class ClientDroppedItem extends ClientEntity {
     public ClientDroppedItem(ClientGame game, Vector2f pos) {
         super(game, pos);        
         
+        this.bounds.width = 24;
+        this.bounds.height = 24;
+        
         spin = (float)Math.toRadians((pos.x + pos.y) % 360);
         Vector2f.Vector2fRound(pos, pos);
     }
@@ -47,7 +50,7 @@ public class ClientDroppedItem extends ClientEntity {
         if(this.droppedItem == null) 
         {
             setDroppedItem(t);            
-        }
+        }        
     }
     
     /* (non-Javadoc)

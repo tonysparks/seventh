@@ -124,6 +124,7 @@ public class ClientGame {
     private final List<ClientVehicle> vehicles;
     private final List<ClientDoor> doors;
     private final List<ClientSmoke> smokeEntities;
+    private final List<ClientDroppedItem> droppedItems;
     
     private final ClientEntityListener entityListener;
     
@@ -198,6 +199,7 @@ public class ClientGame {
         this.vehicles = new ArrayList<ClientVehicle>();
         this.doors = new ArrayList<ClientDoor>();
         this.smokeEntities = new ArrayList<ClientSmoke>();
+        this.droppedItems = new ArrayList<ClientDroppedItem>();
                 
         this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
         this.cameraController = new CameraController(this);
@@ -911,6 +913,25 @@ public class ClientGame {
     }
     
     /**
+     * Determines if the entity is near a dropped item
+     * 
+     * @param ent
+     * @return true if near a dropped item
+     */
+    public boolean isNearDroppedItem(ClientEntity ent) {
+        if(ent!=null && ent.isAlive()) {
+            int size = this.droppedItems.size();
+            for(int i = 0; i < size; i++) {
+                ClientDroppedItem item = this.droppedItems.get(i);
+                if(item.touches(ent)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Calculates the local players orientation relative to the supplied point
      * @param mx
      * @param my
@@ -1001,6 +1022,7 @@ public class ClientGame {
             }
             case DROPPED_ITEM: {
                 entity = new ClientDroppedItem(this, pos);
+                droppedItems.add((ClientDroppedItem)entity);
                 break;
             }
             case SMOKE: {
@@ -1144,6 +1166,7 @@ public class ClientGame {
         this.vehicles.clear();
         this.doors.clear();
         this.smokeEntities.clear();
+        this.droppedItems.clear();
         
         this.gameTimers.removeTimers();
         
@@ -1544,6 +1567,7 @@ public class ClientGame {
             vehicles.remove(ent);
             doors.remove(ent);
             smokeEntities.remove(ent);
+            droppedItems.remove(ent);
             
             OnRemove onRemove = ent.getOnRemove();
             if(onRemove != null) {
@@ -1596,6 +1620,7 @@ public class ClientGame {
         this.vehicles.clear();
         this.doors.clear();
         this.smokeEntities.clear();
+        this.droppedItems.clear();
                 
         this.gameEffects.destroy();
         this.gameTimers.removeTimers();
