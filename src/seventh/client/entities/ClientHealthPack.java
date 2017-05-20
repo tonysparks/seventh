@@ -24,6 +24,14 @@ public class ClientHealthPack extends ClientEntity {
     }
     
     /* (non-Javadoc)
+     * @see seventh.client.entities.ClientEntity#isBackgroundObject()
+     */
+    @Override
+    public boolean isBackgroundObject() {
+        return true;
+    }
+    
+    /* (non-Javadoc)
      * @see seventh.client.ClientEntity#killIfOutdated(long)
      */
     @Override
