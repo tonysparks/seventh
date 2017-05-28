@@ -6,6 +6,7 @@ package seventh.client;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -90,6 +91,7 @@ import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileRemovedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
+import seventh.shared.Arrays;
 import seventh.shared.Cons;
 import seventh.shared.DebugDraw;
 import seventh.shared.Scripting;
@@ -118,7 +120,8 @@ public class ClientGame {
     
     private final Pools pools;
     
-    private final ClientEntity[] renderingOrderEntities;
+    private final ClientEntity[] backgroundEntities;
+    private final ClientEntity[] foregroundEntities;
     
     private final List<ClientBombTarget> bombTargets;
     private final List<ClientVehicle> vehicles;
@@ -176,6 +179,23 @@ public class ClientGame {
         public void onEntityDestroyed(ClientEntity ent);
     }
     
+    private static Comparator<ClientEntity> renderComparator = new Comparator<ClientEntity>() {
+        
+        @Override
+        public int compare(ClientEntity a, ClientEntity b) {
+            if(a!=null && b!=null) {
+                return a.getZOrder() - b.getZOrder();
+            }
+            if(a!=null) {
+                return 1;
+            }
+            if(b!=null) {
+                return -1;
+            }
+            return 0;
+        }
+    };
+    
     /**
      * @param app
      * @param players
@@ -193,7 +213,8 @@ public class ClientGame {
         
         this.localPlayer = players.getPlayer(session.getSessionPlayerId());        
         this.entities = new ClientEntities(SeventhConstants.MAX_ENTITIES);    
-        this.renderingOrderEntities = new ClientEntity[SeventhConstants.MAX_ENTITIES];        
+        this.backgroundEntities = new ClientEntity[SeventhConstants.MAX_ENTITIES];
+        this.foregroundEntities = new ClientEntity[SeventhConstants.MAX_ENTITIES];
         
         this.bombTargets = new ArrayList<ClientBombTarget>();
         this.vehicles = new ArrayList<ClientVehicle>();
@@ -237,7 +258,14 @@ public class ClientGame {
     public ClientTeam getDefendingTeam() {
         return defendingTeam;
     }
-        
+    
+    /**
+     * @return the hud
+     */
+    public Hud getHud() {
+        return hud;
+    }
+    
     /**
      * @return the map
      */
@@ -442,39 +470,49 @@ public class ClientGame {
         map.render(canvas, camera, alpha);
         canvas.end();
         
-        gameEffects.renderBackground(canvas, camera, alpha);
-        
-                
         ClientEntity[] entityList = entities.getEntities();
         int size = entityList.length;
         
-        
-        /* first render the background entities */
+        // gather which entities to render
         for(int i = 0; i < size; i++) {
-            /* clear out the foreground entities */
-            renderingOrderEntities[i] = null;
+            
+            backgroundEntities[i] = null;
+            foregroundEntities[i] = null;
             
             ClientEntity entity = entityList[i];            
             if(entity != null) {
                 
                 if(entity.isBackgroundObject()) {
-                    entity.render(canvas, camera, alpha);
+                    backgroundEntities[i] = entity;
                 }
                 else {
-                    renderingOrderEntities[i] = entity;
+                    foregroundEntities[i] = entity;
                 }                
             }
-        }                        
+        }
         
-        /* now render the foreground entities */
+        
+        // sort based on Z Order
+        Arrays.sort(backgroundEntities, renderComparator);
+        Arrays.sort(foregroundEntities, renderComparator);
+        
+        
+        // now render them
         for(int i = 0; i < size; i++) {            
-            ClientEntity entity = renderingOrderEntities[i];            
+            ClientEntity entity = backgroundEntities[i];            
             if(entity != null) {                                
                 entity.render(canvas, camera, alpha);                
-            }
-            
-            renderingOrderEntities[i] = null;
-        }                        
+            }            
+        }
+        
+        gameEffects.renderBackground(canvas, camera, alpha);
+        
+        for(int i = 0; i < size; i++) {            
+            ClientEntity entity = foregroundEntities[i];            
+            if(entity != null) {                                
+                entity.render(canvas, camera, alpha);                
+            }            
+        }
                 
         gameEffects.renderForeground(canvas, camera, alpha);
         map.renderForeground(canvas, camera, alpha);
@@ -1096,8 +1134,7 @@ public class ClientGame {
         if(entity != null) {
             entity.updateState(ent, gameClock);
             entities.addEntity(ent.id, entity);
-            renderingOrderEntities[ent.id] = entity;
-            
+                        
             entityListener.onEntityCreated(entity);
         }
     }

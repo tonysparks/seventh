@@ -34,7 +34,7 @@ public abstract class ClientEntity implements Renderable {
     protected long lastUpdate;
     protected long previousNetUpdate;
     protected long gameClock;
-    
+    protected int  zOrder;
     protected Type type;
     
     private boolean updateReceived;
@@ -87,6 +87,8 @@ public abstract class ClientEntity implements Renderable {
         
         this.bounds = new Rectangle();        
         this.isAlive = true;
+        
+        this.zOrder = 100;
     }
     
     /**
@@ -252,6 +254,13 @@ public abstract class ClientEntity implements Renderable {
      */
     public boolean isBackgroundObject() {
         return false;
+    }
+    
+    /**
+     * @return the zOrder
+     */
+    public int getZOrder() {
+        return zOrder;
     }
     
     
