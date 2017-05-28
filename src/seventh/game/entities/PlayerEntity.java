@@ -1671,7 +1671,9 @@ public class PlayerEntity extends Entity implements Controllable {
                     case LIGHT_BULB:
                     case BOMB_TARGET:
                         /* don't add */
-                        break;
+                        //break; we must add this, scripts
+                        // may add these items well after the initial
+                        // NetGameState message was sent
                     default: {
                         if(visualBounds.intersects(ent.getBounds())) {
                             entitiesInView.add(ent); 
