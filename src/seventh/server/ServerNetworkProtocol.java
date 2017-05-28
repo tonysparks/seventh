@@ -4,6 +4,8 @@
 package seventh.server;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -54,6 +56,7 @@ import seventh.network.messages.TileRemovedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.Logger;
 import seventh.shared.NetworkProtocol;
 
 
@@ -96,6 +99,7 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 
     private Queue<OutboundMessage> outboundQ;
     
+    private Map<Integer, Logger> rconLoggers;
     
     /**
      * @param serverContext
@@ -110,6 +114,7 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
         this.clients = serverContext.getClients();
         
         this.outboundQ = new ConcurrentLinkedQueue<ServerNetworkProtocol.OutboundMessage>();
+        this.rconLoggers = new HashMap<>();
         
     }
     
@@ -436,6 +441,7 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
                 else if (cmd.startsWith("logoff")) {
                     client.setRconAuthenticated(false);
                     client.setRconToken(ServerContext.INVALID_RCON_TOKEN);
+                    console.removeLogger(this.rconLoggers.get(client.getId()));
                 }
                 else if(cmd.startsWith("password")) {
                     if(!client.hasRconToken()) {
@@ -450,6 +456,10 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
                         
                         if( serverPassword.equals(password) ) {
                             client.setRconAuthenticated(true);
+                            
+                            Logger logger = this.rconLoggers.put(client.getId(), new RconLogger(client.getId(), this));
+                            console.removeLogger(logger);
+                            console.addLogger(this.rconLoggers.get(client.getId()));
                         }
                         else {
                             client.setRconAuthenticated(false);
@@ -459,8 +469,8 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
                         }
                     }
                 }
-                else if(client.isRconAuthenticated()) {
-                    console.execute(msg.getCommand());
+                else if(client.isRconAuthenticated()) {                    
+                    console.execute(msg.getCommand());                                       
                 }
                 else {
                     RconMessage rconMsg = new RconMessage("You must first authenticate by executing these commands:\n rcon login\n rcon password [password]");

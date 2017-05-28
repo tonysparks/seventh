@@ -179,6 +179,14 @@ public class DefaultConsole implements Console {
     }
     
     /* (non-Javadoc)
+     * @see seventh.shared.Console#removeLogger(seventh.shared.Logger)
+     */
+    @Override
+    public void removeLogger(Logger logger) {
+        this.loggers.remove(logger);
+    }
+    
+    /* (non-Javadoc)
      * @see shared.Console#setLogger(shared.Logger)
      */
     public void setLogger(Logger logger) {
