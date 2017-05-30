@@ -480,29 +480,24 @@ public abstract class AbstractTeamGameType implements GameType {
 	 * Refactoring name : nested loops, early return
 	 * Bad smell(reason) : sequential processing of single-dimensional data in loops are unnatural,
 	 */
-	protected void checkRespawns(TimeStep timeStep, Game game) {
-		boolean gameState = GameState.IN_PROGRESS == getGameState();
-		if (!gameState)
-			return;
-
-		Player[] players = game.getPlayers().getPlayers();
-		for (int i = 0; i < players.length; i++) {
-			Player player = players[i];
-			
-			boolean playerState = (player!=null) && player.canSpawn();
-			if(playerState)
-				continue;
-			
-			player.updateSpawnTime(timeStep);
-			boolean playerReady = player.readyToSpawn();
-			if(!playerReady)
-				continue;
-			
-			spawnPlayer(player, game);			
-			
-		}
-
-	}
+	 protected void checkRespawns(TimeStep timeStep, Game game) {
+       if (GameState.IN_PROGRESS == getGameState()) {
+           Player[] players = game.getPlayers().getPlayers();
+           for (int i = 0; i < players.length; i++) {
+               Player player = players[i];
+               if (player != null) {
+                   if (player.canSpawn()) {
+                       player.updateSpawnTime(timeStep);
+                       if (player.readyToSpawn()) {                            
+                           spawnPlayer(player, game);
+                       }
+                   }
+               }
+           }
+           
+           
+       }
+   }
 
 	/**
 	 * Checks to see if any players should be spectating, because they are dead
