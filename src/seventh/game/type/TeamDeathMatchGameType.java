@@ -48,7 +48,10 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
                     if(killer!=null) {
                         Player killed = event.getPlayer();
                         if(killed != null) {
-                            if(killer.getId() == killed.getId()) {
+                            // killing yourself or a teammate causes
+                            // a negative score
+                            if(killer.getId() == killed.getId() ||
+                               killer.getTeam() == killed.getTeam()) {
                                 killed.getTeam().score(-1);
                                 return;
                             }
