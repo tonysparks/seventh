@@ -33,6 +33,7 @@ import seventh.game.events.SoundEmittedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
+import seventh.game.weapons.Bullet;
 import seventh.game.weapons.FlameThrower;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Kar98;
@@ -144,6 +145,10 @@ public class PlayerEntity extends Entity implements Controllable {
     
     private Flag carriedFlag;
     
+    private Rectangle headshot, limbshot;
+    private Vector2f bulletDir;
+    
+    
     /**
      * @param position
      * @param speed
@@ -161,6 +166,10 @@ public class PlayerEntity extends Entity implements Controllable {
         this.bounds.set(position, PLAYER_WIDTH, PLAYER_HEIGHT);
         this.inputVel = new Vector2f();
         this.enemyDir = new Vector2f();
+        
+        this.headshot = new Rectangle(4, 4);
+        this.limbshot = new Rectangle(10, 10);
+        this.bulletDir = new Vector2f();
                 
         this.inventory = new Inventory(MAX_PRIMARY_WEAPONS);                        
         this.hearingBounds = new Rectangle(PLAYER_HEARING_RADIUS, PLAYER_HEARING_RADIUS);
@@ -419,7 +428,50 @@ public class PlayerEntity extends Entity implements Controllable {
     @Override
     public void damage(Entity damager, int amount) {
         if(this.invinceableTime<=0) {
-            super.damage(damager, amount);            
+            
+            /* if the damager is a bullet, we should
+             * determine the entrance wound, as it will
+             * impact the amount of damage done.
+             */
+            if(damager instanceof Bullet) {
+                Bullet bullet = (Bullet) damager;
+                
+                Vector2f center = getCenterPos();
+                Vector2f bulletCenter = bullet.getCenterPos();
+                
+                this.headshot.centerAround(center);
+                
+                // determine which body part the bullet hit
+                Vector2f.Vector2fMA(bulletCenter, bullet.getTargetVel(), 35, this.bulletDir);
+                if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.headshot)) {
+                    // headshots deal out a lot of damage
+                    amount *= 3;                              
+                }
+                else {
+                    // limb shots are not as lethal
+                    
+                    // right side
+                    Vector2f.Vector2fPerpendicular(getFacing(), cache);
+                    Vector2f.Vector2fMA(center, cache, 10, cache);
+                    this.limbshot.centerAround(cache);
+                    if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.limbshot)) {
+                        amount /= 2;
+                    }
+                                 
+                    // left side
+                    Vector2f.Vector2fPerpendicular(getFacing(), cache);
+                    Vector2f.Vector2fMS(center, cache, 10, cache);
+                    this.limbshot.centerAround(cache);
+                    if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.limbshot)) {
+                        amount /= 2;
+                    }                    
+                }
+                
+                //DebugDraw.drawLineRelative(bullet.getCenterPos(), this.bulletDir, 0xff00ffff);
+            }
+                
+            super.damage(damager, amount);           
+            
         }
     }
 
@@ -446,6 +498,24 @@ public class PlayerEntity extends Entity implements Controllable {
             this.operating.operate(this);
             moveTo(this.operating.getCenterPos());
         }
+        
+        /*{   
+            Vector2f center = getCenterPos();
+            headshot.centerAround(center);
+            
+            Vector2f.Vector2fPerpendicular(getFacing(), cache);
+            Vector2f.Vector2fMA(center, cache, 10, cache);
+            this.limbshot.centerAround(cache);
+            DebugDraw.drawRectRelative(limbshot, 0xff0000ff);
+            
+            Vector2f.Vector2fPerpendicular(getFacing(), cache);
+            Vector2f.Vector2fMS(center, cache, 10, cache);
+            this.limbshot.centerAround(cache);
+            DebugDraw.drawRectRelative(limbshot, 0xff0000ff);
+        
+            DebugDraw.drawRectRelative(bounds, 0xff00ffff);
+            DebugDraw.drawRectRelative(headshot, 0xff00ffff);
+        }*/
         
         return blocked;
     }

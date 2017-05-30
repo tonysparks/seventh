@@ -141,6 +141,12 @@ public class Bullet extends Entity {
         return ownerHeightMask;
     }
     
+    /**
+     * @return the targetVel
+     */
+    public Vector2f getTargetVel() {
+        return targetVel;
+    }
 
     /**
      * @return the damage points of this bullet
