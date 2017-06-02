@@ -358,16 +358,24 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @return a valid id.
      */
     public int getNextEntityId() {
-        lastValidId = 0;
+        // NOTE: Maybe we want to keep track of the last 
+        // assigned ID, so that we can more quickly find a new valid
+        // one -- for now we also start from the beginning.
+        lastValidId = 0;  
         
-        for(int i = MAX_PLAYERS + MAX_PERSISTANT_ENTITIES + lastValidId; i < MAX_ENTITIES; i++) {
-            int index = i;// + (lastValidId % (MAX_ENTITIES-MAX_PLAYERS));
-            if(entities[index] == null && deadFrames[i] > 0) { // was 10
+        for(int i = MAX_PLAYERS + MAX_PERSISTANT_ENTITIES + lastValidId; i < MAX_ENTITIES; i++) {            
+            // We the delay the ability to reuse a volatile entity id
+            // because clients need time to timeout the current entity
+            // NOTE: Only persistent and player entities are told when 
+            // they are dead
+            //
+            // The delay is 10 frames (at normal 20 fps ~500 ms delay)
+            if(entities[i] == null && deadFrames[i] > 10) { 
                 lastValidId++;                
                 return i;
             }
         }                
-        
+                
         /* if we ran out of id's, lets find a
          * volatile object so we can respawn this
          * latest object.
