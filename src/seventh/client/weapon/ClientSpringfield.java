@@ -5,7 +5,7 @@ package seventh.client.weapon;
 
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
-import seventh.game.weapons.Weapon.State;
+import seventh.game.weapons.Weapon.WeaponState;
 import seventh.shared.TimeStep;
 import seventh.shared.WeaponConstants;
 
@@ -41,13 +41,13 @@ public class ClientSpringfield extends ClientWeapon {
     public void update(TimeStep timeStep) {
         super.update(timeStep);
         
-        if(getState() == State.READY) {            
+        if(getState() == WeaponState.READY) {            
             timer = -1;            
         }
                 
         timer -= timeStep.getDeltaTime();
         
-        if(getState() == State.FIRING) {
+        if(getState() == WeaponState.FIRING) {
             if(timer<=0) {
                 timer = weaponTime;
             }

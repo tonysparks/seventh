@@ -9,7 +9,7 @@ import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.AnimatedImage;
 import seventh.client.gfx.Camera;
 import seventh.game.net.NetWeapon;
-import seventh.game.weapons.Weapon.State;
+import seventh.game.weapons.Weapon.WeaponState;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 
@@ -121,20 +121,20 @@ public class ClientWeapon {
         return firstFire==1;
     }
     
-    public State getState() {
+    public WeaponState getState() {
         if(this.nextState!=null) {
-            State state = State.fromNet(nextState.state);
-            return state;
+            WeaponState weaponState = nextState.weaponState;
+            return weaponState;
         }
-        return State.UNKNOWN;
+        return WeaponState.UNKNOWN;
     }
     
-    public State getPreviousState() {
+    public WeaponState getPreviousState() {
         if(this.prevState!=null) {
-            State state = State.fromNet(prevState.state);
-            return state;
+            WeaponState weaponState = prevState.weaponState;
+            return weaponState;
         }
-        return State.UNKNOWN;
+        return WeaponState.UNKNOWN;
     }
     
     protected boolean onFire() {
@@ -173,7 +173,7 @@ public class ClientWeapon {
      * @return true if the weapon is currently in the reloading state
      */
     public boolean isReloading() {
-        return getState() == State.RELOADING;
+        return getState() == WeaponState.RELOADING;
     }
     
     private void startSpecialReloadActionTimer() {
@@ -190,20 +190,20 @@ public class ClientWeapon {
         this.specialReloadActionReloadTimer.update(timeStep);
         
         if(this.nextState!=null) {
-            State state = State.fromNet(nextState.state);    
-            if(state != State.FIRING) {
+            WeaponState weaponState = nextState.weaponState;    
+            if(weaponState != WeaponState.FIRING) {
                 firstFire = 0;
             }
             
             if(isPumpAction() /*|| isBoltAction()*/) {
                 if(startReloading) {
-                    if(state!=State.RELOADING) {
+                    if(weaponState!=WeaponState.RELOADING) {
                         startSpecialReloadActionTimer();                        
                     }
                 }
             }
                         
-            switch(state) {
+            switch(weaponState) {
                 case FIRE_EMPTY: {                                                            
                     break;
                 }
@@ -264,7 +264,7 @@ public class ClientWeapon {
 //        this.endFireKick = 18.7f; 
 //        this.beginFireKick = 0f; 
         
-        if(getState() == State.FIRING && weaponKickTime>0) {
+        if(getState() == WeaponState.FIRING && weaponKickTime>0) {
             if(firstFire==1) {
                 camera.shake(weaponKickTime, endFireKick);
             }

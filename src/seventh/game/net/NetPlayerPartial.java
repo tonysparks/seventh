@@ -6,6 +6,7 @@ package seventh.game.net;
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.State;
 import seventh.game.entities.Entity.Type;
+import seventh.game.weapons.Weapon.WeaponState;
 import seventh.network.messages.BufferIO;
 
 /**
@@ -22,7 +23,7 @@ public class NetPlayerPartial extends NetEntity {
         this.type = Type.PLAYER_PARTIAL;
     }
 
-    public byte state;
+    public State state;
     public byte health;
     public NetWeapon weapon;
     
@@ -37,15 +38,14 @@ public class NetPlayerPartial extends NetEntity {
         super.read(buffer);
                 
         orientation = BufferIO.readAngle(buffer);
-        state = buffer.get();
-        health = buffer.get();
+        state = BufferIO.readState(buffer);
+        health = buffer.getByteBits(7);
         
         /* If this player is in a vehicle,
          * send the vehicle ID in lieu of 
          * weapon information
-         */
-        State aState = State.fromNetValue(state);
-        if(aState.isVehicleState()) {
+         */        
+        if(state.isVehicleState()) {
             isOperatingVehicle = true;
             vehicleId = buffer.getUnsignedByte();
         }
@@ -60,8 +60,8 @@ public class NetPlayerPartial extends NetEntity {
      */
     protected void readWeapon(IOBuffer buffer) {
         weapon = new NetWeapon();
-        weapon.type = buffer.get();
-        weapon.state = buffer.get();
+        weapon.type = BufferIO.readType(buffer);
+        weapon.weaponState = BufferIO.readWeaponState(buffer);
     }
     
     /* (non-Javadoc)
@@ -72,16 +72,15 @@ public class NetPlayerPartial extends NetEntity {
         super.write(buffer);
                 
         BufferIO.writeAngle(buffer, orientation);
-        buffer.put(state);        
-        buffer.put(health);
+        BufferIO.writeState(buffer, state);        
+        buffer.putByteBits(health, 7);
         
 
         /* If this player is in a vehicle,
          * send the vehicle ID in lieu of 
          * weapon information
-         */
-        State aState = State.fromNetValue(state);
-        if(aState.isVehicleState()) {
+         */        
+        if(state.isVehicleState()) {
             buffer.putUnsignedByte(vehicleId);
         }
         else {            
@@ -95,12 +94,12 @@ public class NetPlayerPartial extends NetEntity {
      */
     protected void writeWeapon(IOBuffer buffer) {
         if(weapon != null) {
-            buffer.put(weapon.type);
-            buffer.put(weapon.state);
+            BufferIO.writeType(buffer, weapon.type);
+            BufferIO.writeWeaponState(buffer, weapon.weaponState);
         }
         else {
-            buffer.put( (byte)-1);
-            buffer.put( (byte)0);
+            BufferIO.writeType(buffer, Type.UNKNOWN);
+            BufferIO.writeWeaponState(buffer, WeaponState.UNKNOWN);
         }
     }
 }

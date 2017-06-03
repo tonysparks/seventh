@@ -6,6 +6,7 @@ package seventh.network.messages;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import harenet.messages.NetMessageFactory;
+import seventh.game.entities.Entity.State;
 import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetBomb;
 import seventh.game.net.NetBombTarget;
@@ -22,6 +23,7 @@ import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetRocket;
 import seventh.game.net.NetSmoke;
 import seventh.game.net.NetTank;
+import seventh.game.weapons.Weapon.WeaponState;
 import seventh.math.Vector2f;
 
 /**
@@ -173,6 +175,25 @@ public class BufferIO {
             return message;
         }
     }
+
+    public static void writeWeaponState(IOBuffer buffer, WeaponState state) {
+        buffer.putByteBits(state.netValue(), WeaponState.numOfBits());
+    }
+    
+    public static WeaponState readWeaponState(IOBuffer buffer) {
+        byte state = buffer.getByteBits(WeaponState.numOfBits());
+        return WeaponState.fromNet(state);
+    }
+    
+    public static void writeState(IOBuffer buffer, State state) {
+        buffer.putByteBits(state.netValue(), State.numOfBits());
+    }
+    
+    public static State readState(IOBuffer buffer) {
+        byte state = buffer.getByteBits(State.numOfBits());
+        return State.fromNetValue(state);
+    }
+
     
     public static void writeType(IOBuffer buffer, Type type) {
         buffer.putByteBits(type.netValue(), Type.numOfBits());

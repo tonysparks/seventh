@@ -248,7 +248,7 @@ public class PlayerSprite implements Renderable {
     
     private void updateSmokeEmitter(TimeStep timeStep, ClientWeapon weapon) {
         if(weapon.isAutomatic()) {
-            if(weapon.getState().equals(Weapon.State.FIRING)) {
+            if(weapon.getState().equals(Weapon.WeaponState.FIRING)) {
                 timeSpentFiring += timeStep.getDeltaTime();
                 wasFiring = true;
             }
@@ -265,7 +265,7 @@ public class PlayerSprite implements Renderable {
             }
         }        
         else {
-            if(weapon.getState().equals(Weapon.State.FIRING)) {
+            if(weapon.getState().equals(Weapon.WeaponState.FIRING)) {
                 if(!wasFiring) {
                     effects.addEffect(Emitters.newGunSmokeEmitter(entity, 100));
                 }
@@ -366,10 +366,10 @@ public class PlayerSprite implements Renderable {
         if(weapon != null) {            
             updateSmokeEmitter(timeStep, weapon);
             
-            this.isReloading = weapon.getState() == seventh.game.weapons.Weapon.State.RELOADING;
-            this.isSwitching = weapon.getState() == seventh.game.weapons.Weapon.State.SWITCHING;
-            this.isMelee = weapon.getState() == seventh.game.weapons.Weapon.State.MELEE_ATTACK;
-            this.isFiring = weapon.getState() == seventh.game.weapons.Weapon.State.FIRING;
+            this.isReloading = weapon.getState() == seventh.game.weapons.Weapon.WeaponState.RELOADING;
+            this.isSwitching = weapon.getState() == seventh.game.weapons.Weapon.WeaponState.SWITCHING;
+            this.isMelee = weapon.getState() == seventh.game.weapons.Weapon.WeaponState.MELEE_ATTACK;
+            this.isFiring = weapon.getState() == seventh.game.weapons.Weapon.WeaponState.FIRING;
             
             if(weapon.isBoltAction()) {
                 if(!this.isReloading && weapon.isSpecialReloadingAction()) {
@@ -540,7 +540,7 @@ public class PlayerSprite implements Renderable {
     private void renderMuzzleFlash(Canvas canvas, ClientWeapon weapon, float rx, float ry, float rot) {
         AnimatedImage muzzleAnim = weapon.getMuzzleFlash();
         if(muzzleAnim != null) {
-            if(weapon.getState().equals(Weapon.State.FIRING)) 
+            if(weapon.getState().equals(Weapon.WeaponState.FIRING)) 
             {                                        
                 /* if the weapon is automatic, we want to show
                  * the animation

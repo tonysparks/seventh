@@ -4,6 +4,7 @@
 package seventh.game.net;
 
 import harenet.IOBuffer;
+import seventh.game.entities.Entity.State;
 import seventh.game.entities.Entity.Type;
 import seventh.network.messages.BufferIO;
 
@@ -23,7 +24,7 @@ public class NetPlayer extends NetEntity {
         this.type = Type.PLAYER;
     }
 
-    public byte state;
+    public State state;
     public byte grenades;
     public byte health;    
     public byte stamina;
@@ -64,10 +65,10 @@ public class NetPlayer extends NetEntity {
         bits = buffer.get();
         
         orientation = BufferIO.readAngle(buffer);
-        state = buffer.get();
-        grenades = buffer.get();
-        health = buffer.get();
-        stamina = buffer.get();
+        state = BufferIO.readState(buffer);
+        grenades = buffer.getByteBits(4);
+        health = buffer.getByteBits(7);
+        stamina = buffer.getByteBits(7);
         
         if((bits & HAS_WEAPON) != 0) {            
             weapon = new NetWeapon();
@@ -96,10 +97,10 @@ public class NetPlayer extends NetEntity {
         buffer.put(bits);
         
         BufferIO.writeAngle(buffer, orientation);
-        buffer.put(state);
-        buffer.put(grenades);
-        buffer.put(health);
-        buffer.put(stamina);        
+        BufferIO.writeState(buffer, state);
+        buffer.putByteBits(grenades, 4);
+        buffer.putByteBits(health, 7);
+        buffer.putByteBits(stamina, 7);        
         
         if(weapon != null && !isOperatingVehicle) {
             weapon.write(buffer);
