@@ -31,7 +31,7 @@ public class NetTank extends NetVehicle {
      * @param type the type of tank
      */
     public NetTank(Type type) {
-        this.type = type.netValue();
+        this.type = type;
         this.operatorId = SeventhConstants.INVALID_PLAYER_ID;
     }
     

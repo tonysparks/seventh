@@ -19,7 +19,7 @@ public class NetPlayerPartial extends NetEntity {
 
     
     public NetPlayerPartial() {
-        this.type = Type.PLAYER_PARTIAL.netValue();
+        this.type = Type.PLAYER_PARTIAL;
     }
 
     public byte state;

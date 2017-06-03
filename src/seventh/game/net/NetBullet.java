@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 
 /**
@@ -12,8 +13,6 @@ import seventh.game.entities.Entity.Type;
  *
  */
 public class NetBullet extends NetEntity {
-//    public float targetVelX; /* target velocity isn't used yet, so disabling */
-//    public float targetVelY;
     public byte damage;
     public int ownerId;
         
@@ -21,7 +20,7 @@ public class NetBullet extends NetEntity {
      * 
      */
     public NetBullet() {
-        this.type = Type.BULLET.netValue();
+        this.type = Type.BULLET;
     }
     
     
@@ -31,10 +30,7 @@ public class NetBullet extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-//        targetVelX = buffer.getShort() / 100.0f;
-//        targetVelY = buffer.getShort() / 100.0f;
-//        damage = buffer.get();
-        ownerId = buffer.getUnsignedByte();    
+        ownerId = BufferIO.readPlayerId(buffer);    
     }
     
     /* (non-Javadoc)
@@ -43,9 +39,6 @@ public class NetBullet extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-//        buffer.putShort( (short)(targetVelX * 100.0f) );
-//        buffer.putShort( (short)(targetVelY * 100.0f) );
-//        buffer.put(damage);
-        buffer.putUnsignedByte(ownerId);
+        BufferIO.writePlayerId(buffer, ownerId);
     }
 }

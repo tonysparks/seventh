@@ -678,10 +678,18 @@ public class ByteBufferIOBuffer implements IOBuffer {
     }
 
     /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitPosition(int)
+     */
+    @Override
+    public int bitPosition(int position) {
+        return packer.position(position);        
+    }
+    
+    /* (non-Javadoc)
      * @see harenet.IOBuffer#bitPosition()
      */
     @Override
-    public long bitPosition() {
+    public int bitPosition() {
         return packer.position();
     }
 
@@ -689,7 +697,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see harenet.IOBuffer#bitCapacity()
      */
     @Override
-    public long bitCapacity() {
+    public int bitCapacity() {
         return packer.getNumberOfBits();
     }
 

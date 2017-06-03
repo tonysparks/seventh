@@ -105,7 +105,6 @@ public class NetGameUpdate implements NetMessage {
         
         time = buffer.getInt();
         
-        
     }
     
     /* (non-Javadoc)
@@ -174,7 +173,6 @@ public class NetGameUpdate implements NetMessage {
         
         buffer.putInt(this.time);
         
-
     }
     
     /**

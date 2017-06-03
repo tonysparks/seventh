@@ -592,7 +592,15 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see harenet.IOBuffer#bitPosition()
      */
     @Override
-    public long bitPosition() {
+    public int bitPosition() {
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitPosition(int)
+     */
+    @Override
+    public int bitPosition(int position) {     
         return 0;
     }
 
@@ -600,7 +608,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see harenet.IOBuffer#bitCapacity()
      */
     @Override
-    public long bitCapacity() {
+    public int bitCapacity() {
         return capacity() * 8;
     }
 

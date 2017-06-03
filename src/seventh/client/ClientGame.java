@@ -1022,7 +1022,7 @@ public class ClientGame {
         
         ClientEntity entity = null;
         
-        Type type = Type.fromNet(ent.type);
+        Type type = ent.type;
          
         final Vector2f pos = new Vector2f(ent.posX, ent.posY);
         switch(type) {
@@ -1260,7 +1260,7 @@ public class ClientGame {
                 if(netEnt != null) {
                     if(entities.containsEntity(netEnt.id)) {
                         ClientEntity ent = entities.getEntity(netEnt.id);
-                        if(Type.fromNet(netEnt.type) == ent.getType()) {                        
+                        if(netEnt.type == ent.getType()) {                        
                             ent.updateState(netEnt, gameClock);
                         }
                         else {

@@ -43,7 +43,9 @@ public class ByteBufferIOBufferTest {
             
     
             writeBuffer.putInt(attempts);
-            writeBuffer.put( (byte) 5);        
+            writeBuffer.put( (byte) 5);
+            writeBuffer.putByteBits( (byte)12, 6);
+            writeBuffer.putInt(attempts);
             
             //writeBuffer.flip();
             //~~~~~~~~~ sent packet
@@ -82,7 +84,18 @@ public class ByteBufferIOBufferTest {
     
             assertEquals(attempts, readBuffer.getInt());
             assertEquals( (byte) 5, readBuffer.get());
+            assertEquals( (byte) 12, readBuffer.getByteBits(6));
+            assertEquals(attempts, readBuffer.getInt());
         }
     }
 
+    @Test
+    public void testShort() {
+        IOBuffer writeBuffer = IOBuffer.Factory.allocate(1500);
+        writeBuffer.putIntBits( 8189, 13);
+        writeBuffer.flip();
+        int value = writeBuffer.getIntBits(13);// & (short)0b111111111111;
+        assertEquals(8189, value);
+    }
 }
+

@@ -20,7 +20,7 @@ public class NetPlayer extends NetEntity {
     public static final int IS_SMOKE_GRENADES = 8;
     
     public NetPlayer() {
-        this.type = Type.PLAYER.netValue();
+        this.type = Type.PLAYER;
     }
 
     public byte state;
@@ -46,7 +46,7 @@ public class NetPlayer extends NetEntity {
         }
         
         if(isOperatingVehicle) {
-            bits = 0; /* clear the weapon bits */
+            bits = 0; /* clear the weapon isRotated */
             bits |= IS_OPERATING_VEHICLE;
         }                
         

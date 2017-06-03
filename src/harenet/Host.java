@@ -777,7 +777,7 @@ public class Host {
      */
     private void parseMessages(Peer peer, IOBuffer buffer, Protocol protocol) {
         byte numberOfMessages = protocol.getNumberOfMessages();                                                
-        while(numberOfMessages > 0 && buffer.position() < buffer.limit()) {
+        while(numberOfMessages > 0 && buffer.hasRemaining()) {
             numberOfMessages--;
             
             Message message = MessageHeader.readMessageHeader(buffer, messageFactory);

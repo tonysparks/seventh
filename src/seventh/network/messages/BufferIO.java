@@ -173,6 +173,23 @@ public class BufferIO {
             return message;
         }
     }
+    
+    public static void writeType(IOBuffer buffer, Type type) {
+        buffer.putByteBits(type.netValue(), Type.numOfBits());
+    }
+    
+    public static Type readType(IOBuffer buffer) {
+        byte type = buffer.getByteBits(Type.numOfBits());
+        return Type.fromNet(type);
+    }
+    
+    public static void writePlayerId(IOBuffer buffer, int playerId) {
+        buffer.putIntBits(playerId, 4);
+    }
+    
+    public static int readPlayerId(IOBuffer buffer) {
+        return buffer.getIntBits(4);
+    }
         
     public static void writeAngle(IOBuffer buffer, int degrees) {
         int bangle = ( degrees * 256) / 360;
@@ -222,8 +239,9 @@ public class BufferIO {
     public static NetEntity readEntity(IOBuffer buffer) {
         NetEntity result = null;
         
-        byte type = buffer.get();
-        buffer.position(buffer.position() - 1); /* so the entity can re-read the type */
+        byte type = buffer.getByteBits(6);
+        /* so the entity can re-read the type */
+        buffer.bitPosition(buffer.bitPosition() - 6);
         
         Type entType = Type.fromNet(type);
         switch(entType) {

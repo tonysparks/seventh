@@ -20,7 +20,7 @@ public class NetLight extends NetEntity {
     /**
      */
     public NetLight() {
-        this.type = Type.LIGHT_BULB.netValue();
+        this.type = Type.LIGHT_BULB;
     }
     
     /* (non-Javadoc)

@@ -45,11 +45,9 @@ public class ClientDroppedItem extends ClientEntity {
         
         super.orientation = spin;
         
-        NetDroppedItem item = (NetDroppedItem)state;
-        Type t = Type.fromNet(item.droppedItem);
-        if(this.droppedItem == null) 
-        {
-            setDroppedItem(t);            
+        NetDroppedItem item = (NetDroppedItem)state;        
+        if(this.droppedItem == null) {
+            setDroppedItem(item.droppedItem);            
         }        
     }
     

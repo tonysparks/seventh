@@ -1126,10 +1126,10 @@ public interface IOBuffer {
      */
     
     /**
-     * Places the number of bits into the buffer.
+     * Places the number of isRotated into the buffer.
      * 
-     * @param value the value to store (must fit within the supplied number of bits)
-     * @param numberOfBits the number of bits to write out
+     * @param value the value to store (must fit within the supplied number of isRotated)
+     * @param numberOfBits the number of isRotated to write out
      * @return this buffer
      */
     public abstract IOBuffer putBooleanBit(boolean value);
@@ -1147,7 +1147,8 @@ public interface IOBuffer {
     public abstract int getIntBits();
     public abstract int getIntBits(int numberOfBits);       
     
-    public abstract long bitPosition();
-    public abstract long bitCapacity();
+    public abstract int bitPosition(int position);
+    public abstract int bitPosition();
+    public abstract int bitCapacity();
     
 }

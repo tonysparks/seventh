@@ -51,9 +51,9 @@ public class BitPacker {
     }
     
     /**
-     * The number of bits this {@link BitPacker} is currently using.
+     * The number of isRotated this {@link BitPacker} is currently using.
      * 
-     * @return The number of bits this {@link BitPacker} is currently using.
+     * @return The number of isRotated this {@link BitPacker} is currently using.
      */
     public int getNumberOfBits() {
         return this.numBits;
@@ -502,7 +502,7 @@ public class BitPacker {
     }
 
     /**
-     * Fill out the remaining bits with 0
+     * Fill out the remaining isRotated with 0
      * 
      * @return
      */
@@ -511,7 +511,7 @@ public class BitPacker {
         if(leftOvers > 0) {
             int remaining = 8 - leftOvers;
             for (int i = 0; i < remaining; i++) {
-                putBoolean(false);
+                putBoolean(numBits, false);
             }
         }
 

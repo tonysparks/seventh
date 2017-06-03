@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 
 /**
@@ -18,7 +19,7 @@ public class NetExplosion extends NetEntity {
      * 
      */
     public NetExplosion() {
-        this.type = Type.EXPLOSION.netValue();
+        this.type = Type.EXPLOSION;
     }
     
     /* (non-Javadoc)
@@ -27,7 +28,7 @@ public class NetExplosion extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        ownerId = buffer.getUnsignedByte();
+        ownerId = BufferIO.readPlayerId(buffer);
     }
     
     /* (non-Javadoc)
@@ -36,6 +37,6 @@ public class NetExplosion extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putUnsignedByte(ownerId);
+        BufferIO.writePlayerId(buffer, ownerId);
     }
 }

@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 /**
  * A Door
@@ -17,7 +18,7 @@ public class NetDoor extends NetEntity {
     public byte hinge;
     
     public NetDoor() {
-        this.type = Type.DOOR.netValue();
+        this.type = Type.DOOR;
     }
     
     /* (non-Javadoc)
@@ -26,8 +27,8 @@ public class NetDoor extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        this.orientation = buffer.getShort();
-        this.hinge = buffer.get();
+        this.orientation = BufferIO.readAngle(buffer);
+        this.hinge = buffer.getByteBits(3);
     }
     
     /* (non-Javadoc)
@@ -36,7 +37,7 @@ public class NetDoor extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putShort(this.orientation);
-        buffer.put(hinge);
+        BufferIO.writeAngle(buffer, orientation);
+        buffer.putByteBits(hinge, 3);
     }
 }

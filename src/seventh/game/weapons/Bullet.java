@@ -96,7 +96,7 @@ public class Bullet extends Entity {
         this.netBullet = new NetBullet();
         this.netBullet.damage = (byte)damage;
         this.netBullet.id = getId();
-        this.netBullet.type = Type.BULLET.netValue();
+        this.netBullet.type = Type.BULLET;
                 
         this.previousPos = new Vector2f();
         this.delta = new Vector2f();
@@ -404,7 +404,7 @@ public class Bullet extends Entity {
                 
 //        netBullet.targetVelX = this.targetVel.x;
 //        netBullet.targetVelY = this.targetVel.y;
-        netBullet.type = getType().netValue();
+        netBullet.type = getType();
                 
         return netBullet;
     }

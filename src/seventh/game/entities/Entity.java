@@ -187,6 +187,14 @@ public abstract class Entity implements Debugable {
         }
         
         /**
+         * @return the number of bits to represent this 
+         * type
+         */
+        public static int numOfBits() {
+            return 6;
+        }
+        
+        /**
          * @return true if this is a vehicle
          */
         public boolean isVehicle() {

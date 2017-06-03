@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 /**
  * A dropped item
@@ -15,9 +16,9 @@ import seventh.game.entities.Entity.Type;
 public class NetDroppedItem extends NetEntity {
 
     public NetDroppedItem() {
-        this.type = Type.DROPPED_ITEM.netValue();
+        this.type = Type.DROPPED_ITEM;
     }
-    public byte droppedItem;
+    public Type droppedItem;
     
     /* (non-Javadoc)
      * @see seventh.game.net.NetEntity#read(java.nio.ByteBuffer)
@@ -25,7 +26,7 @@ public class NetDroppedItem extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        droppedItem = buffer.get();
+        droppedItem = BufferIO.readType(buffer);
     }
     
     /* (non-Javadoc)
@@ -34,6 +35,6 @@ public class NetDroppedItem extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.put(droppedItem);
+        BufferIO.writeType(buffer, droppedItem);
     }
 }

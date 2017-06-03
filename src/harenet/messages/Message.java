@@ -7,7 +7,7 @@ import harenet.Transmittable;
 
 
 /**
- * A message is a protocol level way is distributing bits of information from Host to Peer.
+ * A message is a protocol level way is distributing isRotated of information from Host to Peer.
  * 
  * Messages are packed into UDP datagram packets and sent to the Peer.  Clients of the Harenet
  * API should not use this interface to create custom messages, instead they should use the {@link NetMessage}.

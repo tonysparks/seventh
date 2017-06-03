@@ -14,7 +14,7 @@ import seventh.game.entities.Entity.Type;
 public class NetRocket extends NetBullet {
 
     public NetRocket() {
-        this.type = Type.ROCKET.netValue();
+        this.type = Type.ROCKET;
     }
     
     /* (non-Javadoc)

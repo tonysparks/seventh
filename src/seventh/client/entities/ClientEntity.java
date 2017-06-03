@@ -145,7 +145,7 @@ public abstract class ClientEntity implements Renderable {
         this.nextTime = time;
         
         this.id = state.id;
-        this.type = Type.fromNet(state.type);
+        this.type = state.type;
                 
         this.bounds.setLocation(pos);
         this.orientation = (float)Math.toRadians(state.orientation);
