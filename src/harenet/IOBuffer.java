@@ -37,11 +37,15 @@ public interface IOBuffer {
             return new ByteBufferIOBuffer(ByteBuffer.wrap(buff, offset, len));
         }
     }
-
+    
+    public IOBuffer receiveSync();
+    public IOBuffer sendSync();
+    
     /**
-     * @return the underlying {@link ByteBuffer}
+     * @return the underlying {@link ByteBuffer} 
      */
     public ByteBuffer asByteBuffer();
+    
         
      /**
      * Creates a new byte buffer whose content is a shared subsequence of
@@ -641,7 +645,7 @@ public interface IOBuffer {
      *          If there are fewer than two bytes
      *          remaining in this buffer
      */
-    public abstract char getChar();
+    //public abstract char getChar();
 
     /**
      * Relative <i>put</i> method for writing a char
@@ -663,7 +667,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer putChar(char value);
+    //public abstract IOBuffer putChar(char value);
 
     /**
      * Absolute <i>get</i> method for reading a char value.
@@ -681,7 +685,7 @@ public interface IOBuffer {
      *          or not smaller than the buffer's limit,
      *          minus one
      */
-    public abstract char getChar(int index);
+    //public abstract char getChar(int index);
 
     /**
      * Absolute <i>put</i> method for writing a char
@@ -706,7 +710,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer putChar(int index, char value);
+    //public abstract IOBuffer putChar(int index, char value);
 
     
 
@@ -1117,5 +1121,33 @@ public interface IOBuffer {
     public abstract IOBuffer putDouble(int index, double value);
 
   
-
+    /*
+     * Bit operations
+     */
+    
+    /**
+     * Places the number of bits into the buffer.
+     * 
+     * @param value the value to store (must fit within the supplied number of bits)
+     * @param numberOfBits the number of bits to write out
+     * @return this buffer
+     */
+    public abstract IOBuffer putBooleanBit(boolean value);
+    public abstract IOBuffer putLongBits(long value, int numberOfBits);
+    public abstract IOBuffer putByteBits(byte value, int numberOfBits);
+    public abstract IOBuffer putShortBits(short value, int numberOfBits);
+    public abstract IOBuffer putIntBits(int value, int numberOfBits);
+    
+    
+    public abstract boolean getBooleanBit();
+    public abstract byte getByteBits();
+    public abstract byte getByteBits(int numberOfBits);
+    public abstract short getShortBits();
+    public abstract short getShortBits(int numberOfBits);
+    public abstract int getIntBits();
+    public abstract int getIntBits(int numberOfBits);       
+    
+    public abstract long bitPosition();
+    public abstract long bitCapacity();
+    
 }
