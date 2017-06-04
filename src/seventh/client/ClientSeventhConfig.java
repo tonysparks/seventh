@@ -166,4 +166,20 @@ public class ClientSeventhConfig extends SeventhConfig {
     public void setFollowReticleEnabled(boolean enabled) {
         this.config.set(enabled, "game", "follow_reticle");
     }
+    
+    public boolean showDebugInfo() {
+        return this.config.getBool(false, "show_debug_info");
+    }
+    
+    public void showDebugInfo(boolean show) {
+        this.config.set(show, "show_debug_info");
+    }
+    
+    public boolean showFps() {
+        return this.config.getBool(true, "show_fps");
+    }
+    
+    public void showFps(boolean show) {
+        this.config.set(show, "show_fps");
+    }
 }

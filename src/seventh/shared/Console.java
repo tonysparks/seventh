@@ -57,6 +57,12 @@ public interface Console extends Logger {
     public void addLogger(Logger logger);
     
     /**
+     * Removes a {@link Logger}
+     * @param logger
+     */
+    public void removeLogger(Logger logger);
+    
+    /**
      * Executes the commands on the game update to avoid
      * concurrency issues.
      * 

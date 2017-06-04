@@ -215,11 +215,9 @@ public class InGameScreen implements Screen {
         
         this.aiShortcuts = new AIShortcuts(this.keyMap, commands, commands.get(2), commands.get(1));
         this.aiShortcutsMenu = new AIShortcutsMenu(game, keyMap, aiShortcuts);
-        
-        createUI();
-                                
         this.controllerInput = new JoystickGameController();
         
+        createUI();
     }
     
     
@@ -245,6 +243,29 @@ public class InGameScreen implements Screen {
     }
     
     private void createUI() {
+        createSayBoxesUI();        
+        createDialogUI();
+    }
+    
+    private void createSayBoxesUI() {
+        if(this.sayTxtBx != null) {
+            this.sayTxtBx.destroy();
+        }
+        this.sayTxtBx = new TextBox();
+        this.sayTxtBx.setLabelText("Say:");
+        this.sayTxtBxView = new TextBoxView(sayTxtBx);
+        setupTextbox(sayTxtBx);
+        
+        if(this.teamSayTxtBx!=null) {
+            this.teamSayTxtBx.destroy();
+        }
+        this.teamSayTxtBx = new TextBox();
+        this.teamSayTxtBx.setLabelText("Team Say:");
+        this.teamSayTxtBxView = new TextBoxView(teamSayTxtBx);
+        setupTextbox(teamSayTxtBx);
+    }
+    
+    private void createDialogUI() {
         if(this.dialog!=null) {
             this.dialog.destroy();
         }
@@ -295,23 +316,6 @@ public class InGameScreen implements Screen {
         });
         
         this.dialogView = new InGameOptionsDialogView(dialog);
-        
-        if(this.sayTxtBx != null) {
-            this.sayTxtBx.destroy();
-        }
-        this.sayTxtBx = new TextBox();
-        this.sayTxtBx.setLabelText("Say:");
-        this.sayTxtBxView = new TextBoxView(sayTxtBx);
-        setupTextbox(sayTxtBx);
-        
-        if(this.teamSayTxtBx!=null) {
-            this.teamSayTxtBx.destroy();
-        }
-        this.teamSayTxtBx = new TextBox();
-        this.teamSayTxtBx.setLabelText("Team Say:");
-        this.teamSayTxtBxView = new TextBoxView(teamSayTxtBx);
-        setupTextbox(teamSayTxtBx);
-        
         this.app.addInputToFront(app.getUiManager());
     }
     
@@ -328,7 +332,7 @@ public class InGameScreen implements Screen {
             hideTextBox(getTeamSayTxtBx());
         }
         else {                    
-            createUI();                    
+            createDialogUI();                    
             Sounds.playGlobalSound(Sounds.uiNavigate);
         }
     }
@@ -408,6 +412,8 @@ public class InGameScreen implements Screen {
         
         Controllers.addListener(this.controllerInput);
         final ClientProtocol protocol = connection.getClientProtocol();
+        
+        createSayBoxesUI();
         
         Console console = app.getConsole();
         console.addCommand(new Command("ai") {
@@ -632,6 +638,9 @@ public class InGameScreen implements Screen {
         if(!game.isFreeformCamera()) {
             inputMessage.keys = inputKeys;
         }
+        else {
+            inputMessage.keys = 0;
+        }
         
         Vector2f mousePos = cursor.getCursorPos();
         inputMessage.orientation = game.calcPlayerOrientation(mousePos.x, mousePos.y);                 
@@ -678,8 +687,10 @@ public class InGameScreen implements Screen {
         this.teamSayTxtBxView.render(canvas, camera, alpha);
         
         this.aiShortcutsMenu.render(canvas, camera, alpha);
-        
-        this.cursor.render(canvas);    
+               
+        if(dialog.isOpen() || game.showCursor()) {
+            this.cursor.render(canvas);    
+        }
         
         if(isDebugMode) {
             String message = "" + game.screenToWorldCoordinates(cursor.getX(), cursor.getY());

@@ -35,6 +35,7 @@ import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.Type;
 import seventh.game.entities.PlayerEntity.Keys;
 import seventh.math.Rectangle;
+import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 import seventh.ui.ProgressBar;
 import seventh.ui.view.ProgressBarView;
@@ -86,7 +87,7 @@ public class Hud implements Renderable {
         this.messageLog = new MessageLog(10, 60, 15000, 6);        
         this.objectiveLog = new SlowDisplayMessageLog(10, 120, 8000, 3);
         this.objectiveLog.setFont(app.getTheme().getSecondaryFontName());
-        this.objectiveLog.setFontSize(14);
+        this.objectiveLog.setFontSize(24);
         
         this.centerLog = new MessageLog(screenWidth/2, 90, 3000, 2) {
             @Override
@@ -215,7 +216,7 @@ public class Hud implements Renderable {
                 else {
                     cursor.setColor(0xafffff00);
                 }
-            }
+            }            
         }
         else {
             cursor.setColor(0xafffff00);
@@ -283,8 +284,23 @@ public class Hud implements Renderable {
         centerLog.update(timeStep);
         objectiveLog.update(timeStep);
         
-        miniMap.update(timeStep);        
-        miniMap.setMapAlpha( scoreboard.isVisible() ? 0x3f : 0x8f);
+        miniMap.update(timeStep);
+        
+        // if the player is under the mini-map, hide it
+        int miniMapAlpha = scoreboard.isVisible() ? 0x3f : 0x8f;
+        ClientPlayer player = game.getLocalPlayer();
+        if(player.isAlive()) {
+            Vector2f cameraPos = game.getCamera().getPosition();
+            Vector2f playerPos = player.getEntity().getCenterPos();
+            float x = playerPos.x - cameraPos.x;
+            float y = playerPos.y - cameraPos.y;
+            
+            if(miniMap.intersectsMiniMap(x, y)) {
+                miniMapAlpha = 0x0a;
+            }
+        }
+        
+        miniMap.setMapAlpha(miniMapAlpha);
         
         updateProgressBar(timeStep);
         
@@ -296,8 +312,11 @@ public class Hud implements Renderable {
      */
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {    
-        canvas.setFont("Consola", 12);
-        canvas.drawString("FPS: " + app.getFps(), canvas.getWidth() - 60, 10, 0xff10f0ef);
+        if(this.config.showFps()) {
+            canvas.setFont("Consola", 12);
+            canvas.drawString("FPS: " + app.getFps(), canvas.getWidth() - 60, 10, 0xff10f0ef);
+        }
+        
         miniMap.render(canvas, camera, alpha);
         
         killLog.render(canvas, camera, 0);
@@ -305,8 +324,8 @@ public class Hud implements Renderable {
         centerLog.render(canvas, camera, 0);
         objectiveLog.render(canvas, camera, 0);
                 
-        
-        if(localPlayer.isAlive()) {
+        boolean isPlayerAlive = localPlayer.isAlive();
+        if(isPlayerAlive) {
             ClientPlayerEntity ent = localPlayer.getEntity();
             ClientWeapon weapon = ent.getWeapon();
             
@@ -335,26 +354,37 @@ public class Hud implements Renderable {
         
         drawSpectating(canvas);
         
-        if(isHoveringOverBomb) {
-            ClientTeam attackingTeam = game.getAttackingTeam();
-            if(attackingTeam != null) {
-                if(this.localPlayer.getTeam().equals(attackingTeam)) {
-                    drawPlantBombNotification(canvas);        
+        if(game.getGameType()==seventh.game.type.GameType.Type.OBJ && isPlayerAlive) {
+            ClientPlayerEntity ent = localPlayer.getEntity();
+            if(!ent.isOperatingVehicle()) {
+                ClientTeam attackingTeam = game.getAttackingTeam();
+                boolean isAttacker = false; 
+                
+                if(attackingTeam!=null) {
+                    isAttacker = this.localPlayer.getTeam().equals(attackingTeam);
                 }
-                else {
-                    drawDefuseBombNotification(canvas);
+                
+                if(isHoveringOverBomb) {                
+                    if(isAttacker) {
+                        drawPlantBombNotification(canvas);        
+                    }
+                    else {
+                        drawDefuseBombNotification(canvas);
+                    }
                 }
-            }
             
+                //drawObjectiveStance(canvas, isAttacker);           
+                drawBombProgressBar(canvas, camera);
+            }
         }
         
-        
-        
-        
-        drawBombProgressBar(canvas, camera);
+        drawPickupWeaponNotication(canvas);
+        drawEnterVehicleNotication(canvas);
             
-        drawMemoryUsage(canvas);
-        drawNetworkUsage(canvas);
+        if(this.config.showDebugInfo()) {
+            drawMemoryUsage(canvas);
+            drawNetworkUsage(canvas);
+        }
     }
     
     private void drawWeaponIcons(Canvas canvas, Camera camera, ClientWeapon weapon) {
@@ -613,9 +643,41 @@ public class Hud implements Renderable {
         KeyMap keyMap = app.getKeyMap();
         String action = isAttacking ? "plant" : "defuse";
         String text = "Hold the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to " + action + " the bomb.";
-        
+        drawMessage(canvas, text);
+    }
+    
+    private void drawEnterVehicleNotication(Canvas canvas) {
+
+        if(game.isNearVehicle(this.localPlayer.getEntity())) {
+            KeyMap keyMap = app.getKeyMap();            
+            String text = "Hold the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to enter the vehicle";
+            drawMessage(canvas, text);    
+        }
+    }
+    
+    private void drawPickupWeaponNotication(Canvas canvas) {
+
+        if(game.isNearDroppedItem(this.localPlayer.getEntity())) {
+            KeyMap keyMap = app.getKeyMap();            
+            String text = "Press the '" + keyMap.keyString(keyMap.getDropWeaponKey()) +"' key to swap weapons";
+            drawMessage(canvas, text);    
+        }
+    }
+    
+    private void drawMessage(Canvas canvas, String text) {
         canvas.setFont("Consola", 18);
         int width = canvas.getWidth(text);
         RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);
     }
+    
+//    private void drawObjectiveStance(Canvas canvas, boolean isAttacking) {
+//        int defaultColor = 0xffffffff;
+//        ClientTeam localTeam = game.getLocalPlayer().getTeam();
+//        int teamColor = (localTeam!=null) ? localTeam.getColor() : defaultColor;
+//        
+//        //isAttacking = false;
+//        TextureRegion tex = isAttacking ? Art.attackerIcon : Art.defenderIcon;
+//        canvas.drawScaledImage(tex, 380 - (tex.getRegionWidth()/2), canvas.getHeight() - tex.getRegionHeight() + 15, 45, 45, teamColor);
+//        
+//    }
 }

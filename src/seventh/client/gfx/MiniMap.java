@@ -20,6 +20,7 @@ import seventh.game.weapons.Weapon.State;
 import seventh.map.Layer;
 import seventh.map.Map;
 import seventh.map.Tile;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -35,12 +36,15 @@ public class MiniMap implements Renderable {
     private TextureRegion miniMap;
     private long gameClock;    
     private int mapColor;
+    private Rectangle bounds;
     
     /**
      */
     public MiniMap(ClientGame game) {
         this.game = game;
         Map map = game.getMap();
+    
+        this.bounds = new Rectangle();
         
         int size = 10;
         
@@ -95,7 +99,19 @@ public class MiniMap implements Renderable {
         this.miniMap.flip(false, true);
         
         this.mapColor = 0xff_ff_ff_ff;
+        this.bounds.setSize(this.miniMap.getRegionWidth(), this.miniMap.getRegionHeight());
         
+    }
+    
+    /**
+     * If the supplied coordinates touches the minimap.
+     * 
+     * @param x
+     * @param y
+     * @return true if the coordinates are contained withing the mini map area
+     */
+    public boolean intersectsMiniMap(float x, float y) {
+        return this.bounds.contains( (int)x, (int)y);
     }
     
     /**

@@ -87,7 +87,7 @@ public class ClientBullet extends ClientEntity {
         nextState = null;
         
         iterations = 0;
-        
+
         trailEffect.reset();
         
 //        trailEffect = Emitters.newBulletTracerEmitter(pos.createClone(), 10_000)
@@ -111,7 +111,7 @@ public class ClientBullet extends ClientEntity {
      */
     @Override
     public boolean killIfOutdated(long gameClock) {    
-        return (gameClock - lastUpdate) > 800;
+        return (gameClock - lastUpdate) > 450; // 800                
     }
     
     /**

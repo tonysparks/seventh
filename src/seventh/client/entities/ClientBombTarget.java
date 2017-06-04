@@ -49,6 +49,8 @@ public class ClientBombTarget extends ClientEntity {
         
         emitSound = new Timer(true, 3_000);
         emitSound.start();
+
+        zOrder = 0;
         
         setOnRemove(new OnRemove() {
             

@@ -619,8 +619,8 @@ public class SeventhGame implements ApplicationListener {
     
     private void updateInputs(Screen previousScreen) {
     
-        if(previousScreen != null) {            
-            this.inputs.removeProcessor(previousScreen.getInputs());
+        if(previousScreen != null) {                        
+            removeInput(previousScreen.getInputs());
         }
         
         Screen screen = this.sm.getCurrentState();
@@ -635,8 +635,9 @@ public class SeventhGame implements ApplicationListener {
      * Adds an input listener
      * @param inputs
      */
-    public void addInput(Inputs inputs) {
-        this.inputs.addProcessor(inputs);
+    public void addInput(Inputs inputs) {        
+        this.inputs.removeProcessor(inputs);
+        this.inputs.addProcessor(inputs);       
     }
     
     /**
@@ -644,7 +645,8 @@ public class SeventhGame implements ApplicationListener {
      * @param inputs
      */
     public void addInputToFront(Inputs inputs) {
-        this.inputs.addProcessor(0, inputs);
+        this.inputs.removeProcessor(inputs);
+        this.inputs.addProcessor(0, inputs);        
     }
     
     /**
@@ -652,7 +654,7 @@ public class SeventhGame implements ApplicationListener {
      * @param inputs
      */
     public void removeInput(Inputs inputs) {
-        this.inputs.removeProcessor(inputs);
+        this.inputs.removeProcessor(inputs);        
     }
     
     /* (non-Javadoc)

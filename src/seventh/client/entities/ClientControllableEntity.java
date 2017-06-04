@@ -197,11 +197,12 @@ public abstract class ClientControllableEntity extends ClientEntity {
         for(int i = 0; i < vehicles.size(); i++) {
             ClientVehicle v = vehicles.get(i);
             if(v.isRelativelyUpdated()) {
-                //if(v.touches()
+                if(v.isTouching(bounds)) {
+                    return true;
+                }
             }
         }
         
-        // TODO: Doors, vehicles
         List<ClientDoor> doors = game.getDoors();
         for(int i = 0; i < doors.size(); i++) {
             ClientDoor door = doors.get(i);

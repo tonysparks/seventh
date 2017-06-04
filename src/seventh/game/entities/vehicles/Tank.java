@@ -96,8 +96,8 @@ public class Tank extends Vehicle {
         this.netTank = new NetTank(type);
         this.netTank.id = getId();
         
-        this.blowupTimer = new Timer(false, 3_000);
-        this.explosionTimer = new Timer(true, 500);
+        this.blowupTimer = new Timer(false, 3_800);
+        this.explosionTimer = new Timer(true, 450);
         this.isDying = false;
         
         this.stopEase = new EaseInInterpolation(WeaponConstants.TANK_MOVEMENT_SPEED, 0f, 800);
@@ -318,8 +318,7 @@ public class Tank extends Vehicle {
             this.explosionTimer.update(timeStep);
             
             if(this.explosionTimer.isTime()) {
-                game.newBigExplosion(getCenterPos(), this, 20, 50, 100);
-                game.newBigExplosion(getPos(), this, 20, 50, 100);
+                game.newBigExplosion(getCenterPos(), this, 20, 80, 100);
             }
             
             if(this.blowupTimer.isTime()) {

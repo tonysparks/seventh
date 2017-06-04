@@ -82,6 +82,13 @@ public class Art {
     public static  TextureRegion pistolIcon = null;
     public static  TextureRegion riskerIcon = null;
     public static  TextureRegion flameThrowerIcon = null;
+
+    public static  TextureRegion tdmIcon = null;
+    public static  TextureRegion ctfIcon = null;
+    public static  TextureRegion objIcon = null;
+    
+    public static  TextureRegion attackerIcon = null;
+    public static  TextureRegion defenderIcon = null;
     
     private static TextureRegion[] explosionImage = null;
     private static TextureRegion[] fireImage = null;
@@ -334,6 +341,14 @@ public class Art {
         
         alliedIcon = loadImage("./assets/gfx/ui/allied_icon.png");
         axisIcon = loadImage("./assets/gfx/ui/axis_icon.png");
+        
+        tdmIcon = loadImage("./assets/gfx/ui/tdm_icon.png");
+        ctfIcon = loadImage("./assets/gfx/ui/ctf_icon.png");
+        objIcon = loadImage("./assets/gfx/ui/obj_icon.png");
+        
+        attackerIcon = loadImage("./assets/gfx/ui/attacker_icon.png");
+        defenderIcon = loadImage("./assets/gfx/ui/defender_icon.png");
+        
         
         doorImg = loadImage("./assets/gfx/entities/door.png");
     }

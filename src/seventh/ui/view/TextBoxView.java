@@ -98,7 +98,7 @@ public class TextBoxView implements Renderable {
             if(showCursor && textBox.hasFocus()) 
             {
                 String text = textBox.getText();
-                int textWidth = renderer.getWidth(text.substring(0, textBox.getCursorIndex()));
+                int textWidth = renderer.getWidth(text.substring(0, textBox.getCursorIndex())) + 5;
                 renderer.setFont(textBox.getTextLabel().getFont(), (int)textBox.getTextLabel().getTextSize());
                 RenderFont.drawShadedString(renderer, "_", lbounds.x + textWidth, lbounds.y + renderer.getHeight("W"), textBox.getForegroundColor());
             }

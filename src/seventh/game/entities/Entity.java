@@ -473,6 +473,13 @@ public abstract class Entity implements Debugable {
     }
     
     /**
+     * @return true if this entity is at max health
+     */
+    public boolean isAtMaxHealth() {
+        return this.health >= this.maxHealth;
+    }
+    
+    /**
      * @return the maxHealth
      */
     public int getMaxHealth() {

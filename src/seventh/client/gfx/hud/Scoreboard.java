@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientTeam;
@@ -100,6 +102,10 @@ public class Scoreboard {
         for(ClientPlayer player : team) {
             y += 30;
             
+            if(player == game.getLocalPlayer()) {
+                canvas.fillRect(x, y-20, 800, 30, 0x5fffffff);
+            }
+            
             String output = String.format("%-33s %-13d %-13d %-13d", player.getName(),player.getKills(),player.getDeaths(), player.getPing());
             RenderFont.drawShadedString(canvas, output, x, y, 0xffffffff );
             if(!player.isAlive()) {
@@ -123,11 +129,33 @@ public class Scoreboard {
                 
         int yIncBig = 50;
         int y = 140;
-        int x = 60;    
+        int x = 90;    
         
         setBigFont(canvas);
         
         int defaultColor = 0xffffffff;
+        
+        ClientTeam localTeam = game.getLocalPlayer().getTeam();
+        int teamColor = (localTeam==ClientTeam.AXIS) ? ClientTeam.AXIS.getColor() : ClientTeam.ALLIES.getColor();
+        boolean isObjective = false;
+        
+        TextureRegion gameTypeIcon = Art.tdmIcon;
+        switch(game.getGameType()) {
+            case CTF:
+                gameTypeIcon = Art.ctfIcon;
+                break;
+            case OBJ:                
+                gameTypeIcon = Art.objIcon;
+                isObjective = true;
+                break;
+            case TDM:
+            default:
+                gameTypeIcon = Art.tdmIcon;
+                break;
+        }
+        
+        canvas.drawImage(gameTypeIcon, (canvas.getWidth()/2) - (gameTypeIcon.getRegionWidth()/2), gameTypeIcon.getRegionHeight()/2, teamColor);
+        
 
         RenderFont.drawShadedString(canvas, "Name                     Kills     Deaths     Ping", x, y, defaultColor);
         List<ClientPlayer> vals = game.getPlayers().asList();
@@ -177,6 +205,10 @@ public class Scoreboard {
                 canvas.fillCircle(14, x - 38, y - 18, 0xff000000);
                 canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
                 canvas.drawImage(Art.alliedIcon, x - 40, y - 20, null);
+                if(isObjective) {
+                    TextureRegion tex = game.getAttackingTeam()==ClientTeam.ALLIES ? Art.attackerIcon : Art.defenderIcon;
+                    canvas.drawScaledImage(tex, x - 80, y - 30, 45, 45, ClientTeam.ALLIES.getColor());
+                }
                 
                 RenderFont.drawShadedString(canvas, "Allies " + blueScore, x, y, ClientTeam.ALLIES.getColor());
                 y = drawTeam(canvas, teams.get(ClientTeam.ALLIES), x, y);
@@ -187,6 +219,10 @@ public class Scoreboard {
                 
                 canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
                 canvas.drawImage(Art.axisIcon, x - 40, y - 20, null);
+                if(isObjective) {
+                    TextureRegion tex = game.getAttackingTeam()==ClientTeam.AXIS ? Art.attackerIcon : Art.defenderIcon;
+                    canvas.drawScaledImage(tex, x - 80, y - 30, 45, 45, ClientTeam.AXIS.getColor());
+                }
                 
                 RenderFont.drawShadedString(canvas, "Axis " + redScore, x, y, ClientTeam.AXIS.getColor());
                 y = drawTeam(canvas, teams.get(ClientTeam.AXIS), x, y);
@@ -199,6 +235,10 @@ public class Scoreboard {
                 
                 canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
                 canvas.drawImage(Art.axisIcon, x - 40, y - 20, null);
+                if(isObjective) {
+                    TextureRegion tex = game.getAttackingTeam()==ClientTeam.AXIS? Art.attackerIcon : Art.defenderIcon;
+                    canvas.drawScaledImage(tex, x - 80, y - 30, 45, 45, ClientTeam.AXIS.getColor());
+                }
                 
                 RenderFont.drawShadedString(canvas, "Axis " + redScore, x, y, ClientTeam.AXIS.getColor());
                 y = drawTeam(canvas, teams.get(ClientTeam.AXIS), x, y);
@@ -210,6 +250,10 @@ public class Scoreboard {
                 canvas.fillCircle(14, x - 38, y - 18, 0xff000000);
                 canvas.fillCircle(13, x - 37, y - 17, 0xffffffff);
                 canvas.drawImage(Art.alliedIcon, x - 40, y - 20, null);
+                if(isObjective) {
+                    TextureRegion tex = game.getAttackingTeam()==ClientTeam.ALLIES ? Art.attackerIcon : Art.defenderIcon;
+                    canvas.drawScaledImage(tex, x - 80, y - 30, 45, 45, ClientTeam.ALLIES.getColor());
+                }
                 
                 //canvas.drawScaledImage(Art.axisIcon, x-32, y-16, 24, 24, null);
                 RenderFont.drawShadedString(canvas, "Allies " + blueScore, x, y, ClientTeam.ALLIES.getColor());
