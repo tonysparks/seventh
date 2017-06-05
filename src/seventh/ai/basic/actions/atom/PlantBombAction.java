@@ -81,20 +81,20 @@ public class PlantBombAction extends AdapterAction {
      */
     @Override
     public void update(Brain brain, TimeStep timeStep) {
-    	if (target == null){
-    		//do nothing
-    	}
-    	else if (target.bombActive()){
-    		getActionResult().setSuccess();
-    	}
-    	else {
-    		Locomotion motion = brain.getMotion();
-    		 if(!target.bombPlanting() || !motion.isPlanting()) {
-                 motion.plantBomb(target);	
-             }
-    		 getActionResult().setFailure(); 
-    	}
-	}
+       if (target == null){
+          //do nothing
+       }
+       else if (target.bombActive()){
+          getActionResult().setSuccess();
+       }
+       else {
+          Locomotion motion = brain.getMotion();
+          if(!target.bombPlanting() || !motion.isPlanting()) {
+             motion.plantBomb(target);
+          }
+          getActionResult().setFailure(); 
+       }
+    }
 
     /* (non-Javadoc)
      * @see seventh.ai.basic.actions.AdapterAction#isFinished()

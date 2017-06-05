@@ -49,27 +49,23 @@ public class InputMap extends Inputs {
     @Override
     public boolean scrolled(int notches) {    
         if(notches < 0) {
-        	scrollerAction(0);
+            if(this.scroller[0] != null) {
+                Action action = this.actions.get(scroller[0]);
+                if(action!=null) {
+                    action.action();                    
+                }
+            }
         }
         else {
-        	scrollerAction(1);
+            if(this.scroller[1] != null) {
+                Action action = this.actions.get(scroller[1]);
+                if(action!=null) {
+                    action.action();                    
+                }
+            }
         }
         return true;
     }
-    
-   
-    public void scrollerAction(int i){
-        if(this.scroller[i] != null) {
-            Action action = this.actions.get(scroller[i]);
-            isActionNull(action);
-        }
-    }
-    
-    public void isActionNull(Action action){
-        if(action != null)
-            action.action();
-    }
-    
 
     public void addAction(String name, Action action) {
         this.actions.put(name, action);
@@ -114,29 +110,6 @@ public class InputMap extends Inputs {
         this.povButtons[pov.ordinal()] = null;
     }
     
-    public void keyDownAction(Keys keys){
-        int key = keys.next();
-        if(isKeyDown(keys.next())) {
-            Action action = this.actions.get(this.keymap.get(key));
-            isActionNull(action);
-        }
-    }
-    
-    public void isButtonDownAction(Keys keys){
-        int button = keys.next();
-        if(isButtonDown(keys.next())) {
-            Action action = this.actions.get(this.buttonmap.get(button));
-            isActionNull(action);
-        }
-    }
-    
-    public void controlButtonDownAction(Keys keys){
-        int button = keys.next();
-        if(controllerInput.isButtonDown(keys.next())) {
-            Action action = this.actions.get(this.controllermap.get(button));
-            isActionNull(action);
-        }
-    }
     
     /**
      * Polls all input devices to see if a game action should take place
@@ -144,36 +117,50 @@ public class InputMap extends Inputs {
     public void pollInput() {
         Keys keys = this.keymap.keys();
         while(keys.hasNext) {
-        	keyDownAction(keys);
+            int key = keys.next();
+            if(isKeyDown(keys.next())) {
+                Action action = this.actions.get(this.keymap.get(key));
+                if(action!=null) {
+                    action.action();
+                }
+            }
         }
         
         keys = this.buttonmap.keys();
         while(keys.hasNext) {
-        	isButtonDownAction(keys);
+            int button = keys.next();
+            if(isButtonDown(keys.next())) {
+                Action action = this.actions.get(this.buttonmap.get(button));
+                if(action!=null) {
+                    action.action();
+                }
+            }
         }
         
         if(this.controllerInput.isConnected()) {
             keys = this.controllermap.keys();
             while(keys.hasNext) {
-            		controlButtonDownAction(keys);
+                int button = keys.next();
+                if(controllerInput.isButtonDown(keys.next())) {
+                    Action action = this.actions.get(this.controllermap.get(button));
+                    if(action!=null) {
+                        action.action();
+                    }
+                }
             }
             
             PovDirection[] dirs = PovDirection.values();
-            isPovDirectionDownAction(dirs);
-        }
-    }
-    
-    public void isPovDirectionDownAction(PovDirection[] dirs){
-        for(int i = 0; i < dirs.length; i++) {
-            if (controllerInput.isPovDirectionDown(dirs[i]) ) {
-                String name = povButtons[i];
-                if(name != null) {
-                    Action action = this.actions.get(name);
-                    if(action!=null) {
-                        action.action();
-                        break;
-                    }
-                }                    
+            for(int i = 0; i < dirs.length; i++) {
+                if (controllerInput.isPovDirectionDown(dirs[i]) ) {
+                    String name = povButtons[i];
+                    if(name != null) {
+                        Action action = this.actions.get(name);
+                        if(action!=null) {
+                            action.action();
+                            break;
+                        }
+                    }                    
+                }
             }
         }
     }
