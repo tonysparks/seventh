@@ -1452,7 +1452,7 @@ public class ClientGame {
         ClientPlayer player = players.getPlayer(msg.playerId);
         if(player != null) {
             
-            Type meansOfDeath = Type.fromNet(msg.deathType);
+            Type meansOfDeath = msg.deathType;
             Vector2f locationOfDeath = new Vector2f(msg.posX, msg.posY);
             
             ClientPlayerEntity entity = player.getEntity();

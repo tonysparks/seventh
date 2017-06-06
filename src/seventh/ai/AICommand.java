@@ -43,7 +43,7 @@ public class AICommand implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        BufferIO.write(buffer, message);
+        BufferIO.writeString(buffer, message);
     }
     
     /**

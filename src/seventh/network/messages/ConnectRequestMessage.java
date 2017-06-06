@@ -40,6 +40,6 @@ public class ConnectRequestMessage extends  AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        BufferIO.write(buffer, name);
+        BufferIO.writeString(buffer, name);
     }
 }

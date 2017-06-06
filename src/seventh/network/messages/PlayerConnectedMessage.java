@@ -38,6 +38,6 @@ public class PlayerConnectedMessage extends AbstractNetMessage {
     public void write(IOBuffer buffer) {    
         super.write(buffer);
         buffer.putUnsignedByte(playerId);
-        BufferIO.write(buffer, name != null ? name : "");
+        BufferIO.writeString(buffer, name != null ? name : "");
     }
 }

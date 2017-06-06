@@ -37,7 +37,7 @@ public class RconMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        this.command = BufferIO.readString(buffer);
+        this.command = BufferIO.readBigString(buffer);
     }
     
     /* (non-Javadoc)
@@ -46,7 +46,7 @@ public class RconMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        BufferIO.write(buffer, command);
+        BufferIO.writeBigString(buffer, command);
     }
     
     /**

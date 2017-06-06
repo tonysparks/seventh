@@ -37,6 +37,6 @@ public class TextMessage extends AbstractNetMessage {
     public void write(IOBuffer buffer) {    
         super.write(buffer);
         buffer.putUnsignedByte(playerId);
-        BufferIO.write(buffer, message);
+        BufferIO.writeString(buffer, message);
     }
 }

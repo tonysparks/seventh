@@ -31,7 +31,7 @@ public class NetPlayerStat implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        playerId = buffer.getUnsignedByte();
+        playerId = BufferIO.readPlayerId(buffer);
         name = BufferIO.readString(buffer);
         kills = buffer.getShort();
         deaths = buffer.getShort();
@@ -48,8 +48,8 @@ public class NetPlayerStat implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        buffer.putUnsignedByte(playerId);
-        BufferIO.write(buffer, name != null ? name : "");
+        BufferIO.writePlayerId(buffer, playerId);
+        BufferIO.writeString(buffer, name != null ? name : "");
         buffer.putShort(kills);
         buffer.putShort(deaths);
         buffer.putShort(ping);

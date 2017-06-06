@@ -237,7 +237,7 @@ public class BufferIO {
         return v;
     }
     
-    public static void write(IOBuffer buffer, String str) {
+    public static void writeString(IOBuffer buffer, String str) {
         
         byte[] chars = str.getBytes();
         int len = chars.length;
@@ -257,12 +257,32 @@ public class BufferIO {
         return new String(chars);
     }
     
+    public static void writeBigString(IOBuffer buffer, String str) {
+        
+        byte[] chars = str.getBytes();
+        int len = chars.length;
+        buffer.putShort( (short)len);
+        for(byte i = 0; i < len; i++) {
+            buffer.put(chars[i]);
+        }        
+    }
+    
+    public static String readBigString(IOBuffer buffer) {
+        int len = buffer.getShort();
+        byte[] chars = new byte[len];
+        for(byte i = 0; i < len; i++) {
+            chars[i] = buffer.get();
+        }
+        
+        return new String(chars);
+    }
+    
     public static NetEntity readEntity(IOBuffer buffer) {
         NetEntity result = null;
         
-        byte type = buffer.getByteBits(6);
+        byte type = buffer.getByteBits(Type.numOfBits());
         /* so the entity can re-read the type */
-        buffer.bitPosition(buffer.bitPosition() - 6);
+        buffer.bitPosition(buffer.bitPosition() - Type.numOfBits());
         
         Type entType = Type.fromNet(type);
         switch(entType) {
