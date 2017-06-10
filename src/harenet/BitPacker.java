@@ -5,7 +5,6 @@ package harenet;
 
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
-import java.util.BitSet;
 
 /**
  * Special thanks to: http://www.shadebob.org/posts/bit-packing-in-java
@@ -16,7 +15,7 @@ import java.util.BitSet;
  */
 public class BitPacker {
 
-    private BitSet data;
+    private BitArray data;
     private int numBits;   
     private int position;
     private int mark;
@@ -26,7 +25,7 @@ public class BitPacker {
      * @param initialSizeInBits the initial size of the bit set
      */
     public BitPacker(int initialSizeInBits, int limit) {
-        this.data = new BitSet(initialSizeInBits);
+        this.data = new BitArray(initialSizeInBits);
         this.numBits = 0;
         this.position = 0;
         this.mark = 0;
@@ -175,11 +174,17 @@ public class BitPacker {
         pad();
         
         int numberOfBytes = getNumberOfBytes();
-
         for (int i = 0; i < numberOfBytes; i++) {
             buffer.put(getByte());
         }
+        /*
+        byte[] bytes = data.getData();
+        for (int i = 0; i < bytes.length; i++) {
+            buffer.put(bytes[i]);
+        }
 
+        this.position += bytes.length * 8;
+        */
         return this;
     }
     
@@ -189,11 +194,19 @@ public class BitPacker {
      * @param buffer
      * @return this object for method chaining
      */
-    public BitPacker readFrom(ByteBuffer buffer) {        
+    public BitPacker readFrom(ByteBuffer buffer) {                
+        /*int remaining = buffer.remaining();
+        if(remaining < data.numberOfBytes()) {
+            for(int i = 0; i < remaining; i++) {
+                data.setDataElement(i, buffer.get());
+            }   
+        }
         
+        this.position += remaining * 8;        
+        */
         while(buffer.hasRemaining()) {
             putByte(buffer.get());
-        }        
+        }
         
         return this;
     }
@@ -206,10 +219,10 @@ public class BitPacker {
         for (int i = 0; i < numberOfBits; i++) {
 
             if (((value >> i) & 1) == 1) {
-                data.set(position++, true);
+                data.setBit(position++, true);
             }
             else {
-                data.set(position++, false);
+                data.setBit(position++, false);
             }
         }
         
@@ -335,7 +348,7 @@ public class BitPacker {
             throw new BufferOverflowException();
         }
         
-        data.set(numBits++, value);
+        data.setBit(numBits++, value);
         this.position++;
         return this;
     }
@@ -345,7 +358,7 @@ public class BitPacker {
             throw new BufferOverflowException();
         }
         
-        data.set(position, value);
+        data.setBit(position, value);
         if(position==numBits+1) {
             numBits++;            
         }
@@ -391,7 +404,7 @@ public class BitPacker {
         byte value = 0;
 
         for (int i = 0; i < length; i++) {
-            value |= (data.get(position++) ? 1 : 0) << (i % Byte.SIZE);
+            value |= (data.getBit(position++) ? 1 : 0) << (i % Byte.SIZE);
         }
 
         return value;
@@ -406,7 +419,7 @@ public class BitPacker {
         short value = 0;
 
         for (int i = 0; i < length; i++) {
-            value |= (data.get(position++) ? 1 : 0) << (i % Short.SIZE);
+            value |= (data.getBit(position++) ? 1 : 0) << (i % Short.SIZE);
         }
 
         return value;
@@ -422,7 +435,7 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.get(position++) ? 1 : 0) << (i % Integer.SIZE);
+            value |= (data.getBit(position++) ? 1 : 0) << (i % Integer.SIZE);
         }
 
         return value;
@@ -438,7 +451,7 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.get(position++) ? 1 : 0) << (i % Long.SIZE);
+            value |= (data.getBit(position++) ? 1 : 0) << (i % Long.SIZE);
         }
 
         return value;
@@ -454,7 +467,7 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.get(position++) ? 1 : 0) << (i % Float.SIZE);
+            value |= (data.getBit(position++) ? 1 : 0) << (i % Float.SIZE);
         }
 
         return Float.intBitsToFloat(value);
@@ -470,7 +483,7 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.get(position++) ? 1 : 0) << (i % Double.SIZE);
+            value |= (data.getBit(position++) ? 1 : 0) << (i % Double.SIZE);
         }
 
         return Double.doubleToLongBits(value);
@@ -478,7 +491,7 @@ public class BitPacker {
 
     public boolean getBoolean() {
         checkPosition();
-        return data.get(position++);
+        return data.getBit(position++);
     }
 
     public byte[] getBytes(int length) {
@@ -558,7 +571,7 @@ public class BitPacker {
         int count = 0;
 
         for (int i = 0; i < numBits; i++) {
-            System.out.print(data.get(i) ? "1" : "0");
+            System.out.print(data.getBit(i) ? "1" : "0");
             if ((i != 0) && (i % 8 == 7)) {
                 System.out.print(" ");
                 count++;

@@ -43,7 +43,7 @@ public class ByteBufferIOBufferTest {
             
     
             writeBuffer.putInt(attempts);
-            writeBuffer.put( (byte) 5);
+            writeBuffer.putByte( (byte) 5);
             writeBuffer.putByteBits( (byte)12, 6);
             writeBuffer.putInt(attempts);
             
@@ -83,7 +83,7 @@ public class ByteBufferIOBufferTest {
     
     
             assertEquals(attempts, readBuffer.getInt());
-            assertEquals( (byte) 5, readBuffer.get());
+            assertEquals( (byte) 5, readBuffer.getByte());
             assertEquals( (byte) 12, readBuffer.getByteBits(6));
             assertEquals(attempts, readBuffer.getInt());
         }

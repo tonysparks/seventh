@@ -115,7 +115,7 @@ public interface IOBuffer {
      * @throws  BufferUnderflowException
      *          If the buffer's current position is not smaller than its limit
      */
-    public abstract byte get();
+    public abstract byte getByte();
     
     
     public abstract int getUnsignedByte();
@@ -138,7 +138,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer put(byte b);
+    public abstract IOBuffer putByte(byte b);
 
     /**
      * Absolute <i>get</i> method.  Reads the byte at the given
@@ -153,7 +153,7 @@ public interface IOBuffer {
      *          If <tt>index</tt> is negative
      *          or not smaller than the buffer's limit
      */
-    public abstract byte get(int index);
+    public abstract byte getByte(int index);
 
     /**
      * Absolute <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
@@ -176,7 +176,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer put(int index, byte b);
+    public abstract IOBuffer putByte(int index, byte b);
 
 
     // -- Bulk get operations --
@@ -230,7 +230,7 @@ public interface IOBuffer {
      *          If the preconditions on the <tt>offset</tt> and <tt>length</tt>
      *          parameters do not hold
      */
-    public IOBuffer get(byte[] dst, int offset, int length);
+    public IOBuffer getBytes(byte[] dst, int offset, int length);
 
     /**
      * Relative bulk <i>get</i> method.
@@ -248,7 +248,7 @@ public interface IOBuffer {
      *          If there are fewer than <tt>length</tt> bytes
      *          remaining in this buffer
      */
-    public IOBuffer get(byte[] dst);
+    public IOBuffer getBytes(byte[] dst);
 
 
     // -- Bulk put operations --
@@ -345,7 +345,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public IOBuffer put(byte[] src, int offset, int length);
+    public IOBuffer putBytes(byte[] src, int offset, int length);
 
     /**
      * Relative bulk <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
@@ -366,7 +366,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public IOBuffer put(byte[] src);
+    public IOBuffer putBytes(byte[] src);
 
 
     // -- Other stuff --

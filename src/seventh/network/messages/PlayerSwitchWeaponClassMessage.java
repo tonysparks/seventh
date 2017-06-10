@@ -26,7 +26,7 @@ public class PlayerSwitchWeaponClassMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        weaponType = buffer.get();
+        weaponType = buffer.getByte();
     }
     
     /* (non-Javadoc)
@@ -35,6 +35,6 @@ public class PlayerSwitchWeaponClassMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.put(weaponType);
+        buffer.putByte(weaponType);
     }
 }

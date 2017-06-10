@@ -29,7 +29,7 @@ public class PlayerCommanderMessage extends AbstractNetMessage {
     public void read(IOBuffer buffer) {    
         super.read(buffer);
         playerId = buffer.getUnsignedByte();
-        isCommander = (buffer.get() > 0);
+        isCommander = (buffer.getByte() > 0);
     }
     
     /* (non-Javadoc)
@@ -39,6 +39,6 @@ public class PlayerCommanderMessage extends AbstractNetMessage {
     public void write(IOBuffer buffer) {    
         super.write(buffer);
         buffer.putUnsignedByte(playerId);
-        buffer.put(isCommander ? (byte)1 : (byte)0);
+        buffer.putByte(isCommander ? (byte)1 : (byte)0);
     }
 }

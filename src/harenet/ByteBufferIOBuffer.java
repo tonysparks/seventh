@@ -117,7 +117,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get()
      */
     @Override
-    public byte get() {
+    public byte getByte() {
         return packer.getByte();
     }
     
@@ -134,7 +134,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte)
      */
     @Override
-    public IOBuffer put(byte b) {        
+    public IOBuffer putByte(byte b) {        
         packer.putByte(b);
         return this;
     }
@@ -143,7 +143,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(int)
      */
     @Override
-    public byte get(int index) {
+    public byte getByte(int index) {
         packer.mark();
         packer.position(index * 8);
         byte result = packer.getByte();
@@ -155,7 +155,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(int, byte)
      */
     @Override
-    public IOBuffer put(int index, byte b) {
+    public IOBuffer putByte(int index, byte b) {
         packer.putBits(index * 8, b, Byte.SIZE);
         return this;
     }
@@ -164,7 +164,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(byte[], int, int)
      */
     @Override
-    public IOBuffer get(byte[] dst, int offset, int length) {
+    public IOBuffer getBytes(byte[] dst, int offset, int length) {
         packer.getBytes(dst, offset, length);
         return this;
     }
@@ -173,7 +173,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(byte[])
      */
     @Override
-    public IOBuffer get(byte[] dst) {
+    public IOBuffer getBytes(byte[] dst) {
         packer.getBytes(dst, 0, dst.length);
         return this;
     }
@@ -195,7 +195,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte[], int, int)
      */
     @Override
-    public IOBuffer put(byte[] src, int offset, int length) {
+    public IOBuffer putBytes(byte[] src, int offset, int length) {
         //buffer.put(src, offset, length);
         packer.putBytes(src, offset, length);
         return this;
@@ -205,7 +205,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte[])
      */
     @Override
-    public IOBuffer put(byte[] src) {
+    public IOBuffer putBytes(byte[] src) {
         packer.putBytes(src);
         return this;
     }

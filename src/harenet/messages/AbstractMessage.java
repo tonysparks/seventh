@@ -55,7 +55,7 @@ public abstract class AbstractMessage implements Message {
      */
     @Override
     public void writeTo(IOBuffer buffer) {
-        buffer.put(type);
+        buffer.putByte(type);
         
         writeHeader(buffer);
         

@@ -95,7 +95,7 @@ public class BufferIO {
         public NetMessage readNetMessage(IOBuffer buffer) {
             NetMessage message = null;
                             
-            byte type = buffer.get();
+            byte type = buffer.getByte();
             switch(type) {
                 case BOMB_DIARMED: message = new BombDisarmedMessage();
                     break;
@@ -243,7 +243,7 @@ public class BufferIO {
         int len = chars.length;
         buffer.putUnsignedByte(len);
         for(byte i = 0; i < len; i++) {
-            buffer.put(chars[i]);
+            buffer.putByte(chars[i]);
         }        
     }
     
@@ -251,7 +251,7 @@ public class BufferIO {
         int len = buffer.getUnsignedByte();
         byte[] chars = new byte[len];
         for(byte i = 0; i < len; i++) {
-            chars[i] = buffer.get();
+            chars[i] = buffer.getByte();
         }
         
         return new String(chars);
@@ -263,7 +263,7 @@ public class BufferIO {
         int len = chars.length;
         buffer.putShort( (short)len);
         for(byte i = 0; i < len; i++) {
-            buffer.put(chars[i]);
+            buffer.putByte(chars[i]);
         }        
     }
     
@@ -271,7 +271,7 @@ public class BufferIO {
         int len = buffer.getShort();
         byte[] chars = new byte[len];
         for(byte i = 0; i < len; i++) {
-            chars[i] = buffer.get();
+            chars[i] = buffer.getByte();
         }
         
         return new String(chars);

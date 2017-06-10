@@ -42,11 +42,11 @@ public class NetTank extends NetVehicle {
     public void read(IOBuffer buffer) {    
         super.read(buffer);
         
-        state = buffer.get();
+        state = buffer.getByte();
         orientation = BufferIO.readAngle(buffer);
         turretOrientation = BufferIO.readAngle(buffer);
-        primaryWeaponState = buffer.get();
-        secondaryWeaponState = buffer.get();
+        primaryWeaponState = buffer.getByte();
+        secondaryWeaponState = buffer.getByte();
         operatorId = buffer.getUnsignedByte();
     }
     
@@ -57,12 +57,12 @@ public class NetTank extends NetVehicle {
     public void write(IOBuffer buffer) {    
         super.write(buffer);
         
-        buffer.put(state);
+        buffer.putByte(state);
         BufferIO.writeAngle(buffer, orientation);
         BufferIO.writeAngle(buffer, turretOrientation);
         
-        buffer.put(primaryWeaponState);
-        buffer.put(secondaryWeaponState);
+        buffer.putByte(primaryWeaponState);
+        buffer.putByte(secondaryWeaponState);
         buffer.putUnsignedByte(operatorId);
     }
 }

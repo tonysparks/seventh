@@ -27,11 +27,11 @@ public class NetTeam implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        bits = buffer.get();
-        id = buffer.get();
+        bits = buffer.getByte();
+        id = buffer.getByte();
         
         if((bits & HAS_PLAYERS) != 0) {
-            byte len = buffer.get();
+            byte len = buffer.getByte();
             playerIds = new int[len];
             for(byte i = 0; i < len; i++) {
                 playerIds[i] = buffer.getUnsignedByte();
@@ -62,11 +62,11 @@ public class NetTeam implements NetMessage {
             bits |= IS_DEFENDER;
         }
         
-        buffer.put(bits);
-        buffer.put(id);
+        buffer.putByte(bits);
+        buffer.putByte(id);
         
         if( (bits & HAS_PLAYERS) != 0 ) {
-            buffer.put( (byte)playerIds.length);
+            buffer.putByte( (byte)playerIds.length);
             for(int i = 0; i < playerIds.length; i++) {
                 buffer.putUnsignedByte(playerIds[i]);
             }

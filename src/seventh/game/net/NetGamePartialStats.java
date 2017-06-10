@@ -19,7 +19,7 @@ public class NetGamePartialStats implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        byte len = buffer.get();
+        byte len = buffer.getByte();
         if(len > 0) {
             playerStats = new NetPlayerPartialStat[len];
             for(byte i = 0; i < len; i++) {
@@ -28,7 +28,7 @@ public class NetGamePartialStats implements NetMessage {
             }
         }
         
-        len = buffer.get();
+        len = buffer.getByte();
         if( len > 0 ) {
             teamStats = new NetTeamStat[len];
             for(byte i = 0; i < len; i++) {
@@ -46,24 +46,24 @@ public class NetGamePartialStats implements NetMessage {
     public void write(IOBuffer buffer) {
         if(playerStats != null) {
             byte len = (byte)playerStats.length;
-            buffer.put(len);
+            buffer.putByte(len);
             for(byte i = 0; i < len; i++) {
                 playerStats[i].write(buffer);
             }
         }
         else {
-            buffer.put( (byte)0 );
+            buffer.putByte( (byte)0 );
         }
         
         if ( teamStats != null ) {
             byte len = (byte)teamStats.length;
-            buffer.put(len);
+            buffer.putByte(len);
             for(byte i = 0; i < len; i++) {
                 teamStats[i].write(buffer);
             }
         }
         else {
-            buffer.put( (byte)0 );
+            buffer.putByte( (byte)0 );
         }
         
     }

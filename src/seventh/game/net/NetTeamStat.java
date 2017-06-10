@@ -19,7 +19,7 @@ public class NetTeamStat implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        id = buffer.get();
+        id = buffer.getByte();
         score = buffer.getShort();
     }
     
@@ -28,7 +28,7 @@ public class NetTeamStat implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        buffer.put(id);
+        buffer.putByte(id);
         buffer.putShort(score);
     }
 }

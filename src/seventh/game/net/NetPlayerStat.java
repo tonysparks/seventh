@@ -37,8 +37,8 @@ public class NetPlayerStat implements NetMessage {
         deaths = buffer.getShort();
         ping = buffer.getShort();
         joinTime = buffer.getInt();
-        teamId = buffer.get();
-        flags = buffer.get();
+        teamId = buffer.getByte();
+        flags = buffer.getByte();
         isBot = ((flags & IS_BOT) != 0);
         isCommander = ((flags & IS_COMMANDER) != 0);        
     }
@@ -54,7 +54,7 @@ public class NetPlayerStat implements NetMessage {
         buffer.putShort(deaths);
         buffer.putShort(ping);
         buffer.putInt(joinTime);
-        buffer.put(teamId);
+        buffer.putByte(teamId);
         
         if(isBot) {
             flags |= IS_BOT;
@@ -64,6 +64,6 @@ public class NetPlayerStat implements NetMessage {
             flags |= IS_COMMANDER;
         }
         
-        buffer.put(flags);
+        buffer.putByte(flags);
     }
 }

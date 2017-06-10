@@ -28,7 +28,7 @@ public class PlayerSwitchTeamMessage extends AbstractNetMessage {
     public void read(IOBuffer buffer) {    
         super.read(buffer);
         playerId = buffer.getUnsignedByte();
-        teamId = buffer.get();
+        teamId = buffer.getByte();
     }
     
     /* (non-Javadoc)
@@ -38,6 +38,6 @@ public class PlayerSwitchTeamMessage extends AbstractNetMessage {
     public void write(IOBuffer buffer) {    
         super.write(buffer);
         buffer.putUnsignedByte(playerId);
-        buffer.put(teamId);
+        buffer.putByte(teamId);
     }
 }

@@ -62,7 +62,7 @@ public class NetPlayer extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        bits = buffer.get();
+        bits = buffer.getByte();
         
         orientation = BufferIO.readAngle(buffer);
         state = BufferIO.readState(buffer);
@@ -94,7 +94,7 @@ public class NetPlayer extends NetEntity {
         
         bits = 0;
         checkBits();
-        buffer.put(bits);
+        buffer.putByte(bits);
         
         BufferIO.writeAngle(buffer, orientation);
         BufferIO.writeState(buffer, state);

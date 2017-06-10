@@ -35,7 +35,7 @@ public class AbstractNetMessage implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        buffer.put(type);
+        buffer.putByte(type);
     }
 
 }

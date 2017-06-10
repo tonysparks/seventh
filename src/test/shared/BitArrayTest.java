@@ -1,10 +1,12 @@
 package test.shared;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import seventh.shared.BitArray;
+import harenet.BitArray;
 
 public class BitArrayTest {
 	/*
@@ -26,7 +28,7 @@ public class BitArrayTest {
 	@Test
 	public void testsetDataElement(){
 		BitArray test = new BitArray(33);
-		test.setDataElement(0, 0);
+		test.setDataElement(0, (byte)0);
 		assertTrue(test.getData()[0]==0);
 	}
 	
@@ -66,17 +68,7 @@ public class BitArrayTest {
 		assertTrue(test.getData()[0]==0xFFffFFff);
 	}
 	
-	/*
-	 * purpose : test numberOfInts function coverage in BitArray class.
-	 * input : integer 32 on class creation.
-	 * output : data.length == 2
-	 */
-	@Test
-	public void testnumberOfInts(){
-		BitArray test = new BitArray(32);
-		assertTrue(test.numberOfInts()==2);
-	}
-	
+		
 	/*
 	 * purpose : test numberOfBytes function coverage in BitArray class.
 	 * input : integer 32 on class creation.
@@ -85,7 +77,7 @@ public class BitArrayTest {
 	@Test
 	public void testnumberOfBytes(){
 		BitArray test = new BitArray(32);
-		assertTrue(test.numberOfBytes()==8);
+		assertTrue(test.numberOfBytes()==4);
 	}
 	
 	/*
@@ -96,7 +88,7 @@ public class BitArrayTest {
 	@Test
 	public void testsize(){
 		BitArray test = new BitArray(32);
-		assertTrue(test.size()==2*32);
+		assertTrue(test.size()==32);
 	}
 	
 	/*
@@ -122,7 +114,7 @@ public class BitArrayTest {
 	@Test
 	public void testsetBit(){
 		BitArray test = new BitArray(32);
-		test.setBit(32);
+		test.setBit(31);
 		assertTrue(test.getData()[0]==0);
 	}
 	
@@ -137,9 +129,51 @@ public class BitArrayTest {
 	public void testgetBit(){
 		BitArray test = new BitArray(32);
 		test.getData()[0]=1;
-		assertTrue(test.getBit(32)==false);
+		assertTrue(test.getBit(31)==false);
 		assertTrue(test.getBit(0)==true);
 		
+	}
+	
+	@Test
+	public void testSetBit() {
+	    BitArray test = new BitArray(32);
+	    assertFalse(test.getBit(4));
+        test.setBit(4, true);
+        assertTrue(test.getBit(4));
+        test.setBit(4, false);
+        assertFalse(test.getBit(4));
+        for(int i = 0; i < test.size(); i++) {
+            assertFalse(test.getBit(i));    
+        }
+        
+        test.setBit(4, true);
+        assertTrue(test.getBit(4));
+        for(int i = 0; i < test.size(); i++) {
+            if(i!=4) {
+                assertFalse(test.getBit(i));
+            }
+        }
+	}
+	
+	@Test
+	public void testSize() {
+	    BitArray array = new BitArray(33);
+	    assertEquals(5, array.numberOfBytes());
+	    
+	    array = new BitArray(31);
+        assertEquals(4, array.numberOfBytes());
+        
+        array = new BitArray(1500);
+        assertEquals(188, array.numberOfBytes());
+        
+        array = new BitArray(255);
+        assertEquals(32, array.numberOfBytes());
+        
+        array = new BitArray(256);
+        assertEquals(32, array.numberOfBytes());
+        
+        array = new BitArray(64);
+        assertEquals(8, array.numberOfBytes());
 	}
 
 }

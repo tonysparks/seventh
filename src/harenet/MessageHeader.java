@@ -47,7 +47,7 @@ public class MessageHeader {
     public static Message readMessageHeader(IOBuffer buf, NetMessageFactory messageFactory) {
         
         Message message = null;
-        byte messageType = buf.get();
+        byte messageType = buf.getByte();
         switch(messageType) {
             case CONNECTION_REQUEST_MESSAGE: {
                 message = new ConnectionRequestMessage();

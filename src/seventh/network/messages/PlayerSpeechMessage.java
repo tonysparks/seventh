@@ -31,7 +31,7 @@ public class PlayerSpeechMessage extends AbstractNetMessage {
         playerId = buffer.getUnsignedByte();        
         posX = buffer.getShort();
         posY = buffer.getShort();
-        speechCommand = buffer.get();
+        speechCommand = buffer.getByte();
         
     }
     
@@ -45,7 +45,7 @@ public class PlayerSpeechMessage extends AbstractNetMessage {
         buffer.putUnsignedByte(playerId);
         buffer.putShort(posX);
         buffer.putShort(posY);
-        buffer.put(speechCommand);
+        buffer.putByte(speechCommand);
     }
 
 }
