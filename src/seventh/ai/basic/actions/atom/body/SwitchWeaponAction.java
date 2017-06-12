@@ -49,15 +49,13 @@ public class SwitchWeaponAction extends AdapterAction {
         
         Inventory inventory = player.getInventory();
         Weapon currentItem = inventory.currentItem();
-       if (currentItem ==null||currentItem.getType().equals(weapon)){
-    	   isDone= true;
-    	   getActionResult().setSuccess();
+        if (currentItem ==null||currentItem.getType().equals(weapon)){
+           isDone= true;
+           getActionResult().setSuccess();
        }
-       else if (currentItem.isReady()){
-    	   player.nextWeapon();
-    	   getActionResult().setFailure();
+        else if (currentItem.isReady()){
+           player.nextWeapon();
+           getActionResult().setFailure();
        }
-
     }
-
 }

@@ -190,9 +190,9 @@ public class Players implements PlayerInfos {
     }
     
     public Player findAlivePlayer(int start){
-    	int PlayerSize = players.length;
-        for(int i = 0; i < PlayerSize; i++) {
-            Player player = players[(start + i) % PlayerSize];
+    	int playerSize = players.length;
+        for(int i = 0; i < playerSize; i++) {
+            Player player = players[(start + i) % playerSize];
             if(isAlivePlayer(player)) {
                 return player;
             }
@@ -212,18 +212,18 @@ public class Players implements PlayerInfos {
     @Override
     public Player getPrevAlivePlayerFrom(Player oldPlayer) {
         if(oldPlayer == null ) return getRandomAlivePlayer();
-        int PlayerSize = players.length;
-        int nextPlayerIndex = SetNextPlayerIndex(oldPlayer, PlayerSize);
-        return findPrevAlivePlayer(nextPlayerIndex, oldPlayer, PlayerSize);
+        int playerSize = players.length;
+        int nextPlayerIndex = setNextPlayerIndex(oldPlayer, playerSize);
+        return findPrevAlivePlayer(nextPlayerIndex, oldPlayer, playerSize);
     }
     
-    public Player findPrevAlivePlayer(int nextPlayerIndex, Player oldPlayer, int PlayerSize){
+    public Player findPrevAlivePlayer(int nextPlayerIndex, Player oldPlayer, int playerSize){
         for(int i = 0; i < this.players.length; i++) {
             Player player = this.players[nextPlayerIndex];
             if(isAlivePlayer(player, oldPlayer)) {
                 return player;
             }
-            nextPlayerIndex = changePlayerIndex(nextPlayerIndex, PlayerSize);
+            nextPlayerIndex = changePlayerIndex(nextPlayerIndex, playerSize);
         }
         return null;
     }
@@ -233,19 +233,19 @@ public class Players implements PlayerInfos {
     }
     
     
-    public int SetNextPlayerIndex(Player oldPlayer, int PlayerSize){
-    	int nextPlayerIndex = (oldPlayer.getId() -1) % PlayerSize;
-    	return isUnderPlayerIndex(nextPlayerIndex, PlayerSize);
+    private int setNextPlayerIndex(Player oldPlayer, int playerSize){
+    	int nextPlayerIndex = (oldPlayer.getId() -1) % playerSize;
+    	return isUnderPlayerIndex(nextPlayerIndex, playerSize);
     }
     
-    public int changePlayerIndex(int nextPlayerIndex, int PlayerSize){
+    private int changePlayerIndex(int nextPlayerIndex, int playerSize){
     	int nextIndex = nextPlayerIndex;
-    	return isUnderPlayerIndex(nextIndex, PlayerSize);
+    	return isUnderPlayerIndex(nextIndex, playerSize);
     }
     
-    public int isUnderPlayerIndex(int nextPlayerIndex, int PlayerSize){
+    public int isUnderPlayerIndex(int nextPlayerIndex, int playerSize){
     	if(nextPlayerIndex < 0)
-    	    return Math.max(PlayerSize-1, 0);
+    	    return Math.max(playerSize-1, 0);
     	return nextPlayerIndex;
     }
     
