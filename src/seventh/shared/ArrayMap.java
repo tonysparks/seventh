@@ -293,7 +293,7 @@ public class ArrayMap<K,V>  implements Map<K, V> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean containsKey(Object key) {
-        int slot = hashFindSlot((K)key);
+        int slot = hashFindSlot((K)key);        
         return this.hashValues[slot] != null;
     }
 

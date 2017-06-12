@@ -20,27 +20,26 @@ public class Timer implements Updatable {
      * @param endTime
      */
     public Timer(boolean loop, long endTime) {
-        this.loop = loop;
-        this.endTime = endTime;                
+        this.setLoop(loop);
+        this.setEndTime(endTime);                
         this.onFirstTime = false;
         reset();
     }
 
     public void set(Timer timer) {
         this.currentTime = timer.currentTime;
-        this.endTime = timer.endTime;
+        this.setEndTime(timer.getEndTime());
         this.update = timer.update;
-        this.loop = timer.loop;
-        this.isTime = timer.isTime;
-        this.onFirstTime = timer.onFirstTime;
+        this.setLoop(timer.loop);
+        this.isTime = timer.isTime();
+        this.onFirstTime = timer.isOnFirstTime();
     }
-    
-    /**
+
+	/**
      * @param endTime the endTime to set
      */
-    public Timer setEndTime(long endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
-        return this;
     }
     
     /**
@@ -54,7 +53,7 @@ public class Timer implements Updatable {
      * @return the remaining time
      */
     public long getRemainingTime() {
-        return this.endTime - this.currentTime;
+        return this.getEndTime() - this.currentTime;
     }
     
     /**
@@ -79,14 +78,14 @@ public class Timer implements Updatable {
     }
     
     public Timer reset() {
-        this.currentTime = 0;
+        this.currentTime = (long) 0;
         this.update = true;
         this.isTime = false;
         return this;
     }
     
     public Timer stop() {
-        this.currentTime = 0;
+        this.currentTime = (long) 0;
         this.isTime = false;
         this.update = false;
         return this;
@@ -103,14 +102,14 @@ public class Timer implements Updatable {
     }
 
     public boolean isExpired() {
-        return isTime && !isLooping();
+        return isTime() && !isLooping();
     }
     
     /**
      * Move the remaining time to 0
      */
     public Timer expire() {
-        this.currentTime = this.endTime;
+        this.currentTime = this.getEndTime();
         return this;
     }
     
@@ -132,7 +131,7 @@ public class Timer implements Updatable {
      * You can override this method to get invoked when
      * the timer has been reached
      */
-    public void onFinish(Timer timer) {        
+    public void onFinish(Timer timer) {
     }
     
     /**
@@ -142,8 +141,8 @@ public class Timer implements Updatable {
     public void update(TimeStep timeStep) {
         this.onFirstTime = false;
         if (this.update) {            
-            this.currentTime += timeStep.getDeltaTime();
-            if (this.currentTime >= this.endTime) {
+            this.currentTime = this.currentTime + timeStep.getDeltaTime();
+            if (this.currentTime >= this.getEndTime()) {
                 if(this.isLooping()) {
                     reset();
                 }

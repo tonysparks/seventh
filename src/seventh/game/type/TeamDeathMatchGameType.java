@@ -23,8 +23,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class TeamDeathMatchGameType extends AbstractTeamGameType {
-        
+public class TeamDeathMatchGameType extends AbstractTeamGameType {     
     /**
      * @param maxKills
      * @param matchTime

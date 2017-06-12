@@ -18,7 +18,6 @@ public class Bits {
      */
     public static byte setSignBit(byte b) {
         return (byte) (b | (byte) (1 << 7));
-        					//10000000
     }
 
     /**

@@ -149,9 +149,9 @@ public class ArrayMapTest {
 		V Value = (V)"Value";
 		V Values = (V)"Values";
 		assertTrue(test.containsValue(Value)==false);
-		test.set(Key, Value);
-		test.containsValue(Value);
-		test.containsValue(Values);
+		test.set(Key, Value);		
+		assertTrue(test.containsValue(Value)==true);		
+		assertTrue(test.containsValue(Values)==false);
 	}
 	
 	/*

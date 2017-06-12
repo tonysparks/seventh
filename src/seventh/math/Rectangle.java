@@ -157,22 +157,6 @@ public class Rectangle {
     }
     
     /**
-     * Sets the components. Equivalent to set
-     * 
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     */
-    public void setBounds(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-    
-    
-    /**
      * Sets the components.  Equivalent to setBounds
      * 
      * @param b
