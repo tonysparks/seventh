@@ -260,7 +260,7 @@ public class WeaponClassDialog extends Widget {
             public void onButtonClicked(ButtonEvent event) {
                 if(connection.isConnected()) {
                     PlayerSwitchWeaponClassMessage msg = new PlayerSwitchWeaponClassMessage();
-                    msg.weaponType = type.netValue();
+                    msg.weaponType = type;
                     connection.getClientProtocol().sendPlayerSwitchWeaponClassMessage(msg);
                 }
                 

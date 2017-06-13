@@ -95,7 +95,7 @@ public class BufferIO {
         public NetMessage readNetMessage(IOBuffer buffer) {
             NetMessage message = null;
                             
-            byte type = buffer.getByte();
+            byte type = buffer.getByteBits(6); // must match AbstractNetMessage.write
             switch(type) {
                 case BOMB_DIARMED: message = new BombDisarmedMessage();
                     break;

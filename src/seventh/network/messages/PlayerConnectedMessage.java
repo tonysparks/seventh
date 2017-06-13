@@ -27,7 +27,7 @@ public class PlayerConnectedMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        playerId = buffer.getUnsignedByte();
+        playerId = BufferIO.readPlayerId(buffer);
         name = BufferIO.readString(buffer);
     }
     
@@ -37,7 +37,7 @@ public class PlayerConnectedMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putUnsignedByte(playerId);
+        BufferIO.writePlayerId(buffer, playerId);
         BufferIO.writeString(buffer, name != null ? name : "");
     }
 }

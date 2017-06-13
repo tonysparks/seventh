@@ -18,7 +18,6 @@ import seventh.game.Player;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.entities.PlayerEntity;
-import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetTeam;
 import seventh.network.messages.AICommandMessage;
 import seventh.network.messages.BombDisarmedMessage;
@@ -39,6 +38,7 @@ import seventh.network.messages.GameUpdateMessage;
 import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
+import seventh.network.messages.PlayerInputMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
@@ -51,7 +51,6 @@ import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
-import seventh.network.messages.PlayerInputMessage;
 import seventh.network.messages.TileRemovedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
@@ -261,9 +260,8 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
      * @see seventh.server.ServerProtocol#receivePlayerSwitchWeaponClassMessage(harenet.api.Connection, seventh.network.messages.PlayerSwitchWeaponClassMessage)
      */
     @Override
-    public void receivePlayerSwitchWeaponClassMessage(Connection conn, PlayerSwitchWeaponClassMessage message) throws IOException {
-        Type weaponType = Type.fromNet(message.weaponType);
-        game.playerSwitchWeaponClass(conn.getId(), weaponType);
+    public void receivePlayerSwitchWeaponClassMessage(Connection conn, PlayerSwitchWeaponClassMessage message) throws IOException {        
+        game.playerSwitchWeaponClass(conn.getId(), message.weaponType);
     }
 
     /* (non-Javadoc)

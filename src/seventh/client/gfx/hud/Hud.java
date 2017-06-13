@@ -618,16 +618,16 @@ public class Hud implements Renderable {
         
         canvas.setFont("Consola", 14);
         Client client = app.getClientConnection().getClient();
-        canvas.drawString("R: " + client.getAvgBitsPerSecRecv() + " B/S", x, y - 20, color);
-        canvas.drawString("S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 40, color);
-        canvas.drawString("D: " + client.getNumberOfDroppedPackets(), x, y - 60, color);
-        canvas.drawString("UR: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, color);
-        canvas.drawString("US: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, color);
+        canvas.drawString("Avg. R: " + client.getAvgBitsPerSecRecv() + " B/S", x, y - 20, color);
+        canvas.drawString("Avg. S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 40, color);
+        canvas.drawString("Drop  : " + client.getNumberOfDroppedPackets(), x, y - 60, color);
+        canvas.drawString("Tot. R: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, color);
+        canvas.drawString("Tot. S: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, color);
         
         String compressedBytes = client.getNumberOfBytesCompressed()>1024?
                                     client.getNumberOfBytesCompressed()/1024 + " KiB" : 
                                     client.getNumberOfBytesCompressed() + " B";
-        canvas.drawString("C: " + compressedBytes, x, y - 120, color);
+        canvas.drawString("Comp B: " + compressedBytes, x, y - 120, color);
     }
     
     
