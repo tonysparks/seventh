@@ -534,13 +534,14 @@ public class GameServer {
                     console.println("\t=============================");
                     
                     NetGameStats stats = game.getNetGameStats();
-                    if(stats.teamStats != null) {
-                        for(int i = 0; i < stats.teamStats.length; i++) {
-                            console.printf("\t%-15s %2d %10d\n", Team.getName(stats.teamStats[i].id)
-                                                             , stats.teamStats[i].id
-                                                             , stats.teamStats[i].score );    
-                        }
-                    }
+                    console.printf("\t%-15s %2d %10d\n", Team.getName(stats.alliedTeamStats.id)
+                            , stats.alliedTeamStats.id
+                            , stats.alliedTeamStats.score );
+                    
+                    console.printf("\t%-15s %2d %10d\n", Team.getName(stats.axisTeamStats.id)
+                            , stats.axisTeamStats.id
+                            , stats.axisTeamStats.score );
+                    
                     console.println("\n");
                 }
             }

@@ -1230,16 +1230,20 @@ public class ClientGame {
         if(gameType!=null) {
             this.gameType = GameType.Type.fromNet(gameType.type);
             
-            for(int i = 0; i < gameType.teams.length; i++) {
-//                this.scoreboard.setScore(ClientTeam.fromId(gameType.teams[i].id), .score);
-                if(gameType.teams[i].isAttacker) {
-                    this.attackingTeam = ClientTeam.fromId(gameType.teams[i].id);
-                }
-                
-                if(gameType.teams[i].isDefender) {
-                    this.defendingTeam = ClientTeam.fromId(gameType.teams[i].id);
-                }
+            if(gameType.alliedTeam.isAttacker) {
+                this.attackingTeam = ClientTeam.fromId(gameType.alliedTeam.id);
             }
+            else {
+                this.attackingTeam = ClientTeam.fromId(gameType.axisTeam.id);
+            }
+            
+            if(gameType.alliedTeam.isDefender) {
+                this.defendingTeam = ClientTeam.fromId(gameType.alliedTeam.id);
+            }
+            else {
+                this.defendingTeam = ClientTeam.fromId(gameType.axisTeam.id);
+            }
+            
         }
         
         NetMapDestructables destructables = gs.mapDestructables;
@@ -1391,11 +1395,8 @@ public class ClientGame {
             }
         }
         
-        if(stats.teamStats!=null) {
-            for(int i = 0; i < stats.teamStats.length; i++) {
-                this.scoreboard.setScore(ClientTeam.fromId(stats.teamStats[i].id), stats.teamStats[i].score);
-            }
-        }
+        this.scoreboard.setScore(ClientTeam.fromId(stats.alliedTeamStats.id), stats.alliedTeamStats.score);
+        this.scoreboard.setScore(ClientTeam.fromId(stats.axisTeamStats.id), stats.axisTeamStats.score);
     }
     
     public void applyGamePartialStats(NetGamePartialStats stats) {
@@ -1415,11 +1416,8 @@ public class ClientGame {
             }
         }
         
-        if(stats.teamStats!=null) {
-            for(int i = 0; i < stats.teamStats.length; i++) {
-                this.scoreboard.setScore(ClientTeam.fromId(stats.teamStats[i].id), stats.teamStats[i].score);
-            }
-        }
+        this.scoreboard.setScore(ClientTeam.fromId(stats.alliedTeamStats.id), stats.alliedTeamStats.score);
+        this.scoreboard.setScore(ClientTeam.fromId(stats.axisTeamStats.id), stats.axisTeamStats.score);        
     }
 
     public void playerSpawned(PlayerSpawnedMessage msg) {

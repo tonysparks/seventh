@@ -12,8 +12,6 @@ import seventh.network.messages.BufferIO;
  *
  */
 public class NetPlayerStat implements NetMessage {
-    private static final byte IS_BOT       = (1<<0);
-    private static final int IS_COMMANDER  = (1<<1);
     
     public int playerId;
     public String name;
@@ -22,7 +20,7 @@ public class NetPlayerStat implements NetMessage {
     public short ping;
     public int joinTime;
     public byte teamId;
-    public byte flags;
+    
     public boolean isBot;
     public boolean isCommander;
     
@@ -33,14 +31,14 @@ public class NetPlayerStat implements NetMessage {
     public void read(IOBuffer buffer) {
         playerId = BufferIO.readPlayerId(buffer);
         name = BufferIO.readString(buffer);
-        kills = buffer.getShort();
-        deaths = buffer.getShort();
-        ping = buffer.getShort();
+        kills = buffer.getShortBits(10);
+        deaths = buffer.getShortBits(10);
+        ping = buffer.getShortBits(9);
         joinTime = buffer.getInt();
-        teamId = buffer.getByte();
-        flags = buffer.getByte();
-        isBot = ((flags & IS_BOT) != 0);
-        isCommander = ((flags & IS_COMMANDER) != 0);        
+        teamId = BufferIO.readTeamId(buffer);
+        
+        isBot = buffer.getBooleanBit();
+        isCommander = buffer.getBooleanBit();        
     }
     
     /* (non-Javadoc)
@@ -50,20 +48,13 @@ public class NetPlayerStat implements NetMessage {
     public void write(IOBuffer buffer) {
         BufferIO.writePlayerId(buffer, playerId);
         BufferIO.writeString(buffer, name != null ? name : "");
-        buffer.putShort(kills);
-        buffer.putShort(deaths);
-        buffer.putShort(ping);
+        buffer.putShortBits(kills, 10);
+        buffer.putShortBits(deaths, 10);
+        buffer.putShortBits(ping, 9);
         buffer.putInt(joinTime);
-        buffer.putByte(teamId);
+        BufferIO.writeTeamId(buffer, teamId);
         
-        if(isBot) {
-            flags |= IS_BOT;
-        }
-        
-        if(isCommander) {
-            flags |= IS_COMMANDER;
-        }
-        
-        buffer.putByte(flags);
+        buffer.putBooleanBit(isBot);
+        buffer.putBooleanBit(isCommander);
     }
 }

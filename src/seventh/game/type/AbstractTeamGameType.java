@@ -24,7 +24,6 @@ import seventh.game.events.RoundStartedListener;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
-import seventh.game.type.GameType.GameState;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
@@ -99,7 +98,11 @@ public abstract class AbstractTeamGameType implements GameType {
         this.gameTypeInfo.maxScore = maxScore;
         this.gameTypeInfo.maxTime = matchTime;        
         
-        this.gameTypeInfo.teams = new NetTeam[2];
+        this.gameTypeInfo.alliedTeam = new NetTeam();
+        this.gameTypeInfo.alliedTeam.id = Team.ALLIED_TEAM_ID;
+        
+        this.gameTypeInfo.axisTeam = new NetTeam();
+        this.gameTypeInfo.axisTeam.id = Team.AXIS_TEAM_ID;
         
         this.gameState = GameState.INTERMISSION;
         this.random = new Random();
@@ -595,28 +598,27 @@ public abstract class AbstractTeamGameType implements GameType {
      */
     @Override
     public NetGameTypeInfo getNetGameTypeInfo() {
-        this.gameTypeInfo.teams[AXIS] = this.teams[AXIS].getNetTeam();
-        this.gameTypeInfo.teams[ALLIED] = this.teams[ALLIED].getNetTeam();
+        this.gameTypeInfo.alliedTeam = this.teams[ALLIED].getNetTeam();
+        this.gameTypeInfo.axisTeam = this.teams[AXIS].getNetTeam();
         return this.gameTypeInfo;
+    }
+
+    /* (non-Javadoc)
+     * @see seventh.game.type.GameType#getAlliedNetTeamStats()
+     */
+    @Override
+    public NetTeamStat getAlliedNetTeamStats() {
+        return this.teams[ALLIED].getNetTeamStats();
     }
     
     /* (non-Javadoc)
-     * @see palisma.game.type.GameType#getNetTeamStats()
+     * @see seventh.game.type.GameType#getAxisNetTeamStats()
      */
     @Override
-    public NetTeamStat[] getNetTeamStats() {
-        NetTeamStat[] stats = new NetTeamStat[this.teams.length];
-        for(int i = 0; i < this.teams.length; i++) {
-            Team team = this.teams[i];
-            NetTeamStat s = new NetTeamStat();
-            
-            s.id = team.getId();
-            s.score = (short)team.getScore();            
-            stats[i] = s;
-            
-        }
-        return stats;
+    public NetTeamStat getAxisNetTeamStats() {
+        return this.teams[AXIS].getNetTeamStats();
     }
+    
     
     /* (non-Javadoc)
      * @see seventh.shared.Debugable#getDebugInformation()

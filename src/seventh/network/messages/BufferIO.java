@@ -211,6 +211,14 @@ public class BufferIO {
     public static int readPlayerId(IOBuffer buffer) {
         return buffer.getIntBits(4);
     }
+    
+    public static void writeTeamId(IOBuffer buffer, byte teamId) {
+        buffer.putByteBits(teamId, 2);
+    }
+    
+    public static byte readTeamId(IOBuffer buffer) {
+        return buffer.getByteBits(2);
+    }
         
     public static void writeAngle(IOBuffer buffer, int degrees) {
         int bangle = ( degrees * 256) / 360;

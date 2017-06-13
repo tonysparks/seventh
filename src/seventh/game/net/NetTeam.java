@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.network.messages.BufferIO;
 
 /**
  * @author Tony
@@ -17,30 +18,31 @@ public class NetTeam implements NetMessage {
     
     public byte id;
     public int[] playerIds;
+    
+    private boolean hasPlayers;
     public boolean isAttacker;
     public boolean isDefender;
     
-    protected byte bits;
     
     /* (non-Javadoc)
      * @see seventh.network.messages.NetMessage#read(java.nio.ByteBuffer)
      */
     @Override
-    public void read(IOBuffer buffer) {
-        bits = buffer.getByte();
-        id = buffer.getByte();
+    public void read(IOBuffer buffer) {    
+        id = BufferIO.readTeamId(buffer);
         
-        if((bits & HAS_PLAYERS) != 0) {
-            byte len = buffer.getByte();
+        hasPlayers = buffer.getBooleanBit();
+        isAttacker = buffer.getBooleanBit();
+        isDefender = !isAttacker;
+        
+        if(hasPlayers) {
+            byte len = buffer.getByteBits(4);
             playerIds = new int[len];
             for(byte i = 0; i < len; i++) {
                 playerIds[i] = buffer.getUnsignedByte();
             }
         }
-        
-        isAttacker = (bits & IS_ATTACKER) != 0;
-        isDefender = (bits & IS_DEFENDER) != 0;
-        
+                
     }
     
     /* (non-Javadoc)
@@ -48,25 +50,14 @@ public class NetTeam implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        bits = 0;
+        hasPlayers = playerIds != null && playerIds.length > 0;
         
-        if(playerIds != null && playerIds.length > 0) {
-            bits |= HAS_PLAYERS;
-        }
-        
-        if(isAttacker) {
-            bits |= IS_ATTACKER;
-        }
-        
-        if(isDefender) {
-            bits |= IS_DEFENDER;
-        }
-        
-        buffer.putByte(bits);
-        buffer.putByte(id);
-        
-        if( (bits & HAS_PLAYERS) != 0 ) {
-            buffer.putByte( (byte)playerIds.length);
+        BufferIO.writeTeamId(buffer, id);
+        buffer.putBooleanBit(hasPlayers);
+        buffer.putBooleanBit(isAttacker);
+                
+        if(hasPlayers) {
+            buffer.putByteBits( (byte)playerIds.length, 4);
             for(int i = 0; i < playerIds.length; i++) {
                 buffer.putUnsignedByte(playerIds[i]);
             }

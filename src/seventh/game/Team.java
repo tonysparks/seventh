@@ -9,6 +9,7 @@ import java.util.List;
 import seventh.game.entities.Entity;
 import seventh.game.entities.PlayerEntity;
 import seventh.game.net.NetTeam;
+import seventh.game.net.NetTeamStat;
 import seventh.math.Vector2f;
 import seventh.shared.Debugable;
 
@@ -24,9 +25,9 @@ public class Team implements Debugable {
     /**
      * Team ID's
      */
-    public static final byte ALLIED_TEAM_ID = 2, 
-                             AXIS_TEAM_ID = 4, 
-                             SPECTATOR_TEAM_ID = -1;
+    public static final byte ALLIED_TEAM_ID = 1, 
+                             AXIS_TEAM_ID = 2, 
+                             SPECTATOR_TEAM_ID = 0;
     
     
     /**
@@ -87,6 +88,7 @@ public class Team implements Debugable {
     private final byte id;
     private List<Player> players;
     private NetTeam netTeam;
+    private NetTeamStat netTeamStats;
     
     private int score;
     private boolean isAttacker;
@@ -102,6 +104,9 @@ public class Team implements Debugable {
         netTeam = new NetTeam();
         netTeam.id = id;        
         
+        netTeamStats = new NetTeamStat();
+        netTeamStats.id = id;
+                
         this.players = new ArrayList<Player>();
     }
     
@@ -531,6 +536,14 @@ public class Team implements Debugable {
         netTeam.isDefender = this.isDefender;
         netTeam.isAttacker = this.isAttacker;
         return netTeam;
+    }
+    
+    /**
+     * @return the netTeamStats
+     */
+    public NetTeamStat getNetTeamStats() {
+        netTeamStats.score = score; 
+        return netTeamStats;
     }
     
     /* (non-Javadoc)

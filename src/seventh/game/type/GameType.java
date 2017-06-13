@@ -113,7 +113,8 @@ public interface GameType extends Debugable {
     public Player getPrevPlayerToSpectate(Players players, Player spectator);
         
     public NetGameTypeInfo getNetGameTypeInfo();
-    public NetTeamStat[] getNetTeamStats();
+    public NetTeamStat getAlliedNetTeamStats();
+    public NetTeamStat getAxisNetTeamStats();
     
     public List<Vector2f> getAlliedSpawnPoints();
     public List<Vector2f> getAxisSpawnPoints();

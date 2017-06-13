@@ -25,8 +25,8 @@ public class NetPlayerPartialStat implements NetMessage {
     public void read(IOBuffer buffer) {
         playerId = BufferIO.readPlayerId(buffer);
         
-        kills = buffer.getShort();
-        deaths = buffer.getShort();        
+        kills = buffer.getShortBits(10);
+        deaths = buffer.getShortBits(10);        
     }
     
     /* (non-Javadoc)
@@ -36,7 +36,7 @@ public class NetPlayerPartialStat implements NetMessage {
     public void write(IOBuffer buffer) {
         BufferIO.writePlayerId(buffer, playerId);
         
-        buffer.putShort(kills);
-        buffer.putShort(deaths);        
+        buffer.putShortBits(kills, 10);
+        buffer.putShortBits(deaths, 10);        
     }
 }
