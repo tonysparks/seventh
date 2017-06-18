@@ -676,6 +676,22 @@ public class ByteBufferIOBuffer implements IOBuffer {
     public int getIntBits(int numberOfBits) {
         return packer.getInteger(numberOfBits);
     }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits()
+     */
+    @Override
+    public long getLongBits() {     
+        return packer.getLong();
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits(int)
+     */
+    @Override
+    public long getLongBits(int numberOfBits) {     
+        return packer.getLong(numberOfBits);
+    }
 
     /* (non-Javadoc)
      * @see harenet.IOBuffer#bitPosition(int)

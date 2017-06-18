@@ -38,5 +38,23 @@ public class Bits {
     public static byte getWithoutSignBit(byte b) {
         return (byte) (b & ~(1 << 7));
     }
+    
+    public static short setSignedShort(short value, int numberOfBits) {
+        if(value < 0) {
+            return (short) (value | (short) (1<<numberOfBits-1));
+        }
+        return value;
+    }
+    
+    public static short getSignedShort(short value, int numberOfBits) {
+        if((value & (1<<numberOfBits-1)) > 0) {
+            
+            int mask = 0xffFFffFF;
+            mask >>>= Integer.SIZE - numberOfBits;
+           
+            return (short) -(mask - value);           
+        }
+        return value;
+    }
 
 }

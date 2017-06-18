@@ -6,6 +6,7 @@ package seventh.game.net;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.network.messages.BufferIO;
+import seventh.shared.Bits;
 
 /**
  * A partial player statistics (updated at a higher frequency than full network stats)
@@ -25,8 +26,8 @@ public class NetPlayerPartialStat implements NetMessage {
     public void read(IOBuffer buffer) {
         playerId = BufferIO.readPlayerId(buffer);
         
-        kills = buffer.getShortBits(10);
-        deaths = buffer.getShortBits(10);        
+        kills = Bits.getSignedShort(buffer.getShortBits(10), 10);
+        deaths = buffer.getShortBits(10);
     }
     
     /* (non-Javadoc)
@@ -36,7 +37,7 @@ public class NetPlayerPartialStat implements NetMessage {
     public void write(IOBuffer buffer) {
         BufferIO.writePlayerId(buffer, playerId);
         
-        buffer.putShortBits(kills, 10);
+        buffer.putShortBits(Bits.setSignedShort(kills, 10), 10);
         buffer.putShortBits(deaths, 10);        
     }
 }

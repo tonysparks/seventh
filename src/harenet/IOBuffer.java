@@ -1144,8 +1144,10 @@ public interface IOBuffer {
     public abstract byte getByteBits(int numberOfBits);
     public abstract short getShortBits();
     public abstract short getShortBits(int numberOfBits);
-    public abstract int getIntBits();
-    public abstract int getIntBits(int numberOfBits);       
+    public abstract int getIntBits();    
+    public abstract int getIntBits(int numberOfBits);
+    public abstract long getLongBits();
+    public abstract long getLongBits(int numberOfBits);     
     
     public abstract int bitPosition(int position);
     public abstract int bitPosition();

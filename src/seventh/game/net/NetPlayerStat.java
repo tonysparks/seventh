@@ -6,6 +6,7 @@ package seventh.game.net;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.network.messages.BufferIO;
+import seventh.shared.Bits;
 
 /**
  * @author Tony
@@ -31,7 +32,7 @@ public class NetPlayerStat implements NetMessage {
     public void read(IOBuffer buffer) {
         playerId = BufferIO.readPlayerId(buffer);
         name = BufferIO.readString(buffer);
-        kills = buffer.getShortBits(10);
+        kills = Bits.getSignedShort(buffer.getShortBits(10), 10);
         deaths = buffer.getShortBits(10);
         ping = buffer.getShortBits(9);
         joinTime = buffer.getInt();
@@ -48,7 +49,7 @@ public class NetPlayerStat implements NetMessage {
     public void write(IOBuffer buffer) {
         BufferIO.writePlayerId(buffer, playerId);
         BufferIO.writeString(buffer, name != null ? name : "");
-        buffer.putShortBits(kills, 10);
+        buffer.putShortBits(Bits.setSignedShort(kills, 10), 10);
         buffer.putShortBits(deaths, 10);
         buffer.putShortBits(ping, 9);
         buffer.putInt(joinTime);

@@ -87,7 +87,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putUnsignedByte(int b) {
-        numberOfBits+=Byte.SIZE;
+        this.numberOfBits+=Byte.SIZE;
         return this;
     }
     
@@ -104,7 +104,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putByte(byte b) {
-        numberOfBits+=Byte.SIZE;
+        this.numberOfBits+=Byte.SIZE;
         return this;
     }
 
@@ -121,7 +121,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putByte(int index, byte b) {
-        numberOfBits += Byte.SIZE;
+        this.numberOfBits += Byte.SIZE;
         return this;
     }
 
@@ -146,7 +146,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer put(IOBuffer src) {
-        numberOfBits += src.remaining() * 8;
+        this.numberOfBits += src.remaining() * 8;
         return this;
     }
 
@@ -155,7 +155,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putBytes(byte[] src, int offset, int length) {
-        numberOfBits += length * 8;
+        this.numberOfBits += length * 8;
         return this;
     }
 
@@ -164,7 +164,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putBytes(byte[] src) {
-        numberOfBits += src.length * 8;
+        this.numberOfBits += src.length * 8;
         return this;
     }
 
@@ -213,11 +213,11 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public int capacity() {
-        int leftOver = numberOfBits % 8;
+        int leftOver = this.numberOfBits % 8;
         if(leftOver > 0) {
-            return (numberOfBits / 8) + 1;
+            return (this.numberOfBits / 8) + 1;
         }
-        return numberOfBits / 8;        
+        return this.numberOfBits / 8;        
     }
 
     /* (non-Javadoc)
@@ -273,7 +273,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer clear() {
-        numberOfBits = 0;
+        this.numberOfBits = 0;
         return this;
     }
 
@@ -330,7 +330,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putShort(short value) {
-        numberOfBits += Short.SIZE;
+        this.numberOfBits += Short.SIZE;
         return this;
     }
 
@@ -347,7 +347,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putShort(int index, short value) {
-        numberOfBits += Short.SIZE;
+        this.numberOfBits += Short.SIZE;
         return this;
     }
 
@@ -364,7 +364,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putInt(int value) {
-        numberOfBits += Integer.SIZE;
+        this.numberOfBits += Integer.SIZE;
         return this;
     }
 
@@ -381,7 +381,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putInt(int index, int value) {
-        numberOfBits += Integer.SIZE;
+        this.numberOfBits += Integer.SIZE;
         return this;
     }
 
@@ -398,7 +398,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putLong(long value) {
-        numberOfBits += Long.SIZE;
+        this.numberOfBits += Long.SIZE;
         return this;
     }
 
@@ -415,7 +415,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putLong(int index, long value) {
-        numberOfBits += Long.SIZE;
+        this.numberOfBits += Long.SIZE;
         return this;
     }
 
@@ -432,7 +432,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putFloat(float value) {
-        numberOfBits += Float.SIZE;
+        this.numberOfBits += Float.SIZE;
         return this;
     }
 
@@ -449,7 +449,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putFloat(int index, float value) {
-        numberOfBits += Float.SIZE;
+        this.numberOfBits += Float.SIZE;
         return this;
     }
 
@@ -466,7 +466,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putDouble(double value) {
-        numberOfBits += Double.SIZE;
+        this.numberOfBits += Double.SIZE;
         return this;
     }
 
@@ -483,7 +483,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putDouble(int index, double value) {
-        numberOfBits += Double.SIZE;
+        this.numberOfBits += Double.SIZE;
         return this;
     }
 
@@ -492,7 +492,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putBooleanBit(boolean value) {
-        numberOfBits ++;
+        this.numberOfBits ++;
         return this;
     }
 
@@ -501,7 +501,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putLongBits(long value, int numberOfBits) {
-        numberOfBits += numberOfBits;
+        this.numberOfBits += numberOfBits;
         return this;
     }
 
@@ -510,7 +510,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putByteBits(byte value, int numberOfBits) {
-        numberOfBits += numberOfBits;
+        this.numberOfBits += numberOfBits;
         return this;
     }
 
@@ -519,7 +519,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putShortBits(short value, int numberOfBits) {
-        numberOfBits += numberOfBits;
+        this.numberOfBits += numberOfBits;
         return this;
     }
 
@@ -528,7 +528,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putIntBits(int value, int numberOfBits) {
-        numberOfBits += numberOfBits;
+        this.numberOfBits += numberOfBits;
         return this;
     }
 
@@ -585,6 +585,22 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public int getIntBits(int numberOfBits) {
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits()
+     */
+    @Override
+    public long getLongBits() {     
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits(int)
+     */
+    @Override
+    public long getLongBits(int numberOfBits) {     
         return 0;
     }
 
