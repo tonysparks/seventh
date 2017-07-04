@@ -12,13 +12,13 @@ import seventh.shared.LANServerConfig;
 
 public class LANServerConstructorTest {
 
-	private Config config;
-	private LANServerConfig lanconfig;
-	
-	@Test
-	public void testLANServerConfig(){
-		lanconfig = new LANServerConfig(config);
-	}
-	
+    private Config config;
+    private LANServerConfig lanconfig;
+    
+    @Test
+    public void testLANServerConfig(){
+        lanconfig = new LANServerConfig(config);
+    }
+    
 
 }

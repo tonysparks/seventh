@@ -63,7 +63,7 @@ public class EaseInInterpolation implements Updatable {
             
             this.value += this.speed * timeStep.asFraction();
         }
-    }	
+    }    
     
     /**
      * @return if there is any time remaining
