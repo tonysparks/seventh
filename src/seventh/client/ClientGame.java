@@ -1632,8 +1632,8 @@ public class ClientGame {
         for(int i = 0; i < entityList.length; i++) {
             ClientEntity other = entityList[i];
             if(other != null && other != entity) {
-                if(entity.isAlive()) {
-                    if(entity.touches(other)) {
+                if(other.isAlive()) {
+                    if(other.touches(entity)) {
                         return true;
                     }
                 }
@@ -1641,6 +1641,29 @@ public class ClientGame {
         }
         
         return false;
+    }
+    
+    /**
+     * Determines if the supplied entity touches another entity, if
+     * it does, it returns the touched entity.
+     * 
+     * @param entity
+     * @return the touched entity if there is one
+     */
+    public ClientEntity getTouchedEntity(ClientEntity entity, Rectangle bounds) {
+        ClientEntity[] entityList = entities.getEntities();
+        for(int i = 0; i < entityList.length; i++) {
+            ClientEntity other = entityList[i];
+            if(other != null && other != entity) {
+                if(other.isAlive() && other.isRelativelyUpdated()) {
+                    if(other.isTouching(bounds)) {
+                        return other;
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
     
     /**

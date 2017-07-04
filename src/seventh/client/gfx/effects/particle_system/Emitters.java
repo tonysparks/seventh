@@ -115,30 +115,37 @@ public class Emitters {
         
         Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
         
-        Emitter emitter = new Emitter(pos, 200, 30)
+        Emitter emitter = new Emitter(pos, 100, 30)
                             .setName("BulletImpactFleshEmitter")
                             .setDieInstantly(false);
-        BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
+        BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 9);
         gen.addSingleParticleGenerator(new SingleParticleGenerator() {
             
                 @Override
                 public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
-                    particles.speed[index] = 125f;
+                    particles.speed[index] = 105f;
+                    //particles.scale[index] = 0.32f;
                 }
             })
-           .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
-           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0x660000ff), new Color(0x330000ff)))
-           .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 120))
-           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(600, 950))           
+           //.addSingleParticleGenerator(new SetPositionSingleParticleGenerator())
+           .addSingleParticleGenerator(new RandomPositionInRadiusSingleParticleGenerator(5))
+           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0x660000fa),
+                                                                              new Color(0x5f0301fa),
+                                                                              new Color(0xb63030fa),
+                                                                              new Color(0x330000fa)))
+           .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 20))
+           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(200, 350))
+          // .addSingleParticleGenerator(new RandomSpriteSingleParticleGenerator(Art.bloodImages)) 
         ;
         
         emitter.addParticleGenerator(gen);
         
         emitter.addParticleUpdater(new KillUpdater());
-        emitter.addParticleUpdater(new RandomMovementParticleUpdater(45));
-        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.82718f));
-        emitter.addParticleRenderer(new CircleParticleRenderer());
-        
+        emitter.addParticleUpdater(new RandomMovementParticleUpdater(125));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.782718f));
+        emitter.addParticleRenderer(new CircleParticleRenderer(1.5f));
+        //emitter.addParticleRenderer(new BlendingSpriteParticleRenderer());
+        //emitter.addParticleRenderer(new SpriteParticleRenderer());
         return emitter;
     }
     
@@ -522,3 +529,4 @@ public class Emitters {
         return emitter;
     }
 }
+

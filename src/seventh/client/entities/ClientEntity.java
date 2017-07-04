@@ -263,6 +263,12 @@ public abstract class ClientEntity implements Renderable {
         return zOrder;
     }
     
+    /**
+     * @return true if this entity is a player
+     */
+    public boolean isPlayer() {
+        return this.type.isPlayer();
+    }
     
     /**
      * @return the isAlive

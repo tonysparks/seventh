@@ -562,7 +562,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         
         if(isControlledByLocalPlayer()) {
             this.effects.getHurtEffect().reset();
-        }
+        }        
     }
     
     @Override
