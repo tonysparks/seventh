@@ -15,7 +15,7 @@ import seventh.game.entities.Entity.Type;
 public class NetBomb extends NetEntity {
 
     public NetBomb() {
-        this.type = Type.BOMB.netValue();
+        this.type = Type.BOMB;
     }
     public int timeRemaining;
     

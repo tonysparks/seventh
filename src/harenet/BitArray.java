@@ -1,23 +1,28 @@
 /*
  * see license.txt 
  */
-package seventh.shared;
+package harenet;
 
+import seventh.shared.SeventhConstants;
 
 /**
+ * Stores bits
+ * 
  * @author Tony
  *
  */
 public class BitArray {
 
-    private static final int WORD_SIZE = 4 * 8;
+    private static final int WORD_SIZE = 8;
     
-    private int[] data;
+    private byte[] data;
+    
     /**
-     * 
+     * @param maxNumberOfBits
      */
-    public BitArray(int size) {
-        this.data = new int[size / 32 + 1];
+    public BitArray(int maxNumberOfBits) {
+        int leftOver = maxNumberOfBits % WORD_SIZE;
+        this.data = new byte[(maxNumberOfBits / WORD_SIZE) + ((leftOver>0) ? 1 : 0)];
     }
     
     private int bitIndex(int b) {
@@ -28,22 +33,54 @@ public class BitArray {
         return b % WORD_SIZE;
     }
     
+    /**
+     * Sets the bit (is zero based)
+     * 
+     * @param b
+     * @param isSet
+     */
+    public void setBit(int b, boolean isSet) {
+        if(isSet) {
+            data[bitIndex(b)] |= 1 << (bitOffset(b));
+        }
+        else {
+            data[bitIndex(b)] &= ~(1 << (bitOffset(b)));
+        }
+    }
+    
+    /**
+     * Sets the bit (is zero based)
+     * 
+     * @param b
+     */
     public void setBit(int b) {
         data[bitIndex(b)] |= 1 << (bitOffset(b));
     }
     
+    /**
+     * Zero based index
+     * 
+     * @param b
+     * @return true if the bit is set
+     */
     public boolean getBit(int b) {
         return (data[bitIndex(b)] & (1 << (bitOffset(b)))) != 0;
     }
 
-    public void setDataElement(int i, int data) {
+    /**
+     * Set the data directly
+     * 
+     * @param i
+     * @param data
+     */
+    public void setDataElement(int i, byte data) {
         this.data[i] = data;
     }
     
     /**
      * @return the data
      */
-    public int[] getData() {
+    public byte[] getData() {
         return data;
     }
     
@@ -55,7 +92,7 @@ public class BitArray {
         
     public void setAll() {
         for(int i = 0; i < data.length; i++) {
-            data[i] = 0xFFffFFff;
+            data[i] = 0xFFFFFFFF;
         }
     }
     
@@ -72,15 +109,21 @@ public class BitArray {
         
         return sb.toString();
     }
-    
-    public int numberOfInts() {
+        
+    /**
+     * The number of bytes to represent the number of bits
+     * 
+     * @return The number of bytes to represent the number of bits
+     */
+    public int numberOfBytes() {
         return this.data.length;
     }
     
-    public int numberOfBytes() {
-        return this.data.length * 4;
-    }
-    
+    /**
+     * The number of bits used in this bit array
+     * 
+     * @return the number of bits
+     */
     public int size() {
         return this.data.length * WORD_SIZE;
     }

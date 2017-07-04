@@ -28,7 +28,7 @@ import seventh.shared.SoundType;
 public class NetSound implements NetMessage {    
     public byte type;    
     
-    public short posX, posY;
+    public int posX, posY;
     private boolean hasPositionalInformation;
     
     private static final short TILE_WIDTH = 32;
@@ -46,8 +46,8 @@ public class NetSound implements NetMessage {
     }
     
     public void setPos(Vector2f pos) {
-        this.posX = (short)pos.x;
-        this.posY = (short)pos.y;
+        this.posX = (int)pos.x;
+        this.posY = (int)pos.y;
     }
     
     public void setSoundType(SoundType soundType) {
@@ -72,10 +72,10 @@ public class NetSound implements NetMessage {
          * */
         
         if(hasPositionalInformation()) {
-            posX = (short)(buffer.get() & 0xFF);
+            posX = (buffer.getByte() & 0xFF);
             posX *= TILE_WIDTH;
             
-            posY = (short)(buffer.get() & 0xFF);
+            posY = (buffer.getByte() & 0xFF);
             posY *= TILE_WIDTH;
         }
     }
@@ -89,11 +89,11 @@ public class NetSound implements NetMessage {
             this.type = Bits.setSignBit(this.type);
         }
         
-        buffer.put(type);
+        buffer.putByte(type);
         
         if(this.hasPositionalInformation) {
-            buffer.put( (byte)(posX/TILE_WIDTH) );
-            buffer.put( (byte)(posY/TILE_HEIGHT) );
+            buffer.putByte( (byte)(posX/TILE_WIDTH) );
+            buffer.putByte( (byte)(posY/TILE_HEIGHT) );
         }
     }
     
@@ -147,7 +147,7 @@ public class NetSound implements NetMessage {
     
     public static NetSound readNetSound(IOBuffer buffer) {
         NetSound snd = null;
-        byte type = buffer.get();
+        byte type = buffer.getByte();
         switch(SoundType.fromNet(Bits.getWithoutSignBit(type)).getSourceType()) {
             case REFERENCED:
             case REFERENCED_ATTACHED:

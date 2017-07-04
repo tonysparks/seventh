@@ -1022,7 +1022,7 @@ public class ClientGame {
         
         ClientEntity entity = null;
         
-        Type type = Type.fromNet(ent.type);
+        Type type = ent.type;
          
         final Vector2f pos = new Vector2f(ent.posX, ent.posY);
         switch(type) {
@@ -1230,16 +1230,20 @@ public class ClientGame {
         if(gameType!=null) {
             this.gameType = GameType.Type.fromNet(gameType.type);
             
-            for(int i = 0; i < gameType.teams.length; i++) {
-//                this.scoreboard.setScore(ClientTeam.fromId(gameType.teams[i].id), .score);
-                if(gameType.teams[i].isAttacker) {
-                    this.attackingTeam = ClientTeam.fromId(gameType.teams[i].id);
-                }
-                
-                if(gameType.teams[i].isDefender) {
-                    this.defendingTeam = ClientTeam.fromId(gameType.teams[i].id);
-                }
+            if(gameType.alliedTeam.isAttacker) {
+                this.attackingTeam = ClientTeam.fromId(gameType.alliedTeam.id);
             }
+            else {
+                this.attackingTeam = ClientTeam.fromId(gameType.axisTeam.id);
+            }
+            
+            if(gameType.alliedTeam.isDefender) {
+                this.defendingTeam = ClientTeam.fromId(gameType.alliedTeam.id);
+            }
+            else {
+                this.defendingTeam = ClientTeam.fromId(gameType.axisTeam.id);
+            }
+            
         }
         
         NetMapDestructables destructables = gs.mapDestructables;
@@ -1260,7 +1264,7 @@ public class ClientGame {
                 if(netEnt != null) {
                     if(entities.containsEntity(netEnt.id)) {
                         ClientEntity ent = entities.getEntity(netEnt.id);
-                        if(Type.fromNet(netEnt.type) == ent.getType()) {                        
+                        if(netEnt.type == ent.getType()) {                        
                             ent.updateState(netEnt, gameClock);
                         }
                         else {
@@ -1391,11 +1395,8 @@ public class ClientGame {
             }
         }
         
-        if(stats.teamStats!=null) {
-            for(int i = 0; i < stats.teamStats.length; i++) {
-                this.scoreboard.setScore(ClientTeam.fromId(stats.teamStats[i].id), stats.teamStats[i].score);
-            }
-        }
+        this.scoreboard.setScore(ClientTeam.fromId(stats.alliedTeamStats.id), stats.alliedTeamStats.score);
+        this.scoreboard.setScore(ClientTeam.fromId(stats.axisTeamStats.id), stats.axisTeamStats.score);
     }
     
     public void applyGamePartialStats(NetGamePartialStats stats) {
@@ -1415,11 +1416,8 @@ public class ClientGame {
             }
         }
         
-        if(stats.teamStats!=null) {
-            for(int i = 0; i < stats.teamStats.length; i++) {
-                this.scoreboard.setScore(ClientTeam.fromId(stats.teamStats[i].id), stats.teamStats[i].score);
-            }
-        }
+        this.scoreboard.setScore(ClientTeam.fromId(stats.alliedTeamStats.id), stats.alliedTeamStats.score);
+        this.scoreboard.setScore(ClientTeam.fromId(stats.axisTeamStats.id), stats.axisTeamStats.score);        
     }
 
     public void playerSpawned(PlayerSpawnedMessage msg) {
@@ -1452,7 +1450,7 @@ public class ClientGame {
         ClientPlayer player = players.getPlayer(msg.playerId);
         if(player != null) {
             
-            Type meansOfDeath = Type.fromNet(msg.deathType);
+            Type meansOfDeath = msg.deathType;
             Vector2f locationOfDeath = new Vector2f(msg.posX, msg.posY);
             
             ClientPlayerEntity entity = player.getEntity();
@@ -1634,8 +1632,8 @@ public class ClientGame {
         for(int i = 0; i < entityList.length; i++) {
             ClientEntity other = entityList[i];
             if(other != null && other != entity) {
-                if(entity.isAlive()) {
-                    if(entity.touches(other)) {
+                if(other.isAlive()) {
+                    if(other.touches(entity)) {
                         return true;
                     }
                 }
@@ -1643,6 +1641,29 @@ public class ClientGame {
         }
         
         return false;
+    }
+    
+    /**
+     * Determines if the supplied entity touches another entity, if
+     * it does, it returns the touched entity.
+     * 
+     * @param entity
+     * @return the touched entity if there is one
+     */
+    public ClientEntity getTouchedEntity(ClientEntity entity, Rectangle bounds) {
+        ClientEntity[] entityList = entities.getEntities();
+        for(int i = 0; i < entityList.length; i++) {
+            ClientEntity other = entityList[i];
+            if(other != null && other != entity) {
+                if(other.isAlive() && other.isRelativelyUpdated()) {
+                    if(other.isTouching(bounds)) {
+                        return other;
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
     
     /**

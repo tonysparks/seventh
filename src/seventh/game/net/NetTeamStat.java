@@ -12,14 +12,14 @@ import harenet.messages.NetMessage;
  */
 public class NetTeamStat implements NetMessage {
     public byte id;
-    public short score;
+    public int score;
     
     /* (non-Javadoc)
      * @see seventh.network.messages.NetMessage#read(java.nio.ByteBuffer)
      */
     @Override
     public void read(IOBuffer buffer) {
-        id = buffer.get();
+    //    id = BufferIO.readTeamId(buffer); is assigned by order in packet
         score = buffer.getShort();
     }
     
@@ -28,7 +28,7 @@ public class NetTeamStat implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        buffer.put(id);
-        buffer.putShort(score);
+    //    BufferIO.writeTeamId(buffer, id);
+        buffer.putShort( (short) score);
     }
 }

@@ -16,7 +16,7 @@ import seventh.client.ClientPlayers;
 import seventh.client.ClientTeam;
 import seventh.client.entities.ClientBombTarget;
 import seventh.client.weapon.ClientWeapon;
-import seventh.game.weapons.Weapon.State;
+import seventh.game.weapons.Weapon.WeaponState;
 import seventh.map.Layer;
 import seventh.map.Map;
 import seventh.map.Tile;
@@ -163,7 +163,7 @@ public class MiniMap implements Renderable {
                 
                 ClientWeapon weapon = ent.getEntity().getWeapon();
                 if(weapon != null) {
-                    if(weapon.getState().equals(State.FIRING)) {
+                    if(weapon.getState().equals(WeaponState.FIRING)) {
                         canvas.fillCircle(3.0f, x-1, y-1, 0xfaffff00);        
                     }
                 }

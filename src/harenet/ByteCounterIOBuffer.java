@@ -13,18 +13,35 @@ import java.nio.ByteBuffer;
  */
 public class ByteCounterIOBuffer implements IOBuffer {
 
-    private int numberOfBytes;
+    private int numberOfBits;
+    
     /**
      * 
      */
     public ByteCounterIOBuffer() {
-        this.numberOfBytes = 0;
+        this.numberOfBits = 0;
     }
     
     public ByteCounterIOBuffer(int size) {
-        this.numberOfBytes = size;
+        this.numberOfBits = size;
     }
 
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#receiveSync()
+     */
+    @Override
+    public IOBuffer receiveSync() {
+        return this;
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#sync()
+     */
+    @Override
+    public IOBuffer sendSync() {
+        return this;
+    }
+    
     /* (non-Javadoc)
      * @see netspark.IOBuffer#asByteBuffer()
      */
@@ -46,7 +63,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer duplicate() {
-        return new ByteCounterIOBuffer(this.numberOfBytes);
+        return new ByteCounterIOBuffer(this.numberOfBits);
     }
 
     /* (non-Javadoc)
@@ -70,7 +87,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putUnsignedByte(int b) {
-        numberOfBytes++;
+        this.numberOfBits+=Byte.SIZE;
         return this;
     }
     
@@ -78,7 +95,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get()
      */
     @Override
-    public byte get() {
+    public byte getByte() {
         return 0;
     }
 
@@ -86,8 +103,8 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte)
      */
     @Override
-    public IOBuffer put(byte b) {
-        numberOfBytes++;
+    public IOBuffer putByte(byte b) {
+        this.numberOfBits+=Byte.SIZE;
         return this;
     }
 
@@ -95,7 +112,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(int)
      */
     @Override
-    public byte get(int index) {
+    public byte getByte(int index) {
         return 0;
     }
 
@@ -103,8 +120,8 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(int, byte)
      */
     @Override
-    public IOBuffer put(int index, byte b) {
-        numberOfBytes += 1;
+    public IOBuffer putByte(int index, byte b) {
+        this.numberOfBits += Byte.SIZE;
         return this;
     }
 
@@ -112,7 +129,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(byte[], int, int)
      */
     @Override
-    public IOBuffer get(byte[] dst, int offset, int length) {
+    public IOBuffer getBytes(byte[] dst, int offset, int length) {
         return this;
     }
 
@@ -120,7 +137,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(byte[])
      */
     @Override
-    public IOBuffer get(byte[] dst) {
+    public IOBuffer getBytes(byte[] dst) {
         return this;
     }
 
@@ -129,7 +146,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer put(IOBuffer src) {
-        numberOfBytes += src.remaining();
+        this.numberOfBits += src.remaining() * 8;
         return this;
     }
 
@@ -137,8 +154,8 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte[], int, int)
      */
     @Override
-    public IOBuffer put(byte[] src, int offset, int length) {
-        numberOfBytes += length;
+    public IOBuffer putBytes(byte[] src, int offset, int length) {
+        this.numberOfBits += length * 8;
         return this;
     }
 
@@ -146,8 +163,8 @@ public class ByteCounterIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte[])
      */
     @Override
-    public IOBuffer put(byte[] src) {
-        numberOfBytes += src.length;
+    public IOBuffer putBytes(byte[] src) {
+        this.numberOfBits += src.length * 8;
         return this;
     }
 
@@ -196,7 +213,11 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public int capacity() {
-        return numberOfBytes;
+        int leftOver = this.numberOfBits % 8;
+        if(leftOver > 0) {
+            return (this.numberOfBits / 8) + 1;
+        }
+        return this.numberOfBits / 8;        
     }
 
     /* (non-Javadoc)
@@ -220,7 +241,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public int limit() {
-        return numberOfBytes;
+        return capacity();
     }
 
     /* (non-Javadoc)
@@ -252,7 +273,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer clear() {
-        numberOfBytes = 0;
+        this.numberOfBits = 0;
         return this;
     }
 
@@ -295,41 +316,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
     public boolean isReadOnly() {
         return false;
     }
-
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#getChar()
-     */
-    @Override
-    public char getChar() {
-        return 0;
-    }
-
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#putChar(char)
-     */
-    @Override
-    public IOBuffer putChar(char value) {
-        numberOfBytes += 2;
-        return this;
-    }
-
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#getChar(int)
-     */
-    @Override
-    public char getChar(int index) {
-        return 0;
-    }
-
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#putChar(int, char)
-     */
-    @Override
-    public IOBuffer putChar(int index, char value) {
-        numberOfBytes += 2;
-        return this;
-    }
-
+    
     /* (non-Javadoc)
      * @see netspark.IOBuffer#getShort()
      */
@@ -343,7 +330,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putShort(short value) {
-        numberOfBytes += 2;
+        this.numberOfBits += Short.SIZE;
         return this;
     }
 
@@ -360,7 +347,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putShort(int index, short value) {
-        numberOfBytes += 2;
+        this.numberOfBits += Short.SIZE;
         return this;
     }
 
@@ -377,7 +364,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putInt(int value) {
-        numberOfBytes += 4;
+        this.numberOfBits += Integer.SIZE;
         return this;
     }
 
@@ -394,7 +381,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putInt(int index, int value) {
-        numberOfBytes += 4;
+        this.numberOfBits += Integer.SIZE;
         return this;
     }
 
@@ -411,7 +398,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putLong(long value) {
-        numberOfBytes += 8;
+        this.numberOfBits += Long.SIZE;
         return this;
     }
 
@@ -428,7 +415,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putLong(int index, long value) {
-        numberOfBytes += 8;
+        this.numberOfBits += Long.SIZE;
         return this;
     }
 
@@ -445,7 +432,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putFloat(float value) {
-        numberOfBytes += 4;
+        this.numberOfBits += Float.SIZE;
         return this;
     }
 
@@ -462,7 +449,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putFloat(int index, float value) {
-        numberOfBytes += 4;
+        this.numberOfBits += Float.SIZE;
         return this;
     }
 
@@ -479,7 +466,7 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putDouble(double value) {
-        numberOfBytes += 8;
+        this.numberOfBits += Double.SIZE;
         return this;
     }
 
@@ -496,8 +483,149 @@ public class ByteCounterIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putDouble(int index, double value) {
-        numberOfBytes += 8;
+        this.numberOfBits += Double.SIZE;
         return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putBooleanBit(boolean)
+     */
+    @Override
+    public IOBuffer putBooleanBit(boolean value) {
+        this.numberOfBits ++;
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putLongBits(long, int)
+     */
+    @Override
+    public IOBuffer putLongBits(long value, int numberOfBits) {
+        this.numberOfBits += numberOfBits;
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putByteBits(byte, int)
+     */
+    @Override
+    public IOBuffer putByteBits(byte value, int numberOfBits) {
+        this.numberOfBits += numberOfBits;
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putShortBits(short, int)
+     */
+    @Override
+    public IOBuffer putShortBits(short value, int numberOfBits) {
+        this.numberOfBits += numberOfBits;
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putIntBits(int, int)
+     */
+    @Override
+    public IOBuffer putIntBits(int value, int numberOfBits) {
+        this.numberOfBits += numberOfBits;
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getBooleanBit()
+     */
+    @Override
+    public boolean getBooleanBit() {
+        return false;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getByteBits()
+     */
+    @Override
+    public byte getByteBits() {
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getByteBits(int)
+     */
+    @Override
+    public byte getByteBits(int numberOfBits) {
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getShortBits()
+     */
+    @Override
+    public short getShortBits() {
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getShortBits(int)
+     */
+    @Override
+    public short getShortBits(int numberOfBits) {
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getIntBits()
+     */
+    @Override
+    public int getIntBits() {
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getIntBits(int)
+     */
+    @Override
+    public int getIntBits(int numberOfBits) {
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits()
+     */
+    @Override
+    public long getLongBits() {     
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits(int)
+     */
+    @Override
+    public long getLongBits(int numberOfBits) {     
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitPosition()
+     */
+    @Override
+    public int bitPosition() {
+        return 0;
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitPosition(int)
+     */
+    @Override
+    public int bitPosition(int position) {     
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitCapacity()
+     */
+    @Override
+    public int bitCapacity() {
+        return capacity() * 8;
     }
 
 }

@@ -26,7 +26,7 @@ public class TextMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        playerId = buffer.getUnsignedByte();
+        playerId = BufferIO.readPlayerId(buffer);
         message = BufferIO.readString(buffer);
     }
     
@@ -36,7 +36,7 @@ public class TextMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putUnsignedByte(playerId);
-        BufferIO.write(buffer, message);
+        BufferIO.writePlayerId(buffer, playerId);
+        BufferIO.writeString(buffer, message);
     }
 }

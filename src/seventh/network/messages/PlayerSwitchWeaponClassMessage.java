@@ -5,13 +5,14 @@
 package seventh.network.messages;
 
 import harenet.IOBuffer;
+import seventh.game.entities.Entity.Type;
 
 /**
  * @author Tony
  *
  */
 public class PlayerSwitchWeaponClassMessage extends AbstractNetMessage {
-    public byte weaponType;
+    public Type weaponType;
     
     /**
      * 
@@ -26,7 +27,7 @@ public class PlayerSwitchWeaponClassMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        weaponType = buffer.get();
+        weaponType = BufferIO.readType(buffer);
     }
     
     /* (non-Javadoc)
@@ -35,6 +36,6 @@ public class PlayerSwitchWeaponClassMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.put(weaponType);
+        BufferIO.writeType(buffer, weaponType);
     }
 }

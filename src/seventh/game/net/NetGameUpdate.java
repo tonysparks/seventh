@@ -3,11 +3,11 @@
  */
 package seventh.game.net;
 
+import harenet.BitArray;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.network.messages.BufferIO;
 import seventh.shared.Arrays;
-import seventh.shared.BitArray;
 import seventh.shared.SeventhConstants;
 
 /**
@@ -30,7 +30,7 @@ public class NetGameUpdate implements NetMessage {
 
     private BitArray entityBitArray;
     public BitArray deadPersistantEntities;
-    private int numberOfInts;
+    private int numberOfBytes;
     
     private boolean hasDeadEntities;
     
@@ -41,13 +41,13 @@ public class NetGameUpdate implements NetMessage {
      * 
      */
     public NetGameUpdate() {
-        entityBitArray = new BitArray(SeventhConstants.MAX_ENTITIES - 1);        
+        entityBitArray = new BitArray(SeventhConstants.MAX_ENTITIES);        
         entities = new NetEntity[SeventhConstants.MAX_ENTITIES];
         
-        deadPersistantEntities = new BitArray(SeventhConstants.MAX_PERSISTANT_ENTITIES - 1);
+        deadPersistantEntities = new BitArray(SeventhConstants.MAX_PERSISTANT_ENTITIES);
         hasDeadEntities = true;
         
-        numberOfInts = entityBitArray.numberOfInts();        
+        numberOfBytes = entityBitArray.numberOfBytes();        
     }
     
     
@@ -70,10 +70,10 @@ public class NetGameUpdate implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        bits = buffer.get();
+        bits = buffer.getByte();
         if( (bits & ENTITIES_MASK) != 0) {
-            for(int i = 0; i < numberOfInts; i++) {
-                entityBitArray.setDataElement(i, buffer.getInt());
+            for(int i = 0; i < numberOfBytes; i++) {
+                entityBitArray.setDataElement(i, buffer.getByte());
             }
             
             for(int i = 0; i < entities.length; i++) {
@@ -85,7 +85,7 @@ public class NetGameUpdate implements NetMessage {
         }
         
         if( (bits & SOUND_MASK) != 0) {
-            numberOfSounds = buffer.get();
+            numberOfSounds = buffer.getByte();
             sounds = new NetSound[numberOfSounds];
             for(short i = 0; i < numberOfSounds; i++) {
                 sounds[i] = NetSound.readNetSound(buffer);                
@@ -94,8 +94,8 @@ public class NetGameUpdate implements NetMessage {
         
         if( (bits & DEAD_ENTS_MASK) != 0) {            
             hasDeadEntities = true;
-            for(int i = 0; i < deadPersistantEntities.numberOfInts(); i++) {
-                deadPersistantEntities.setDataElement(i, buffer.getInt());
+            for(int i = 0; i < deadPersistantEntities.numberOfBytes(); i++) {
+                deadPersistantEntities.setDataElement(i, buffer.getByte());
             }
         }
         
@@ -104,7 +104,6 @@ public class NetGameUpdate implements NetMessage {
         }
         
         time = buffer.getInt();
-        
         
     }
     
@@ -131,7 +130,7 @@ public class NetGameUpdate implements NetMessage {
             bits |= SPEC_MASK;
         }
     
-        buffer.put(bits);
+        buffer.putByte(bits);
         
         if(entities != null && entities.length > 0) {
             entityBitArray.clear();
@@ -142,9 +141,9 @@ public class NetGameUpdate implements NetMessage {
                 }
             }
             
-            int[] data = entityBitArray.getData();
+            byte[] data = entityBitArray.getData();
             for(int i = 0; i < data.length; i++) {
-                buffer.putInt(data[i]);
+                buffer.putByte(data[i]);
             }
             
             for(short i = 0; i < entities.length; i++) {
@@ -155,16 +154,16 @@ public class NetGameUpdate implements NetMessage {
         }
         
         if(numberOfSounds > 0) {            
-            buffer.put(numberOfSounds);
+            buffer.putByte(numberOfSounds);
             for(byte i = 0; i < numberOfSounds; i++) {
                 sounds[i].write(buffer);
             }
         }
         
         if(hasDeadEntities) {
-            int[] data = deadPersistantEntities.getData();
+            byte[] data = deadPersistantEntities.getData();
             for(int i = 0; i < data.length; i++) {
-                buffer.putInt(data[i]);
+                buffer.putByte(data[i]);
             }
         }
         
@@ -174,7 +173,6 @@ public class NetGameUpdate implements NetMessage {
         
         buffer.putInt(this.time);
         
-
     }
     
     /**

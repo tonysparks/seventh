@@ -12,7 +12,10 @@ import harenet.messages.NetMessage;
  */
 public class NetGameStats implements NetMessage {
     public NetPlayerStat[] playerStats;
-    public NetTeamStat[] teamStats;
+    
+    public NetTeamStat alliedTeamStats;
+    public NetTeamStat axisTeamStats;
+    
     
     /**
      * 
@@ -25,7 +28,7 @@ public class NetGameStats implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        byte len = buffer.get();
+        byte len = buffer.getByteBits(4);
         if(len > 0) {
             playerStats = new NetPlayerStat[len];
             for(byte i = 0; i < len; i++) {
@@ -34,15 +37,13 @@ public class NetGameStats implements NetMessage {
             }
         }
         
-        len = buffer.get();
-        if( len > 0 ) {
-            teamStats = new NetTeamStat[len];
-            for(byte i = 0; i < len; i++) {
-                teamStats[i] = new NetTeamStat();
-                teamStats[i].read(buffer);
-            }
-        }
+        alliedTeamStats = new NetTeamStat();
+        alliedTeamStats.read(buffer);
+        alliedTeamStats.id = 1;
         
+        axisTeamStats = new NetTeamStat();
+        axisTeamStats.read(buffer);
+        axisTeamStats.id = 2;
     }
     
     /* (non-Javadoc)
@@ -52,25 +53,17 @@ public class NetGameStats implements NetMessage {
     public void write(IOBuffer buffer) {
         if(playerStats != null) {
             byte len = (byte)playerStats.length;
-            buffer.put(len);
+            buffer.putByteBits(len, 4);
             for(byte i = 0; i < len; i++) {
                 playerStats[i].write(buffer);
             }
         }
         else {
-            buffer.put( (byte)0 );
+            buffer.putByteBits( (byte)0, 4 );
         }
         
-        if ( teamStats != null ) {
-            byte len = (byte)teamStats.length;
-            buffer.put(len);
-            for(byte i = 0; i < len; i++) {
-                teamStats[i].write(buffer);
-            }
-        }
-        else {
-            buffer.put( (byte)0 );
-        }
+        alliedTeamStats.write(buffer);
+        axisTeamStats.write(buffer);
         
     }
 }

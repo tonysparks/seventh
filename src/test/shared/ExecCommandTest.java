@@ -14,23 +14,23 @@ import seventh.shared.ExecCommand;
 
 public class ExecCommandTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
-	/**
-	 * Test case for ExecCommand
-	 */
-	@Test
-	public void testExecute() {
-		ExecCommand EC = new ExecCommand();
-		Console console = new DefaultConsole();
-		EC.execute(console, "new file");
-		EC.execute(console, "/Users/hyeongjukim/Desktop/new.txt");
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
+    /**
+     * Test case for ExecCommand
+     */
+    @Test
+    public void testExecute() {
+        ExecCommand EC = new ExecCommand();
+        Console console = new DefaultConsole();
+        EC.execute(console, "new file");
+        EC.execute(console, "/Users/hyeongjukim/Desktop/new.txt");
+    }
 
-	
+    
 }

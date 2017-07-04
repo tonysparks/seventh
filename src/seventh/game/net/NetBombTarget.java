@@ -14,18 +14,18 @@ import seventh.game.entities.Entity.Type;
  */
 public class NetBombTarget extends NetEntity {
 
-    public byte bits;
+    public boolean isRotated;
     
     public NetBombTarget() {
-        this.type = Type.BOMB_TARGET.netValue();
+        this.type = Type.BOMB_TARGET;
     }
     
     public boolean rotated90() {
-        return bits > 0;
+        return isRotated;
     }
     
     public void rotate90() {
-        bits=1;
+        isRotated=true;
     }
     
     /* (non-Javadoc)
@@ -34,7 +34,7 @@ public class NetBombTarget extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        bits = buffer.get();
+        isRotated = buffer.getBooleanBit();
     }
     
     /* (non-Javadoc)
@@ -43,6 +43,6 @@ public class NetBombTarget extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.put(bits);
+        buffer.putBooleanBit(isRotated);
     }
 }

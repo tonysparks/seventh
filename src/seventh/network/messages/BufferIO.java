@@ -6,6 +6,7 @@ package seventh.network.messages;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import harenet.messages.NetMessageFactory;
+import seventh.game.entities.Entity.State;
 import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetBomb;
 import seventh.game.net.NetBombTarget;
@@ -22,6 +23,7 @@ import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetRocket;
 import seventh.game.net.NetSmoke;
 import seventh.game.net.NetTank;
+import seventh.game.weapons.Weapon.WeaponState;
 import seventh.math.Vector2f;
 
 /**
@@ -93,7 +95,7 @@ public class BufferIO {
         public NetMessage readNetMessage(IOBuffer buffer) {
             NetMessage message = null;
                             
-            byte type = buffer.get();
+            byte type = buffer.getByteBits(6); // must match AbstractNetMessage.write
             switch(type) {
                 case BOMB_DIARMED: message = new BombDisarmedMessage();
                     break;
@@ -173,6 +175,50 @@ public class BufferIO {
             return message;
         }
     }
+
+    public static void writeWeaponState(IOBuffer buffer, WeaponState state) {
+        buffer.putByteBits(state.netValue(), WeaponState.numOfBits());
+    }
+    
+    public static WeaponState readWeaponState(IOBuffer buffer) {
+        byte state = buffer.getByteBits(WeaponState.numOfBits());
+        return WeaponState.fromNet(state);
+    }
+    
+    public static void writeState(IOBuffer buffer, State state) {
+        buffer.putByteBits(state.netValue(), State.numOfBits());
+    }
+    
+    public static State readState(IOBuffer buffer) {
+        byte state = buffer.getByteBits(State.numOfBits());
+        return State.fromNetValue(state);
+    }
+
+    
+    public static void writeType(IOBuffer buffer, Type type) {
+        buffer.putByteBits(type.netValue(), Type.numOfBits());
+    }
+    
+    public static Type readType(IOBuffer buffer) {
+        byte type = buffer.getByteBits(Type.numOfBits());
+        return Type.fromNet(type);
+    }
+    
+    public static void writePlayerId(IOBuffer buffer, int playerId) {
+        buffer.putIntBits(playerId, 4);
+    }
+    
+    public static int readPlayerId(IOBuffer buffer) {
+        return buffer.getIntBits(4);
+    }
+    
+    public static void writeTeamId(IOBuffer buffer, byte teamId) {
+        buffer.putByteBits(teamId, 2);
+    }
+    
+    public static byte readTeamId(IOBuffer buffer) {
+        return buffer.getByteBits(2);
+    }
         
     public static void writeAngle(IOBuffer buffer, int degrees) {
         int bangle = ( degrees * 256) / 360;
@@ -199,13 +245,13 @@ public class BufferIO {
         return v;
     }
     
-    public static void write(IOBuffer buffer, String str) {
+    public static void writeString(IOBuffer buffer, String str) {
         
         byte[] chars = str.getBytes();
         int len = chars.length;
         buffer.putUnsignedByte(len);
         for(byte i = 0; i < len; i++) {
-            buffer.put(chars[i]);
+            buffer.putByte(chars[i]);
         }        
     }
     
@@ -213,7 +259,27 @@ public class BufferIO {
         int len = buffer.getUnsignedByte();
         byte[] chars = new byte[len];
         for(byte i = 0; i < len; i++) {
-            chars[i] = buffer.get();
+            chars[i] = buffer.getByte();
+        }
+        
+        return new String(chars);
+    }
+    
+    public static void writeBigString(IOBuffer buffer, String str) {
+        
+        byte[] chars = str.getBytes();
+        int len = chars.length;
+        buffer.putShort( (short)len);
+        for(byte i = 0; i < len; i++) {
+            buffer.putByte(chars[i]);
+        }        
+    }
+    
+    public static String readBigString(IOBuffer buffer) {
+        int len = buffer.getShort();
+        byte[] chars = new byte[len];
+        for(byte i = 0; i < len; i++) {
+            chars[i] = buffer.getByte();
         }
         
         return new String(chars);
@@ -222,8 +288,9 @@ public class BufferIO {
     public static NetEntity readEntity(IOBuffer buffer) {
         NetEntity result = null;
         
-        byte type = buffer.get();
-        buffer.position(buffer.position() - 1); /* so the entity can re-read the type */
+        byte type = buffer.getByteBits(Type.numOfBits());
+        /* so the entity can re-read the type */
+        buffer.bitPosition(buffer.bitPosition() - Type.numOfBits());
         
         Type entType = Type.fromNet(type);
         switch(entType) {

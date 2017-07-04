@@ -335,7 +335,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         if(state instanceof NetPlayer) {
             NetPlayer ps = (NetPlayer) state;
             
-            this.currentState = State.fromNetValue(ps.state);
+            this.currentState = ps.state;
             int newHealth = ps.health;
             int newDamageDelta = newHealth - this.health;
             if(newDamageDelta < 0) {
@@ -362,7 +362,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         }
         else {
             NetPlayerPartial ps = (NetPlayerPartial) state;
-            this.currentState = State.fromNetValue(ps.state);
+            this.currentState = ps.state;
             int newHealth = ps.health;
             
             int newDamageDelta = newHealth - this.health;
@@ -398,7 +398,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         if(netWeapon != null){
             lineOfSight = WeaponConstants.DEFAULT_LINE_OF_SIGHT;
             
-            Type type = Type.fromNet(netWeapon.type); 
+            Type type = netWeapon.type; 
             switch(type) {
                 case THOMPSON: {
                     weapon = WEAPONS[0];
@@ -562,7 +562,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         
         if(isControlledByLocalPlayer()) {
             this.effects.getHurtEffect().reset();
-        }
+        }        
     }
     
     @Override

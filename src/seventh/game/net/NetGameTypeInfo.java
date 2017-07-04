@@ -15,7 +15,8 @@ public class NetGameTypeInfo implements NetMessage {
     public long maxTime;
     
     public int maxScore;
-    public NetTeam[] teams;
+    public NetTeam alliedTeam;
+    public NetTeam axisTeam;
     
     public byte type;
     
@@ -26,16 +27,15 @@ public class NetGameTypeInfo implements NetMessage {
     public void read(IOBuffer buffer) {
         maxTime = buffer.getLong();
         maxScore = buffer.getInt();
-        type = buffer.get();
+        type = buffer.getByte();
         
-        byte len = buffer.get();
-        if(len > 0 ) {
-            teams= new NetTeam[len];
-            for(byte i = 0; i < len; i++) {
-                teams[i] = new NetTeam();
-                teams[i].read(buffer);
-            }
-        }
+        alliedTeam = new NetTeam();
+        alliedTeam.read(buffer);
+        alliedTeam.id = 1;
+        
+        axisTeam = new NetTeam();
+        axisTeam.read(buffer);
+        axisTeam.id = 2;
     }
     
     /* (non-Javadoc)
@@ -45,17 +45,9 @@ public class NetGameTypeInfo implements NetMessage {
     public void write(IOBuffer buffer) {
         buffer.putLong(maxTime);
         buffer.putInt(maxScore);
-        buffer.put(type);
+        buffer.putByte(type);
         
-        if(teams != null) {
-            byte len = (byte)teams.length;
-            buffer.put(len);
-            for(byte i = 0; i < len; i++) {
-                teams[i].write(buffer);
-            }
-        }
-        else {
-            buffer.put( (byte)0 );
-        }
+        alliedTeam.write(buffer);
+        axisTeam.write(buffer);
     }
 }

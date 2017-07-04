@@ -3,6 +3,15 @@
  */
 package harenet;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.util.Iterator;
+import java.util.Queue;
+
 import harenet.Peer.State;
 import harenet.messages.ConnectionRequestMessage;
 import harenet.messages.DisconnectMessage;
@@ -11,14 +20,6 @@ import harenet.messages.Message;
 import harenet.messages.NetMessageFactory;
 import harenet.messages.PingMessage;
 import harenet.messages.PongMessage;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.DatagramChannel;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.util.Iterator;
-import java.util.Queue;
 
 /**
  * Represents a {@link Host} machine.  This is able to send and receive
@@ -610,12 +611,13 @@ public class Host {
      * @param peer
      * @return the number of bytes transfered
      */
-    private int send(IOBuffer buffer, Peer peer) {        
-        buffer.flip();
+    private int send(IOBuffer ioBuffer, Peer peer) {
+        ByteBuffer buffer = ioBuffer.sendSync().asByteBuffer();        
+        buffer.flip();        
         try {
             peer.setLastSendTime(System.currentTimeMillis());
             peer.addNumberOfBytesSent(buffer.limit());
-            return datagramChannel.send(buffer.asByteBuffer(), peer.getAddress());
+            return datagramChannel.send(buffer, peer.getAddress());
         } 
         catch (Exception e) {        
             if(log.enabled()) log.error("Error sending bytes to peer: " + e);
@@ -630,11 +632,14 @@ public class Host {
      * @param buffer
      * @return the number of bytes received
      */
-    private int receive(IOBuffer buffer) {
+    private int receive(IOBuffer ioBuffer) {
+        ByteBuffer buffer = ioBuffer.clear().asByteBuffer();
         buffer.clear();
         try {
-            this.receivedAddress = (InetSocketAddress) datagramChannel.receive(buffer.asByteBuffer());
-            buffer.flip();                
+            this.receivedAddress = (InetSocketAddress) datagramChannel.receive(buffer);            
+            buffer.flip();  
+            
+            ioBuffer.receiveSync();
             
             return buffer.limit();            
         }
@@ -772,7 +777,7 @@ public class Host {
      */
     private void parseMessages(Peer peer, IOBuffer buffer, Protocol protocol) {
         byte numberOfMessages = protocol.getNumberOfMessages();                                                
-        while(numberOfMessages > 0 && buffer.position() < buffer.limit()) {
+        while(numberOfMessages > 0 && buffer.hasRemaining()) {
             numberOfMessages--;
             
             Message message = MessageHeader.readMessageHeader(buffer, messageFactory);

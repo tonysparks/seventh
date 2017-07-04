@@ -11,8 +11,8 @@ import harenet.IOBuffer;
  */
 public class PlayerSpawnedMessage extends AbstractNetMessage {
     public int playerId;
-    public short posX;
-    public short posY;
+    public int posX;
+    public int posY;
         
     /**
      * 
@@ -27,14 +27,9 @@ public class PlayerSpawnedMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        playerId = buffer.getUnsignedByte();
-//        if((playerId & 0x80) != 0) {
-//            isMech = true;
-//        }
-//        playerId = playerId & ~0x80;
-//        
-        posX = buffer.getShort();
-        posY = buffer.getShort();
+        playerId = BufferIO.readPlayerId(buffer);
+        posX = buffer.getIntBits(13); // max X & Y of 256x256 tiles (32x32 tiles) ~8191 
+        posY = buffer.getIntBits(13);
     }
     
     /* (non-Javadoc)
@@ -43,15 +38,9 @@ public class PlayerSpawnedMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-//        if(isMech) {
-//            buffer.putUnsignedByte(playerId | 0x80 );
-//        }
-//        else 
-        {
-            buffer.putUnsignedByte(playerId);
-        }
-        buffer.putShort(posX);
-        buffer.putShort(posY);
+        BufferIO.writePlayerId(buffer, playerId);
+        buffer.putIntBits(posX, 13);
+        buffer.putIntBits(posY, 13);
     }
 
 }

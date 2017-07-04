@@ -1992,7 +1992,8 @@ public class Game implements GameInfo, Debugable, Updatable {
             }
         }
         
-        gameStats.teamStats = this.gameType.getNetTeamStats();        
+        gameStats.alliedTeamStats = this.gameType.getAlliedNetTeamStats();
+        gameStats.axisTeamStats = this.gameType.getAxisNetTeamStats();
         return gameStats;
     }
     
@@ -2011,7 +2012,9 @@ public class Game implements GameInfo, Debugable, Updatable {
             }
         }
         
-        gamePartialStats.teamStats = this.gameType.getNetTeamStats();        
+        gamePartialStats.alliedTeamStats = this.gameType.getAlliedNetTeamStats();
+        gamePartialStats.axisTeamStats = this.gameType.getAxisNetTeamStats();     
+        
         return gamePartialStats;
     }
     

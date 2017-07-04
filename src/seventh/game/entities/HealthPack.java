@@ -53,7 +53,7 @@ public class HealthPack extends Entity {
         this.bounds.height = 16;
         
         this.netEntity = new NetEntity();
-        this.netEntity.type = Type.HEALTH_PACK.netValue();      
+        this.netEntity.type = Type.HEALTH_PACK;      
         
     }
     /* (non-Javadoc)

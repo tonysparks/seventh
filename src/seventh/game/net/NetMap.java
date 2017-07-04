@@ -32,7 +32,7 @@ public class NetMap implements NetMessage {
     @Override
     public void write(IOBuffer buffer) {
         buffer.putInt(id);
-        BufferIO.write(buffer, path);
-        BufferIO.write(buffer, name);
+        BufferIO.writeString(buffer, path);
+        BufferIO.writeString(buffer, name);
     }
 }

@@ -28,7 +28,7 @@ public class RoundEndedMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        winnerTeamId = buffer.get();
+        winnerTeamId = BufferIO.readTeamId(buffer);
         stats = new NetGameStats();
         stats.read(buffer);
     }
@@ -39,7 +39,7 @@ public class RoundEndedMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.put(winnerTeamId);
+        BufferIO.writeTeamId(buffer, winnerTeamId);
         stats.write(buffer);
     }
 }

@@ -73,6 +73,14 @@ public abstract class Entity implements Debugable {
         }
         
         /**
+         * @return number of bits it takes to represent this
+         * enum
+         */
+        public static int numOfBits() {
+            return 4;
+        }
+        
+        /**
          * @return true if we are in the vehicle operation states
          */
         public boolean isVehicleState() {
@@ -184,6 +192,14 @@ public abstract class Entity implements Debugable {
             }
             
             return values[value];
+        }
+        
+        /**
+         * @return the number of bits to represent this 
+         * type
+         */
+        public static int numOfBits() {
+            return 6;
         }
         
         /**

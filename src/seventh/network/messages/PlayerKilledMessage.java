@@ -4,6 +4,7 @@
 package seventh.network.messages;
 
 import harenet.IOBuffer;
+import seventh.game.entities.Entity.Type;
 
 /**
  * @author Tony
@@ -12,9 +13,9 @@ import harenet.IOBuffer;
 public class PlayerKilledMessage extends AbstractNetMessage {
     public int playerId;
     public int killedById;
-    public byte deathType;
-    public short posX;
-    public short posY;
+    public Type deathType;
+    public int posX;
+    public int posY;
     
     /**
      * 
@@ -29,11 +30,11 @@ public class PlayerKilledMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        playerId = buffer.getUnsignedByte();
-        killedById = buffer.getUnsignedByte();
-        deathType = buffer.get();        
-        posX = buffer.getShort();
-        posY = buffer.getShort();
+        playerId = BufferIO.readPlayerId(buffer);
+        killedById = BufferIO.readPlayerId(buffer);
+        deathType = BufferIO.readType(buffer);        
+        posX = buffer.getIntBits(13); // max X & Y of 256x256 tiles (32x32 tiles) ~8191 
+        posY = buffer.getIntBits(13);
     }
     
     /* (non-Javadoc)
@@ -42,10 +43,10 @@ public class PlayerKilledMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putUnsignedByte(playerId);
-        buffer.putUnsignedByte(killedById);
-        buffer.put(deathType);
-        buffer.putShort(posX);
-        buffer.putShort(posY);
+        BufferIO.writePlayerId(buffer, playerId);
+        BufferIO.writePlayerId(buffer, killedById);
+        BufferIO.writeType(buffer, deathType);
+        buffer.putIntBits(posX, 13);
+        buffer.putIntBits(posY, 13);
     }
 }

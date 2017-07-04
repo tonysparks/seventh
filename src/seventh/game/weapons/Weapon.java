@@ -26,7 +26,7 @@ import seventh.shared.TimeStep;
  */
 public abstract class Weapon {
     
-    public enum State {
+    public enum WeaponState {
         READY,
         FIRING,
         WAITING,
@@ -43,14 +43,18 @@ public abstract class Weapon {
             return (byte)ordinal();
         }
         
-        private static State[] values = values();
+        private static WeaponState[] values = values();
         
-        public static State fromNet(byte value) {
+        public static WeaponState fromNet(byte value) {
             if(value < 0 || value >= values.length) {
                 return UNKNOWN;
             }
             
             return values[value];
+        }
+        
+        public static int numOfBits() {
+            return 4;
         }
     }
     
@@ -68,7 +72,7 @@ public abstract class Weapon {
     protected int lineOfSight;
     protected int bulletRange;
     
-    private State state;
+    private WeaponState weaponState;
     
     protected Entity owner;
     
@@ -95,9 +99,9 @@ public abstract class Weapon {
         this.game = game;
         this.owner = owner;
         this.netWeapon = new NetWeapon();
-        this.netWeapon.type = type.netValue();
+        this.netWeapon.type = type;
         this.random = new Random();
-        this.state = State.READY;    
+        this.weaponState = WeaponState.READY;    
         
         this.gunSwing = new GunSwing(game, owner);        
         
@@ -238,7 +242,7 @@ public abstract class Weapon {
      * @return true if we were able to swing
      */
     public boolean meleeAttack() {
-        if(state == State.READY) {
+        if(weaponState == WeaponState.READY) {
             if(this.gunSwing.beginSwing()) {
                 setMeleeAttack();
                 this.gunSwing.endSwing();
@@ -267,28 +271,28 @@ public abstract class Weapon {
      * @return true if this weapon is ready to fire/use
      */
     public boolean isReady() {
-        return state == State.READY;
+        return weaponState == WeaponState.READY;
     }
     
     /**
      * @return true if this weapon is switching
      */
     public boolean isSwitchingWeapon() {
-        return state == State.SWITCHING;
+        return weaponState == WeaponState.SWITCHING;
     }
     
     /**
      * @return true if this weapon is currently firing
      */
     public boolean isFiring() {
-        return state == State.FIRING;
+        return weaponState == WeaponState.FIRING;
     }
     
     /**
      * @return true if this weapon is currently reloading
      */
     public boolean isReloading() {
-        return state == State.RELOADING;
+        return weaponState == WeaponState.RELOADING;
     }
     
     /**
@@ -313,47 +317,47 @@ public abstract class Weapon {
     }
     
     protected void setMeleeAttack() {
-        state = State.MELEE_ATTACK;
+        weaponState = WeaponState.MELEE_ATTACK;
         weaponTime = 200;
     }
     
     protected void setReadyState() {
-        this.state = State.READY;
+        this.weaponState = WeaponState.READY;
     }
     
     protected void setReloadingState() {
-        state = State.RELOADING;
+        weaponState = WeaponState.RELOADING;
     }
     
     protected void setWaitingState() {
-        state = State.WAITING; 
+        weaponState = WeaponState.WAITING; 
     }
     
     public void setSwitchingWeaponState() {
-        state = State.SWITCHING;
+        weaponState = WeaponState.SWITCHING;
         weaponTime = 900;
         game.emitSound(getOwnerId(), SoundType.WEAPON_SWITCH, getPos());
     }
     
     protected void setFireState() {
-        state = State.FIRING;
+        weaponState = WeaponState.FIRING;
 //        this.fired = false;
     }
     
     protected void setFireEmptyState() {
-        if(getState() != Weapon.State.FIRE_EMPTY) {
+        if(getState() != Weapon.WeaponState.FIRE_EMPTY) {
             game.emitSound(getOwnerId(), SoundType.EMPTY_FIRE, getPos());    
         }
         this.weaponTime = 500;
-        state = State.FIRE_EMPTY;                        
+        weaponState = WeaponState.FIRE_EMPTY;                        
 //        this.fired = false;
     }
     
     /**
-     * @return the state
+     * @return the weaponState
      */
-    public State getState() {
-        return state;
+    public WeaponState getState() {
+        return weaponState;
     }
     
     /**
@@ -592,7 +596,7 @@ public abstract class Weapon {
     
     
     /**
-     * Calculates the accuracy of the shot based on the owner {@link Entity}'s state.
+     * Calculates the accuracy of the shot based on the owner {@link Entity}'s weaponState.
      * 
      * <p>
      * The more still you are, the more accurate you are.
@@ -647,7 +651,7 @@ public abstract class Weapon {
     public NetWeapon getNetWeapon() {
         netWeapon.ammoInClip = (byte)bulletsInClip;
         netWeapon.totalAmmo = (short)totalAmmo;
-        netWeapon.state = state.netValue();        
+        netWeapon.weaponState = weaponState;        
         
         return this.netWeapon;
     }

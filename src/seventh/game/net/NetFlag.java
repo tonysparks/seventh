@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 /**
  * @author Tony
@@ -24,7 +25,7 @@ public class NetFlag extends NetEntity {
      * @param type
      */
     public NetFlag(Type type) {
-        this.type = type.netValue();
+        this.type = type;
     }
     
     /* (non-Javadoc)
@@ -33,7 +34,7 @@ public class NetFlag extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        this.carriedBy = buffer.getUnsignedByte();
+        this.carriedBy = BufferIO.readPlayerId(buffer);
     }
 
     /* (non-Javadoc)
@@ -42,6 +43,6 @@ public class NetFlag extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {
         super.write(buffer);
-        buffer.putUnsignedByte(this.carriedBy);
+        BufferIO.writePlayerId(buffer, carriedBy);
     }
 }

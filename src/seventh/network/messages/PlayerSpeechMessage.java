@@ -11,8 +11,8 @@ import harenet.IOBuffer;
  */
 public class PlayerSpeechMessage extends AbstractNetMessage {
     public int playerId;
-    public short posX;
-    public short posY;
+    public int posX;
+    public int posY;
     public byte speechCommand;
         
     /**
@@ -28,10 +28,10 @@ public class PlayerSpeechMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        playerId = buffer.getUnsignedByte();        
-        posX = buffer.getShort();
-        posY = buffer.getShort();
-        speechCommand = buffer.get();
+        playerId = BufferIO.readPlayerId(buffer);
+        posX = buffer.getIntBits(13); // max X & Y of 256x256 tiles (32x32 tiles) ~8191 
+        posY = buffer.getIntBits(13);
+        speechCommand = buffer.getByteBits(4);
         
     }
     
@@ -42,10 +42,10 @@ public class PlayerSpeechMessage extends AbstractNetMessage {
     public void write(IOBuffer buffer) {    
         super.write(buffer);
 
-        buffer.putUnsignedByte(playerId);
-        buffer.putShort(posX);
-        buffer.putShort(posY);
-        buffer.put(speechCommand);
+        BufferIO.writePlayerId(buffer, playerId);
+        buffer.putIntBits(posX, 13);
+        buffer.putIntBits(posY, 13);
+        buffer.putByteBits(speechCommand, 4);
     }
 
 }

@@ -14,10 +14,16 @@ import java.nio.ByteBuffer;
 public class ByteBufferIOBuffer implements IOBuffer {
 
     private ByteBuffer buffer;
+    private BitPacker packer;
+        
     /**
      */
     public ByteBufferIOBuffer(ByteBuffer buffer) {
         this.buffer = buffer;
+        this.packer = new BitPacker(this.buffer.capacity() * 8, buffer.limit() * 8);
+        
+        // syncs what's in the ByteBuffer to the BitPacker
+        syncBuffer();
     }
     
     /**
@@ -25,13 +31,50 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     public ByteBufferIOBuffer(int size) {
         this.buffer = ByteBuffer.allocate(size);
+        this.packer = new BitPacker(this.buffer.capacity() * 8, size * 8);
     }
 
+    private void syncBuffer() {                      
+        buffer.clear();
+        
+        int oldPosition = packer.position(0);
+        packer.writeTo(buffer);
+        packer.position(oldPosition);
+    }
+    
     /* (non-Javadoc)
-     * @see netspark.IOBuffer#asByteBuffer()
+     * @see harenet.IOBuffer#receiveSync()
      */
     @Override
-    public ByteBuffer asByteBuffer() {    
+    public IOBuffer receiveSync() {
+
+        buffer.mark();
+        {
+            packer.clear();
+            packer.readFrom(buffer);
+            packer.flip();
+        }
+        buffer.reset();
+        
+        return this;
+
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#sync()
+     */
+    @Override
+    public IOBuffer sendSync() {        
+        syncBuffer();        
+        return this;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see harenet.IOBuffer#asByteBuffer()
+     */
+    @Override
+    public ByteBuffer asByteBuffer() {        
         return buffer;
     }
     
@@ -39,7 +82,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#slice()
      */
     @Override
-    public IOBuffer slice() {        
+    public IOBuffer slice() {
+        syncBuffer();
         return new ByteBufferIOBuffer(buffer.slice());
     }
 
@@ -48,6 +92,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer duplicate() {
+        syncBuffer();
         return new ByteBufferIOBuffer(buffer.duplicate());
     }
 
@@ -56,6 +101,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer asReadOnlyBuffer() {
+        syncBuffer();
         return new ByteBufferIOBuffer(buffer.asReadOnlyBuffer());
     }
 
@@ -64,23 +110,23 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public int getUnsignedByte() {    
-        return buffer.get() & 0xFF;
+        return packer.getByte() & 0xFF;
     }
     
     /* (non-Javadoc)
      * @see netspark.IOBuffer#get()
      */
     @Override
-    public byte get() {
-        return buffer.get();
+    public byte getByte() {
+        return packer.getByte();
     }
     
     /* (non-Javadoc)
      * @see harenet.IOBuffer#putUnsignedByte(int)
      */
     @Override
-    public IOBuffer putUnsignedByte(int b) {    
-        buffer.put( (byte) b);
+    public IOBuffer putUnsignedByte(int b) {            
+        packer.putByte( (byte) b);
         return this;
     }
 
@@ -88,8 +134,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte)
      */
     @Override
-    public IOBuffer put(byte b) {
-        buffer.put(b);
+    public IOBuffer putByte(byte b) {        
+        packer.putByte(b);
         return this;
     }
 
@@ -97,16 +143,20 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(int)
      */
     @Override
-    public byte get(int index) {
-        return buffer.get(index);
+    public byte getByte(int index) {
+        packer.mark();
+        packer.position(index * 8);
+        byte result = packer.getByte();
+        packer.reset();
+        return result;
     }
 
     /* (non-Javadoc)
      * @see netspark.IOBuffer#put(int, byte)
      */
     @Override
-    public IOBuffer put(int index, byte b) {
-        buffer.put(index, b);
+    public IOBuffer putByte(int index, byte b) {
+        packer.putBits(index * 8, b, Byte.SIZE);
         return this;
     }
 
@@ -114,8 +164,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(byte[], int, int)
      */
     @Override
-    public IOBuffer get(byte[] dst, int offset, int length) {
-        buffer.get(dst, offset, length);
+    public IOBuffer getBytes(byte[] dst, int offset, int length) {
+        packer.getBytes(dst, offset, length);
         return this;
     }
 
@@ -123,8 +173,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#get(byte[])
      */
     @Override
-    public IOBuffer get(byte[] dst) {
-        buffer.get(dst);
+    public IOBuffer getBytes(byte[] dst) {
+        packer.getBytes(dst, 0, dst.length);
         return this;
     }
 
@@ -134,7 +184,10 @@ public class ByteBufferIOBuffer implements IOBuffer {
     @Override
     public IOBuffer put(IOBuffer src) {
         //buffer.put(src.array(), src.arrayOffset(), src.capacity());
-        buffer.put(src.asByteBuffer());
+        //buffer.put(src.asByteBuffer());
+        //ByteBuffer buffer = src.asByteBuffer();
+        // TODO: Think about this more
+        packer.putBytes(buffer.array(), buffer.arrayOffset(), buffer.capacity());
         return this;
     }
 
@@ -142,8 +195,9 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte[], int, int)
      */
     @Override
-    public IOBuffer put(byte[] src, int offset, int length) {
-        buffer.put(src, offset, length);
+    public IOBuffer putBytes(byte[] src, int offset, int length) {
+        //buffer.put(src, offset, length);
+        packer.putBytes(src, offset, length);
         return this;
     }
 
@@ -151,8 +205,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#put(byte[])
      */
     @Override
-    public IOBuffer put(byte[] src) {
-        buffer.put(src);
+    public IOBuffer putBytes(byte[] src) {
+        packer.putBytes(src);
         return this;
     }
 
@@ -169,6 +223,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public byte[] array() {
+        syncBuffer();
         return buffer.array();
     }
 
@@ -185,7 +240,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer compact() {
-        buffer.compact();
+        syncBuffer();
+        buffer.compact();        
         return this;
     }
 
@@ -209,8 +265,13 @@ public class ByteBufferIOBuffer implements IOBuffer {
      * @see netspark.IOBuffer#position()
      */
     @Override
-    public int position() {        
-        return buffer.position();
+    public int position() {
+        int leftOver = packer.position() % 8;
+        if(leftOver>0) {
+            return (packer.position() / 8) + 1;
+        }
+        
+        return (packer.position() / 8);
     }
 
     /* (non-Javadoc)
@@ -218,7 +279,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer position(int newPosition) {
-        buffer.position(newPosition);
+        packer.position(newPosition * 8);
         return this;
     }
 
@@ -227,7 +288,12 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public int limit() {
-        return buffer.limit();
+        int leftOver = packer.limit() % 8;
+        if(leftOver>0) {
+            return (packer.limit() / 8) + 1;
+        }
+        
+        return (packer.limit() / 8);
     }
 
     /* (non-Javadoc)
@@ -235,7 +301,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer limit(int newLimit) {
-        buffer.limit(newLimit);
+        packer.limit(newLimit * 8);
         return this;
     }
 
@@ -244,7 +310,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer mark() {
-        buffer.mark();
+        packer.mark();
         return this;
     }
 
@@ -253,7 +319,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer reset() {
-        buffer.reset();
+        packer.reset();
         return this;
     }
 
@@ -262,7 +328,8 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer clear() {
-        buffer.clear();
+        packer.clear();
+        packer.limit(buffer.capacity() * 8);
         return this;
     }
 
@@ -271,7 +338,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer flip() {
-        buffer.flip();
+        packer.flip();
         return this;
     }
 
@@ -280,7 +347,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer rewind() {
-        buffer.rewind();
+        packer.rewind();
         return this;
     }
 
@@ -289,7 +356,12 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public int remaining() {
-        return buffer.remaining();
+        int leftOver = packer.remaining() % 8;
+        if(leftOver>0) {
+            return (packer.remaining() / 8) + 1;
+        }
+        
+        return (packer.remaining() / 8);
     }
 
     /* (non-Javadoc)
@@ -297,7 +369,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public boolean hasRemaining() {
-        return buffer.hasRemaining();
+        return packer.hasRemaining();
     }
 
     /* (non-Javadoc)
@@ -308,48 +380,13 @@ public class ByteBufferIOBuffer implements IOBuffer {
         return buffer.isReadOnly();
     }
 
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#getChar()
-     */
-    @Override
-    public char getChar() {
-        return buffer.getChar();
-    }
-
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#putChar(char)
-     */
-    @Override
-    public IOBuffer putChar(char value) {
-        buffer.putChar(value);
-        return this;
-    }
-
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#getChar(int)
-     */
-    @Override
-    public char getChar(int index) {
-        return buffer.getChar(index);
-    }
-
-    /* (non-Javadoc)
-     * @see netspark.IOBuffer#putChar(int, char)
-     */
-    @Override
-    public IOBuffer putChar(int index, char value) {
-        buffer.putChar(index, value);
-        return this;
-    }
-
-    
 
     /* (non-Javadoc)
      * @see netspark.IOBuffer#getShort()
      */
     @Override
     public short getShort() {    
-        return buffer.getShort();
+        return packer.getShort();
     }
 
     /* (non-Javadoc)
@@ -357,7 +394,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putShort(short value) {
-        buffer.putShort(value);
+        packer.putShort(value);
         return this;
     }
 
@@ -366,7 +403,11 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public short getShort(int index) {
-        return buffer.getShort(index);
+        packer.mark();
+        packer.position(index * 8);
+        short result = packer.getShort();
+        packer.reset();
+        return result;
     }
 
     /* (non-Javadoc)
@@ -374,7 +415,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putShort(int index, short value) {
-        buffer.putShort(index, value);
+        packer.putShort(index, value, Short.SIZE);
         return this;
     }
 
@@ -385,7 +426,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public int getInt() {
-        return buffer.getInt();
+        return packer.getInteger();
     }
 
     /* (non-Javadoc)
@@ -393,7 +434,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putInt(int value) {
-        buffer.putInt(value);
+        packer.putInteger(value);
         return this;
     }
 
@@ -402,7 +443,11 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public int getInt(int index) {
-        return buffer.getInt(index);
+        packer.mark();
+        packer.position(index * 8);
+        int result = packer.getInteger();
+        packer.reset();
+        return result;
     }
 
     /* (non-Javadoc)
@@ -410,7 +455,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putInt(int index, int value) {
-        buffer.putInt(index, value);
+        packer.putInteger(index, value, Integer.SIZE);
         return this;
     }
 
@@ -419,7 +464,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public long getLong() {
-        return buffer.getLong();
+        return packer.getLong();
         
     }
 
@@ -428,7 +473,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putLong(long value) {
-        buffer.putLong(value);
+        packer.putLong(value);
         return this;
     }
 
@@ -437,7 +482,11 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public long getLong(int index) {
-        return buffer.getLong(index);
+        packer.mark();
+        packer.position(index * 8);
+        long result = packer.getLong();
+        packer.reset();
+        return result;
     }
 
     /* (non-Javadoc)
@@ -445,7 +494,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putLong(int index, long value) {
-        buffer.putLong(index, value);
+        packer.putLong(index, value, Long.SIZE);
         return this;
     }
 
@@ -455,7 +504,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public float getFloat() {        
-        return buffer.getFloat();
+        return packer.getFloat();
     }
 
     /* (non-Javadoc)
@@ -463,7 +512,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putFloat(float value) {
-        buffer.putFloat(value);
+        packer.putFloat(value);
         return this;
     }
 
@@ -472,7 +521,11 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public float getFloat(int index) {
-        return buffer.getFloat(index);
+        packer.mark();
+        packer.position(index * 8);
+        float result = packer.getFloat();
+        packer.reset();
+        return result;
     }
 
     /* (non-Javadoc)
@@ -480,7 +533,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putFloat(int index, float value) {
-        buffer.putFloat(index, value);
+        packer.putFloat(index, value);
         return this;
     }
 
@@ -490,7 +543,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public double getDouble() {
-        return buffer.getDouble();
+        return packer.getDouble();
     }
 
     /* (non-Javadoc)
@@ -498,7 +551,7 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putDouble(double value) {
-        buffer.putDouble(value);
+        packer.putDouble(value);
         return this;
     }
 
@@ -507,7 +560,11 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public double getDouble(int index) {
-        return buffer.getDouble(index);
+        packer.mark();
+        packer.position(index * 8);
+        double result = packer.getDouble();
+        packer.reset();
+        return result;
     }
 
     /* (non-Javadoc)
@@ -515,8 +572,150 @@ public class ByteBufferIOBuffer implements IOBuffer {
      */
     @Override
     public IOBuffer putDouble(int index, double value) {
-        buffer.putDouble(index, value);
+        packer.putDouble(index, value);
         return this;
     }
 
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putBooleanBit(boolean)
+     */
+    @Override
+    public IOBuffer putBooleanBit(boolean value) {
+        packer.putBoolean(value);
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putLongBits(long, int)
+     */
+    @Override
+    public IOBuffer putLongBits(long value, int numberOfBits) {
+        packer.putLong(value, numberOfBits);
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putByteBits(byte, int)
+     */
+    @Override
+    public IOBuffer putByteBits(byte value, int numberOfBits) {
+        packer.putByte(value, numberOfBits);
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putShortBits(short, int)
+     */
+    @Override
+    public IOBuffer putShortBits(short value, int numberOfBits) {
+        packer.putShort(value, numberOfBits);
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#putIntBits(int, int)
+     */
+    @Override
+    public IOBuffer putIntBits(int value, int numberOfBits) {
+        packer.putInteger(value, numberOfBits);
+        return this;
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getBooleanBit()
+     */
+    @Override
+    public boolean getBooleanBit() {
+        return packer.getBoolean();
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getByteBits()
+     */
+    @Override
+    public byte getByteBits() {
+        return packer.getByte();
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getByteBits(int)
+     */
+    @Override
+    public byte getByteBits(int numberOfBits) {
+        return packer.getByte(numberOfBits);
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getShortBits()
+     */
+    @Override
+    public short getShortBits() {
+        return packer.getShort();
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getShortBits(int)
+     */
+    @Override
+    public short getShortBits(int numberOfBits) {
+        return packer.getShort(numberOfBits);
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getIntBits()
+     */
+    @Override
+    public int getIntBits() {
+        return packer.getInteger();
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getIntBits(int)
+     */
+    @Override
+    public int getIntBits(int numberOfBits) {
+        return packer.getInteger(numberOfBits);
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits()
+     */
+    @Override
+    public long getLongBits() {     
+        return packer.getLong();
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#getLongBits(int)
+     */
+    @Override
+    public long getLongBits(int numberOfBits) {     
+        return packer.getLong(numberOfBits);
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitPosition(int)
+     */
+    @Override
+    public int bitPosition(int position) {
+        return packer.position(position);        
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitPosition()
+     */
+    @Override
+    public int bitPosition() {
+        return packer.position();
+    }
+
+    /* (non-Javadoc)
+     * @see harenet.IOBuffer#bitCapacity()
+     */
+    @Override
+    public int bitCapacity() {
+        return packer.getNumberOfBits();
+    }
+
+    
 }

@@ -3,25 +3,27 @@
  */
 package seventh.game.net;
 
+import java.util.List;
+
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.game.entities.Entity;
-
-import java.util.List;
+import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 /**
  * @author Tony
  *
  */
 public class NetEntity implements NetMessage {        
-    public byte type;
+    public Type type; 
     public int id;
     
 //    public byte dir;
     public short orientation;
     
-    public short posX;
-    public short posY;
+    public int posX;
+    public int posY;
     
 //    public byte width;
 //    public byte height;
@@ -34,14 +36,16 @@ public class NetEntity implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        type = buffer.get();
-        
+        type = BufferIO.readType(buffer);  // NOTE: Must match BufferIO.readEntity
+        //type = buffer.get();
                 
 //        id = buffer.getInt();        
 //        orientation = buffer.getShort();
         
-        posX = buffer.getShort();
-        posY = buffer.getShort();
+//        posX = buffer.getShort();
+//        posY = buffer.getShort();
+        posX = buffer.getIntBits(13); // max X & Y of 256x256 tiles (32x32 tiles) ~8191 
+        posY = buffer.getIntBits(13);
         
 //        width = buffer.get();
 //        height = buffer.get();
@@ -54,14 +58,17 @@ public class NetEntity implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        buffer.put(type);
-                        
+        BufferIO.writeType(buffer, type);
+        //buffer.put(type);  
+        
 //        buffer.putInt(id);
         
 //        buffer.putShort(orientation);
         
-        buffer.putShort(posX);
-        buffer.putShort(posY);
+//        buffer.putShort(posX);
+//        buffer.putShort(posY);
+        buffer.putIntBits(posX, 13);
+        buffer.putIntBits(posY, 13);
         
 //        buffer.put(width);
 //        buffer.put(height);

@@ -19,7 +19,6 @@ import seventh.game.PlayerInfo;
 import seventh.game.PlayerInfos;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeam;
-import seventh.game.net.NetTeamStat;
 import seventh.server.GameServer;
 import seventh.server.ServerContext;
 import seventh.server.ServerSeventhConfig;
@@ -173,24 +172,22 @@ public class MasterServerClient {
             sb.append("&map=").append(URLEncoder.encode(serverContext.getMapCycle().getCurrentMap().getFileName(), ENCODING));
             sb.append("&time=").append(game.getGameType().getRemainingTime());
             
-            NetTeamStat[] stats = game.getGameType().getNetTeamStats();
-            sb.append("&axis_score=").append(stats[0].score);
-            sb.append("&allied_score=").append(stats[1].score);
+            sb.append("&axis_score=").append(game.getGameType().getAxisNetTeamStats().score);
+            sb.append("&allied_score=").append(game.getGameType().getAlliedNetTeamStats().score);
                     
             NetGameTypeInfo info = game.getGameType().getNetGameTypeInfo();
-            if(info!= null && info.teams!=null && info.teams.length > 1) {
-                PlayerInfos players = game.getPlayerInfos();
-                
-                sb.append("&axis=");
-                
-                NetTeam axis = info.teams[0];        
-                appendTeam(players, axis, sb);
-                
-                sb.append("&allied=");
-                
-                NetTeam allied = info.teams[1];
-                appendTeam(players, allied, sb);
-            }
+            
+            PlayerInfos players = game.getPlayerInfos();               
+            sb.append("&axis=");
+            
+            NetTeam axis = info.axisTeam;        
+            appendTeam(players, axis, sb);
+            
+            sb.append("&allied=");
+            
+            NetTeam allied = info.alliedTeam;
+            appendTeam(players, allied, sb);
+            
         
         }
         sb.append("&port=").append(serverContext.getPort());

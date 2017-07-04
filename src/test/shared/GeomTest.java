@@ -11,18 +11,18 @@ import seventh.shared.Geom;
 
 public class GeomTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void test() {
-		Geom geom = new Geom();
+    @Test
+    public void test() {
+        Geom geom = new Geom();
 
-	}
+    }
 
 }

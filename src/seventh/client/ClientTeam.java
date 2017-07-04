@@ -11,8 +11,8 @@ package seventh.client;
  */
 public enum ClientTeam {
     NONE(0, 0xff443366, "Spectator"),
-    ALLIES(2, 0xff8888ff, "Allies"),
-    AXIS(4, 0xffff8888, "Axis"),
+    ALLIES(1, 0xff8888ff, "Allies"),
+    AXIS(2, 0xffff8888, "Axis"),
     ;
     
     private int id;

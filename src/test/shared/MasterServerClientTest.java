@@ -10,17 +10,17 @@ import seventh.shared.MasterServerClient;
 import seventh.shared.MasterServerConfig;
 
 public class MasterServerClientTest {
-	
-	private MasterServerClient msclient;
-	private MasterServerConfig config;
-	/*
-	 * Purpose: Test MasterServerClient constructor
-	 * Input: MasterServerConfig config
-	 */
-	
-	@Test
-	public void MasterServerClientTest(){
-		msclient = new MasterServerClient(config);
-	}
+    
+    private MasterServerClient msclient;
+    private MasterServerConfig config;
+    /*
+     * Purpose: Test MasterServerClient constructor
+     * Input: MasterServerConfig config
+     */
+    
+    @Test
+    public void MasterServerClientTest(){
+        msclient = new MasterServerClient(config);
+    }
 
 }

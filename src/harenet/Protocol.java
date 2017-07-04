@@ -224,13 +224,13 @@ public class Protocol implements Transmittable {
      */
     @Override
     public void readFrom(IOBuffer buffer, NetMessageFactory messageFactory) {
-        this.protocolId = buffer.get();
-        this.flags = buffer.get();
+        this.protocolId = buffer.getByte();
+        this.flags = buffer.getByte();
         
         uncompress(buffer);
         
-        this.peerId = buffer.get();
-        this.numberOfMessages = buffer.get();
+        this.peerId = buffer.getByte();
+        this.numberOfMessages = buffer.getByte();
 //        this.sentTime = buffer.getInt();
         this.sendSequence = buffer.getInt();
         this.acknowledge = buffer.getInt();
@@ -245,10 +245,10 @@ public class Protocol implements Transmittable {
         int endPosition = buffer.position();
         buffer.position(0);
         
-        buffer.put(PROTOCOL_ID);
-        buffer.put(this.flags); // just a place holder
-        buffer.put(this.peerId);
-        buffer.put(this.numberOfMessages);
+        buffer.putByte(PROTOCOL_ID);
+        buffer.putByte(this.flags); // just a place holder
+        buffer.putByte(this.peerId);
+        buffer.putByte(this.numberOfMessages);
 //        buffer.putInt(this.sentTime);
         
         buffer.putInt(this.sendSequence);
@@ -262,7 +262,7 @@ public class Protocol implements Transmittable {
         /* if we compressed things, mark the 
          * flags header
          */
-        buffer.put(1, this.flags); 
+        buffer.putByte(1, this.flags); 
     }    
     
     

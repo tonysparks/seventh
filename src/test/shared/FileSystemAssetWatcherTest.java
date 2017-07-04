@@ -15,25 +15,25 @@ import seventh.shared.FileSystemAssetWatcher;
 
 public class FileSystemAssetWatcherTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
-	/**
-	 * test the FileSystemAssetWatcher
-	 * @throws IOException
-	 */
-	@Test
-	public void testFileSystemAssetWatcher() throws IOException {
-		File file = new File("/Users/hyeongjukim/Desktop/");
-		FileSystemAssetWatcher FSA = new FileSystemAssetWatcher(file);
-		FSA.startWatching();
-		
-		FSA.loadAsset("new.txt", new AssetLoader<File>(){
-			@Override
+    @After
+    public void tearDown() throws Exception {
+    }
+    /**
+     * test the FileSystemAssetWatcher
+     * @throws IOException
+     */
+    @Test
+    public void testFileSystemAssetWatcher() throws IOException {
+        File file = new File("/Users/hyeongjukim/Desktop/");
+        FileSystemAssetWatcher FSA = new FileSystemAssetWatcher(file);
+        FSA.startWatching();
+        
+        FSA.loadAsset("new.txt", new AssetLoader<File>(){
+            @Override
             public File loadAsset(String filename) throws IOException {
                 try {
                     Cons.println("Evaluating: " + filename);
@@ -46,12 +46,12 @@ public class FileSystemAssetWatcherTest {
                 }
                 return null;
             }
-		});
-		
-		FSA.stopWatching();
-		FSA.clearWatched();
-		FSA.removeWatchedAsset("new.txt");
-		
-		
-	}
+        });
+        
+        FSA.stopWatching();
+        FSA.clearWatched();
+        FSA.removeWatchedAsset("new.txt");
+        
+        
+    }
 }

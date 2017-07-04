@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 
 /**
@@ -12,14 +13,13 @@ import seventh.game.entities.Entity.Type;
  *
  */
 public class NetFire extends NetEntity {    
-//    public byte damage; /* currently not used */
     public int ownerId;
     
     /**
      * 
      */
     public NetFire() {
-        this.type = Type.FIRE.netValue();
+        this.type = Type.FIRE;
     }
     
     /* (non-Javadoc)
@@ -28,8 +28,7 @@ public class NetFire extends NetEntity {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-//        damage = buffer.get();
-        ownerId = buffer.getUnsignedByte();
+        ownerId = BufferIO.readPlayerId(buffer);
     }
     
     /* (non-Javadoc)
@@ -38,7 +37,6 @@ public class NetFire extends NetEntity {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-//        buffer.put(damage);
-        buffer.putUnsignedByte(ownerId);
+        BufferIO.writePlayerId(buffer, ownerId);
     }
 }

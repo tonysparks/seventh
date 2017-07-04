@@ -158,7 +158,7 @@ public class InGameState implements State {
             public void onPlayerKilled(PlayerKilledEvent event) {
                 PlayerKilledMessage msg = new PlayerKilledMessage();
                                 
-                msg.deathType = event.getMeansOfDeath().netValue();
+                msg.deathType = event.getMeansOfDeath();
                 msg.killedById = event.getKillerId();
                 msg.playerId = event.getPlayer().getId();
                 msg.posX = (short)event.getPos().x;

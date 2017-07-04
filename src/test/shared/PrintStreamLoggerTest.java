@@ -19,20 +19,20 @@ import seventh.shared.PrintStreamLogger;
 
 
 public class PrintStreamLoggerTest {
-	
-	private PrintStreamLogger printlogger;
-	private PrintStream stream;
+    
+    private PrintStreamLogger printlogger;
+    private PrintStream stream;
 
-	@Before
-	public void setUp() throws Exception {
-		printlogger = new PrintStreamLogger(stream);
-	}
-	
-	
-	@Test
-	public void ConstructTest(){
-		printlogger = new PrintStreamLogger(stream);
-	}
+    @Before
+    public void setUp() throws Exception {
+        printlogger = new PrintStreamLogger(stream);
+    }
+    
+    
+    @Test
+    public void ConstructTest(){
+        printlogger = new PrintStreamLogger(stream);
+    }
 
 
 

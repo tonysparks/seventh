@@ -40,8 +40,8 @@ public class ClientTank extends ClientVehicle {
     private float turretOrientation;
     private Vector2f turretFacing;
     
-    private Weapon.State primaryWeaponState;
-    private Weapon.State secondaryWeaponState;
+    private Weapon.WeaponState primaryWeaponState;
+    private Weapon.WeaponState secondaryWeaponState;
     
     private ClientGameEffects effects;
     private Vector2f previousTrackMark;
@@ -152,8 +152,8 @@ public class ClientTank extends ClientVehicle {
         Vector2f.Vector2fRotate(this.turretFacing, this.turretOrientation, this.turretFacing);
         this.facing.set(this.turretFacing); // TODO - should we be overiding this like this?
         
-        this.primaryWeaponState = Weapon.State.fromNet(netTank.primaryWeaponState);
-        this.secondaryWeaponState = Weapon.State.fromNet(netTank.secondaryWeaponState);
+        this.primaryWeaponState = Weapon.WeaponState.fromNet(netTank.primaryWeaponState);
+        this.secondaryWeaponState = Weapon.WeaponState.fromNet(netTank.secondaryWeaponState);
 
         Vector2f center = new Vector2f(getPos());
         center.x += WeaponConstants.TANK_AABB_WIDTH/2f;
@@ -236,14 +236,14 @@ public class ClientTank extends ClientVehicle {
     /**
      * @return the primaryWeaponState
      */
-    public Weapon.State getPrimaryWeaponState() {
+    public Weapon.WeaponState getPrimaryWeaponState() {
         return primaryWeaponState;
     }
     
     /**
      * @return the secondaryWeaponState
      */
-    public Weapon.State getSecondaryWeaponState() {
+    public Weapon.WeaponState getSecondaryWeaponState() {
         return secondaryWeaponState;
     }
     
@@ -252,14 +252,14 @@ public class ClientTank extends ClientVehicle {
      * @return true if the primary weapon is firing
      */
     public boolean isPrimaryWeaponFiring() {
-        return primaryWeaponState==Weapon.State.FIRING;
+        return primaryWeaponState==Weapon.WeaponState.FIRING;
     }
     
     /**
      * @return true if the secondary weapon is firing
      */
     public boolean isSecondaryWeaponFiring() {
-        return secondaryWeaponState==Weapon.State.FIRING;
+        return secondaryWeaponState==Weapon.WeaponState.FIRING;
     }
     
     /* (non-Javadoc)

@@ -3,10 +3,10 @@
  */
 package seventh.game.net;
 
+import harenet.BitArray;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.network.messages.BufferIO;
-import seventh.shared.BitArray;
 import seventh.shared.SeventhConstants;
 
 /**
@@ -31,14 +31,14 @@ public class NetGameState  implements NetMessage {
     protected byte bits;
     
     private BitArray bitArray;
-    private int numberOfInts;
+    private int numberOfBytes;
     
     
     public NetGameState() {
-        bitArray = new BitArray(SeventhConstants.MAX_ENTITIES - 1);
+        bitArray = new BitArray(SeventhConstants.MAX_ENTITIES);
         entities = new NetEntity[SeventhConstants.MAX_ENTITIES];
         
-        numberOfInts = bitArray.numberOfInts();
+        numberOfBytes = bitArray.numberOfBytes();
     }
     
     /* (non-Javadoc)
@@ -46,7 +46,7 @@ public class NetGameState  implements NetMessage {
      */
     @Override
     public void read(IOBuffer buffer) {
-        bits = buffer.get();
+        bits = buffer.getByte();
         if( (bits & FL_GAMETYPE) != 0) {
             gameType = new NetGameTypeInfo();
             gameType.read(buffer);
@@ -54,8 +54,8 @@ public class NetGameState  implements NetMessage {
         
         if( (bits & FL_ENTITIES) != 0) {
             
-            for(int i = 0; i < numberOfInts; i++) {
-                bitArray.setDataElement(i, buffer.getInt());
+            for(int i = 0; i < numberOfBytes; i++) {
+                bitArray.setDataElement(i, buffer.getByte());
             }
             
             for(int i = 0; i < entities.length; i++) {
@@ -105,7 +105,7 @@ public class NetGameState  implements NetMessage {
             bits |= FL_DESTRUCTABLES;
         }
         
-        buffer.put(bits);
+        buffer.putByte(bits);
         
         if(gameType != null) {
             gameType.write(buffer);
@@ -119,9 +119,9 @@ public class NetGameState  implements NetMessage {
                 }
             }
             
-            int[] data = bitArray.getData();
+            byte[] data = bitArray.getData();
             for(int i = 0; i < data.length; i++) {
-                buffer.putInt(data[i]);
+                buffer.putByte(data[i]);
             }
             
             for(int i = 0; i < entities.length; i++) {

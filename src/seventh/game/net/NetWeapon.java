@@ -5,26 +5,29 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.game.entities.Entity.Type;
+import seventh.game.weapons.Weapon.WeaponState;
+import seventh.network.messages.BufferIO;
 
 /**
  * @author Tony
  *
  */
 public class NetWeapon implements NetMessage {    
-    public byte type;
+    public Type type;
     public short ammoInClip;
     public short totalAmmo;    
-    public byte state;
+    public WeaponState weaponState;
     
     /* (non-Javadoc)
      * @see seventh.network.messages.NetMessage#read(java.nio.ByteBuffer)
      */
     @Override
     public void read(IOBuffer buffer) {
-        type = buffer.get();
+        type = BufferIO.readType(buffer);
         ammoInClip = (short)buffer.getUnsignedByte();
         totalAmmo = buffer.getShort();
-        state = buffer.get();
+        weaponState = BufferIO.readWeaponState(buffer);
     }
     
     /* (non-Javadoc)
@@ -32,9 +35,9 @@ public class NetWeapon implements NetMessage {
      */
     @Override
     public void write(IOBuffer buffer) {
-        buffer.put(type);
+        BufferIO.writeType(buffer, type);
         buffer.putUnsignedByte(ammoInClip);
         buffer.putShort(totalAmmo);
-        buffer.put(state);
+        BufferIO.writeWeaponState(buffer, weaponState);
     }
 }

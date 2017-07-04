@@ -3,6 +3,8 @@
  */
 package seventh.client.entities;
 
+import java.util.Random;
+
 import seventh.client.ClientGame;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
@@ -11,6 +13,7 @@ import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 
@@ -28,6 +31,9 @@ public class ClientBullet extends ClientEntity {
         
     static class BulletOnRemove implements OnRemove {
         private Vector2f vel = new Vector2f();
+        private Rectangle bounds = new Rectangle(5, 5);
+        private Vector2f bloodPos = new Vector2f();
+        private Vector2f offset = new Vector2f();
         
         @Override
         public void onRemove(ClientEntity me, ClientGame game) {
@@ -39,8 +45,30 @@ public class ClientBullet extends ClientEntity {
             
             Vector2f pos = me.getCenterPos();
             Vector2f.Vector2fMA(pos, vel, 5.0f, pos);
+            bounds.centerAround(pos);
             
-            if(!game.doesEntityTouchOther(me)) {
+            ClientEntity victim = game.getTouchedEntity(me, bounds);
+            if(victim != null && victim.isPlayer() && 
+               bullet.getOwnerId() != victim.getId()) {
+                
+                bloodPos.zeroOut();
+                offset.zeroOut();
+                
+                Vector2f direction = me.getMovementDir();
+                Random rand = game.getRandom();
+
+                // toggle between outward blood splats
+                if(rand.nextBoolean()) Vector2f.Vector2fRotate(direction, Math.toRadians(180), direction);
+                Vector2f.Vector2fPerpendicular(direction, offset);
+                
+                // randomly position the emitter position
+                Vector2f.Vector2fMS(victim.getCenterPos(), direction, 6+game.getRandom().nextInt(5), bloodPos);
+                float moveBy = rand.nextBoolean() ? -rand.nextInt(10) : rand.nextInt(10);
+                Vector2f.Vector2fMA(bloodPos, offset, moveBy, bloodPos);
+                
+                game.addBackgroundEffect(Emitters.newBulletImpactFleshEmitter(bloodPos, direction));
+            }
+            else {
                 game.addBackgroundEffect(Emitters.newBulletImpactEmitter(pos, vel));
             }
             
@@ -55,8 +83,8 @@ public class ClientBullet extends ClientEntity {
      */
     public ClientBullet(ClientGame game, Vector2f pos) {
         super(game, pos);
-        origin = new Vector2f(pos);
         
+        origin = new Vector2f(pos);        
         vel = new Vector2f();
                                 
         bounds.width = 5;

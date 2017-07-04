@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import seventh.game.entities.Entity.Type;
+import seventh.network.messages.BufferIO;
 
 
 /**
@@ -14,7 +15,7 @@ import seventh.game.entities.Entity.Type;
 public class NetRocket extends NetBullet {
 
     public NetRocket() {
-        this.type = Type.ROCKET.netValue();
+        this.type = Type.ROCKET;
     }
     
     /* (non-Javadoc)
@@ -23,7 +24,7 @@ public class NetRocket extends NetBullet {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        this.orientation = buffer.getShort();
+        this.orientation = BufferIO.readAngle(buffer);
     }
     
     /* (non-Javadoc)
@@ -32,6 +33,6 @@ public class NetRocket extends NetBullet {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putShort( this.orientation );        
+        BufferIO.writeAngle(buffer, orientation);
     }
 }

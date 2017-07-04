@@ -1775,7 +1775,7 @@ public class PlayerEntity extends Entity implements Controllable {
         setNetEntity(player);
         player.orientation = (short) Math.toDegrees(this.orientation);
 
-        player.state = currentState.netValue();
+        player.state = currentState;
         
         if(inventory.hasGrenades()) {
             GrenadeBelt belt = inventory.getGrenades();
@@ -1818,7 +1818,7 @@ public class PlayerEntity extends Entity implements Controllable {
         setNetEntity(partialPlayer);
         partialPlayer.orientation = getNetOrientation();
         
-        partialPlayer.state = currentState.netValue();                                
+        partialPlayer.state = currentState;                                
         partialPlayer.health = (byte)getHealth(); 
         
         player.isOperatingVehicle = isOperatingVehicle();

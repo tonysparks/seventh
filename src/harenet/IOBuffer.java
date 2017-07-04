@@ -37,11 +37,15 @@ public interface IOBuffer {
             return new ByteBufferIOBuffer(ByteBuffer.wrap(buff, offset, len));
         }
     }
-
+    
+    public IOBuffer receiveSync();
+    public IOBuffer sendSync();
+    
     /**
-     * @return the underlying {@link ByteBuffer}
+     * @return the underlying {@link ByteBuffer} 
      */
     public ByteBuffer asByteBuffer();
+    
         
      /**
      * Creates a new byte buffer whose content is a shared subsequence of
@@ -111,7 +115,7 @@ public interface IOBuffer {
      * @throws  BufferUnderflowException
      *          If the buffer's current position is not smaller than its limit
      */
-    public abstract byte get();
+    public abstract byte getByte();
     
     
     public abstract int getUnsignedByte();
@@ -134,7 +138,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer put(byte b);
+    public abstract IOBuffer putByte(byte b);
 
     /**
      * Absolute <i>get</i> method.  Reads the byte at the given
@@ -149,7 +153,7 @@ public interface IOBuffer {
      *          If <tt>index</tt> is negative
      *          or not smaller than the buffer's limit
      */
-    public abstract byte get(int index);
+    public abstract byte getByte(int index);
 
     /**
      * Absolute <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
@@ -172,7 +176,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer put(int index, byte b);
+    public abstract IOBuffer putByte(int index, byte b);
 
 
     // -- Bulk get operations --
@@ -226,7 +230,7 @@ public interface IOBuffer {
      *          If the preconditions on the <tt>offset</tt> and <tt>length</tt>
      *          parameters do not hold
      */
-    public IOBuffer get(byte[] dst, int offset, int length);
+    public IOBuffer getBytes(byte[] dst, int offset, int length);
 
     /**
      * Relative bulk <i>get</i> method.
@@ -244,7 +248,7 @@ public interface IOBuffer {
      *          If there are fewer than <tt>length</tt> bytes
      *          remaining in this buffer
      */
-    public IOBuffer get(byte[] dst);
+    public IOBuffer getBytes(byte[] dst);
 
 
     // -- Bulk put operations --
@@ -341,7 +345,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public IOBuffer put(byte[] src, int offset, int length);
+    public IOBuffer putBytes(byte[] src, int offset, int length);
 
     /**
      * Relative bulk <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
@@ -362,7 +366,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public IOBuffer put(byte[] src);
+    public IOBuffer putBytes(byte[] src);
 
 
     // -- Other stuff --
@@ -641,7 +645,7 @@ public interface IOBuffer {
      *          If there are fewer than two bytes
      *          remaining in this buffer
      */
-    public abstract char getChar();
+    //public abstract char getChar();
 
     /**
      * Relative <i>put</i> method for writing a char
@@ -663,7 +667,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer putChar(char value);
+    //public abstract IOBuffer putChar(char value);
 
     /**
      * Absolute <i>get</i> method for reading a char value.
@@ -681,7 +685,7 @@ public interface IOBuffer {
      *          or not smaller than the buffer's limit,
      *          minus one
      */
-    public abstract char getChar(int index);
+    //public abstract char getChar(int index);
 
     /**
      * Absolute <i>put</i> method for writing a char
@@ -706,7 +710,7 @@ public interface IOBuffer {
      * @throws  ReadOnlyBufferException
      *          If this buffer is read-only
      */
-    public abstract IOBuffer putChar(int index, char value);
+    //public abstract IOBuffer putChar(int index, char value);
 
     
 
@@ -1117,5 +1121,36 @@ public interface IOBuffer {
     public abstract IOBuffer putDouble(int index, double value);
 
   
-
+    /*
+     * Bit operations
+     */
+    
+    /**
+     * Places the number of isRotated into the buffer.
+     * 
+     * @param value the value to store (must fit within the supplied number of isRotated)
+     * @param numberOfBits the number of isRotated to write out
+     * @return this buffer
+     */
+    public abstract IOBuffer putBooleanBit(boolean value);
+    public abstract IOBuffer putLongBits(long value, int numberOfBits);
+    public abstract IOBuffer putByteBits(byte value, int numberOfBits);
+    public abstract IOBuffer putShortBits(short value, int numberOfBits);
+    public abstract IOBuffer putIntBits(int value, int numberOfBits);
+    
+    
+    public abstract boolean getBooleanBit();
+    public abstract byte getByteBits();
+    public abstract byte getByteBits(int numberOfBits);
+    public abstract short getShortBits();
+    public abstract short getShortBits(int numberOfBits);
+    public abstract int getIntBits();    
+    public abstract int getIntBits(int numberOfBits);
+    public abstract long getLongBits();
+    public abstract long getLongBits(int numberOfBits);     
+    
+    public abstract int bitPosition(int position);
+    public abstract int bitPosition();
+    public abstract int bitCapacity();
+    
 }

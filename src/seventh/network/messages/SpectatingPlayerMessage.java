@@ -26,7 +26,7 @@ public class SpectatingPlayerMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        playerIdBeingWatched = buffer.getUnsignedByte();
+        playerIdBeingWatched = BufferIO.readPlayerId(buffer);
     }
     
     /* (non-Javadoc)
@@ -35,6 +35,6 @@ public class SpectatingPlayerMessage extends AbstractNetMessage {
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putUnsignedByte(playerIdBeingWatched);
+        BufferIO.writePlayerId(buffer, playerIdBeingWatched);
     }
 }

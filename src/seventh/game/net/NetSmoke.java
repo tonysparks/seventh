@@ -17,7 +17,7 @@ public class NetSmoke extends NetEntity {
      * 
      */
     public NetSmoke() {
-        this.type = Type.SMOKE.netValue();
+        this.type = Type.SMOKE;
     }
     
     /* (non-Javadoc)
