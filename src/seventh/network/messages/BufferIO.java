@@ -80,6 +80,8 @@ public class BufferIO {
     
     public static final byte PLAYER_COMMANDER = 35;
     
+    public static final byte PLAYER_AWARD  = 36;
+    
     /**
      * The Seventh {@link NetMessageFactory} implementation
      * 
@@ -166,6 +168,8 @@ public class BufferIO {
                 case FLAG_STOLEN: message = new FlagStolenMessage();
                     break;
                 case PLAYER_COMMANDER: message = new PlayerCommanderMessage();
+                    break;
+                case PLAYER_AWARD: message = new PlayerAwardMessage();
                     break;
                 default: throw new IllegalArgumentException("Unknown type: " + type);
             }

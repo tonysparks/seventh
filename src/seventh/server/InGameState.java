@@ -10,10 +10,11 @@ import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventMethod;
 import seventh.game.Game;
 import seventh.game.Player;
+import seventh.game.PlayerAwardSystem.Award;
 import seventh.game.Players;
 import seventh.game.Players.PlayerIterator;
-import seventh.game.entities.Entity;
 import seventh.game.Team;
+import seventh.game.entities.Entity;
 import seventh.game.events.BombDisarmedEvent;
 import seventh.game.events.BombDisarmedListener;
 import seventh.game.events.BombExplodedEvent;
@@ -28,6 +29,12 @@ import seventh.game.events.FlagStolenEvent;
 import seventh.game.events.FlagStolenListener;
 import seventh.game.events.GameEndEvent;
 import seventh.game.events.GameEndListener;
+import seventh.game.events.KillRollEvent;
+import seventh.game.events.KillRollListener;
+import seventh.game.events.KillStreakEvent;
+import seventh.game.events.KillStreakListener;
+import seventh.game.events.PlayerAwardEvent;
+import seventh.game.events.PlayerAwardListener;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.PlayerSpawnedEvent;
@@ -50,6 +57,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerAwardMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.RoundEndedMessage;
@@ -295,6 +303,41 @@ public class InGameState implements State {
                 msg.flagId = event.getFlag().getId();
                 msg.stolenBy = event.getPlayerId();
                 protocol.sendFlagStolenMessage(msg);
+            }
+        });
+        
+        this.dispatcher.addEventListener(KillStreakEvent.class, new KillStreakListener() {
+            
+            @Override
+            public void onKillStreak(KillStreakEvent event) {
+                PlayerAwardMessage msg = new PlayerAwardMessage();
+                msg.playerId = event.getPlayer().getId();
+                msg.award = Award.KillStreak;
+                msg.killStreak = (byte) event.getStreak();
+                protocol.sendPlayerAwardMessage(msg);
+            }
+        });
+        
+        this.dispatcher.addEventListener(KillRollEvent.class, new KillRollListener() {
+            
+            @Override
+            public void onKillRoll(KillRollEvent event) {
+                PlayerAwardMessage msg = new PlayerAwardMessage();
+                msg.playerId = event.getPlayer().getId();
+                msg.award = Award.KillRoll;
+                msg.killStreak = (byte) event.getStreak();
+                protocol.sendPlayerAwardMessage(msg);
+            }
+        });
+        
+        this.dispatcher.addEventListener(PlayerAwardEvent.class, new PlayerAwardListener() {
+            
+            @Override
+            public void onPlayerAward(PlayerAwardEvent event) {
+                PlayerAwardMessage msg = new PlayerAwardMessage();
+                msg.playerId = event.getPlayer().getId();
+                msg.award = event.getAward();                
+                protocol.sendPlayerAwardMessage(msg);
             }
         });
     }

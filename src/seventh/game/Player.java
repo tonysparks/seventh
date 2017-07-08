@@ -320,7 +320,7 @@ public class Player implements PlayerInfo, Debugable {
      */
     @Override
     public boolean isTeammateWith(int playerId) {    
-        return getTeam().onTeam(spectating);
+        return getTeam().onTeam(playerId);
     }
     
     /**

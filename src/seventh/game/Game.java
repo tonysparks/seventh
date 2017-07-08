@@ -37,8 +37,10 @@ import seventh.game.entities.vehicles.PanzerTank;
 import seventh.game.entities.vehicles.ShermanTank;
 import seventh.game.entities.vehicles.Tank;
 import seventh.game.entities.vehicles.Vehicle;
+import seventh.game.events.PlayerJoinedEvent;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
+import seventh.game.events.PlayerLeftEvent;
 import seventh.game.events.PlayerSpawnedEvent;
 import seventh.game.events.PlayerSpawnedListener;
 import seventh.game.events.RoundEndedEvent;
@@ -196,6 +198,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private int lastValidId;
     
     private AISystem aiSystem;
+    private PlayerAwardSystem awardSystem;
     
     /**
      * @param config
@@ -335,6 +338,8 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         this.aiSystem.init(this);        
         this.gameType.registerListeners(this, dispatcher);
+        
+        this.awardSystem = new PlayerAwardSystem(this);
     }
         
     
@@ -468,6 +473,13 @@ public class Game implements GameInfo, Debugable, Updatable {
     @Override
     public AISystem getAISystem() {
         return aiSystem;
+    }
+    
+    /**
+     * @return the awardSystem
+     */
+    public PlayerAwardSystem getAwardSystem() {
+        return awardSystem;
     }
     
     /* (non-Javadoc)
@@ -962,6 +974,8 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.gameType.playerJoin(player);
         
         this.aiSystem.playerJoined(player);
+        
+        this.dispatcher.queueEvent(new PlayerJoinedEvent(this, player));
     }
     
     /**
@@ -986,6 +1000,8 @@ public class Game implements GameInfo, Debugable, Updatable {
             this.aiSystem.playerLeft(player);
             this.gameType.playerLeft(player);            
             player.commitSuicide();
+            
+            this.dispatcher.queueEvent(new PlayerLeftEvent(this, player));
         }                
     }    
     

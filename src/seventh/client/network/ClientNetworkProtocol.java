@@ -36,6 +36,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerAwardMessage;
 import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
@@ -276,6 +277,9 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         else if(message instanceof PlayerCommanderMessage) {
             receivePlayerCommanderMessage(conn, (PlayerCommanderMessage)message);
         }
+        else if(message instanceof PlayerAwardMessage) {
+            receivePlayerAwardMessage(conn, (PlayerAwardMessage)message);
+        }
         /* None game messages */
         
         else if(message instanceof ConnectAcceptedMessage) {
@@ -301,7 +305,7 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         }
         else if(message instanceof RconTokenMessage) {
             receiveRconTokenMessage(conn, (RconTokenMessage)message);
-        }
+        }        
         else {
             Cons.println("Unknown message: " + message);
         }
@@ -612,6 +616,16 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     public void receiveFlagStolenMessage(Connection conn, FlagStolenMessage msg) {
         if(game!=null) {
             game.flagStolen(msg);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#receivePlayerAwardMessage(harenet.api.Connection, seventh.network.messages.PlayerAwardMessage)
+     */
+    @Override
+    public void receivePlayerAwardMessage(Connection conn, PlayerAwardMessage msg) {
+        if(game!=null) {
+            game.playerReceiveAward(msg);
         }
     }
     

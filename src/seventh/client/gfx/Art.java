@@ -172,6 +172,9 @@ public class Art {
     
     public static  TextureRegion doorImg = null;
     
+    public static  TextureRegion firstBloodIcon = null;
+    public static  TextureRegion killRollIcon = null;
+    
     /**
      * Reloads the graphics
      */
@@ -351,6 +354,9 @@ public class Art {
         
         
         doorImg = loadImage("./assets/gfx/entities/door.png");
+        
+        firstBloodIcon = loadImage("./assets/gfx/ui/first_blood_icon.png");
+        killRollIcon = loadImage("./assets/gfx/ui/kill_roll_icon.png");
     }
 
     

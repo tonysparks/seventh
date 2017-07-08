@@ -251,12 +251,14 @@ public class Terminal implements Updatable, Logger {
                 case '\n': {
                     String command = inputBuffer.toString();                                    
                                         
-                    cmdHistory.add(command);
-                    cmdHistoryIndex = cmdHistory.size()-1;
+                    if(command != null && !"".equals(command)) {
+                        cmdHistory.add(command);
+                        cmdHistoryIndex = cmdHistory.size()-1;
+                    }
+                                        
+                    setInputText("");                    
+                    console.execute(command);
                     
-                    setInputText("");
-                    
-                    console.execute(command);                    
                     break;
                 }                
                 default: {

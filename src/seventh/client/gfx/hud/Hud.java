@@ -60,6 +60,7 @@ public class Hud implements Renderable {
     private KillLog killLog;
     private MessageLog messageLog, centerLog, objectiveLog;
     private Scoreboard scoreboard;
+    private EffectsLog awardsLog;
 
     private MiniMap miniMap;
     
@@ -88,6 +89,8 @@ public class Hud implements Renderable {
         this.objectiveLog = new SlowDisplayMessageLog(10, 120, 8000, 3);
         this.objectiveLog.setFont(app.getTheme().getSecondaryFontName());
         this.objectiveLog.setFontSize(24);
+        
+        this.awardsLog = new EffectsLog(-190, 200, 15);
         
         this.centerLog = new MessageLog(screenWidth/2, 90, 3000, 2) {
             @Override
@@ -128,6 +131,20 @@ public class Hud implements Renderable {
      */
     public MessageLog getObjectiveLog() {
         return objectiveLog;
+    }
+    
+    /**
+     * @return the awardsLog
+     */
+    public EffectsLog getAwardsLog() {
+        return awardsLog;
+    }
+    
+    /**
+     * @return the centerLog
+     */
+    public MessageLog getCenterLog() {
+        return centerLog;
     }
 
     /**
@@ -283,6 +300,8 @@ public class Hud implements Renderable {
         messageLog.update(timeStep);        
         centerLog.update(timeStep);
         objectiveLog.update(timeStep);
+     
+        awardsLog.update(timeStep);
         
         miniMap.update(timeStep);
         
@@ -323,7 +342,9 @@ public class Hud implements Renderable {
         messageLog.render(canvas, camera, 0);
         centerLog.render(canvas, camera, 0);
         objectiveLog.render(canvas, camera, 0);
-                
+        
+        awardsLog.render(canvas, camera, 0);
+        
         boolean isPlayerAlive = localPlayer.isAlive();
         if(isPlayerAlive) {
             ClientPlayerEntity ent = localPlayer.getEntity();

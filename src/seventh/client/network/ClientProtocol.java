@@ -20,6 +20,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerAwardMessage;
 import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
@@ -277,6 +278,15 @@ public interface ClientProtocol {
      * @param msg
      */
     public void receiveFlagStolenMessage(Connection conn, FlagStolenMessage msg);
+
+    
+    /**
+     * A player has received an award
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receivePlayerAwardMessage(Connection conn, PlayerAwardMessage msg);
     
     /**
      * Sends a {@link ClientReadyMessage}

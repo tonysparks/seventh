@@ -22,6 +22,7 @@ import seventh.network.messages.GamePartialStatsMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameStatsMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerAwardMessage;
 import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
@@ -377,4 +378,11 @@ public interface ServerProtocol {
      * @param msg
      */
     public void sendPlayerCommanderMessage(PlayerCommanderMessage msg);
+    
+    /**
+     * Sends a {@link PlayerAwardMessage}
+     * 
+     * @param msg
+     */
+    public void sendPlayerAwardMessage(PlayerAwardMessage msg);
 }

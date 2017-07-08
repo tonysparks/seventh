@@ -31,10 +31,12 @@ import seventh.client.entities.ClientSmoke;
 import seventh.client.entities.vehicles.ClientPanzerTank;
 import seventh.client.entities.vehicles.ClientShermanTank;
 import seventh.client.entities.vehicles.ClientVehicle;
+import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Camera2d;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.LightSystem;
+import seventh.client.gfx.effects.AwardEffect;
 import seventh.client.gfx.effects.ClientGameEffects;
 import seventh.client.gfx.effects.Effect;
 import seventh.client.gfx.effects.particle_system.Emitters;
@@ -77,6 +79,7 @@ import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameUpdateMessage;
+import seventh.network.messages.PlayerAwardMessage;
 import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerConnectedMessage;
 import seventh.network.messages.PlayerDisconnectedMessage;
@@ -92,7 +95,9 @@ import seventh.network.messages.TileRemovedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Arrays;
+import seventh.shared.Command;
 import seventh.shared.Cons;
+import seventh.shared.Console;
 import seventh.shared.DebugDraw;
 import seventh.shared.Scripting;
 import seventh.shared.SeventhConstants;
@@ -243,6 +248,33 @@ public class ClientGame {
         this.runtime = Scripting.newSandboxedRuntime();    
         
         executeCallbackScript("onInit", this);
+        
+        app.getConsole().addCommand(new Command("kk") {
+            
+            @Override
+            public void execute(Console console, String... args) {
+                Vector2f offsetPos = hud.getAwardsLog().nextOffset();        
+                Vector2f startPos = new Vector2f(offsetPos);
+                Vector2f endPos = new Vector2f(40, offsetPos.y);
+                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff00ff));
+                
+                offsetPos = hud.getAwardsLog().nextOffset();        
+                startPos = new Vector2f(offsetPos);
+                endPos = new Vector2f(40, offsetPos.y);
+                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff0000ff));
+                
+                offsetPos = hud.getAwardsLog().nextOffset();        
+                startPos = new Vector2f(offsetPos);
+                endPos = new Vector2f(40, offsetPos.y);
+                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff0000));
+                
+                offsetPos = hud.getAwardsLog().nextOffset();        
+                startPos = new Vector2f(offsetPos);
+                endPos = new Vector2f(40, offsetPos.y);
+                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff00ff00));
+                
+            }
+        });
     }    
     
     /**
@@ -668,6 +700,11 @@ public class ClientGame {
     public Sound playGlobalSound(Sound snd) {
         Vector2f pos = Sounds.getPosition();
         return playSound(snd, pos.x, pos.y);
+    }
+    
+    public Sound playGlobalSound(SoundType type) {
+        Vector2f pos = Sounds.getPosition();
+        return playSound(type, pos.x, pos.y);
     }
     
     /**
@@ -1815,6 +1852,81 @@ public class ClientGame {
     public void flagReturned(FlagReturnedMessage msg) {
         Sounds.playGlobalSound(Sounds.flagCaptured);
         
+    }
+
+    /**
+     * @param msg
+     */
+    public void playerReceiveAward(PlayerAwardMessage msg) {
+        ClientPlayer player = players.getPlayer(msg.playerId);
+        if(player==null || player.getId() != localPlayer.getId()) {
+            return;
+        }
+        
+        Vector2f offsetPos = hud.getAwardsLog().nextOffset();        
+        Vector2f startPos = new Vector2f(offsetPos);
+        Vector2f endPos = new Vector2f(40, offsetPos.y);
+               
+        
+        switch(msg.award) {
+        case FirstBlood:
+            //hud.getMessageLog().log(player.getName() + " spilt first blood!");
+            hud.getAwardsLog().addEffect(new AwardEffect(Art.bloodImages[1], "First Blood", 3_000, startPos, endPos));
+            this.playGlobalSound(SoundType.UI_ELEMENT_SELECT);
+            break;
+        case KillStreak:
+            //hud.getMessageLog().log(player.getName() + " is on a " + msg.killStreak + " enemy kill streak!");
+            hud.getAwardsLog().addEffect(new AwardEffect(Art.deathsImage, msg.killStreak + "x", 3_000, startPos, endPos));
+            this.playGlobalSound(SoundType.UI_ELEMENT_SELECT);
+            break;
+        case KillRoll:
+            String message = "";
+            int color = 0xffffffff;
+            switch(msg.killStreak) {                
+                case 2:
+                    message += "DOUBLE KILL!";
+                    color = 0xffffffff;
+                    break;
+                case 3:
+                    message += "TRIPLE KILL!";
+                    color = 0xffff0000;
+                    break;
+                case 4:
+                    message += "QUAD KILL!";
+                    color = 0xff00ff00;
+                    break;
+                case 5:
+                    message += "SQUAD KILL!";
+                    color = 0xff0000ff;
+                    break;
+                default:
+                    message += "MADNESS KILL!";
+                    color = 0xffff00ff;
+            }
+            hud.getCenterLog().log(message);
+            hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, msg.killStreak + "x", 3_000, startPos, endPos, color));
+            break;
+        case BadMan:
+            break;
+        case BeastMode:
+            break;
+        case Coward:
+            break;
+        case Excellence:
+            break;
+        case FavreMode:
+            break;
+        case Marksman:
+            break;
+        case Participation:
+            break;
+        case Rodgers:
+            break;
+        default:
+            break;
+            
+        
+        }        
     }
 }
  
