@@ -996,13 +996,16 @@ public class OrthoMap implements Map {
         
         int toIndex_x=0, toIndex_y=0;
         
+        int camPosX = (int) (camPos.x);
+        int camPosY = (int) (camPos.y);
+        
         // Current Tile offset (to pixels)
-        int tileOffset_x =  -( (int)camPos.x % this.tileWidth );
-        toIndex_x    = ( tileOffset_x + (int)camPos.x) / this.tileWidth;
+        int tileOffset_x =  -( camPosX % this.tileWidth );
+        toIndex_x    = ( tileOffset_x + camPosX) / this.tileWidth;
 
         // current tile y offset (to pixels)
-        int tileOffset_y =  -( (int)camPos.y % this.tileHeight);
-        toIndex_y    = (tileOffset_y + (int)camPos.y) / this.tileHeight;
+        int tileOffset_y =  -( camPosY % this.tileHeight);
+        toIndex_y    = ( tileOffset_y + camPosY) / this.tileHeight;
         
         // render the background
         renderBackground(canvas, camera);

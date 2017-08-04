@@ -27,6 +27,10 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import seventh.client.SeventhGame;
 
 /**
  * @author Tony
@@ -52,6 +56,7 @@ public class GdxCanvas implements Canvas {
     
     private ShapeRenderer shapes;
     private OrthographicCamera camera;
+    private Viewport viewport;
     
     private boolean isBegun;
     
@@ -71,6 +76,12 @@ public class GdxCanvas implements Canvas {
         
         this.camera = new OrthographicCamera(getWidth(), getHeight());
         this.camera.setToOrtho(true, getWidth(), getHeight());
+        this.camera.position.x = this.camera.viewportWidth/2;
+        this.camera.position.y = this.camera.viewportHeight/2;
+        this.camera.update();
+        
+        this.viewport = new FitViewport(getWidth(), getHeight(), camera);
+        this.viewport.apply();
                 
         this.generators = new HashMap<String, FreeTypeFontGenerator>();
         this.fonts = new HashMap<String, BitmapFont>();
@@ -142,7 +153,7 @@ public class GdxCanvas implements Canvas {
      * @see seventh.client.gfx.Canvas#enableAntialiasing(boolean)
      */
     @Override
-    public void enableAntialiasing(boolean b) {        
+    public void enableAntialiasing(boolean b) {    
     }
 
     /* (non-Javadoc)
@@ -484,7 +495,8 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public int getWidth() {
-        return Gdx.graphics.getWidth();
+        //return Gdx.graphics.getWidth();
+        return SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH;
     }
 
     /* (non-Javadoc)
@@ -492,7 +504,8 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public int getHeight() {
-        return Gdx.graphics.getHeight();
+        //return Gdx.graphics.getHeight();
+        return SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT;
     }
 
     /* (non-Javadoc)

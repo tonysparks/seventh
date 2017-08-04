@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
+import seventh.client.SeventhGame;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
@@ -69,7 +70,7 @@ public class TankTrackMarks implements Renderable {
         {                
             //shader.setUniformi("u_texture", 0);
             shader.setUniformi("mark", 1);
-            shader.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            shader.setUniformf("resolution", SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);
 
         }
         shader.end();

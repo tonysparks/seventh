@@ -1280,6 +1280,8 @@ public class Tile implements Renderable {
         
         if(image!=null) {
             this.sprite = new Sprite(image);
+            this.u = image.getU();
+            this.v = image.getV();
         }
     }
     
@@ -1549,15 +1551,27 @@ public class Tile implements Renderable {
     public void update(TimeStep timeStep) {
     }
 
+    float u,u2,v,v2;
+    
     /* (non-Javadoc)
      * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
      */
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {        
         if(!this.isDestroyed) {
-            sprite.setPosition(renderX, renderY);
-            canvas.drawRawSprite(sprite);
-           // canvas.drawScaledImage(image, renderX, renderY, width, height, 0xFFFFFFFF);
+            //canvas.drawScaledImage(sprite, renderX-2, renderY-2, width+2, height+2, 0xFFFFFFFF);
+            //u = sprite.getU();
+            sprite.setU(u+.001f);
+            sprite.setV(v-.001f);
+            
+            
+            //sprite.setU(u);
+            //sprite.setV(v);
+            
+            sprite.setPosition(renderX, renderY);            
+            canvas.drawRawSprite(sprite);            
+            
+            
 
 //            Vector2f pos = camera.getRenderPosition(alpha);
 //            float x = (this.x - pos.x);
@@ -1566,8 +1580,8 @@ public class Tile implements Renderable {
             
             
 //            Vector2f pos = camera.getRenderPosition(alpha);
-//            float x = (int)(this.x - pos.x);
-//            float y = (int)(this.y - pos.y);
+//            float x = (this.x - pos.x);
+//            float y = (this.y - pos.y);
 //            sprite.setPosition(x, y);
 //            canvas.drawRawSprite(sprite);    
         }

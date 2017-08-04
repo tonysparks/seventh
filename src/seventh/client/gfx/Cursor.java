@@ -5,6 +5,7 @@ package seventh.client.gfx;
 
 import com.badlogic.gdx.Gdx;
 
+import seventh.client.SeventhGame;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Updatable;
@@ -90,8 +91,13 @@ public abstract class Cursor implements Updatable {
      * Centers the mouse
      */
     public void centerMouse() {
-        int x = Gdx.graphics.getWidth()/2;
-        int y = Gdx.graphics.getHeight()/2;    
+        int width = SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH;
+        int height = SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT;
+        
+        
+        int x = width/2;
+        int y = height/2;
+        
         moveNativeMouse(x, y);
         moveTo(x,y);
     }
@@ -119,12 +125,15 @@ public abstract class Cursor implements Updatable {
             this.cursorPos.y = 0f;
         }
         
-        if(this.cursorPos.x > Gdx.graphics.getWidth()) {
-            this.cursorPos.x = Gdx.graphics.getWidth();
+        int width = SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH;
+        int height = SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT;
+        
+        if(this.cursorPos.x > width) {
+            this.cursorPos.x = width;
         }
         
-        if(this.cursorPos.y > Gdx.graphics.getHeight()) {
-            this.cursorPos.y = Gdx.graphics.getHeight();
+        if(this.cursorPos.y > height) {
+            this.cursorPos.y = height;
         }
     }
     

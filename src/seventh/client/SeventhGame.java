@@ -71,8 +71,8 @@ public class SeventhGame implements ApplicationListener {
             ;
     
     private static final String VERSION = "v0.1.3.0-BETA";
-    public static final int DEFAULT_MINIMIZED_SCREEN_WIDTH = 1024;
-    public static final int DEFAULT_MINIMIZED_SCREEN_HEIGHT = 768;
+    public static final int DEFAULT_MINIMIZED_SCREEN_WIDTH = 640;//960;//1024;
+    public static final int DEFAULT_MINIMIZED_SCREEN_HEIGHT = 400;//600;//768;
     
     private StateMachine<Screen> sm;
     
@@ -442,6 +442,18 @@ public class SeventhGame implements ApplicationListener {
     }
     
     /**
+     * Returns the screen if the current screen was to be popped off
+     * 
+     * @return the previous screen if available, otherwise null
+     */
+    public Screen previousScreen() {
+        if(this.screenStack.size()>1) {
+            return this.screenStack.elementAt(this.screenStack.size() - 2);
+        }
+        return null;
+    }
+    
+    /**
      * Pushes a {@link Screen} onto the stack.
      * 
      * @param newScreen
@@ -461,6 +473,17 @@ public class SeventhGame implements ApplicationListener {
                 preserveStackSetScreen(this.screenStack.peek());
             }
         }
+    }
+    
+    /**
+     * @param screen
+     * @return true if the current screen is of the supplied type
+     */
+    public boolean onScreen(Class<? extends Screen> screen) {
+        if(!this.screenStack.empty()) {
+            return this.screenStack.peek().getClass().equals(screen);
+        }
+        return false;
     }
     
     /**
@@ -554,14 +577,16 @@ public class SeventhGame implements ApplicationListener {
      * @return the screenHeight
      */
     public int getScreenHeight() {
-        return Gdx.graphics.getHeight();
+        //return Gdx.graphics.getHeight();
+        return DEFAULT_MINIMIZED_SCREEN_HEIGHT;
     }
     
     /**
      * @return the screenWidth
      */
     public int getScreenWidth() {
-        return Gdx.graphics.getWidth();
+        //return Gdx.graphics.getWidth();
+        return DEFAULT_MINIMIZED_SCREEN_WIDTH;
     }
     
     /**
