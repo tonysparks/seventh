@@ -8,6 +8,7 @@ import harenet.messages.ConnectionRequestMessage;
 import harenet.messages.DisconnectMessage;
 import harenet.messages.Message;
 import harenet.messages.ReliableNetMessage;
+import harenet.messages.ServerFullMessage;
 import harenet.messages.UnReliableNetMessage;
 
 import java.net.InetSocketAddress;
@@ -31,6 +32,7 @@ public class Peer {
         CONNECTED,
         DISCONNECTING,
         DISCONNECTED,
+        DENIED,
         
         ZOMBIE,
     }
@@ -492,6 +494,15 @@ public class Peer {
 //               ( seqNum > this.remoteSequence ) && ( seqNum - this.remoteSequence >  Integer.MAX_VALUE/2  );
     }
     
+    /**
+     * The server can be full and deny this connection
+     * 
+     * @return
+     */
+    public boolean isDeniedConnection() {
+        return state==State.DENIED;
+    }
+    
     public boolean isConnected() {
         return state==State.CONNECTED;
     }
@@ -512,6 +523,13 @@ public class Peer {
      */
     public boolean isZombie() {
         return state==State.ZOMBIE;
+    }
+    
+    /**
+     * Denies the connection
+     */
+    public void denyConnection() {
+        state = State.DENIED;
     }
     
     /**
@@ -601,6 +619,11 @@ public class Peer {
             else if(message instanceof DisconnectMessage) {
                 listener.onDisconnected(this);
             }            
+            else if(message instanceof ServerFullMessage) {
+                denyConnection();
+                
+                listener.onServerFull(this);
+            }
         }
     }
 }

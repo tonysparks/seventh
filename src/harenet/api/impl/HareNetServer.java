@@ -74,6 +74,22 @@ public class HareNetServer extends HareNetEndpoint implements Server {
                 fireOnReceivedEvent(conn, message);
             }    
         }
+        
+        /* (non-Javadoc)
+         * @see harenet.Host.MessageListener#onServerFull(harenet.Peer)
+         */
+        @Override
+        public void onServerFull(Peer peer) {
+            byte peerId = peer.getId();
+            
+            if(peerId > -1) {
+                Connection conn = connections[peerId];
+                if(conn != null) {
+                    fireOnServerFullEvent(conn);
+                }
+            }
+            
+        }
     }
     
     /**

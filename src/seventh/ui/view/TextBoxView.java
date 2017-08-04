@@ -123,7 +123,7 @@ public class TextBoxView implements Renderable {
         Rectangle bounds = w.getScreenBounds();
         
 //        int a = 0;//w.getBackgroundAlpha();        
-        for(int i = 0; i < bounds.height; i++ ) {
+        /*for(int i = 0; i < bounds.height; i++ ) {
 //            Vector3f.Vector3fSubtract(bg, gradiant, this.scratch1);
 //            int scratch = Colors.subtract(bg, gradiant);
             
@@ -136,10 +136,11 @@ public class TextBoxView implements Renderable {
             //int col = (a << 24) | scratch;
             int col = 0xff383e18;
             renderer.drawLine(bounds.x, bounds.y + i, bounds.x + bounds.width, bounds.y + i, col);
-        }
+        }*/
         
 //        renderer.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y, 0xff000000);
 //        renderer.drawLine(bounds.x + bounds.width, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height, 0xff000000);
+        renderer.fillRect(bounds.x,  bounds.y,  bounds.width,  bounds.height, 0xff383e18);
         renderer.drawRect(bounds.x,  bounds.y,  bounds.width,  bounds.height, 0xff000000);
     }
     

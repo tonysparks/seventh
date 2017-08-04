@@ -323,7 +323,7 @@ public class OptionsScreen implements Screen {
         
         uiPos.x = startX;
         uiPos.y = bottomPanelY;
-        final Button resBtn = setupButton(uiPos, "Resolution: '" +  app.getScreenWidth()+"x" + app.getScreenHeight() + "'", false); uiPos.y += yInc;
+        final Button resBtn = setupButton(uiPos, "Resolution: '" +  Gdx.graphics.getWidth()+"x" + Gdx.graphics.getHeight() + "'", false); uiPos.y += yInc;
         resBtn.getTextLabel().setForegroundColor(0xffffffff);
         resBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             

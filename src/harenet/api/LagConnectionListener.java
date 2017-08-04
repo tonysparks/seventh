@@ -101,6 +101,14 @@ public class LagConnectionListener implements ConnectionListener {
     public void onDisconnected(Connection conn) {
         decorator.onDisconnected(conn);
     }
+    
+    /* (non-Javadoc)
+     * @see harenet.api.ConnectionListener#onServerFull(harenet.api.Connection)
+     */
+    @Override
+    public void onServerFull(Connection conn) {
+        decorator.onServerFull(conn);
+    }
 
     /* (non-Javadoc)
      * @see harenet.api.ConnectionListener#onReceived(harenet.api.Connection, java.lang.Object)

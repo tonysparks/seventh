@@ -12,6 +12,7 @@ import harenet.messages.NetMessageFactory;
 import harenet.messages.PingMessage;
 import harenet.messages.PongMessage;
 import harenet.messages.ReliableNetMessage;
+import harenet.messages.ServerFullMessage;
 import harenet.messages.UnReliableNetMessage;
 
 /**
@@ -26,14 +27,15 @@ public class MessageHeader {
     public static final byte CONNECTION_REQUEST_MESSAGE = 1;
     public static final byte CONNECTION_ACCEPTED_MESSAGE = 2;
     public static final byte DISCONNECT_MESSAGE = 3;
+    public static final byte SERVER_FULL_MESSAGE = 4;
     
-    public static final byte HEARTBEAT_MESSAGE = 4;
-    public static final byte PING_MESSAGE = 5;
-    public static final byte PONG_MESSAGE = 6;
+    public static final byte HEARTBEAT_MESSAGE = 5;
+    public static final byte PING_MESSAGE = 6;
+    public static final byte PONG_MESSAGE = 7;
     
     // messages past this must have a NetMessage Attached
-    public static final byte RELIABLE_NETMESSAGE = 7;
-    public static final byte UNRELIABLE_NETMESSAGE = 8;
+    public static final byte RELIABLE_NETMESSAGE = 8;
+    public static final byte UNRELIABLE_NETMESSAGE = 9;
     
     
     
@@ -59,6 +61,10 @@ public class MessageHeader {
             }
             case DISCONNECT_MESSAGE: {
                 message = new DisconnectMessage();
+                break;
+            }
+            case SERVER_FULL_MESSAGE: {
+                message = new ServerFullMessage();
                 break;
             }
             case RELIABLE_NETMESSAGE: {

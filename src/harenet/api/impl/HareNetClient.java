@@ -52,6 +52,14 @@ public class HareNetClient extends HareNetEndpoint implements Client {
         public void onMessage(Peer peer, Message message) {
             fireOnReceivedEvent(HareNetClient.this, message);
         }
+        
+        /* (non-Javadoc)
+         * @see harenet.Host.MessageListener#onServerFull(harenet.Peer)
+         */
+        @Override
+        public void onServerFull(Peer peer) {
+            fireOnServerFullEvent(HareNetClient.this);
+        }
     }
     
     private MessageListener listener;
@@ -187,7 +195,7 @@ public class HareNetClient extends HareNetEndpoint implements Client {
         int attemptsRemaining = 5;
         do {
             update(timeout);            
-        } while(!peer.isConnected() && attemptsRemaining-- > 0);
+        } while( !peer.isConnected() && peer.isDeniedConnection() && attemptsRemaining-- > 0);
         
         return peer.isConnected();
     }
