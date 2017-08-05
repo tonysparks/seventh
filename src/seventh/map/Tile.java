@@ -1264,6 +1264,10 @@ public class Tile implements Renderable {
     private SurfaceType surfaceType;    
     
     private boolean isDestroyed;
+    
+    private float u,u2,v,v2;
+    
+    
     /**
      * 
      */
@@ -1278,10 +1282,34 @@ public class Tile implements Renderable {
         this.surfaceType = SurfaceType.CEMENT;
         this.isDestroyed = false;
         
+        /* Account for texture bleeding, 
+         * we offset the u/v coordinates
+         * to be nudged in ward of the sprite
+         * 
+         * u,u2,v,v2 are data members for now
+         * as this allows me to quickly move this
+         * code to the render() method for quick
+         * responsive feedback
+         */
         if(image!=null) {
             this.sprite = new Sprite(image);
             this.u = image.getU();
+            this.u2 = image.getU2();
+            
             this.v = image.getV();
+            this.v2 = image.getV2();
+                        
+            // this value is some what arbitrary
+            // as this looks the best
+            float adjustX = 0.0125f / width;
+            float adjustY = 0.0125f / height;
+            
+            sprite.setU(u+adjustX);
+            sprite.setU2(u2-adjustX);
+            
+            sprite.setV(v-adjustY);
+            sprite.setV2(v2+adjustY);
+            
         }
     }
     
@@ -1551,7 +1579,6 @@ public class Tile implements Renderable {
     public void update(TimeStep timeStep) {
     }
 
-    float u,u2,v,v2;
     
     /* (non-Javadoc)
      * @see leola.live.gfx.Renderable#render(leola.live.gfx.Canvas, leola.live.gfx.Camera, long)
@@ -1559,19 +1586,9 @@ public class Tile implements Renderable {
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {        
         if(!this.isDestroyed) {
-            //canvas.drawScaledImage(sprite, renderX-2, renderY-2, width+2, height+2, 0xFFFFFFFF);
-            //u = sprite.getU();
-            sprite.setU(u+.001f);
-            sprite.setV(v-.001f);
-            
-            
-            //sprite.setU(u);
-            //sprite.setV(v);
-            
+
             sprite.setPosition(renderX, renderY);            
             canvas.drawRawSprite(sprite);            
-            
-            
 
 //            Vector2f pos = camera.getRenderPosition(alpha);
 //            float x = (this.x - pos.x);

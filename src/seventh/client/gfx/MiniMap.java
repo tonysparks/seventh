@@ -46,7 +46,7 @@ public class MiniMap implements Renderable {
     
         this.bounds = new Rectangle();
         
-        int size = 10;
+        int size = 15;
         
         int ratioWidth = map.getMapWidth()/size;
         int ratioHeight = map.getMapHeight()/size;
@@ -148,8 +148,8 @@ public class MiniMap implements Renderable {
         float xr = (float)miniMap.getRegionWidth() / (float)map.getMapWidth();
         float yr = (float)miniMap.getRegionHeight() / (float)map.getMapHeight();
         
-        xr -= 0.01f;
-        yr -= 0.01f;
+        xr -= 0.015f;
+        yr -= 0.015f;
         
         ClientPlayers players = game.getPlayers();
         for(int i = 0; i < players.getMaxNumberOfPlayers(); i++) {

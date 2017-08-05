@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -373,6 +374,8 @@ public class GdxCanvas implements Canvas {
             params.size = size;
             params.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
             params.flip = true;
+            params.magFilter = TextureFilter.Linear;
+            params.minFilter = TextureFilter.Linear;
             
             font = this.generators.get(alias).generateFont(params);
             this.fonts.put(mask, font);
@@ -529,9 +532,16 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public void drawLine(int x1, int y1, int x2, int y2, Integer color) {
+        drawLine(x1, y1, x2, y2, color, 1);
+    }
+    
+    @Override
+    public void drawLine(int x1, int y1, int x2, int y2, Integer color, float thickness) {
         Color c=setTempColor(color);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(thickness);
+        
         this.shapes.setColor(c);
         
         this.shapes.begin(ShapeType.Line);
@@ -545,9 +555,16 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public void drawLine(float x1, float y1, float x2, float y2, Integer color) {
+        drawLine(x1, y1, x2, y2, color, 1);
+    }
+    
+    @Override
+    public void drawLine(float x1, float y1, float x2, float y2, Integer color, float thickness) {
         Color c=setTempColor(color);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(thickness);
+        
         this.shapes.setColor(c);
         
         this.shapes.begin(ShapeType.Line);

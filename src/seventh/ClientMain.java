@@ -140,8 +140,8 @@ public class ClientMain {
             cfg.vSyncEnabled = vConfig.isVsync();
                         
             if(!cfg.fullscreen) {
-                cfg.width = 1024;
-                cfg.height = 768;
+                cfg.width = 840;// 960;
+                cfg.height = 480; //600;
             }
             
             new LwjglApplication(new SeventhGame(config), cfg);            

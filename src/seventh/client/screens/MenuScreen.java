@@ -71,7 +71,8 @@ public class MenuScreen implements Screen {
         this.menuItems = new ArrayList<>(); 
         this.menuIndex = 0;        
         
-        Vector2f uiPos = new Vector2f(app.getScreenWidth()/2, 300);
+        Vector2f uiPos = new Vector2f(app.getScreenWidth()/2, 180);
+        final int spacing = 60;
         
         setupButton(uiPos, "Single Player").addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -81,7 +82,7 @@ public class MenuScreen implements Screen {
             }
         });
         
-        uiPos.y += 80;
+        uiPos.y += spacing;
         
         setupButton(uiPos, "Multiplayer").addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -91,7 +92,7 @@ public class MenuScreen implements Screen {
             }
         });
         
-        uiPos.y += 80;
+        uiPos.y += spacing;
         
         setupButton(uiPos, "Options").addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -101,7 +102,7 @@ public class MenuScreen implements Screen {
             }
         });
         
-        uiPos.y += 80;
+        uiPos.y += spacing;
         
         setupButton(uiPos, "Credits").addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -111,7 +112,7 @@ public class MenuScreen implements Screen {
             }
         });
         
-        uiPos.y += 80;
+        uiPos.y += spacing;
         
         setupButton(uiPos, "Quit").addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -174,6 +175,8 @@ public class MenuScreen implements Screen {
         btn.getBounds().centerAround(uiPos);
         btn.setForegroundColor(theme.getForegroundColor());
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
+        btn.setTextSize(18);
+        btn.setHoverTextSize(22);
         btn.setTheme(theme);
         btn.setEnableGradiant(false);
         btn.addOnHoverListener(new OnHoverListener() {
@@ -287,11 +290,11 @@ public class MenuScreen implements Screen {
     public void render(Canvas canvas, float alpha) {            
         canvas.fillRect(0, 0, canvas.getWidth() + 100,  canvas.getHeight() + 100, theme.getBackgroundColor());
         
-        canvas.setFont(theme.getPrimaryFontName(), 18);    
+       // canvas.setFont(theme.getPrimaryFontName(), 8);    
         this.panelView.render(canvas, null, 0);
         
         canvas.begin();
-        canvas.setFont(theme.getPrimaryFontName(), 94);
+        canvas.setFont(theme.getPrimaryFontName(), 74);
                 
         int fontColor = theme.getForegroundColor();
         String message = "The Seventh";

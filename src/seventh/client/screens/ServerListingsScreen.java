@@ -74,7 +74,7 @@ public class ServerListingsScreen implements Screen {
     private AtomicBoolean queryingLan;
     private ListBox serverListings;
     
-    private AtomicBoolean showServersLabel;
+    private AtomicBoolean showNoServersLabel;
     
     /**
      * 
@@ -88,7 +88,7 @@ public class ServerListingsScreen implements Screen {
         this.isServerInternetOptionsDisplayed = true;
         this.gameTypeIndex = GameType.Type.values().length;
         
-        this.showServersLabel = new AtomicBoolean(true);
+        this.showNoServersLabel = new AtomicBoolean(true);
         
         this.servers = new ConcurrentLinkedQueue<>();
         this.update = new AtomicBoolean();
@@ -121,7 +121,7 @@ public class ServerListingsScreen implements Screen {
         final int yInc = 30;
         
         uiPos.x = 200;
-        uiPos.y = 200;
+        uiPos.y = 100;
         
         final Button serversBtn = setupButton(uiPos, isServerInternetOptionsDisplayed ? "Servers: Internet" : "Servers: LAN");
         serversBtn.getBounds().setSize(140, 20);
@@ -170,17 +170,17 @@ public class ServerListingsScreen implements Screen {
         });
         
         
-        uiPos.y += yInc;
+        uiPos.y += yInc - 20;
         uiPos.x = 80;
         
         serverListings = new ListBox();
         serverListings.setBackgroundColor(0xff383e18);
         //serverListings.setTheme(theme);
-        serverListings.setBounds(new Rectangle((int)uiPos.x, (int)uiPos.y, app.getScreenWidth() - 220, 400));
-        serverListings.addColumnHeader("Server Name", 340)
-                      .addColumnHeader("Game Type", 200)
-                      .addColumnHeader("Map", 170)
-                      .addColumnHeader("Players", 150);
+        serverListings.setBounds(new Rectangle((int)uiPos.x, (int)uiPos.y, app.getScreenWidth() - 220, 260));
+        serverListings.addColumnHeader("Server Name", 240)
+                      .addColumnHeader("Game Type", 150)
+                      .addColumnHeader("Map", 120)
+                      .addColumnHeader("Players", 80);
         
         uiPos.x = 140;
         uiPos.y = 40;
@@ -197,8 +197,8 @@ public class ServerListingsScreen implements Screen {
         optionsPanel.addWidget(serverListings);
         panelView.addElement(new ListBoxView<>(serverListings));
         
-        uiPos.x = app.getScreenWidth()/2;
-        uiPos.y = 650;
+        uiPos.x = app.getScreenWidth()/2 - 20;
+        uiPos.y = 390;
         
         this.noServersFoundLbl = new Label("No Servers Found.");
         this.noServersFoundLbl.setFont(theme.getSecondaryFontName());
@@ -212,7 +212,7 @@ public class ServerListingsScreen implements Screen {
         panelView.addElement(new LabelView(noServersFoundLbl));
         
         uiPos.x = app.getScreenWidth() - 100;
-        uiPos.y = 420;
+        uiPos.y = 220;
         
         Button upArrow = setupButton(uiPos, "", false, false);
         //upArrow.setForegroundColor(0xff282c0c);
@@ -263,7 +263,8 @@ public class ServerListingsScreen implements Screen {
         String[] result = {"Error", ""};
         try {
             result = new String[] { 
-                    String.format("%-50s %-20s %-30s %d/%d", info.getServerName(), info.getGameType(), info.getMapName(), info.getAxis().size() + info.getAllies().size(), 12), 
+                    String.format("%-35s %-12s %-23s %d/%d", 
+                            info.getServerName(), info.getGameType(), info.getMapName(), info.getAxis().size() + info.getAllies().size(), 12), 
                     info.getAddress() +":"+ info.getPort() 
             };
         }
@@ -290,7 +291,7 @@ public class ServerListingsScreen implements Screen {
     }
     
     private void checkServerListingLabel() {
-        if(!this.showServersLabel.get()) {
+        if(!this.showNoServersLabel.get()) {
             noServersFoundLbl.hide();
         }
     }
@@ -307,19 +308,18 @@ public class ServerListingsScreen implements Screen {
                     String gameType = gameTypeIndex>=0 && gameTypeIndex < GameType.Type.values().length ? GameType.Type.values()[gameTypeIndex].name() : null; 
                     LeoObject result = api.getServerListings(gameType);                    
                     if(LeoObject.isTrue(result)) {
-                        showServersLabel.set(false);
+                        
                         if(result.isArray()) {
                             LeoArray array = result.as();
-                            showServersLabel.set(array.isEmpty());
+                            showNoServersLabel.set(array.isEmpty());
                             for(LeoObject obj : array) {
                                 ServerInfo info = new ServerInfo(obj);
                                 servers.add(info);
                             }
                         }                                                
                     }
-                    else {
-                        showServersLabel.set(true);
-                    }
+                    
+                    showNoServersLabel.set(servers.isEmpty());
                     
                     update.set(true);
                 } 
@@ -419,7 +419,7 @@ public class ServerListingsScreen implements Screen {
                         }
                         
                         listener.close();
-                        showServersLabel.set(servers.isEmpty());
+                        showNoServersLabel.set(servers.isEmpty());
                         update.set(true);
                     } 
                     catch (Exception e) {
@@ -439,8 +439,8 @@ public class ServerListingsScreen implements Screen {
         Button btn = setupButton(pos, settings[0], true, false);
         btn.setBounds(new Rectangle(app.getScreenWidth() - 280, 24));
         btn.getBounds().x += 20;
-        btn.setTextSize(12);
-        btn.setHoverTextSize(12);
+        btn.setTextSize(11);
+        btn.setHoverTextSize(11);
         btn.getTextLabel().setForegroundColor(0xffffffff);
         btn.getTextLabel().setFont("Courier New");
         btn.addOnButtonClickedListener(new OnButtonClickedListener() {
@@ -476,8 +476,8 @@ public class ServerListingsScreen implements Screen {
         btn.getBounds().centerAround(pos);
         btn.setForegroundColor(theme.getForegroundColor());
         btn.setEnableGradiant(false);
-        btn.setTextSize(18);
-        btn.setHoverTextSize(24);
+        btn.setTextSize(15);
+        btn.setHoverTextSize(20);
         
         btn.getTextLabel().setFont(theme.getSecondaryFontName());        
         btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
@@ -554,13 +554,13 @@ public class ServerListingsScreen implements Screen {
         this.panelView.render(canvas, null, 0);
         
         canvas.begin();
-        canvas.setFont(theme.getPrimaryFontName(), 54);
+        canvas.setFont(theme.getPrimaryFontName(), 34);
         canvas.boldFont();
         
         int fontColor = theme.getForegroundColor();
-        String message = "Seventh Servers";
+        String message = "Servers";
         RenderFont.drawShadedString(canvas, message
-                , canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/9, fontColor);
+                , canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/12, fontColor);
                 
         this.menuScreen.getUiManager().render(canvas);
         

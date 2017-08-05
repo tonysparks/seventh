@@ -4,6 +4,7 @@
 package seventh.client.gfx;
 
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.math.Rectangle;
@@ -98,23 +99,23 @@ public class WeaponClassDialogView implements Renderable {
         switch(dialog.getTeam()) {
             case ALLIES:
                 this.panelView.addElement(new ImageButtonView(btns[0], scale(Art.thompsonIcon)));                
-                this.panelView.addElement(new ImageButtonView(btns[1], Art.m1GarandIcon));
-                this.panelView.addElement(new ImageButtonView(btns[2], Art.springfieldIcon));
+                this.panelView.addElement(new ImageButtonView(btns[1], scale(Art.m1GarandIcon)));
+                this.panelView.addElement(new ImageButtonView(btns[2], scale(Art.springfieldIcon)));
                 
                 break;
             case AXIS:
-                this.panelView.addElement(new ImageButtonView(btns[0], Art.mp40Icon));
-                this.panelView.addElement(new ImageButtonView(btns[1], Art.mp44Icon));
-                this.panelView.addElement(new ImageButtonView(btns[2], Art.kar98Icon));
+                this.panelView.addElement(new ImageButtonView(btns[0], scale(Art.mp40Icon)));
+                this.panelView.addElement(new ImageButtonView(btns[1], scale(Art.mp44Icon)));
+                this.panelView.addElement(new ImageButtonView(btns[2], scale(Art.kar98Icon)));
                 break;        
             default:
                 break;            
         }
         
-        this.panelView.addElement(new ImageButtonView(btns[3], Art.riskerIcon));
-        this.panelView.addElement(new ImageButtonView(btns[4], Art.shotgunIcon));
-        this.panelView.addElement(new ImageButtonView(btns[5], Art.rocketIcon));
-        this.panelView.addElement(new ImageButtonView(btns[6], Art.flameThrowerIcon));
+        this.panelView.addElement(new ImageButtonView(btns[3], scale(Art.riskerIcon)));
+        this.panelView.addElement(new ImageButtonView(btns[4], scale(Art.shotgunIcon)));
+        this.panelView.addElement(new ImageButtonView(btns[5], scale(Art.rocketIcon)));
+        this.panelView.addElement(new ImageButtonView(btns[6], scale(Art.flameThrowerIcon)));
         
         this.weaponDescriptions = dialog.getWeaponClassDescriptions();
         for(Label lbl : this.weaponDescriptions) {
@@ -124,10 +125,9 @@ public class WeaponClassDialogView implements Renderable {
     }
                
     private TextureRegion scale(TextureRegion tex) {
-//        Sprite sprite = new Sprite(tex);
-//        sprite.setSize(220, 80);
-        TextureRegion sprite = new TextureRegion(tex);
-        sprite.setRegionWidth(350);
+        Sprite sprite = new Sprite(tex);
+        sprite.setSize(110, 45);
+                
         return sprite;
     }
     

@@ -241,19 +241,19 @@ public class ServerSetupScreen implements Screen {
             
         Label headerLbl = new Label("Game Setup");
         headerLbl.setTheme(theme);
-        headerLbl.setBounds(new Rectangle(0,50, app.getScreenWidth(), 80));
+        headerLbl.setBounds(new Rectangle(0,0, app.getScreenWidth(), 80));
         headerLbl.setHorizontalTextAlignment(TextAlignment.CENTER);
         headerLbl.setFont(theme.getPrimaryFontName());
-        headerLbl.setTextSize(45);
+        headerLbl.setTextSize(34);
                 
 
         uiPos.x = 10;
-        uiPos.y = 120;
+        uiPos.y = 70;
         setupLabel(uiPos, "Settings", true);
         
         final int startX = 30;
-        final int startY = 160;
-        final int yInc = 20;
+        final int startY = 100;
+        final int yInc = 15;
         final int xInc = 100;
         
         final int toggleX = 290;
@@ -262,7 +262,7 @@ public class ServerSetupScreen implements Screen {
         uiPos.y = startY;        
         
         final ImagePanel previewPanel = new ImagePanel(getCurrentMapPreview());
-        previewPanel.setBounds(new Rectangle(app.getScreenWidth() - 450, startY + 5, 256, 256));        
+        previewPanel.setBounds(new Rectangle(app.getScreenWidth() - 280, startY + 5, 168, 168));        
         previewPanel.setBackgroundColor(0xff383e18);
         previewPanel.setForegroundColor(0xff000000);
 //        this.optionsPanel.addWidget(previewPanel);
@@ -275,7 +275,7 @@ public class ServerSetupScreen implements Screen {
         uiPos.y += yInc;
         
         final TextBox serverNameTxtBox = setupTextBox(uiPos, this.gameSettings.serverName);
-        serverNameTxtBox.setBounds(new Rectangle(240, 30));
+        serverNameTxtBox.setBounds(new Rectangle(240, 25));
         serverNameTxtBox.getBounds().centerAround(uiPos);
         serverNameTxtBox.setMaxSize(26);
         serverNameTxtBox.addInputListenerToFront(new Inputs() {
@@ -672,8 +672,8 @@ public class ServerSetupScreen implements Screen {
         btn.setTheme(theme);
         btn.setText(text);
         if(smallBtn) {
-            btn.setTextSize(18);
-            btn.setHoverTextSize(22);
+            btn.setTextSize(12);
+            btn.setHoverTextSize(16);
             btn.setBounds(new Rectangle(40, 30));
         }
         else { 
@@ -710,12 +710,12 @@ public class ServerSetupScreen implements Screen {
         if(header) {
             lbl.setForegroundColor(theme.getForegroundColor());
             lbl.setFont(theme.getSecondaryFontName());
-            lbl.setTextSize(24);
+            lbl.setTextSize(16);
         }
         else {
             lbl.setForegroundColor(0xffffffff);
             lbl.setFont(theme.getSecondaryFontName());
-            lbl.setTextSize(18);
+            lbl.setTextSize(14);
         }
         
         this.optionsPanel.addWidget(lbl);
@@ -727,7 +727,7 @@ public class ServerSetupScreen implements Screen {
     
     private TextBox setupTextBox(Vector2f pos, final String text) {
         TextBox box = new TextBox();
-        box.setBounds(new Rectangle((int)pos.x, (int)pos.y, 120, 30));
+        box.setBounds(new Rectangle((int)pos.x, (int)pos.y, 120, 25));
         box.getTextLabel().setFont(theme.getSecondaryFontName());
         box.setText(text);
         box.setMaxSize(16);

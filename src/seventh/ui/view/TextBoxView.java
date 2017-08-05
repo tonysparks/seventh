@@ -75,7 +75,7 @@ public class TextBoxView implements Renderable {
             String labelText = textBox.getLabelText();
             
             renderer.setFont(textBox.getTextLabel().getFont(), (int)textBox.getTextLabel().getTextSize());
-            
+            int textHeight = renderer.getHeight("W");
             int originalX = bounds.x;
             int originalY = bounds.y;
             
@@ -91,16 +91,15 @@ public class TextBoxView implements Renderable {
             Rectangle lbounds = this.textBox.getTextLabel().getBounds();//update the text
             lbounds.set(bounds);
             lbounds.x += 5;        
-            lbounds.y += 3;
+            lbounds.y += (lbounds.height / 2) - textHeight/2;
             this.textView.render(renderer, camera, alpha);
-            
-            
+                        
             if(showCursor && textBox.hasFocus()) 
             {
                 String text = textBox.getText();
                 int textWidth = renderer.getWidth(text.substring(0, textBox.getCursorIndex())) + 5;
                 renderer.setFont(textBox.getTextLabel().getFont(), (int)textBox.getTextLabel().getTextSize());
-                RenderFont.drawShadedString(renderer, "_", lbounds.x + textWidth, lbounds.y + renderer.getHeight("W"), textBox.getForegroundColor());
+                RenderFont.drawShadedString(renderer, "_", lbounds.x + textWidth, lbounds.y + textHeight - 3, textBox.getForegroundColor());
             }
             
             bounds.x = originalX;

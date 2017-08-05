@@ -93,18 +93,18 @@ public class WeaponClassDialog extends Widget {
         this.title.setTheme(theme);
         //this.title.setForegroundColor(0xffffffff);
         this.title.setBounds(new Rectangle(bounds));
-        this.title.getBounds().height = 30;
-        this.title.getBounds().y += 30;
+        this.title.getBounds().height = 15;
+        this.title.getBounds().y += 20;
         this.title.setFont(theme.getSecondaryFontName());
         this.title.setHorizontalTextAlignment(TextAlignment.CENTER);
-        this.title.setTextSize(28);
+        this.title.setTextSize(22);
                     
         refreshButtons();
 
         this.cancel = new Button();        
         this.cancel.setText("Cancel");
         this.cancel.setBounds(new Rectangle(0,0,100,40));
-        this.cancel.getBounds().centerAround(bounds.x + 205, bounds.y + bounds.height - 20);
+        this.cancel.getBounds().centerAround(bounds.x + 205, bounds.y + bounds.height - 10);
         this.cancel.setEnableGradiant(false);
         this.cancel.setTheme(theme);
         this.cancel.getTextLabel().setFont(theme.getSecondaryFontName());
@@ -128,9 +128,9 @@ public class WeaponClassDialog extends Widget {
         
         Vector2f pos = new Vector2f();
         pos.x = bounds.x + 120;
-        pos.y = bounds.y + 70;
+        pos.y = bounds.y + 50;
         
-        int yInc = 80;
+        int yInc = 50;
         
         
         for(int i = 0; i < weaponClasses.length; i++) {
@@ -245,7 +245,7 @@ public class WeaponClassDialog extends Widget {
     
     private Button setupButton(Vector2f pos, final Type type) {
         final Button btn = new Button();
-        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, 320, 70));
+        btn.setBounds(new Rectangle((int)pos.x, (int)pos.y, 320, 40));
         btn.setBorder(false);
 //        btn.setText(getClassDescription(type));
 //        btn.setTextSize(12);
@@ -275,8 +275,8 @@ public class WeaponClassDialog extends Widget {
     
     private Label setupLabel(Vector2f pos, final Type type) {
         Label lbl = new Label(this.getClassDescription(type));
-        lbl.setBounds(new Rectangle((int)pos.x + 80, (int)pos.y + 5, 220, 80));
-        lbl.setTextSize(14);
+        lbl.setBounds(new Rectangle((int)pos.x + 80, (int)pos.y, 220, 60));
+        lbl.setTextSize(12);
         lbl.setForegroundColor(this.theme.getForegroundColor()); //0xff363e0f
         lbl.setShadow(false);
         lbl.setFont("Consola");

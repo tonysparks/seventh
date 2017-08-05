@@ -90,9 +90,9 @@ public class Hud implements Renderable {
         this.objectiveLog.setFont(app.getTheme().getSecondaryFontName());
         this.objectiveLog.setFontSize(24);
         
-        this.awardsLog = new EffectsLog(-190, 200, 15);
+        this.awardsLog = new EffectsLog(-190, 100, 15);
         
-        this.centerLog = new MessageLog(screenWidth/2, 90, 3000, 2) {
+        this.centerLog = new MessageLog(screenWidth/2, 50, 3000, 2) {
             @Override
             protected void onRenderMesage(Canvas canvas, Camera camera, String message, int x, int y) {
                 int width = canvas.getWidth(message);                
@@ -538,7 +538,10 @@ public class Hud implements Renderable {
         if (health > 0) {
             canvas.fillRect( x, y, (100 * health/100), 15, 0xff9aFF1a );
         }
-        canvas.drawRect( x-1, y, 101, 15, 0xff000000 );
+        
+        //canvas.drawRect(x, y, 100, 15, 0xbf000000);
+        //canvas.drawRect(x, y+2, 100, 13, 0x9f000000);
+        
         
         // add a shadow effect
         canvas.drawLine( x, y+1, x+100, y+1, 0x8f000000 );
@@ -552,8 +555,36 @@ public class Hud implements Renderable {
         canvas.drawLine( x, y-4, x+100, y-4, 0x0f000000 );
         canvas.drawLine( x, y-3, x+100, y-3, 0x2f000000 );
         canvas.drawLine( x, y-2, x+100, y-2, 0x5f000000 );
-        canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );        
+        canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 ); 
         
+        /*
+      //  canvas.drawLine( x, y+0, x+100, y+0, 0xff000000, 2 );
+        canvas.drawLine( x, y+1, x+100, y+1, 0x8f000000, 4 );
+        canvas.drawLine( x, y+2, x+100, y+2, 0x5f000000, 4 );
+        canvas.drawLine( x, y+3, x+100, y+3, 0x2f000000, 4 );
+        canvas.drawLine( x, y+4, x+100, y+4, 0x0f000000, 4 );
+        canvas.drawLine( x, y+5, x+100, y+5, 0x0b000000, 4 );
+        canvas.drawLine( x, y+6, x+100, y+6, 0x0a000000, 4 );
+        
+        //canvas.drawLine( x, y+7, x+100, y+7, 0x5f000000, 2 );
+        canvas.drawLine( x, y+8, x+100, y+8, 0xf000000, 2 );
+        canvas.drawLine( x, y+9, x+100, y+9, 0x0b000000, 2 );
+        canvas.drawLine( x, y+10, x+100, y+10, 0x0b000000, 2 );
+        canvas.drawLine( x, y+11, x+100, y+11, 0x0a000000, 2 );
+        canvas.drawLine( x, y+12, x+100, y+12, 0x0a000000, 2 );//
+        
+        y = y+15;
+        canvas.drawLine( x, y-6, x+100, y-6, 0x0a000000, 4 );
+        canvas.drawLine( x, y-5, x+100, y-5, 0x0b000000, 4 );
+        canvas.drawLine( x, y-4, x+100, y-4, 0x0f000000, 4 );
+        canvas.drawLine( x, y-3, x+100, y-3, 0x2f000000, 4 );
+        canvas.drawLine( x, y-2, x+100, y-2, 0x5f000000, 4 );
+        canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000, 4 );        
+       // canvas.drawLine( x, y-0, x+100, y-0, 0xff000000, 2 );
+        canvas.drawRect( x, y-15, 100, 15, 0xff000000 );
+        */
+
+        //canvas.drawRect( x, y, 100, 15, 0xff000000 );
 //        Art.healthIcon.setSize(12, 12);
         canvas.drawSprite(Art.healthIcon, x - 20, y - 16, null);
     }
@@ -567,7 +598,6 @@ public class Hud implements Renderable {
         if (stamina > 0) {
             canvas.fillRect( x, y, (100 * stamina/100), 15, 0xff3a9aFF );
         }
-        canvas.drawRect( x-1, y, 101, 15, 0xff000000 );
         
         // add a shadow effect
         canvas.drawLine( x, y+1, x+100, y+1, 0x8f000000 );
@@ -583,6 +613,7 @@ public class Hud implements Renderable {
         canvas.drawLine( x, y-2, x+100, y-2, 0x5f000000 );
         canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );        
         
+        canvas.drawRect( x, y-15, 101, 15, 0xff000000 );
         canvas.drawSprite(Art.staminaIcon, x + 108, y - 14, null);
     }
     
@@ -605,7 +636,6 @@ public class Hud implements Renderable {
             double percentage = ((double)usedMemory / (double)maxMemory);
             canvas.fillRect( x, y, (int)(100 * percentage), 15, 0xaf2f2f2f );
         }
-        canvas.drawRect( x-1, y, 101, 15, 0xff000000 );
         
         // add a shadow effect
         canvas.drawLine( x, y+1, x+100, y+1, 0x8f000000 );
@@ -621,6 +651,7 @@ public class Hud implements Renderable {
         canvas.drawLine( x, y-2, x+100, y-2, 0x5f000000 );
         canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );        
         
+        canvas.drawRect( x, y-15, 100, 15, 0xff000000 );
         canvas.setFont("Consola", 14);
         canvas.drawString(usedMemory + " / " + maxMemory + " MiB", x, y - 20, 0x6f00CC00);
     }
@@ -640,15 +671,15 @@ public class Hud implements Renderable {
         canvas.setFont("Consola", 14);
         Client client = app.getClientConnection().getClient();
         canvas.drawString("Avg. R: " + client.getAvgBitsPerSecRecv() + " B/S", x, y - 20, color);
-        canvas.drawString("Avg. S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 40, color);
-        canvas.drawString("Drop  : " + client.getNumberOfDroppedPackets(), x, y - 60, color);
-        canvas.drawString("Tot. R: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 80, color);
-        canvas.drawString("Tot. S: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 100, color);
+        canvas.drawString("Avg. S: " + client.getAvgBitsPerSecSent() + " B/S", x, y - 35, color);
+        canvas.drawString("Drop  : " + client.getNumberOfDroppedPackets(), x, y - 50, color);
+        canvas.drawString("Tot. R: " + client.getNumberOfBytesReceived()/1024 + " KiB", x, y - 70, color);
+        canvas.drawString("Tot. S: " + client.getNumberOfBytesSent()/1024 + " KiB", x, y - 85, color);
         
         String compressedBytes = client.getNumberOfBytesCompressed()>1024?
                                     client.getNumberOfBytesCompressed()/1024 + " KiB" : 
                                     client.getNumberOfBytesCompressed() + " B";
-        canvas.drawString("Comp B: " + compressedBytes, x, y - 120, color);
+        canvas.drawString("Comp B: " + compressedBytes, x, y - 100, color);
     }
     
     

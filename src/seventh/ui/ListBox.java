@@ -140,8 +140,8 @@ public class ListBox extends Widget {
         Button button = new Button();
         button.getBounds().setSize(width, 25);
         button.setText(header);    
-        button.setTextSize(16);
-        button.setHoverTextSize(17);
+        button.setTextSize(12);
+        button.setHoverTextSize(15);
         button.setEnableGradiant(false);            
         button.setTheme(getTheme());
         button.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);

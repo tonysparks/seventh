@@ -26,6 +26,7 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.ui.Button;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
@@ -159,24 +160,32 @@ public class ImageButtonView extends ButtonView {
             int color = button.getForegroundColor();
             
             if ( this.buttonImage != null ) {
-                // center the button icon
-                int uw = this.buttonUpImage.getRegionWidth();
-                int uh = this.buttonUpImage.getRegionHeight();
-                
-                int w = uw / 2 - this.buttonImage.getRegionWidth()/2;
-                int h = uh / 2 - this.buttonImage.getRegionHeight()/2  + 5;
-                
-                if ( button.isPressed() ) {
-                    if ( this.buttonDownImage != null) {        
-                        renderer.drawScaledImage(this.buttonDownImage, (int)position.x, (int)position.y, uw, uh, color);
-                    }            
-                    renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h + 5, 
-                            this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
+                if(this.buttonImage instanceof Sprite) {
+                    Sprite sprite = (Sprite)this.buttonImage;
+                    sprite.setPosition(position.x, position.y);
+                    renderer.drawRawSprite( sprite );
                 }
                 else {
-                    //renderer.drawImage(this.buttonUpImage, (int)position.x, (int)position.y, color);
-                    renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h, 
-                            this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
+                
+                    // center the button icon
+                    int uw = this.buttonUpImage.getRegionWidth();
+                    int uh = this.buttonUpImage.getRegionHeight();
+                    
+                    int w = uw / 2 - this.buttonImage.getRegionWidth()/2;
+                    int h = uh / 2 - this.buttonImage.getRegionHeight()/2  + 5;
+                    
+                    if ( button.isPressed() ) {
+                        if ( this.buttonDownImage != null) {        
+                            renderer.drawScaledImage(this.buttonDownImage, (int)position.x, (int)position.y, uw, uh, color);
+                        }            
+                        renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h + 5, 
+                                this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
+                    }
+                    else {
+                        //renderer.drawImage(this.buttonUpImage, (int)position.x, (int)position.y, color);
+                        renderer.drawScaledImage(this.buttonImage, (int)position.x + w, (int)position.y + h, 
+                                this.buttonImage.getRegionWidth(), this.buttonImage.getRegionHeight(), color);
+                    }
                 }
             }
             else {

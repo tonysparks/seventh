@@ -11,6 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
 import seventh.client.ClientSeventhConfig;
+import seventh.client.SeventhGame;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
@@ -26,7 +27,7 @@ import seventh.shared.Updatable;
  */
 public class Terminal implements Updatable, Logger {
     
-    private static final int MAX_HEIGHT = 500;
+    private static final int MAX_HEIGHT = SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT/2;
     private static final int MAX_TEXT_HISTORY = 2000;
     
     private boolean isActive, isCollapsing, isOpening;

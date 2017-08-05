@@ -255,22 +255,23 @@ public class ClientGame {
             public void execute(Console console, String... args) {
                 Vector2f offsetPos = hud.getAwardsLog().nextOffset();        
                 Vector2f startPos = new Vector2f(offsetPos);
-                Vector2f endPos = new Vector2f(40, offsetPos.y);
+                final float xPos = 20;
+                Vector2f endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff00ff));
                 
                 offsetPos = hud.getAwardsLog().nextOffset();        
                 startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(40, offsetPos.y);
+                endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff0000ff));
                 
                 offsetPos = hud.getAwardsLog().nextOffset();        
                 startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(40, offsetPos.y);
+                endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff0000));
                 
                 offsetPos = hud.getAwardsLog().nextOffset();        
                 startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(40, offsetPos.y);
+                endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff00ff00));
                 
             }
@@ -1865,7 +1866,7 @@ public class ClientGame {
         
         Vector2f offsetPos = hud.getAwardsLog().nextOffset();        
         Vector2f startPos = new Vector2f(offsetPos);
-        Vector2f endPos = new Vector2f(40, offsetPos.y);
+        Vector2f endPos = new Vector2f(20, offsetPos.y);
                
         
         switch(msg.award) {
