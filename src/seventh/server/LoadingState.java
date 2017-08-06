@@ -7,10 +7,11 @@ import leola.vm.Leola;
 import seventh.game.GameMap;
 import seventh.game.Players;
 import seventh.game.type.AbstractGameTypeScript;
-import seventh.game.type.CaptureTheFlagScript;
 import seventh.game.type.GameType;
-import seventh.game.type.ObjectiveScript;
-import seventh.game.type.TeamDeathMatchScript;
+import seventh.game.type.cmd.CommanderScript;
+import seventh.game.type.ctf.CaptureTheFlagScript;
+import seventh.game.type.obj.ObjectiveScript;
+import seventh.game.type.tdm.TeamDeathMatchScript;
 import seventh.map.Map;
 import seventh.map.MapLoaderUtil;
 import seventh.shared.Cons;
@@ -94,6 +95,10 @@ public class LoadingState implements State {
     private GameType loadCTFGameType(MapEntry mapFile) throws Exception {
         return loadGameType(mapFile, new CaptureTheFlagScript(runtime));
     }
+    
+    private GameType loadCMDGameType(MapEntry mapFile) throws Exception {
+        return loadGameType(mapFile, new CommanderScript(runtime));
+    }
 
     
     /**
@@ -138,6 +143,14 @@ public class LoadingState implements State {
                 case CTF: {
                     gameType = loadCTFGameType(mapFile);
                     break;
+                }
+                case CMD: {
+                    gameType = loadCMDGameType(mapFile);
+                    break;                
+                }
+                default: {
+                    throw new IllegalArgumentException
+                        ("Unknown game type: " + this.serverContext.getConfig().getGameType());
                 }
             }            
             

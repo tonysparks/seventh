@@ -6,6 +6,7 @@ package seventh.game.net;
 import harenet.BitArray;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.game.type.GameType.Type;
 import seventh.network.messages.BufferIO;
 import seventh.shared.SeventhConstants;
 
@@ -48,7 +49,7 @@ public class NetGameState  implements NetMessage {
     public void read(IOBuffer buffer) {
         bits = buffer.getByte();
         if( (bits & FL_GAMETYPE) != 0) {
-            gameType = new NetGameTypeInfo();
+            gameType = NetGameTypeInfo.newNetGameTypeInfo(Type.fromNet(buffer.getByteBits(Type.numOfBits())));
             gameType.read(buffer);
         }
         
@@ -108,6 +109,7 @@ public class NetGameState  implements NetMessage {
         buffer.putByte(bits);
         
         if(gameType != null) {
+            buffer.putByteBits(gameType.type, Type.numOfBits());
             gameType.write(buffer);
         }
         if(entities != null && entities.length > 0) {

@@ -1,7 +1,7 @@
 /*
  * see license.txt
  */
-package seventh.ai.basic.squad;
+package seventh.ai.basic.group;
 
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
@@ -13,23 +13,23 @@ import seventh.shared.TimeStep;
 import seventh.shared.Updatable;
 
 /**
- * Represents a small squad of bots that can take on team work type activities
+ * Represents a small AI Group of bots that can take on team work type activities
  * 
  * @author Tony
  *
  */
-public class Squad implements Updatable {
+public class AIGroup implements Updatable {
 
     private DefaultAISystem aiSystem;
     private Brain[] members;
     private Roles roles;
     
-    private SquadAction squadAction;
+    private AIGroupAction aIGroupAction;
     private int size;
     /**
      * 
      */
-    public Squad(DefaultAISystem aiSystem) {
+    public AIGroup(DefaultAISystem aiSystem) {
         this.aiSystem = aiSystem;
         this.members = new Brain[SeventhConstants.MAX_PLAYERS];
         this.roles = new Roles();
@@ -42,7 +42,7 @@ public class Squad implements Updatable {
         return roles;
     }
 
-    public void addSquadMember(Brain bot) {
+    public void addMember(Brain bot) {
         if(bot.getPlayer().isAlive()) {
             if(this.members[bot.getPlayer().getId()] == null) {
                 this.size++;    
@@ -52,7 +52,7 @@ public class Squad implements Updatable {
         }
     }
     
-    public boolean isInSquad(Brain bot) {
+    public boolean inGroup(Brain bot) {
         for(int i = 0; i < this.members.length; i++) {
             Brain member = this.members[i];
             if(member.getPlayer().getId() == bot.getPlayer().getId()) {
@@ -62,7 +62,7 @@ public class Squad implements Updatable {
         return false;
     }
     
-    public int squadSize() {
+    public int groupSize() {
         return size;
     }
     
@@ -85,12 +85,12 @@ public class Squad implements Updatable {
         return members;
     }
     
-    public void doAction(SquadAction action) {
-        if(this.squadAction!=null) {
-            this.squadAction.cancel(this);
+    public void doAction(AIGroupAction action) {
+        if(this.aIGroupAction!=null) {
+            this.aIGroupAction.cancel(this);
         }
-        this.squadAction = action;
-        this.squadAction.start(this);
+        this.aIGroupAction = action;
+        this.aIGroupAction.start(this);
     }
     
     /* (non-Javadoc)
@@ -98,11 +98,11 @@ public class Squad implements Updatable {
      */
     @Override
     public void update(TimeStep timeStep) {
-        if(this.squadAction != null) {
-            this.squadAction.update(timeStep);
-            if(this.squadAction.isFinished(this)) {
-                this.squadAction.end(this);
-                this.squadAction = null;
+        if(this.aIGroupAction != null) {
+            this.aIGroupAction.update(timeStep);
+            if(this.aIGroupAction.isFinished(this)) {
+                this.aIGroupAction.end(this);
+                this.aIGroupAction = null;
             }
         }
     }

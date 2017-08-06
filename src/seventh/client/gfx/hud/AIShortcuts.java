@@ -59,7 +59,9 @@ public class AIShortcuts {
      * @param inputs
      * @param game
      */
-    public boolean checkShortcuts(Inputs inputs, Console console, ClientGame game) {
+    public boolean checkShortcuts(Inputs inputs, Console console, ClientGame game, int memberIndex) {
+        ClientPlayer aiPlayer = game.getPlayerByFireTeamId(memberIndex);
+        
         boolean result = false;
         for(int i = 0; i < this.shortcuts.length; i++) {
             boolean isKeyDown = inputs.isKeyDown(this.shortcuts[i]);
@@ -67,7 +69,7 @@ public class AIShortcuts {
                 this.isDown[i] = true;
             }
             if(this.isDown[i] && !isKeyDown) {
-                this.commands.get(i).execute(console, game);
+                this.commands.get(i).execute(console, game, aiPlayer);
                 result = true;
             }
             
@@ -76,19 +78,24 @@ public class AIShortcuts {
             }
         }
         
-        this.isMouseButtonDown = checkHotKey(this.hotCommand, this.isMouseButtonDown, inputs.isButtonDown(keyMap.getFireKey()), console, game);
-        this.isMouseButton2Down = checkHotKey(this.secondaryHotCommand, this.isMouseButton2Down, inputs.isButtonDown(keyMap.getThrowGrenadeKey()), console, game);
+        this.isMouseButtonDown = checkHotKey(this.hotCommand, this.isMouseButtonDown, inputs.isButtonDown(keyMap.getFireKey()), console, game, aiPlayer);
+        this.isMouseButton2Down = checkHotKey(this.secondaryHotCommand, this.isMouseButton2Down, inputs.isButtonDown(keyMap.getThrowGrenadeKey()), console, game, aiPlayer);
                 
         return result;
     }
     
-    private boolean checkHotKey(AIShortcut hotCommand, boolean wasDown, boolean isDown, Console console, ClientGame game) {
+    public boolean checkGroupCommands(Inputs inputs, Console console, ClientGame game) {
+   //     if(inputs.isKeyDown(key))
+        return false;
+    }
+    
+    private boolean checkHotKey(AIShortcut hotCommand, boolean wasDown, boolean isDown, Console console, ClientGame game, ClientPlayer aiPlayer) {
         if(isDown) {
             wasDown = true;
         }
         
         if(wasDown && !isDown) {
-            hotCommand.execute(console, game);
+            hotCommand.execute(console, game, aiPlayer);
         }
         
         if(!isDown) {
@@ -111,8 +118,9 @@ public class AIShortcuts {
          * @see seventh.client.AIShortcut#execute(seventh.client.ClientGame)
          */
         @Override
-        public void execute(Console console, ClientGame game) {
-            int botId = getBotId(game);
+        public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
+            int botId = //getBotId(game);
+                    aiPlayer!=null ? aiPlayer.getId() : -1;
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 ClientPlayer bot = players.getPlayer(botId);                
@@ -139,8 +147,9 @@ public class AIShortcuts {
          * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
          */
         @Override
-        public void execute(Console console, ClientGame game) {
-            int botId = getBotId(game);
+        public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
+            int botId = //getBotId(game);
+                    aiPlayer!=null ? aiPlayer.getId() : -1;
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -164,8 +173,9 @@ public class AIShortcuts {
          * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
          */
         @Override
-        public void execute(Console console, ClientGame game) {
-            int botId = getBotId(game);
+        public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
+            int botId = //getBotId(game);
+                    aiPlayer!=null ? aiPlayer.getId() : -1;
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -188,8 +198,9 @@ public class AIShortcuts {
          * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
          */
         @Override
-        public void execute(Console console, ClientGame game) {
-            int botId = getBotId(game);
+        public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
+            int botId = //getBotId(game);
+                    aiPlayer!=null ? aiPlayer.getId() : -1;
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " defuseBomb");
@@ -210,8 +221,9 @@ public class AIShortcuts {
          * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
          */
         @Override
-        public void execute(Console console, ClientGame game) {
-            int botId = getBotId(game);
+        public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
+            int botId = //getBotId(game);
+                    aiPlayer!=null ? aiPlayer.getId() : -1;
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " plantBomb");
@@ -233,8 +245,9 @@ public class AIShortcuts {
          * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
          */
         @Override
-        public void execute(Console console, ClientGame game) {
-            int botId = getBotId(game);
+        public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
+            int botId = //getBotId(game);
+                    aiPlayer!=null ? aiPlayer.getId() : -1;
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " defendBomb");
@@ -257,8 +270,9 @@ public class AIShortcuts {
          * @see seventh.client.AIShortcut#execute(seventh.shared.Console, seventh.client.ClientGame)
          */
         @Override
-        public void execute(Console console, ClientGame game) {
-            int botId = getBotId(game);
+        public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
+            int botId = //getBotId(game);
+                    aiPlayer!=null ? aiPlayer.getId() : -1;
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -266,6 +280,19 @@ public class AIShortcuts {
                 console.execute("team_say " + players.getPlayer(botId).getName() + " take cover!" );
                 //console.execute("speech " + 5);
             }    
+        }
+    }
+    
+    public static class RegroupAIGroupCommand extends AIGroupCommand {
+        
+        public RegroupAIGroupCommand(int shortcutKey) {
+            super(shortcutKey, "Regroup");
+        }
+        
+        @Override
+        public void execute(ClientGame game) {
+            // TODO Auto-generated method stub
+            
         }
     }
 }

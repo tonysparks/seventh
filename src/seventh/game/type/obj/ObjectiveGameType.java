@@ -2,7 +2,7 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.game.type;
+package seventh.game.type.obj;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,8 @@ import seventh.game.Player;
 import seventh.game.Team;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
+import seventh.game.type.AbstractTeamGameType;
+import seventh.game.type.GameType;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

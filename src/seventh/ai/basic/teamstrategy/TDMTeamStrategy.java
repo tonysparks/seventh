@@ -6,9 +6,9 @@ package seventh.ai.basic.teamstrategy;
 import seventh.ai.basic.Brain;
 import seventh.ai.basic.DefaultAISystem;
 import seventh.ai.basic.actions.Action;
-import seventh.ai.basic.squad.Squad;
-import seventh.ai.basic.squad.SquadAttackAction;
-import seventh.ai.basic.squad.SquadDefendAction;
+import seventh.ai.basic.group.AIGroup;
+import seventh.ai.basic.group.AIGroupAttackAction;
+import seventh.ai.basic.group.AIGroupDefendAction;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
@@ -28,7 +28,7 @@ import seventh.shared.Timer;
 public class TDMTeamStrategy implements TeamStrategy {
 
     private Team team;
-    Squad squad;
+    AIGroup aIGroup;
     private DefaultAISystem aiSystem;
     private Timer time;
     /**
@@ -37,13 +37,13 @@ public class TDMTeamStrategy implements TeamStrategy {
     public TDMTeamStrategy(DefaultAISystem aiSystem, Team team) {
         this.team = team;
         this.aiSystem = aiSystem;
-        this.squad = new Squad(aiSystem);
+        this.aIGroup = new AIGroup(aiSystem);
         this.time = new Timer(false, 5_000);
         Cons.getImpl().addCommand(new Command("squadDefend") {
             
             @Override
             public void execute(Console console, String... args) {
-                squad.doAction(new SquadDefendAction(new Vector2f(275, 215)));
+                aIGroup.doAction(new AIGroupDefendAction(new Vector2f(275, 215)));
             }
         });
         
@@ -51,7 +51,7 @@ public class TDMTeamStrategy implements TeamStrategy {
             
             @Override
             public void execute(Console console, String... args) {
-                squad.doAction(new SquadAttackAction(new Vector2f(275, 215)));
+                aIGroup.doAction(new AIGroupAttackAction(new Vector2f(275, 215)));
             }
         });
     }
@@ -97,7 +97,7 @@ public class TDMTeamStrategy implements TeamStrategy {
             if(player.isBot()) {
                 Brain brain = aiSystem.getBrain(player);
                 if(brain!=null) {
-                    this.squad.addSquadMember(brain);
+                    this.aIGroup.addMember(brain);
                 }
             }
         }

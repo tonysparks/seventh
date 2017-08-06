@@ -1,7 +1,7 @@
 /*
  * see license.txt
  */
-package seventh.ai.basic.squad;
+package seventh.ai.basic.group;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import seventh.shared.TimeStep;
  * @author Tony
  *
  */
-public class SquadDefendAction extends SquadAction {
+public class AIGroupDefendAction extends AIGroupAction {
 
     private Vector2f defendPosition;
     private List<AttackDirection> directionsToDefend;
@@ -26,30 +26,30 @@ public class SquadDefendAction extends SquadAction {
     /**
      * @param position
      */
-    public SquadDefendAction(Vector2f position) {
+    public AIGroupDefendAction(Vector2f position) {
         this.defendPosition = position;
         this.directionsToDefend = new ArrayList<>();
     }
 
     @Override
-    public void start(Squad squad) {
-        World world = squad.getWorld();
+    public void start(AIGroup aIGroup) {
+        World world = aIGroup.getWorld();
         float radius = (float)world.getRandom().getRandomRange(100f, 150f);
         directionsToDefend.addAll(world.getAttackDirections(this.defendPosition, radius, 12));
 
     }
     
     /* (non-Javadoc)
-     * @see seventh.ai.basic.squad.SquadAction#getAction(seventh.ai.basic.squad.Squad)
+     * @see seventh.ai.basic.group.AIGroupAction#getAction(seventh.ai.basic.group.AIGroup)
      */
     @Override
-    public Action getAction(Squad squad) {
-        if(squad.squadSize() > 0 ) {
-            World world = squad.getWorld();
-            Brain[] members = squad.getMembers();
-//            Roles roles = squad.getRoles();
+    public Action getAction(AIGroup aIGroup) {
+        if(aIGroup.groupSize() > 0 ) {
+            World world = aIGroup.getWorld();
+            Brain[] members = aIGroup.getMembers();
+//            Roles roles = aIGroup.getRoles();
             
-            int squadSize = squad.squadSize();
+            int squadSize = aIGroup.groupSize();
             
             if(!directionsToDefend.isEmpty() && squadSize>0) {
                 int increment = 1;
@@ -79,24 +79,24 @@ public class SquadDefendAction extends SquadAction {
     }
     
     /* (non-Javadoc)
-     * @see seventh.ai.basic.squad.SquadAction#end(seventh.ai.basic.squad.Squad)
+     * @see seventh.ai.basic.group.AIGroupAction#end(seventh.ai.basic.group.AIGroup)
      */
     @Override
-    public void end(Squad squad) {
+    public void end(AIGroup aIGroup) {
     }
     
     /* (non-Javadoc)
-     * @see seventh.ai.basic.squad.SquadAction#cancel(seventh.ai.basic.squad.Squad)
+     * @see seventh.ai.basic.group.AIGroupAction#cancel(seventh.ai.basic.group.AIGroup)
      */
     @Override
-    public void cancel(Squad squad) {        
+    public void cancel(AIGroup aIGroup) {        
     }
     
     /* (non-Javadoc)
-     * @see seventh.ai.basic.squad.SquadAction#isFinished(seventh.ai.basic.squad.Squad)
+     * @see seventh.ai.basic.group.AIGroupAction#isFinished(seventh.ai.basic.group.AIGroup)
      */
     @Override
-    public boolean isFinished(Squad squad) {
+    public boolean isFinished(AIGroup aIGroup) {
         return false;
     }
     

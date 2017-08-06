@@ -93,7 +93,7 @@ public abstract class AbstractTeamGameType implements GameType {
         
         this.highScoreTeams = new ArrayList<Team>(2);
         
-        this.gameTypeInfo = new NetGameTypeInfo();
+        this.gameTypeInfo = createNetGameTypeInfo();
         this.gameTypeInfo.type = type.netValue();
         this.gameTypeInfo.maxScore = maxScore;
         this.gameTypeInfo.maxTime = matchTime;        
@@ -108,6 +108,16 @@ public abstract class AbstractTeamGameType implements GameType {
         this.random = new Random();
         this.spawnBounds = new Rectangle(300, 300);
         
+    }
+    
+    /**
+     * For sub classes to override with their own {@link NetGameTypeInfo}
+     * if necessary
+     * 
+     * @return the {@link NetGameTypeInfo}
+     */
+    protected NetGameTypeInfo createNetGameTypeInfo() {
+        return new NetGameTypeInfo();
     }
     
     /* (non-Javadoc)
@@ -300,12 +310,23 @@ public abstract class AbstractTeamGameType implements GameType {
         byte teamId = player.getTeamId();
         if(teamId != Team.SPECTATOR_TEAM_ID) {
             switch(teamId) {
-                case Team.ALLIED_TEAM_ID: {
-                    teams[ALLIED].addPlayer(player);
+                case Team.ALLIED_TEAM_ID: {                    
+                    if(!joinTeam(teams[ALLIED], player)) {
+                        
+                        if(!joinTeam(teams[AXIS], player)) {
+                            // TODO Player couldn't join any team??
+                        }
+                    }
+                    
                     break;
                 }
                 case Team.AXIS_TEAM_ID: {
-                    teams[AXIS].addPlayer(player);
+                    if(!joinTeam(teams[AXIS], player)) {
+                        
+                        if(!joinTeam(teams[ALLIED], player)) {
+                            // TODO Player couldn't join any team??
+                        }
+                    }
                     break;
                 }
                 default: {
@@ -317,18 +338,20 @@ public abstract class AbstractTeamGameType implements GameType {
         // if not, then try to balance out the teams
         else {
             Team teamWithLeast = null;
-            int minSize = Integer.MAX_VALUE;
-            for(int i = 0; i < teams.length; i++) {
-                Team team = teams[i];
-                if(team.teamSize()<=minSize) {
-                    teamWithLeast = team;
-                    minSize = teamWithLeast.teamSize();
-                }
+            if(teams[ALLIED].getTeamSize() > teams[AXIS].getTeamSize()) {
+                teamWithLeast = teams[AXIS];
             }
+            else if(teams[ALLIED].getTeamSize() < teams[AXIS].getTeamSize()) {
+                teamWithLeast = teams[ALLIED];
+            }
+            
             if(teamWithLeast==null) {
                 teamWithLeast = teams[this.random.nextInt(2)];
             }
-            teamWithLeast.addPlayer(player);
+            
+            if(joinTeam(teamWithLeast, player)) {
+                // TODO ??
+            }            
         }
     }
     
@@ -568,6 +591,16 @@ public abstract class AbstractTeamGameType implements GameType {
         return this.teams[0];
     }
     
+    protected boolean joinTeam(Team team, Player player) {
+        team.addPlayer(player);
+        return true;
+    }
+    
+    protected boolean leaveTeam(Team team, Player player) {
+        team.removePlayer(player);
+        return true;
+    }
+    
     /* (non-Javadoc)
      * @see palisma.game.type.GameType#switchTeam(palisma.game.Player, byte)
      */
@@ -576,16 +609,18 @@ public abstract class AbstractTeamGameType implements GameType {
         boolean assigned = false;
         
         Team currentTeam = getTeam(player);
-        if(currentTeam != null && currentTeam.getId() != teamId) {
-            currentTeam.removePlayer(player);
-            assigned = true;
+        if(currentTeam != null && currentTeam.getId() != teamId) {            
+            if(leaveTeam(currentTeam, player)) {
+                assigned = true;
+            }
         }
         
         for(int i = 0; i < this.teams.length; i++) {
             Team team = this.teams[i];
-            if(team.getId() == teamId) {
-                team.addPlayer(player);
-                assigned = true;
+            if(team.getId() == teamId) {                
+                if(joinTeam(team, player)) {
+                    assigned = true;
+                }
             }
         }
         

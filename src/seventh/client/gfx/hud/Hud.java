@@ -363,9 +363,7 @@ public class Hud implements Renderable {
             drawStamina(canvas, 0);
         }
     
-        if(this.scoreboard.isVisible()) {
-            this.scoreboard.drawScoreboard(canvas);
-        }
+
         
         drawScore(canvas);
         
@@ -405,6 +403,10 @@ public class Hud implements Renderable {
         if(this.config.showDebugInfo()) {
             drawMemoryUsage(canvas);
             drawNetworkUsage(canvas);
+        }
+        
+        if(this.scoreboard.isVisible()) {
+            this.scoreboard.drawScoreboard(canvas);
         }
     }
     

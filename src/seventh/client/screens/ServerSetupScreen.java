@@ -78,9 +78,7 @@ public class ServerSetupScreen implements Screen {
     private int gameTypeIndex;
     
     private Random random;
-    private static final GameType.Type[] GAME_TYPES = {
-        GameType.Type.TDM, GameType.Type.OBJ, GameType.Type.CTF
-    };
+    private static final GameType.Type[] GAME_TYPES = GameType.Type.values();
     private static final String[] BOT_NAMES = {
         "Messiah",
         "Irishman",
@@ -462,6 +460,11 @@ public class ServerSetupScreen implements Screen {
                         gameSettings.gameType = GameType.Type.CTF;
                         gameSettings.matchTime = 20;
                         gameSettings.maxScore = 3;
+                        break;
+                    case CMD:
+                        gameSettings.gameType = GameType.Type.CMD;
+                        gameSettings.matchTime = 20;
+                        gameSettings.maxScore = 50;
                         break;
                 }
                 

@@ -17,7 +17,7 @@ import seventh.game.entities.Entity;
 import seventh.game.entities.PlayerEntity;
 import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.type.GameType;
-import seventh.game.type.ObjectiveGameType;
+import seventh.game.type.obj.ObjectiveGameType;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;

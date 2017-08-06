@@ -50,8 +50,9 @@ public abstract class AIShortcut {
      * 
      * @param console
      * @param game
+     * @param aiPlayer
      */
-    public abstract void execute(Console console, ClientGame game);
+    public abstract void execute(Console console, ClientGame game, ClientPlayer aiPlayer);
     
     
     /**

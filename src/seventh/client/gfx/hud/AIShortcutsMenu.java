@@ -22,6 +22,7 @@ public class AIShortcutsMenu implements Renderable {
     private boolean show;
     
     private String[] texts;
+    private int activeMemberIndex;
     
     
     /**
@@ -54,6 +55,24 @@ public class AIShortcutsMenu implements Renderable {
     public void toggle() {
         this.show = !this.show;
     }
+    
+    /**
+     * Opens the AI menu for the supplied AI unit
+     * 
+     * @param teamMemberIndex
+     */
+    public void openFor(int teamMemberIndex) {
+        this.activeMemberIndex = teamMemberIndex;
+        show();
+    }
+    
+    /**
+     * @return the activeMemberIndex
+     */
+    public int getActiveMemberIndex() {
+        return activeMemberIndex;
+    }
+    
     
     /* (non-Javadoc)
      * @see seventh.client.gfx.Renderable#update(seventh.shared.TimeStep)

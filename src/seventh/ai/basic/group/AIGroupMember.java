@@ -1,7 +1,7 @@
 /*
  * see license.txt
  */
-package seventh.ai.basic.squad;
+package seventh.ai.basic.group;
 
 import seventh.ai.basic.Brain;
 
@@ -9,7 +9,7 @@ import seventh.ai.basic.Brain;
  * @author Tony
  *
  */
-public class SquadMember {
+public class AIGroupMember {
 
     public static enum Role {
         LEADER,
@@ -24,7 +24,7 @@ public class SquadMember {
     /**
      * 
      */
-    public SquadMember(Brain brain, Role type) {
+    public AIGroupMember(Brain brain, Role type) {
         this.bot = brain;
         this.type = type;
     }

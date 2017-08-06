@@ -524,6 +524,26 @@ public class Team implements Debugable {
         return this.players.size();
     }
     
+    /**
+     * @return true if this team is the allied team
+     */
+    public boolean isAlliedTeam() {
+        return this.id == Team.ALLIED_TEAM_ID;
+    }
+    
+    /**
+     * @return true if this team is the axis team
+     */
+    public boolean isAxisTeam() {
+        return this.id == Team.AXIS_TEAM_ID;
+    }
+    
+    /**
+     * @return true if this team is the specator team
+     */
+    public boolean isSpectatorTeam() {
+        return this.id == Team.SPECTATOR_TEAM_ID;
+    }
     
     /**
      * @return this team on a serializable form
