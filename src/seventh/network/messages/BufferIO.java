@@ -208,12 +208,16 @@ public class BufferIO {
         return Type.fromNet(type);
     }
     
+    public static int numPlayerIdBits() {
+        return 5;
+    }
+    
     public static void writePlayerId(IOBuffer buffer, int playerId) {
-        buffer.putIntBits(playerId, 4);
+        buffer.putIntBits(playerId, numPlayerIdBits());
     }
     
     public static int readPlayerId(IOBuffer buffer) {
-        return buffer.getIntBits(4);
+        return buffer.getIntBits(numPlayerIdBits());
     }
     
     public static void writeTeamId(IOBuffer buffer, byte teamId) {

@@ -196,7 +196,7 @@ public class ServerSeventhConfig extends SeventhConfig {
      * @return the max number of players allowed on this server
      */
     public int getMaxPlayers() {
-        return this.config.getInt(12, "sv_maxplayers");
+        return this.config.getInt(SeventhConstants.MAX_PLAYERS, "sv_maxplayers");
     }
     
     /**
