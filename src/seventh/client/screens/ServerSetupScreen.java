@@ -263,8 +263,8 @@ public class ServerSetupScreen extends AbstractServerSetupScreen {
             @Override
             public void onButtonClicked(ButtonEvent event) {
                 gameSettings.maxPlayers++;
-                if(gameSettings.maxPlayers > 12) {
-                    gameSettings.maxPlayers = 12;
+                if(gameSettings.maxPlayers > SeventhConstants.MAX_PLAYERS) {
+                    gameSettings.maxPlayers = SeventhConstants.MAX_PLAYERS;
                 }
                 
                 maxPlayersLbl.setText(Integer.toString(gameSettings.maxPlayers));
