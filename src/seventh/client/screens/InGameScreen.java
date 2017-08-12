@@ -3,9 +3,6 @@
  */
 package seventh.client.screens;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controllers;
 
@@ -23,15 +20,7 @@ import seventh.client.gfx.InGameOptionsDialog.OnHideListener;
 import seventh.client.gfx.InGameOptionsDialogView;
 import seventh.client.gfx.Theme;
 import seventh.client.gfx.effects.Effects;
-import seventh.client.gfx.hud.AIShortcut;
 import seventh.client.gfx.hud.AIShortcuts;
-import seventh.client.gfx.hud.AIShortcuts.DefendPlantedBombAIShortcut;
-import seventh.client.gfx.hud.AIShortcuts.DefuseBombAIShortcut;
-import seventh.client.gfx.hud.AIShortcuts.FollowMeAIShortcut;
-import seventh.client.gfx.hud.AIShortcuts.MoveToAIShortcut;
-import seventh.client.gfx.hud.AIShortcuts.PlantBombAIShortcut;
-import seventh.client.gfx.hud.AIShortcuts.SurpressFireAIShortcut;
-import seventh.client.gfx.hud.AIShortcuts.TakeCoverAIShortcut;
 import seventh.client.gfx.hud.AIShortcutsMenu;
 import seventh.client.inputs.ControllerInput.ControllerButtons;
 import seventh.client.inputs.Inputs;
@@ -209,16 +198,7 @@ public class InGameScreen implements Screen {
         
         this.cursor = app.getUiManager().getCursor();
         
-        List<AIShortcut> commands = new ArrayList<AIShortcut>();
-        commands.add(new FollowMeAIShortcut(Keys.NUM_1));
-        commands.add(new SurpressFireAIShortcut(Keys.NUM_2));
-        commands.add(new MoveToAIShortcut(Keys.NUM_3));
-        commands.add(new TakeCoverAIShortcut(Keys.NUM_4));
-        commands.add(new PlantBombAIShortcut(Keys.NUM_5));
-        commands.add(new DefuseBombAIShortcut(Keys.NUM_6));
-        commands.add(new DefendPlantedBombAIShortcut(Keys.NUM_7));
-        
-        this.aiShortcuts = new AIShortcuts(this.keyMap, commands, commands.get(2), commands.get(1));
+        this.aiShortcuts = new AIShortcuts(this.keyMap);
         this.aiShortcutsMenu = new AIShortcutsMenu(game, keyMap, aiShortcuts);
         this.controllerInput = new JoystickGameController();
         
@@ -624,10 +604,12 @@ public class InGameScreen implements Screen {
             /* AI command shortcuts, the player can issue AI commands to nearby
              * Bots */
             if(this.aiShortcutsMenu.isShowing()) {
-                if( this.aiShortcuts.checkShortcuts(inputs, app.getConsole(), game, this.aiShortcutsMenu.getActiveMemberIndex()) ) {
+                if( this.aiShortcuts.checkShortcuts(inputs, game, this.aiShortcutsMenu.getActiveMemberIndex()) ) {
                     this.aiShortcutsMenu.hide();
                 }
             }
+            
+            this.aiShortcuts.checkGroupCommands(inputs, game);
         }
         else {            
             this.uiManager.update(timeStep);

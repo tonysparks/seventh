@@ -572,6 +572,35 @@ public class GdxCanvas implements Canvas {
         this.shapes.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
+    
+    private Color startColor=new Color(), endColor=new Color();
+    
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.Canvas#drawLine(int, int, int, int, java.lang.Integer, java.lang.Integer, float)
+     */
+    @Override
+    public void drawLine(int x1, int y1, int x2, int y2, Integer startColor, Integer endColor, float thickness) {
+        
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(thickness);
+        
+        int alpha = startColor >>> 24;
+        startColor = (startColor << 8) | alpha;
+        
+        this.startColor.set(startColor);
+        
+        alpha = endColor >>> 24;
+        endColor = (endColor << 8) | alpha;
+        
+        this.endColor.set(startColor);
+        
+        this.shapes.begin(ShapeType.Line);
+        this.shapes.line(x1, y1, x2, y2, this.startColor, this.endColor);
+        this.shapes.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+        
+    }
 
     /* (non-Javadoc)
      * @see seventh.client.gfx.Canvas#drawRect(int, int, int, int, java.lang.Integer)

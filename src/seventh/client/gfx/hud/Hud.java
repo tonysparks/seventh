@@ -541,11 +541,14 @@ public class Hud implements Renderable {
             canvas.fillRect( x, y, (100 * health/100), 15, 0xff9aFF1a );
         }
         
+        //canvas.drawLine(x, y, x, y + 10, 0xff0000ff, 0x0000000a, 440);
+        
         //canvas.drawRect(x, y, 100, 15, 0xbf000000);
         //canvas.drawRect(x, y+2, 100, 13, 0x9f000000);
         
         
         // add a shadow effect
+        
         canvas.drawLine( x, y+1, x+100, y+1, 0x8f000000 );
         canvas.drawLine( x, y+2, x+100, y+2, 0x5f000000 );
         canvas.drawLine( x, y+3, x+100, y+3, 0x2f000000 );
@@ -557,7 +560,8 @@ public class Hud implements Renderable {
         canvas.drawLine( x, y-4, x+100, y-4, 0x0f000000 );
         canvas.drawLine( x, y-3, x+100, y-3, 0x2f000000 );
         canvas.drawLine( x, y-2, x+100, y-2, 0x5f000000 );
-        canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 ); 
+        canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );
+        
         
         /*
       //  canvas.drawLine( x, y+0, x+100, y+0, 0xff000000, 2 );
@@ -586,7 +590,7 @@ public class Hud implements Renderable {
         canvas.drawRect( x, y-15, 100, 15, 0xff000000 );
         */
 
-        //canvas.drawRect( x, y, 100, 15, 0xff000000 );
+        canvas.drawRect( x, y-15, 100, 15, 0xff000000 );
 //        Art.healthIcon.setSize(12, 12);
         canvas.drawSprite(Art.healthIcon, x - 20, y - 16, null);
     }
