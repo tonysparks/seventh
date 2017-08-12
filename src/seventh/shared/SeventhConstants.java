@@ -19,7 +19,7 @@ public interface SeventhConstants {
     public static final int MAX_PRIMARY_WEAPONS = 2;
     public static final int MAX_TIMERS = 32;    
     public static final int MAX_ENTITIES = 256;
-    public static final int MAX_PLAYERS = 12;
+    public static final int MAX_PLAYERS = 24;
     public static final int MAX_PERSISTANT_ENTITIES = 64;
     
     public static final int MAX_SOUNDS = 32;
@@ -48,8 +48,8 @@ public interface SeventhConstants {
     public static final int RECOVERY_TIME = 2000;
     
     public static final byte MAX_STAMINA = 100;
-    public static final float STAMINA_DECAY_RATE = 4; // 2
-    public static final float STAMINA_RECOVER_RATE = 0.5f;
+    public static final float STAMINA_DECAY_RATE = 2; // 4
+    public static final float STAMINA_RECOVER_RATE = 1.5f;
     
     public static final int FLAG_WIDTH = 20;
     public static final int FLAG_HEIGHT = 20;
