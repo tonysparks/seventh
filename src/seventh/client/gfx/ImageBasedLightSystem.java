@@ -224,7 +224,8 @@ public class ImageBasedLightSystem implements LightSystem {
             
             shader.setUniformi("u_lightmap", 1);
             shader.setUniformf("ambientColor", ambientColor.x, ambientColor.y, ambientColor.z, ambientIntensity);        
-            shader.setUniformf("resolution", SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);
+            shader.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); 
+                    //SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);
         }
         shader.end();
         
