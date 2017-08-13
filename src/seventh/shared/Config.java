@@ -4,21 +4,18 @@
  */
 package seventh.shared;
 
-import harenet.NetConfig;
-
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Map;
 
+import harenet.NetConfig;
 import leola.vm.Leola;
 import leola.vm.types.LeoArray;
-import leola.vm.types.LeoDouble;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoNull;
 import leola.vm.types.LeoObject;
-import leola.vm.types.LeoObject.LeoType;
 import leola.vm.types.LeoString;
 import seventh.network.messages.BufferIO.SeventhNetMessageFactory;
 
@@ -143,17 +140,16 @@ public class Config {
     }
     
     public float getFloat(String ...keys ) {
+        return getFloat(0, keys);
+    }
+    
+    public float getFloat(float defaultValue, String ...keys) {
         LeoObject obj = get(keys);
-        if(obj!=null) {
-            if(obj.isNumber()) {
-                if(obj.isOfType(LeoType.REAL)) {
-                    LeoDouble d = obj.as();
-                    return d.asFloat();
-                }
-                return obj.asInt();
-            }
+        if(obj != null && obj.isNumber()) {
+            return obj.asFloat();
         }
-        return 0;
+        
+        return defaultValue;
     }
     
     public int getInt(String ...keys ) {

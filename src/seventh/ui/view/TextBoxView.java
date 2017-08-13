@@ -87,11 +87,13 @@ public class TextBoxView implements Renderable {
                         0x5ff1f401);
 //                        0xff393939);
             }
-                        
+            
+            final int xTextOffset = 0;
+            
             Rectangle lbounds = this.textBox.getTextLabel().getBounds();//update the text
             lbounds.set(bounds);
-            lbounds.x += 5;        
-            lbounds.y += (lbounds.height / 2) - textHeight/2;
+            lbounds.x += xTextOffset;  
+            lbounds.y += (lbounds.height / 2) - textHeight/3;
             this.textView.render(renderer, camera, alpha);
                         
             if(showCursor && textBox.hasFocus()) 
@@ -99,7 +101,7 @@ public class TextBoxView implements Renderable {
                 String text = textBox.getText();
                 int textWidth = renderer.getWidth(text.substring(0, textBox.getCursorIndex())) + 5;
                 renderer.setFont(textBox.getTextLabel().getFont(), (int)textBox.getTextLabel().getTextSize());
-                RenderFont.drawShadedString(renderer, "_", lbounds.x + textWidth, lbounds.y + textHeight - 3, textBox.getForegroundColor());
+                RenderFont.drawShadedString(renderer, "_", lbounds.x + textWidth, lbounds.y + textHeight - 5, textBox.getForegroundColor());
             }
             
             bounds.x = originalX;
