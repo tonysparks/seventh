@@ -89,12 +89,12 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         setupLabel(uiPos, "Teams", true);
 
         uiPos.x = startX + 128;
-        uiPos.y += yInc + 10;
+        uiPos.y += yInc + 5;
         
         setupImagePanel(uiPos, Art.alliedIcon);
         
         uiPos.x = startX + 100;
-        uiPos.y += yInc*3 + 5;
+        uiPos.y += yInc*3 - 25;
         
         setupButton(uiPos, "-", false).addOnButtonClickedListener(new OnButtonClickedListener() {
 
@@ -141,7 +141,7 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         
         Vector2f otherPos = new Vector2f(uiPos);
         otherPos.x += 28;
-        otherPos.y -= 50;
+        otherPos.y -= 20;
         
         setupImagePanel(otherPos, Art.axisIcon);
 
@@ -179,6 +179,9 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         // int startX = (int)pos.x;
         int startY = (int) pos.y;
 
+        final int xInc = 170;
+        final int yInc = 25;
+        
         int i = 0;
         for (String name : gameSettings.alliedTeam) {
             final int nameIndex = i++;
@@ -193,10 +196,10 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
             });
 
             if (i % 2 == 0) {
-                pos.x -= 170;
-                pos.y += 40;
+                pos.x -= xInc;
+                pos.y += yInc;
             } else {
-                pos.x += 170;
+                pos.x += xInc;
             }
 
         }
@@ -218,10 +221,10 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
             });
 
             if (i % 2 == 0) {
-                pos.x -= 170;
-                pos.y += 40;
+                pos.x -= xInc;
+                pos.y += yInc;
             } else {
-                pos.x += 170;
+                pos.x += xInc;
             }
         }
 
