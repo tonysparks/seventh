@@ -241,6 +241,17 @@ public class World {
     }
     
     /**
+     * Determines if the supplied potentialEnemy is an enemy of the supplied {@link Brain}
+     * 
+     * @param brain
+     * @param potentialEnemy
+     * @return true if potential enemy is an enemy
+     */
+    public boolean isEnemyOf(Brain brain, PlayerEntity potentialEnemy) {
+        return !brain.getPlayer().getTeam().onTeam(potentialEnemy.getId());
+    }
+    
+    /**
      * @param entity
      * @param target
      * @return determines if the enemy is in line of fire
