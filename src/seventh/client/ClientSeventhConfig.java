@@ -178,7 +178,7 @@ public class ClientSeventhConfig extends SeventhConfig {
     }
     
     public boolean getFollowReticleEnabled() {
-        return this.config.getBool(true, KEYS[8]);
+        return this.config.getBool(false, KEYS[8]);
     }
     
     public void setFollowReticleEnabled(boolean enabled) {
