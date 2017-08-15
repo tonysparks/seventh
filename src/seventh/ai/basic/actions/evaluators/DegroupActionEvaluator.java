@@ -50,7 +50,7 @@ public class DegroupActionEvaluator extends ActionEvaluator {
         PlayerEntity bot = brain.getEntityOwner();
                 
         if(!motion.isMoving()) {
-            if(isTooClose(brain, bot.getCenterPos())) {
+            if(isTooCloseToTeammates(brain, bot.getCenterPos())) {
                 score = 1;                
             }            
         }
@@ -58,7 +58,7 @@ public class DegroupActionEvaluator extends ActionEvaluator {
         return score;
     }
 
-    private boolean isTooClose(Brain brain, Vector2f pos) {        
+    private boolean isTooCloseToTeammates(Brain brain, Vector2f pos) {        
         PlayerEntity bot = brain.getEntityOwner();
         
         personalSpace.centerAround(pos);
@@ -90,7 +90,7 @@ public class DegroupActionEvaluator extends ActionEvaluator {
         while(attempts > 0) {
             Vector2f pos = world.getRandomSpot(brain.getEntityOwner(), checkBounds);
             if(pos!=null) {
-                if(!isTooClose(brain, pos)) {
+                if(!isTooCloseToTeammates(brain, pos)) {
                     return new MoveToAction(pos);
                 }
             }
