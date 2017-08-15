@@ -121,9 +121,12 @@ public class LoadingScreen implements Screen {
                             protocol.sendConnectRequestMessage(msg);
                         }
                         catch(Exception e) {
-                            Cons.println("*** Unable to connect to the server :: \n" + e);
-                            Cons.getImpl().execute("kill_local_server");
-                            app.goToMenuScreen();
+                            if(!app.onScreen(ServerFullScreen.class)) { 
+                                Cons.println("*** Unable to connect to the server :: \n" + e);
+                                Cons.getImpl().execute("kill_local_server");
+                                
+                                app.goToMenuScreen();
+                            }
                         }                        
                     }
                 }, "client-connection-thread");

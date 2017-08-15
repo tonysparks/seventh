@@ -18,6 +18,7 @@ import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.commands.AICommands;
 import seventh.ai.basic.teamstrategy.CaptureTheFlagTeamStrategy;
+import seventh.ai.basic.teamstrategy.CommanderTeamStrategy;
 import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
 import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
@@ -27,6 +28,7 @@ import seventh.game.PlayerInfos;
 import seventh.game.PlayerInfos.PlayerInfoIterator;
 import seventh.game.Team;
 import seventh.game.type.GameType;
+import seventh.game.type.cmd.CommanderGameType;
 import seventh.math.Rectangle;
 import seventh.shared.AssetLoader;
 import seventh.shared.AssetWatcher;
@@ -176,7 +178,11 @@ public class DefaultAISystem implements AISystem {
                 this.alliedAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAlliedTeam());
                 this.axisAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAxisTeam());
                 break;
-            case TDM:                
+            case CMD: 
+                this.alliedAIStrategy = new CommanderTeamStrategy((CommanderGameType)gameType, this, gameType.getAlliedTeam());
+                this.axisAIStrategy = new CommanderTeamStrategy((CommanderGameType)gameType, this, gameType.getAxisTeam());
+                break;
+            case TDM:
             default:
                 this.alliedAIStrategy = new TDMTeamStrategy(this, gameType.getAlliedTeam());
                 this.axisAIStrategy = new TDMTeamStrategy(this, gameType.getAxisTeam());

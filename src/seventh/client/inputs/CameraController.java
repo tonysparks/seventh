@@ -342,7 +342,7 @@ public class CameraController implements Updatable {
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 
                 if(!this.localPlayer.isSpectating() && this.config.getFollowReticleEnabled() && this.isCameraActive) {
-                    Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), 80f, cameraCenterAround);
+                    Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), config.getFollowReticleOffset(), cameraCenterAround); 
                     
                     // smooth out the camera
                     previousCameraPos.set(cameraCenterAround);

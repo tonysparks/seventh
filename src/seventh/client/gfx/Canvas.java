@@ -102,6 +102,10 @@ public interface Canvas {
 
     public void drawLine(int x1, int y1, int x2, int y2, Integer color);
     public void drawLine(float x1, float y1, float x2, float y2, Integer color);
+    public void drawLine(int x1, int y1, int x2, int y2, Integer color, float thickness);
+    public void drawLine(float x1, float y1, float x2, float y2, Integer color, float thickness);
+    
+    public void drawLine(int x1, int y1, int x2, int y2, Integer startColor, Integer endColor, float thickness);
 
     public void drawRect(int x, int y, int width, int height, Integer color);
     public void drawRect(float x, float y, float width, float height, Integer color);

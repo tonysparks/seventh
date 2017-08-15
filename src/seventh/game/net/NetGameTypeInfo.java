@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.game.type.GameType.Type;
 
 /**
  * @author Tony
@@ -12,6 +13,23 @@ import harenet.messages.NetMessage;
  */
 public class NetGameTypeInfo implements NetMessage {
 
+    public static final NetGameTypeInfo newNetGameTypeInfo(Type gameType) {
+        NetGameTypeInfo result = null;
+        switch(gameType) {
+        case CMD:
+            result = new NetCommanderGameTypeInfo();
+            break;
+        case CTF:            
+        case OBJ:            
+        case TDM:            
+        default:
+            result = new NetGameTypeInfo();
+        }
+        
+        result.type = gameType.netValue();
+        return result;
+    }
+    
     public long maxTime;
     
     public int maxScore;
@@ -27,7 +45,7 @@ public class NetGameTypeInfo implements NetMessage {
     public void read(IOBuffer buffer) {
         maxTime = buffer.getLong();
         maxScore = buffer.getInt();
-        type = buffer.getByte();
+        // type = buffer.getByte(); Handled by polymorphic handling of network types
         
         alliedTeam = new NetTeam();
         alliedTeam.read(buffer);
@@ -45,7 +63,7 @@ public class NetGameTypeInfo implements NetMessage {
     public void write(IOBuffer buffer) {
         buffer.putLong(maxTime);
         buffer.putInt(maxScore);
-        buffer.putByte(type);
+//        buffer.putByte(type);
         
         alliedTeam.write(buffer);
         axisTeam.write(buffer);

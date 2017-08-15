@@ -7,6 +7,8 @@ package seventh.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import leola.vm.types.LeoArray;
@@ -286,6 +288,9 @@ public class TiledMapLoader implements MapLoader {
                 final String imagePath = tileset.getString("image");
                 image = TextureUtil.loadImage(imagePath);
                 image.flip(false, true);
+                image.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+                image.getTexture().setWrap(TextureWrap.MirroredRepeat, TextureWrap.MirroredRepeat);
+                
                 images = TextureUtil.toTileSet(image, tilewidth, tileheight, margin, spacing);            
             }
             atlas.addTileset(new Tileset(firstgid, images, tilesetprops));

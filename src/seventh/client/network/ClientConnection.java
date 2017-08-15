@@ -3,12 +3,11 @@
  */
 package seventh.client.network;
 
-import harenet.api.Client;
-import harenet.api.impl.HareNetClient;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import harenet.api.Client;
+import harenet.api.impl.HareNetClient;
 import seventh.client.ClientSeventhConfig;
 import seventh.client.SeventhGame;
 import seventh.client.network.ClientProtocol.GameCreationListener;
@@ -28,7 +27,6 @@ public class ClientConnection {
     private Client client;
     private ClientNetworkProtocol protocol;
     
-    
     /**
      * @param config
      * @param console
@@ -38,6 +36,7 @@ public class ClientConnection {
         
         this.protocol = new ClientNetworkProtocol(this, app);
         this.client.addConnectionListener(this.protocol);
+        
 //      this.client.addConnectionListener(new LagConnectionListener(50, 100, listener));
         
         console.addCommand(new Command("netstat") {
@@ -111,6 +110,10 @@ public class ClientConnection {
         disconnect();
                 
         InetSocketAddress address = new InetSocketAddress(host, port);
+        /*if(client.connect(5_000, address)) {
+            client.start();
+        }*/
+        
         client.connect(5_000, address);
         
         int tries = 4;

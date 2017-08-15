@@ -48,16 +48,18 @@ public class PanelView implements Renderable {
         this.uiElements = new ArrayList<>();
     }
     
-    public void clear() {
+    public PanelView clear() {
         this.uiElements.clear();
+        return this;
     }
     
     /**
      * Adds an element
      * @param element
      */
-    public void addElement(Renderable element) {
+    public PanelView addElement(Renderable element) {
         this.uiElements.add(element);
+        return this;
     }
     
     /**

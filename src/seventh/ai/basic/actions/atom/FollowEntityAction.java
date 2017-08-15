@@ -111,7 +111,6 @@ public class FollowEntityAction extends AdapterAction {
                     else {
                         if(feeder.hasPath()) {
                             feeder.clearPath();
-                            //System.out.println("clear");
                         }
                         
                     }

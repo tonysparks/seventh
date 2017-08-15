@@ -22,10 +22,12 @@ public class AIShortcutsMenu implements Renderable {
     private boolean show;
     
     private String[] texts;
-    
+    private int activeMemberIndex;
     
     /**
-     * 
+     * @param game
+     * @param keyMap
+     * @param shortcuts
      */
     public AIShortcutsMenu(ClientGame game, KeyMap keyMap, AIShortcuts shortcuts) {
         this.game = game;
@@ -36,7 +38,7 @@ public class AIShortcutsMenu implements Renderable {
         this.texts[0] = "Dispatch command:";
         int i = 1;
         for(AIShortcut s : this.shortcuts.getCommands()) {
-            this.texts[i++] = "   PRESS '" + keyMap.keyString(s.getShortcutKey()) + "' : " + s.getDescription();
+            this.texts[i++] = "   PRESS '" + keyMap.humanReadableKey(s.getShortcutKey()) + "' : " + s.getDescription();
         }
     }
     
@@ -54,6 +56,24 @@ public class AIShortcutsMenu implements Renderable {
     public void toggle() {
         this.show = !this.show;
     }
+    
+    /**
+     * Opens the AI menu for the supplied AI unit
+     * 
+     * @param teamMemberIndex
+     */
+    public void openFor(int teamMemberIndex) {
+        this.activeMemberIndex = teamMemberIndex;
+        show();
+    }
+    
+    /**
+     * @return the activeMemberIndex
+     */
+    public int getActiveMemberIndex() {
+        return activeMemberIndex;
+    }
+    
     
     /* (non-Javadoc)
      * @see seventh.client.gfx.Renderable#update(seventh.shared.TimeStep)

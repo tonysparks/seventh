@@ -184,6 +184,16 @@ public abstract class HareNetEndpoint implements Endpoint {
         }
     }
     
+    /**
+     * @param conn
+     */
+    protected void fireOnServerFullEvent(Connection conn) {        
+        int size = this.listeners.size();
+        for(int i = 0; i < size; i++) {
+            this.listeners.get(i).onServerFull(conn);
+        }
+    }
+    
     /* (non-Javadoc)
      * @see net.jenet.api.Endpoint#addConnectionListener(net.jenet.api.ConnectionListener)
      */

@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type;
+package seventh.game.type.obj;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,6 +12,8 @@ import leola.vm.types.LeoArray;
 import leola.vm.types.LeoNativeClass;
 import leola.vm.types.LeoObject;
 import seventh.game.Team;
+import seventh.game.type.AbstractGameTypeScript;
+import seventh.game.type.GameType;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
 

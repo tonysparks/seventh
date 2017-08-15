@@ -75,7 +75,7 @@ public class TextBoxView implements Renderable {
             String labelText = textBox.getLabelText();
             
             renderer.setFont(textBox.getTextLabel().getFont(), (int)textBox.getTextLabel().getTextSize());
-            
+            int textHeight = renderer.getHeight("W");
             int originalX = bounds.x;
             int originalY = bounds.y;
             
@@ -87,20 +87,21 @@ public class TextBoxView implements Renderable {
                         0x5ff1f401);
 //                        0xff393939);
             }
-                        
+            
+            final int xTextOffset = 0;
+            
             Rectangle lbounds = this.textBox.getTextLabel().getBounds();//update the text
             lbounds.set(bounds);
-            lbounds.x += 5;        
-            lbounds.y += 3;
+            lbounds.x += xTextOffset;  
+            lbounds.y += (lbounds.height / 2) - textHeight/3;
             this.textView.render(renderer, camera, alpha);
-            
-            
+                        
             if(showCursor && textBox.hasFocus()) 
             {
                 String text = textBox.getText();
                 int textWidth = renderer.getWidth(text.substring(0, textBox.getCursorIndex())) + 5;
                 renderer.setFont(textBox.getTextLabel().getFont(), (int)textBox.getTextLabel().getTextSize());
-                RenderFont.drawShadedString(renderer, "_", lbounds.x + textWidth, lbounds.y + renderer.getHeight("W"), textBox.getForegroundColor());
+                RenderFont.drawShadedString(renderer, "_", lbounds.x + textWidth, lbounds.y + textHeight - 5, textBox.getForegroundColor());
             }
             
             bounds.x = originalX;
@@ -123,7 +124,7 @@ public class TextBoxView implements Renderable {
         Rectangle bounds = w.getScreenBounds();
         
 //        int a = 0;//w.getBackgroundAlpha();        
-        for(int i = 0; i < bounds.height; i++ ) {
+        /*for(int i = 0; i < bounds.height; i++ ) {
 //            Vector3f.Vector3fSubtract(bg, gradiant, this.scratch1);
 //            int scratch = Colors.subtract(bg, gradiant);
             
@@ -136,10 +137,11 @@ public class TextBoxView implements Renderable {
             //int col = (a << 24) | scratch;
             int col = 0xff383e18;
             renderer.drawLine(bounds.x, bounds.y + i, bounds.x + bounds.width, bounds.y + i, col);
-        }
+        }*/
         
 //        renderer.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y, 0xff000000);
 //        renderer.drawLine(bounds.x + bounds.width, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height, 0xff000000);
+        renderer.fillRect(bounds.x,  bounds.y,  bounds.width,  bounds.height, 0xff383e18);
         renderer.drawRect(bounds.x,  bounds.y,  bounds.width,  bounds.height, 0xff000000);
     }
     

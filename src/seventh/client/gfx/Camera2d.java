@@ -67,26 +67,26 @@ public class Camera2d implements Camera {
     public Camera2d() {        
         
         this.timeToShake     = 0L;
-        this.shakeIntensity = 1.0f;        
-        this.zoom             = 1.0f;
+        this.shakeIntensity  = 1.0f;        
+        this.zoom            = 1.0f;
                 
         this.pathToFollow   = new Stack<Vector2f>();
-        this.screenCoord      = new Vector2f(0,0);
+        this.screenCoord    = new Vector2f(0,0);
         this.destination    = new Vector2f(0,0);
                 
         this.vSpeed         = new Vector2f();
-        this.vDelta            = new Vector2f();
-        this.vVelocity        = new Vector2f();
-        this.vMovementSpeed    = new Vector2f();
+        this.vDelta         = new Vector2f();
+        this.vVelocity      = new Vector2f();
+        this.vMovementSpeed = new Vector2f();
         
-        this.position = new Vector2f();
+        this.position     = new Vector2f();
         this.prevPosition = new Vector2f();
                 
         this.worldViewport  = new Rectangle();
         this.worldBounds    = new Vector2f();
         
         this.originalViewport = new Rectangle();
-        this.viewport           = new Rectangle();        
+        this.viewport         = new Rectangle();        
                 
         this.vShakeVelocity = new Vector2f();
         this.renderPosition = new Vector2f();

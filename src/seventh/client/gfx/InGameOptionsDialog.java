@@ -51,7 +51,7 @@ public class InGameOptionsDialog extends Widget {
         this.theme = theme;
                 
         this.weaponDialog = new WeaponClassDialog(this, network, theme);
-        this.weaponDialog.setBounds(new Rectangle(400, 680));
+        this.weaponDialog.setBounds(new Rectangle(400, 440));
         this.weaponDialog.hide();
         
         this.switchTeamDialog = new SwitchTeamDialog(this, console, theme);        
@@ -184,7 +184,7 @@ public class InGameOptionsDialog extends Widget {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
-                weaponDialog.getBounds().setLocation(getBounds().x, getBounds().y-150);
+                weaponDialog.getBounds().setLocation(getBounds().x, getBounds().y-20);
                 weaponDialog.show();                
             }
         });

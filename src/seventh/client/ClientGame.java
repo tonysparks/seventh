@@ -53,8 +53,10 @@ import seventh.client.weapon.ClientBomb;
 import seventh.game.Timers;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
+import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
+import seventh.game.net.NetFireTeam;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
@@ -65,6 +67,7 @@ import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
+import seventh.game.net.NetSquad;
 import seventh.game.type.GameType;
 import seventh.map.Map;
 import seventh.map.Tile;
@@ -122,6 +125,9 @@ public class ClientGame {
     
     private final ClientEntities entities;
     private final ClientPlayers players;
+    
+    // Commander handling
+    private NetCommanderGameTypeInfo commanderInfo;
     
     private final Pools pools;
     
@@ -255,22 +261,23 @@ public class ClientGame {
             public void execute(Console console, String... args) {
                 Vector2f offsetPos = hud.getAwardsLog().nextOffset();        
                 Vector2f startPos = new Vector2f(offsetPos);
-                Vector2f endPos = new Vector2f(40, offsetPos.y);
+                final float xPos = 20;
+                Vector2f endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff00ff));
                 
                 offsetPos = hud.getAwardsLog().nextOffset();        
                 startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(40, offsetPos.y);
+                endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff0000ff));
                 
                 offsetPos = hud.getAwardsLog().nextOffset();        
                 startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(40, offsetPos.y);
+                endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff0000));
                 
                 offsetPos = hud.getAwardsLog().nextOffset();        
                 startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(40, offsetPos.y);
+                endPos = new Vector2f(xPos, offsetPos.y);
                 hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff00ff00));
                 
             }
@@ -758,6 +765,46 @@ public class ClientGame {
      */
     public ClientPlayers getPlayers() {
         return players;
+    }
+    
+    public NetFireTeam getLocalPlayersFireTeam() {
+        if(this.commanderInfo != null && this.localPlayer.isAlive()) {
+            int localPlayerId = this.localPlayer.getId();
+            //
+            // TODO:            
+            // Optimize all of this and clean this shit up
+            // should keep a local cache that we alter given 
+            // movement of players (leaving, entering the game)
+            ClientTeam team = this.localPlayer.getTeam();
+            NetSquad squad = (team.getId() == ClientTeam.ALLIES.getId()) ?
+                                    this.commanderInfo.alliedSquad
+                                  : this.commanderInfo.axisSquad;
+            
+            
+            for(int i = 0; i < squad.squad.length; i++) {
+                NetFireTeam fireTeam = squad.squad[i];
+                if(fireTeam.teamLeaderPlayerId == localPlayerId) {
+                    return fireTeam;
+                }
+            }
+        }
+        
+        return null;
+        
+    }
+    
+    public ClientPlayer getPlayerByFireTeamId(int fireTeamId) {
+        if(fireTeamId < 0 || fireTeamId>2) {
+            return null;
+        }
+        
+        NetFireTeam fireTeam = getLocalPlayersFireTeam();
+        if(fireTeam!=null) {
+            int playerId = fireTeam.memberPlayerIds[fireTeamId];
+            return this.players.getPlayer(playerId);
+        }
+                
+        return null;
     }
     
     /**
@@ -1281,6 +1328,10 @@ public class ClientGame {
                 this.defendingTeam = ClientTeam.fromId(gameType.axisTeam.id);
             }
             
+            if(this.gameType == GameType.Type.CMD) {
+                this.commanderInfo = (NetCommanderGameTypeInfo) gameType;                
+            }
+            
         }
         
         NetMapDestructables destructables = gs.mapDestructables;
@@ -1580,6 +1631,10 @@ public class ClientGame {
                 }
                 break;
             }
+            case CMD: {
+                hud.getObjectiveLog().log("Commander Mode");
+                break;
+            }
             default:
                 break;
             
@@ -1619,6 +1674,8 @@ public class ClientGame {
     public void playerConnected(PlayerConnectedMessage msg) {
         this.players.addPlayer(new ClientPlayer(msg.name, msg.playerId));
         hud.postMessage(msg.name + " has joined the game.");
+        
+        // TODO : Update the CommanderInfo
     }
 
     public void playerDisconnected(PlayerDisconnectedMessage msg) {
@@ -1627,6 +1684,8 @@ public class ClientGame {
             removeEntity(player.getId());
             hud.postMessage(player.getName() + " has left the game.");
         }
+        
+        // TODO : Update the CommanderInfo
     }
     
     private boolean removeEntity(int id) {                
@@ -1736,6 +1795,8 @@ public class ClientGame {
                 hud.postMessage(player.getName() + " switched to the " + newTeam.getName());
             }
         }
+        
+        // TODO : Update the CommanderInfo
     }
 
     /**
@@ -1865,7 +1926,7 @@ public class ClientGame {
         
         Vector2f offsetPos = hud.getAwardsLog().nextOffset();        
         Vector2f startPos = new Vector2f(offsetPos);
-        Vector2f endPos = new Vector2f(40, offsetPos.y);
+        Vector2f endPos = new Vector2f(20, offsetPos.y);
                
         
         switch(msg.award) {

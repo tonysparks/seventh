@@ -407,19 +407,28 @@ public class GameServer {
                     else {
                         int id = serverContext.getServer().reserveId();
                         if(id >= 0) {
-                            game.addBot(id, args[0]);
-                        }
-                        
-                        if(args.length > 1) {                            
-                            String team = args[1].trim().toLowerCase();
-                            if(team.startsWith(Team.ALLIED_TEAM_NAME.toLowerCase())) {
+                            String botName = mergeArgsDelim(" ", args);
+                            String teamName = args[args.length-1].trim();
+                            if(teamName.toLowerCase().equals(Team.ALLIED_TEAM_NAME.toLowerCase()) || 
+                               teamName.toLowerCase().equals(Team.AXIS_TEAM_NAME.toLowerCase())) {
+                               botName = botName.replace(teamName, ""); 
+                            }
+                            
+                            game.addBot(id, botName);
+                                                                                        
+                            if(teamName.startsWith(Team.ALLIED_TEAM_NAME.toLowerCase())) {
                                 game.playerSwitchedTeam(id, Team.ALLIED_TEAM_ID);
                             }
-                            else if(team.startsWith(Team.AXIS_TEAM_NAME.toLowerCase())) {
+                            else if(teamName.startsWith(Team.AXIS_TEAM_NAME.toLowerCase())) {
                                 game.playerSwitchedTeam(id, Team.AXIS_TEAM_ID);
                             }
+                        
+                            
+                            console.println("Added Bot...ID: " + id);
                         }
-                        console.println("Added Bot...ID: " + id);
+                        else {
+                            console.println("Server if full, could not add bot");
+                        }
                     }
                 }
                 else {

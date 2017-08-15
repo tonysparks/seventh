@@ -3,6 +3,8 @@
  */
 package seventh.client.entities;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import seventh.client.ClientGame;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
@@ -11,8 +13,7 @@ import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetDroppedItem;
 import seventh.game.net.NetEntity;
 import seventh.math.Vector2f;
-
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import seventh.shared.TimeStep;
 
 /**
  * @author Tony
@@ -22,7 +23,7 @@ public class ClientDroppedItem extends ClientEntity {
 
     private Sprite weapon;
     private Type droppedItem;
-    
+        
     private float spin;
     /**
      * @param pos
@@ -36,9 +37,8 @@ public class ClientDroppedItem extends ClientEntity {
         spin = (float)Math.toRadians((pos.x + pos.y) % 360);
         Vector2f.Vector2fRound(pos, pos);
     }
-    /* (non-Javadoc)
-     * @see seventh.client.ClientEntity#updateState(seventh.game.net.NetEntity, long)
-     */
+
+    
     @Override
     public void updateState(NetEntity state, long time) {    
         super.updateState(state, time);
@@ -107,21 +107,22 @@ public class ClientDroppedItem extends ClientEntity {
         }
     }
 
-    /* (non-Javadoc)
-     * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)
-     */
+    @Override
+    public void update(TimeStep timeStep) {
+        super.update(timeStep);
+    }
+    
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
 
-        if(weapon!=null) {
+        if(weapon!=null) {                        
             Vector2f cameraPos = camera.getRenderPosition(alpha);
             float x = (pos.x - cameraPos.x);
             float y = (pos.y - cameraPos.y);
             weapon.setPosition(x-54f, y-24f);                        
-            canvas.fillCircle(10.0f, (int)x, (int)y, 0x3f4a4f8f);
+    
+            canvas.fillCircle(10f, (int)x, (int)y, 0xafafafff);//0x3f4a4f8f);
             canvas.drawSprite(weapon);
-//            canvas.fillRect(x, y, bounds.width, bounds.height, 0x0f00ff00);
-            
         }
     }
 

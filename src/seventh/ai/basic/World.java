@@ -17,7 +17,7 @@ import seventh.game.entities.Entity;
 import seventh.game.entities.PlayerEntity;
 import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.type.GameType;
-import seventh.game.type.ObjectiveGameType;
+import seventh.game.type.obj.ObjectiveGameType;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
@@ -238,6 +238,17 @@ public class World {
      */
     public List<Player> getTeammates(Brain brain) {
         return brain.getPlayer().getTeam().getPlayers();
+    }
+    
+    /**
+     * Determines if the supplied potentialEnemy is an enemy of the supplied {@link Brain}
+     * 
+     * @param brain
+     * @param potentialEnemy
+     * @return true if potential enemy is an enemy
+     */
+    public boolean isEnemyOf(Brain brain, PlayerEntity potentialEnemy) {
+        return !brain.getPlayer().getTeam().onTeam(potentialEnemy.getId());
     }
     
     /**

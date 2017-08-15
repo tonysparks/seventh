@@ -10,7 +10,7 @@ import seventh.ai.basic.actions.WaitAction;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
-import seventh.game.type.ObjectiveGameType;
+import seventh.game.type.obj.ObjectiveGameType;
 import seventh.shared.TimeStep;
 
 /**

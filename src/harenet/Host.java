@@ -20,6 +20,7 @@ import harenet.messages.Message;
 import harenet.messages.NetMessageFactory;
 import harenet.messages.PingMessage;
 import harenet.messages.PongMessage;
+import harenet.messages.ServerFullMessage;
 
 /**
  * Represents a {@link Host} machine.  This is able to send and receive
@@ -78,6 +79,14 @@ public class Host {
          * @param peer
          */
         public void onDisconnected(Peer peer);
+        
+        /**
+         * The server is full and is denying the peer from
+         * connecting.
+         * 
+         * @param peer
+         */
+        public void onServerFull(Peer peer);
         
         /**
          * A message has been received
@@ -149,6 +158,7 @@ public class Host {
             if(isValidPeerId(id)) {
                 if(peers[id] == null) {
                     peers[id] = new DummyPeer(this, (byte)id);
+                    numberOfConnections++;
                 }
             }
             return id;
@@ -209,20 +219,22 @@ public class Host {
     protected Peer allocatePeer(InetSocketAddress address) throws IOException {
         synchronized (this) {    
             if (this.numberOfConnections >= this.maxConnections) {
+                sendOutOfBandMessage(writeBuffer, address, ServerFullMessage.INSTANCE);
+                
                 throw new IOException("Max number of connections has been met.");
             }
             Peer peer = isClientAlreadyConnected(address);
             if(peer==null) {
-                    byte id = findOpenId();
-                    if (id == INVALID_PEER_ID) {
-                        throw new IOException("Unable to allocate a valid id.");
-                    }
-            
-                    this.numberOfConnections++;
-            
-                    peer = new Peer(this, address, id);
-                    peer.setState(State.CONNECTED);            
-                    peers[id] = peer;
+                byte id = findOpenId();
+                if (id == INVALID_PEER_ID) {
+                    throw new IOException("Unable to allocate a valid id.");
+                }
+        
+                this.numberOfConnections++;
+        
+                peer = new Peer(this, address, id);
+                peer.setState(State.CONNECTED);            
+                peers[id] = peer;
             }
             return peer;
         }        
@@ -602,6 +614,31 @@ public class Host {
                 peer.receiveMessages(listener);
 //                peer.checkReliableMessages();
             }
+        }
+    }
+    
+    /**
+     * Writes an out of band message to the remote address.  This is one way communication
+     * 
+     * @param ioBuffer
+     * @param remoteAddress
+     * @param msg
+     * @return the number of bytes written out
+     */
+    private int sendOutOfBandMessage(IOBuffer ioBuffer, InetSocketAddress remoteAddress, Message msg) {
+        protocol.reset();
+        protocol.setNumberOfMessages( (byte)1 );
+        protocol.writeTo(ioBuffer);
+        msg.writeTo(ioBuffer);
+        
+        ByteBuffer buffer = ioBuffer.sendSync().asByteBuffer();        
+        buffer.flip();        
+        try {                       
+            return datagramChannel.send(buffer, remoteAddress);
+        } 
+        catch (Exception e) {        
+            if(log.enabled()) log.error("Error sending bytes to peer: " + e);
+            return -1;
         }
     }
     

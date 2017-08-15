@@ -206,6 +206,14 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
         this.clients.removeClient(conn.getId());        
     }
     
+    /* (non-Javadoc)
+     * @see harenet.api.ConnectionListener#onServerFull(harenet.api.Connection)
+     */
+    @Override
+    public void onServerFull(Connection conn) {
+        Cons.println("Connected attempted but the server is full.");        
+    }
+    
     /*
      * (non-Javadoc)
      * @see palisma.shared.NetworkProtocol#processMessage(com.esotericsoftware.kryonet.Connection, palisma.network.messages.Message)

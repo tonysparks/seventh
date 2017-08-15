@@ -10,6 +10,7 @@ import seventh.ai.basic.actions.evaluators.AttackActionEvaluator;
 import seventh.ai.basic.actions.evaluators.AvoidGrenadeActionEvaluator;
 import seventh.ai.basic.actions.evaluators.CommandActionEvaluator;
 import seventh.ai.basic.actions.evaluators.DefendSelfActionEvaluator;
+import seventh.ai.basic.actions.evaluators.DegroupActionEvaluator;
 import seventh.ai.basic.actions.evaluators.DoNothingEvaluator;
 import seventh.ai.basic.actions.evaluators.ExploreActionEvaluator;
 import seventh.ai.basic.actions.evaluators.HandleDoorActionEvaluator;
@@ -51,6 +52,7 @@ public class WeightedThoughtProcess implements ThoughtProcess {
                                         new InvestigateActionEvaluator(goals, rand.getRandomRange(0.5, 0.9), 0.6),
 //                                        new RideVehicleEvaluator(goals, 1.0f,1f),//brain.getRandomRange(0.5, 0.7), 0.51),
                                         new StrategyEvaluator(teamStrategy, goals, rand.getRandomRange(0.2, 0.6), 0),
+                                        new DegroupActionEvaluator(goals, 1, 0.99),
                                         new ExploreActionEvaluator(goals, rand.getRandomRange(0.1, 0.5), 0.5)                                            
                 ),
                 

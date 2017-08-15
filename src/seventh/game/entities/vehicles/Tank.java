@@ -384,6 +384,8 @@ public class Tank extends Vehicle {
                 float newX = pos.x + vel.x * movementSpeed * dt;
                 float newY = pos.y + vel.y * movementSpeed * dt;                    
                 
+                newX = Math.max(0, newX);
+                newY = Math.max(0, newY);
                 
                 Map map = game.getMap();
                 

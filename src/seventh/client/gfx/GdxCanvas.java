@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -27,6 +28,10 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import seventh.client.SeventhGame;
 
 /**
  * @author Tony
@@ -52,6 +57,7 @@ public class GdxCanvas implements Canvas {
     
     private ShapeRenderer shapes;
     private OrthographicCamera camera;
+    private Viewport viewport;
     
     private boolean isBegun;
     
@@ -71,6 +77,12 @@ public class GdxCanvas implements Canvas {
         
         this.camera = new OrthographicCamera(getWidth(), getHeight());
         this.camera.setToOrtho(true, getWidth(), getHeight());
+        this.camera.position.x = this.camera.viewportWidth/2;
+        this.camera.position.y = this.camera.viewportHeight/2;
+        this.camera.update();
+        
+        this.viewport = new FitViewport(getWidth(), getHeight(), camera);
+        this.viewport.apply();
                 
         this.generators = new HashMap<String, FreeTypeFontGenerator>();
         this.fonts = new HashMap<String, BitmapFont>();
@@ -142,7 +154,7 @@ public class GdxCanvas implements Canvas {
      * @see seventh.client.gfx.Canvas#enableAntialiasing(boolean)
      */
     @Override
-    public void enableAntialiasing(boolean b) {        
+    public void enableAntialiasing(boolean b) {    
     }
 
     /* (non-Javadoc)
@@ -362,6 +374,8 @@ public class GdxCanvas implements Canvas {
             params.size = size;
             params.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
             params.flip = true;
+            params.magFilter = TextureFilter.Linear;
+            params.minFilter = TextureFilter.Linear;
             
             font = this.generators.get(alias).generateFont(params);
             this.fonts.put(mask, font);
@@ -484,7 +498,8 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public int getWidth() {
-        return Gdx.graphics.getWidth();
+        //return Gdx.graphics.getWidth();
+        return SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH;
     }
 
     /* (non-Javadoc)
@@ -492,7 +507,8 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public int getHeight() {
-        return Gdx.graphics.getHeight();
+        //return Gdx.graphics.getHeight();
+        return SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT;
     }
 
     /* (non-Javadoc)
@@ -516,9 +532,16 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public void drawLine(int x1, int y1, int x2, int y2, Integer color) {
+        drawLine(x1, y1, x2, y2, color, 1);
+    }
+    
+    @Override
+    public void drawLine(int x1, int y1, int x2, int y2, Integer color, float thickness) {
         Color c=setTempColor(color);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(thickness);
+        
         this.shapes.setColor(c);
         
         this.shapes.begin(ShapeType.Line);
@@ -532,15 +555,51 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public void drawLine(float x1, float y1, float x2, float y2, Integer color) {
+        drawLine(x1, y1, x2, y2, color, 1);
+    }
+    
+    @Override
+    public void drawLine(float x1, float y1, float x2, float y2, Integer color, float thickness) {
         Color c=setTempColor(color);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(thickness);
+        
         this.shapes.setColor(c);
         
         this.shapes.begin(ShapeType.Line);
         this.shapes.line(x1, y1, x2, y2);
         this.shapes.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+    
+    private Color startColor=new Color(), endColor=new Color();
+    
+    /* (non-Javadoc)
+     * @see seventh.client.gfx.Canvas#drawLine(int, int, int, int, java.lang.Integer, java.lang.Integer, float)
+     */
+    @Override
+    public void drawLine(int x1, int y1, int x2, int y2, Integer startColor, Integer endColor, float thickness) {
+        
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glLineWidth(thickness);
+        
+        int alpha = startColor >>> 24;
+        startColor = (startColor << 8) | alpha;
+        
+        this.startColor.set(startColor);
+        
+        alpha = endColor >>> 24;
+        endColor = (endColor << 8) | alpha;
+        
+        this.endColor.set(startColor);
+        
+        this.shapes.begin(ShapeType.Line);
+        this.shapes.line(x1, y1, x2, y2, this.startColor, this.endColor);
+        this.shapes.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+        
     }
 
     /* (non-Javadoc)

@@ -315,6 +315,12 @@ public class Game implements GameInfo, Debugable, Updatable {
             
             @Override
             public void onRoundStarted(RoundStartedEvent event) {
+                // mark all entities as dead, so that we can reload them
+                // on start up
+                for(int i = MAX_PLAYERS; i < deadFrames.length; i++) {
+                    deadFrames[i] = 999;
+                }
+                
                 // remove any nodes we may have created by destructable
                 // terrain
                 for(Tile tile : map.getRemovedTiles()) {
@@ -396,7 +402,8 @@ public class Game implements GameInfo, Debugable, Updatable {
             }
         }
         
-        return MAX_PLAYERS;
+        // Should we throw an error
+        return MAX_ENTITIES-1;
     }
     
     /**
@@ -702,7 +709,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     @Override
     public void update(TimeStep timeStep) {        
         for(int i = 0; i < entities.length; i++) {
-            Entity ent = entities[i];
+            Entity ent = entities[i];            
             if(ent!=null) {
                 if(ent.isAlive()) {
                     deadFrames[i] = 0;
@@ -725,7 +732,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.gameTriggers.update(timeStep);
         
         this.gameType.update(this, timeStep);
-        this.time = this.gameType.getRemainingTime();                                
+        this.time = this.gameType.getRemainingTime();
     }
     
     /**

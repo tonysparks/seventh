@@ -88,22 +88,22 @@ public class Scoreboard {
     }
     
     private void setSmallFont(Canvas canvas) {
-        canvas.setFont("Consola", 18);
+        canvas.setFont("Consola", 14);
         canvas.boldFont();
     }
     
     private void setBigFont(Canvas canvas) {
-        canvas.setFont("Consola", 24);
+        canvas.setFont("Consola", 18);
         canvas.boldFont();
     }
     
     private int drawTeam(Canvas canvas, List<ClientPlayer> team, int x, int y) {
         setSmallFont(canvas);
         for(ClientPlayer player : team) {
-            y += 30;
+            y += 20;
             
             if(player == game.getLocalPlayer()) {
-                canvas.fillRect(x, y-20, 800, 30, 0x5fffffff);
+                canvas.fillRect(x-5, y-15, 530, 20, 0x5fffffff);
             }
             
             String output = String.format("%-33s %-13d %-13d %-13d", player.getName(),player.getKills(),player.getDeaths(), player.getPing());
@@ -127,35 +127,35 @@ public class Scoreboard {
             return;
         }
                 
-        int yIncBig = 50;
-        int y = 140;
+        int yIncBig = 35;
+        int y = 50;
         int x = 90;    
         
         setBigFont(canvas);
         
         int defaultColor = 0xffffffff;
         
-        ClientTeam localTeam = game.getLocalPlayer().getTeam();
-        int teamColor = (localTeam==ClientTeam.AXIS) ? ClientTeam.AXIS.getColor() : ClientTeam.ALLIES.getColor();
+        //ClientTeam localTeam = game.getLocalPlayer().getTeam();
+        //int teamColor = (localTeam==ClientTeam.AXIS) ? ClientTeam.AXIS.getColor() : ClientTeam.ALLIES.getColor();
         boolean isObjective = false;
         
-        TextureRegion gameTypeIcon = Art.tdmIcon;
-        switch(game.getGameType()) {
-            case CTF:
-                gameTypeIcon = Art.ctfIcon;
-                break;
-            case OBJ:                
-                gameTypeIcon = Art.objIcon;
-                isObjective = true;
-                break;
-            case TDM:
-            default:
-                gameTypeIcon = Art.tdmIcon;
-                break;
-        }
-        
-        canvas.drawImage(gameTypeIcon, (canvas.getWidth()/2) - (gameTypeIcon.getRegionWidth()/2), gameTypeIcon.getRegionHeight()/2, teamColor);
-        
+//        TextureRegion gameTypeIcon = Art.tdmIcon;
+//        switch(game.getGameType()) {
+//            case CTF:
+//                gameTypeIcon = Art.ctfIcon;
+//                break;
+//            case OBJ:                
+//                gameTypeIcon = Art.objIcon;
+//                isObjective = true;
+//                break;
+//            case TDM:
+//            default:
+//                gameTypeIcon = Art.tdmIcon;
+//                break;
+//        }
+//        
+//        canvas.drawImage(gameTypeIcon, (canvas.getWidth()/2) - (gameTypeIcon.getRegionWidth()/2), gameTypeIcon.getRegionHeight()/2, teamColor);
+//        
 
         RenderFont.drawShadedString(canvas, "Name                     Kills     Deaths     Ping", x, y, defaultColor);
         List<ClientPlayer> vals = game.getPlayers().asList();

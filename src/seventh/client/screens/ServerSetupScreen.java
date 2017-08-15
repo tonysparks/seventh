@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Art;
-import seventh.client.gfx.Canvas;
-import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.game.type.GameType;
 import seventh.math.Rectangle;
@@ -34,19 +31,16 @@ import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;
 import seventh.ui.Panel;
 import seventh.ui.TextBox;
-import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.CheckboxEvent;
 import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.events.OnCheckboxClickedListener;
 import seventh.ui.events.OnHoverListener;
-import seventh.ui.view.ButtonView;
 import seventh.ui.view.CheckboxView;
 import seventh.ui.view.ImagePanelView;
 import seventh.ui.view.LabelView;
 import seventh.ui.view.PanelView;
-import seventh.ui.view.TextBoxView;
 
 /**
  * Server setup page
@@ -54,66 +48,30 @@ import seventh.ui.view.TextBoxView;
  * @author Tony
  *
  */
-public class ServerSetupScreen implements Screen {
+public class ServerSetupScreen extends AbstractServerSetupScreen {
         
-    private boolean load;
-    
-    private MenuScreen menuScreen;
-    private SeventhGame app;
-    
-    private UserInterfaceManager uiManager;
-    
-    private Theme theme;
-            
     private KeyInput keyInput;
     
-    private Panel optionsPanel;    
-    private PanelView panelView;
-        
-    private GameServerSettings gameSettings;
     private List<MapEntry> mapListings;
     private Map<String, TextureRegion> mapPreviews;
     
     private int currentMapIndex;
     private int gameTypeIndex;
     
-    private Random random;
-    private static final GameType.Type[] GAME_TYPES = {
-        GameType.Type.TDM, GameType.Type.OBJ, GameType.Type.CTF
-    };
-    private static final String[] BOT_NAMES = {
-        "Messiah",
-        "Irishman",
-        "Outlaw",
-        "Osiris",
-        "Newera",
-        "Uki",
-        "Misty",
-        "Randy",
-        "Jeremy",
-        "Tripwire",
-        "Leo",
-        "nvm",
-    };
+    private MenuScreen menuScreen;
+    
+    private static final GameType.Type[] GAME_TYPES = GameType.Type.values();
     
     /**
-     * 
+     * @param app
      */
-    public ServerSetupScreen(final MenuScreen menuScreen) {
-        this.menuScreen = menuScreen;
-        this.theme = menuScreen.getTheme();        
-        this.app = menuScreen.getApp();
-        this.uiManager = menuScreen.getUiManager();            
-        
-        this.load = false;
-        
-        this.random = new Random();
-        
+    public ServerSetupScreen(SeventhGame app) {   
+        super(app, new GameServerSettings());                   
+        this.menuScreen = app.getMenuScreen();
 
         this.mapListings = MapList.getMapListing();
         this.mapPreviews = buildMapPreviews(mapListings);
         
-        this.gameSettings = new GameServerSettings();
         this.gameSettings.currentMap = mapListings.isEmpty() ? null : this.mapListings.get(0);
         this.gameSettings.maxPlayers = SeventhConstants.MAX_PLAYERS;
         this.gameSettings.gameType = GameType.Type.TDM;
@@ -138,35 +96,6 @@ public class ServerSetupScreen implements Screen {
             this.gameSettings.axisTeam.add(axis);
         }
         
-        
-        createUI();
-    }
-        
-    private String getNextRandomName() {
-        String name = null;
-        boolean found = false;
-        final int maxIterations = 100;
-        int i = 0;
-        while(!found) {
-            name = BOT_NAMES[this.random.nextInt(BOT_NAMES.length)];
-            i++;
-            
-            if(i>maxIterations) {
-                found = true;
-            }
-            
-            if(gameSettings.alliedTeam.contains(name)) {
-                continue;
-            }
-            
-            if(gameSettings.axisTeam.contains(name)) {
-                continue;
-            }
-            
-            found = true;
-        }
-        
-        return name;
     }
     
     private Map<String, TextureRegion> buildMapPreviews(List<MapEntry> mapList) {
@@ -181,18 +110,7 @@ public class ServerSetupScreen implements Screen {
         }
         return mapPreviews;
     }
-    
-    private void refreshUI() {
-        if(this.panelView!=null) {
-            this.panelView.clear();
-        }
-        if(optionsPanel!=null) {
-            optionsPanel.destroy();
-        }
-        
-        createUI();
-    }
-    
+       
     private TextureRegion getCurrentMapPreview() {
         if(this.currentMapIndex > -1 && this.currentMapIndex < this.mapListings.size()) {
             String mapName = this.mapListings.get(this.currentMapIndex).getDisplayName();
@@ -202,7 +120,8 @@ public class ServerSetupScreen implements Screen {
         return null;
     }
     
-    private void createUI() {
+    @Override
+    protected void createUI() {
         this.panelView = new PanelView();
         this.optionsPanel = new Panel();
         
@@ -212,16 +131,13 @@ public class ServerSetupScreen implements Screen {
                 
         Vector2f uiPos = new Vector2f(180, app.getScreenHeight() - 30);
         
-        Button saveBtn = setupButton(uiPos, "Play",false);        
+        Button saveBtn = setupButton(uiPos, "Next", false);        
         saveBtn.getTextLabel().setFont(theme.getPrimaryFontName());
         saveBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
-                load = true;
-                if(app.getTerminal().getInputText().equals("connect ")) {
-                    app.getTerminal().setInputText("");
-                }
+                app.pushScreen(new ServerTeamsSetupScreen(app, gameSettings));
             }
         });
         
@@ -241,33 +157,30 @@ public class ServerSetupScreen implements Screen {
             
         Label headerLbl = new Label("Game Setup");
         headerLbl.setTheme(theme);
-        headerLbl.setBounds(new Rectangle(0,50, app.getScreenWidth(), 80));
+        headerLbl.setBounds(new Rectangle(0,0, app.getScreenWidth(), 80));
         headerLbl.setHorizontalTextAlignment(TextAlignment.CENTER);
         headerLbl.setFont(theme.getPrimaryFontName());
-        headerLbl.setTextSize(45);
+        headerLbl.setTextSize(34);
                 
 
         uiPos.x = 10;
-        uiPos.y = 120;
+        uiPos.y = 90;
         setupLabel(uiPos, "Settings", true);
         
         final int startX = 30;
-        final int startY = 160;
+        final int startY = 120;
         final int yInc = 20;
         final int xInc = 100;
         
-        final int toggleX = 290;
+        final int toggleX = 200;
         
         uiPos.x = startX;
         uiPos.y = startY;        
         
         final ImagePanel previewPanel = new ImagePanel(getCurrentMapPreview());
-        previewPanel.setBounds(new Rectangle(app.getScreenWidth() - 450, startY + 5, 256, 256));        
+        previewPanel.setBounds(new Rectangle(app.getScreenWidth() - 400, startY + 5, 325, 275));//168, 168));        
         previewPanel.setBackgroundColor(0xff383e18);
         previewPanel.setForegroundColor(0xff000000);
-//        this.optionsPanel.addWidget(previewPanel);
-//        this.panelView.addElement(new ImagePanelView(previewPanel));
-        
         
         setupLabel(uiPos, "Server Name: ", false);
         
@@ -275,7 +188,7 @@ public class ServerSetupScreen implements Screen {
         uiPos.y += yInc;
         
         final TextBox serverNameTxtBox = setupTextBox(uiPos, this.gameSettings.serverName);
-        serverNameTxtBox.setBounds(new Rectangle(240, 30));
+        serverNameTxtBox.setBounds(new Rectangle(240, 25));
         serverNameTxtBox.getBounds().centerAround(uiPos);
         serverNameTxtBox.setMaxSize(26);
         serverNameTxtBox.addInputListenerToFront(new Inputs() {
@@ -330,7 +243,7 @@ public class ServerSetupScreen implements Screen {
         
         uiPos.x = toggleX;
         uiPos.y += yInc;
-        setupButton(uiPos, "-", true).addOnButtonClickedListener(new OnButtonClickedListener() {
+        setupButton(uiPos, "-", false).addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
@@ -345,13 +258,13 @@ public class ServerSetupScreen implements Screen {
         }); 
         
         uiPos.x += xInc;
-        setupButton(uiPos, "+", true).addOnButtonClickedListener(new OnButtonClickedListener() {
+        setupButton(uiPos, "+", false).addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
                 gameSettings.maxPlayers++;
-                if(gameSettings.maxPlayers > 12) {
-                    gameSettings.maxPlayers = 12;
+                if(gameSettings.maxPlayers > SeventhConstants.MAX_PLAYERS) {
+                    gameSettings.maxPlayers = SeventhConstants.MAX_PLAYERS;
                 }
                 
                 maxPlayersLbl.setText(Integer.toString(gameSettings.maxPlayers));
@@ -370,7 +283,7 @@ public class ServerSetupScreen implements Screen {
         
         uiPos.x = toggleX;
         uiPos.y += yInc;
-        setupButton(uiPos, "-", true).addOnButtonClickedListener(new OnButtonClickedListener() {
+        setupButton(uiPos, "-", false).addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
@@ -391,7 +304,7 @@ public class ServerSetupScreen implements Screen {
         }); 
 
         uiPos.x += xInc;
-        setupButton(uiPos, "+", true).addOnButtonClickedListener(new OnButtonClickedListener() {
+        setupButton(uiPos, "+", false).addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
@@ -406,9 +319,6 @@ public class ServerSetupScreen implements Screen {
             }
         }); 
         
-        
-        
-        
         uiPos.x = startX;
         uiPos.y += yInc;
         setupLabel(uiPos, "Match Time: ", false);
@@ -418,7 +328,7 @@ public class ServerSetupScreen implements Screen {
         
         uiPos.x = toggleX;
         uiPos.y += yInc;
-        setupButton(uiPos, "-", true).addOnButtonClickedListener(new OnButtonClickedListener() {
+        setupButton(uiPos, "-", false).addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
@@ -432,7 +342,7 @@ public class ServerSetupScreen implements Screen {
         
 
         uiPos.x += xInc;
-        setupButton(uiPos, "+", true).addOnButtonClickedListener(new OnButtonClickedListener() {
+        setupButton(uiPos, "+", false).addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
@@ -463,6 +373,11 @@ public class ServerSetupScreen implements Screen {
                         gameSettings.matchTime = 20;
                         gameSettings.maxScore = 3;
                         break;
+                    case CMD:
+                        gameSettings.gameType = GameType.Type.CMD;
+                        gameSettings.matchTime = 20;
+                        gameSettings.maxScore = 50;
+                        break;
                 }
                 
                 maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));
@@ -481,7 +396,7 @@ public class ServerSetupScreen implements Screen {
         
 
         uiPos.x = startX;
-        uiPos.y += yInc;
+        uiPos.y += yInc + 20;
         
         Checkbox isDedicatedServer = new Checkbox(gameSettings.isDedicatedServer);
         isDedicatedServer.setTheme(theme);                
@@ -506,7 +421,7 @@ public class ServerSetupScreen implements Screen {
         this.panelView.addElement(new CheckboxView(isDedicatedServer));
         
         
-        uiPos.x = toggleX - xInc;         
+        uiPos.x = toggleX ;//- xInc;         
         
         Checkbox isLAN = new Checkbox(!gameSettings.isDedicatedServer);
         isLAN.setTheme(theme);                
@@ -529,82 +444,7 @@ public class ServerSetupScreen implements Screen {
         
         this.optionsPanel.addWidget(isLAN);
         this.panelView.addElement(new CheckboxView(isLAN));
-        
-        
-        uiPos.x = 10;
-        uiPos.y += yInc * 2;
-        setupLabel(uiPos, "Team", true);
-        
-        uiPos.x = startX + 100;
-        uiPos.y += yInc + 30;
-        setupButton(uiPos, "-", true).addOnButtonClickedListener(new OnButtonClickedListener() {
-            
-            @Override
-            public void onButtonClicked(ButtonEvent event) {
-                if(gameSettings.alliedTeam.size() > 0) {
-                    gameSettings.alliedTeam.remove(gameSettings.alliedTeam.size()-1);
-                    refreshUI();
-                }
-            }
-        });
-        uiPos.x += 10;
-        uiPos.y -= 20;
-        setupLabel(uiPos, "Allies", false);
-        
-        uiPos.x += 100;
-        uiPos.y += 20;
-        setupButton(uiPos, "+", true).addOnButtonClickedListener(new OnButtonClickedListener() {
-            
-            @Override
-            public void onButtonClicked(ButtonEvent event) {
-                if(gameSettings.axisTeam.size() + gameSettings.alliedTeam.size() < gameSettings.maxPlayers-1) {
-                    String name = getNextRandomName();
-                    gameSettings.alliedTeam.add(name);
-                    
-                    refreshUI();
-                }
-            }
-        });
-        
-
-        uiPos.x = 550;        
-        setupButton(uiPos, "-", true).addOnButtonClickedListener(new OnButtonClickedListener() {
-            
-            @Override
-            public void onButtonClicked(ButtonEvent event) {
-                if(gameSettings.axisTeam.size() > 0) {
-                    gameSettings.axisTeam.remove(gameSettings.axisTeam.size()-1);
-                    refreshUI();
-                }
-            }
-        });
-        
-        uiPos.x += 20;
-        uiPos.y -= 20;
-        setupLabel(uiPos, "Axis", false);
-        
-        uiPos.x += 90;
-        uiPos.y += 20;
-        setupButton(uiPos, "+", true).addOnButtonClickedListener(new OnButtonClickedListener() {
-            
-            @Override
-            public void onButtonClicked(ButtonEvent event) {
-                if(gameSettings.axisTeam.size() + gameSettings.alliedTeam.size() < gameSettings.maxPlayers-1) {
-                
-                    String name = getNextRandomName();
-                    gameSettings.axisTeam.add(name);
-                    
-                    refreshUI();
-                }
-            }
-        });
-
-        
-        
-        uiPos.x = startX;
-        uiPos.y += yInc;
-        createBotsPanel(uiPos);
-            
+                   
         this.panelView.addElement(new LabelView(headerLbl));
         
         this.optionsPanel.addWidget(previewPanel);
@@ -612,214 +452,27 @@ public class ServerSetupScreen implements Screen {
                 
     }
     
-    private void createBotsPanel(Vector2f pos) {
-
-//        int startX = (int)pos.x;    
-        int startY = (int)pos.y;
-        
-        int i = 0;
-        for(String name : gameSettings.alliedTeam) {
-            final int nameIndex = i++;
-            final TextBox box = setupTextBox(pos, name);
-            box.addInputListenerToFront(new Inputs() {
-                
-                @Override
-                public boolean keyUp(int key) {
-                    gameSettings.alliedTeam.set(nameIndex, box.getText());
-                    return false;
-                }
-            });
-            
-            if(i%2==0) {
-                pos.x -= 170;
-                pos.y += 40;
-            }
-            else {                                
-                pos.x += 170;
-            }
-            
-        }
-        
-        pos.x = 450;
-        pos.y = startY;
-        
-        i = 0;
-        for(String name : gameSettings.axisTeam) {
-            final int nameIndex = i++;
-            final TextBox box = setupTextBox(pos, name);
-            box.addInputListenerToFront(new Inputs() {
-                
-                @Override
-                public boolean keyUp(int key) {
-                    gameSettings.axisTeam.set(nameIndex, box.getText());
-                    return false;
-                }
-            });
-                        
-            if(i%2==0) {
-                pos.x -= 170;
-                pos.y += 40;
-            }
-            else {                                
-                pos.x += 170;
-            }
-        }
-        
-    }
-    
-    private Button setupButton(Vector2f pos, final String text, boolean smallBtn) {
-        Button btn = new Button();
-        btn.setTheme(theme);
-        btn.setText(text);
-        if(smallBtn) {
-            btn.setTextSize(18);
-            btn.setHoverTextSize(22);
-            btn.setBounds(new Rectangle(40, 30));
-        }
-        else { 
-            btn.setTextSize(24);
-            btn.setHoverTextSize(28);
-            btn.setBounds(new Rectangle(140, 40));
-        }
-        
-        btn.getBounds().centerAround(pos);
-        btn.setForegroundColor(theme.getForegroundColor());
-        btn.setEnableGradiant(false);            
-        btn.getTextLabel().setFont(theme.getSecondaryFontName());
-        btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
-        btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
-        btn.addOnHoverListener(new OnHoverListener() {
-            
-            @Override
-            public void onHover(HoverEvent event) {
-                uiManager.getCursor().touchAccuracy();
-            }
-        });
-        
-        this.optionsPanel.addWidget(btn);
-        this.panelView.addElement(new ButtonView(btn));
-        
-        return btn;
-    }
-    
-    private Label setupLabel(Vector2f pos, final String text, boolean header) {
-        Label lbl = new Label(text);
-        lbl.setTheme(theme);
-        lbl.setBounds(new Rectangle((int)pos.x, (int)pos.y, 400, 40));
-        lbl.setHorizontalTextAlignment(TextAlignment.LEFT);
-        if(header) {
-            lbl.setForegroundColor(theme.getForegroundColor());
-            lbl.setFont(theme.getSecondaryFontName());
-            lbl.setTextSize(24);
-        }
-        else {
-            lbl.setForegroundColor(0xffffffff);
-            lbl.setFont(theme.getSecondaryFontName());
-            lbl.setTextSize(18);
-        }
-        
-        this.optionsPanel.addWidget(lbl);
-        this.panelView.addElement(new LabelView(lbl));
-        
-        return lbl;
-    }
-    
-    
-    private TextBox setupTextBox(Vector2f pos, final String text) {
-        TextBox box = new TextBox();
-        box.setBounds(new Rectangle((int)pos.x, (int)pos.y, 120, 30));
-        box.getTextLabel().setFont(theme.getSecondaryFontName());
-        box.setText(text);
-        box.setMaxSize(16);
-        box.setTextSize(14);        
-        box.setFocus(false);
-        
-        this.optionsPanel.addWidget(box);
-        this.panelView.addElement(new TextBoxView(box));
-        
-        return box;
-    }
-    
-
-    
-    /* (non-Javadoc)
-     * @see seventh.shared.State#enter()
-     */
     @Override
     public void enter() {
-        this.optionsPanel.show();
+        super.enter();
         this.keyInput.setDisabled(true);
     }
-
-    /* (non-Javadoc)
-     * @see seventh.shared.State#exit()
-     */
-    @Override
-    public void exit() {
-        this.optionsPanel.destroy();
-        this.panelView.clear();
-    }
     
-    /* (non-Javadoc)
-     * @see seventh.client.Screen#destroy()
-     */
     @Override
     public void destroy() {
-        this.optionsPanel.destroy();
-        this.panelView.clear();
+        super.destroy();
         
         for(TextureRegion tex : this.mapPreviews.values()) {
             tex.getTexture().dispose();
         }
     }
     
-    /* (non-Javadoc)
-     * @see seventh.shared.State#update(seventh.shared.TimeStep)
-     */
     @Override
     public void update(TimeStep timeStep) {
-        uiManager.update(timeStep);
-        uiManager.checkIfCursorIsHovering();
-        
-        if(load) {
-            menuScreen.startLocalServer(gameSettings);
-            load = false;
-        }
-        
-        panelView.update(timeStep);
+        super.update(timeStep);
         
         if(uiManager.isKeyDown(Keys.ESCAPE)) {
             app.setScreen(menuScreen);
         }
     }
-
-
-
-
-    /* (non-Javadoc)
-     * @see seventh.client.Screen#render(seventh.client.gfx.Canvas)
-     */
-    @Override
-    public void render(Canvas canvas, float alpha) {
-        canvas.fillRect(0, 0, canvas.getWidth() + 100,  canvas.getHeight() + 100, theme.getBackgroundColor());
-        
-        this.panelView.render(canvas, null, 0);
-        
-        canvas.begin();
-//        canvas.setFont(theme.getPrimaryFontName(), 54);
-//        canvas.boldFont();
-//        
-        this.menuScreen.getUiManager().render(canvas);
-        
-        canvas.end();
-    }
-
-    /* (non-Javadoc)
-     * @see seventh.client.Screen#getInputs()
-     */
-    @Override
-    public Inputs getInputs() {
-        return this.menuScreen.getInputs();
-    }
-
 }

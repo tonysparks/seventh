@@ -96,6 +96,24 @@ public class AICommands {
             
         });
         
+        this.aiCommands.put("defendLeader", new Command() {
+
+            @Override
+            public Action parse(Brain brain, String... args) {
+                if(args.length > 0) {
+                    String pid = args[0];                    
+                    int playerId = Integer.parseInt(pid);
+                    PlayerInfo player = game.getPlayerById(playerId);
+                    if(player.isAlive()) {                        
+                        return goals.defendLeader(player);
+                    }
+                    
+                }
+                return null;
+            }
+            
+        });
+        
         this.aiCommands.put("takeCover", new Command() {
             
             @Override

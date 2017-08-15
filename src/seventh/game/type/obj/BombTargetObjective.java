@@ -2,7 +2,7 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.game.type;
+package seventh.game.type.obj;
 
 import seventh.game.Game;
 import seventh.game.GameInfo;

@@ -47,6 +47,7 @@ import seventh.ai.basic.actions.evaluators.MoveTowardEnemyEvaluator;
 import seventh.ai.basic.actions.evaluators.ShootWeaponEvaluator;
 import seventh.ai.basic.actions.evaluators.StayStillEvaluator;
 import seventh.ai.basic.actions.evaluators.TakeCoverEvaluator;
+import seventh.game.PlayerInfo;
 import seventh.game.entities.BombTarget;
 import seventh.game.entities.Door;
 import seventh.game.entities.Flag;
@@ -212,6 +213,17 @@ public class Actions {
         return action;
     }
     
+    public Action defendLeader(PlayerInfo leader) {
+        //Action action = getScriptedAction("defendLeader");
+        //action.getActionResult().setValue(leader.getEntityOwner());
+        if(leader.isAlive()) {            
+            Zone zone = this.aiSystem.getZones().getZone(leader.getEntity().getCenterPos());
+            return defend(zone);
+        }
+        
+        return waitAction(1000);
+    }
+    
     public Action defendPlantedBomb(BombTarget target) {
         Action action = getScriptedAction("defendPlantedBomb");
         action.getActionResult().setValue(target);
@@ -229,7 +241,7 @@ public class Actions {
         return new ConcurrentAction(action, new WeightedAction(this.config, "moveToCover",
                            new ShootWeaponEvaluator(this, random.getRandomRangeMin(0.8), 0.8),
                            new MeleeEvaluator(this, random.getRandomRange(0.2, 0.4), 0),
-                           new DoNothingEvaluator(this, random.getRandomRangeMin(0.6), 0),
+                           new DoNothingEvaluator(this, random.getRandomRangeMin(0.3), 0),
                         new GrenadeEvaluator(this, random.getRandomRangeMin(0.5), 0)
         ));        
         
@@ -242,7 +254,7 @@ public class Actions {
         return new ConcurrentAction(action, new WeightedAction(config, "moveToCover",
                                                new ShootWeaponEvaluator(this, random.getRandomRangeMin(0.93), 0.8),
                                                new MeleeEvaluator(this, 1, 0),
-                                               new DoNothingEvaluator(this, random.getRandomRange(0.1, 0.35), 0),
+                                               new DoNothingEvaluator(this, random.getRandomRange(0.1, 0.25), 0),
                                             new GrenadeEvaluator(this, random.getRandomRangeMin(0.5), 0)
         ));
     }

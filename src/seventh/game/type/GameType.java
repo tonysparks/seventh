@@ -26,7 +26,7 @@ public interface GameType extends Debugable {
         TDM("Team Death Match"),
         OBJ("Objective Based Match"),
         CTF("Capture The Flag"),
-        
+        CMD("Commander")
         ;
         
         private String displayName;
@@ -52,6 +52,10 @@ public interface GameType extends Debugable {
             return (byte)ordinal();
         }
         
+        public static int numOfBits() {
+            return 3;
+        }
+        
         private static final Type[] values = values();
         
         public static Type fromNet(byte value) {
@@ -70,6 +74,9 @@ public interface GameType extends Debugable {
                 }
                 else if ("ctf".equalsIgnoreCase(gameType.trim())) {
                     result = CTF;
+                }
+                else if ("cmd".equalsIgnoreCase(gameType.trim())) {
+                    result = CMD;
                 }
             }
             

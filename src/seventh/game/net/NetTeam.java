@@ -36,7 +36,7 @@ public class NetTeam implements NetMessage {
         isDefender = !isAttacker;
         
         if(hasPlayers) {
-            byte len = buffer.getByteBits(4);
+            byte len = buffer.getByteBits(BufferIO.numPlayerIdBits());
             playerIds = new int[len];
             for(byte i = 0; i < len; i++) {
                 playerIds[i] = buffer.getUnsignedByte();
@@ -57,7 +57,7 @@ public class NetTeam implements NetMessage {
         buffer.putBooleanBit(isAttacker);
                 
         if(hasPlayers) {
-            buffer.putByteBits( (byte)playerIds.length, 4);
+            buffer.putByteBits( (byte)playerIds.length, BufferIO.numPlayerIdBits());
             for(int i = 0; i < playerIds.length; i++) {
                 buffer.putUnsignedByte(playerIds[i]);
             }

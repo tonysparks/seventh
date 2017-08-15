@@ -13,9 +13,9 @@ import seventh.ai.basic.World;
 import seventh.ai.basic.actions.Action;
 import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.actions.WaitAction;
-import seventh.ai.basic.squad.Squad;
-import seventh.ai.basic.squad.SquadAction;
-import seventh.ai.basic.squad.SquadDefendAction;
+import seventh.ai.basic.group.AIGroup;
+import seventh.ai.basic.group.AIGroupAction;
+import seventh.ai.basic.group.AIGroupDefendAction;
 import seventh.ai.basic.teamstrategy.Roles.Role;
 import seventh.game.GameInfo;
 import seventh.game.Player;
@@ -23,7 +23,7 @@ import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.entities.Flag;
 import seventh.game.entities.PlayerEntity;
-import seventh.game.type.CaptureTheFlagGameType;
+import seventh.game.type.ctf.CaptureTheFlagGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;
@@ -68,10 +68,10 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
     
     private PlayerInfo[] unassignedPlayers;
     
-    private Squad defenseSquad;
+    private AIGroup defenseSquad;
     private int desiredDefenseSquadSize;
     
-    private SquadAction currentSquadAction;    
+    private AIGroupAction currentSquadAction;    
     private boolean hasRoundStarted;
     
     /**
@@ -96,7 +96,7 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
         this.defendPositions = new ArrayList<>();
         
         this.unassignedPlayers = new PlayerInfo[SeventhConstants.MAX_PLAYERS];
-        this.defenseSquad = new Squad(aiSystem);                    
+        this.defenseSquad = new AIGroup(aiSystem);                    
     }
     
     private void assignRoles() {
@@ -227,7 +227,7 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
         Brain brain = aiSystem.getBrain(player.getId());
         
         if(role==Role.Defender) {
-            this.defenseSquad.addSquadMember(brain);
+            this.defenseSquad.addMember(brain);
         }
         
         System.out.println("Assigning Role: " + role + " for " + player.getName());        
@@ -244,7 +244,7 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
         switch(role) {
             case Defender: {
                 if(this.enemyFlag.isAtHomeBase()) {
-                    if(this.defenseSquad.squadSize()>0) {
+                    if(this.defenseSquad.groupSize()>0) {
                         return this.currentSquadAction.getAction(defenseSquad);
                     }
                     else {
@@ -349,7 +349,7 @@ public class CaptureTheFlagTeamStrategy implements TeamStrategy {
         this.desiredDefenseSquadSize = this.team.getTeamSize() / 2;
         this.desiredDefenseSquadSize = Math.min(this.desiredDefenseSquadSize, this.team.getNumberOfBots());
         
-        this.currentSquadAction = new SquadDefendAction(this.captureDestination);
+        this.currentSquadAction = new AIGroupDefendAction(this.captureDestination);
         this.currentSquadAction.start(defenseSquad);
         
         this.hasRoundStarted = true;

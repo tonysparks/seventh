@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
+import harenet.NetConfig;
 import harenet.api.Server;
 import harenet.api.impl.HareNetServer;
 import leola.vm.Leola;
@@ -90,7 +91,10 @@ public class ServerContext {
         this.clients = new RemoteClients(config.getMaxPlayers());
         this.stateMachine = new StateMachine<State>();
 
-        this.server = new HareNetServer(config.getNetConfig());
+        NetConfig netConfig = config.getNetConfig();
+        netConfig.setMaxConnections(config.getMaxPlayers());
+        
+        this.server = new HareNetServer(netConfig);
         
         this.protocol = new ServerNetworkProtocol(this);
         this.server.addConnectionListener(this.protocol);

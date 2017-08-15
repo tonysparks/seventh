@@ -118,7 +118,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         this.mussleFlash = lightSystem.newPointLight();
         this.mussleFlash.setTexture(Art.fireWeaponLight);
         this.mussleFlash.setColor(0.5f,0.5f,0.5f);
-        
+                
         ClientPlayer localPlayer = game.getLocalPlayer();
         if(localPlayer != null) {
             setControlledByLocalPlayer(localPlayer.getId() == player.getId());
@@ -521,9 +521,11 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         
         Vector2f centerPos = getCenterPos();        
         mussleFlash.setPos(centerPos);
+        
         Vector2f.Vector2fMA(mussleFlash.getPos(), getFacing(), 40.0f, mussleFlash.getPos());
         mussleFlash.setOrientation(getOrientation());
-        mussleFlash.setLuminacity((fadeAlphaColor-150)/255.0f);
+        mussleFlash.setLuminacity((fadeAlphaColor-150)/255.0f);        
+        mussleFlash.setLuminacity(0.9f);
         mussleFlash.setColor(0.7f,.7f,0.5f);
         
         hearingBounds.centerAround(centerPos);

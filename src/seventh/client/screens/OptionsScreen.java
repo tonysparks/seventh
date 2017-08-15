@@ -113,7 +113,7 @@ public class OptionsScreen implements Screen {
         
         this.isFullscreen = app.isFullscreen();
         
-        Vector2f uiPos = new Vector2f(200, app.getScreenHeight() - 30);
+        Vector2f uiPos = new Vector2f(200, app.getScreenHeight() - 20);
         
         Button saveBtn = setupButton(uiPos, "Save", false);
         saveBtn.getBounds().setSize(140, 80);
@@ -197,10 +197,10 @@ public class OptionsScreen implements Screen {
         nameTxtBox = new TextBox();
         nameTxtBox.setLabelText("Name: ");
         nameTxtBox.setTheme(theme);
-        nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 160, 200, 30));        
+        nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 70, 200, 25));        
         nameTxtBox.setFont(theme.getSecondaryFontName()); 
-        nameTxtBox.setTextSize(18);
-        nameTxtBox.getLabel().setTextSize(24);
+        nameTxtBox.setTextSize(14);
+        nameTxtBox.getLabel().setTextSize(18);
         nameTxtBox.setFocus(false);
         nameTxtBox.setMaxSize(16);
         nameTxtBox.setText(app.getConfig().getPlayerName());
@@ -215,15 +215,15 @@ public class OptionsScreen implements Screen {
                 
         Label controlsLbl = new Label("Controls");
         controlsLbl.setTheme(theme);
-        controlsLbl.setBounds(new Rectangle(10, 200, 400, 40));
+        controlsLbl.setBounds(new Rectangle(10, 110, 400, 40));
         controlsLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         controlsLbl.setFont(theme.getPrimaryFontName());
-        controlsLbl.setTextSize(18);
+        controlsLbl.setTextSize(14);
         
         
-        final int startX = 230;
-        final int startY = 270;
-        final int yInc = 30;
+        final int startX = 270;
+        final int startY = 130;
+        final int yInc = 25;
         
         uiPos.x = startX;
         uiPos.y = startY;        
@@ -235,7 +235,7 @@ public class OptionsScreen implements Screen {
         setupButton(uiPos, "sprint: '" + keys.keyString(keys.getSprintKey())+"'"); uiPos.y += yInc;
         setupButton(uiPos, "crouch: '" + keys.keyString(keys.getCrouchKey())+"'"); uiPos.y += yInc;
         
-        uiPos.x = app.getScreenWidth() / 2 + 80;
+        uiPos.x = app.getScreenWidth() / 2 + 100;
         uiPos.y = startY;
         setupButton(uiPos, "reload: '" + keys.keyString(keys.getReloadKey())+"'"); uiPos.y += yInc;
         setupButton(uiPos, "drop weapon: '" + keys.keyString(keys.getDropWeaponKey())+"'"); uiPos.y += yInc;
@@ -245,23 +245,23 @@ public class OptionsScreen implements Screen {
         setupButton(uiPos, "use: '" + keys.keyString(keys.getUseKey()) +"'" ); uiPos.y += yInc;
         
         
-        uiPos.y += yInc;
+        //uiPos.y += yInc;
         
         Label mouseSensitivityLbl = new Label("Mouse Sensitivity: ");        
 //        mouseSensitivityLbl.setTheme(theme);
         mouseSensitivityLbl.setBounds(new Rectangle(80, 20));
-        mouseSensitivityLbl.getBounds().x = 110;
-        mouseSensitivityLbl.getBounds().y = (int)uiPos.y;
+        mouseSensitivityLbl.getBounds().x = 400;
+        mouseSensitivityLbl.getBounds().y = (int)uiPos.y - 10;
         mouseSensitivityLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         mouseSensitivityLbl.setFont(theme.getSecondaryFontName());
-        mouseSensitivityLbl.setTextSize(18);
+        mouseSensitivityLbl.setTextSize(15);
         mouseSensitivityLbl.setForegroundColor(0xffffffff);
         
         optionsPanel.addWidget(mouseSensitivityLbl);
         panelView.addElement(new LabelView(mouseSensitivityLbl));
         
-        uiPos.x = 300;
-        uiPos.y += 5;
+        uiPos.x = 560;
+        uiPos.y -= 8;
         
         Slider mouseSensitivitySlider = new Slider();
         mouseSensitivitySlider.setTheme(theme);
@@ -300,7 +300,7 @@ public class OptionsScreen implements Screen {
         keyOverwriteLbl = new Label("Press any key");
         keyOverwriteLbl.setTheme(theme);
         keyOverwriteLbl.setBounds(new Rectangle(app.getScreenWidth(), 40));
-        keyOverwriteLbl.getBounds().y = app.getScreenHeight() - 120;
+        keyOverwriteLbl.getBounds().y = app.getScreenHeight() - 30;
         keyOverwriteLbl.setHorizontalTextAlignment(TextAlignment.CENTER);
         keyOverwriteLbl.setFont(theme.getPrimaryFontName());
         keyOverwriteLbl.setTextSize(18);
@@ -310,20 +310,20 @@ public class OptionsScreen implements Screen {
         this.panelView.addElement(new LabelView(controlsLbl));
         this.panelView.addElement(new TextBoxView(nameTxtBox));
                 
-        final int bottomPanelY = 600;
+        final int bottomPanelY = 360;
         
         // ~~~ Video 
         
         Label videoLbl = new Label("Video");
         videoLbl.setTheme(theme);
-        videoLbl.setBounds(new Rectangle(80, bottomPanelY - 70, 470, 40));
+        videoLbl.setBounds(new Rectangle(10, bottomPanelY - 50, 470, 40));
         videoLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         videoLbl.setFont(theme.getPrimaryFontName());
-        videoLbl.setTextSize(18);
+        videoLbl.setTextSize(16);
         
-        uiPos.x = startX;
+        uiPos.x = startX - 100;
         uiPos.y = bottomPanelY;
-        final Button resBtn = setupButton(uiPos, "Resolution: '" +  app.getScreenWidth()+"x" + app.getScreenHeight() + "'", false); uiPos.y += yInc;
+        final Button resBtn = setupButton(uiPos, "Resolution: '" +  Gdx.graphics.getWidth()+"x" + Gdx.graphics.getHeight() + "'", false); uiPos.y += yInc;
         resBtn.getTextLabel().setForegroundColor(0xffffffff);
         resBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -342,7 +342,7 @@ public class OptionsScreen implements Screen {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
-                isFullscreen = !app.isFullscreen();                        
+                isFullscreen = !isFullscreen;                        
                 fullscreenBtn.setText("Fullscreen: '" +  isFullscreen + "'");
             }
         });
@@ -366,15 +366,15 @@ public class OptionsScreen implements Screen {
         
         Label soundLbl = new Label("Sound");
         soundLbl.setTheme(theme);
-        soundLbl.setBounds(new Rectangle(app.getScreenWidth()/2 - 90, bottomPanelY-70, 400, 40));
+        soundLbl.setBounds(new Rectangle(app.getScreenWidth()/2 - 120, bottomPanelY-50, 400, 40));
         soundLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         soundLbl.setFont(theme.getPrimaryFontName());
-        soundLbl.setTextSize(18);
+        soundLbl.setTextSize(16);
                 
         this.panelView.addElement(new LabelView(soundLbl));
         
-        uiPos.x = app.getScreenWidth()/3 + startX - 25;
-        uiPos.y = bottomPanelY - 5;
+        uiPos.x = app.getScreenWidth()/3 + startX - 135;
+        uiPos.y = bottomPanelY - 7;
                         
         final Slider slider = new Slider();        
         slider.setTheme(theme);
@@ -401,7 +401,7 @@ public class OptionsScreen implements Screen {
         this.optionsPanel.addWidget(slider);
         this.panelView.addElement(new SliderView(slider));
         
-        uiPos.x = app.getScreenWidth()/3 + startX;
+        uiPos.x = app.getScreenWidth()/3 + startX - 90;
         uiPos.y = bottomPanelY;
         
         final Button sndBtn = setupButton(uiPos, "Volume: ", false); uiPos.y += yInc;
@@ -420,14 +420,14 @@ public class OptionsScreen implements Screen {
             }
         });
         
-        final int thirdSectionX = app.getScreenWidth() - (app.getScreenWidth() / 3) + 20;
+        final int thirdSectionX = app.getScreenWidth() - ((app.getScreenWidth() / 3) + 40);
         
         Label gameLbl = new Label("Game");
         gameLbl.setTheme(theme);
-        gameLbl.setBounds(new Rectangle(thirdSectionX + 30, bottomPanelY-70, 400, 40));
+        gameLbl.setBounds(new Rectangle(thirdSectionX + 30, bottomPanelY-50, 400, 40));
         gameLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         gameLbl.setFont(theme.getPrimaryFontName());
-        gameLbl.setTextSize(18);
+        gameLbl.setTextSize(16);
                 
         this.panelView.addElement(new LabelView(gameLbl));
         
@@ -457,7 +457,7 @@ public class OptionsScreen implements Screen {
         this.panelView.addElement(new CheckboxView(weaponRecoilEnabledChkBx));
         
                 
-        uiPos.y = bottomPanelY + 15;
+        uiPos.y = bottomPanelY + 12;
         
         Checkbox bloodEnabledChkBx = new Checkbox(app.getConfig().getBloodEnabled());
         bloodEnabledChkBx.setTheme(theme);                
@@ -481,7 +481,7 @@ public class OptionsScreen implements Screen {
         this.panelView.addElement(new CheckboxView(bloodEnabledChkBx));
         
         
-        uiPos.y = bottomPanelY + 45;
+        uiPos.y = bottomPanelY + 39;
         
         Checkbox followReticleEnabledChkBx = new Checkbox(app.getConfig().getFollowReticleEnabled());
         followReticleEnabledChkBx.setTheme(theme);                
@@ -526,8 +526,8 @@ public class OptionsScreen implements Screen {
         btn.getBounds().centerAround(pos);
         btn.setForegroundColor(theme.getForegroundColor());
         btn.setEnableGradiant(false);
-        btn.setTextSize(18);
-        btn.setHoverTextSize(22);        
+        btn.setTextSize(15);
+        btn.setHoverTextSize(20);        
         btn.getTextLabel().setFont(theme.getSecondaryFontName());
         btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
@@ -659,13 +659,13 @@ public class OptionsScreen implements Screen {
         this.panelView.render(canvas, null, 0);
         
         canvas.begin();
-        canvas.setFont(theme.getPrimaryFontName(), 54);
+        canvas.setFont(theme.getPrimaryFontName(), 34);
         canvas.boldFont();
         
         int fontColor = theme.getForegroundColor();
         String message = "Options";
         RenderFont.drawShadedString(canvas, message
-                , canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/9, fontColor);
+                , canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/12, fontColor);
                 
         this.uiManager.render(canvas);
         

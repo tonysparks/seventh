@@ -17,6 +17,7 @@ import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayers;
 import seventh.client.SeventhGame;
 import seventh.client.screens.InGameScreen;
+import seventh.client.screens.ServerFullScreen;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetMap;
 import seventh.map.Map;
@@ -209,6 +210,14 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         }
         
         app.goToMenuScreen();
+    }
+    
+    /* (non-Javadoc)
+     * @see harenet.api.ConnectionListener#onServerFull(harenet.api.Connection)
+     */
+    @Override
+    public void onServerFull(Connection conn) {        
+        app.pushScreen(new ServerFullScreen(app));
     }
     
     /*

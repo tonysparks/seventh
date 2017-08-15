@@ -9,7 +9,7 @@ package harenet.api;
  * @author Tony
  *
  */
-public interface ConnectionListener {
+public interface ConnectionListener {    
     /**
      * A connection has been made
      * @param conn
@@ -21,6 +21,14 @@ public interface ConnectionListener {
      * @param conn
      */
     void onDisconnected(Connection conn);
+    
+    /**
+     * The server is full, and this client is not allowed
+     * to connect
+     * 
+     * @param conn
+     */
+    void onServerFull(Connection conn);
     
     /**
      * A message has been received

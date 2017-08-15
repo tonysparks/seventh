@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type;
+package seventh.game.type.ctf;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
+import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
