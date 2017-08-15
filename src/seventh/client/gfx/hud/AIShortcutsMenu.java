@@ -24,9 +24,10 @@ public class AIShortcutsMenu implements Renderable {
     private String[] texts;
     private int activeMemberIndex;
     
-    
     /**
-     * 
+     * @param game
+     * @param keyMap
+     * @param shortcuts
      */
     public AIShortcutsMenu(ClientGame game, KeyMap keyMap, AIShortcuts shortcuts) {
         this.game = game;
@@ -37,7 +38,7 @@ public class AIShortcutsMenu implements Renderable {
         this.texts[0] = "Dispatch command:";
         int i = 1;
         for(AIShortcut s : this.shortcuts.getCommands()) {
-            this.texts[i++] = "   PRESS '" + keyMap.keyString(s.getShortcutKey()) + "' : " + s.getDescription();
+            this.texts[i++] = "   PRESS '" + keyMap.humanReadableKey(s.getShortcutKey()) + "' : " + s.getDescription();
         }
     }
     

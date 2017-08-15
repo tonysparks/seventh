@@ -13,7 +13,6 @@ import seventh.client.ClientPlayer;
 import seventh.client.ClientPlayers;
 import seventh.client.inputs.Inputs;
 import seventh.client.inputs.KeyMap;
-import seventh.game.net.NetFireTeam;
 import seventh.math.Vector2f;
 import seventh.shared.Console;
 
@@ -24,9 +23,9 @@ import seventh.shared.Console;
 public class AIShortcuts {
 
     private static final int FOLLOW_ME=0,
-                             SUPRESS_FIRE=1,
-                             MOVE_TO=2,
-                             TAKE_COVER=3,
+                             //SUPRESS_FIRE=1,
+                             //MOVE_TO=2,
+                             //TAKE_COVER=3,
                              DEFEND_LEADER=4
                              ;
     
@@ -42,7 +41,7 @@ public class AIShortcuts {
      * 
      */
     public AIShortcuts(KeyMap keyMap) {
-        this.keyMap = keyMap;        
+        this.keyMap = keyMap;   // TODO: Allow shortcuts to be configurable     
         this.commands = new ArrayList<AIShortcut>();
         commands.add(new FollowMeAIShortcut(Keys.NUM_1));
         commands.add(new SurpressFireAIShortcut(Keys.NUM_2));
@@ -139,8 +138,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
-            int botId = //getBotId(game);
-                    aiPlayer!=null ? aiPlayer.getId() : -1;
+            int botId = aiPlayer!=null ? aiPlayer.getId() : getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 ClientPlayer bot = players.getPlayer(botId);                
@@ -168,8 +166,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
-            int botId = //getBotId(game);
-                    aiPlayer!=null ? aiPlayer.getId() : -1;
+            int botId = aiPlayer!=null ? aiPlayer.getId() : getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -194,8 +191,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
-            int botId = //getBotId(game);
-                    aiPlayer!=null ? aiPlayer.getId() : -1;
+            int botId = aiPlayer!=null ? aiPlayer.getId() : getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -242,8 +238,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
-            int botId = //getBotId(game);
-                    aiPlayer!=null ? aiPlayer.getId() : -1;
+            int botId = aiPlayer!=null ? aiPlayer.getId() : getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " plantBomb");
@@ -266,8 +261,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
-            int botId = //getBotId(game);
-                    aiPlayer!=null ? aiPlayer.getId() : -1;
+            int botId = aiPlayer!=null ? aiPlayer.getId() : getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 console.execute("ai " + botId + " defendBomb");
@@ -291,8 +285,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
-            int botId = //getBotId(game);
-                    aiPlayer!=null ? aiPlayer.getId() : -1;
+            int botId = aiPlayer!=null ? aiPlayer.getId() : getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 Vector2f worldPosition = getMouseWorldPosition(game);
@@ -318,8 +311,7 @@ public class AIShortcuts {
          */
         @Override
         public void execute(Console console, ClientGame game, ClientPlayer aiPlayer) {
-            int botId = //getBotId(game);
-                    aiPlayer!=null ? aiPlayer.getId() : -1;
+            int botId = aiPlayer!=null ? aiPlayer.getId() : getBotId(game);
             if(botId > -1) {
                 ClientPlayers players = game.getPlayers();
                 ClientPlayer bot = players.getPlayer(botId);                

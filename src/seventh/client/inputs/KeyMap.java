@@ -539,6 +539,24 @@ public class KeyMap {
         return key;
     }
     
+    public String humanReadableKey(int key) {
+        switch(key) {
+            case Keys.NUM_0:
+            case Keys.NUM_1:
+            case Keys.NUM_2:
+            case Keys.NUM_3:
+            case Keys.NUM_4:
+            case Keys.NUM_5:
+            case Keys.NUM_6:
+            case Keys.NUM_7:
+            case Keys.NUM_8:
+            case Keys.NUM_9:
+                return Integer.toString(key - Keys.NUM_0);
+            default:
+                return keyString(key);
+        }
+    }
+    
     public String keyString(int key) {
         String strKey = keyToString(key);
         return strKey.replace("_", " ");
