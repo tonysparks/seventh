@@ -137,7 +137,7 @@ public class InGameState implements State {
         final long netRate = Math.abs(config.getServerNetUpdateRate());        
         this.netUpdateRate = 1000 / netRate==0 ? 20 : netRate;
         
-        this.nextGameStatUpdate = this.netFullStatDelay;
+        this.nextGameStatUpdate = 2_000; // first big update, wait only 2 seconds
         this.nextGamePartialStatUpdate = this.netPartialStatDelay;
         this.nextGameUpdate = this.netUpdateRate;
                 

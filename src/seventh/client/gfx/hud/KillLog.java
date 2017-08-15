@@ -100,7 +100,7 @@ public class KillLog implements Renderable {
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
 //        canvas.resizeFont(14);
-        canvas.setFont("Consola", 14);
+        canvas.setFont("Consola", 12);
         canvas.boldFont();
         
         int height = canvas.getHeight("W") + 5;
@@ -133,14 +133,14 @@ public class KillLog implements Renderable {
                     switch(m.mod) {
                         case EXPLOSION: {
                             RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
-                            canvas.drawImage(Art.fragGrenadeImage, startX-killedLength-iconLength+10, y-16, null);
+                            canvas.drawImage(Art.smallFragGrenadeIcon, startX-killedLength-iconLength+10, y-16, null);
                             RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
                             break;
                         }
                         case NAPALM_GRENADE:
                         case GRENADE: {
                             RenderFont.drawShadedString(canvas, m.killer.getName(), startX-killedLength-killerLength-iconLength, y, killerColor);
-                            canvas.drawImage(Art.fragGrenadeImage, startX-killedLength-iconLength, y-10, null);
+                            canvas.drawImage(Art.smallFragGrenadeIcon, startX-killedLength-iconLength, y-10, null);
                             RenderFont.drawShadedString(canvas, m.killed.getName(), startX-killedLength, y, killedColor);
                             break;
                         }
