@@ -71,6 +71,8 @@ public abstract interface Map extends Renderable, Debugable {
         
         private SurfaceType[][] surfaces;
         
+        private TilesetAtlas atlas;
+        
         /**
          * @return the surfaces
          */
@@ -184,7 +186,19 @@ public abstract interface Map extends Renderable, Debugable {
             this.backgroundImage = backgroundImage;
         }
         
+        /**
+         * @param atlas the atlas to set
+         */
+        public void setAtlas(TilesetAtlas atlas) {
+            this.atlas = atlas;
+        }
         
+        /**
+         * @return the atlas
+         */
+        public TilesetAtlas getAtlas() {
+            return atlas;
+        }
     }
     
     /**

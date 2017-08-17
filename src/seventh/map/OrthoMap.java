@@ -85,7 +85,8 @@ public class OrthoMap implements Map {
     /**
      * The surfaces
      */
-    private SurfaceType[][] surfaces;
+    private SurfaceType[][] surfaces;    
+    private TilesetAtlas atlas;
     
     private java.util.Map<Integer, TextureRegion> shadeTilesLookup;
     
@@ -515,6 +516,14 @@ public class OrthoMap implements Map {
         
         this.destroyedTiles.clear();
         this.destructableLayer = null;
+        
+        if(this.backgroundImage!=null) {
+            this.backgroundImage.getTexture().dispose();
+        }
+        
+        if(this.atlas != null) {
+            this.atlas.destroy();
+        }
     }
 
     /* (non-Javadoc)
@@ -724,6 +733,7 @@ public class OrthoMap implements Map {
         
         this.worldBounds = new Rectangle(0, 0, this.mapWidth, this.mapHeight);
         
+        this.atlas = info.getAtlas();
 
 //        this.originalLayer = new boolean[this.maxY][this.maxX];
 //        for(int i = 0; i < this.destructableLayer.length; i++) {

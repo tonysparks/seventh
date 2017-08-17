@@ -96,4 +96,13 @@ public class TilesetAtlas {
         
         return -1;
     }
+    
+    /**
+     * Frees the allocated textures
+     */
+    public void destroy() {
+        for(Tileset t : tilesets) {
+            t.destroy();
+        }
+    }
 }

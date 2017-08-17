@@ -50,13 +50,12 @@ public class TiledMapLoader implements MapLoader {
         
         def.setTileWidth(tileWidth);
         def.setTileHeight(tileHeight);
-        
-        TilesetAtlas atlas = null;
+                
         SurfaceType[][] surfaces = new SurfaceType[height][width];
         def.setSurfaces(surfaces);
         
         LeoArray tilesets = map.getByString("tilesets").as();
-        atlas = parseTilesets(tilesets, loadAssets);
+        TilesetAtlas atlas = parseTilesets(tilesets, loadAssets);
         
         
         LeoArray layers = map.getByString("layers").as();
@@ -76,7 +75,9 @@ public class TiledMapLoader implements MapLoader {
         
         def.setBackgroundLayers(backgroundLayers.toArray(new Layer[backgroundLayers.size()]));
         def.setForegroundLayers(foregroundLayers.toArray(new Layer[foregroundLayers.size()]));
-            
+        
+        def.setAtlas(atlas);
+        
         Map theMap = new OrthoMap(loadAssets);
         theMap.init(def);
         
