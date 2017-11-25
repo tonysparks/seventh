@@ -18,7 +18,6 @@ import seventh.shared.WeaponConstants;
 public class MP40 extends Weapon {
 
     private int roundsPerSecond;
-    private final int spread;
     
     /**
      * @param game

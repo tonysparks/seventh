@@ -614,10 +614,10 @@ public abstract class Weapon {
         int newAccuracy = standardAccuracy;
         switch(owner.getCurrentState()) {
             case CROUCHING:
-                newAccuracy = standardAccuracy / 2;
+                newAccuracy = standardAccuracy / 5;
                 break;            
             case IDLE:
-                newAccuracy = standardAccuracy;
+                newAccuracy = standardAccuracy / 2;
                 break;
             case RUNNING:
                 newAccuracy = standardAccuracy + (standardAccuracy/4);
@@ -626,7 +626,7 @@ public abstract class Weapon {
                 newAccuracy = standardAccuracy * 3;
                 break;
             case WALKING:
-                newAccuracy = standardAccuracy + (standardAccuracy/10);
+                newAccuracy = standardAccuracy - (standardAccuracy/4);
                 break;
             default: newAccuracy = standardAccuracy * 10;
         }
@@ -647,7 +647,7 @@ public abstract class Weapon {
     protected Vector2f spread(Vector2f facing, int maxSpread) {            
         maxSpread = calculateAccuracy(facing, maxSpread);
         
-        double rd = random.nextInt(maxSpread) / 100.0;
+        double rd = Math.toRadians(random.nextInt(maxSpread));
         int sd = random.nextInt(2);
         return sd>0 ? facing.rotate(rd) : facing.rotate(-rd);
     }

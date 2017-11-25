@@ -22,8 +22,7 @@ public class MG42 extends Weapon {
 
 
     private int roundsPerSecond;
-    private final int spread;
-        
+            
     private long heatTime;
     private long maxHeat;
     

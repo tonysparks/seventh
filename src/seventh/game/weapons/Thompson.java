@@ -18,8 +18,7 @@ import seventh.shared.WeaponConstants;
 public class Thompson extends Weapon {
 
     private int roundsPerSecond;
-    private final int spread;
-    
+        
     /**
      * @param game
      * @param owner
