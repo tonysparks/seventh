@@ -473,7 +473,9 @@ public abstract class Weapon {
         Bullet bullet = new Bullet(pos, speed, game, owner, vel, damage, isPiercing);
         bullet.setMaxDistance(getBulletRange());                
         
-        game.addEntity(bullet);        
+        game.addEntity(bullet); 
+        game.getStatSystem().onBulletFired(owner);
+        
         return bullet;
     }
     
@@ -516,6 +518,8 @@ public abstract class Weapon {
         Rocket bullet = new Rocket(pos, speed, game, owner, vel, damage, splashDamage);
                 
         game.addEntity(bullet);        
+        game.getStatSystem().onBulletFired(owner);
+        
         return bullet;
     }
     

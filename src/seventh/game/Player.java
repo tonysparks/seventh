@@ -36,6 +36,7 @@ public class Player implements PlayerInfo, Debugable {
     private int deaths;
     private int assists;
     private int ping;
+    private int hitPercentage;
     
     private long joinTime;
     
@@ -99,6 +100,7 @@ public class Player implements PlayerInfo, Debugable {
         this.deaths = 0;
         this.kills = 0;
         this.assists = 0;
+        this.hitPercentage = 0;
         
         this.joinTime = System.currentTimeMillis();
         this.team = Team.SPECTATOR;
@@ -242,6 +244,20 @@ public class Player implements PlayerInfo, Debugable {
     
     public int incrementAssists() {
         return ++this.assists;
+    }
+    
+    /**
+     * @param hitPercentage the hitPercentage to set
+     */
+    public void setHitPercentage(float hitPercentage) {        
+        this.hitPercentage = (int) (hitPercentage*100f);        
+    }
+    
+    /**
+     * @return the hitPercentage
+     */
+    public int getHitPercentage() {
+        return hitPercentage;
     }
     
     /**
@@ -536,6 +552,7 @@ public class Player implements PlayerInfo, Debugable {
         this.stats.kills = (short)this.kills;
         this.stats.assists = (short)this.assists;
         this.stats.deaths = (short)this.deaths;
+        this.stats.hitPercentage = (byte)this.hitPercentage;
         this.stats.ping = (short)this.ping; 
         this.stats.name = this.name;
         this.stats.teamId = (team!=null) ? team.getId() : Team.SPECTATOR_TEAM_ID;
@@ -564,6 +581,7 @@ public class Player implements PlayerInfo, Debugable {
           .add("deaths", getDeaths())
           .add("kills", getKills())
           .add("assists", getAssists())
+          .add("hitPercentage", getHitPercentage())
           .add("ping", getPing())
           .add("time_joined", new Date(getJoinTime()).toString())          
           .add("weapon_class", getWeaponClass().name())

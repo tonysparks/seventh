@@ -54,14 +54,14 @@ public class Scoreboard {
         this.yOffset = Y_START;
     }
     
-    public void scrollUp() {
+    public void scrollDown() {
         this.yOffset += 20;
         if(this.yOffset > Y_START) {
             this.yOffset = Y_START;
         }
     }
     
-    public void scrollDown() {
+    public void scrollUp() {
         this.yOffset -= 20;
     }
     
@@ -135,8 +135,8 @@ public class Scoreboard {
                 canvas.fillRect(x-5, y-15, 630, 20, 0x5fffffff);
             }
             
-            String output = String.format("%-33s %-13d %-13d %-13d %-13d", 
-                    player.getName(),player.getKills(), player.getAssists(), player.getDeaths(), player.getPing());
+            String output = String.format("%-30s %-13d %-13d %-10d %-8d %-13d", 
+                    player.getName(),player.getKills(), player.getAssists(), player.getDeaths(), player.getHitPercentage(), player.getPing());
             
             RenderFont.drawShadedString(canvas, output, x, y, 0xffffffff );
             if(!player.isAlive()) {
@@ -188,7 +188,7 @@ public class Scoreboard {
 //        canvas.drawImage(gameTypeIcon, (canvas.getWidth()/2) - (gameTypeIcon.getRegionWidth()/2), gameTypeIcon.getRegionHeight()/2, teamColor);
 //        
 
-        RenderFont.drawShadedString(canvas, "Name                     Kills     Assists     Deaths      Ping", x, y, defaultColor);
+        RenderFont.drawShadedString(canvas, "Name                  Kills     Assists     Deaths    Hit%   Ping", x, y, defaultColor);
         List<ClientPlayer> vals = game.getPlayers().asList();
         Map<ClientTeam, List<ClientPlayer>> teams = new HashMap<ClientTeam, List<ClientPlayer>>();
         teams.put(ClientTeam.NONE, new ArrayList<ClientPlayer>());

@@ -19,6 +19,7 @@ public class NetPlayerStat implements NetMessage {
     public short kills;
     public short deaths;
     public short assists;
+    public byte hitPercentage;
     public short ping;
     public int joinTime;
     public byte teamId;
@@ -36,6 +37,7 @@ public class NetPlayerStat implements NetMessage {
         kills = Bits.getSignedShort(buffer.getShortBits(10), 10);
         deaths = buffer.getShortBits(10);
         assists = buffer.getShortBits(10);
+        hitPercentage = buffer.getByteBits(7);
         ping = buffer.getShortBits(9);
         joinTime = buffer.getInt();
         teamId = BufferIO.readTeamId(buffer);
@@ -54,6 +56,7 @@ public class NetPlayerStat implements NetMessage {
         buffer.putShortBits(Bits.setSignedShort(kills, 10), 10);
         buffer.putShortBits(deaths, 10);
         buffer.putShortBits(assists, 10);
+        buffer.putByteBits(hitPercentage, 7);
         buffer.putShortBits(ping, 9);
         buffer.putInt(joinTime);
         BufferIO.writeTeamId(buffer, teamId);

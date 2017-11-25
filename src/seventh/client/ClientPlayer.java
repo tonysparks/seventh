@@ -82,6 +82,10 @@ public class ClientPlayer {
         return this.stats.deaths;
     }
     
+    public int getHitPercentage() {
+        return this.stats.hitPercentage;
+    }    
+    
     public int getPing() {
         return this.stats.ping;
     }

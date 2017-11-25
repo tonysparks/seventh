@@ -16,20 +16,23 @@ import seventh.game.weapons.Fire;
  */
 public class PlayerStatSystem {
 
-    private static class PlayerStat {
+    private class PlayerStat {
         Players players;
         
         /**
          * List of players that have damaged
          * this player
          */
-        Player[] playersWhoCausedDamage;
+        private Player[] playersWhoCausedDamage;
         
         /**
          * This player that we are keeping track of
          * who shot them (for tracking assists)
          */
-        int playerId;
+        private int playerId;
+        
+        private int numberOfBulletsFired;
+        private int numberOfHits;
         
         PlayerStat(Players players, int playerId) {
             this.players = players;
@@ -57,6 +60,10 @@ public class PlayerStatSystem {
             
             return player;
         }
+
+        public void onBulletFired() {
+            this.numberOfBulletsFired++;
+        }
         
         public void onDamaged(Entity damager) {
             Entity player = getPlayer(damager);
@@ -64,12 +71,26 @@ public class PlayerStatSystem {
             // mark that the damager dealt damage            
             if(player!=null) {
                 int damagerId = player.getId();
-                if(this.playerId != damagerId) {
-                    this.playersWhoCausedDamage[damagerId] = this.players.getPlayer(damagerId);
+                PlayerStat stat = stats[damagerId];
+                
+                Player damagerPlayer = this.players.getPlayer(damagerId);
+                if(!damagerPlayer.isTeammateWith(this.playerId)) {
+                    // mark this damagers hit                    
+                    stat.numberOfHits++;                               
+                
+                    // mark that the damager dealt damage to this player
+                    if(this.playerId != damagerId) {
+                        this.playersWhoCausedDamage[damagerId] = damagerPlayer;
+                    }
+                }
+                
+
+                if(stat.numberOfBulletsFired > 0) {
+                    damagerPlayer.setHitPercentage( (float)stat.numberOfHits / (float)stat.numberOfBulletsFired);
                 }
             }
         }
-        
+            
         public void onDeath(Entity killer) {
             Entity player = getPlayer(killer);
             
@@ -80,7 +101,7 @@ public class PlayerStatSystem {
             
             for(int i = 0; i < this.playersWhoCausedDamage.length; i++) {
                 Player p = this.playersWhoCausedDamage[i];
-                if(p!=null && !p.isTeammateWith(playerId)) {
+                if(p!=null) {
                     p.incrementAssists();
                 }
                 
@@ -140,6 +161,12 @@ public class PlayerStatSystem {
     public void onPlayerDamaged(Entity damaged, Entity damager, int damage) {
         if(damaged.isPlayer()) {
             this.stats[damaged.getId()].onDamaged(damager);
+        }
+    }
+    
+    public void onBulletFired(Entity owner) {
+        if(owner.isPlayer()) {
+            this.stats[owner.getId()].onBulletFired();
         }
     }
 }
