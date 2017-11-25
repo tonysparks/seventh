@@ -22,6 +22,7 @@ import seventh.client.gfx.Theme;
 import seventh.client.gfx.effects.Effects;
 import seventh.client.gfx.hud.AIShortcuts;
 import seventh.client.gfx.hud.AIShortcutsMenu;
+import seventh.client.gfx.hud.Scoreboard;
 import seventh.client.inputs.ControllerInput.ControllerButtons;
 import seventh.client.inputs.Inputs;
 import seventh.client.inputs.JoystickGameController;
@@ -164,12 +165,24 @@ public class InGameScreen implements Screen {
         }
         
         @Override
-        public boolean scrolled(int notches) {        
-            if(notches < 0) {
-                inputKeys |= Actions.WEAPON_SWITCH_DOWN.getMask();
+        public boolean scrolled(int notches) {   
+            Scoreboard scoreboard = game.getScoreboard();
+            if(scoreboard.isVisible()) {
+                if(notches < 0) {
+                    scoreboard.scrollDown();
+                }
+                else {
+                    scoreboard.scrollUp();
+                }
             }
             else {
-                inputKeys |= Actions.WEAPON_SWITCH_UP.getMask();
+            
+                if(notches < 0) {
+                    inputKeys |= Actions.WEAPON_SWITCH_DOWN.getMask();
+                }
+                else {
+                    inputKeys |= Actions.WEAPON_SWITCH_UP.getMask();
+                }
             }
             return true;
         }

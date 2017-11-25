@@ -98,9 +98,7 @@ import seventh.network.messages.TileRemovedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Arrays;
-import seventh.shared.Command;
 import seventh.shared.Cons;
-import seventh.shared.Console;
 import seventh.shared.DebugDraw;
 import seventh.shared.Scripting;
 import seventh.shared.SeventhConstants;
@@ -254,34 +252,6 @@ public class ClientGame {
         this.runtime = Scripting.newSandboxedRuntime();    
         
         executeCallbackScript("onInit", this);
-        
-        app.getConsole().addCommand(new Command("kk") {
-            
-            @Override
-            public void execute(Console console, String... args) {
-                Vector2f offsetPos = hud.getAwardsLog().nextOffset();        
-                Vector2f startPos = new Vector2f(offsetPos);
-                final float xPos = 20;
-                Vector2f endPos = new Vector2f(xPos, offsetPos.y);
-                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff00ff));
-                
-                offsetPos = hud.getAwardsLog().nextOffset();        
-                startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(xPos, offsetPos.y);
-                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff0000ff));
-                
-                offsetPos = hud.getAwardsLog().nextOffset();        
-                startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(xPos, offsetPos.y);
-                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xffff0000));
-                
-                offsetPos = hud.getAwardsLog().nextOffset();        
-                startPos = new Vector2f(offsetPos);
-                endPos = new Vector2f(xPos, offsetPos.y);
-                hud.getAwardsLog().addEffect(new AwardEffect(Art.killRollIcon, "3x", 3_000, startPos, endPos, 0xff00ff00));
-                
-            }
-        });
     }    
     
     /**

@@ -31,6 +31,10 @@ public class Scoreboard {
     private boolean gameEnded;
     private Map<ClientTeam, Integer> teamScores;
     private ClientTeam winningTeam;
+    
+    private int yOffset;
+    private static final int Y_START = 50; 
+    
     /**
      * 
      */
@@ -38,9 +42,27 @@ public class Scoreboard {
         this.game = game;
         this.showScoreBoard = false;
         this.teamScores = new HashMap<ClientTeam, Integer>();
+        
+        resetScroll();
+        
         setScore(ClientTeam.ALLIES, 0);
         setScore(ClientTeam.AXIS, 0);
         setScore(ClientTeam.NONE, 0);
+    }
+    
+    public void resetScroll() {
+        this.yOffset = Y_START;
+    }
+    
+    public void scrollUp() {
+        this.yOffset += 20;
+        if(this.yOffset > Y_START) {
+            this.yOffset = Y_START;
+        }
+    }
+    
+    public void scrollDown() {
+        this.yOffset -= 20;
     }
     
     /**
@@ -63,6 +85,9 @@ public class Scoreboard {
      */
     public void showScoreBoard(boolean showScoreBoard) {
         this.showScoreBoard = showScoreBoard;
+        if(!this.showScoreBoard) {
+            resetScroll();
+        }
     }
     
     public boolean isVisible() {
@@ -101,6 +126,10 @@ public class Scoreboard {
         setSmallFont(canvas);
         for(ClientPlayer player : team) {
             y += 20;
+            
+            if(y < Y_START + 20) {
+                continue;
+            }
             
             if(player == game.getLocalPlayer()) {
                 canvas.fillRect(x-5, y-15, 530, 20, 0x5fffffff);
@@ -182,6 +211,8 @@ public class Scoreboard {
             }
         }
         
+        y = this.yOffset;
+        
         int numberOfBlue = teams.get(ClientTeam.ALLIES).size();
         int numberOfRed = teams.get(ClientTeam.AXIS).size();
         int numberOfIndividuals = teams.get(ClientTeam.NONE).size();
@@ -196,7 +227,7 @@ public class Scoreboard {
 
         int redScore = this.teamScores.get(ClientTeam.AXIS);
         int blueScore = this.teamScores.get(ClientTeam.ALLIES);
-        
+                
         if(blueScore > redScore) {
         
             if (numberOfBlue>0) {

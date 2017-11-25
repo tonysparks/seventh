@@ -71,7 +71,7 @@ public class SoundEventPool {
             event.setSoundType(sound);
             event.setPos(pos);
             event.setEntityId(entityId);
-        }        
+        }
     }
     
     /**
