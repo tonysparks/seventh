@@ -74,6 +74,10 @@ public class ClientPlayer {
         return this.stats.kills;
     }
     
+    public int getAssists() {
+        return this.stats.assists;
+    }
+    
     public int getDeaths() {
         return this.stats.deaths;
     }

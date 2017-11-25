@@ -199,6 +199,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     
     private AISystem aiSystem;
     private PlayerAwardSystem awardSystem;
+    private PlayerStatSystem statSystem;
     
     /**
      * @param config
@@ -269,24 +270,8 @@ public class Game implements GameInfo, Debugable, Updatable {
             public void onPlayerKilled(PlayerKilledEvent event) {
                 if (gameType.isInProgress()) {
                     Player killed = event.getPlayer();
-                    killed.incrementDeaths();
-
                     aiSystem.playerKilled(killed);
-                    
-                    Player killer = players.getPlayer(event.getKillerId());
-                    if (killer != null) {
-
-                        // lose a point for team kills
-                        if (killed.getTeam().getId() == killer.getTeam().getId()) {
-                            killer.loseKill();
-                        }
-                        // lose a point for suicide
-                        else if (killed.getId() == killer.getId()) {
-                            killer.loseKill();
-                        } else {
-                            killer.incrementKills();
-                        }
-                    }
+                    statSystem.onPlayerKilled(event);
                 }
             }
         });
@@ -297,7 +282,6 @@ public class Game implements GameInfo, Debugable, Updatable {
             @EventMethod
             public void onPlayerSpawned(PlayerSpawnedEvent event) {
 //                aiSystem.playerSpawned(event.getPlayer());
-            
             }
         });
         
@@ -306,7 +290,6 @@ public class Game implements GameInfo, Debugable, Updatable {
             @Override
             @EventMethod
             public void onSoundEmitted(SoundEmittedEvent event) {
-//                soundEvents.add(event);
                 soundEvents.emitSound(event);
             }
         });                
@@ -328,7 +311,9 @@ public class Game implements GameInfo, Debugable, Updatable {
                 }
                 map.restoreDestroyedTiles();
                 loadMapScripts();
-                aiSystem.startOfRound(Game.this);                
+                
+                aiSystem.startOfRound(Game.this);
+                statSystem.onRoundStarted();
             }
         });
         
@@ -346,6 +331,8 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.gameType.registerListeners(this, dispatcher);
         
         this.awardSystem = new PlayerAwardSystem(this);
+        this.statSystem = new PlayerStatSystem(this);
+        
     }
         
     
@@ -480,6 +467,13 @@ public class Game implements GameInfo, Debugable, Updatable {
     @Override
     public AISystem getAISystem() {
         return aiSystem;
+    }
+    
+    /**
+     * @return the statSystem
+     */
+    public PlayerStatSystem getStatSystem() {
+        return statSystem;
     }
     
     /**

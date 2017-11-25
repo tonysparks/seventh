@@ -408,6 +408,11 @@ public class PlayerEntity extends Entity implements Controllable {
         return (byte)stamina;
     }
     
+    @Override
+    public boolean isPlayer() {     
+        return true;
+    }
+    
     /**
      * @return the isFlashlightOn
      */

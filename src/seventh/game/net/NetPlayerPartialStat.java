@@ -17,7 +17,8 @@ import seventh.shared.Bits;
 public class NetPlayerPartialStat implements NetMessage {
     public int playerId;    
     public short kills;
-    public short deaths;            
+    public short deaths;     
+    public short assists;
     
     /* (non-Javadoc)
      * @see seventh.network.messages.NetMessage#read(java.nio.ByteBuffer)
@@ -28,6 +29,7 @@ public class NetPlayerPartialStat implements NetMessage {
         
         kills = Bits.getSignedShort(buffer.getShortBits(10), 10);
         deaths = buffer.getShortBits(10);
+        assists = buffer.getShortBits(10);
     }
     
     /* (non-Javadoc)
@@ -38,6 +40,7 @@ public class NetPlayerPartialStat implements NetMessage {
         BufferIO.writePlayerId(buffer, playerId);
         
         buffer.putShortBits(Bits.setSignedShort(kills, 10), 10);
-        buffer.putShortBits(deaths, 10);        
+        buffer.putShortBits(deaths, 10);  
+        buffer.putShortBits(assists, 10);
     }
 }

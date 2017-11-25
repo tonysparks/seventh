@@ -437,6 +437,13 @@ public abstract class Entity implements Debugable {
     }
     
     /**
+     * @return true if this entity is a Player
+     */
+    public boolean isPlayer() {
+        return false;
+    }
+    
+    /**
      * @return the type
      */
     public Type getType() {
@@ -841,6 +848,8 @@ public abstract class Entity implements Debugable {
             }
             addEvent(Events.DAMAGE);
         }
+        
+        game.getStatSystem().onPlayerDamaged(this, damager, amount);
     }
     
     /**

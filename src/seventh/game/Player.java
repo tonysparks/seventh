@@ -34,6 +34,7 @@ public class Player implements PlayerInfo, Debugable {
     
     private int kills;
     private int deaths;
+    private int assists;
     private int ping;
     
     private long joinTime;
@@ -97,6 +98,8 @@ public class Player implements PlayerInfo, Debugable {
     public void resetStats() {
         this.deaths = 0;
         this.kills = 0;
+        this.assists = 0;
+        
         this.joinTime = System.currentTimeMillis();
         this.team = Team.SPECTATOR;
         // DO NOT RESET teamId, this is used for map_restarts to keep
@@ -236,7 +239,25 @@ public class Player implements PlayerInfo, Debugable {
     public int loseKill() {
         return --this.kills;
     }
-            
+    
+    public int incrementAssists() {
+        return ++this.assists;
+    }
+    
+    /**
+     * @param assists the assists to set
+     */
+    public void setAssists(int assists) {
+        this.assists = assists;
+    }
+    
+    /**
+     * @return the assists
+     */
+    public int getAssists() {
+        return assists;
+    }
+    
     /**
      * @param kills the kills to set
      */
@@ -513,6 +534,7 @@ public class Player implements PlayerInfo, Debugable {
         this.stats.isBot = this.isBot;
         this.stats.joinTime = (int)this.joinTime;
         this.stats.kills = (short)this.kills;
+        this.stats.assists = (short)this.assists;
         this.stats.deaths = (short)this.deaths;
         this.stats.ping = (short)this.ping; 
         this.stats.name = this.name;
@@ -526,6 +548,7 @@ public class Player implements PlayerInfo, Debugable {
     public NetPlayerPartialStat getNetPlayerPartialStat() {
         this.partialStats.kills = (short)this.kills;
         this.partialStats.deaths = (short)this.deaths;        
+        this.partialStats.assists = (short)this.assists;
         return this.partialStats;
     }
     
@@ -540,6 +563,7 @@ public class Player implements PlayerInfo, Debugable {
           .add("name", getName())
           .add("deaths", getDeaths())
           .add("kills", getKills())
+          .add("assists", getAssists())
           .add("ping", getPing())
           .add("time_joined", new Date(getJoinTime()).toString())          
           .add("weapon_class", getWeaponClass().name())
