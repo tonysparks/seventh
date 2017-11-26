@@ -92,6 +92,7 @@ import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
+import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileRemovedMessage;
@@ -1222,6 +1223,16 @@ public class ClientGame {
                 Cons.println("*** ERROR -> Loading " + propertiesFile.getName() + ":" + e);
             }
         }
+        
+        File gameTypeFile = new File(mapFile + ".client." + getGameType().name().toLowerCase() + ".leola");
+        if(gameTypeFile.exists()) {
+            try {                
+                runtime.eval(gameTypeFile);
+            }
+            catch(Exception e) {
+                Cons.println("*** ERROR -> Loading " + gameTypeFile.getName() + ":" + e);
+            }
+        }
     }
     
     /**
@@ -1958,6 +1969,22 @@ public class ClientGame {
             
         
         }        
+    }
+    
+    public void survivorEventMessage(SurvivorEventMessage msg) {
+        switch(msg.eventType) {
+            case CustomSound:
+                Sound snd = loadSound(msg.path);
+                playGlobalSound(snd);
+                break;
+            case CustomTrigger:
+                break;
+            case EnemySpawned:
+                break;
+            default:
+                break;
+            
+        }
     }
 }
  

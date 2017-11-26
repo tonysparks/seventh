@@ -10,6 +10,7 @@ import java.util.List;
 import leola.frontend.listener.EventDispatcher;
 import leola.vm.Leola;
 import leola.vm.types.LeoNativeFunction;
+import leola.vm.types.LeoObject;
 import leola.vm.util.ClassUtil;
 import seventh.ai.basic.AILeolaLibrary;
 import seventh.ai.basic.Brain;
@@ -23,6 +24,8 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
+import seventh.game.events.SurvivorEvent;
+import seventh.game.events.SurvivorEvent.EventType;
 import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -35,7 +38,7 @@ import seventh.shared.Timer;
  *
  */
 public class SurvivalGameType extends AbstractTeamGameType {
-
+    
     private GameState currentGameState;
     private List<Player> availablePlayers;
     private boolean joinAllies;
@@ -71,11 +74,19 @@ public class SurvivalGameType extends AbstractTeamGameType {
         addMethod("failedMission");
         addMethod("aiCommand", int.class, Action.class);
         addMethod("spawnEnemy", Rectangle.class);
+        addMethod("playSound", String.class);
+        addMethod("doIn", long.class, LeoObject.class);
     }
     
     private void addMethod(String methodName, Class<?> ... params) {
         LeoNativeFunction func = new LeoNativeFunction(ClassUtil.getMethodByName(SurvivalGameType.class, methodName, params), this);
         runtime.put(func.getMethodName().toString(), func);
+    }
+    
+    public void doIn(long time, LeoObject action) {
+        if(game!=null) {
+            game.addGameTimer(false, time, action);
+        }
     }
     
     public void completeMission() {
@@ -93,6 +104,12 @@ public class SurvivalGameType extends AbstractTeamGameType {
         Brain brain = aiSystem.getBrain(playerId);
         if(brain!=null) {
             brain.doAction(action);
+        }
+    }
+    
+    public void playSound(String path) {
+        if(game!=null) {
+            game.getDispatcher().queueEvent(new SurvivorEvent(this, EventType.CustomSound, new Vector2f(), path, 0, 0));
         }
     }
     
@@ -136,6 +153,9 @@ public class SurvivalGameType extends AbstractTeamGameType {
             else if(teamId == Team.AXIS_TEAM_ID) {
                 joinTeam(getAxisTeam(), player);
             }
+            else {
+                joinTeam(getAlliedTeam(), player);
+            }
         }
         else {
             if(!joinAllies && player.isBot()) {
@@ -155,13 +175,14 @@ public class SurvivalGameType extends AbstractTeamGameType {
         AILeolaLibrary aiLib = new AILeolaLibrary(game.getAISystem());
         this.runtime.loadLibrary(aiLib, "ai");
         
-//        game.getPlayers().forEachPlayer(new PlayerIterator() {
-//            
-//            @Override
-//            public void onPlayer(Player player) {
-//                game.playerSwitchedTeam(player.getId(), Team.ALLIED_TEAM_ID);
-//            }
-//        });
+
+        this.startTimer.start();
+    }
+    
+    private void initializeGame(Game game) {
+        this.gameTypeInitialized = true;
+        
+        game.killAll();
         
         final int maxAlliedTeamSize = 0;
         // spawn allied bots first
@@ -183,16 +204,8 @@ public class SurvivalGameType extends AbstractTeamGameType {
             if(id > -1) {
                 game.playerSwitchedTeam(id, Team.AXIS_TEAM_ID);
             }
-        }
-        
-        for(Player player : getAxisTeam().getPlayers()) {
-            player.commitSuicide();
-        }
-        
-        this.gameTypeInitialized = true;
-        this.startTimer.start();
+        }                
     }
-    
     
     @Override
     protected void spawnPlayer(Player player, Game game) {
@@ -225,8 +238,10 @@ public class SurvivalGameType extends AbstractTeamGameType {
         this.startTimer.update(timeStep);
         if(this.startTimer.isOnFirstTime()) {
             this.availablePlayers.clear();
-            for(Player player : getAxisTeam().getPlayers()) {
-                player.commitSuicide();
+            
+            initializeGame(game);
+            
+            for(Player player : getAxisTeam().getPlayers()) {                
                 this.availablePlayers.add(player);
             }
             

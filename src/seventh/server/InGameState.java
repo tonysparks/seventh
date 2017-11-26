@@ -43,6 +43,8 @@ import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
+import seventh.game.events.SurvivorEvent;
+import seventh.game.events.SurvivorEventListener;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.events.TileRemovedListener;
 import seventh.game.net.NetGameUpdate;
@@ -62,6 +64,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
+import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TileRemovedMessage;
 import seventh.server.RemoteClients.RemoteClientIterator;
 import seventh.shared.Command;
@@ -338,6 +341,21 @@ public class InGameState implements State {
                 msg.playerId = event.getPlayer().getId();
                 msg.award = event.getAward();                
                 protocol.sendPlayerAwardMessage(msg);
+            }
+        });
+        
+        this.dispatcher.addEventListener(SurvivorEvent.class, new SurvivorEventListener() {
+            
+            @Override
+            public void onSurvivorEvent(SurvivorEvent event) {
+                SurvivorEventMessage msg = new SurvivorEventMessage();
+                msg.eventType = event.getEventType();
+                msg.path = event.getPath();
+                msg.pos = event.getPos();
+                msg.playerId1 = event.getPlayerId1();
+                msg.playerId2 = event.getPlayerId2();
+                
+                protocol.sendSurvivoEventrMessage(msg);                
             }
         });
     }

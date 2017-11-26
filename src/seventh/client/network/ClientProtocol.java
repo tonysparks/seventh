@@ -35,6 +35,7 @@ import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
+import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileRemovedMessage;
@@ -287,6 +288,15 @@ public interface ClientProtocol {
      * @param msg
      */
     public void receivePlayerAwardMessage(Connection conn, PlayerAwardMessage msg);
+
+    
+    /**
+     * A Survivor game type event message
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receiveSurvivorEventMessage(Connection conn, SurvivorEventMessage msg);
     
     /**
      * Sends a {@link ClientReadyMessage}

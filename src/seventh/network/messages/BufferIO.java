@@ -81,6 +81,7 @@ public class BufferIO {
     public static final byte PLAYER_COMMANDER = 35;
     
     public static final byte PLAYER_AWARD  = 36;
+    public static final byte SURVIVOR_EVENT  = 37;
     
     /**
      * The Seventh {@link NetMessageFactory} implementation
@@ -171,6 +172,8 @@ public class BufferIO {
                     break;
                 case PLAYER_AWARD: message = new PlayerAwardMessage();
                     break;
+                case SURVIVOR_EVENT: message = new SurvivorEventMessage();
+                    break;
                 default: throw new IllegalArgumentException("Unknown type: " + type);
             }
             
@@ -180,6 +183,19 @@ public class BufferIO {
         }
     }
 
+    
+    public static void writePos(IOBuffer buffer, float worldPos) {
+        writePos(buffer, (int) worldPos);
+    }
+    
+    public static void writePos(IOBuffer buffer, int worldPos) {
+        buffer.putIntBits(worldPos, 13);
+    }
+    
+    public static int readPos(IOBuffer buffer) {
+        return buffer.getIntBits(13);
+    }
+    
     public static void writeWeaponState(IOBuffer buffer, WeaponState state) {
         buffer.putByteBits(state.netValue(), WeaponState.numOfBits());
     }

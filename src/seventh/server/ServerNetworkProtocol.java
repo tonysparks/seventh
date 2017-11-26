@@ -50,6 +50,7 @@ import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
+import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileRemovedMessage;
@@ -709,5 +710,13 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
     @Override
     public void sendPlayerAwardMessage(PlayerAwardMessage msg) {        
         queueSendToAll(Endpoint.FLAG_RELIABLE, msg);        
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.server.ServerProtocol#sendSurvivoEventrMessage(seventh.network.messages.SurvivorEventMessage)
+     */
+    @Override
+    public void sendSurvivoEventrMessage(SurvivorEventMessage msg) {
+        queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
     }
 }
