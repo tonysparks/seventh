@@ -14,7 +14,6 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.type.AbstractTeamGameType;
-import seventh.game.type.GameType.GameState;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
 

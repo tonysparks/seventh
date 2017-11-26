@@ -11,6 +11,7 @@ import seventh.game.type.GameType;
 import seventh.game.type.cmd.CommanderScript;
 import seventh.game.type.ctf.CaptureTheFlagScript;
 import seventh.game.type.obj.ObjectiveScript;
+import seventh.game.type.svr.SurvivorScript;
 import seventh.game.type.tdm.TeamDeathMatchScript;
 import seventh.map.Map;
 import seventh.map.MapLoaderUtil;
@@ -99,6 +100,10 @@ public class LoadingState implements State {
     private GameType loadCMDGameType(MapEntry mapFile) throws Exception {
         return loadGameType(mapFile, new CommanderScript(runtime));
     }
+    
+    private GameType loadSVRGameType(MapEntry mapFile) throws Exception {
+        return loadGameType(mapFile, new SurvivorScript(runtime));
+    }
 
     
     /**
@@ -147,6 +152,10 @@ public class LoadingState implements State {
                 case CMD: {
                     gameType = loadCMDGameType(mapFile);
                     break;                
+                }
+                case SVR: {
+                    gameType = loadSVRGameType(mapFile);
+                    break;
                 }
                 default: {
                     throw new IllegalArgumentException

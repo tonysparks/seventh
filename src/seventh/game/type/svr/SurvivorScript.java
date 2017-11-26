@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type.cmd;
+package seventh.game.type.svr;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,17 +15,17 @@ import seventh.math.Vector2f;
 import seventh.shared.Cons;
 
 /**
- * Loads an Commander rules script
+ * Loads Survivor rules script
  * 
  * @author Tony
  *
  */
-public class CommanderScript extends AbstractGameTypeScript {
+public class SurvivorScript extends AbstractGameTypeScript {
 
     /**
      * 
      */
-    public CommanderScript(Leola runtime) {
+    public SurvivorScript(Leola runtime) {
         super(runtime);
     }
 
@@ -42,9 +42,9 @@ public class CommanderScript extends AbstractGameTypeScript {
         List<Vector2f> axisSpawnPoints = new ArrayList<Vector2f>();
         
         
-        File scriptFile = new File(mapFile + ".cmd.leola");
+        File scriptFile = new File(mapFile + ".svr.leola");
         if(!scriptFile.exists()) {
-            Cons.println("*** ERROR -> No associated script file for Commander game type.  Looking for: " + scriptFile.getName());
+            Cons.println("*** ERROR -> No associated script file for Survivor game type.  Looking for: " + scriptFile.getName());
         }
         else {
             LeoObject config = getRuntime().eval(scriptFile);
@@ -55,7 +55,7 @@ public class CommanderScript extends AbstractGameTypeScript {
             }
         }
         
-        GameType gameType = new CommanderGameType(getRuntime(), alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
+        GameType gameType = new SurvivalGameType(getRuntime(), alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
         return gameType;
     }
 }

@@ -26,7 +26,8 @@ public interface GameType extends Debugable {
         TDM("Team Death Match"),
         OBJ("Objective Based Match"),
         CTF("Capture The Flag"),
-        CMD("Commander")
+        CMD("Commander"),
+        SVR("Survivor")
         ;
         
         private String displayName;
@@ -53,7 +54,7 @@ public interface GameType extends Debugable {
         }
         
         public static int numOfBits() {
-            return 3;
+            return 4;
         }
         
         private static final Type[] values = values();
@@ -77,6 +78,9 @@ public interface GameType extends Debugable {
                 }
                 else if ("cmd".equalsIgnoreCase(gameType.trim())) {
                     result = CMD;
+                }
+                else if("svr".equalsIgnoreCase(gameType.trim())) {
+                    result = SVR;
                 }
             }
             

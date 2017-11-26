@@ -65,7 +65,10 @@ public class FeelSensor implements Sensor, OnDamageListener {
     @Override
     public void reset(Brain brain) {
         this.memory.clear();
-        brain.getEntityOwner().onDamage = this;                
+        PlayerEntity ent = brain.getEntityOwner();
+        if(ent!=null) {
+            ent.onDamage = this;
+        }
     }
     
     

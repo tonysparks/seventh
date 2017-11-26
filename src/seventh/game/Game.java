@@ -594,7 +594,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                 }
                 
                 long delta = maxEndTime - minStartTime;
-                int millis = (int)delta / 100;
+                int millis = Math.max(1, (int)delta / 100);
                 timer.setEndTime(minStartTime + random.nextInt(millis) * 100);
             }
         });
@@ -887,6 +887,10 @@ public class Game implements GameInfo, Debugable, Updatable {
         return findFreeRandomSpot(entity, bounds.x, bounds.y, bounds.width, bounds.height);
     }
     
+    public Vector2f findFreeRandomSpot(Rectangle entity, Rectangle bounds) {
+        return findFreeRandomSpot(entity, bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+    
     /**
      * 
      * @param entity
@@ -897,8 +901,12 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @return a random position anywhere in the supplied bounds
      */
     public Vector2f findFreeRandomSpot(Entity entity, int x, int y, int width, int height) {
+        return findFreeRandomSpot(entity.getBounds(), x, y, width, height);                
+    }
+    
+    public Vector2f findFreeRandomSpot(Rectangle bounds, int x, int y, int width, int height) {
         Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
-        Rectangle temp = new Rectangle(entity.getBounds());
+        Rectangle temp = new Rectangle(bounds);
         temp.setLocation(pos);
         
         int loopChecker = 0;

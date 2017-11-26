@@ -64,7 +64,7 @@ public abstract class AbstractTeamGameType implements GameType {
     private boolean gameEnded;
     
     private EventDispatcher dispatcher;
-    private Leola runtime;
+    protected Leola runtime;
     
     // avoid GC, so we create data members :\
     private List<Vector2f> alliedSpawnPoints, axisSpawnPoints;
@@ -592,6 +592,9 @@ public abstract class AbstractTeamGameType implements GameType {
     }
     
     protected boolean joinTeam(Team team, Player player) {
+        Team otherTeam = team.getId() == Team.ALLIED_TEAM_ID ? getAxisTeam() : getAlliedTeam();
+        leaveTeam(otherTeam, player);
+        
         team.addPlayer(player);
         return true;
     }

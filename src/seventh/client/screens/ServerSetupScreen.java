@@ -378,6 +378,12 @@ public class ServerSetupScreen extends AbstractServerSetupScreen {
                         gameSettings.matchTime = 20;
                         gameSettings.maxScore = 50;
                         break;
+                    case SVR: {
+                        gameSettings.gameType = GameType.Type.SVR;
+                        gameSettings.matchTime = 20;
+                        gameSettings.maxScore = 50;
+                        break;
+                    }
                 }
                 
                 maxScoreLbl.setText(Integer.toString(gameSettings.maxScore));

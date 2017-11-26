@@ -344,7 +344,7 @@ public class DefaultAISystem implements AISystem {
      * @see seventh.ai.AISystem#playerSpawned(seventh.game.Player)
      */
     @Override
-    public void playerSpawned(PlayerInfo player) {
+    public void playerSpawned(PlayerInfo player) {        
         TeamStrategy teamStrategy = getStrategyFor(player);
         
         Brain brain = getBrain(player);
@@ -519,7 +519,7 @@ public class DefaultAISystem implements AISystem {
      * @return the {@link Brain} from the supplied player
      */
     public Brain getBrain(PlayerInfo player) {
-        if(player != null) {
+        if(player != null && player.isBot()) {
             return getBrain(player.getId());
         }
         return null;
