@@ -255,7 +255,7 @@ public class OptionsScreen implements Screen {
         mouseSensitivityLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         mouseSensitivityLbl.setFont(theme.getSecondaryFontName());
         mouseSensitivityLbl.setTextSize(15);
-        mouseSensitivityLbl.setForegroundColor(0xffffffff);
+        mouseSensitivityLbl.setForegroundColor(theme.getForegroundColor());
         
         optionsPanel.addWidget(mouseSensitivityLbl);
         panelView.addElement(new LabelView(mouseSensitivityLbl));
@@ -304,6 +304,7 @@ public class OptionsScreen implements Screen {
         keyOverwriteLbl.setHorizontalTextAlignment(TextAlignment.CENTER);
         keyOverwriteLbl.setFont(theme.getPrimaryFontName());
         keyOverwriteLbl.setTextSize(18);
+        keyOverwriteLbl.setForegroundColor(0xffffffff);
         
         
         this.panelView.addElement(new LabelView(keyOverwriteLbl));
@@ -438,6 +439,7 @@ public class OptionsScreen implements Screen {
         weaponRecoilEnabledChkBx.setTheme(theme);                
         weaponRecoilEnabledChkBx.setLabelText("Weapon Recoil");
         weaponRecoilEnabledChkBx.getBounds().setLocation(uiPos);
+        weaponRecoilEnabledChkBx.getLabel().setForegroundColor(theme.getForegroundColor());
         weaponRecoilEnabledChkBx.addCheckboxClickedListener(new OnCheckboxClickedListener() {
             
             @Override
@@ -463,6 +465,7 @@ public class OptionsScreen implements Screen {
         bloodEnabledChkBx.setTheme(theme);                
         bloodEnabledChkBx.setLabelText("Blood");
         bloodEnabledChkBx.getBounds().setLocation(uiPos);
+        bloodEnabledChkBx.getLabel().setForegroundColor(theme.getForegroundColor());
         bloodEnabledChkBx.addCheckboxClickedListener(new OnCheckboxClickedListener() {
             
             @Override
@@ -487,6 +490,7 @@ public class OptionsScreen implements Screen {
         followReticleEnabledChkBx.setTheme(theme);                
         followReticleEnabledChkBx.setLabelText("Camera Follow Reticle");
         followReticleEnabledChkBx.getBounds().setLocation(uiPos);
+        followReticleEnabledChkBx.getLabel().setForegroundColor(theme.getForegroundColor());
         followReticleEnabledChkBx.addCheckboxClickedListener(new OnCheckboxClickedListener() {
             
             @Override
