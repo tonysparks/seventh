@@ -246,24 +246,28 @@ public class OptionsScreen implements Screen {
         
         
         //uiPos.y += yInc;
+        final Slider mouseSensitivitySlider = new Slider();
         
-        Label mouseSensitivityLbl = new Label("Mouse Sensitivity: ");        
-//        mouseSensitivityLbl.setTheme(theme);
-        mouseSensitivityLbl.setBounds(new Rectangle(80, 20));
-        mouseSensitivityLbl.getBounds().x = 400;
-        mouseSensitivityLbl.getBounds().y = (int)uiPos.y - 10;
-        mouseSensitivityLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
-        mouseSensitivityLbl.setFont(theme.getSecondaryFontName());
-        mouseSensitivityLbl.setTextSize(15);
-        mouseSensitivityLbl.setForegroundColor(theme.getForegroundColor());
-        
-        optionsPanel.addWidget(mouseSensitivityLbl);
-        panelView.addElement(new LabelView(mouseSensitivityLbl));
+        final Button mouseSensitivityBtn = setupButton(uiPos, "Mouse Sensitivity", false);
+        mouseSensitivityBtn.getBounds().width = 80;
+        mouseSensitivityBtn.setHoverTextSize(16);
+        mouseSensitivityBtn.getTextLabel().setForegroundColor(theme.getForegroundColor());
+        mouseSensitivityBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+            
+            @Override
+            public void onButtonClicked(ButtonEvent event) {
+                int value = mouseSensitivitySlider.getIndex();
+                value += 10;
+                if(value > 100) {
+                    value = 0;
+                }
+                mouseSensitivitySlider.moveHandle(value);
+            }
+        });
         
         uiPos.x = 560;
         uiPos.y -= 8;
         
-        Slider mouseSensitivitySlider = new Slider();
         mouseSensitivitySlider.setTheme(theme);
         mouseSensitivitySlider.getBounds().setSize(100, 5);
         mouseSensitivitySlider.getBounds().setLocation(uiPos);
@@ -408,6 +412,7 @@ public class OptionsScreen implements Screen {
         final Button sndBtn = setupButton(uiPos, "Volume: ", false); uiPos.y += yInc;
         sndBtn.getBounds().width = 80;
         sndBtn.getTextLabel().setForegroundColor(0xffffffff);
+        sndBtn.setHoverTextSize(16);
         sndBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
