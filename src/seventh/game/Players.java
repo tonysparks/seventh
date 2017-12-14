@@ -35,7 +35,7 @@ public class Players implements PlayerInfos {
      * @param id
      * @return true if the supplied ID is valid
      */
-    private boolean isValidId(int id) {
+    public boolean isValidId(int id) {
         return (id >= 0  & id < this.players.length);
     }
 

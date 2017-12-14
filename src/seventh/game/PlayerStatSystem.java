@@ -71,22 +71,24 @@ public class PlayerStatSystem {
             // mark that the damager dealt damage            
             if(player!=null) {
                 int damagerId = player.getId();
-                PlayerStat stat = stats[damagerId];
-                
-                Player damagerPlayer = this.players.getPlayer(damagerId);
-                if(!damagerPlayer.isTeammateWith(this.playerId)) {
-                    // mark this damagers hit                    
-                    stat.numberOfHits++;                               
-                
-                    // mark that the damager dealt damage to this player
-                    if(this.playerId != damagerId) {
-                        this.playersWhoCausedDamage[damagerId] = damagerPlayer;
+                if(this.players.isValidId(damagerId)) {
+                    PlayerStat stat = stats[damagerId];
+                    
+                    Player damagerPlayer = this.players.getPlayer(damagerId);
+                    if(!damagerPlayer.isTeammateWith(this.playerId)) {
+                        // mark this damagers hit                    
+                        stat.numberOfHits++;                               
+                    
+                        // mark that the damager dealt damage to this player
+                        if(this.playerId != damagerId) {
+                            this.playersWhoCausedDamage[damagerId] = damagerPlayer;
+                        }
                     }
-                }
-                
-
-                if(stat.numberOfBulletsFired > 0) {
-                    damagerPlayer.setHitPercentage( (float)stat.numberOfHits / (float)stat.numberOfBulletsFired);
+                    
+    
+                    if(stat.numberOfBulletsFired > 0) {
+                        damagerPlayer.setHitPercentage( (float)stat.numberOfHits / (float)stat.numberOfBulletsFired);
+                    }
                 }
             }
         }
@@ -95,7 +97,7 @@ public class PlayerStatSystem {
             Entity player = getPlayer(killer);
             
             // don't give an assist to the killer
-            if(player!=null) {
+            if(player!=null && this.players.isValidId(player.getId())) {
                 this.playersWhoCausedDamage[player.getId()] = null;
             }
             

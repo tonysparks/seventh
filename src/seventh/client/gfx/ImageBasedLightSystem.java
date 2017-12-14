@@ -6,7 +6,11 @@ package seventh.client.gfx;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.client.SeventhGame;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+
 import seventh.client.ClientGame.ClientEntityListener;
 import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.effects.LightEffectShader;
@@ -14,11 +18,6 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.math.Vector3f;
 import seventh.shared.TimeStep;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  * @author Tony

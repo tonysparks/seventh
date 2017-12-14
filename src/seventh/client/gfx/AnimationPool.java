@@ -3,8 +3,6 @@
  */
 package seventh.client.gfx;
 
-import seventh.shared.Cons;
-
 /**
  * A pool of animations.  This reduces the GC load
  * 

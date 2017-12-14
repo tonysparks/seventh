@@ -166,7 +166,7 @@ public class ClientGame {
     
     private final Vector2f screenToWorld;
     private       ClientPlayerEntity selectedEntity;
-    
+
     private Leola runtime;
     /**
      * Listens for {@link ClientEntity} life cycle
@@ -249,7 +249,7 @@ public class ClientGame {
         
         this.pools = new Pools(this);
         this.zings = new Zings(this);
-        
+     
         this.runtime = Scripting.newSandboxedRuntime();    
         
         executeCallbackScript("onInit", this);
@@ -589,7 +589,7 @@ public class ClientGame {
     public ClientEntities getEntities() {
         return entities;
     }
-    
+        
     /**
      * Adds a Timer to the client game world.
      * 

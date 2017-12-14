@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import leola.frontend.listener.EventDispatcher;
+import leola.frontend.listener.EventListener;
 import leola.frontend.listener.EventMethod;
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
@@ -37,6 +38,7 @@ import seventh.game.entities.vehicles.PanzerTank;
 import seventh.game.entities.vehicles.ShermanTank;
 import seventh.game.entities.vehicles.Tank;
 import seventh.game.entities.vehicles.Vehicle;
+import seventh.game.events.EventRegistration;
 import seventh.game.events.PlayerJoinedEvent;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
@@ -201,6 +203,8 @@ public class Game implements GameInfo, Debugable, Updatable {
     private PlayerAwardSystem awardSystem;
     private PlayerStatSystem statSystem;
     
+    private EventRegistration eventRegistration;
+    
     /**
      * @param config
      * @param players
@@ -262,7 +266,9 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.TILE_HEIGHT = map.getTileHeight();
         
         this.DISTANCE_CHECK = TILE_HEIGHT * TILE_WIDTH * 2;
-                
+        
+        this.eventRegistration = new EventRegistration(this.dispatcher);
+        
         this.dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
 
             @Override
@@ -513,6 +519,16 @@ public class Game implements GameInfo, Debugable, Updatable {
     @Override
     public Timers getGameTimers() {
         return gameTimers;
+    }
+        
+    /**
+     * Binds an {@link EventListener}
+     * 
+     * @param eventName - the name of the event to listen to
+     * @param function - the callback
+     */
+    public void addEventListener(String eventName, final LeoObject function) {
+        this.eventRegistration.addEventListener(eventName, function);
     }
     
     /**
