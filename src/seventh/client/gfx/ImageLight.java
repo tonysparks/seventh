@@ -19,7 +19,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class ImageLight implements Updatable, Light {
 
-    private Vector2f pos;
+    private Vector2f pos, absolutePos;
     private float orientation;
     
     private float luminacity;    
@@ -45,6 +45,7 @@ public class ImageLight implements Updatable, Light {
     public ImageLight(LightSystem lightSystem, Vector2f pos) {
         this.lightSystem = lightSystem;
         this.pos = pos;
+        this.absolutePos = new Vector2f(pos);
         this.orientation = 0;
         
         this.color = new Vector3f(0.3f, 0.3f, 0.7f);        
@@ -96,7 +97,12 @@ public class ImageLight implements Updatable, Light {
      */
     @Override
     public void setLightSize(int lightSize) {
+        int previousLightSize = this.lightSize;        
         this.lightSize = lightSize;
+        
+        if(previousLightSize != lightSize) {
+            setPos(this.absolutePos);
+        }
     }
     
     /* (non-Javadoc)
@@ -197,9 +203,7 @@ public class ImageLight implements Updatable, Light {
      */
     @Override
     public void setPos(Vector2f pos) {        
-        this.pos.set(pos);
-        this.pos.x -= lightSize/2;
-        this.pos.y -= lightSize/2;
+        setPos(pos.x, pos.y);
     }
     
     /* (non-Javadoc)
@@ -208,6 +212,8 @@ public class ImageLight implements Updatable, Light {
     @Override
     public void setPos(float x, float y) {
         this.pos.set(x,y);
+        this.absolutePos.set(pos);
+        
         this.pos.x -= lightSize/2;
         this.pos.y -= lightSize/2;
     }
@@ -220,6 +226,7 @@ public class ImageLight implements Updatable, Light {
      */
     public void setAbsolutePos(Vector2f pos) {
         this.pos.set(pos);
+        this.absolutePos.set(pos);
     }
     
     /* (non-Javadoc)
