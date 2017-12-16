@@ -7,6 +7,7 @@ package seventh.network.messages;
 import harenet.IOBuffer;
 import seventh.game.events.SurvivorEvent.EventType;
 import seventh.math.Vector2f;
+import seventh.math.Vector4f;
 
 /**
  * @author Tony
@@ -18,6 +19,8 @@ public class SurvivorEventMessage extends AbstractNetMessage {
     public String path;
     public int playerId1;
     public int playerId2;
+    
+    public Vector4f light;
     
     public SurvivorEventMessage() {
         super(BufferIO.SURVIVOR_EVENT);
@@ -39,6 +42,21 @@ public class SurvivorEventMessage extends AbstractNetMessage {
                 this.pos.x = BufferIO.readPos(buffer);
                 this.pos.y = BufferIO.readPos(buffer);
                 break;
+            case Message:
+                this.path = BufferIO.readString(buffer);
+                break;
+            case LightAdjust:
+                this.light = new Vector4f();
+                int r = buffer.getUnsignedByte();
+                int g = buffer.getUnsignedByte();
+                int b = buffer.getUnsignedByte();
+                int intensity = buffer.getUnsignedByte();
+                
+                this.light.x = (float)r / 255f;
+                this.light.y = (float)g / 255f;
+                this.light.z = (float)b / 255f;
+                this.light.w = (float)intensity / 255f;
+                break;
             default:
                 break;
         }
@@ -59,6 +77,15 @@ public class SurvivorEventMessage extends AbstractNetMessage {
                 BufferIO.writePlayerId(buffer, this.playerId1);
                 BufferIO.writePos(buffer, this.pos.x);
                 BufferIO.writePos(buffer, this.pos.y);                
+                break;
+            case Message:
+                BufferIO.writeString(buffer, this.path);
+                break;
+            case LightAdjust:
+                buffer.putUnsignedByte( (int)(255f * this.light.x) );
+                buffer.putUnsignedByte( (int)(255f * this.light.y) );
+                buffer.putUnsignedByte( (int)(255f * this.light.z) );
+                buffer.putUnsignedByte( (int)(255f * this.light.w) );
                 break;
             default:
                 break;

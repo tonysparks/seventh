@@ -5,6 +5,7 @@ package seventh.game.events;
 
 import leola.frontend.listener.Event;
 import seventh.math.Vector2f;
+import seventh.math.Vector4f;
 
 /**
  * @author Tony
@@ -13,15 +14,17 @@ import seventh.math.Vector2f;
 public class SurvivorEvent extends Event {
 
     public static enum EventType {
-        CustomSound,
+        CustomSound,        
         EnemySpawned,
         CustomTrigger,
+        Message,
+        LightAdjust,
         ;
         
         private static final EventType[] values = values();
         
         public static int numberOfBits() {
-            return 4;
+            return 5;
         }
         
         public static EventType fromNet(int bits) {
@@ -38,17 +41,22 @@ public class SurvivorEvent extends Event {
     private int playerId2;
     private EventType eventType;
     
+    private Vector4f light;
+    
     /**
      * @param source
      */
-    public SurvivorEvent(Object source, EventType eventType, Vector2f pos, String path, int playerId1, int playerId2) {
+    public SurvivorEvent(Object source, EventType eventType, Vector2f pos, String path, int playerId1, int playerId2, Vector4f light) {
         super(source);
         this.eventType = eventType;
         this.pos = pos;
         this.path = path;
         this.playerId1 = playerId1;
         this.playerId2 = playerId2;
+        this.light = light;
     }
+    
+    
 
     /**
      * @return the pos
@@ -83,6 +91,13 @@ public class SurvivorEvent extends Event {
      */
     public EventType getEventType() {
         return eventType;
+    }
+    
+    /**
+     * @return the light
+     */
+    public Vector4f getLight() {
+        return light;
     }
     
 }

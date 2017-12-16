@@ -109,7 +109,7 @@ public class SurvivalGameType extends AbstractTeamGameType {
     
     public void playSound(String path) {
         if(game!=null) {
-            game.getDispatcher().queueEvent(new SurvivorEvent(this, EventType.CustomSound, new Vector2f(), path, 0, 0));
+            game.getDispatcher().queueEvent(new SurvivorEvent(this, EventType.CustomSound, null, path, 0, 0, null));
         }
     }
     

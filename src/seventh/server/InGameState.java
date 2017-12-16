@@ -354,6 +354,7 @@ public class InGameState implements State {
                 msg.pos = event.getPos();
                 msg.playerId1 = event.getPlayerId1();
                 msg.playerId2 = event.getPlayerId2();
+                msg.light = event.getLight();
                 
                 protocol.sendSurvivoEventrMessage(msg);                
             }

@@ -31,13 +31,6 @@ public class ClientHealthPack extends ClientEntity {
         return true;
     }
     
-    /* (non-Javadoc)
-     * @see seventh.client.ClientEntity#killIfOutdated(long)
-     */
-    @Override
-    public boolean killIfOutdated(long gameClock) {
-        return false;
-    }
 
     /* (non-Javadoc)
      * @see seventh.client.gfx.Renderable#render(seventh.client.gfx.Canvas, seventh.client.gfx.Camera, long)

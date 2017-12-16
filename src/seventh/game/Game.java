@@ -51,6 +51,8 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
+import seventh.game.events.SurvivorEvent;
+import seventh.game.events.SurvivorEvent.EventType;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
@@ -87,6 +89,7 @@ import seventh.map.Tile;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.math.Vector4f;
 import seventh.network.messages.AICommandMessage;
 import seventh.network.messages.PlayerInputMessage;
 import seventh.server.GameServerLeolaLibrary;
@@ -520,7 +523,28 @@ public class Game implements GameInfo, Debugable, Updatable {
     public Timers getGameTimers() {
         return gameTimers;
     }
-        
+    
+    /**
+     * Sends an ambient light adjustment to the client
+     * 
+     * @param r
+     * @param g
+     * @param b
+     * @param intensity
+     */
+    public void adjustLight(float r, float g, float b, float intensity) {
+        this.dispatcher.queueEvent(new SurvivorEvent(this, EventType.LightAdjust, null, null, -1, -1, new Vector4f(r, g, b, intensity)));
+    }
+    
+    /**
+     * Sends a message to the players HUD
+     * 
+     * @param message
+     */
+    public void text(String message) {
+        this.dispatcher.queueEvent(new SurvivorEvent(this, EventType.Message, null, message, -1, -1, null));
+    }
+    
     /**
      * Binds an {@link EventListener}
      * 

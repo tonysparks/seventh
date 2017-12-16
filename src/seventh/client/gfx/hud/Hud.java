@@ -173,9 +173,11 @@ public class Hud implements Renderable {
      * @param message
      */
     public void postMessage(String message) {
-        messageLog.log(message);
+        if(message!=null) {
+            messageLog.log(message);
 
-        Sounds.playGlobalSound(Sounds.logAlert);
+            Sounds.playGlobalSound(Sounds.logAlert);
+        }
     }
     
     

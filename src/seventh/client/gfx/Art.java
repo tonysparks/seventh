@@ -311,8 +311,9 @@ public class Art {
         riskerMuzzleFlash = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/risker_muzzle_flash.png"), 2, 2);
         
         healthPack = TextureUtil.resizeImage(loadImage("./assets/gfx/entities/healthpack.png"), 16, 16);
-        healthIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/ui/health.bmp"), 12, 12);
-        staminaIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/ui/stamina.png"), 12, 12);
+        healthIcon = healthPack; 
+                //TextureUtil.resizeImage(loadImage("./assets/gfx/ui/health.bmp"), 12, 12);
+        staminaIcon = TextureUtil.resizeImage(loadImage("./assets/gfx/ui/stamina.png"), 16, 16);
         
         TextureRegion navArrow = loadImage("./assets/gfx/ui/ui_nav_arrows.png");
         upArrow = new Sprite(navArrow);

@@ -168,6 +168,7 @@ public class ClientGame {
     private       ClientPlayerEntity selectedEntity;
 
     private Leola runtime;
+    
     /**
      * Listens for {@link ClientEntity} life cycle
      * 
@@ -249,10 +250,9 @@ public class ClientGame {
         
         this.pools = new Pools(this);
         this.zings = new Zings(this);
-     
+    
         this.runtime = Scripting.newSandboxedRuntime();    
-        
-        executeCallbackScript("onInit", this);
+        this.runtime.loadLibrary(new ClientLeolaLibrary(this), "client");
     }    
     
     /**
@@ -598,49 +598,6 @@ public class ClientGame {
      */
     public boolean addGameTimer(Timer timer) {
         return this.gameTimers.addTimer(timer);
-    }
-    
-    /**
-     * Adds a {@link Timer} which will execute the supplied {@link LeoObject}.
-     * 
-     * @param loop
-     * @param endTime
-     * @param function
-     * @return true if it was added
-     */
-    public boolean addGameTimer(boolean loop, long endTime, final LeoObject function) {
-        return addGameTimer(new Timer(loop, endTime) {
-            
-            @Override
-            public void onFinish(Timer timer) {
-                function.xcall();
-            }
-        });
-    }
-    
-    /**
-     * Adds the {@link LeoObject} callback as a the timer function, which will also randomize the start/end time.
-     * 
-     * @param loop
-     * @param minStartTime
-     * @param maxEndTime
-     * @param function
-     * @return true if the timer was added;false otherwise
-     */
-    public boolean addRandomGameTimer(boolean loop, final long minStartTime, final long maxEndTime, final LeoObject function) {
-        return addGameTimer(new Timer(loop, minStartTime) {            
-            @Override
-            public void onFinish(Timer timer) {
-                LeoObject result = function.call();
-                if(result.isError()) {
-                    Cons.println("*** ERROR: Script error in GameTimer: " + result);
-                }
-                
-                long delta = maxEndTime - minStartTime;
-                int millis = (int)delta / 100;
-                timer.setEndTime(minStartTime + random.nextInt(millis) * 100);
-            }
-        });
     }
     
     
@@ -1203,6 +1160,8 @@ public class ClientGame {
     public void prepareGame(String mapFile, NetGameState gameState) {
         applyFullGameState(gameState);
         loadMapProperties(mapFile);
+
+        executeCallbackScript("onInit");
     }
     
     /**
@@ -1215,8 +1174,7 @@ public class ClientGame {
         File propertiesFile = new File(mapFile + ".client.props.leola");
         if(propertiesFile.exists()) {
             try {
-                runtime.loadStatics(SeventhScriptingCommonLibrary.class);
-                runtime.put("game", this);
+                runtime.loadStatics(SeventhScriptingCommonLibrary.class);                
                 runtime.eval(propertiesFile);
             }
             catch(Exception e) {
@@ -1241,10 +1199,10 @@ public class ClientGame {
      * @param functionName
      * @param game
      */
-    private void executeCallbackScript(String functionName, ClientGame game) {
+    private void executeCallbackScript(String functionName) {
         LeoObject function = runtime.get(functionName);
         if(LeoObject.isTrue(function)) {
-            LeoObject result = function.call(LeoObject.valueOf(game));
+            LeoObject result = function.call();
             if(result.isError()) {
                 Cons.println("*** ERROR: Client calling '" + functionName + "' - " + result.toString());
             }
@@ -1510,7 +1468,7 @@ public class ClientGame {
             entities.addEntity(msg.playerId, entity);
             entityListener.onEntityCreated(entity);
             
-            Sounds.startPlaySound(Sounds.respawnSnd, msg.playerId, spawnLocation.x, spawnLocation.y);
+            Sounds.startPlaySound(Sounds.respawnSnd, msg.playerId, spawnLocation.x, spawnLocation.y);            
         }
         
     }
@@ -1548,7 +1506,7 @@ public class ClientGame {
         
         showScoreBoard(true);
         
-        executeCallbackScript("onRoundEnded", this);
+        executeCallbackScript("onRoundEnded");
     }
     
     public void roundStarted(RoundStartedMessage msg) {        
@@ -1566,7 +1524,7 @@ public class ClientGame {
         showScoreBoard(false);
         applyFullGameState(msg.gameState);
         
-        executeCallbackScript("onRoundStarted", this);
+        executeCallbackScript("onRoundStarted");
     }
     
     public void gameEnded(GameEndedMessage msg) {
@@ -1747,7 +1705,7 @@ public class ClientGame {
      * Cleans up resources
      */
     public void destroy() {
-        executeCallbackScript("onDestroy", this);
+        executeCallbackScript("onDestroy");
         
         this.pools.destroy();
         this.entities.clear();        
@@ -1980,6 +1938,13 @@ public class ClientGame {
             case CustomTrigger:
                 break;
             case EnemySpawned:
+                break;
+            case Message:
+                postMessage(msg.path);
+                break;
+            case LightAdjust:
+                getLightSystem().setAmbientColor(msg.light.x, msg.light.y, msg.light.z);
+                getLightSystem().setAmbientIntensity(msg.light.w);
                 break;
             default:
                 break;

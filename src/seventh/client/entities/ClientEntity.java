@@ -5,6 +5,7 @@ package seventh.client.entities;
 
 import java.util.Random;
 
+import leola.vm.types.LeoObject;
 import seventh.client.ClientGame;
 import seventh.client.gfx.Renderable;
 import seventh.client.sfx.Sound;
@@ -47,6 +48,7 @@ public abstract class ClientEntity implements Renderable {
     private boolean isDestroyed;
     
     private Sound[] attachedSounds;
+    private LeoObject scriptObj;
     
     /**
      * Invoked on each update
@@ -70,9 +72,9 @@ public abstract class ClientEntity implements Renderable {
     
     private OnRemove onRemove;
     
-    
     /**
-     * 
+     * @param game
+     * @param pos
      */
     public ClientEntity(ClientGame game, Vector2f pos) {
         this.game = game;
@@ -89,6 +91,15 @@ public abstract class ClientEntity implements Renderable {
         this.isAlive = true;
         
         this.zOrder = 100;
+        
+        this.scriptObj = LeoObject.valueOf(this);
+    }
+    
+    /**
+     * @return the scriptObj
+     */
+    public LeoObject getScriptObj() {
+        return scriptObj;
     }
     
     /**

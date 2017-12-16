@@ -20,24 +20,12 @@ public class HealthPack extends Entity {
     private NetEntity netEntity;
     
     /**
-     * @param position
-     * @param game
-     */
-    public HealthPack(Vector2f position, Game game) {
-        this(game.getNextPersistantId(), position, game);        
-    }
-
-    /**
      * @param id
      * @param position
      * @param game
      */
-    public HealthPack(int id, Vector2f position, final Game game) {
-        super(id, position, 0, game, Type.HEALTH_PACK);
-        init(game);
-    }
-
-    private void init(final Game game) {
+    public HealthPack(Vector2f position, final Game game) {
+        super(position, 0, game, Type.HEALTH_PACK);
         this.onTouch = new OnTouchListener() {
             
             @Override
@@ -53,9 +41,9 @@ public class HealthPack extends Entity {
         this.bounds.height = 16;
         
         this.netEntity = new NetEntity();
-        this.netEntity.type = Type.HEALTH_PACK;      
-        
+        this.netEntity.type = Type.HEALTH_PACK;
     }
+
     /* (non-Javadoc)
      * @see seventh.game.Entity#getNetEntity()
      */
