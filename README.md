@@ -26,6 +26,7 @@ Features
 * Tanks
 * Destructable terrain
 * Multiplayer and Single player (Single player vs. Bots)
+* Server side and client side scripting
 
 TODO
 ===
@@ -50,6 +51,7 @@ Technical Stuff
 * Libgdx is used for client rendering and input handling
 * SoundSystem is used for 3d sound
 * Tiled is used for the map editor
+* [Leola](https://github.com/tonysparks/leola) for scripting
 
 Build from Source
 ===
