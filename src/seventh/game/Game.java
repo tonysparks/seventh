@@ -790,6 +790,9 @@ public class Game implements GameInfo, Debugable, Updatable {
         File propertiesFile = new File(gameMap.getMapFileName() + ".props.leola");
         if(propertiesFile.exists()) {
             try {   
+                // remove any previous scripted listeners
+                this.eventRegistration.unregisterListeners();
+                
                 // TODO:
                 // Clean this up, I don't think we actually need a 'properties'
                 // loading, this can all be done thru the gameType scripts.

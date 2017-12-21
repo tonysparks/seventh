@@ -4,6 +4,7 @@
  */
 package seventh.map;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -286,7 +287,12 @@ public class TiledMapLoader implements MapLoader {
             TextureRegion[] images = null;
                                                 
             if(loadImages) {
-                final String imagePath = tileset.getString("image");
+                String imagePath = tileset.getString("image");
+                
+                // override to local assets tile directory
+                if(!new File(imagePath).exists()) {
+                    imagePath = "./assets/gfx/tiles" + imagePath.substring(imagePath.lastIndexOf("/"), imagePath.length());
+                }
                 image = TextureUtil.loadImage(imagePath);
                 image.flip(false, true);
                 image.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);

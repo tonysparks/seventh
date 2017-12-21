@@ -3,9 +3,13 @@
  */
 package seventh.game.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import leola.frontend.listener.EventDispatcher;
 import leola.frontend.listener.EventListener;
 import leola.vm.types.LeoObject;
+import seventh.math.Pair;
 import seventh.shared.Cons;
 
 /**
@@ -17,12 +21,14 @@ import seventh.shared.Cons;
 public class EventRegistration {
     
     private EventDispatcher dispatcher;
-
+    private List<Pair<Class<?>, EventListener>> registeredListeners;
+    
     /**
      * @param dispatcher
      */
     public EventRegistration(EventDispatcher dispatcher) {
         this.dispatcher = dispatcher;
+        this.registeredListeners = new ArrayList<>();
     }
 
     private void callFunction(String eventName, LeoObject function, Object event) {
@@ -34,6 +40,20 @@ public class EventRegistration {
         } 
     }
     
+    private void addEventListener(Class<?> type, EventListener listener) {
+        this.dispatcher.addEventListener(type, listener);
+        this.registeredListeners.add(new Pair<Class<?>, EventListener>(type, listener));
+    }
+    
+    /**
+     * Unregisters the supplied listeners
+     */
+    public void unregisterListeners() {
+        for(Pair<Class<?>, EventListener> pair : this.registeredListeners) {
+            this.dispatcher.removeEventListener(pair.getFirst(), pair.getSecond());
+        }
+    }
+    
     /**
      * Adds an {@link EventListener} to the supplied event name
      * 
@@ -43,7 +63,7 @@ public class EventRegistration {
     public void addEventListener(final String eventName, final LeoObject function) {
         switch(eventName.toLowerCase()) {
             case "bombdisarmedevent": {
-                this.dispatcher.addEventListener(BombDisarmedEvent.class, new BombDisarmedListener() {
+                addEventListener(BombDisarmedEvent.class, new BombDisarmedListener() {
                     
                     @Override
                     public void onBombDisarmedEvent(BombDisarmedEvent event) {
@@ -53,7 +73,7 @@ public class EventRegistration {
                 break;
             }
             case "bombexplodedevent": {
-                this.dispatcher.addEventListener(BombExplodedEvent.class, new BombExplodedListener() {                    
+                addEventListener(BombExplodedEvent.class, new BombExplodedListener() {                    
                     @Override
                     public void onBombExplodedEvent(BombExplodedEvent event) {
                         callFunction(eventName, function, event);
@@ -62,7 +82,7 @@ public class EventRegistration {
                 break;
             }
             case "bombplantedevent": {
-                this.dispatcher.addEventListener(BombPlantedEvent.class, new BombPlantedListener() {                    
+                addEventListener(BombPlantedEvent.class, new BombPlantedListener() {                    
                     @Override
                     public void onBombPlanted(BombPlantedEvent event) {
                         callFunction(eventName, function, event);
@@ -71,7 +91,7 @@ public class EventRegistration {
                 break;
             }
             case "flagcapturedevent": {
-                this.dispatcher.addEventListener(FlagCapturedEvent.class, new FlagCapturedListener() {                                    
+                addEventListener(FlagCapturedEvent.class, new FlagCapturedListener() {                                    
                     @Override
                     public void onFlagCapturedEvent(FlagCapturedEvent event) {
                         callFunction(eventName, function, event);
@@ -80,7 +100,7 @@ public class EventRegistration {
                 break;
             }
             case "flagreturnedevent": {
-                this.dispatcher.addEventListener(FlagReturnedEvent.class, new FlagReturnedListener() {                                        
+                addEventListener(FlagReturnedEvent.class, new FlagReturnedListener() {                                        
                     @Override
                     public void onFlagReturnedEvent(FlagReturnedEvent event) {                    
                         callFunction(eventName, function, event);
@@ -89,7 +109,7 @@ public class EventRegistration {
                 break;
             }
             case "flagstolenevent": {
-                this.dispatcher.addEventListener(FlagStolenEvent.class, new FlagStolenListener() {                                        
+                addEventListener(FlagStolenEvent.class, new FlagStolenListener() {                                        
                     @Override
                     public void onFlagStolenEvent(FlagStolenEvent event) {                    
                         callFunction(eventName, function, event);
@@ -98,7 +118,7 @@ public class EventRegistration {
                 break;
             }
             case "gameendevent": {
-                this.dispatcher.addEventListener(GameEndEvent.class, new GameEndListener() {                                        
+                addEventListener(GameEndEvent.class, new GameEndListener() {                                        
                     @Override
                     public void onGameEnd(GameEndEvent event) {                    
                         callFunction(eventName, function, event);
@@ -107,7 +127,7 @@ public class EventRegistration {
                 break;
             }
             case "killrollevent": {
-                this.dispatcher.addEventListener(KillRollEvent.class, new KillRollListener() {                                        
+                addEventListener(KillRollEvent.class, new KillRollListener() {                                        
                     @Override
                     public void onKillRoll(KillRollEvent event) {                    
                         callFunction(eventName, function, event);
@@ -116,7 +136,7 @@ public class EventRegistration {
                 break;
             }
             case "killstreakevent": {
-                this.dispatcher.addEventListener(KillStreakEvent.class, new KillStreakListener() {                                        
+                addEventListener(KillStreakEvent.class, new KillStreakListener() {                                        
                     @Override
                     public void onKillStreak(KillStreakEvent event) {
                         callFunction(eventName, function, event);
@@ -125,7 +145,7 @@ public class EventRegistration {
                 break;
             }
             case "playerawardevent": {
-                this.dispatcher.addEventListener(PlayerAwardEvent.class, new PlayerAwardListener() {                                        
+                addEventListener(PlayerAwardEvent.class, new PlayerAwardListener() {                                        
                     @Override
                     public void onPlayerAward(PlayerAwardEvent event) {                    
                         callFunction(eventName, function, event);
@@ -134,7 +154,7 @@ public class EventRegistration {
                 break;
             }
             case "playerjoinedevent": {
-                this.dispatcher.addEventListener(PlayerJoinedEvent.class, new PlayerJoinedListener() {                                        
+                addEventListener(PlayerJoinedEvent.class, new PlayerJoinedListener() {                                        
                     @Override
                     public void onPlayerJoined(PlayerJoinedEvent event) {                    
                         callFunction(eventName, function, event);
@@ -143,7 +163,7 @@ public class EventRegistration {
                 break;
             }
             case "playerkilledevent": {
-                this.dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {                                        
+                addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {                                        
                     @Override
                     public void onPlayerKilled(PlayerKilledEvent event) {                    
                         callFunction(eventName, function, event);
@@ -152,7 +172,7 @@ public class EventRegistration {
                 break;
             }
             case "playerleftevent": {
-                this.dispatcher.addEventListener(PlayerLeftEvent.class, new PlayerLeftListener() {                                        
+                addEventListener(PlayerLeftEvent.class, new PlayerLeftListener() {                                        
                     @Override
                     public void onPlayerLeft(PlayerLeftEvent event) {                    
                         callFunction(eventName, function, event);
@@ -161,7 +181,7 @@ public class EventRegistration {
                 break;
             }
             case "playerspawnedevent": {
-                this.dispatcher.addEventListener(PlayerSpawnedEvent.class, new PlayerSpawnedListener() {                                        
+                addEventListener(PlayerSpawnedEvent.class, new PlayerSpawnedListener() {                                        
                     @Override
                     public void onPlayerSpawned(PlayerSpawnedEvent event) {
                         callFunction(eventName, function, event);
@@ -170,7 +190,7 @@ public class EventRegistration {
                 break;
             }
             case "roundendedevent": {
-                this.dispatcher.addEventListener(RoundEndedEvent.class, new RoundEndedListener() {                    
+                addEventListener(RoundEndedEvent.class, new RoundEndedListener() {                    
                     @Override
                     public void onRoundEnded(RoundEndedEvent event) {
                         callFunction(eventName, function, event);
@@ -179,7 +199,7 @@ public class EventRegistration {
                 break;
             }
             case "roundstartedevent": {
-                this.dispatcher.addEventListener(RoundStartedEvent.class, new RoundStartedListener() {                                        
+                addEventListener(RoundStartedEvent.class, new RoundStartedListener() {                                        
                     @Override
                     public void onRoundStarted(RoundStartedEvent event) {                    
                         callFunction(eventName, function, event);
@@ -188,7 +208,7 @@ public class EventRegistration {
                 break;
             }
             case "soundemittedevent": {
-                this.dispatcher.addEventListener(SoundEmittedEvent.class, new SoundEmitterListener() {                    
+                addEventListener(SoundEmittedEvent.class, new SoundEmitterListener() {                    
                     @Override
                     public void onSoundEmitted(SoundEmittedEvent event) {                    
                         callFunction(eventName, function, event);
@@ -197,7 +217,7 @@ public class EventRegistration {
                 break;
             }
             case "survivorevent": {
-                this.dispatcher.addEventListener(SurvivorEvent.class, new SurvivorEventListener() {                    
+                addEventListener(SurvivorEvent.class, new SurvivorEventListener() {                    
                     @Override
                     public void onSurvivorEvent(SurvivorEvent event) {
                         callFunction(eventName, function, event);
@@ -206,7 +226,7 @@ public class EventRegistration {
                 break;
             }
             case "tileremoveevent": {
-                this.dispatcher.addEventListener(TileRemovedEvent.class, new TileRemovedListener() {                                        
+                addEventListener(TileRemovedEvent.class, new TileRemovedListener() {                                        
                     @Override
                     public void onTileRemoved(TileRemovedEvent event) {                    
                         callFunction(eventName, function, event);

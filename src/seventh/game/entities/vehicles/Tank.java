@@ -682,6 +682,7 @@ public class Tank extends Vehicle {
             desiredOrientation += fullCircle;
         }
         this.orientation = desiredOrientation;
+        this.desiredOrientation = desiredOrientation;
                         
         syncOOB(this.orientation, pos);
     }
@@ -692,6 +693,7 @@ public class Tank extends Vehicle {
             desiredOrientation += fullCircle;
         }
         this.turretOrientation = desiredOrientation;
+        this.desiredTurretOrientation = desiredOrientation;
     }
     
     /*
