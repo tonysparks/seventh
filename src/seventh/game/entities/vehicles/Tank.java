@@ -149,6 +149,7 @@ public class Tank extends Vehicle {
             @Override
             protected Rocket newRocket() {
                 Rocket rocket = super.newRocket();
+                rocket.setOwnerHeightMask(CROUCHED_HEIGHT_MASK);
                 rocket.setOrientation(turretOrientation);
                 rocket.setOwner(getOperator());
                 

@@ -142,6 +142,13 @@ public class Bullet extends Entity {
     }
     
     /**
+     * @param ownerHeightMask the ownerHeightMask to set
+     */
+    public void setOwnerHeightMask(int ownerHeightMask) {
+        this.ownerHeightMask = ownerHeightMask;
+    }
+    
+    /**
      * @return the targetVel
      */
     public Vector2f getTargetVel() {
