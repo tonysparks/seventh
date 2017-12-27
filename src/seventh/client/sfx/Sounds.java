@@ -205,7 +205,7 @@ public class Sounds {
     
     private static final Random random = new Random();
     private static Map<String, SoundBuffer> loadedSounds = new ConcurrentHashMap<>();
-    private static Sound[][] channels = new Sound[16][];
+    private static Sound[][] channels = new Sound[64][];
     private static float volume = 0.1f;
     private static Vector2f listenerPosition = new Vector2f();
     private static ClientSeventhConfig config;
@@ -474,6 +474,7 @@ public class Sounds {
             SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
             SoundSystemConfig.setCodec( "wav", CodecWav.class );
             SoundSystemConfig.setDefaultFadeDistance(10000f);
+            SoundSystemConfig.setNumberNormalChannels(cfg.getNumberOfSoundChannels());
             
             soundSystem = new SoundSystem(LibraryLWJGLOpenAL.class);
             setVolume(volume);        
@@ -732,7 +733,7 @@ public class Sounds {
             if(snd!=null) {
                 snd.setVolume(volume*damp); // TODO global config
                 snd.play(x,y);
-            }
+            }            
             return snd;
         }
         

@@ -27,14 +27,15 @@ public class ClientSeventhConfig extends SeventhConfig {
             {"name"},                           // 1
             {"mouse_sensitivity"},              // 2
             {"sound","volume"},                 // 3
-            {"console","foreground_color"},     // 4
-            {"console","background_color"},     // 5
-            {"game", "weapon_recoil"},          // 6
-            {"game", "blood"},                  // 7
-            {"game", "follow_reticle"},         // 8
-            {"game", "follow_reticle_offset"},  // 9
-            {"show_debug_info"},                // 10
-            {"show_fps"},                       // 11
+            {"sound","number_of_channels"},     // 4
+            {"console","foreground_color"},     // 5
+            {"console","background_color"},     // 6
+            {"game", "weapon_recoil"},          // 7
+            {"game", "blood"},                  // 8
+            {"game", "follow_reticle"},         // 9
+            {"game", "follow_reticle_offset"},  // 10
+            {"show_debug_info"},                // 11
+            {"show_fps"},                       // 12
     };
      
     private KeyMap keyMap;
@@ -129,13 +130,21 @@ public class ClientSeventhConfig extends SeventhConfig {
     public void setVolume(float volume) {
         this.config.set(volume, KEYS[3]);
     }
+    
+    public int getNumberOfSoundChannels() {
+        return this.config.getInt(256, KEYS[4]);
+    }
+    
+    public void setNumberOfSoundChannels(int numberOfChannels) {
+        this.config.set(numberOfChannels, KEYS[4]);
+    }
 
     /**
      * The in-game debug console foreground color
      * @return The in-game debug console foreground color
      */
     public int getConsoleForegroundColor() {
-        return this.config.getInt(0xffFFFF00, KEYS[4]);
+        return this.config.getInt(0xffFFFF00, KEYS[5]);
     }
     
     
@@ -144,14 +153,14 @@ public class ClientSeventhConfig extends SeventhConfig {
      * @return The in-game debug console background color
      */
     public int getConsoleBackgroundColor() {
-        return this.config.getInt(0x8f0000FF, KEYS[5]);
+        return this.config.getInt(0x8f0000FF, KEYS[6]);
     }
     
     /**
      * @return true if the weapon shows weapon recoiling (camera shaking)
      */
     public boolean getWeaponRecoilEnabled() {
-        return this.config.getBool(true, KEYS[6]);
+        return this.config.getBool(true, KEYS[7]);
     }
     
     /**
@@ -159,14 +168,14 @@ public class ClientSeventhConfig extends SeventhConfig {
      * @param recoilEnabled
      */
     public void setWeaponRecoilEnabled(boolean recoilEnabled) {
-        this.config.set(recoilEnabled, KEYS[6]);
+        this.config.set(recoilEnabled, KEYS[7]);
     }
     
     /**
      * @return true if blood is shown
      */
     public boolean getBloodEnabled() {
-        return this.config.getBool(true, KEYS[7]);
+        return this.config.getBool(true, KEYS[8]);
     }
     
     /**
@@ -174,15 +183,15 @@ public class ClientSeventhConfig extends SeventhConfig {
      * @param bloodEnabled
      */
     public void setBloodEnabled(boolean bloodEnabled) {
-        this.config.set(bloodEnabled, KEYS[7]);
+        this.config.set(bloodEnabled, KEYS[8]);
     }
     
     public boolean getFollowReticleEnabled() {
-        return this.config.getBool(false, KEYS[8]);
+        return this.config.getBool(false, KEYS[9]);
     }
     
     public void setFollowReticleEnabled(boolean enabled) {
-        this.config.set(enabled, KEYS[8]);
+        this.config.set(enabled, KEYS[9]);
     }
     
     
@@ -190,7 +199,7 @@ public class ClientSeventhConfig extends SeventhConfig {
      * @return The camera offset for following the reticle
      */
     public float getFollowReticleOffset() {
-        return this.config.getFloat(80f, KEYS[9]);
+        return this.config.getFloat(80f, KEYS[10]);
     }
 
     /**
@@ -199,22 +208,22 @@ public class ClientSeventhConfig extends SeventhConfig {
      * @param offset
      */
     public void setFollowReticleOffset(float offset) {
-        this.config.set(offset, KEYS[9]);
+        this.config.set(offset, KEYS[10]);
     }
     
     public boolean showDebugInfo() {
-        return this.config.getBool(false, KEYS[10]);
+        return this.config.getBool(false, KEYS[11]);
     }
     
     public void showDebugInfo(boolean show) {
-        this.config.set(show, KEYS[10]);
+        this.config.set(show, KEYS[11]);
     }
     
     public boolean showFps() {
-        return this.config.getBool(true, KEYS[11]);
+        return this.config.getBool(true, KEYS[12]);
     }
     
     public void showFps(boolean show) {
-        this.config.set(show, KEYS[11]);
+        this.config.set(show, KEYS[12]);
     }
 }
