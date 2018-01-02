@@ -24,6 +24,8 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
+import seventh.game.net.NetCtfGameTypeInfo;
+import seventh.game.net.NetGameTypeInfo;
 import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -86,6 +88,8 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
     
     private long spawnDelay;
     
+    private NetCtfGameTypeInfo gameTypeInfo;
+    
     /**
      * @param runtime
      * @param maxScore
@@ -111,8 +115,19 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
         this.axisHomeBase = axisHomeBase;
         
         this.spawnDelay = spawnDelay;
+                
+        this.gameTypeInfo.axisHomeBase = this.axisHomeBase;
+        this.gameTypeInfo.alliedHomeBase = this.alliedHomeBase;
+        this.gameTypeInfo.axisFlagSpawn = this.axisFlagSpawn;
+        this.gameTypeInfo.alliedFlagSpawn = this.alliedFlagSpawn;
     }
 
+    @Override
+    protected NetGameTypeInfo createNetGameTypeInfo() {    
+        this.gameTypeInfo = new NetCtfGameTypeInfo();
+        return this.gameTypeInfo;
+    }
+    
     /**
      * @return the alliedHomeBase
      */

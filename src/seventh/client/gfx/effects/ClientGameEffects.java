@@ -13,13 +13,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 import seventh.client.ClientGame;
+import seventh.client.ClientTeam;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Colors;
 import seventh.client.gfx.FrameBufferRenderable;
 import seventh.client.gfx.ImageBasedLightSystem;
 import seventh.client.gfx.LightSystem;
 import seventh.client.gfx.effects.particle_system.Emitter;
 import seventh.client.gfx.effects.particle_system.Emitters;
+import seventh.game.net.NetCtfGameTypeInfo;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
@@ -43,6 +47,8 @@ public class ClientGameEffects {
     
     private final Emitter[] playerBloodEmitters;
     private final BulletCasingEffect[] bulletCasings;
+    
+    private NetCtfGameTypeInfo ctfInfo;
     
     
     /**
@@ -74,6 +80,14 @@ public class ClientGameEffects {
         for(int i = 0; i < this.bulletCasings.length; i++) {
             this.bulletCasings[i] = new BulletCasingEffect(random);
         }
+    }
+    
+    public void addCtfInformation(NetCtfGameTypeInfo info) {
+        this.ctfInfo = info;
+    }
+    
+    public void clearCtfInformation() {
+        this.ctfInfo = null;
     }
     
     public void spawnBulletCasing(Vector2f pos, float orientation) {
@@ -142,6 +156,8 @@ public class ClientGameEffects {
         for(int i = 0; i < this.playerBloodEmitters.length; i++) {         
             this.playerBloodEmitters[i].kill();
         }
+        
+        clearCtfInformation();
     }
     
     
@@ -302,6 +318,17 @@ public class ClientGameEffects {
                 trackMarks[i].render(canvas, camera, alpha);
             }
         }
+        
+        if(this.ctfInfo != null) {            
+            renderCtfBase(canvas, camera, alpha, this.ctfInfo.axisHomeBase, Colors.setAlpha(ClientTeam.AXIS.getColor(), 50));
+            renderCtfBase(canvas, camera, alpha, this.ctfInfo.alliedHomeBase, Colors.setAlpha(ClientTeam.ALLIES.getColor(), 50));
+        }
+    }
+    
+    private void renderCtfBase(Canvas canvas, Camera camera, float alpha, Rectangle base, Integer color) {
+        Vector2f cam = camera.getRenderPosition(alpha);
+        canvas.fillRect(base.x - cam.x, base.y - cam.y, base.width, base.height, color);
+        canvas.drawRect(base.x - cam.x, base.y - cam.y, base.width, base.height, 0x1a000000);
     }
     
     public void renderForeground(Canvas canvas, Camera camera, float alpha) {

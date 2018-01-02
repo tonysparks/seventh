@@ -28,6 +28,7 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 
 /**
  * @author Tony
@@ -35,6 +36,12 @@ import seventh.shared.TimeStep;
  */
 public abstract class AbstractTeamGameType implements GameType {
 
+    /**
+     * Time it take to warm up to when the game is ready to 
+     * start being played
+     */
+    public static final int WARMUP_TIME = 5_000;
+    
     /**
      * The team indexes
      */
@@ -69,6 +76,9 @@ public abstract class AbstractTeamGameType implements GameType {
     // avoid GC, so we create data members :\
     private List<Vector2f> alliedSpawnPoints, axisSpawnPoints;
     private Rectangle spawnBounds;
+    
+    private Timer warmupTimer;
+    
     /**
      * @param type
      * @param runtime
@@ -107,6 +117,8 @@ public abstract class AbstractTeamGameType implements GameType {
         this.gameState = GameState.INTERMISSION;
         this.random = new Random();
         this.spawnBounds = new Rectangle(300, 300);
+        
+        this.warmupTimer = new Timer(false, WARMUP_TIME);
         
     }
     
@@ -372,6 +384,12 @@ public abstract class AbstractTeamGameType implements GameType {
      */
     @Override
     public GameState update(Game game, TimeStep timeStep) {
+        this.warmupTimer.update(timeStep);
+    
+        if(!this.warmupTimer.isExpired()) {
+            return GameState.INTERMISSION;
+        }
+        
         this.timeRemaining -= timeStep.getDeltaTime();
                 
         /**

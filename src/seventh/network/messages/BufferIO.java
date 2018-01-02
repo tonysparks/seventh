@@ -24,6 +24,7 @@ import seventh.game.net.NetRocket;
 import seventh.game.net.NetSmoke;
 import seventh.game.net.NetTank;
 import seventh.game.weapons.Weapon.WeaponState;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
 /**
@@ -255,18 +256,33 @@ public class BufferIO {
         return (short)degree;
     }
     
-    
-    public static void write(IOBuffer buffer, Vector2f v) {
-        buffer.putFloat(v.x);
-        buffer.putFloat(v.y);
-    }
-
     public static Vector2f readVector2f(IOBuffer buffer) {
         Vector2f v = new Vector2f();
-        v.x = buffer.getFloat();
-        v.y = buffer.getFloat();
+        v.x = readPos(buffer);
+        v.y = readPos(buffer);
         
         return v;
+    }
+    
+    public static void writeVector2f(IOBuffer buffer, Vector2f v) {
+        writePos(buffer, v.x);
+        writePos(buffer, v.y);
+    }
+    
+    public static Rectangle readRect(IOBuffer buffer) {
+        Rectangle r = new Rectangle();
+        r.x = readPos(buffer);
+        r.y = readPos(buffer);
+        r.width = readPos(buffer);
+        r.height = readPos(buffer);
+        return r;
+    }
+    
+    public static void writeRect(IOBuffer buffer, Rectangle r) {
+        writePos(buffer, r.x);
+        writePos(buffer, r.y);
+        writePos(buffer, r.width);
+        writePos(buffer, r.height);
     }
     
     public static void writeString(IOBuffer buffer, String str) {

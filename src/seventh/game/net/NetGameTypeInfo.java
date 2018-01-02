@@ -20,6 +20,8 @@ public class NetGameTypeInfo implements NetMessage {
             result = new NetCommanderGameTypeInfo();
             break;
         case CTF:            
+            result = new NetCtfGameTypeInfo();
+            break;
         case OBJ:            
         case TDM:            
         default:

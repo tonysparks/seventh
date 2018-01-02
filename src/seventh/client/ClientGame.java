@@ -54,6 +54,7 @@ import seventh.game.Timers;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetCommanderGameTypeInfo;
+import seventh.game.net.NetCtfGameTypeInfo;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
 import seventh.game.net.NetFireTeam;
@@ -1232,6 +1233,8 @@ public class ClientGame {
         
         this.gameEffects.removeAllLights();
         this.gameEffects.clearEffects();
+        
+        this.commanderInfo = null;
     }
     
     public void applyFullGameState(NetGameState gs) {
@@ -1269,6 +1272,10 @@ public class ClientGame {
             
             if(this.gameType == GameType.Type.CMD) {
                 this.commanderInfo = (NetCommanderGameTypeInfo) gameType;                
+            }
+            else if(this.gameType == GameType.Type.CTF) {
+                NetCtfGameTypeInfo ctfInfo = (NetCtfGameTypeInfo) gameType;
+                this.gameEffects.addCtfInformation(ctfInfo);
             }
             
         }
