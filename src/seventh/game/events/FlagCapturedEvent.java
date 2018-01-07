@@ -3,8 +3,8 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
 import seventh.game.entities.Flag;
+import seventh.shared.Event;
 
 /**
  * @author Tony

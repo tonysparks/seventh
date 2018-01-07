@@ -6,8 +6,6 @@ package seventh.server;
 import java.io.IOException;
 
 import harenet.api.Connection;
-import leola.frontend.listener.EventDispatcher;
-import leola.frontend.listener.EventMethod;
 import seventh.game.Game;
 import seventh.game.Player;
 import seventh.game.PlayerAwardSystem.Award;
@@ -70,6 +68,8 @@ import seventh.server.RemoteClients.RemoteClientIterator;
 import seventh.shared.Command;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.EventDispatcher;
+import seventh.shared.EventMethod;
 import seventh.shared.State;
 import seventh.shared.TimeStep;
 

@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import leola.frontend.listener.EventDispatcher;
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.game.Game;
@@ -27,6 +26,7 @@ import seventh.game.net.NetTeamStat;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
+import seventh.shared.EventDispatcher;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 

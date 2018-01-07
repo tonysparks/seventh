@@ -6,7 +6,6 @@ package seventh.game;
 import java.util.List;
 import java.util.Random;
 
-import leola.frontend.listener.EventDispatcher;
 import seventh.ai.AISystem;
 import seventh.game.entities.BombTarget;
 import seventh.game.entities.Door;
@@ -19,6 +18,7 @@ import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.EventDispatcher;
 import seventh.shared.SeventhConfig;
 
 /**

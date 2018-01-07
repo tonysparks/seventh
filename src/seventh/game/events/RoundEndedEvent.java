@@ -6,7 +6,7 @@ package seventh.game.events;
 
 import seventh.game.Team;
 import seventh.game.net.NetGameStats;
-import leola.frontend.listener.Event;
+import seventh.shared.Event;
 
 /**
  * @author Tony

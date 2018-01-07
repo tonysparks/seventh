@@ -3,8 +3,8 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
 import seventh.game.net.NetGameStats;
+import seventh.shared.Event;
 
 /**
  * @author Tony

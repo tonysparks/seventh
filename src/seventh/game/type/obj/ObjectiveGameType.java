@@ -7,7 +7,6 @@ package seventh.game.type.obj;
 import java.util.ArrayList;
 import java.util.List;
 
-import leola.frontend.listener.EventDispatcher;
 import leola.vm.Leola;
 import seventh.game.Game;
 import seventh.game.Player;
@@ -17,6 +16,7 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.type.AbstractTeamGameType;
 import seventh.game.type.GameType;
 import seventh.math.Vector2f;
+import seventh.shared.EventDispatcher;
 import seventh.shared.TimeStep;
 
 /**

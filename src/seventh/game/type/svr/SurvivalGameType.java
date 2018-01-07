@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import leola.frontend.listener.EventDispatcher;
 import leola.vm.Leola;
 import leola.vm.types.LeoNativeFunction;
 import leola.vm.types.LeoObject;
@@ -29,6 +28,7 @@ import seventh.game.events.SurvivorEvent.EventType;
 import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.EventDispatcher;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;

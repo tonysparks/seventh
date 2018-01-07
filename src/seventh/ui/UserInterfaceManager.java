@@ -23,13 +23,13 @@ package seventh.ui;
 
 import java.util.List;
 
-import leola.frontend.listener.EventDispatcher;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.CompoundCursor;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.ImageCursor;
 import seventh.client.gfx.ReticleCursor;
 import seventh.client.inputs.Inputs;
+import seventh.shared.EventDispatcher;
 import seventh.shared.TimeStep;
 
 /**

@@ -3,8 +3,8 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
 import seventh.game.Player;
+import seventh.shared.Event;
 
 /**
  * A {@link Player} has gone on a kill streak

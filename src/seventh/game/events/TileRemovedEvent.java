@@ -3,7 +3,7 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
+import seventh.shared.Event;
 
 /**
  * @author Tony

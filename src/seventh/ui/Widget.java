@@ -26,12 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import leola.frontend.listener.EventDispatcher;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.EventDispatcher;
 import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnHoverListener;
 

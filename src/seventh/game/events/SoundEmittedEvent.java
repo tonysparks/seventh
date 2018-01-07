@@ -3,8 +3,8 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
 import seventh.math.Vector2f;
+import seventh.shared.Event;
 import seventh.shared.SoundType;
 
 /**

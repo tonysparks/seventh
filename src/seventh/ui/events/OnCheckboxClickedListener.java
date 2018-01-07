@@ -20,9 +20,9 @@
 */
 package seventh.ui.events;
 
+import seventh.shared.EventListener;
+import seventh.shared.EventMethod;
 import seventh.ui.Checkbox;
-import leola.frontend.listener.EventListener;
-import leola.frontend.listener.EventMethod;
 
 /**
  * Listens toggling of checkbox events

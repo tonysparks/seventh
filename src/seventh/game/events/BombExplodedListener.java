@@ -4,8 +4,8 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.EventListener;
-import leola.frontend.listener.EventMethod;
+import seventh.shared.EventListener;
+import seventh.shared.EventMethod;
 
 /**
  * @author Tony

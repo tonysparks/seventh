@@ -4,9 +4,9 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
 import seventh.game.entities.Bomb;
 import seventh.game.entities.BombTarget;
+import seventh.shared.Event;
 
 /**
  * @author Tony

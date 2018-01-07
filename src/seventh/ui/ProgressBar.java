@@ -3,7 +3,7 @@
  */
 package seventh.ui;
 
-import leola.frontend.listener.EventDispatcher;
+import seventh.shared.EventDispatcher;
 
 /**
  * A progress bar

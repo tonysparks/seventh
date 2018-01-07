@@ -5,8 +5,6 @@ package seventh.game.type.ctf;
 
 import java.util.List;
 
-import leola.frontend.listener.EventDispatcher;
-import leola.frontend.listener.EventMethod;
 import leola.vm.Leola;
 import seventh.game.Game;
 import seventh.game.PlayerInfo;
@@ -29,6 +27,8 @@ import seventh.game.net.NetGameTypeInfo;
 import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.EventDispatcher;
+import seventh.shared.EventMethod;
 import seventh.shared.TimeStep;
 
 /**

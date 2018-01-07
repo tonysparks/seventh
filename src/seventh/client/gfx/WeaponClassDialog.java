@@ -3,13 +3,13 @@
  */
 package seventh.client.gfx;
 
-import leola.frontend.listener.EventDispatcher;
 import seventh.client.ClientTeam;
 import seventh.client.network.ClientConnection;
 import seventh.game.entities.Entity.Type;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
+import seventh.shared.EventDispatcher;
 import seventh.ui.Button;
 import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;

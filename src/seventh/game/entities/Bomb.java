@@ -4,7 +4,6 @@
  */
 package seventh.game.entities;
 
-import leola.frontend.listener.EventDispatcher;
 import seventh.game.Game;
 import seventh.game.events.BombDisarmedEvent;
 import seventh.game.events.BombExplodedEvent;
@@ -13,6 +12,7 @@ import seventh.game.net.NetBomb;
 import seventh.game.net.NetEntity;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.EventDispatcher;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;

@@ -3,9 +3,9 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
 import seventh.game.Player;
 import seventh.math.Vector2f;
+import seventh.shared.Event;
 
 /**
  * @author Tony

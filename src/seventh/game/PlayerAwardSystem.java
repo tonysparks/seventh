@@ -3,7 +3,6 @@
  */
 package seventh.game;
 
-import leola.frontend.listener.EventDispatcher;
 import seventh.game.events.KillRollEvent;
 import seventh.game.events.KillStreakEvent;
 import seventh.game.events.PlayerAwardEvent;
@@ -17,6 +16,7 @@ import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
+import seventh.shared.EventDispatcher;
 import seventh.shared.SeventhConstants;
 
 /**

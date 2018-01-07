@@ -3,9 +3,9 @@
  */
 package seventh.game.events;
 
-import leola.frontend.listener.Event;
 import seventh.game.Player;
 import seventh.game.PlayerAwardSystem.Award;
+import seventh.shared.Event;
 
 /**
  * A {@link Player} has received an award

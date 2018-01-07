@@ -3,11 +3,11 @@
  */
 package seventh.ui;
 
-import leola.frontend.listener.EventDispatcher;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
 import seventh.math.Rectangle;
+import seventh.shared.EventDispatcher;
 import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnSliderMovedListener;
 import seventh.ui.events.SliderMovedEvent;

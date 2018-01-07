@@ -6,11 +6,11 @@ package seventh.game.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import leola.frontend.listener.EventDispatcher;
-import leola.frontend.listener.EventListener;
 import leola.vm.types.LeoObject;
 import seventh.math.Pair;
 import seventh.shared.Cons;
+import seventh.shared.EventDispatcher;
+import seventh.shared.EventListener;
 
 /**
  * Registers {@link EventListener}s to events for scripting

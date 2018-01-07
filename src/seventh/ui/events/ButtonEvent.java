@@ -20,7 +20,7 @@
 */
 package seventh.ui.events;
 
-import leola.frontend.listener.Event;
+import seventh.shared.Event;
 import seventh.ui.Button;
 
 /**
