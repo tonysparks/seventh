@@ -91,7 +91,6 @@ public class Art {
     public static  TextureRegion defenderIcon = null;
     
     private static TextureRegion[] explosionImage = null;
-    private static TextureRegion[] fireImage = null;
     private static TextureRegion[] rocketImage = null;
         
     public static  TextureRegion deathsImage = null;
@@ -247,9 +246,6 @@ public class Art {
         flameThrowerIcon = loadImage("./assets/gfx/weapons/flame_thrower_icon.png"); 
         
         explosionImage = TextureUtil.splitImage(loadImage("./assets/gfx/particles/explosion.png"), 4, 4);
-        TextureRegion tmp = loadImage("./assets/gfx/fire.png");
-        tmp.flip(false, false);
-        fireImage = TextureUtil.splitImage(tmp, 1, 5);
         rocketImage = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/rocket.bmp", 0xff00ff), 1, 1);
 
         deathsImage = loadImage("./assets/gfx/player/death_symbol.png");
@@ -560,14 +556,7 @@ public class Art {
         animation.loop(false);
         return new AnimatedImage(explosionImage, animation);
     }
-    
-    public static AnimatedImage newFireAnim() {
-        Animation animation = newAnimation(new int[]{
-                80, 80, 80, 80, 80
-        });                        
-        return new AnimatedImage(fireImage, animation);
-    }
-        
+            
     public static AnimatedImage newAlliedBackDeathAnim() {
         int frameTime = 120;
         Animation animation = newAnimation(new int[] {
