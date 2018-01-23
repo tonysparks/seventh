@@ -34,6 +34,8 @@ public class DefaultStyling implements Styling {
      * Background color
      */
     private static final int BACKGROUND_COLOR = BLACK;//new Vector3f(0.5f, 0.0f, 0.05f);
+
+    private final Skin skin = new Skin();
     
     /* (non-Javadoc)
      * @see com.fived.ricochet.ui.Styling#styleButton(com.fived.ricochet.ui.Button)
@@ -64,4 +66,8 @@ public class DefaultStyling implements Styling {
         }
     }
 
+    @Override
+    public Skin getSkin() {
+        return this.skin;
+    }
 }

@@ -46,4 +46,11 @@ public interface Styling {
      * @param dialog
      */
     public void styleDialog(Dialog dialog);
+    
+    
+    /**
+     * The {@link Skin}
+     * @return
+     */
+    public Skin getSkin();
 }

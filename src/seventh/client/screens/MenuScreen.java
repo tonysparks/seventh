@@ -27,13 +27,17 @@ import seventh.shared.Console;
 import seventh.shared.Scripting;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
+import seventh.ui.Label.TextAlignment;
 import seventh.ui.Panel;
+import seventh.ui.Skin;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.events.OnHoverListener;
 import seventh.ui.view.ButtonView;
+import seventh.ui.view.IconButtonView;
+import seventh.ui.view.NinePatchButtonView;
 import seventh.ui.view.PanelView;
 
 /**
@@ -71,8 +75,8 @@ public class MenuScreen implements Screen {
         this.menuItems = new ArrayList<>(); 
         this.menuIndex = 0;        
         
-        Vector2f uiPos = new Vector2f(app.getScreenWidth()/2, 180);
-        final int spacing = 60;
+        Vector2f uiPos = new Vector2f(app.getScreenWidth()/2, 140);
+        final int spacing = 80;
         
         setupButton(uiPos, "Single Player").addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -166,6 +170,35 @@ public class MenuScreen implements Screen {
                 return super.keyUp(key);
             }
         };
+        
+        Skin skin = this.theme.getSkin();
+        
+        Button btn = new Button();
+        //btn.setBounds(new Rectangle(148*3, 148*2));
+        btn.setText("Single Player");
+        btn.setTextSize(18);
+        btn.setHoverTextSize(19);        
+        btn.setTheme(theme);
+        btn.setBounds(new Rectangle(260, 115));
+        btn.getBounds().centerAround(new Vector2f(200, 200));
+        btn.addOnButtonClickedListener(new OnButtonClickedListener() {
+            
+            @Override
+            public void onButtonClicked(ButtonEvent event) {
+                app.setScreen(new MenuScreen(app));
+            }
+        });
+        this.menuPanel.addWidget(btn);
+        this.panelView.addElement(new NinePatchButtonView(btn, skin));
+        
+        
+        Button btn2 = new Button();
+        //btn.setBounds(new Rectangle(148*3, 148*2));
+        btn2.setBounds(new Rectangle(48, 48));
+        btn2.getBounds().centerAround(new Vector2f(600, 200));
+        this.menuPanel.addWidget(btn2);
+        this.panelView.addElement(new IconButtonView(btn2, 
+                skin.buttonIconBackground, skin.buttonIconOnClick, skin.cancelIcon));
     }
     
     private Button setupButton(Vector2f uiPos, String text) {
@@ -179,6 +212,13 @@ public class MenuScreen implements Screen {
         btn.setHoverTextSize(22);
         btn.setTheme(theme);
         btn.setEnableGradiant(false);
+        
+        btn.setTextSize(18);
+        btn.setHoverTextSize(19);        
+        btn.setTheme(theme);
+        btn.setBounds(new Rectangle(260, 110));
+        btn.getBounds().centerAround(uiPos);
+        
         btn.addOnHoverListener(new OnHoverListener() {
             
             @Override
@@ -188,8 +228,9 @@ public class MenuScreen implements Screen {
         });
         
         this.menuPanel.addWidget(btn);        
-        this.panelView.addElement(new ButtonView(btn));
-        
+        //this.panelView.addElement(new ButtonView(btn));
+        this.panelView.addElement(new NinePatchButtonView(btn, theme.getSkin()));
+                
         this.menuItems.add(btn);
         
         return btn;
@@ -291,9 +332,9 @@ public class MenuScreen implements Screen {
         canvas.fillRect(0, 0, canvas.getWidth() + 100,  canvas.getHeight() + 100, theme.getBackgroundColor());
         
        // canvas.setFont(theme.getPrimaryFontName(), 8);    
+        canvas.begin();
         this.panelView.render(canvas, null, 0);
         
-        canvas.begin();
         canvas.setFont(theme.getPrimaryFontName(), 74);
                 
         int fontColor = theme.getForegroundColor();

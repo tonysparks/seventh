@@ -4,6 +4,10 @@
  */
 package seventh.client.gfx;
 
+
+import com.badlogic.gdx.graphics.Color;
+
+import seventh.ui.Skin;
 import seventh.ui.Widget;
 
 
@@ -27,6 +31,7 @@ public class Theme {
     private String secondaryFontName;
     private String secondaryFontFile;
 
+    private Skin skin;
 
     
     /**
@@ -48,7 +53,7 @@ public class Theme {
         this.primaryFontName = primaryFontName;
         this.primaryFontFile = primaryFontFile;
         this.secondaryFontName = secondaryFontName;
-        this.secondaryFontFile = secondaryFontFile;
+        this.secondaryFontFile = secondaryFontFile;        
     }
 
     /**
@@ -58,7 +63,8 @@ public class Theme {
         this(//Color.toIntBits(0, 0, 183, 255) 
                 0xff4b5320
                 , //0xffffffff 
-                0xfff1f401
+               // 0xfff1f401
+                Color.argb8888(1f,182f/255f, 224f/255f, 65f/255f)
                 , 0xffffffff
 //                , "Futurist Fixed-width"
 //                , "./assets/gfx/fonts/future.ttf"
@@ -76,7 +82,17 @@ public class Theme {
                 , "./assets/gfx/fonts/Army.ttf"
                 );
     }
-
+    
+    /**
+     * @return the skin
+     */
+    public Skin getSkin() {
+        if(this.skin == null) {
+            this.skin = new Skin();
+        }
+        return skin;
+    }
+    
     /**
      * @return the fontFile
      */

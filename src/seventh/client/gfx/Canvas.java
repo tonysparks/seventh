@@ -9,6 +9,7 @@ import java.io.IOException;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
@@ -167,4 +168,6 @@ public interface Canvas {
     public void setBlendFunction(int srcFunc, int dstFunc);
     public int getSrcBlendFunction();
     public int getDstBlendFunction();
+    
+    public SpriteBatch getSpriteBatch();
 }

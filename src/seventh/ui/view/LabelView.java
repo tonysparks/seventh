@@ -122,6 +122,8 @@ public class LabelView implements Renderable {
         else {
             renderWithCR(renderer, buttonTxt, bounds);
         }
+                
+        renderer.setColor(0xffffffff, 255);
     }
 
     /**

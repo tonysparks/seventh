@@ -107,6 +107,14 @@ public class GdxCanvas implements Canvas {
     }
 
     /* (non-Javadoc)
+     * @see seventh.client.gfx.Canvas#getSpriteBatch()
+     */
+    @Override
+    public SpriteBatch getSpriteBatch() {     
+        return this.batch;
+    }
+    
+    /* (non-Javadoc)
      * @see seventh.client.gfx.Canvas#getCamera()
      */
     @Override
