@@ -100,7 +100,9 @@ import seventh.network.messages.TileRemovedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Arrays;
+import seventh.shared.Command;
 import seventh.shared.Cons;
+import seventh.shared.Console;
 import seventh.shared.DebugDraw;
 import seventh.shared.Scripting;
 import seventh.shared.SeventhConstants;
@@ -254,6 +256,19 @@ public class ClientGame {
     
         this.runtime = Scripting.newSandboxedRuntime();    
         this.runtime.loadLibrary(new ClientLeolaLibrary(this), "client");
+        
+        app.getConsole().addCommand(new Command("client_repl") {
+            
+            @Override
+            public void execute(Console console, String... args) {
+                try {
+                    runtime.eval(mergeArgs(args));
+                }
+                catch(Exception e) {
+                    console.println("*** Error evaulating expression - " + e);
+                }                
+            }
+        });
     }    
     
     /**
