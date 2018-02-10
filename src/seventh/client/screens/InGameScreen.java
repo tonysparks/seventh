@@ -31,6 +31,7 @@ import seventh.client.inputs.KeyboardGameController;
 import seventh.client.network.ClientConnection;
 import seventh.client.network.ClientProtocol;
 import seventh.client.sfx.Sounds;
+import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.AICommandMessage;
@@ -696,6 +697,14 @@ public class InGameScreen implements Screen {
             String message = "" + game.screenToWorldCoordinates(cursor.getX(), cursor.getY());
             int len = canvas.getWidth(message);
             canvas.drawString(message, cursor.getX() - len/2, cursor.getY() + 50, 0xffffffff);
+            Tile tile = game.getMap().getWorldTile(0, cursor.getX(), cursor.getY());
+            if(tile!=null) {
+                Vector2f pos = camera.getRenderPosition(alpha);
+                message = "(" + tile.getXIndex() + "," + tile.getYIndex() + ")";
+                len = canvas.getWidth(message);
+                canvas.drawString(message, cursor.getX() - len/2, cursor.getY() + 90, 0xffffffff);
+                canvas.drawRect(tile.getX() - pos.x, tile.getY() - pos.y, tile.getWidth(), tile.getHeight(), 0xffff0000);
+            }
         }
     }
 

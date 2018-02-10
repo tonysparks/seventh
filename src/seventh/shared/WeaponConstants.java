@@ -52,8 +52,8 @@ public interface WeaponConstants {
      */
     public static final int TANK_DEFAULT_LINE_OF_SIGHT = 250;
     public static final int TANK_MOVEMENT_SPEED = 90; // 50
-    public static final int TANK_WIDTH = 225; //145
-    public static final int TANK_HEIGHT = 145;//110
+    public static final int TANK_WIDTH = 200;//225; //145
+    public static final int TANK_HEIGHT = 125;//145;//110
     public static final int TANK_AABB_WIDTH = 295; 
     public static final int TANK_AABB_HEIGHT = 295;
     

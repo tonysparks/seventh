@@ -340,8 +340,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.gameType.registerListeners(this, dispatcher);
         
         this.awardSystem = new PlayerAwardSystem(this);
-        this.statSystem = new PlayerStatSystem(this);
-        
+        this.statSystem = new PlayerStatSystem(this);        
     }
         
     
@@ -543,6 +542,65 @@ public class Game implements GameInfo, Debugable, Updatable {
      */
     public void text(String message) {
         this.dispatcher.queueEvent(new SurvivorEvent(this, EventType.Message, null, message, -1, -1, null));
+    }
+    
+    /**
+     * Adds an explosion trigger that is activated when a bullet/explosion/rocket
+     * strikes the tile at the supplied x/y location
+     * 
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    public void addExplosionTrigger(int x, int y, Integer width, Integer height) {    
+        if(width==null||height==null) {
+            Tile tile = map.getWorldTile(0, x, y);
+            // snap to the tile
+            if(tile!=null) {
+                x = tile.getX();
+                y = tile.getY();
+            }
+            
+            width  = 32;
+            height = 32;
+        }
+        
+        final Rectangle bounds = new Rectangle(x, y, width, height);
+        
+        addTrigger(new Trigger() {
+            
+            Entity trigger = null;
+            
+            @Override
+            public boolean checkCondition(Game game) {
+                for(int i = 0; i < entities.length; i++) {
+                    Entity ent = entities[i];
+                    if(ent!=null) {
+                        Type entType = ent.getType();
+                        
+                        if(entType.equals(Type.BULLET) || 
+                           entType.equals(Type.EXPLOSION) || 
+                           entType.equals(Type.ROCKET)) {
+                            
+                            if(bounds.intersects(ent.getBounds())) {
+                                trigger = ent;
+                                return true;
+                            }
+                        }
+                        
+                    }
+                }
+                return false;
+            }
+            
+            @Override
+            public void execute(Game game) {
+                if(trigger != null) {
+                    game.newBigExplosion(new Vector2f(bounds.x, bounds.y), trigger, 15, 25, 1);
+                }
+            }
+        });
     }
     
     /**
