@@ -530,7 +530,7 @@ public class Hud implements Renderable {
             }
             
             int width = canvas.getWidth(message);
-            RenderFont.drawShadedString(canvas, message, canvas.getWidth()/2 - (width/2), canvas.getHeight() - canvas.getHeight("W") - 10, 0xffffffff);            
+            RenderFont.drawShadedString(canvas, message, canvas.getWidth()/2 - (width/2), canvas.getHeight() - canvas.getHeight("W") - 25, 0xffffffff);            
         }
     }
     
