@@ -201,14 +201,15 @@ public class Bomb extends Entity {
         this.pos.set(bombTarget.getCenterPos());
         
         if(this.planter == null) {
-            this.planter = planter;            
+            this.planter = planter;
+            
+            if(this.planter != null) {
+                this.plantTimer.start();
+            }
         }
         
         
-        if(this.planter != null) {
-            this.plantTimer.start();
-        }
-        else {
+        if(this.planter == null) {            
             this.plantTimer.stop();
         }                
     }
@@ -269,12 +270,13 @@ public class Bomb extends Entity {
     public void disarm(PlayerEntity entity) {
         if(this.disarmer == null) {
             this.disarmer = entity;
+            
+            if(this.disarmer!=null) {
+                this.disarmTimer.start();
+            }
         }
         
-        if(this.disarmer!=null) {
-            this.disarmTimer.start();
-        }
-        else {
+        if(this.disarmer == null) {
             this.disarmTimer.stop();
         }        
     }
