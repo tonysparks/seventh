@@ -176,7 +176,7 @@ public class PlayerEntity extends Entity implements Controllable {
         
         this.stamina = MAX_STAMINA;
         
-        this.visualBounds = new Rectangle(5000, 5000);
+        this.visualBounds = new Rectangle(2000, 2000);
         
         setLineOfSight(WeaponConstants.DEFAULT_LINE_OF_SIGHT);
         setHearingRadius(PLAYER_HEARING_RADIUS);

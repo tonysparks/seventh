@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -62,6 +63,7 @@ public class GdxCanvas implements Canvas {
     private boolean isBegun;
     
     private Stack<ShaderProgram> shaderStack;
+    private Stack<Float> zoomStack;
     
     private FrameBuffer fbo;
     
@@ -74,6 +76,7 @@ public class GdxCanvas implements Canvas {
         this.tmpColor = new Color();
         
         this.shaderStack = new Stack<>();
+        this.zoomStack = new Stack<>();
         
         this.camera = new OrthographicCamera(getWidth(), getHeight());
         this.camera.setToOrtho(true, getWidth(), getHeight());
@@ -958,11 +961,30 @@ public class GdxCanvas implements Canvas {
         this.shapes.identity();
     }
 
+    private void setZoom(float zoom) {
+        final float maxZoom = 2.0f;
+        
+        camera.zoom = MathUtils.clamp(zoom, 0.1f, 2.0f);
+
+        float effectiveViewportWidth = camera.viewportWidth * camera.zoom;
+        float effectiveViewportHeight = camera.viewportHeight * camera.zoom;
+
+        camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, maxZoom - effectiveViewportWidth / 2f);
+        camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, maxZoom - effectiveViewportHeight / 2f);
+        
+        this.camera.update();
+        
+        this.batch.setProjectionMatrix(this.camera.combined);
+        this.shapes.setProjectionMatrix(this.camera.combined);
+    }
+    
     /* (non-Javadoc)
      * @see seventh.client.gfx.Canvas#pushZoom(double)
      */
     @Override
     public void pushZoom(double zoom) {
+        this.zoomStack.push((float)zoom);
+        setZoom(this.zoomStack.peek().floatValue());
     }
 
     /* (non-Javadoc)
@@ -970,6 +992,8 @@ public class GdxCanvas implements Canvas {
      */
     @Override
     public void popZoom() {
+        this.zoomStack.pop();
+        setZoom(this.zoomStack.empty() ? 1f : this.zoomStack.peek().floatValue());        
     }
 
     /* (non-Javadoc)
