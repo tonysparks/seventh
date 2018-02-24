@@ -10,8 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import com.badlogic.gdx.math.MathUtils;
-
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.client.entities.ClientBombTarget;
@@ -55,7 +53,6 @@ import seventh.client.weapon.ClientBomb;
 import seventh.game.Timers;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
-import seventh.game.entities.PlayerEntity.Keys;
 import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetCtfGameTypeInfo;
 import seventh.game.net.NetEntity;
@@ -171,8 +168,6 @@ public class ClientGame {
     private final Vector2f screenToWorld;
     private       ClientPlayerEntity selectedEntity;
 
-    private float zoom;
-    
     private Leola runtime;
     
     /**
@@ -259,8 +254,6 @@ public class ClientGame {
     
         this.runtime = Scripting.newSandboxedRuntime();    
         this.runtime.loadLibrary(new ClientLeolaLibrary(this), "client");
-        
-        this.zoom = 1.5f;
     }    
     
     /**
@@ -456,7 +449,6 @@ public class ClientGame {
             hud.render(canvas, camera, alpha);
         }
         else {
-            canvas.pushZoom(this.zoom);            
             canvas.fboBegin();
             {
                 gameEffects.preRenderFrameBuffer(canvas, camera, alpha);
@@ -467,7 +459,6 @@ public class ClientGame {
             gameEffects.postRenderFrameBuffer(canvas, camera, alpha);
             
             renderWorld(canvas, camera, alpha);
-            canvas.popZoom();
             
             canvas.setShader(null);
             DebugDraw.enable(false);
@@ -883,34 +874,7 @@ public class ClientGame {
                     }
                 }
             }
-        }
-        
-        if(Keys.WEAPON_SWITCH_UP.isDown(keys)) {
-  //          this.zoom += 0.1f;
-            
-            final float maxZoom = 200;
-            
-            Rectangle bounds = camera.getViewPort();
-//            float effectiveViewportWidth = bounds.width * camera.zoom;
-//            float effectiveViewportHeight = bounds.height * camera.zoom;
-//
-//            camera.setScreenCoord(pos);
-//            
-//            camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, maxZoom - effectiveViewportWidth / 2f);
-//            camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, maxZoom - effectiveViewportHeight / 2f);
-            
-            int width  = bounds.width + (int) ((float)bounds.width * 0.1f);
-            int height = bounds.height + (int) ((float)bounds.height * 0.1f);
-//            camera.setViewPort(new Rectangle(width, height));    
-        }
-        else if(Keys.WEAPON_SWITCH_DOWN.isDown(keys)) {
-//            this.zoom -= 0.1f;
-            Rectangle bounds = camera.getViewPort();
-            int width  = bounds.width - (int) ((float)bounds.width * 0.1f);
-            int height = bounds.height - (int) ((float)bounds.height * 0.1f);
-  //          camera.setViewPort(new Rectangle(width, height));
-        }
-        
+        }        
     }
     
     /**
@@ -1044,13 +1008,6 @@ public class ClientGame {
         camera.setViewPort(new Rectangle(this.app.getScreenWidth(), this.app.getScreenHeight()));
 //        camera.setMovementSpeed(new Vector2f(4000, 4000));
         camera.setMovementSpeed(new Vector2f(130, 130));
-                
-        
-        Rectangle bounds = camera.getViewPort();
-        int width  = bounds.width + (int) ((float)bounds.width * 0.5f);
-        int height = bounds.height + (int) ((float)bounds.height * 0.5f);
-
-        camera.setViewPort(new Rectangle(width, height));
         return camera;
     }
     
