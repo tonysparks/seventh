@@ -301,6 +301,14 @@ public abstract interface Map extends Renderable, Debugable {
      */
     public abstract Tile getWorldCollidableTile(int x, int y);
     
+    /**
+     * Determines if there is a collidable tile at the location.
+     * 
+     * @param x
+     * @param y
+     * @return true if there is a collidable tile at this location
+     */
+    public abstract boolean hasCollidableTile(int x, int y);
     
     /**
      * Determines if there is a collidable tile at the location.
@@ -344,6 +352,17 @@ public abstract interface Map extends Renderable, Debugable {
      * @return true if a collision occurs, false otherwise
      */
     public abstract boolean rectCollides( Rectangle rect, int heightMask );
+    
+    /**
+     * Check for a collision given a {@link Rectangle}
+     * 
+     * @param rect
+     * @param heightMask
+     * @param collisionTilePos - if there is a collision, the tile indexes that caused the collision
+     * @return true if a collision occurs, false otherwise
+     */
+    public abstract boolean rectCollides(Rectangle rect, int heightMask, Vector2f collisionTilePos);
+    
     
     /**
      * Check for a collision given a point
