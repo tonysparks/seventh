@@ -90,12 +90,16 @@ public class OrthoMap implements Map {
     
     private java.util.Map<Integer, TextureRegion> shadeTilesLookup;
     
+    private Vector2f collisionTilePos;
+    
     /**
      * Constructs a new {@link OrthoMap}.
      */
     public OrthoMap(boolean loadAssets) {
         this.currentFrameViewport = new Rectangle();
         this.destroyedTiles = new ArrayList<Tile>();
+        this.collisionTilePos = new Vector2f();
+        
         if(loadAssets) {
             this.shadeTilesLookup = new HashMap<Integer, TextureRegion>();
         }
@@ -121,6 +125,14 @@ public class OrthoMap implements Map {
      */
     public Layer[] getForegroundLayers() {
         return foregroundLayers;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.map.Map#hasCollidableTile(int, int)
+     */
+    @Override
+    public boolean hasCollidableTile(int x, int y) {     
+        return getCollidableTile(x, y) != null;
     }
     
     /* (non-Javadoc)
@@ -317,7 +329,8 @@ public class OrthoMap implements Map {
      * @see leola.live.game.Map#rectCollides(leola.live.math.Rectangle)
      */
     @Override
-    public boolean rectCollides(Rectangle rect, int heightMask) {
+    public boolean rectCollides(Rectangle rect, int heightMask, Vector2f collisionTilePos) {       
+        collisionTilePos.set(-1, -1);
         
         if(!worldBounds.contains(rect)) {
             return true;
@@ -360,10 +373,12 @@ public class OrthoMap implements Map {
                             int tileHeightMask = tile.getHeightMask();
                             if(tileHeightMask>0) {                            
                                 if ( (tileHeightMask & heightMask) == tileHeightMask && (tile.rectCollide(rect)) ) {
+                                    collisionTilePos.set(tile.getX(), tile.getY());
                                     return true;
                                 }
                             } 
                             else if( tile.rectCollide(rect) ) {
+                                collisionTilePos.set(tile.getX(), tile.getY());
                                 return true;
                             }
                         }
@@ -373,6 +388,14 @@ public class OrthoMap implements Map {
         }
         
         return false;
+    }
+    
+    /* (non-Javadoc)
+     * @see leola.live.game.Map#rectCollides(leola.live.math.Rectangle)
+     */
+    @Override
+    public boolean rectCollides(Rectangle rect, int heightMask) {
+        return rectCollides(rect, heightMask, this.collisionTilePos);
     }
 
     @Override

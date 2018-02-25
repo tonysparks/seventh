@@ -315,6 +315,8 @@ public abstract class Entity implements Debugable {
     
     public int deadFrame;
     
+    private Vector2f xCollisionTilePos, yCollisionTilePos;
+    
     /**
      * @param position
      * @param speed
@@ -356,6 +358,9 @@ public abstract class Entity implements Debugable {
         this.centerPos = new Vector2f();
         
         this.scriptObj = LeoObject.valueOf(this);
+        
+        this.xCollisionTilePos = new Vector2f();
+        this.yCollisionTilePos = new Vector2f();
     }
     
     /**
@@ -608,6 +613,85 @@ public abstract class Entity implements Debugable {
     }
     
     /**
+     * Adjusts the y movement if the player is at the edge of a collidable tile and there
+     * is a free space
+     * 
+     * @param collisionTilePos
+     * @param deltaX
+     * @param currentX
+     * @param currentY
+     * @return the adjusted y to move
+     */
+    private int adjustY(Vector2f collisionTilePos, float deltaX, int currentX, int currentY) {
+        Map map = game.getMap();
+        Tile collisionTile = map.getWorldCollidableTile((int)collisionTilePos.x, (int)collisionTilePos.y);
+        if(collisionTile != null) {
+            //DebugDraw.drawRectRelative(collisionTile.getBounds(), 0xff00ff00);
+            
+            int xIndex = collisionTile.getXIndex();
+            int yIndex = collisionTile.getYIndex();
+            
+            int offset = 16;
+            
+            if(!map.checkTileBounds(xIndex, yIndex - 1) && !map.hasCollidableTile(xIndex, yIndex - 1)) {
+                if(currentY < (collisionTile.getY()-(bounds.height-offset))) {
+                    //DebugDraw.drawRectRelative(map.getTile(0, xIndex, yIndex-1).getBounds(), 0xafff0000);
+                    return currentY - 1;
+                }
+            }
+            
+            if(!map.checkTileBounds(xIndex, yIndex + 1) && !map.hasCollidableTile(xIndex, yIndex + 1)) {
+                if(currentY > (collisionTile.getY()+(collisionTile.getHeight()-offset))) {
+                    //DebugDraw.drawRectRelative(map.getTile(0, xIndex, yIndex+1).getBounds(), 0xaf0000ff);
+                    return currentY + 1;
+                }
+            }            
+        }
+        
+        return currentY;
+    }
+    
+    
+    /**
+     * Adjusts the x movement if the player is at the edge of a collidable tile and there
+     * is a free space
+     * 
+     * @param collisionTilePos
+     * @param deltaY
+     * @param currentX
+     * @param currentY
+     * @return the adjusted x to move
+     */
+    private int adjustX(Vector2f collisionTilePos, float deltaY, int currentX, int currentY) {
+        Map map = game.getMap();
+        Tile collisionTile = map.getWorldCollidableTile((int)collisionTilePos.x, (int)collisionTilePos.y);
+        if(collisionTile != null) {
+            //DebugDraw.drawRectRelative(collisionTile.getBounds(), 0xff00ff00);
+            
+            int xIndex = collisionTile.getXIndex();
+            int yIndex = collisionTile.getYIndex();
+            
+            int offset = 16;
+            
+            if(!map.checkTileBounds(xIndex-1, yIndex) && !map.hasCollidableTile(xIndex-1, yIndex)) {
+                if(currentX+bounds.width < (collisionTile.getX()+offset)) {
+                    //DebugDraw.drawRectRelative(map.getTile(0, xIndex-1, yIndex).getBounds(), 0xafff0000);
+                    return currentX - 1;
+                }
+            }
+            
+            if(!map.checkTileBounds(xIndex+1, yIndex) && !map.hasCollidableTile(xIndex+1, yIndex)) {
+                if(currentX > (collisionTile.getX()+collisionTile.getWidth()-offset)) {
+                    //DebugDraw.drawRectRelative(map.getTile(0, xIndex+1, yIndex).getBounds(), 0xaf0000ff);
+                    return currentX + 1;
+                }
+            }            
+        }
+        
+        return currentX;
+    }
+    
+    /**
      * @param dt
      * @return true if blocked
      */
@@ -637,11 +721,10 @@ public abstract class Entity implements Debugable {
                 this.movementDir.y = vel.y;
             }
             
-            
             Map map = game.getMap();
             
             bounds.x = (int)newX;
-            if( map.rectCollides(bounds, collisionHeightMask) ) {
+            if( map.rectCollides(bounds, collisionHeightMask, xCollisionTilePos) ) {
                 isBlocked = collideX((int)newX, bounds.x);
                 if(isBlocked) { 
                     bounds.x = (int)pos.x;
@@ -657,7 +740,7 @@ public abstract class Entity implements Debugable {
             
             
             bounds.y = (int)newY;
-            if( map.rectCollides(bounds, collisionHeightMask)) {
+            if( map.rectCollides(bounds, collisionHeightMask, yCollisionTilePos)) {
                 isBlocked = collideY((int)newY, bounds.y);
                 if(isBlocked) {
                     bounds.y = (int)pos.y;
@@ -670,19 +753,29 @@ public abstract class Entity implements Debugable {
                 isBlocked = true;
             }
             
-
-            /* some things want to stop dead it their tracks
-             * if a component is blocked
-             */
-            if(isBlocked && !continueIfBlock()) {
-                bounds.setLocation(pos);                
+            if(isBlocked) {
+                /* some things want to stop dead it their tracks
+                 * if a component is blocked
+                 */
+                if(!continueIfBlock()) {
+                    bounds.setLocation(pos);
+                    
+                    newX = pos.x;
+                    newY = pos.y;
+                }  
                 
-                newX = pos.x;
-                newY = pos.y;
+                /*
+                 * Otherwise determine if the character
+                 * is a couple pixels off and is snagged on
+                 * a corner, if so auto adjust them
+                 */
+                else if(deltaX!=0 && deltaY==0) {
+                    newY = adjustY(xCollisionTilePos, deltaX, (int)(pos.x + deltaX), bounds.y);
+                }
+                else if(deltaX==0 && deltaY!=0) {
+                    newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(pos.y + deltaY));
+                }
             }
-                        
-//            pos.x = bounds.x;
-//            pos.y = bounds.y;
         
             pos.x = newX;
             pos.y = newY;
