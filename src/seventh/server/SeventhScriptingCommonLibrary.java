@@ -6,6 +6,7 @@ package seventh.server;
 
 import seventh.game.Game;
 import seventh.game.Trigger;
+import seventh.game.entities.Door;
 import seventh.game.entities.Entity;
 import seventh.game.type.obj.BombTargetObjective;
 import seventh.game.weapons.Bullet;
@@ -65,22 +66,103 @@ public class SeventhScriptingCommonLibrary {
         return new BombTargetObjective(new Vector2f(x, y), name, rotated);
     }
     
+    /**
+     * Places a door in the world at the specified tileX/tileY coordinates
+     * 
+     * @param tileX
+     * @param tileY
+     * @param hinge
+     */
+    public static Door newDoor(Game game, int tileX, int tileY, String hinge, String pos) {
+        if(game.getMap().checkTileBounds(tileX, tileY)) {
+           return null; 
+        }
+        
+        Tile tile = game.getMap().getTile(0, tileX, tileY);
+        int offset = 0;
+        if(pos != null) {
+            switch(pos.toLowerCase()) {
+            case "left":
+                offset = Door.DOOR_WIDTH / 2;
+                break;
+            case "top":
+                offset = Door.DOOR_WIDTH / 2;
+                break;
+            case "middle":
+                offset += tile.getHeight() / 2; 
+                break;
+            case "bottom":
+                offset = tile.getHeight() - Door.DOOR_WIDTH / 2;
+                break;
+            case "right":
+                offset = tile.getHeight() - Door.DOOR_WIDTH / 2;
+                break;
+            }
+        }
+        
+        float posX = 0;
+        float posY = 0;
+        
+        float facingX = 0;
+        float facingY = 0;
+        
+        switch(hinge.toLowerCase()) {
+            case "n":
+            case "north":
+                posX = tile.getX() + offset;
+                posY = tile.getY();
+                
+                facingX = 0;
+                facingY = 1;
+                
+                break;
+            case "e":
+            case "east":
+                posX = tile.getX() + tile.getWidth();
+                posY = tile.getY() + offset;
+                
+                facingX = 1;
+                facingY = 0;
+                
+                break;
+            case "s":
+            case "south":
+                posX = tile.getX() + offset;
+                posY = tile.getY() + tile.getHeight();
+                
+                facingX = 0;
+                facingY = -1;
+                
+                break;
+            case "w":
+            case "west":
+                posX = tile.getX();
+                posY = tile.getY() + offset;
+                
+                facingX = -1;
+                facingY = 0;
+                
+                break;
+        }
+        
+        return game.newDoor(posX, posY, facingX, facingY);
+    }
 
     /**
      * Binds an explosion to a tile.  If a bullet or an explosion intersects the tile
      * at the specified location.
      * 
      * @param game
-     * @param x
-     * @param y
+     * @param tileX
+     * @param tileY
      */
-    public static void newExplosiveCrate(Game game, final int x, final int y) {
-        final Tile tile = game.getMap().getWorldTile(0, x, y);
-        if(tile==null) {
-            Cons.println("Invalid tile position: " + x + ", " + y);
+    public static void newExplosiveCrate(Game game, final int tileX, final int tileY) {
+        if(game.getMap().checkTileBounds(tileX, tileY)) {
+            Cons.println("Invalid tile position: " + tileX + ", " + tileY);
             return;
         }
         
+        final Tile tile = game.getMap().getTile(0, tileX, tileY);                
         game.addTrigger(new Trigger() {
             
             Entity triggeredEntity = null;
@@ -107,7 +189,7 @@ public class SeventhScriptingCommonLibrary {
             @Override
             public void execute(Game game) {
                 if(triggeredEntity!=null) {
-                    game.newBigExplosion(new Vector2f(x,y), triggeredEntity, 15, 25, 1);
+                    game.newBigExplosion(new Vector2f(tile.getX(),tile.getY()), triggeredEntity, 15, 25, 1);
                 }
             }
         });
