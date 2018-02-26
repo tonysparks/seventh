@@ -25,6 +25,7 @@ public class ClientDoor extends ClientEntity {
 
     private SmoothOrientation rotation;
     private Vector2f frontDoorHandle,
+                     frontHingePos,
                      rearDoorHandle, 
                      rearHingePos;
     
@@ -44,6 +45,7 @@ public class ClientDoor extends ClientEntity {
         this.rotation = new SmoothOrientation(0.05);
         this.rotation.setOrientation(0);
         this.frontDoorHandle = new Vector2f();
+        this.frontHingePos = new Vector2f();
         this.rearDoorHandle = new Vector2f();
         this.rearHingePos = new Vector2f();
         
@@ -59,7 +61,9 @@ public class ClientDoor extends ClientEntity {
         this.hinge = DoorHinge.fromNetValue(door.hinge);
         this.rotation.setOrientation(this.getOrientation());
 
-        Vector2f.Vector2fMA(getPos(), this.rotation.getFacing(), 64, this.frontDoorHandle);
+        this.frontHingePos = this.hinge.getFrontHingePosition(getPos(), this.rotation.getFacing(), this.frontHingePos);
+        Vector2f.Vector2fMA(this.frontHingePos, this.rotation.getFacing(), 64, this.frontDoorHandle);
+        
         this.rearHingePos = this.hinge.getRearHingePosition(getPos(), this.rotation.getFacing(), this.rearHingePos);                
         Vector2f.Vector2fMA(this.rearHingePos, this.rotation.getFacing(), 64, this.rearDoorHandle);
         
@@ -90,8 +94,8 @@ public class ClientDoor extends ClientEntity {
     public boolean isTouching(Rectangle bounds) {
 //        return Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
 //               Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
-        boolean isTouching = Line.lineIntersectsRectangle(getPos(), this.frontDoorHandle, bounds) ||
-                Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
+        boolean isTouching = Line.lineIntersectsRectangle(this.frontHingePos, this.frontDoorHandle, bounds) ||
+                             Line.lineIntersectsRectangle(this.rearHingePos, this.rearDoorHandle, bounds);
 //         if(isTouching) {
 //             DebugDraw.fillRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xff00ff00);
 //             DebugDraw.drawLineRelative(getPos(), this.frontDoorHandle, 0xffffff00);
@@ -106,8 +110,10 @@ public class ClientDoor extends ClientEntity {
         /*canvas.drawLine(getPos().x - cameraPos.x, getPos().y - cameraPos.y, 
                         this.doorHandle.x - cameraPos.x, this.doorHandle.y - cameraPos.y, 0xffff00ff);*/
         
+        Vector2f pos = getPos();
+        
         this.sprite.setRotation((float)Math.toDegrees(getOrientation()));
-        this.sprite.setPosition(getPos().x - cameraPos.x, getPos().y - cameraPos.y);
+        this.sprite.setPosition(pos.x - cameraPos.x, pos.y - cameraPos.y - 8f);
         canvas.drawRawSprite(this.sprite);
     }
 
