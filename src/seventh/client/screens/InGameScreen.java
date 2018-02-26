@@ -697,9 +697,9 @@ public class InGameScreen implements Screen {
             String message = "" + game.screenToWorldCoordinates(cursor.getX(), cursor.getY());
             int len = canvas.getWidth(message);
             canvas.drawString(message, cursor.getX() - len/2, cursor.getY() + 50, 0xffffffff);
-            Tile tile = game.getMap().getWorldTile(0, cursor.getX(), cursor.getY());
+            Vector2f pos = camera.getRenderPosition(alpha);
+            Tile tile = game.getMap().getWorldTile(0, cursor.getX()+(int)pos.x, cursor.getY()+(int)pos.y);
             if(tile!=null) {
-                Vector2f pos = camera.getRenderPosition(alpha);
                 message = "(" + tile.getXIndex() + "," + tile.getYIndex() + ")";
                 len = canvas.getWidth(message);
                 canvas.drawString(message, cursor.getX() - len/2, cursor.getY() + 90, 0xffffffff);
