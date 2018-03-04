@@ -222,6 +222,8 @@ public class Door extends Entity {
         this.autoCloseRadius = new Rectangle(100, 100);
         
         this.bounds.set(this.handleTouchRadius);
+        this.bounds.setLocation(getPos());
+        
         this.hingeTouchRadius.centerAround(getPos());
         this.autoCloseRadius.centerAround(getPos());
         
