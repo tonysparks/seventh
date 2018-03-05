@@ -33,7 +33,6 @@ public class DroppedItem extends Entity {
         
         this.bounds.width = 24;
         this.bounds.height = 24;
-        this.bounds.centerAround(position);
         
         this.orientation = (float)Math.toRadians(game.getRandom().nextInt(360));
         
@@ -56,7 +55,7 @@ public class DroppedItem extends Entity {
             timeToLive -= timeStep.getDeltaTime();            
         }
         else {
-            softKill();
+            kill(null);
         }
         
         
@@ -70,16 +69,11 @@ public class DroppedItem extends Entity {
             int size = players.length;
             for(int i = 0; i < size; i++) {
                 PlayerEntity ent = players[i];
-                if(ent != null) {
-                    if(ent.isAlive() && !ent.getType().isVehicle()) {
-                        if(ent.bounds.intersects(bounds)) {
-                            if(ent.pickupItem(droppedItem)) {
-                                softKill(); /* remove this dropped item */
-                                break;
-                            }
-                        }
+                if(canBePickedUpBy(ent)) {
+                    if(pickup(ent)) {                                                        
+                        break;
                     }
-                }
+                }                
             }
         }
         
@@ -102,4 +96,34 @@ public class DroppedItem extends Entity {
         return this.netEntity;
     }
 
+    /**
+     * If this {@link DroppedItem} can be picked up by the supplied {@link PlayerEntity}
+     * 
+     * @param ent
+     * @return true if it can be picked up; false otherwise
+     */
+    public boolean canBePickedUpBy(PlayerEntity ent) {
+        if(isAlive()) {
+            if(ent != null && ent.isAlive() && !ent.getType().isVehicle()) {
+                return (ent.bounds.intersects(bounds));
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Have the supplied {@link PlayerEntity} pick up the {@link DroppedItem}
+     * 
+     * @param ent
+     * @return true if the player picked up the dropped item
+     */
+    public boolean pickup(PlayerEntity ent) {
+        if(ent.pickupItem(droppedItem)) {
+            kill(ent);
+            return true;
+        }
+        
+        return false;
+    }
 }

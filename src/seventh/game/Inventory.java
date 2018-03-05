@@ -146,6 +146,13 @@ public class Inventory {
     }
     
     /**
+     * @return true if the primary weapon storage is full
+     */
+    public boolean isPrimaryFull() {
+        return numberOfPrimaryItems() >= this.maxPrimaryWeapons;
+    }
+    
+    /**
      * @return the weapons
      */
     public List<Weapon> getItems() {

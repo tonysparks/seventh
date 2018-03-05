@@ -13,7 +13,6 @@ import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetDroppedItem;
 import seventh.game.net.NetEntity;
 import seventh.math.Vector2f;
-import seventh.shared.TimeStep;
 
 /**
  * @author Tony
@@ -105,11 +104,6 @@ public class ClientDroppedItem extends ClientEntity {
             weapon.scale(-0.65f);
             weapon.rotate( (float)Math.toDegrees(this.orientation));
         }
-    }
-
-    @Override
-    public void update(TimeStep timeStep) {
-        super.update(timeStep);
     }
     
     @Override

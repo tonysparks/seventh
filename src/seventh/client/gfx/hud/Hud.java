@@ -719,7 +719,7 @@ public class Hud implements Renderable {
 
         if(game.isNearDroppedItem(this.localPlayer.getEntity())) {
             KeyMap keyMap = app.getKeyMap();            
-            String text = "Press the '" + keyMap.keyString(keyMap.getDropWeaponKey()) +"' key to swap weapons";
+            String text = "Press the '" + keyMap.keyString(keyMap.getDropWeaponKey()) +"' key to pick up or swap weapons";
             drawMessage(canvas, text);    
         }
     }

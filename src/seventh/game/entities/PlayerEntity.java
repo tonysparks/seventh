@@ -343,6 +343,16 @@ public class PlayerEntity extends Entity implements Controllable {
     }
     
     /**
+     * Attempts to pick up the {@link DroppedItem}
+     * 
+     * @param item
+     * @return true if the player picked up the {@link DroppedItem}
+     */
+    public boolean pickupDroppedItem(DroppedItem item) {
+        return item.pickup(this);
+    }
+    
+    /**
      * Pickup a flag
      * 
      * @param flag
@@ -854,7 +864,7 @@ public class PlayerEntity extends Entity implements Controllable {
             }
             
             if(Keys.DROP_WEAPON.isDown(previousKeys) && !Keys.DROP_WEAPON.isDown(keys)) {            
-                dropItem(true);
+                dropWeapon();
             }
             
             if(Keys.RELOAD.isDown(keys)) {
@@ -1308,6 +1318,20 @@ public class PlayerEntity extends Entity implements Controllable {
         
     }
     
+    public void armWeapon(Weapon weapon) {
+        if(weapon != null) {
+            if(inventory.hasItem(weapon.getType())) {
+                inventory.equipItem(weapon.getType());
+                
+                weapon.setSwitchingWeaponState();
+                if(weapon.isHeavyWeapon()) {
+                    standup();
+                }
+                checkLineOfSightChange();    
+            }
+        }
+    }
+    
     
     /**
      * Determines if this entity is currently planting a bomb
@@ -1373,6 +1397,27 @@ public class PlayerEntity extends Entity implements Controllable {
     
     protected void handleDoor(Door door) {
         door.handleDoor(this);
+    }
+    
+    /**
+     * Drop the players current weapon, and if there is a weapon
+     * near, and we have a full inventory
+     */
+    public void dropWeapon() {
+        // if we have a full inventory, and there is a weapon
+        // near this entity, replace the dropped item with the near weapon
+        DroppedItem itemNearMe = game.getArmsReachDroppedWeapon(this);
+        if(itemNearMe != null) {
+            if(this.inventory.isPrimaryFull()) {
+                dropItem(true);
+            }
+            
+            pickupDroppedItem(itemNearMe);            
+            armWeapon(itemNearMe.getDroppedItem());
+        }   
+        else {
+            dropItem(true);
+        }
     }
     
     /**
@@ -1794,7 +1839,6 @@ public class PlayerEntity extends Entity implements Controllable {
         player.health = (byte)getHealth(); 
 //        player.events = (byte)getEvents();
         player.stamina = getStamina();
-        setEvents(0);
         
         player.isOperatingVehicle = isOperatingVehicle();
         if(player.isOperatingVehicle) {

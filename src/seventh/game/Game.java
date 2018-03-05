@@ -166,6 +166,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private List<Flag> flags;
     private List<Door> doors;
     private List<Smoke> smokeEntities;
+    private List<DroppedItem> droppedItems;
     
     private Players players;
                 
@@ -248,6 +249,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.flags = new ArrayList<Flag>();
         this.doors = new ArrayList<Door>();
         this.smokeEntities = new ArrayList<Smoke>();
+        this.droppedItems = new ArrayList<DroppedItem>();
         
         this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
         this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
@@ -778,6 +780,13 @@ public class Game implements GameInfo, Debugable, Updatable {
         return smokeEntities;
     }
     
+    /**
+     * @return the droppedItems
+     */
+    public List<DroppedItem> getDroppedItems() {
+        return droppedItems;
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getPlayerInfos()
      */
@@ -1134,6 +1143,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.flags.clear();
         this.doors.clear();
         this.smokeEntities.clear();
+        this.droppedItems.clear();
         
         this.players.resetStats();
         this.aiSystem.destroy();
@@ -1543,7 +1553,16 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @return the item
      */
     public DroppedItem newDroppedItem(Vector2f pos, Weapon item) {
-        DroppedItem droppedItem = new DroppedItem(pos, this, item);
+        final DroppedItem droppedItem = new DroppedItem(pos, this, item);
+        droppedItem.onKill = new KilledListener() {
+            
+            @Override
+            public void onKill(Entity entity, Entity killer) {
+                droppedItems.remove(droppedItem);
+            }
+        };
+        
+        droppedItems.add(droppedItem);
         addEntity(droppedItem);
         return droppedItem;
     }
@@ -1810,6 +1829,25 @@ public class Game implements GameInfo, Debugable, Updatable {
         return flag;
     }
 
+    /**
+     * If the entity is near enough a dropped weapon to pick up.
+     * 
+     * @param entity
+     * @return the dropped weapon which the entity is close enough to pick up,
+     * otherwise null
+     */
+    public DroppedItem getArmsReachDroppedWeapon(PlayerEntity entity)  {
+        int size = this.droppedItems.size();
+        for(int i = 0; i < size; i++) {
+            DroppedItem item = this.droppedItems.get(i);
+            if(item.canBePickedUpBy(entity)) {
+                return item;
+            }
+        }
+        
+        return null;
+    }
+    
     /**
      * If the entity is near enough a door to handle.
      * 
