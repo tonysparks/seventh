@@ -98,23 +98,6 @@ public abstract class Entity implements Debugable {
         }
     }
     
-    public static enum Events {
-        DAMAGE(1<<0),
-        KILLED(1<<1),
-        ;
-        
-        private Events(int e) {
-            this.netValue = e;
-        }
-        
-        private int netValue;
-        
-        public int netValue() {
-            return netValue;
-        }
-        
-    }
-    
     /**
      * Entity Type
      * 
@@ -299,8 +282,6 @@ public abstract class Entity implements Debugable {
     private Type type;        
     protected int id;
     
-    private int events;
-
     private LeoObject scriptObj;
     
     /* if states become unweidly, convert to EntityStateMachine */
@@ -401,29 +382,6 @@ public abstract class Entity implements Debugable {
     public int getId() {
         return id;
     }
-    
-    /**
-     * @param events the events to set
-     */
-    public void setEvents(int events) {
-        this.events = events;
-    }
-    
-    public void addEvent(Events event) {
-        this.events |= event.netValue();
-    }
-    
-    public void removeEvent(Events event) {
-        this.events &= ~event.netValue();
-    }
-    
-    /**
-     * @return the events
-     */
-    public int getEvents() {
-        return events;
-    }
-    
     
     /**
      * @param type the type to set
@@ -918,8 +876,6 @@ public abstract class Entity implements Debugable {
             if(onKill != null) {
                 onKill.onKill(this, killer);
             }
-        
-            addEvent(Events.KILLED);
         }
     }
     
@@ -939,7 +895,6 @@ public abstract class Entity implements Debugable {
             if (onDamage != null) {
                 onDamage.onDamage(damager, amount);
             }
-            addEvent(Events.DAMAGE);
         }
         
         game.getStatSystem().onPlayerDamaged(this, damager, amount);
