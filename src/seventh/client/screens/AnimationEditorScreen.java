@@ -86,7 +86,7 @@ public class AnimationEditorScreen implements Screen {
 
         uiPos.x = app.getScreenWidth()/2 + 50;
         uiPos.y = app.getScreenHeight() - 20;
-        Button cancelBtn = setupButton(uiPos, "Exit");
+        Button cancelBtn = setupButton(uiPos, "Exit", true);
         cancelBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
@@ -97,12 +97,12 @@ public class AnimationEditorScreen implements Screen {
         });
         
         int startX = app.getScreenWidth()/2;
-        int startY = app.getScreenHeight()/6;
+        int startY = 60;//app.getScreenHeight()/6;
         uiPos.x = startX;
         uiPos.y = startY;
         
         int xSpacing = 180;
-        int ySpacing = 50;
+        int ySpacing = 30;
         
         final TextBox pathBox = setupTextBox(uiPos, 500, "Image File: ", "[PASTE FILE PATH TO IMAGE]");
         uiPos.x = pathBox.getBounds().x;
@@ -130,7 +130,7 @@ public class AnimationEditorScreen implements Screen {
         uiPos.x = pathBox.getBounds().x + pathBox.getBounds().width + 80;
         uiPos.y = pathBox.getBounds().y + 15;
         
-        loadAnimation = setupButton(uiPos, "Load");        
+        loadAnimation = setupButton(uiPos, "Load", true);        
         loadAnimation.getTextLabel().setFont(theme.getPrimaryFontName());
         loadAnimation.addOnButtonClickedListener(new OnButtonClickedListener() {
             
@@ -201,7 +201,7 @@ public class AnimationEditorScreen implements Screen {
                 
         
         uiPos.x = app.getScreenWidth()/3;
-        uiPos.y = app.getScreenHeight() - 90;
+        uiPos.y = app.getScreenHeight() - 50;
         
         /*====================================*/
         /* Animation Panel */
@@ -267,7 +267,7 @@ public class AnimationEditorScreen implements Screen {
         /*====================================*/
         
         uiPos.x = app.getScreenWidth()/3;
-        uiPos.y = app.getScreenHeight() - 90;
+        uiPos.y = app.getScreenHeight() - 50;
 
         Button playBtn = setupButton(uiPos, "Play");
         steppingPanel.addWidget(playBtn);        
@@ -333,15 +333,19 @@ public class AnimationEditorScreen implements Screen {
     }
     
     private Button setupButton(Vector2f pos, final String text) {
+        return setupButton(pos, text, false);
+    }
+    
+    private Button setupButton(Vector2f pos, final String text, boolean isBig) {
         Button btn = new Button();
         btn.setTheme(theme);
         btn.setText(text);
-        btn.setBounds(new Rectangle(100, 40));
+        btn.setBounds(isBig ? new Rectangle(100, 40) : new Rectangle(100, 30));
         btn.getBounds().centerAround(pos);
         btn.setForegroundColor(theme.getForegroundColor());
         btn.setEnableGradiant(false);
-        btn.setTextSize(18);
-        btn.setHoverTextSize(22);        
+        btn.setTextSize(isBig ? 18 : 14);
+        btn.setHoverTextSize(isBig ? 22 : 18);        
         btn.getTextLabel().setFont(theme.getPrimaryFontName());        
         btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());        
@@ -452,7 +456,7 @@ public class AnimationEditorScreen implements Screen {
         int fontColor = theme.getForegroundColor();
         String message = "Animation Editor";
         RenderFont.drawShadedString(canvas, message
-                , canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/12, fontColor);
+                , canvas.getWidth()/2 - canvas.getWidth(message)/2, 30, fontColor);
                 
 
         canvas.end();
