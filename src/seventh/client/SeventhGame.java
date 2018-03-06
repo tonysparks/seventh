@@ -211,25 +211,7 @@ public class SeventhGame implements ApplicationListener {
                 LightEffectShader.getInstance().reload();
             }
         });
-        
-        console.addCommand(new Command("v_reload_gfx") {            
-            @Override
-            public void execute(Console console, String... args) {
-                Art.reload();
-            }
-        });
-        
-//        console.addCommand(new Command("v_reload_animation") {            
-//            @Override
-//            public void execute(Console console, String... args) {
-//                try {
-//                    Art.debugAnimations(new Leola());
-//                } catch (Exception e) {
-//                    console.println("*** Error loading animations: " + e);
-//                }
-//            }
-//        });
-        
+                
         console.addCommand(new Command("animation_editor"){            
             @Override
             public void execute(Console console, String... args) {
