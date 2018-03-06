@@ -283,7 +283,8 @@ public class OrthoMap implements Map {
         int wy = (tileOffset_y + y) / this.tileHeight;
         
         for (int i = 0; i < this.collidableLayers.length; i++) {        
-            Tile tile = this.backgroundLayers[this.collidableLayers[i].getIndex()].getRow(wy)[wx];                     
+            //Tile tile = this.backgroundLayers[this.collidableLayers[i].getIndex()].getRow(wy)[wx];                     
+            Tile tile = this.collidableLayers[i].getRow(wy)[wx];
             if ( tile != null ) {
                 int tileHeightMask = tile.getHeightMask();
                 if(tileHeightMask>0) {
