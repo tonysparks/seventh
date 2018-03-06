@@ -41,7 +41,7 @@ public class ImageScaler {
      */
     public static void main(String[] args) throws Exception {
         
-        ScaleType type = ScaleType.AXIS_LEGS;
+        ScaleType type = ScaleType.AXIS_POSITION;
         
         
         File imageFile = null;
@@ -54,21 +54,21 @@ public class ImageScaler {
         
         switch(type) {
             case AXIS_DEATH1: {
-                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\seventh\\gfx\\player\\axis_death_01.png");
+                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\assets\\gfx\\player\\axis_death_01.png");
                 scale = 0.60f;
                 width = 512;
                 height = 256;
                 break;
             }
             case AXIS_DEATH2: {
-                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\seventh\\gfx\\player\\axis_death_02.png");
+                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\assets\\gfx\\player\\axis_death_02.png");
                 scale = 0.60f;
                 width = 512;
                 height = 256;
                 break;
             }
             case AXIS_POSITION: {
-                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\seventh\\gfx\\player\\axis_positions.png");
+                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\assets\\gfx\\player\\axis_positions.png");
                 scale = 0.77f; // TODO: 0.616f take ((77% * 256) * 80%) 
                 xOffset = -5;
                 yOffset = -5;
@@ -87,21 +87,21 @@ public class ImageScaler {
                 break;
             }
             case ALLIED_DEATH1: {
-                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\seventh\\gfx\\player\\allied_death_01.png");
+                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\assets\\gfx\\player\\allied_death_01.png");
                 scale = 0.60f;
                 width = 512;
                 height = 256;
                 break;
             }
             case ALLIED_DEATH2: {
-                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\seventh\\gfx\\player\\allied_death_02.png");
+                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\assets\\gfx\\player\\allied_death_02.png");
                 scale = 0.60f;
                 width = 512;
                 height = 256;
                 break;
             }
             case ALLIED_POSITION: {
-                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\seventh\\gfx\\player\\allied_positions.png");
+                imageFile = new File("C:\\Users\\Tony\\git\\seventh\\assets\\gfx\\player\\allied_positions.png");
                 scale = 0.77f;
                 xOffset = -5;
                 yOffset = -5;
