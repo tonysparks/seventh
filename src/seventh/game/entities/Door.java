@@ -219,7 +219,7 @@ public class Door extends Entity {
         this.hinge = DoorHinge.fromVector(facing);
         this.handleTouchRadius = new Rectangle(48, 48);
         this.hingeTouchRadius = new Rectangle(48,48);
-        this.autoCloseRadius = new Rectangle(100, 100);
+        this.autoCloseRadius = new Rectangle(128, 128);
         
         this.bounds.set(this.handleTouchRadius);
         this.bounds.setLocation(getPos());
@@ -347,6 +347,7 @@ public class Door extends Entity {
         //DebugDraw.drawLineRelative(this.frontHingePos, this.frontDoorHandle, 0xffffff00);
         //DebugDraw.drawLineRelative(this.rearHingePos, this.rearDoorHandle, 0xffffff00);
                 
+        //DebugDraw.drawRectRelative(autoCloseRadius, 0xffff0000);
         //DebugDraw.drawStringRelative("State: " + this.doorState, (int)getPos().x, (int)getPos().y, 0xffff00ff);
         //DebugDraw.drawStringRelative("Orientation: C:" + (int)Math.toDegrees(this.rotation.getOrientation())  + "   D:" + (int)Math.toDegrees(this.rotation.getDesiredOrientation()) , (int)getPos().x, (int)getPos().y + 20, 0xffff00ff);
         
