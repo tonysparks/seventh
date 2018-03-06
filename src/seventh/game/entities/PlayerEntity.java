@@ -627,13 +627,6 @@ public class PlayerEntity extends Entity implements Controllable {
                 
                 recoveryTime = RECOVERY_TIME;
             }
-            
-//            float recoveryTimeNeeded = MAX_STAMINA/2f; 
-//            if(stamina < recoveryTimeNeeded) {
-//                // Take percentage of the stamina to time to recovery and adjust the
-//                // recovery time accordingly
-//                recoveryTime = RECOVERY_TIME - (long)(RECOVERY_TIME * (stamina / recoveryTimeNeeded));                 
-//            }
         }
                 
     }
