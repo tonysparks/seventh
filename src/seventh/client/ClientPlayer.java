@@ -39,10 +39,14 @@ public class ClientPlayer {
         this.team = ClientTeam.NONE;
         this.spectatingPlayerId = Entity.INVALID_ENTITY_ID;
         
+        reloadGraphics();
+    }
+
+    public void reloadGraphics() {
         this.axisSprite = new PlayerSprite(this, Art.axisBodyModel, Art.axisWalkModel, Art.axisCrouchLegs, Art.axisSprintModel);
         this.alliedSprite = new PlayerSprite(this, Art.alliedBodyModel, Art.alliedWalkModel, Art.alliedCrouchLegs, Art.alliedSprintModel);
     }
-
+    
     public void updateStats(NetPlayerStat state) {
         this.stats= state;
         this.name = state.name;
