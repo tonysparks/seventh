@@ -306,10 +306,13 @@ public class ClientGame {
     }
     
     /**
-     * Reloads the HUD graphics 
+     * Reloads the game graphics 
      */
-    public void debugReloadGfx() {
-        this.hud = new Hud(this);        
+    public void reloadGfx() {
+        this.hud = new Hud(this); 
+        for(ClientPlayer player : this.players.asList()) {
+            player.reloadGraphics();            
+        }
     }
     
     /**
