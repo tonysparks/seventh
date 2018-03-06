@@ -178,7 +178,7 @@ public class Art {
      * Reloads the graphics
      */
     public static void reload() {
-        destroy();
+       // destroy();
         load();
     }
     
@@ -250,23 +250,33 @@ public class Art {
 
         deathsImage = loadImage("./assets/gfx/player/death_symbol.png");
 
-        alliedBackDeathImage = TextureUtil.splitImage(
-                TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_01.png"), 0, 0, 300, 210), 2, 4);
-        alliedBackDeath2Image = TextureUtil.splitImage(
-                TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_03.png"), 0, 0, 260, 290), 2, 3);
+//        alliedBackDeathImage = TextureUtil.splitImage(
+//                TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_01.png"), 0, 0, 300, 210), 2, 4);
+//        alliedBackDeath2Image = TextureUtil.splitImage(
+//                TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_03.png"), 0, 0, 260, 290), 2, 3);
         alliedFrontDeathImage = TextureUtil.splitImage(
                 TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_02.png"), 0, 0, 330, 190), 2, 6);        
         alliedExplosionDeathImage = TextureUtil.splitImage(
                 TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_04.png"), 0, 0, 330, 290), 2, 4);
-                
-        axisBackDeathImage = TextureUtil.splitImage(
-                TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_01.png"), 0, 0, 300, 210), 2, 4);
-        axisBackDeath2Image = TextureUtil.splitImage(
-                TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_03.png"), 0, 0, 260, 290), 2, 3);        
+        
+        alliedBackDeathImage = TextureUtil.splitImage(
+                TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_01.png"), 0, 0, 450, 200), 2, 6);
+        alliedBackDeath2Image = TextureUtil.splitImage(
+                TextureUtil.subImage(loadImage("./assets/gfx/player/allied_death_02.png"), 0, 0, 420, 175), 2, 6);
+        
+//        axisBackDeathImage = TextureUtil.splitImage(
+//                TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_01.png"), 0, 0, 300, 210), 2, 4);        
+//        axisBackDeath2Image = TextureUtil.splitImage(
+//                TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_03.png"), 0, 0, 260, 290), 2, 3);        
         axisFrontDeathImage = TextureUtil.splitImage(
                 TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_02.png"), 0, 0, 330, 190), 2, 6);
         axisExplosionDeathImage = TextureUtil.splitImage(
                 TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_04.png"), 0, 0, 330, 290), 2, 4);
+        
+        axisBackDeathImage = TextureUtil.splitImage(
+                TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_01.png"), 0, 0, 450, 200), 2, 6);
+        axisBackDeath2Image = TextureUtil.splitImage(
+                TextureUtil.subImage(loadImage("./assets/gfx/player/axis_death_02.png"), 0, 0, 420, 175), 2, 6);
         
 //        bloodImages = TextureUtil.splitImage(                
 //                TextureUtil.subImage(loadImage("./assets/gfx/particles/blood.png"), 0, 0, 128, 32), 1, 4);
@@ -558,10 +568,10 @@ public class Art {
     }
             
     public static AnimatedImage newAlliedBackDeathAnim() {
-        int frameTime = 120;
+        int frameTime = 75;
         Animation animation = newAnimation(new int[] {
-            frameTime, frameTime, frameTime, frameTime, 
-            frameTime, frameTime, frameTime, frameTime*9,            
+            frameTime, frameTime, frameTime, frameTime, frameTime, frameTime,
+            frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,            
         });
         AnimatedImage anim = new AnimatedImage(alliedBackDeathImage, animation);
         anim.loop(false);
@@ -569,10 +579,10 @@ public class Art {
     }
     
     public static AnimatedImage newAlliedBackDeath2Anim() {
-        int frameTime = 120;
+        int frameTime = 75;
         Animation animation = newAnimation(new int[] {
-            frameTime, frameTime, frameTime,  
-            frameTime, frameTime, frameTime*9,            
+                frameTime, frameTime, frameTime, frameTime, frameTime, frameTime,
+                frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,                
         });
         AnimatedImage anim = new AnimatedImage(alliedBackDeath2Image, animation);
         anim.loop(false);
@@ -624,10 +634,10 @@ public class Art {
     }
     
     public static AnimatedImage newAxisBackDeathAnim() {
-        int frameTime = 120;
+        int frameTime = 75;
         Animation animation = newAnimation(new int[] {
-            frameTime, frameTime, frameTime, frameTime, 
-            frameTime, frameTime, frameTime, frameTime*9,
+            frameTime, frameTime, frameTime, frameTime, frameTime, frameTime, 
+            frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,
         });
         AnimatedImage anim = new AnimatedImage(axisBackDeathImage, animation);
         anim.loop(false);
@@ -635,10 +645,10 @@ public class Art {
     }
     
     public static AnimatedImage newAxisBackDeath2Anim() {
-        int frameTime = 120;
+        int frameTime = 75;
         Animation animation = newAnimation(new int[] {
-            frameTime, frameTime, frameTime,  
-            frameTime, frameTime, frameTime*9,            
+                frameTime, frameTime, frameTime, frameTime, frameTime, frameTime, 
+                frameTime, frameTime, frameTime, frameTime, frameTime, frameTime*9,            
         });
         AnimatedImage anim = new AnimatedImage(axisBackDeath2Image, animation);
         anim.loop(false);
