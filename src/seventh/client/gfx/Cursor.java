@@ -28,6 +28,7 @@ public abstract class Cursor implements Updatable {
     private int color;
     private int prevX, prevY;
 
+    private boolean isInverted;
     
     /**
      * @param bounds
@@ -39,8 +40,23 @@ public abstract class Cursor implements Updatable {
         this.isVisible = true;
         this.mouseSensitivity = 1.0f;
         this.accuracy = 1.0f;
+        this.isInverted = false;
     }
 
+    /**
+     * @param isInverted the isInverted to set
+     */
+    public void setInverted(boolean isInverted) {
+        this.isInverted = isInverted;
+    }
+    
+    /**
+     * @return the isInverted
+     */
+    public boolean isInverted() {
+        return isInverted;
+    }
+    
     /**
      * @param color the color to set
      */
@@ -191,9 +207,14 @@ public abstract class Cursor implements Updatable {
             float deltaX = this.mouseSensitivity * (this.prevX - x);
             float deltaY = this.mouseSensitivity * (this.prevY - y);
                         
-            this.cursorPos.x -= deltaX;            
-            this.cursorPos.y -= deltaY;
-                
+            if(this.isInverted) {
+                this.cursorPos.x += deltaX;            
+                this.cursorPos.y += deltaY;
+            }
+            else {
+                this.cursorPos.x -= deltaX;            
+                this.cursorPos.y -= deltaY;
+            }
             this.prevX = x;
             this.prevY = y;            
             
@@ -213,9 +234,14 @@ public abstract class Cursor implements Updatable {
         this.prevX = (int)cursorPos.x;
         this.prevY = (int)cursorPos.y;
         
-                
-        this.cursorPos.x += deltaX;
-        this.cursorPos.y += deltaY;        
+        if(this.isInverted) {
+            this.cursorPos.x -= deltaX;
+            this.cursorPos.y -= deltaY;
+        }
+        else {
+            this.cursorPos.x += deltaX;
+            this.cursorPos.y += deltaY;
+        }
         
         clamp();
     }

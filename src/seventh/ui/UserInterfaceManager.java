@@ -66,12 +66,12 @@ public class UserInterfaceManager extends Inputs {
         Widget.globalInputListener.cursor = this.cursor;
     }
     
-    public void menuCursor() {
-        this.cursor.activateA();
+    public Cursor menuCursor() {
+        return this.cursor.activateA().getActive();
     }
     
-    public void gameCursor() {
-        this.cursor.activateB();
+    public Cursor gameCursor() {
+        return this.cursor.activateB().getActive();
     }
     
     public void hideMouse() {

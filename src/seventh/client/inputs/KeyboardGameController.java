@@ -21,33 +21,46 @@ public class KeyboardGameController extends Inputs implements GameController {
      */
     @Override
     public int pollInputs(TimeStep timeStep, KeyMap keyMap, Cursor cursor, int inputKeys) {
-        if(isKeyDown(keyMap.getWalkKey())) {
+        if(isKeyOrButtonDown(keyMap.getWalkKey())) {
             inputKeys |= Actions.WALK.getMask();
         }
         
-        if(isKeyDown(keyMap.getCrouchKey())) {
+        if(isKeyOrButtonDown(keyMap.getCrouchKey())) {
             inputKeys |= Actions.CROUCH.getMask();
         }
         
-        if(isKeyDown(keyMap.getSprintKey())) {
+        if(isKeyOrButtonDown(keyMap.getSprintKey())) {
             inputKeys |= Actions.SPRINT.getMask();
         }
         
-        if(isKeyDown(keyMap.getUseKey())) {
+        if(isKeyOrButtonDown(keyMap.getUseKey())) {
             inputKeys |= Actions.USE.getMask();
         }
         
-        if(isKeyDown(keyMap.getDropWeaponKey())) {
+        if(isKeyOrButtonDown(keyMap.getDropWeaponKey())) {
             inputKeys |= Actions.DROP_WEAPON.getMask();
         }
         
-        if(isKeyDown(keyMap.getMeleeAttackKey())) {
+        if(isKeyOrButtonDown(keyMap.getMeleeAttackKey())) {
             inputKeys |= Actions.MELEE_ATTACK.getMask();
         }
         
-        if(isKeyDown(keyMap.getReloadKey()) ) {
+        if(isKeyOrButtonDown(keyMap.getReloadKey()) ) {
             inputKeys |= Actions.RELOAD.getMask();
         }
+        
+        if(isKeyOrButtonDown(keyMap.getIronSightsKey())) {
+            inputKeys |= Actions.IRON_SIGHTS.getMask();
+        }
+        
+        if(isKeyOrButtonDown(keyMap.getFireKey())) {
+            inputKeys |= Actions.FIRE.getMask();
+        }
+        
+        if(isKeyOrButtonDown(keyMap.getThrowGrenadeKey())) {
+            inputKeys |= Actions.THROW_GRENADE.getMask();
+        }
+        
         
         if(isKeyDown(keyMap.getUpKey())) {
             inputKeys |= Actions.UP.getMask();
@@ -63,14 +76,16 @@ public class KeyboardGameController extends Inputs implements GameController {
             inputKeys |= Actions.RIGHT.getMask();
         }
         
-        if(isButtonDown(keyMap.getFireKey()) || isKeyDown(keyMap.getFireKey()) ) {
-            inputKeys |= Actions.FIRE.getMask();
-        }
-        
-        if(isButtonDown(keyMap.getThrowGrenadeKey()) || isKeyDown(keyMap.getThrowGrenadeKey())) {
-            inputKeys |= Actions.THROW_GRENADE.getMask();
-        }
+
         
         return inputKeys;
+    }
+    
+    private boolean isKeyOrButtonDown(int key) {
+        if(key < 5) {
+            return isButtonDown(key);
+        }
+        
+        return isKeyDown(key);
     }
 }

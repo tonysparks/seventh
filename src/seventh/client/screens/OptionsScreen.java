@@ -197,7 +197,7 @@ public class OptionsScreen implements Screen {
         nameTxtBox = new TextBox();
         nameTxtBox.setLabelText("Name: ");
         nameTxtBox.setTheme(theme);
-        nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 70, 200, 25));        
+        nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 55, 200, 25));        
         nameTxtBox.setFont(theme.getSecondaryFontName()); 
         nameTxtBox.setTextSize(14);
         nameTxtBox.getLabel().setTextSize(18);
@@ -215,14 +215,14 @@ public class OptionsScreen implements Screen {
                 
         Label controlsLbl = new Label("Controls");
         controlsLbl.setTheme(theme);
-        controlsLbl.setBounds(new Rectangle(10, 110, 400, 40));
+        controlsLbl.setBounds(new Rectangle(10, 90, 400, 40));
         controlsLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
         controlsLbl.setFont(theme.getPrimaryFontName());
         controlsLbl.setTextSize(14);
         
         
         final int startX = 270;
-        final int startY = 130;
+        final int startY = 110;
         final int yInc = 25;
         
         uiPos.x = startX;
@@ -235,6 +235,25 @@ public class OptionsScreen implements Screen {
         setupButton(uiPos, "sprint: '" + keys.keyString(keys.getSprintKey())+"'"); uiPos.y += yInc;
         setupButton(uiPos, "crouch: '" + keys.keyString(keys.getCrouchKey())+"'"); uiPos.y += yInc;
         
+        uiPos.x = 155;
+        uiPos.y -= 5;
+        
+        Checkbox invertMouseChkBx = new Checkbox(app.getConfig().getKeyMap().isMouseInverted());
+        invertMouseChkBx.setTheme(theme);                
+        invertMouseChkBx.setLabelText("Invert Mouse");
+        invertMouseChkBx.getBounds().setLocation(uiPos);
+        invertMouseChkBx.getLabel().setForegroundColor(theme.getForegroundColor());
+        invertMouseChkBx.addCheckboxClickedListener(new OnCheckboxClickedListener() {
+            
+            @Override
+            public void onCheckboxClicked(CheckboxEvent event) {
+                app.getConfig().getKeyMap().setMouseInverted(event.getCheckbox().isChecked()); 
+            }
+        });
+        
+        this.optionsPanel.addWidget(invertMouseChkBx);
+        this.panelView.addElement(new CheckboxView(invertMouseChkBx));
+        
         uiPos.x = app.getScreenWidth() / 2 + 100;
         uiPos.y = startY;
         setupButton(uiPos, "reload: '" + keys.keyString(keys.getReloadKey())+"'"); uiPos.y += yInc;
@@ -243,9 +262,9 @@ public class OptionsScreen implements Screen {
         setupButton(uiPos, "throw grenade: '" + keys.keyString(keys.getThrowGrenadeKey())+"'"); uiPos.y += yInc;
         setupButton(uiPos, "fire: '" + keys.keyString(keys.getFireKey())+"'"); uiPos.y += yInc;
         setupButton(uiPos, "use: '" + keys.keyString(keys.getUseKey()) +"'" ); uiPos.y += yInc;
+        setupButton(uiPos, "iron sights: '" + keys.keyString(keys.getIronSightsKey()) +"'" ); uiPos.y += yInc;
         
-        
-        //uiPos.y += yInc;
+        uiPos.y += 10;
         final Slider mouseSensitivitySlider = new Slider();
         
         final Button mouseSensitivityBtn = setupButton(uiPos, "Mouse Sensitivity", false);

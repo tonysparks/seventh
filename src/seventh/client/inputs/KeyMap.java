@@ -42,6 +42,7 @@ public class KeyMap {
                 useKey,
                 dropWeaponKey,
                 meleeAttackKey,
+                ironSightsKey,
                 
                 sayKey,
                 teamSayKey;
@@ -63,7 +64,8 @@ public class KeyMap {
                 throwGrenadeBtn,
                 useBtn,
                 dropWeaponBtn,
-                meleeAttackBtn;
+                meleeAttackBtn,
+                ironSightsBtn;
     
     private boolean invertJoystick;
     private boolean isSouthPaw;
@@ -233,6 +235,8 @@ public class KeyMap {
         keyMap.put("mouse_button_left", Buttons.LEFT);
         keyMap.put("mouse_button_middle", Buttons.MIDDLE);
         keyMap.put("mouse_button_right", Buttons.RIGHT);
+        keyMap.put("mouse_button_forward", Buttons.FORWARD);
+        keyMap.put("mouse_button_back", Buttons.BACK);
         
         keyMap.put("js_left_trigger_btn", ControllerButtons.LEFT_TRIGGER_BTN.getKey());
         keyMap.put("js_right_trigger_btn", ControllerButtons.RIGHT_TRIGGER_BTN.getKey());
@@ -414,10 +418,12 @@ public class KeyMap {
         stringKey[Keys.F11] = "f11"; 
         stringKey[Keys.F12] = "f12"; 
 
-        // 0,1,2
+        // 0,1,2,3,4
         stringKey[Buttons.LEFT] = "mouse_button_left";
         stringKey[Buttons.RIGHT] = "mouse_button_right";
         stringKey[Buttons.MIDDLE] = "mouse_button_middle";        
+        stringKey[Buttons.FORWARD] = "mouse_button_forward";
+        stringKey[Buttons.BACK] = "mouse_button_back";
         
         stringKey[ControllerButtons.LEFT_TRIGGER_BTN.getKey()] = "js_left_trigger_btn";
         stringKey[ControllerButtons.RIGHT_TRIGGER_BTN.getKey()] = "js_right_trigger_btn";
@@ -486,6 +492,7 @@ public class KeyMap {
         this.useKey  = getKey(config, "use", Keys.E);
         this.dropWeaponKey  = getKey(config, "drop_weapon", Keys.F);
         this.meleeAttackKey = getKey(config, "melee_attack", Keys.Q);
+        this.ironSightsKey = getKey(config, "iron_sites", Keys.Z);
         this.invertMouse = LeoObject.isTrue(config.getByString("inverted"));
         
         this.sayKey = getKey(config, "say", Keys.Y);
@@ -504,6 +511,7 @@ public class KeyMap {
         this.useBtn  = getKey(joystick, "use", ControllerButtons.A_BTN);
         this.dropWeaponBtn = getKey(joystick, "drop_weapon", ControllerButtons.SELECT_BTN);
         this.meleeAttackBtn = getKey(joystick, "melee_attack", ControllerButtons.RIGHT_JOYSTICK_BTN);
+        this.ironSightsBtn = getKey(joystick, "iron_sites", ControllerButtons.RIGHT_BUMPER_BTN);
         this.invertJoystick = LeoObject.isTrue(joystick.getByString("inverted"));
         this.isSouthPaw = LeoObject.isTrue(joystick.getByString("south_paw"));
     }
@@ -569,7 +577,14 @@ public class KeyMap {
         return stringKey[key];
     }
     
-    
+    /**
+     * Sets if the mouse is inverted or not
+     * @param invert
+     */
+    public void setMouseInverted(boolean invert) {
+        this.invertMouse = invert;
+        this.config.setObject("inverted", LeoObject.valueOf(this.invertMouse));        
+    }
     
     /**
      * @return true if the mouse is inverted
@@ -684,7 +699,19 @@ public class KeyMap {
         return meleeAttackBtn;
     }
 
+    /**
+     * @return the ironSightsBtn
+     */
+    public ControllerInput.ControllerButtons getIronSightsBtn() {
+        return ironSightsBtn;
+    }
 
+    /**
+     * @return the ironSightsKey
+     */
+    public int getIronSightsKey() {
+        return ironSightsKey;
+    }
 
     /**
      * @return the meleeAttack

@@ -223,6 +223,10 @@ public class JoystickGameController extends ControllerInput implements GameContr
                 inputKeys |= Actions.WEAPON_SWITCH_UP.getMask();
             }
             
+            if (isButtonDown(keyMap.getIronSightsBtn())) {
+                inputKeys |= Actions.IRON_SIGHTS.getMask();
+            }
+            
             if (isButtonDown(keyMap.getMeleeAttackBtn())) {
                 inputKeys |= Actions.MELEE_ATTACK.getMask();
             }

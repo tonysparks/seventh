@@ -28,6 +28,13 @@ public class CompoundCursor extends Cursor {
         this.active = a;
     }
     
+    /**
+     * @return the active
+     */
+    public Cursor getActive() {
+        return active;
+    }
+    
     public CompoundCursor activateA() {
         this.active = a;
         return this;

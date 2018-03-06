@@ -55,6 +55,7 @@ public class CameraController implements Updatable {
     
     private boolean isCameraRoaming, isFastCamera;
     private boolean isCameraActive;
+    private boolean isIronSights;
     private int previousKeys;
     private Cursor cursor;
     
@@ -228,6 +229,13 @@ public class CameraController implements Updatable {
             }
         }
         
+        if(Keys.IRON_SIGHTS.isDown(keys)) {
+            this.isIronSights = true;
+        }
+        else {
+            this.isIronSights = false;
+        }
+        
         if(this.localPlayer.isPureSpectator()) {
             if(Keys.FIRE.isDown(previousKeys) && !Keys.FIRE.isDown(keys)) {
                 this.isCameraRoaming = !this.isCameraRoaming;
@@ -341,7 +349,7 @@ public class CameraController implements Updatable {
                 
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 
-                if(!this.localPlayer.isSpectating() && this.config.getFollowReticleEnabled() && this.isCameraActive) {
+                if(!this.localPlayer.isSpectating() && this.isCameraActive && (this.config.getFollowReticleEnabled() || this.isIronSights) ) {
                     Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), config.getFollowReticleOffset(), cameraCenterAround); 
                     
                     // smooth out the camera

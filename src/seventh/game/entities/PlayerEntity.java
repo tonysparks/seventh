@@ -93,6 +93,7 @@ public class PlayerEntity extends Entity implements Controllable {
         USE(1<<12),
         DROP_WEAPON(1<<13),
         MELEE_ATTACK(1<<14),
+        IRON_SIGHTS(1<<15),
         ;
         
         private Keys(int value) {

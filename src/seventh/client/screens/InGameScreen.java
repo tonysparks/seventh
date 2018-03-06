@@ -3,6 +3,7 @@
  */
 package seventh.client.screens;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controllers;
 
@@ -12,6 +13,7 @@ import seventh.client.ClientPlayer;
 import seventh.client.ClientTeam;
 import seventh.client.SeventhGame;
 import seventh.client.entities.ClientPlayerEntity;
+import seventh.client.gfx.Art;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
@@ -19,6 +21,7 @@ import seventh.client.gfx.InGameOptionsDialog;
 import seventh.client.gfx.InGameOptionsDialog.OnHideListener;
 import seventh.client.gfx.InGameOptionsDialogView;
 import seventh.client.gfx.Theme;
+import seventh.client.gfx.effects.AnimationEffect;
 import seventh.client.gfx.effects.Effects;
 import seventh.client.gfx.hud.AIShortcuts;
 import seventh.client.gfx.hud.AIShortcutsMenu;
@@ -79,9 +82,10 @@ public class InGameScreen implements Screen {
         USE(1<<12),
         DROP_WEAPON(1<<13),
         MELEE_ATTACK(1<<14),
+        IRON_SIGHTS(1<<15),
         
-        SAY(1<<15),
-        TEAM_SAY(1<<16),
+        SAY(1<<16),
+        TEAM_SAY(1<<17),
         
         ;
         
@@ -283,7 +287,7 @@ public class InGameScreen implements Screen {
             @Override
             public void onHide() {
                 game.activateCamera(true);
-                uiManager.gameCursor();
+                uiManager.gameCursor().setInverted(app.getConfig().getKeyMap().isMouseInverted());
             }
         });                
         
@@ -330,7 +334,7 @@ public class InGameScreen implements Screen {
         else if(!getTeamSayTxtBx().isDisabled()) {                    
             hideTextBox(getTeamSayTxtBx());
         }
-        else {                    
+        else {
             createDialogUI();                    
             Sounds.playGlobalSound(Sounds.uiNavigate);
         }
@@ -406,7 +410,7 @@ public class InGameScreen implements Screen {
         
         if(!this.dialog.isOpen()) {
             game.activateCamera(true);    
-            uiManager.gameCursor();
+            uiManager.gameCursor().setInverted(app.getConfig().getKeyMap().isMouseInverted());
         }
         
         Controllers.addListener(this.controllerInput);
@@ -558,6 +562,18 @@ public class InGameScreen implements Screen {
                 protocol.sendPlayerCommanderMessage(msg);
             }
         });
+        
+        console.addCommand(new Command("v_reload_gfx") {            
+            @Override
+            public void execute(Console console, String... args) {
+                Art.reload();
+                if(game!=null) {
+                    game.reloadGfx();
+                    console.execute("kill 0");
+                }
+                
+            }
+        });
     }
     
     /* (non-Javadoc)
@@ -653,7 +669,18 @@ public class InGameScreen implements Screen {
                 
         inputKeys = 0;
         
-        if( isDebugMode ) {
+        if(isDebugMode) {
+            if(inputs.isButtonDown(Buttons.LEFT)) {
+                if(debugEffects.isEmpty()) {
+                    Vector2f effectPos = game.screenToWorldCoordinates( (int)mousePos.x, (int)mousePos.y);
+                    debugEffects.addEffect(new AnimationEffect(Art.newAxisBackDeathAnim(), effectPos, 90));
+                    debugEffects.addEffect(new AnimationEffect(Art.newAxisBackDeath2Anim(), effectPos.addition(new Vector2f(60,0)), 90));
+                    
+                    
+                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedBackDeathAnim(), effectPos.addition(new Vector2f(0,90)), 90));
+                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedBackDeath2Anim(), effectPos.addition(new Vector2f(60,90)), 90));
+                }
+            }
             debugEffects.update(timeStep);
         }
         
