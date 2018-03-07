@@ -675,10 +675,13 @@ public class InGameScreen implements Screen {
                     Vector2f effectPos = game.screenToWorldCoordinates( (int)mousePos.x, (int)mousePos.y);
                     debugEffects.addEffect(new AnimationEffect(Art.newAxisBackDeathAnim(), effectPos, 90));
                     debugEffects.addEffect(new AnimationEffect(Art.newAxisBackDeath2Anim(), effectPos.addition(new Vector2f(60,0)), 90));
-                    
+                    debugEffects.addEffect(new AnimationEffect(Art.newAxisFrontDeathAnim(), effectPos.addition(new Vector2f(120,0)), 90));
+                    debugEffects.addEffect(new AnimationEffect(Art.newAxisFrontDeath2Anim(), effectPos.addition(new Vector2f(180,0)), 90));
                     
                     debugEffects.addEffect(new AnimationEffect(Art.newAlliedBackDeathAnim(), effectPos.addition(new Vector2f(0,90)), 90));
-                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedBackDeath2Anim(), effectPos.addition(new Vector2f(60,90)), 90));
+                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedBackDeath2Anim(), effectPos.addition(new Vector2f(60,90)), 90));                    
+                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedFrontDeathAnim(), effectPos.addition(new Vector2f(120,90)), 90));
+                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedFrontDeath2Anim(), effectPos.addition(new Vector2f(180,90)), 90));
                 }
             }
             debugEffects.update(timeStep);

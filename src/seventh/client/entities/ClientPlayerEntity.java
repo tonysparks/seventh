@@ -627,7 +627,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                 switch(player.getTeam()) {
                 // TODO use pool
                     case ALLIES: {
-                        switch(random.nextInt(2)) {
+                        switch(random.nextInt(4)) {
                         case 0:
                             Vector2f.Vector2fMA(pos, getFacing(), -20, pos);
                             anim = Art.newAlliedBackDeathAnim();
@@ -635,21 +635,17 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                         case 1:
                             anim = Art.newAlliedBackDeath2Anim();
                             break;
-                        /*case 2: 
+                        case 2: 
                             anim = Art.newAlliedFrontDeathAnim();
                             break;
                         default:
                             anim = Art.newAlliedFrontDeath2Anim();
                             break;
-                        }*/
-                        default:
-                            anim = Art.newAlliedBackDeath2Anim();
-                            break;
                         }
                         break;
                     }
                     case AXIS: {
-                        switch(random.nextInt(2)) {
+                        switch(random.nextInt(4)) {
                         case 0:
                             Vector2f.Vector2fMA(pos, getFacing(), -20, pos);   
                             anim = Art.newAxisBackDeathAnim();
@@ -657,15 +653,11 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                         case 1:
                             anim = Art.newAxisBackDeath2Anim();
                             break;
-                        /*case 2: 
+                        case 2: 
                             anim = Art.newAxisFrontDeathAnim();
                             break;
                         default:
                             anim = Art.newAxisFrontDeath2Anim();                            
-                            break;
-                        }*/
-                        default:
-                            anim = Art.newAxisBackDeath2Anim();
                             break;
                         }
                         break;
