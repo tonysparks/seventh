@@ -31,7 +31,7 @@ public class LoadingState implements State {
     private ServerContext serverContext;
     private Leola runtime;
     private GameSession gameSession;
-    private    Players players;
+    private Players players;
     private MapEntry mapFile;
     
     private GameSessionListener gameSessionListener;
