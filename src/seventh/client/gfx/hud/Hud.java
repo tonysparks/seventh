@@ -727,7 +727,7 @@ public class Hud implements Renderable {
 
         if(game.isNearVehicle(this.localPlayer.getEntity())) {
             KeyMap keyMap = app.getKeyMap();            
-            String text = "Hold the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to enter the vehicle";
+            String text = "Press the '" + keyMap.keyString(keyMap.getUseKey()) +"' key to enter the vehicle";
             drawMessage(canvas, text);    
         }
     }
