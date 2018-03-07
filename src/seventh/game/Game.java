@@ -1060,23 +1060,23 @@ public class Game implements GameInfo, Debugable, Updatable {
     }
     
     public Vector2f findFreeRandomSpotNotIn(Entity entity, Rectangle bounds, OBB notIn) {
-        Vector2f pos = new Vector2f(bounds.x+random.nextInt(bounds.width), bounds.y+random.nextInt(bounds.height));
+        Vector2f pos = new Vector2f();
         Rectangle temp = new Rectangle(entity.getBounds());
-        temp.setLocation(pos);
-        
+                
         int numberOfAttempts = 0;
         
-        while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || 
-                (notIn.expensiveIntersects(temp))) {
-            
+        do {            
             pos.x = bounds.x + random.nextInt(bounds.width);
             pos.y = bounds.y + random.nextInt(bounds.height);
             temp.setLocation(pos);
             
-            if(numberOfAttempts++ > 100_00) {
+            if(numberOfAttempts++ > 100_000) {
                 return null;
             }
         }
+        while (map.rectCollides(temp) || 
+               map.hasWorldCollidableTile(temp.x, temp.y) || 
+               notIn.expensiveIntersects(temp));
         
         return pos;
     }
