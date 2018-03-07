@@ -155,10 +155,12 @@ public class ClientTank extends ClientVehicle {
         this.primaryWeaponState = Weapon.WeaponState.fromNet(netTank.primaryWeaponState);
         this.secondaryWeaponState = Weapon.WeaponState.fromNet(netTank.secondaryWeaponState);
 
-        Vector2f center = new Vector2f(getPos());
-        center.x += WeaponConstants.TANK_AABB_WIDTH/2f;
-        center.y += WeaponConstants.TANK_AABB_HEIGHT/2f;
-        this.vehicleOOB.update(orientation, center);
+        Vector2f pos = getPos();
+        this.vehicleOOB.update(orientation, 
+                               pos.x + WeaponConstants.TANK_AABB_WIDTH/2f, 
+                               pos.y + WeaponConstants.TANK_AABB_HEIGHT/2f);
+        
+        this.operateHitBox.centerAround(getCenterPos());
         
         if(netTank.operatorId != SeventhConstants.INVALID_PLAYER_ID) {
             ClientPlayer clientPlayer = game.getPlayers().getPlayer(netTank.operatorId);
