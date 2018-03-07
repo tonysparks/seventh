@@ -4,6 +4,7 @@
 package seventh.server;
 
 
+import leola.vm.types.LeoObject;
 import seventh.game.Game;
 import seventh.game.Trigger;
 import seventh.game.entities.Door;
@@ -156,7 +157,7 @@ public class SeventhScriptingCommonLibrary {
      * @param tileX
      * @param tileY
      */
-    public static void newExplosiveCrate(Game game, final int tileX, final int tileY) {
+    public static void newExplosiveCrate(Game game, final int tileX, final int tileY, final LeoObject function) {
         if(game.getMap().checkTileBounds(tileX, tileY)) {
             Cons.println("Invalid tile position: " + tileX + ", " + tileY);
             return;
@@ -190,6 +191,13 @@ public class SeventhScriptingCommonLibrary {
             public void execute(Game game) {
                 if(triggeredEntity!=null) {
                     game.newBigExplosion(new Vector2f(tile.getX(),tile.getY()), triggeredEntity, 15, 25, 1);
+                }
+                
+                if(function != null) {
+                    LeoObject result = function.call(triggeredEntity.asScriptObject());
+                    if(result.isError()) {
+                        Cons.println("*** Error calling trigger function for exploting crate: \n" + result);
+                    }
                 }
             }
         });
