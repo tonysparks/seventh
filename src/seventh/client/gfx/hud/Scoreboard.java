@@ -132,7 +132,7 @@ public class Scoreboard {
             }
             
             if(player == game.getLocalPlayer()) {
-                canvas.fillRect(x-5, y-15, 630, 20, 0x5fffffff);
+                canvas.fillRect(x-5, y-15, 650, 20, 0x5fffffff);
             }
             
             String output = String.format("%-30s %-13d %-13d %-10d %-8d %-13d", 
