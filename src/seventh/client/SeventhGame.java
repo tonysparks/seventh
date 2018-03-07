@@ -25,6 +25,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import leola.vm.types.LeoObject;
 import seventh.ClientMain;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.Canvas;
@@ -246,6 +247,44 @@ public class SeventhGame implements ApplicationListener {
                 }
                 
             }
+        });
+        
+        console.addCommand(new Command("client_config") {
+
+            @Override
+            public void execute(Console console, String... args) {
+                if(args.length==0) {
+                    console.println("<usage> client_config [config property name] [(optional) value to set]");
+                    console.println("Ex. ");
+                    console.println("\tclient_config show_debug_info");
+                    console.println("\tshow_debug_info = false");
+                    return;
+                }
+
+                String[] keys = args[0].split("\\.");
+                if(args.length == 1) {
+                    LeoObject value = config.getConfig().get(keys);
+                    console.println(args[0] + " = " + value);
+                }
+                else {
+                    String newValue = mergeArgsDelimAt(" ", 1, args);
+                    
+                    try {
+                        config.getConfig().set(Double.parseDouble(newValue), keys);
+                        return;
+                    }
+                    catch(NumberFormatException e) {}
+                    
+                    try {
+                        config.getConfig().set(Boolean.parseBoolean(newValue), keys);
+                        return;
+                    }
+                    catch(NumberFormatException e) {}
+                    
+                    config.getConfig().set(newValue, keys);
+                }
+            }
+            
         });
     }
 
