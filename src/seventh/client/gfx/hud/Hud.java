@@ -37,6 +37,7 @@ import seventh.game.entities.PlayerEntity.Keys;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
+import seventh.shared.Timer;
 import seventh.ui.ProgressBar;
 import seventh.ui.view.ProgressBarView;
 
@@ -72,6 +73,10 @@ public class Hud implements Renderable {
     private long bombTime, completionTime;
     private boolean isAtBomb, useButtonReleased;
     private boolean isHoveringOverBomb;
+    
+    private Timer weaponHoverTimer;
+    private boolean isHoveringOverWeapon;
+    
     /**
      * 
      */
@@ -108,6 +113,10 @@ public class Hud implements Renderable {
         this.bombProgressBar.setBounds(new Rectangle(300, 15));
         this.bombProgressBar.getBounds().centerAround(screenWidth/2, app.getScreenHeight() - 80);
         this.bombProgressBarView = new ProgressBarView(bombProgressBar);
+        
+        this.weaponHoverTimer = new Timer(false, 500);
+        this.weaponHoverTimer.stop();
+        this.isHoveringOverWeapon = false;
         
         this.miniMap = new MiniMap(game);
     }
@@ -326,6 +335,14 @@ public class Hud implements Renderable {
         updateProgressBar(timeStep);
         
         isHoveringOverBomb = game.isHoveringOverBomb();
+        isHoveringOverWeapon = game.isNearDroppedItem(this.localPlayer.getEntity());
+        if(isHoveringOverWeapon) {
+            weaponHoverTimer.start();
+            weaponHoverTimer.update(timeStep);
+        }
+        else {
+            weaponHoverTimer.stop();
+        }
     }
     
     /* (non-Javadoc)
@@ -717,7 +734,7 @@ public class Hud implements Renderable {
     
     private void drawPickupWeaponNotication(Canvas canvas) {
 
-        if(game.isNearDroppedItem(this.localPlayer.getEntity())) {
+        if(isHoveringOverWeapon && weaponHoverTimer.isExpired()) {
             KeyMap keyMap = app.getKeyMap();            
             String text = "Press the '" + keyMap.keyString(keyMap.getDropWeaponKey()) +"' key to pick up or swap weapons";
             drawMessage(canvas, text);    
