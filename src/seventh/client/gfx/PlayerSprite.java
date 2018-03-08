@@ -313,11 +313,11 @@ public class PlayerSprite implements Renderable {
         State currentState = entity.getCurrentState();
         
         switch(currentState) {
-        case IDLE:
+        /*case IDLE:
             activeBodyPosition = isPumpAction ? idlePumpActionReloadBody : idleBody;
             activeLegsAnimation = idleLegsAnimation;
             resetLegMovements();
-            break;
+            break;*/
         case CROUCHING:
             activeBodyPosition = isPumpAction ? crouchPumpActionReloadBody : crouchBody;
             activeLegsAnimation = crouchingLegsAnimation;
@@ -343,6 +343,7 @@ public class PlayerSprite implements Renderable {
             xOffset += (dir.y * swayMotion.direction) * 0.755f;
             yOffset += (dir.x * swayMotion.direction) * 0.755f;
         } break;
+        case IDLE:
         case SPRINTING:
             activeBodyPosition = sprintBody;
             activeLegsAnimation = sprintLegsAnimation;
@@ -608,6 +609,9 @@ public class PlayerSprite implements Renderable {
         // TODO: do the math to do this outside
         // in imageScaler program
         sprite.setScale(0.8f, 0.8f);
+        sprite.setColor(1f, 1f, 1f, 1f);
+        
+        boolean renderBody = true;
         
         /* Renders the feet
          */
@@ -630,21 +634,42 @@ public class PlayerSprite implements Renderable {
                 sprite.translate(facing.x * -6.0f, facing.y * -6.0f);
                 break;
             }
-            case SPRINTING: {
-                sprite.setScale(0.87f, 0.87f);
-                sprite.setRotation(rot);
-                sprite.setPosition(x, y);
+            case IDLE: {
+            //case SPRINTING: {
+                Vector2f facing = entity.getFacing();
+                float fx = (facing.x * 1.0f)  + 8;
+                float fy = (facing.y * 1.0f)  + 32;
                 
                 setTextureRegion(sprite, activeLegsAnimation.getCurrentImage());
+                sprite.setScale(0.87f, 0.87f);
+                sprite.setRotation(rot);
+                sprite.setPosition(x - fx, y - fy);
+                sprite.setOrigin(sprite.getRegionWidth() * 0.5f, sprite.getRegionHeight() * 0.66f);
+                
+                canvas.drawRect(x, y, sprite.getRegionWidth(), sprite.getRegionHeight(), 0xff00ff00);
                                         
-                Vector2f facing = entity.getFacing();                
-                float fx = (facing.y-9.0f);
-                float fy = -(facing.x+5);
+                canvas.drawString(facing.x + ", " + facing.y, x, y - 40, 0xff00ff00);
+//                float fx = (facing.y-9.0f);
+//                float fy = -(facing.x+5);
+                
+                sprite.setColor(1f, 0f, 0f, 1f);
+                canvas.drawSprite(sprite);
                 
                 sprite.translate(fx, fy);
+                sprite.setColor(0f, 0f, 1f, 1f);
                 canvas.drawSprite(sprite);
                 sprite.translate(-fx, -fy);
                 sprite.setScale(0.8f, 0.8f);
+                
+                sprite.setColor(1f, 1f, 1f, 0.75f);
+                sprite.setPosition(x, y);
+                canvas.drawRect(rx, ry, this.entity.getBounds().width, this.entity.getBounds().height, 0xff00ff00);
+                
+//                setTextureRegion(sprite, activeBodyPosition.getCurrentImage());
+//                sprite.setOrigin(sprite.getRegionWidth() * 0.5f, sprite.getRegionHeight() * 0.5f);
+//                canvas.drawRawSprite(sprite);  
+//                
+//                renderBody = false;
                 break;
             }
             default: {
@@ -665,7 +690,7 @@ public class PlayerSprite implements Renderable {
                 
         /* Renders the body
          */
-        {
+        if(renderBody) {
 
             setTextureRegion(sprite, activeBodyPosition.getCurrentImage());        
             canvas.drawRawSprite(sprite);                

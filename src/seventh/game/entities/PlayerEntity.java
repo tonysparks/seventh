@@ -54,6 +54,7 @@ import seventh.map.Tile.SurfaceType;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.DebugDraw;
 import seventh.shared.Geom;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
@@ -515,7 +516,7 @@ public class PlayerEntity extends Entity implements Controllable {
             moveTo(this.operating.getCenterPos());
         }
         
-        /*{   
+        {   
             Vector2f center = getCenterPos();
             headshot.centerAround(center);
             
@@ -531,7 +532,7 @@ public class PlayerEntity extends Entity implements Controllable {
         
             DebugDraw.drawRectRelative(bounds, 0xff00ffff);
             DebugDraw.drawRectRelative(headshot, 0xff00ffff);
-        }*/
+        }
         
         return blocked;
     }
@@ -621,7 +622,7 @@ public class PlayerEntity extends Entity implements Controllable {
             }            
         }
         else {
-            stamina -= STAMINA_DECAY_RATE;
+            //stamina -= STAMINA_DECAY_RATE;
             if(stamina < 0) {
                 stamina = 0;
                 currentState = State.RUNNING;

@@ -868,7 +868,7 @@ public class GdxCanvas implements Canvas {
     @Override
     public void drawSprite(Sprite sprite) {
         if(!isBegun) batch.begin();        
-        sprite.setColor(1,1,1, this.compositeAlpha);
+        //sprite.setColor(1,1,1, this.compositeAlpha);
         sprite.draw(batch);        
         if(!isBegun) batch.end();
     }

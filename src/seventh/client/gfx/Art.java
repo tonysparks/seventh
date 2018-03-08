@@ -231,7 +231,8 @@ public class Art {
                         
         axisBodyModel = new Model(loadImage("./assets/gfx/player/axis_positions.png"), 201, 256, 3, 3);
         axisWalkModel = new Model(loadImage("./assets/gfx/player/axis_legs_walk.png"), 372, 196, 2, 4);
-        axisSprintModel = new Model(loadImage("./assets/gfx/player/axis_legs_sprint.png"), 256, 190, 2, 3);
+        //axisSprintModel = new Model(loadImage("./assets/gfx/player/axis_legs_sprint.png"), 256, 190, 2, 3);
+        axisSprintModel = new Model(loadImage("./assets/gfx/player/axis_legs_sprint.png"), 160, 140, 2, 3);
         axisCrouchLegs = loadImage("./assets/gfx/player/axis_crouch_legs.png");
         
         
