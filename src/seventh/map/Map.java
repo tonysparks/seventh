@@ -73,6 +73,22 @@ public abstract interface Map extends Renderable, Debugable {
         
         private TilesetAtlas atlas;
         
+        private List<MapObject> mapObjects;
+        
+        /**
+         * @param mapObjects the mapObjects to set
+         */
+        public void setMapObjects(List<MapObject> mapObjects) {
+            this.mapObjects = mapObjects;
+        }
+        
+        /**
+         * @return the mapObjects
+         */
+        public List<MapObject> getMapObjects() {
+            return mapObjects;
+        }
+        
         /**
          * @return the surfaces
          */
@@ -199,6 +215,8 @@ public abstract interface Map extends Renderable, Debugable {
         public TilesetAtlas getAtlas() {
             return atlas;
         }
+        
+                
     }
     
     /**
@@ -471,6 +489,12 @@ public abstract interface Map extends Renderable, Debugable {
      */
     public abstract Vector2f tileToWorld( int tx, int ty );
     
+    /**
+     * Get {@link MapObject}s.
+     * 
+     * @return Get {@link MapObject}s.
+     */
+    public abstract List<MapObject> getMapObjects();
     
     /**
      * @param layer

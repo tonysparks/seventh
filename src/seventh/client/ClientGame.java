@@ -71,6 +71,7 @@ import seventh.game.net.NetSoundByEntity;
 import seventh.game.net.NetSquad;
 import seventh.game.type.GameType;
 import seventh.map.Map;
+import seventh.map.MapObject;
 import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -551,6 +552,10 @@ public class ClientGame {
      */
     public Scoreboard getScoreboard() {
         return scoreboard;
+    }
+    
+    public List<MapObject> getMapObjects() {
+        return this.map.getMapObjects();
     }
     
     /**
@@ -1654,6 +1659,26 @@ public class ClientGame {
         return false;
     }
     
+    
+    /**
+     * Determines if the {@link ClientEntity} touches any {@link MapObject}
+     * 
+     * @param ent
+     * @return true if touching
+     */
+    public boolean doesTouchMapObject(ClientEntity ent) {
+        List<MapObject> mapObjects = getMapObjects();
+        for(int i = 0; i < mapObjects.size(); i++) {
+            MapObject object = mapObjects.get(i);
+            if(object.isCollidable()) {
+                if(object.isTouching(ent.getBounds()) ) {                    
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
     
     /**
      * Determines if the supplied entity touches any other entities.

@@ -4,8 +4,7 @@
 package seventh.map;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.nio.file.Files;
 
 import leola.vm.Leola;
 import leola.vm.types.LeoMap;
@@ -29,34 +28,14 @@ public class MapLoaderUtil {
      * @throws Exception
      */
     public static Map loadMap(Leola runtime, String mapFile, boolean loadAssets) throws Exception {
-        File file = new File(mapFile);
-        String contents = loadFileContents(file);
+        File file = new File(mapFile);        
+        String contents = new String(Files.readAllBytes(file.toPath()));
+        
+        MapObjectFactory factory = new DefaultMapObjectFactory(runtime, mapFile, loadAssets);
         
         LeoMap mapData = JSON.parseJson(runtime, contents).as();
         MapLoader mapLoader = new TiledMapLoader();
-        Map map = mapLoader.loadMap(mapData, loadAssets);
+        Map map = mapLoader.loadMap(mapData, factory, loadAssets);
         return map;
     }
-    
-    private static String loadFileContents(File file) throws IOException {        
-        RandomAccessFile raf = new RandomAccessFile(file, "r");
-        try {
-            StringBuilder sb = new StringBuilder((int)raf.length());
-            String line = null;
-            do {
-                line = raf.readLine();
-                if ( line != null) {
-                    sb.append(line).append("\n");
-                }
-                
-            } while(line != null);
-            
-            return sb.toString();
-        }
-        finally {
-            raf.close();
-        }
-        
-    }
-    
 }

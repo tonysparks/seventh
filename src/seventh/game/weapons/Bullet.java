@@ -9,6 +9,7 @@ import seventh.game.entities.Entity;
 import seventh.game.net.NetBullet;
 import seventh.game.net.NetEntity;
 import seventh.map.Map;
+import seventh.map.MapObject;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -38,9 +39,7 @@ public class Bullet extends Entity {
         public BulletOnTouchListener(Game game) {
             this.game = game;
         }
-        /* (non-Javadoc)
-         * @see palisma.game.Entity.OnTouchListener#onTouch(palisma.game.Entity, palisma.game.Entity)
-         */
+        
         @Override
         public void onTouch(Entity me, Entity other) {
             Bullet bullet = (Bullet)me;
@@ -74,6 +73,20 @@ public class Bullet extends Entity {
         }
     }
     
+    private static class BulletOnMapObjectTouchListener implements OnMapObjectTouchListener {
+        private Game game;
+        
+        public BulletOnMapObjectTouchListener(Game game) {
+            this.game = game;
+        }
+        
+        @Override
+        public void onTouch(Entity bullet, MapObject object) {
+            game.emitSound(bullet.getId(), SurfaceTypeToSoundType.toImpactSoundType(object.geSurfaceType()), bullet.getCenterPos());  
+            bullet.kill(bullet);
+        }
+    }
+    
     /**
      * @param position
      * @param speed
@@ -102,6 +115,7 @@ public class Bullet extends Entity {
         this.delta = new Vector2f();
         this.origin = new Vector2f(position);
         this.onTouch = new BulletOnTouchListener(game);
+        this.onMapObjectTouch = new BulletOnMapObjectTouchListener(game);
         
         this.ownerHeightMask = owner.getHeightMask();
         this.piercing = isPiercing;
@@ -137,7 +151,7 @@ public class Bullet extends Entity {
     /**
      * @return the height mask for if the entity is crouching or standing
      */
-    protected int getOwnerHeightMask() {
+    public int getOwnerHeightMask() {
         return ownerHeightMask;
     }
     
@@ -291,7 +305,7 @@ public class Bullet extends Entity {
                     break;
                 }
                 else {
-                    if(collidesAgainstEntity(bounds)) {
+                    if(collidesAgainstEntity(bounds) || collidesAgainstMapObject(bounds)) {
                         break;
                     }
                 }
@@ -308,7 +322,11 @@ public class Bullet extends Entity {
             } while(!isBlocked && (bounds.x != newX || bounds.y != newY));
         }
         else {
-            collidesAgainstEntity(bounds);
+            if(!collidesAgainstEntity(bounds)) {
+                if(collidesAgainstMapObject(bounds)) {
+                    kill(this);
+                }
+            }
         }
         
         getPos().set(bounds.x, bounds.y);        
@@ -329,57 +347,16 @@ public class Bullet extends Entity {
         }
         return false;
     }
+
     
-//    /* (non-Javadoc)
-//     * @see palisma.game.Entity#update(leola.live.TimeStep)
-//     */
-//    @Override
-//    public boolean update(TimeStep timeStep) {    
-//        this.previousPos.set(getPos());
-//        boolean isBlocked = super.update(timeStep);
-//        vel.set(targetVel);
-//        
-//        Map map = this.game.getMap();
-//        
-//        if(isBlocked 
-//            || pos.y < 0 
-//            || pos.x < 0
-//            || (pos.y > map.getMapHeight() + 80)
-//            || (pos.x > map.getMapWidth() + 80)) {
-//            
-//            kill(this);
-//        }
-//        else {
-//            
-//            Vector2f.Vector2fSubtract(getPos(),this.previousPos, this.delta);
-//            int dx = (int)this.delta.x < 0 ? -2 : (int)this.delta.x > 0 ? 2 : 0;
-//            int dy = (int)this.delta.y < 0 ? -2 : (int)this.delta.y > 0 ? 2 : 0;
-//            
-//            if(dx != 0 || dy != 0) {
-//                
-//                while(!Vector2f.Vector2fApproxEquals(this.previousPos, getPos(), 5.0f)) {                
-//                    if ( game.doesTouchPlayers(this) ) {
-//                        break;
-//                    }
-//                    
-//                    if( ! FloatUtil.eq(this.previousPos.x, pos.x, 5.0f ) ) {
-//                        this.previousPos.x += dx;
-//                    }
-//                    
-//                    if( ! FloatUtil.eq(this.previousPos.y, pos.y, 5.0f ) ) {
-//                        this.previousPos.y += dy;
-//                    }
-//                                
-//                    this.bounds.setLocation(this.previousPos);
-//                }
-//            }
-//            else {
-//                game.doesTouchPlayers(this);
-//            }
-//        }
-//        
-//        return isBlocked;
-//    }
+    @Override
+    protected boolean collidesAgainstMapObject(Rectangle bounds) {
+        if(game.doesTouchMapObject(this)) {
+            return true;
+        }
+        
+        return false;
+    }
     
     /* (non-Javadoc)
      * @see seventh.game.entities.Entity#isTouching(seventh.game.entities.Entity)

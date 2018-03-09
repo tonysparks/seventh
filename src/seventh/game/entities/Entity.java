@@ -10,6 +10,7 @@ import seventh.game.Game;
 import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.net.NetEntity;
 import seventh.map.Map;
+import seventh.map.MapObject;
 import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -253,9 +254,14 @@ public abstract class Entity implements Debugable {
         void onTouch(Entity me, Entity other);
     }
     
+    public static interface OnMapObjectTouchListener {
+        void onTouch(Entity me, MapObject object);
+    }
+    
     public KilledListener onKill;
     public OnDamageListener onDamage;
     public OnTouchListener onTouch;
+    public OnMapObjectTouchListener onMapObjectTouch;
     
     protected Vector2f pos;
     protected Vector2f vel;
@@ -681,6 +687,8 @@ public abstract class Entity implements Debugable {
             
             Map map = game.getMap();
             
+            boolean isBlockedByEntity = false;
+            
             bounds.x = (int)newX;
             if( map.rectCollides(bounds, collisionHeightMask, xCollisionTilePos) ) {
                 isBlocked = collideX((int)newX, bounds.x);
@@ -690,10 +698,11 @@ public abstract class Entity implements Debugable {
                 }
                                 
             }
-            else if(collidesAgainstEntity(bounds)) {
+            else if(collidesAgainstEntity(bounds) || collidesAgainstMapObject(bounds)) {
                 bounds.x = (int)pos.x;
                 newX = pos.x;
                 isBlocked = true;
+                isBlockedByEntity = true;
             }
             
             
@@ -705,10 +714,11 @@ public abstract class Entity implements Debugable {
                     newY = pos.y;
                 }
             }
-            else if(collidesAgainstEntity(bounds)) {                
+            else if(collidesAgainstEntity(bounds) || collidesAgainstMapObject(bounds)) {                
                 bounds.y = (int)pos.y;
                 newY = pos.y;
                 isBlocked = true;
+                isBlockedByEntity = true;
             }
             
             if(isBlocked) {
@@ -727,11 +737,13 @@ public abstract class Entity implements Debugable {
                  * is a couple pixels off and is snagged on
                  * a corner, if so auto adjust them
                  */
-                else if(deltaX!=0 && deltaY==0) {
-                    newY = adjustY(xCollisionTilePos, deltaX, (int)(pos.x + deltaX), bounds.y);
-                }
-                else if(deltaX==0 && deltaY!=0) {
-                    newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(pos.y + deltaY));
+                else if (!isBlockedByEntity) {
+                    if(deltaX!=0 && deltaY==0) {                
+                        newY = adjustY(xCollisionTilePos, deltaX, (int)(pos.x + deltaX), bounds.y);
+                    }
+                    else if(deltaX==0 && deltaY!=0) {
+                        newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(pos.y + deltaY));
+                    }
                 }
             }
         
@@ -753,6 +765,20 @@ public abstract class Entity implements Debugable {
         
         
         return isBlocked;
+    }
+    
+    protected boolean collidesAgainstMapObject(Rectangle bounds) {
+        List<MapObject> mapObjects = game.getMapObjects();
+        for(int i = 0; i < mapObjects.size(); i++) {
+            MapObject object = mapObjects.get(i);
+            if(object.isCollidable()) {
+                if(object.isTouching(bounds)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
     
     protected boolean collidesAgainstEntity(Rectangle bounds) {

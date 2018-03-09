@@ -91,6 +91,7 @@ public class OrthoMap implements Map {
     private java.util.Map<Integer, TextureRegion> shadeTilesLookup;
     
     private Vector2f collisionTilePos;
+    private List<MapObject> mapObjects;
     
     /**
      * Constructs a new {@link OrthoMap}.
@@ -106,6 +107,11 @@ public class OrthoMap implements Map {
         destroy();
     }
 
+    @Override
+    public List<MapObject> getMapObjects() {     
+        return this.mapObjects;
+    }
+    
     /**
      * @return the backgroundLayers
      */
@@ -548,6 +554,14 @@ public class OrthoMap implements Map {
         if(this.atlas != null) {
             this.atlas.destroy();
         }
+        
+        if(this.mapObjects != null) {
+            for(MapObject object : this.mapObjects) {
+                object.destroy();
+            }
+            
+            this.mapObjects.clear();
+        }
     }
 
     /* (non-Javadoc)
@@ -759,6 +773,8 @@ public class OrthoMap implements Map {
         
         this.atlas = info.getAtlas();
 
+        this.mapObjects = info.getMapObjects();
+        
 //        this.originalLayer = new boolean[this.maxY][this.maxX];
 //        for(int i = 0; i < this.destructableLayer.length; i++) {
 //            Layer layer = this.destructableLayer[i];
@@ -1086,6 +1102,8 @@ public class OrthoMap implements Map {
                 }
             }
         }
+        
+        renderMapObjects(canvas, camera, alpha);
             
     }
     
@@ -1293,6 +1311,17 @@ public class OrthoMap implements Map {
                     }
                 }
 
+            }
+        }
+    }
+    
+    private void renderMapObjects(Canvas canvas, Camera camera, float alpha) {
+        Rectangle viewport = camera.getWorldViewPort();
+        
+        for(int i = 0; i < this.mapObjects.size(); i++) {
+            MapObject object = this.mapObjects.get(i);
+            if(viewport.intersects(object.getBounds())) {
+                object.render(canvas, camera, alpha);
             }
         }
     }

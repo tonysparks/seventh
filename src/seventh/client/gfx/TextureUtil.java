@@ -37,7 +37,7 @@ public class TextureUtil {
      * @return
      * @throws Exception
      */
-    public static TextureRegion loadImage(String image) throws Exception {
+    public static TextureRegion loadImage(String image) {
         Texture texture = new Texture(Gdx.files.internal(image));
         TextureRegion region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
         region.flip(false, true);
@@ -51,7 +51,7 @@ public class TextureUtil {
      * @return
      * @throws Exception
      */
-    public static TextureRegion loadImage(String image, int width, int height) throws Exception {
+    public static TextureRegion loadImage(String image, int width, int height) {
         Texture texture = new Texture(Gdx.files.internal(image));
         TextureRegion region = new TextureRegion(texture, 0, 0, width, height);
         region.flip(false, true);
@@ -65,7 +65,7 @@ public class TextureUtil {
      * @return
      * @throws Exception
      */
-    public static Pixmap loadPixmap(String image) throws Exception {        
+    public static Pixmap loadPixmap(String image) {        
         return new Pixmap(Gdx.files.internal(image));        
     }
     
@@ -76,7 +76,7 @@ public class TextureUtil {
      * @return
      * @throws Exception
      */
-    public static Pixmap loadPixmap(String image, int width, int height) throws Exception {        
+    public static Pixmap loadPixmap(String image, int width, int height) {        
         Pixmap pixmap = new Pixmap(Gdx.files.internal(image));
         Pixmap result = pixmap;
         if(pixmap.getWidth() != width || pixmap.getHeight() != height) {

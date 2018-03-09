@@ -37,7 +37,7 @@ public class TiledMapLoader implements MapLoader {
      * @return
      * @throws Exception
      */
-    public Map loadMap(LeoMap map, boolean loadAssets) throws Exception {
+    public Map loadMap(LeoMap map, MapObjectFactory mapObjectsFactory, boolean loadAssets) throws Exception {
         SceneDef def = new SceneDef();
         
         int width = map.getInt("width");
@@ -61,6 +61,7 @@ public class TiledMapLoader implements MapLoader {
         
         LeoArray layers = map.getByString("layers").as();
         List<Layer> mapLayers = parseLayers(layers, atlas, loadAssets, tileWidth, tileHeight, surfaces);
+        List<MapObject> mapObjects = parseMapObjects(layers, mapObjectsFactory);
         
         List<Layer> backgroundLayers = new ArrayList<Layer>();
         List<Layer> foregroundLayers = new ArrayList<Layer>();
@@ -78,6 +79,7 @@ public class TiledMapLoader implements MapLoader {
         def.setForegroundLayers(foregroundLayers.toArray(new Layer[foregroundLayers.size()]));
         
         def.setAtlas(atlas);
+        def.setMapObjects(mapObjects);
         
         Map theMap = new OrthoMap(loadAssets);
         theMap.init(def);
@@ -107,6 +109,8 @@ public class TiledMapLoader implements MapLoader {
         }
     }        
     
+    
+    
     private List<Layer> parseLayers(LeoArray layers,TilesetAtlas atlas, boolean loadImages, int tileWidth, int tileHeight, SurfaceType[][] surfaces) throws Exception {
         
         List<Layer> mapLayers = new ArrayList<Layer>(layers.size());
@@ -115,129 +119,169 @@ public class TiledMapLoader implements MapLoader {
         for(LeoObject l : layers) {            
             LeoMap layer = l.as();
             
-            LeoArray data = layer.getByString("data").as();
-            int width = layer.getInt("width");    
-            int height = layer.getInt("height");
-            
-            boolean isCollidable = false;
-            boolean isForeground = false;
-            boolean isProperty = false;
-            boolean isSurfaceTypes = false;
-            boolean isDestructable = false;
-            boolean isVisible = layer.getBoolean("visible");
-            
-            int heightMask = 0;
-            if ( layer.has(LeoString.valueOf("properties"))) {
-                LeoMap properties = layer.getByString("properties").as();            
-                isCollidable = properties.getString("collidable").equals("true");
-                isForeground = properties.getString("foreground").equals("true");
-                isDestructable = properties.getString("destructable").equals("true");
-                
-                if(properties.containsKeyByString("heightMask")) {
-                    String strMask = properties.getString("heightMask");
-                    heightMask = Integer.parseInt(strMask);
-                }
-                
-                if(properties.containsKeyByString("lights")) {
-                    isProperty = true;
-                }
-                
-                if(properties.containsKeyByString("surfaces")) {
-                    isSurfaceTypes = true;
-                }
-                                
-            }
-            
-            if(isSurfaceTypes) {
-                parseSurfaces(surfaces, atlas, data, width, tileWidth, tileHeight);
-                continue;
-            }
-            
-            Layer mapLayer = new Layer(layer.getString("name"),
-                                       isCollidable, 
-                                       isForeground, 
-                                       isDestructable, 
-                                       isProperty, 
-                                       isVisible,
-                                       index, 
-                                       heightMask,
-                                       height);
-            mapLayers.add(mapLayer);
-                        
-            Tile[] row = null; //new Tile[width];
-            
-            int y = -tileHeight; // account for zero
-            int rowIndex = 0;
-            for(int x = 0; x < data.size(); x++) {
-                int tileId = data.get(x).asInt();
-                boolean flippedHorizontally = (tileId & FLIPPED_HORIZONTALLY_FLAG) != 0;
-                boolean flippedVertically = (tileId & FLIPPED_VERTICALLY_FLAG) != 0; 
-                boolean flippedDiagonally = (tileId & FLIPPED_DIAGONALLY_FLAG) != 0;
-                
-                tileId &= ~(FLIPPED_HORIZONTALLY_FLAG |
-                            FLIPPED_VERTICALLY_FLAG |
-                            FLIPPED_DIAGONALLY_FLAG);
-                
-                if(x % width == 0) {                        
-                    row = new Tile[width];
-                    mapLayer.addRow(rowIndex++, row);
-                    y+=tileHeight;
-                }
-                
-                if(loadImages) {
-                    TextureRegion image = atlas.getTile(tileId);
-                    if(image != null) {
-                        Tile tile = null;
-                        if( atlas.isAnimatedTile(tileId) ) {
-                            tile = new AnimatedTile(atlas.getAnimatedTile(tileId), index, tileWidth, tileHeight); 
-                            mapLayer.setContainsAnimations(true);
-                        }
-                        else {
-                            tile = new Tile(image, index, tileWidth, tileHeight);
-                        }
-                                                
-                        tile.setPosition( (x%width) * tileWidth, y);
-//                        tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
-                        tile.setFlips(flippedHorizontally, flippedVertically, flippedDiagonally);
-                        
-                        if(isCollidable) {
-                            int collisionId = atlas.getTileId(tileId);
-                            tile.setCollisionMaskById(collisionId);
-                        }
-                        row[x%width] = tile;
-                    }
-                    else {
-                        row[x%width] = null;
+            String layerType = layer.getString("type");
+            if("tilelayer".equalsIgnoreCase(layerType)) {
+                Layer mapLayer = parseLayer(layer, index, atlas, loadImages, tileWidth, tileHeight, surfaces);
+                if(mapLayer != null) {
+                    mapLayers.add(mapLayer);
+                    
+                    if(!mapLayer.isForeground()) {
+                        index++;
                     }
                 }
-                // if we are headless...
-                else {
-                    if(tileId != 0) {
-                        Tile tile = new Tile(null, index, tileWidth,tileHeight);
-                        tile.setPosition( (x%width) * tileWidth, y);
-//                        tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
-                        
-                        if(isCollidable) {
-                            int collisionId = atlas.getTileId(tileId);
-                            tile.setCollisionMaskById(collisionId);
-                        }
-                        row[x%width] = tile;
-                    }
-                    else {
-                        row[x%width] = null;
-                    }
-                }
-            }
-            
-            
-            if(!isForeground) {
-                index++;
-            }    
-            
-            mapLayer.applyHeightMask();
+            }                        
         }
         
         return mapLayers;
+    }
+    
+    private List<MapObject> parseMapObjects(LeoArray layers, MapObjectFactory mapObjectsFactory) {
+        List<MapObject> mapObjects = new ArrayList<>();
+        
+        for(LeoObject l : layers) {            
+            LeoMap layer = l.as();
+            
+            String layerType = layer.getString("type");
+            if ("objectgroup".equalsIgnoreCase(layerType)) {
+                LeoArray objects = layer.getArray("objects");
+                for(LeoObject obj : objects) {
+                    MapObjectData data = LeoObject.fromLeoObject(obj, MapObjectData.class);
+                    MapObject object = mapObjectsFactory.createMapObject(data);
+                    if(object != null) {
+                        mapObjects.add(object);
+                    }
+                }
+            }
+        }
+        
+        return mapObjects;
+    }
+    
+    private Layer parseLayer(LeoMap layer, int index, TilesetAtlas atlas, boolean loadImages, int tileWidth, int tileHeight, SurfaceType[][] surfaces) {
+        LeoArray data = layer.getByString("data").as();
+        int width = layer.getInt("width");    
+        int height = layer.getInt("height");
+        
+        boolean isCollidable = false;
+        boolean isForeground = false;
+        boolean isProperty = false;
+        boolean isSurfaceTypes = false;
+        boolean isDestructable = false;
+        boolean isVisible = layer.getBoolean("visible");
+        
+        int heightMask = 0;
+        if ( layer.has(LeoString.valueOf("properties"))) {
+            LeoMap properties = layer.getByString("properties").as();            
+            isCollidable = properties.getString("collidable").equals("true");
+            isForeground = properties.getString("foreground").equals("true");
+            isDestructable = properties.getString("destructable").equals("true");
+            
+            if(properties.containsKeyByString("heightMask")) {
+                String strMask = properties.getString("heightMask");
+                heightMask = Integer.parseInt(strMask);
+            }
+            
+            if(properties.containsKeyByString("lights")) {
+                isProperty = true;
+            }
+            
+            if(properties.containsKeyByString("surfaces")) {
+                isSurfaceTypes = true;
+            }
+                            
+        }
+        
+        // surface sounds are not a proper layer, so therefore we return
+        // null to indicate that this wasn't a normal layer and shouldn't be
+        // added to the layers
+        if(isSurfaceTypes) {
+            parseSurfaces(surfaces, atlas, data, width, tileWidth, tileHeight);
+            return null;
+        }
+        
+        Layer mapLayer = new Layer(layer.getString("name"),
+                                   isCollidable, 
+                                   isForeground, 
+                                   isDestructable, 
+                                   isProperty, 
+                                   isVisible,
+                                   index, 
+                                   heightMask,
+                                   height);
+                    
+        Tile[] row = null; //new Tile[width];
+        
+        int y = -tileHeight; // account for zero
+        int rowIndex = 0;
+        for(int x = 0; x < data.size(); x++) {
+            int tileId = data.get(x).asInt();
+            boolean flippedHorizontally = (tileId & FLIPPED_HORIZONTALLY_FLAG) != 0;
+            boolean flippedVertically = (tileId & FLIPPED_VERTICALLY_FLAG) != 0; 
+            boolean flippedDiagonally = (tileId & FLIPPED_DIAGONALLY_FLAG) != 0;
+            
+            tileId &= ~(FLIPPED_HORIZONTALLY_FLAG |
+                        FLIPPED_VERTICALLY_FLAG |
+                        FLIPPED_DIAGONALLY_FLAG);
+            
+            if(x % width == 0) {                        
+                row = new Tile[width];
+                mapLayer.addRow(rowIndex++, row);
+                y+=tileHeight;
+            }
+            
+            if(loadImages) {
+                TextureRegion image = atlas.getTile(tileId);
+                if(image != null) {
+                    Tile tile = null;
+                    if( atlas.isAnimatedTile(tileId) ) {
+                        tile = new AnimatedTile(atlas.getAnimatedTile(tileId), index, tileWidth, tileHeight); 
+                        mapLayer.setContainsAnimations(true);
+                    }
+                    else {
+                        tile = new Tile(image, index, tileWidth, tileHeight);
+                    }
+                                            
+                    tile.setPosition( (x%width) * tileWidth, y);
+//                    tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
+                    tile.setFlips(flippedHorizontally, flippedVertically, flippedDiagonally);
+                    
+                    if(isCollidable) {
+                        int collisionId = atlas.getTileId(tileId);
+                        tile.setCollisionMaskById(collisionId);
+                    }
+                    row[x%width] = tile;
+                }
+                else {
+                    row[x%width] = null;
+                }
+            }
+            // if we are headless...
+            else {
+                if(tileId != 0) {
+                    Tile tile = new Tile(null, index, tileWidth,tileHeight);
+                    tile.setPosition( (x%width) * tileWidth, y);
+//                    tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
+                    
+                    if(isCollidable) {
+                        int collisionId = atlas.getTileId(tileId);
+                        tile.setCollisionMaskById(collisionId);
+                    }
+                    row[x%width] = tile;
+                }
+                else {
+                    row[x%width] = null;
+                }
+            }
+        }
+        
+        
+        if(!isForeground) {
+            index++;
+        }    
+        
+        mapLayer.applyHeightMask();
+        
+        return mapLayer;
     }
     
     private TilesetAtlas parseTilesets(LeoArray tilesets, boolean loadImages) throws Exception {

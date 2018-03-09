@@ -74,7 +74,7 @@ public class Grenade extends Bullet {
      * @see seventh.game.weapons.Bullet#getOwnerHeightMask()
      */
     @Override
-    protected int getOwnerHeightMask() {
+    public int getOwnerHeightMask() {
         return Entity.STANDING_HEIGHT_MASK;
     }
     

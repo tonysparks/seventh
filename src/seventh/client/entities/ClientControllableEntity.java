@@ -10,6 +10,7 @@ import seventh.client.entities.vehicles.ClientVehicle;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.State;
 import seventh.map.Map;
+import seventh.map.MapObject;
 import seventh.map.Tile;
 import seventh.math.Line;
 import seventh.math.Rectangle;
@@ -167,13 +168,13 @@ public abstract class ClientControllableEntity extends ClientEntity {
             float newY = predictedPos.y + deltaY;
             
             bounds.x = (int)newX;
-            if( map.rectCollides(bounds) || collidesAgainstEntity(bounds)) {
+            if( map.rectCollides(bounds) || collidesAgainstEntity(bounds) || collidesAgainstMapObject(bounds)) {
                 bounds.x = (int)predictedPos.x;
                 newX = predictedPos.x;
             }
             
             bounds.y = (int)newY;
-            if( map.rectCollides(bounds) || collidesAgainstEntity(bounds)) {
+            if( map.rectCollides(bounds) || collidesAgainstEntity(bounds) || collidesAgainstMapObject(bounds)) {
                 bounds.y = (int)predictedPos.y;
                 newY = predictedPos.y;
             }
@@ -208,6 +209,20 @@ public abstract class ClientControllableEntity extends ClientEntity {
             ClientDoor door = doors.get(i);
             if(door.isTouching(bounds)) {
                 return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    protected boolean collidesAgainstMapObject(Rectangle bounds) {
+        List<MapObject> mapObjects = game.getMapObjects();
+        for(int i = 0; i < mapObjects.size(); i++) {
+            MapObject object = mapObjects.get(i);
+            if(object.isCollidable()) {
+                if(object.isTouching(bounds) ) {                    
+                    return true;
+                }
             }
         }
         

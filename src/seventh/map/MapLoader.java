@@ -21,5 +21,5 @@ public interface MapLoader {
      * @return
      * @throws Exception
      */
-    public Map loadMap(LeoMap map, boolean loadAssets) throws Exception;
+    public Map loadMap(LeoMap map, MapObjectFactory mapObjectsFactory, boolean loadAssets) throws Exception;
 }

@@ -65,7 +65,9 @@ public class Tile implements Renderable {
         public static SurfaceType fromString(String type) {
             SurfaceType result = UNKNOWN;
             try {
-                result = SurfaceType.valueOf(type.toUpperCase());            
+                if(type!=null) {
+                    result = SurfaceType.valueOf(type.toUpperCase());
+                }
             }
             catch(IllegalArgumentException e) {                
             }

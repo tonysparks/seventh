@@ -128,6 +128,32 @@ public class OBB {
         Vector2f.Vector2fAdd(bottomLeft, center, bottomLeft);
         Vector2f.Vector2fAdd(bottomRight, center, bottomRight);        
     }
+    
+    public void rotateAround(Vector2f pos, float newOrientation) {
+        // first translate to center coordinate space
+        Vector2f.Vector2fSubtract(center, pos, center);
+        Vector2f.Vector2fSubtract(topLeft, pos, topLeft);
+        Vector2f.Vector2fSubtract(topRight, pos, topRight);
+        Vector2f.Vector2fSubtract(bottomLeft, pos, bottomLeft);
+        Vector2f.Vector2fSubtract(bottomRight, pos, bottomRight);
+
+        // rotate the rectangle
+        this.orientation = newOrientation;
+        
+        Vector2f.Vector2fRotate(center, orientation, center);
+        Vector2f.Vector2fRotate(topLeft, orientation, topLeft);
+        Vector2f.Vector2fRotate(topRight, orientation, topRight);
+        Vector2f.Vector2fRotate(bottomLeft, orientation, bottomLeft);
+        Vector2f.Vector2fRotate(bottomRight, orientation, bottomRight);
+        
+        // translate the rotated rectangle back to the supplied 
+        // center position
+        Vector2f.Vector2fAdd(center, pos, center);
+        Vector2f.Vector2fAdd(topLeft, pos, topLeft);
+        Vector2f.Vector2fAdd(topRight, pos, topRight);
+        Vector2f.Vector2fAdd(bottomLeft, pos, bottomLeft);
+        Vector2f.Vector2fAdd(bottomRight, pos, bottomRight);        
+    }
 
     /**
      * set the rotation to the supplied orientation
@@ -225,6 +251,15 @@ public class OBB {
      */
     public float getHeight() {
         return height;
+    }
+    
+    /**
+     * Longest length from corner to corner
+     * @return Longest length from corner to corner
+     */
+    public float length() {
+        float distance = Vector2f.Vector2fDistance(this.topLeft, this.bottomRight);
+        return distance;
     }
     
     /**

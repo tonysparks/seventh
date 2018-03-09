@@ -82,6 +82,7 @@ import seventh.map.Layer;
 import seventh.map.Layer.LayerTileIterator;
 import seventh.map.Map;
 import seventh.map.MapGraph;
+import seventh.map.MapObject;
 import seventh.map.Tile;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
@@ -785,6 +786,10 @@ public class Game implements GameInfo, Debugable, Updatable {
      */
     public List<DroppedItem> getDroppedItems() {
         return droppedItems;
+    }
+    
+    public List<MapObject> getMapObjects() {
+        return map.getMapObjects();
     }
     
     /* (non-Javadoc)
@@ -1965,6 +1970,21 @@ public class Game implements GameInfo, Debugable, Updatable {
                         ent.onTouch.onTouch(ent, other);
                         return true;
                     }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean doesTouchMapObject(Entity ent) {
+        List<MapObject> mapObjects = getMapObjects();
+        for(int i = 0; i < mapObjects.size(); i++) {
+            MapObject object = mapObjects.get(i);
+            if(object.isCollidable()) {
+                if(object.isTouching(ent) && ent.onMapObjectTouch != null) {
+                    ent.onMapObjectTouch.onTouch(ent, object);
+                    return true;
                 }
             }
         }
