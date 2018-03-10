@@ -82,19 +82,21 @@ public class ClientFlag extends ClientEntity {
         
         long clockTime = timeStep.getGameClock();
         
-        if (carrier != null && carrier.isAlive()) {            
-            long lastUpdate = carrier.getEntity().getLastUpdate(); 
+        if(this.isRelativelyUpdated()) {
+            fadeAlphaColor = 255;
             
-            if ((lastUpdate+150) < clockTime) {
-                fadeAlphaColor = 255 - ((int)(clockTime-lastUpdate)/3);
-                if (fadeAlphaColor < 0) fadeAlphaColor = 0;                        
+            if (carrier != null && carrier.isAlive()) {            
+                long lastUpdate = carrier.getEntity().getLastUpdate(); 
+                
+                if ((lastUpdate+150) < clockTime) {
+                    fadeAlphaColor = 255 - ((int)(clockTime-lastUpdate)/3);
+                    if (fadeAlphaColor < 0) fadeAlphaColor = 0;                        
+                }            
             }
-            else {
-                fadeAlphaColor = 255;
-            }
+            
         }
         else {
-            fadeAlphaColor = 255;
+            fadeAlphaColor = 0;
         }
     }
 
