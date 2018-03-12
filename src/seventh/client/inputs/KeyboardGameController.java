@@ -51,6 +51,7 @@ public class KeyboardGameController extends Inputs implements GameController {
         
         if(isKeyOrButtonDown(keyMap.getIronSightsKey())) {
             inputKeys |= Actions.IRON_SIGHTS.getMask();
+            inputKeys |= Actions.WALK.getMask();
         }
         
         if(isKeyOrButtonDown(keyMap.getFireKey())) {
