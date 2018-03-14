@@ -526,7 +526,7 @@ public class ClientGame {
         gameEffects.renderForeground(canvas, camera, alpha);
         map.renderForeground(canvas, camera, alpha);
         
-        canvas.setColor(0, 45);
+        canvas.setColor(0, 75);
         map.renderSolid(canvas, camera, alpha);
 
         gameEffects.renderLightSystem(canvas, camera, alpha);

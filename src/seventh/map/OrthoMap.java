@@ -797,7 +797,7 @@ public class OrthoMap implements Map {
         this.surfaces = info.getSurfaces();
         
         if(this.shadeTilesLookup != null) {
-            this.shadeTilesLookup = createShadeLookup(45);
+            this.shadeTilesLookup = createShadeLookup(75);
         }
     }
     
