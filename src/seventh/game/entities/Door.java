@@ -230,7 +230,7 @@ public class Door extends Entity {
         this.autoCloseTimer = new Timer(false, 5_000);
         this.autoCloseTimer.stop();
         
-        this.rotation = new SmoothOrientation(0.05);
+        this.rotation = new SmoothOrientation(0.1);
         this.rotation.setOrientation(this.hinge.getClosedOrientation());
         setOrientation(this.rotation.getOrientation());
         
