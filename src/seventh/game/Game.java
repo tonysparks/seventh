@@ -957,7 +957,9 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         int safety = 100000;
         while((map.rectCollides(player.getBounds()) || 
-               map.hasWorldCollidableTile((int)player.getCenterPos().x, (int)player.getCenterPos().y)) && 
+               map.hasWorldCollidableTile((int)player.getCenterPos().x, (int)player.getCenterPos().y) || 
+               doesTouchOthers(player, false) ||
+               doesTouchMapObject(player, false)) &&
                safety>0) {
             
             int w = (player.getBounds().width + 5);
@@ -1020,13 +1022,13 @@ public class Game implements GameInfo, Debugable, Updatable {
     }
     
     public Vector2f findFreeRandomSpot(Rectangle bounds, int x, int y, int width, int height) {
-        Vector2f pos = new Vector2f(x+random.nextInt(width), y+random.nextInt(height));
+        Vector2f pos = new Vector2f();
         Rectangle temp = new Rectangle(bounds);
-        temp.setLocation(pos);
-        
+                
         int loopChecker = 0;
         
-        while (map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y) ) {
+        do {
+            
             pos.x = x + random.nextInt(width);
             pos.y = y + random.nextInt(height);
             temp.setLocation(pos);
@@ -1036,6 +1038,9 @@ public class Game implements GameInfo, Debugable, Updatable {
                 return null;
             }
         }
+        while(map.rectCollides(temp) || 
+              map.hasWorldCollidableTile(temp.x, temp.y) ||
+              doesTouchEntity(temp));
         
         return pos;
     }
@@ -1055,10 +1060,21 @@ public class Game implements GameInfo, Debugable, Updatable {
         Rectangle temp = new Rectangle(entity.getBounds());
         temp.setLocation(pos);
         
-        while ((map.rectCollides(temp) && !map.hasWorldCollidableTile(temp.x, temp.y)) || notIn.intersects(temp)) {
+        int loopChecker = 0;
+        
+        while (map.rectCollides(temp) || 
+               map.hasWorldCollidableTile(temp.x, temp.y) ||                
+               doesTouchEntity(temp) ||
+               notIn.intersects(temp)) {
+            
             pos.x = x + random.nextInt(width);
             pos.y = y + random.nextInt(height);
             temp.setLocation(pos);
+            
+            // this bounds doesn't have a free spot
+            if(loopChecker++ > 500_000) {
+                return null;
+            }
         }
         
         return pos;
@@ -1081,6 +1097,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         }
         while (map.rectCollides(temp) || 
                map.hasWorldCollidableTile(temp.x, temp.y) || 
+               doesTouchEntity(temp) ||
                notIn.expensiveIntersects(temp));
         
         return pos;
@@ -1937,19 +1954,39 @@ public class Game implements GameInfo, Debugable, Updatable {
         return false;
     }
     
-    /* (non-Javadoc)
-     * @see seventh.game.GameInfo#doesTouchOthers(seventh.game.Entity)
-     */
     @Override
     public boolean doesTouchOthers(Entity ent) {
+        return doesTouchOthers(ent, true);
+    }
+    
+    @Override
+    public boolean doesTouchOthers(Entity ent, boolean invokeTouch) {
         for(int i = 0; i < this.entities.length; i++) {
             Entity other = this.entities[i];
             if(other != null) {
                 if(other != ent && /*other.bounds.intersects(ent.bounds)*/ ent.isTouching(other)) {
+                    if(!invokeTouch) {
+                        return true;
+                    }
                     if(ent.onTouch != null) {
                         ent.onTouch.onTouch(ent, other);
                         return true;
                     }
+                    
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    @Override
+    public boolean doesTouchEntity(Rectangle bounds) {
+        for(int i = 0; i < this.entities.length; i++) {
+            Entity other = this.entities[i];
+            if(other != null) {
+                if(bounds.intersects(other.getBounds())) {
+                    return true;
                 }
             }
         }
@@ -1978,13 +2015,23 @@ public class Game implements GameInfo, Debugable, Updatable {
     }
     
     public boolean doesTouchMapObject(Entity ent) {
+        return doesTouchMapObject(ent, true);
+    }
+    
+    public boolean doesTouchMapObject(Entity ent, boolean invokeTouch) {
         List<MapObject> mapObjects = getMapObjects();
         for(int i = 0; i < mapObjects.size(); i++) {
             MapObject object = mapObjects.get(i);
             if(object.isCollidable()) {
-                if(object.isTouching(ent) && ent.onMapObjectTouch != null) {
-                    ent.onMapObjectTouch.onTouch(ent, object);
-                    return true;
+                if(object.isTouching(ent)) { 
+                    if(!invokeTouch) {
+                        return true;
+                    }
+                    
+                    if(ent.onMapObjectTouch != null) {                
+                        ent.onMapObjectTouch.onTouch(ent, object);
+                        return true;
+                    }
                 }
             }
         }
