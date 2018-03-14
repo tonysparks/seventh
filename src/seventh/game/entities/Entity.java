@@ -595,7 +595,7 @@ public abstract class Entity implements Debugable {
             int xIndex = collisionTile.getXIndex();
             int yIndex = collisionTile.getYIndex();
             
-            int offset = 16;
+            int offset = 32;
             
             if(!map.checkTileBounds(xIndex, yIndex - 1) && !map.hasCollidableTile(xIndex, yIndex - 1)) {
                 if(currentY < (collisionTile.getY()-(bounds.height-offset))) {
@@ -635,7 +635,7 @@ public abstract class Entity implements Debugable {
             int xIndex = collisionTile.getXIndex();
             int yIndex = collisionTile.getYIndex();
             
-            int offset = 16;
+            int offset = 32;
             
             if(!map.checkTileBounds(xIndex-1, yIndex) && !map.hasCollidableTile(xIndex-1, yIndex)) {
                 if(currentX+bounds.width < (collisionTile.getX()+offset)) {
