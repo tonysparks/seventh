@@ -451,7 +451,7 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.getBit(position++) ? 1 : 0) << (i % Long.SIZE);
+            value |= (data.getBit(position++) ? 1L : 0L) << (i % Long.SIZE);
         }
 
         return value;
@@ -483,10 +483,10 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.getBit(position++) ? 1 : 0) << (i % Double.SIZE);
+            value |= (data.getBit(position++) ? 1L : 0L) << (i % Double.SIZE);
         }
 
-        return Double.doubleToLongBits(value);
+        return Double.longBitsToDouble(value);
     }
 
     public boolean getBoolean() {

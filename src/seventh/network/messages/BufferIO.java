@@ -290,7 +290,7 @@ public class BufferIO {
         byte[] chars = str.getBytes();
         int len = chars.length;
         buffer.putUnsignedByte(len);
-        for(byte i = 0; i < len; i++) {
+        for(int i = 0; i < len; i++) {
             buffer.putByte(chars[i]);
         }        
     }
@@ -298,7 +298,7 @@ public class BufferIO {
     public static String readString(IOBuffer buffer) {
         int len = buffer.getUnsignedByte();
         byte[] chars = new byte[len];
-        for(byte i = 0; i < len; i++) {
+        for(int i = 0; i < len; i++) {
             chars[i] = buffer.getByte();
         }
         
@@ -310,7 +310,7 @@ public class BufferIO {
         byte[] chars = str.getBytes();
         int len = chars.length;
         buffer.putShort( (short)len);
-        for(byte i = 0; i < len; i++) {
+        for(int i = 0; i < len; i++) {
             buffer.putByte(chars[i]);
         }        
     }
@@ -318,7 +318,7 @@ public class BufferIO {
     public static String readBigString(IOBuffer buffer) {
         int len = buffer.getShort();
         byte[] chars = new byte[len];
-        for(byte i = 0; i < len; i++) {
+        for(int i = 0; i < len; i++) {
             chars[i] = buffer.getByte();
         }
         
