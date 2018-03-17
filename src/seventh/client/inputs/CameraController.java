@@ -54,8 +54,10 @@ public class CameraController implements Updatable {
     private int viewportWidth, viewportHeight;
     
     private boolean isCameraRoaming, isFastCamera;
-    private boolean isCameraActive;
+    private boolean isCameraActive;    
     private boolean isIronSights;
+    
+    
     private int previousKeys;
     private Cursor cursor;
     
@@ -81,7 +83,7 @@ public class CameraController implements Updatable {
         this.cameraShakeBounds = new Rectangle(600, 600);
         
         this.playerVelocity = new Vector2f();
-
+                        
         this.bounds = new Rectangle();
         this.viewportWidth = this.camera.getViewPort().width;
         this.viewportHeight = this.camera.getViewPort().height;
@@ -349,22 +351,27 @@ public class CameraController implements Updatable {
                 
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 
-                if(!this.localPlayer.isSpectating() && this.isCameraActive && (this.config.getFollowReticleEnabled() || this.isIronSights) ) {
-                    Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), config.getFollowReticleOffset(), cameraCenterAround); 
-                    
+                boolean adjustCameraView = !this.localPlayer.isSpectating() && this.isCameraActive && 
+                                              (this.config.getFollowReticleEnabled() || this.isIronSights);
+                
+                
+                if(adjustCameraView) {
+                    Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), config.getFollowReticleOffset(), cameraCenterAround);
+                                                                                                    
                     // smooth out the camera
                     previousCameraPos.set(cameraCenterAround);
                     Vector2f.Vector2fLerp(cameraCenterAround, previousCameraPos, 0.15f, cameraCenterAround);
+ 
                 }
-                else {
+                else {                    
                     cameraCenterAround.set(entity.getCenterPos());
                 }
                 
-                //cameraCenterAround.set(entity.getPos());
                 Vector2f.Vector2fRound(cameraCenterAround, cameraCenterAround);;
                 camera.centerAround(cameraCenterAround);
         
                 Sounds.setPosition(cameraCenterAround);
+                                
                 
                 /* Calculates the Fog Of War
                  */
@@ -375,7 +382,7 @@ public class CameraController implements Updatable {
                     
                     /* only calculate every 100 ms */
                     nextFOWUpdate = 100;                    
-                }            
+                }
             }
         }
     }
