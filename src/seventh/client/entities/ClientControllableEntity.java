@@ -264,7 +264,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
             boolean isBlockedByEntity = false;
             
             bounds.x = (int)newX;            
-            if(map.rectCollides(bounds)) {
+            if(map.rectCollides(bounds, 1, xCollisionTilePos)) {
                 bounds.x = (int)predictedPos.x;
                 newX = predictedPos.x;
                 isBlocked = true;
@@ -277,7 +277,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
             }
             
             bounds.y = (int)newY;            
-            if(map.rectCollides(bounds)) {
+            if(map.rectCollides(bounds, 1, yCollisionTilePos)) {
                 bounds.y = (int)predictedPos.y;
                 newY = predictedPos.y;
                 isBlocked = true;
@@ -307,10 +307,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
                  */
                 else if (!isBlockedByEntity) {
                     if(deltaX!=0 && deltaY==0) {                
-                        newY = adjustY(xCollisionTilePos, deltaX, (int)(pos.x + deltaX), bounds.y);
+                        newY = adjustY(xCollisionTilePos, deltaX, (int)(predictedPos.x + deltaX), bounds.y);
                     }
                     else if(deltaX==0 && deltaY!=0) {
-                        newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(pos.y + deltaY));
+                        newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(predictedPos.y + deltaY));
                     }
                 }
             }
