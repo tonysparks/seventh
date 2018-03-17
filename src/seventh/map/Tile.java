@@ -1217,6 +1217,55 @@ public class Tile implements Renderable {
                                 
                 return Circle.circleIntersectsRect(circleX, circleY, radius, b);
             }
+        },
+        
+        CENTER_VERTICAL_SOLID(31) {
+            
+            @Override
+            public boolean pointCollide(Rectangle a, int x, int y) {
+                a.x += 8;
+                a.width /= 2;
+                return a.contains(x, y);
+            }
+            
+            
+            @Override
+            public boolean rectCollide(Rectangle a, OBB oob) {
+                a.x += 8;
+                a.width /= 2;
+                return oob.intersects(a);
+            }
+            
+            @Override
+            public boolean rectCollide(Rectangle a, Rectangle b) {
+                a.x += 8;
+                a.width /= 2;
+                return a.intersects(b);
+            }
+        },
+        
+        CENTER_HORIZONTAL_SOLID(32) {
+            @Override
+            public boolean pointCollide(Rectangle a, int x, int y) {
+                a.y += 8;
+                a.height /= 2;                    
+                return a.contains(x, y);                
+            }
+            
+            @Override
+            public boolean rectCollide(Rectangle a, OBB oob) {
+                a.y += 8;
+                a.height /= 2;                        
+                return oob.intersects(a);
+            }
+            
+            @Override
+            public boolean rectCollide(Rectangle a, Rectangle b) {                                        
+                a.y += 8;
+                a.height /= 2;                        
+                return a.intersects(b);
+                
+            }
         }
         
         ;
