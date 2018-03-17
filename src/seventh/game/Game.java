@@ -1656,8 +1656,8 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @param position
      * @return the bomb target
      */
-    public BombTarget newBombTarget(Vector2f position) {
-        final BombTarget target = new BombTarget(position, this);
+    public BombTarget newBombTarget(Team owner, Vector2f position) {
+        final BombTarget target = new BombTarget(owner, position, this);
         target.onKill = new KilledListener() {
             
             @Override

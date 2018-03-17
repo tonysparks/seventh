@@ -79,6 +79,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
     /**
      * @return the attacker
      */
+    @Override
     public Team getAttacker() {
         return attacker;
     }
@@ -86,6 +87,7 @@ public class ObjectiveGameType extends AbstractTeamGameType {
     /**
      * @return the defender
      */
+    @Override
     public Team getDefender() {
         return defender;
     }

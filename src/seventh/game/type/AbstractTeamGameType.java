@@ -581,6 +581,17 @@ public abstract class AbstractTeamGameType implements GameType {
         return this.highScoreTeams;
     }
     
+    
+    @Override
+    public Team getAttacker() {    
+        return getAlliedTeam().isAttacker() ? getAlliedTeam() : getAxisTeam();
+    }
+    
+    @Override
+    public Team getDefender() {
+        return getAlliedTeam().isDefender() ? getAlliedTeam() : getAxisTeam();
+    }
+    
     /* (non-Javadoc)
      * @see palisma.game.type.GameType#getTeam(palisma.game.Player)
      */

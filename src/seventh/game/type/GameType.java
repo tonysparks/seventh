@@ -110,6 +110,9 @@ public interface GameType extends Debugable {
     public void playerJoin(Player player);
     public void playerLeft(Player player);
     
+    public Team getAttacker();
+    public Team getDefender();
+    
     public Team getTeam(Player player);
     public Team getEnemyTeam(Player player);
     public boolean switchTeam(Player player, byte teamId);

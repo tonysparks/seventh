@@ -1372,11 +1372,14 @@ public class PlayerEntity extends Entity implements Controllable {
      */
     protected void handleBombTarget(BombTarget target) {
         if(target!=null) {
-            if(target.bombActive()) {
-                Bomb bomb = target.getBomb();
-                bomb.disarm(this);                        
-                                        
-                game.emitSound(getId(), SoundType.BOMB_DISARM, getPos());                        
+            
+            if(target.getOwner().equals(getTeam())) {
+                if(target.bombActive()) {
+                    Bomb bomb = target.getBomb();
+                    bomb.disarm(this);                        
+                                            
+                    game.emitSound(getId(), SoundType.BOMB_DISARM, getPos());                        
+                }    
             }
             else {
                 if(!target.isBombAttached()) {                            
@@ -1384,8 +1387,8 @@ public class PlayerEntity extends Entity implements Controllable {
                     bomb.plant(this, target);
                     target.attachBomb(bomb);
                     game.emitSound(getId(), SoundType.BOMB_PLANT, getPos());
-                }                                                
-            }    
+                }
+            } 
         }
     }
     
@@ -1506,6 +1509,7 @@ public class PlayerEntity extends Entity implements Controllable {
         
         return false;
     }
+    
     
     /**
      * If this {@link PlayerEntity} is currently holding a specific
