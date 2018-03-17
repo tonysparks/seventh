@@ -103,7 +103,7 @@ public class Emitters {
         
         emitter.addParticleUpdater(new KillUpdater());
         emitter.addParticleUpdater(new MovementParticleUpdater(0, 2));
-        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9878f));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.994898f));
         emitter.addParticleRenderer(new SpriteParticleRenderer());
         
         return emitter;
