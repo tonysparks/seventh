@@ -64,6 +64,11 @@ public class CompoundCursor extends Cursor {
     public Vector2f getCursorPos() {    
         return this.active.getCursorPos();
     }
+        
+    @Override
+    public Vector2f getPreviousCursorPos() {    
+        return this.active.getPreviousCursorPos();
+    }
     
     @Override
     public float getMouseSensitivity() {    
@@ -103,6 +108,18 @@ public class CompoundCursor extends Cursor {
     public void moveTo(int x, int y) {
         this.a.moveTo(x, y);
         this.b.moveTo(x, y);
+    }
+        
+    @Override
+    public void snapTo(int x, int y) {    
+        this.a.snapTo(x, y);
+        this.b.snapTo(x, y);
+    }
+    
+    @Override
+    public void snapTo(Vector2f screenPos) {    
+        this.a.snapTo(screenPos);
+        this.b.snapTo(screenPos);
     }
     
     @Override
