@@ -27,7 +27,6 @@ public class NetPlayer extends NetEntity {
     public State state;
     public byte grenades;
     public byte health;    
-    public byte stamina;
     
     public boolean isOperatingVehicle;
     public boolean isSmokeGrenades;
@@ -68,7 +67,6 @@ public class NetPlayer extends NetEntity {
         state = BufferIO.readState(buffer);
         grenades = buffer.getByteBits(4);
         health = buffer.getByteBits(7);
-        stamina = buffer.getByteBits(7);
         
         if((bits & HAS_WEAPON) != 0) {            
             weapon = new NetWeapon();
@@ -100,7 +98,6 @@ public class NetPlayer extends NetEntity {
         BufferIO.writeState(buffer, state);
         buffer.putByteBits(grenades, 4);
         buffer.putByteBits(health, 7);
-        buffer.putByteBits(stamina, 7);        
         
         if(weapon != null && !isOperatingVehicle) {
             weapon.write(buffer);

@@ -1831,8 +1831,6 @@ public class PlayerEntity extends Entity implements Controllable {
         }
         
         player.health = (byte)getHealth(); 
-//        player.events = (byte)getEvents();
-        player.stamina = getStamina();
         
         player.isOperatingVehicle = isOperatingVehicle();
         if(player.isOperatingVehicle) {

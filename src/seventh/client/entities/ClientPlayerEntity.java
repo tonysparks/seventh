@@ -58,8 +58,6 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     private final ClientWeapon[] WEAPONS = new ClientWeapon[11];
     
     private int health;        
-    private int stamina;
-        
     private long invinceableTime;
             
     private PlayerSprite sprite;
@@ -261,14 +259,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     public boolean isSmokeGrenades() {
         return isSmokeGrenades;
     }
-    
-    /**
-     * @return the stamina
-     */
-    public int getStamina() {
-        return stamina;
-    }
-    
+        
     /**
      * @param team
      */
@@ -344,7 +335,6 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             }
             
             this.health = ps.health;
-            this.stamina = ps.stamina;
             
             this.numberOfGrenades = ps.grenades;
             this.isSmokeGrenades = ps.isSmokeGrenades;
