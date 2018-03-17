@@ -1961,10 +1961,10 @@ public class Game implements GameInfo, Debugable, Updatable {
     
     @Override
     public boolean doesTouchOthers(Entity ent, boolean invokeTouch) {
-        for(int i = 0; i < this.entities.length; i++) {
-            Entity other = this.entities[i];
+        for(int i = 0; i < this.vehicles.size(); i++) {
+            Entity other = this.vehicles.get(i);
             if(other != null) {
-                if(other != ent && /*other.bounds.intersects(ent.bounds)*/ ent.isTouching(other)) {
+                if(other != ent && other.isTouching(ent)) {
                     if(!invokeTouch) {
                         return true;
                     }
@@ -1972,10 +1972,25 @@ public class Game implements GameInfo, Debugable, Updatable {
                         ent.onTouch.onTouch(ent, other);
                         return true;
                     }
-                    
                 }
             }
         }
+        
+        for(int i = 0; i < this.doors.size(); i++) {
+            Entity other = this.doors.get(i);
+            if(other != null) {
+                if(other != ent && other.isTouching(ent)) {
+                    if(!invokeTouch) {
+                        return true;
+                    }
+                    if(ent.onTouch != null) {
+                        ent.onTouch.onTouch(ent, other);
+                        return true;
+                    }
+                }
+            }
+        }
+        
         
         return false;
     }
