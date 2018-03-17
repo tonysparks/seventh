@@ -370,7 +370,7 @@ public class CameraController implements Updatable {
                 Vector2f.Vector2fRound(cameraCenterAround, cameraCenterAround);;
                 camera.centerAround(cameraCenterAround);
         
-                Sounds.setPosition(cameraCenterAround);
+                Sounds.setPosition(entity.getCenterPos());
                                 
                 
                 /* Calculates the Fog Of War
