@@ -80,6 +80,7 @@ public class TiledMapLoader implements MapLoader {
         
         def.setAtlas(atlas);
         def.setMapObjects(mapObjects);
+        def.setMapObjectsFactory(mapObjectsFactory);
         
         Map theMap = new OrthoMap(loadAssets);
         theMap.init(def);

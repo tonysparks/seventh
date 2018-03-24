@@ -55,7 +55,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
 import seventh.shared.NetworkProtocol;
@@ -283,6 +285,12 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         }
         else if(message instanceof TilesRemovedMessage) {
             receiveTilesRemovedMessage(conn, (TilesRemovedMessage)message);
+        }
+        else if(message instanceof TileAddedMessage) {
+            receiveTileAddedMessage(conn, (TileAddedMessage)message);
+        }
+        else if(message instanceof TilesAddedMessage) {
+            receiveTilesAddedMessage(conn, (TilesAddedMessage)message);
         }
         else if(message instanceof PlayerCommanderMessage) {
             receivePlayerCommanderMessage(conn, (PlayerCommanderMessage)message);
@@ -581,6 +589,26 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     public void receiveTilesRemovedMessage(Connection conn, TilesRemovedMessage msg) {
         if(game!=null) {
             game.removeTiles(msg);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#receiveTileAddedMessage(harenet.api.Connection, seventh.network.messages.TileAddedMessage)
+     */
+    @Override
+    public void receiveTileAddedMessage(Connection conn, TileAddedMessage msg) {
+        if(game!=null) {
+            game.addTile(msg);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#receiveTilesAddedMessage(harenet.api.Connection, seventh.network.messages.TilesAddedMessage)
+     */
+    @Override
+    public void receiveTilesAddedMessage(Connection conn, TilesAddedMessage msg) {
+        if(game!=null) {
+            game.addTiles(msg);
         }
     }
     

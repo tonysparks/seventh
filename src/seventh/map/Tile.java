@@ -1282,9 +1282,10 @@ public class Tile implements Renderable {
         public abstract boolean rectCollide(Rectangle a, OBB oob);
         public abstract boolean pointCollide(Rectangle a, int x, int y);
         
+        private static CollisionMask[] values = values();
         
         public static CollisionMask fromId(int id) {
-            for(CollisionMask m : values()) {
+            for(CollisionMask m : values) {
                 if(m.id == id) {
                     return m;
                 }

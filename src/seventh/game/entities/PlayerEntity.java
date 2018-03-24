@@ -897,7 +897,15 @@ public class PlayerEntity extends Entity implements Controllable {
             else {
                 noMoveX();
             }
-                
+            
+            if(!Keys.SPRINT.isDown(keys)) {
+                if(Keys.SPRINT.isDown(previousKeys)) {
+                    // place tile if possible
+                    placeTile();
+                }
+            }
+            
+            /*
             if(Keys.SPRINT.isDown(keys)) {
                 if(!inputVel.isZero() && currentState != State.WALKING) {                                        
                     sprint();
@@ -905,7 +913,7 @@ public class PlayerEntity extends Entity implements Controllable {
             }
             else {
                 stopSprinting();        
-            }
+            }*/
             
             if(Keys.CROUCH.isDown(keys)) {
                 crouch();
@@ -929,6 +937,15 @@ public class PlayerEntity extends Entity implements Controllable {
             this.previousOrientation = orientation;
         }
         
+    }
+    
+    private void placeTile() {
+        Vector2f tilePos = new Vector2f();
+        Vector2f.Vector2fMA(getCenterPos(), getFacing(), 32f, tilePos);
+        
+        // TODO: Pick the current tile the user has
+        // TODO: Only allow if current weapon is Hammer
+        game.addTile( (byte)1, tilePos);
     }
     
     /* (non-Javadoc)

@@ -75,14 +75,17 @@ public class BufferIO {
     public static final byte TILE_REMOVED = 30;
     public static final byte TILES_REMOVED= 31;
     
-    public static final byte FLAG_CAPTURED = 32;
-    public static final byte FLAG_RETURNED = 33;
-    public static final byte FLAG_STOLEN = 34;
+    public static final byte TILE_ADDED = 32;
+    public static final byte TILES_ADDED = 33;
     
-    public static final byte PLAYER_COMMANDER = 35;
+    public static final byte FLAG_CAPTURED = 34;
+    public static final byte FLAG_RETURNED = 35;
+    public static final byte FLAG_STOLEN = 36;
     
-    public static final byte PLAYER_AWARD  = 36;
-    public static final byte SURVIVOR_EVENT  = 37;
+    public static final byte PLAYER_COMMANDER = 37;
+    
+    public static final byte PLAYER_AWARD  = 38;
+    public static final byte SURVIVOR_EVENT  = 39;
     
     /**
      * The Seventh {@link NetMessageFactory} implementation
@@ -162,6 +165,10 @@ public class BufferIO {
                 case TILE_REMOVED: message = new TileRemovedMessage();
                     break;
                 case TILES_REMOVED: message = new TilesRemovedMessage();
+                    break;
+                case TILE_ADDED: message = new TileAddedMessage();
+                    break;
+                case TILES_ADDED: message = new TilesAddedMessage();
                     break;
                 case FLAG_CAPTURED: message = new FlagCapturedMessage();
                     break;

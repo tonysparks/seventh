@@ -50,6 +50,7 @@ import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
 import seventh.game.events.SurvivorEvent;
 import seventh.game.events.SurvivorEvent.EventType;
+import seventh.game.events.TileAddedEvent;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
@@ -84,6 +85,7 @@ import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.MapObject;
 import seventh.map.Tile;
+import seventh.map.TileData;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -321,7 +323,11 @@ public class Game implements GameInfo, Debugable, Updatable {
                 for(Tile tile : map.getRemovedTiles()) {
                     graph.removeNode(tile.getXIndex(), tile.getYIndex());
                 }
+                
+                
                 map.restoreDestroyedTiles();
+                map.removeAddedTiles();
+                
                 loadMapScripts();
                 
                 aiSystem.startOfRound(Game.this);
@@ -699,6 +705,46 @@ public class Game implements GameInfo, Debugable, Updatable {
                 timer.setEndTime(minStartTime + random.nextInt(millis) * 100);
             }
         });
+    }
+    
+    /**
+     * Adds a {@link Tile} to the game world
+     * 
+     * @param type
+     * @param pos
+     * @return true if it was added
+     */
+    public boolean addTile(byte type, Vector2f pos) {
+        int tileX = (int)pos.x;
+        int tileY = (int)pos.y;
+        
+        // ensure there is not already a collision tile here
+        // and also ensure no players are touching here
+        if(!map.hasWorldCollidableTile(tileX, tileY)) {
+            Tile groundTile = map.getWorldTile(0, tileX, tileY);
+            Rectangle bounds = groundTile.getBounds();
+            for(int i = 0; i < this.playerEntities.length; i++) {
+                PlayerEntity ent = this.playerEntities[i];
+                if(ent!=null) {
+                    if(ent.getBounds().intersects(bounds)) {
+                        return false;
+                    }
+                }
+            }
+            
+            TileData data = new TileData();
+            data.tileX = map.worldToTileX((int) pos.x);
+            data.tileY = map.worldToTileY((int) pos.y);
+            data.type = type;
+            Tile tile = map.getMapObjectFactory().createMapTile(map.geTilesetAtlas(), data);
+            if(tile != null) {
+                map.addTile(tile);
+                
+                dispatcher.queueEvent(new TileAddedEvent(this, data.type, data.tileX, data.tileY));                
+                return true;
+            }
+        }
+        return false;
     }
     
     /* (non-Javadoc)

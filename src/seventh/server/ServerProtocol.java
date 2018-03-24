@@ -40,7 +40,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 
 /**
@@ -280,6 +282,20 @@ public interface ServerProtocol {
      * @param msg
      */
     public void sendTilesRemovedMessage(TilesRemovedMessage msg);
+    
+    /**
+     * Sends a {@link TileAddedMessage} to all clients
+     * 
+     * @param msg
+     */
+    public void sendTileAddedMessage(TileAddedMessage msg);
+    
+    /**
+     * Sends a {@link TilesAddedMessage} to all clients
+     * 
+     * @param msg
+     */
+    public void sendTilesAddedMessage(TilesAddedMessage msg);
     
     /**
      * Sends an {@link RconTokenMessage} to a particular client

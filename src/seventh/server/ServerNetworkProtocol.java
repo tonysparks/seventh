@@ -53,7 +53,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
 import seventh.shared.Console;
@@ -599,6 +601,19 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
      */
     @Override
     public void sendTilesRemovedMessage(TilesRemovedMessage msg) {
+        queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+    }
+    
+    @Override
+    public void sendTileAddedMessage(TileAddedMessage msg) {
+        queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.server.ServerProtocol#sendTilesRemovedMessage(seventh.network.messages.TilesRemovedMessage)
+     */
+    @Override
+    public void sendTilesAddedMessage(TilesAddedMessage msg) {
         queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
     }
     

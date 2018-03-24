@@ -211,6 +211,14 @@ public class Layer {
         }
     }
     
+    public void addTile(Tile tile) {
+        this.rows[tile.getYIndex()][tile.getXIndex()] = tile;
+    }
+    
+    public void removeTile(Tile tile) {
+        this.rows[tile.getYIndex()][tile.getXIndex()] = null;
+    }
+    
     /**
      * Iterate over each {@link Tile} in this {@link Layer}
      * @param it

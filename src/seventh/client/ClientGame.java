@@ -63,6 +63,7 @@ import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetGameUpdate;
+import seventh.game.net.NetMapAddition;
 import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
@@ -73,6 +74,7 @@ import seventh.game.type.GameType;
 import seventh.map.Map;
 import seventh.map.MapObject;
 import seventh.map.Tile;
+import seventh.map.TileData;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.BombDisarmedMessage;
@@ -97,7 +99,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Arrays;
@@ -1528,6 +1532,7 @@ public class ClientGame {
         this.hud.getMessageLog().clearLogs();
         
         map.restoreDestroyedTiles();
+        map.removeAddedTiles();
         
         showScoreBoard(false);
         applyFullGameState(msg.gameState);
@@ -1832,7 +1837,6 @@ public class ClientGame {
         
         Tile tile = map.getDestructableTile(msg.x, msg.y);
         if(tile!=null) {
-            //this.gameEffects.addBackgroundEffect(new WallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
             this.gameEffects.addBackgroundEffect(Emitters.newWallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
         }
         
@@ -1841,6 +1845,28 @@ public class ClientGame {
     
     public void removeTiles(TilesRemovedMessage msg) {
         map.removeDestructableTilesAt(msg.tiles);
+    }
+    
+    private void addTile(NetMapAddition addition) {
+        TileData data = new TileData();
+        data.tileX = addition.tileX;
+        data.tileY = addition.tileY;
+        data.type = addition.type;
+        
+        Tile tile = map.getMapObjectFactory().createMapTile(map.geTilesetAtlas(), data);
+        if(tile != null) {
+            map.addTile(tile);
+        }
+    }
+    
+    public void addTile(TileAddedMessage msg) {
+        addTile(msg.tile);
+    }
+    
+    public void addTiles(TilesAddedMessage msg) {
+        for(int i = 0; i < msg.tiles.tiles.length; i++) {
+            addTile(msg.tiles.tiles[i]);
+        }
     }
     
     public void flagCaptured(FlagCapturedMessage msg) {

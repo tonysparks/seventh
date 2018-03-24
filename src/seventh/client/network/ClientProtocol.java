@@ -38,7 +38,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 
 
@@ -237,6 +239,22 @@ public interface ClientProtocol {
      * @param msg
      */
     public void receiveTilesRemovedMessage(Connection conn, TilesRemovedMessage msg);
+    
+    /**
+     * A tile has been added to the world
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receiveTileAddedMessage(Connection conn, TileAddedMessage msg);
+    
+    /**
+     * A set of tiles have been added to the world
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receiveTilesAddedMessage(Connection conn, TilesAddedMessage msg);
     
     /**
      * A remote control message (response) from the server
