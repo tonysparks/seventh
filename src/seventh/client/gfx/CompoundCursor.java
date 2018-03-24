@@ -44,7 +44,29 @@ public class CompoundCursor extends Cursor {
         this.active = b;
         return this;
     }
-
+    
+    @Override
+    public boolean isClampEnabled() {    
+        return this.active.isClampEnabled();
+    }
+    
+    @Override
+    public void setClampEnabled(boolean isClampEnabled) {    
+        this.a.setClampEnabled(isClampEnabled);
+        this.b.setClampEnabled(isClampEnabled);
+    }
+    
+    @Override
+    public boolean isInverted() {    
+        return this.active.isInverted();
+    }
+    
+    @Override
+    public void setInverted(boolean isInverted) {
+        this.a.setInverted(isInverted);
+        this.b.setInverted(isInverted);
+    }
+    
     @Override
     public float getAccuracy() {
         return this.active.getAccuracy();
@@ -163,3 +185,4 @@ public class CompoundCursor extends Cursor {
     protected void doRender(Canvas canvas) {       
     }
 }
+

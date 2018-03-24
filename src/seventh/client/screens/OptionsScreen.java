@@ -84,8 +84,8 @@ public class OptionsScreen implements Screen {
     private boolean isFullscreen;
     private int displayModeIndex;
     
-     
-    
+    private Button applyBtn;
+        
     /**
      * 
      */
@@ -115,79 +115,66 @@ public class OptionsScreen implements Screen {
         
         Vector2f uiPos = new Vector2f(200, app.getScreenHeight() - 20);
         
-        Button saveBtn = setupButton(uiPos, "Save", false);
-        saveBtn.getBounds().setSize(140, 80);
-        saveBtn.getTextLabel().setFont(theme.getPrimaryFontName());
-        saveBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+        if(applyBtn != null) {
+            applyBtn.destroy();
+        }
+        
+        applyBtn = setupButton(uiPos, "Apply", false);
+        applyBtn.setVisible(false);
+        applyBtn.getBounds().setSize(140, 80);
+        applyBtn.getTextLabel().setFont(theme.getPrimaryFontName());
+        applyBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
             public void onButtonClicked(ButtonEvent event) {
-                try {
-                    VideoConfig vConfig = app.getConfig().getVideo();
-                    if(isFullscreen != app.isFullscreen()) {
-                        vConfig.setFullscreen(isFullscreen);
-                        
-                        if(!isFullscreen) {
-                            vConfig.setWidth(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH);
-                            vConfig.setHeight(SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);                        
-                            Gdx.graphics.setDisplayMode(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT, isFullscreen);                            
-                        }
-                        else if (mode!=null) {
-                            vConfig.setWidth(mode.width);
-                            vConfig.setHeight(mode.height);
-                            Gdx.graphics.setDisplayMode(mode.width, mode.height, true);        
-                        }
-                        else {                                                        
-                            Gdx.graphics.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
-                        }
+            
+                VideoConfig vConfig = app.getConfig().getVideo();
+                if(isFullscreen != app.isFullscreen()) {
+                    vConfig.setFullscreen(isFullscreen);
+                    
+                    boolean success = false;
+                    
+                    if(!isFullscreen) {
+                        vConfig.setWidth(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH);
+                        vConfig.setHeight(SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);                        
+                        success = Gdx.graphics.setDisplayMode(SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH, SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT, isFullscreen);                            
+                    }
+                    else if (mode!=null) {
+                        vConfig.setWidth(mode.width);
+                        vConfig.setHeight(mode.height);
+                        success = Gdx.graphics.setDisplayMode(mode.width, mode.height, true);        
+                    }
+                    else {                                                        
+                        success = Gdx.graphics.setDisplayMode(app.getScreenWidth(), app.getScreenHeight(), true);
+                    }
+                    
+                    if(success) {
                         app.restartVideo();
                     }
-                    else if(mode!=null) {
-                        if(app.isFullscreen()) {                            
-                            vConfig.setWidth(mode.width);
-                            vConfig.setHeight(mode.height);
-                            Gdx.graphics.setDisplayMode(mode.width, mode.height, true);
+                }
+                else if(mode!=null) {
+                    if(app.isFullscreen()) {                            
+                        vConfig.setWidth(mode.width);
+                        vConfig.setHeight(mode.height);
+                        if(Gdx.graphics.setDisplayMode(mode.width, mode.height, true)) {
                             app.restartVideo();
                         }
                     }
-                    
-                    if(nameTxtBox!=null) {
-                        String name = nameTxtBox.getText();
-                        String cfgName = app.getConfig().getPlayerName(); 
-                        if(name != null && cfgName != null) {
-                            if(!name.equals(cfgName)) {
-                                // change the configuration file
-                                // and if we are connected to a server,
-                                // let the server know we changed our name 
-                                app.getConfig().setPlayerName(name);
-                                Cons.getImpl().execute("name", name);
-                            }
-                        }
-                    }
-                    
-                    app.getConfig().setMouseSensitivity(uiManager.getCursor().getMouseSensitivity());
-                    
-                    app.getConfig().save();
-                } catch (IOException e) {
-                    Cons.println("Unable to save the configuration file:");
-                    Cons.println(e);
-                    
-                    app.getTerminal().open();
                 }
-                app.popScreen();
-                Sounds.playGlobalSound(Sounds.uiNavigate);
+                
+                applyBtn.setVisible(false);
             }
         });
         
         uiPos.x = app.getScreenWidth() - 80;
 
-        Button cancelBtn = setupButton(uiPos, "Cancel", false);
-        cancelBtn.getBounds().setSize(140, 80);
-        cancelBtn.getTextLabel().setFont(theme.getPrimaryFontName());
-        cancelBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
+        Button backBtn = setupButton(uiPos, "Back", false);
+        backBtn.getBounds().setSize(140, 80);
+        backBtn.getTextLabel().setFont(theme.getPrimaryFontName());
+        backBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
-            public void onButtonClicked(ButtonEvent event) {
+            public void onButtonClicked(ButtonEvent event) {                
                 app.popScreen();
                 Sounds.playGlobalSound(Sounds.uiNavigate);
             }
@@ -287,17 +274,18 @@ public class OptionsScreen implements Screen {
         uiPos.x = 560;
         uiPos.y -= 8;
         
+        final Cursor cursor = uiManager.getCursor();
+        
         mouseSensitivitySlider.setTheme(theme);
         mouseSensitivitySlider.getBounds().setSize(100, 5);
         mouseSensitivitySlider.getBounds().setLocation(uiPos);
         // valid ranges from 0.5 to 2.0
-        int handlePos = (int)((uiManager.getCursor().getMouseSensitivity()/2f) * 100.0f);
+        int handlePos = (int)((cursor.getMouseSensitivity()/2f) * 100.0f);
         mouseSensitivitySlider.moveHandle(handlePos);
         mouseSensitivitySlider.addSliderMoveListener(new OnSliderMovedListener() {
             
             @Override
-            public void onSliderMoved(SliderMovedEvent event) {
-                Cursor cursor = uiManager.getCursor();
+            public void onSliderMoved(SliderMovedEvent event) {                
                 int value = event.getSlider().getIndex();
                 
                 float sensitivity = value / 50f;
@@ -357,6 +345,7 @@ public class OptionsScreen implements Screen {
                 mode = displayModes[displayModeIndex];
                                 
                 resBtn.setText("Resolution: '" +  mode.width+"x" + mode.height + "'");
+                applyBtn.setVisible(true);
             }
         });
         
@@ -368,6 +357,7 @@ public class OptionsScreen implements Screen {
             public void onButtonClicked(ButtonEvent event) {
                 isFullscreen = !isFullscreen;                        
                 fullscreenBtn.setText("Fullscreen: '" +  isFullscreen + "'");
+                applyBtn.setVisible(true);
             }
         });
         
@@ -379,7 +369,7 @@ public class OptionsScreen implements Screen {
             public void onButtonClicked(ButtonEvent event) {
                 app.setVSync(!app.isVSync());
                 app.getConfig().getVideo().setVsync(app.isVSync());
-                vsyncBtn.setText("VSync: '" +  app.isVSync() + "'");                
+                vsyncBtn.setText("VSync: '" +  app.isVSync() + "'");                   
             }
         });
         
@@ -579,7 +569,7 @@ public class OptionsScreen implements Screen {
                     isKeyModifyOn++;
                 }
             });
-        }
+        }   
         
         this.optionsPanel.addWidget(btn);
         this.panelView.addElement(new ButtonView(btn));
@@ -593,6 +583,8 @@ public class OptionsScreen implements Screen {
     @Override
     public void enter() {
         this.optionsPanel.show();
+        this.applyBtn.setVisible(false);
+        
         this.keyInput.setDisabled(true);
     }
 
@@ -602,6 +594,33 @@ public class OptionsScreen implements Screen {
     @Override
     public void exit() {
         this.optionsPanel.destroy();
+        
+        try {
+            
+            if(nameTxtBox!=null) {
+                String name = nameTxtBox.getText();
+                String cfgName = app.getConfig().getPlayerName(); 
+                if(name != null && cfgName != null) {
+                    if(!name.equals(cfgName)) {
+                        // change the configuration file
+                        // and if we are connected to a server,
+                        // let the server know we changed our name 
+                        app.getConfig().setPlayerName(name);
+                        Cons.getImpl().execute("name", name);
+                    }
+                }
+            }
+            
+            app.getConfig().setMouseSensitivity(uiManager.getCursor().getMouseSensitivity());                    
+            app.getConfig().save();
+
+        }
+        catch (IOException e) {
+            Cons.println("Unable to save the configuration file:");
+            Cons.println(e);
+            
+            app.getTerminal().open();
+        }        
     }
     
     /* (non-Javadoc)
