@@ -1460,6 +1460,7 @@ public class OrthoMap implements Map {
         if(this.collisionLayerToAddTiles != null) {
             Tile collisionTile = new Tile(null, this.collisionLayerToAddTiles.getIndex(), tile.getWidth(), tile.getHeight());
             collisionTile.setCollisionMask(CollisionMask.ALL_SOLID);
+            collisionTile.setPosition(tile.getX(), tile.getY());
             collisionTile.setIndexPosition(tile.getXIndex(), tile.getYIndex());
             
             this.collisionLayerToAddTiles.addTile(collisionTile);            

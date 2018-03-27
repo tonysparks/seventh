@@ -251,6 +251,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         }
         
         Tile tile = new Tile(loadAssets ? atlas.getTile(definition.tileId) : null, definition.layer, definition.width, definition.height);
+        tile.setPosition(data.tileX * definition.width, data.tileY * definition.height);
         tile.setIndexPosition(data.tileX, data.tileY);
         tile.setCollisionMaskById(definition.collisionMaskId);
         tile.setFlips(false, false, false);
