@@ -503,6 +503,8 @@ public abstract interface Map extends Renderable, Debugable {
      * @return
      */
     public abstract Vector2f tileToWorld( int tx, int ty );
+    public abstract int tileToWorldX(int x);
+    public abstract int tileToWorldY(int y);
     
     /**
      * Get {@link MapObject}s.

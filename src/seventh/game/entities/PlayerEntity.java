@@ -940,7 +940,7 @@ public class PlayerEntity extends Entity implements Controllable {
     }
     
     private void placeTile() {
-        Vector2f tilePos = new Vector2f();
+        Vector2f tilePos = this.cache;       
         Vector2f.Vector2fMA(getCenterPos(), getFacing(), 32f, tilePos);
         
         // TODO: Pick the current tile the user has

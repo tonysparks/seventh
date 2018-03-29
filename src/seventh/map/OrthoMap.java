@@ -977,6 +977,16 @@ public class OrthoMap implements Map {
     public Vector2f tileToWorld(int tx, int ty) {
         return new Vector2f(tx * this.tileWidth, ty * this.tileHeight);
     }
+    
+    @Override
+    public int tileToWorldX(int x) {    
+        return x * this.tileWidth;
+    }
+    
+    @Override
+    public int tileToWorldY(int y) {
+        return y * this.tileHeight;
+    }
 
     /*
      * (non-Javadoc)

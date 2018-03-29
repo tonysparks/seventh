@@ -1847,6 +1847,30 @@ public class ClientGame {
         map.removeDestructableTilesAt(msg.tiles);
     }
     
+    public boolean canAddTile(Vector2f tilePos) {
+        int tileX = (int)tilePos.x;
+        int tileY = (int)tilePos.y;
+        
+        // ensure there is not already a collision tile here
+        // and also ensure no players are touching here
+        if(!map.hasWorldCollidableTile(tileX, tileY)) {
+            Tile groundTile = map.getWorldTile(0, tileX, tileY);
+            Rectangle bounds = groundTile.getBounds();
+            for(int i = 0; i < this.players.getMaxNumberOfPlayers(); i++) {
+                ClientPlayer player = this.players.getPlayer(i);
+                if(player!=null && player.isAlive()) {
+                    ClientPlayerEntity ent = player.getEntity();
+                    if(ent.isRelativelyUpdated() && ent.getBounds().intersects(bounds)) {
+                        return false;
+                    }
+                }
+            }   
+            
+            return true;
+        }
+        return false;
+    }
+    
     private void addTile(NetMapAddition addition) {
         TileData data = new TileData();
         data.tileX = addition.tileX;

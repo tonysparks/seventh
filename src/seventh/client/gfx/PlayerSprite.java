@@ -39,7 +39,7 @@ public class PlayerSprite implements Renderable {
         
         public int direction;
         {
-            clear();
+            clear(); 
         }
         
         @Override

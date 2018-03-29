@@ -45,6 +45,7 @@ import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetWeapon;
 import seventh.game.type.GameType;
+import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -684,10 +685,10 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         canvas.setColor(teamColor, fadeAlphaColor);    
         
         //states[currentState].render(canvas, camera)
-        Vector2f c = camera.getRenderPosition(alpha);
+        Vector2f cameraPos = camera.getRenderPosition(alpha);
         Vector2f pos = getRenderPos(alpha);
-        float rx = pos.x - c.x;
-        float ry = pos.y - c.y;
+        float rx = pos.x - cameraPos.x;
+        float ry = pos.y - cameraPos.y;
 
         canvas.setFont("Consola", 14);
         canvas.boldFont();
@@ -701,10 +702,33 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                 canvas.drawCircle(21, rx - (bounds.width/2f)-1f, ry - (bounds.height/2f)-1f, 0xff000000);
             }                
         }
-                
+        
+        if(this.weapon != null) {
+            // TODO: Change to Hammer
+            if(this.weapon instanceof ClientPistol) {
+                drawHighlightedTilePlant(canvas, cameraPos);
+            }
+        }
+        
         sprite.render(canvas, camera, alpha);
         canvas.setCompositeAlpha(1.0f);
 
+    }
+    
+    private void drawHighlightedTilePlant(Canvas canvas, Vector2f cameraPos) {        
+        Vector2f tilePos = this.cache;       
+        Vector2f.Vector2fMA(getCenterPos(), getFacing(), 32f, tilePos);
+        
+        seventh.map.Map map = game.getMap();
+        
+        int tileX = (int)tilePos.x;
+        int tileY = (int)tilePos.y;
+        
+        int color = game.canAddTile(tilePos) ?  0x2f00ff00 : 0x2fff0000;
+        Tile groundTile = map.getWorldTile(0, tileX, tileY);
+        if(groundTile!=null) {
+            canvas.fillRect(groundTile.getX() - cameraPos.x, groundTile.getY() - cameraPos.y, map.getTileWidth(), map.getTileHeight(), color);
+        }
     }
 
 }
