@@ -1473,7 +1473,7 @@ public class OrthoMap implements Map {
             collisionTile.setPosition(tile.getX(), tile.getY());
             collisionTile.setIndexPosition(tile.getXIndex(), tile.getYIndex());
             
-            this.collisionLayerToAddTiles.addTile(collisionTile);            
+            this.collisionLayerToAddTiles.addTile(collisionTile);
         }
     }
     

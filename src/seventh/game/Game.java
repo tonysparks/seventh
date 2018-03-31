@@ -738,7 +738,11 @@ public class Game implements GameInfo, Debugable, Updatable {
             data.type = type;
             Tile tile = map.getMapObjectFactory().createMapTile(map.geTilesetAtlas(), data);
             if(tile != null) {
+                // add the tile to the world map
                 map.addTile(tile);
+                
+                // make this tile unwalkable, so that pathfinding works correctly
+                graph.removeNode(data.tileX, data.tileY);
                 
                 dispatcher.queueEvent(new TileAddedEvent(this, data.type, data.tileX, data.tileY));                
                 return true;
