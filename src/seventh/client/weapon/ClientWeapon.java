@@ -165,6 +165,14 @@ public class ClientWeapon {
         return false;
     }
     
+    public boolean emitBulletCasing() {
+        return true;
+    }
+    
+    public boolean emitBarrelSmoke() {
+        return true;
+    }
+    
     public boolean isSpecialReloadingAction() {
         return this.specialReloadActionReloadTimer.isUpdating();
     }
@@ -224,7 +232,7 @@ public class ClientWeapon {
                         this.fireWaitTimer.reset();
                         this.fireWaitTimer.start();
                         
-                        if(!isAutomatic() && !isHeavyWeapon()) {
+                        if(emitBulletCasing()) {                        
                             this.owner.emitBulletCasing();
                         }
                     }

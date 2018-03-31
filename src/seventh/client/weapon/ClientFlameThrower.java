@@ -56,17 +56,17 @@ public class ClientFlameThrower extends ClientWeapon {
         }
     }
     
-    /* (non-Javadoc)
-     * @see seventh.client.weapon.ClientWeapon#isBurstFire()
-     */
+    @Override
+    public boolean emitBulletCasing() {
+        return false;
+    }
+    
     @Override
     public boolean isBurstFire() {    
         return false;
     }
     
-    /* (non-Javadoc)
-     * @see palisma.client.weapon.ClientWeapon#onFire()
-     */
+    
     @Override
     protected boolean onFire() {        
         return true;

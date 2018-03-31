@@ -29,4 +29,14 @@ public class ClientHammer extends ClientWeapon {
         this.endFireKick = 0f; 
         this.beginFireKick = 0f; 
     }
+    
+    @Override
+    public boolean emitBulletCasing() {
+        return false;
+    }
+    
+    @Override
+    public boolean emitBarrelSmoke() {
+        return false;
+    }
 }

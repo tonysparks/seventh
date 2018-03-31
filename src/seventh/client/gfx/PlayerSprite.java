@@ -256,8 +256,10 @@ public class PlayerSprite implements Renderable {
                 if(wasFiring) {    
                     // automatic weapons only smoke after
                     // some time firing
-                    if(timeSpentFiring > 500) {                    
-                        effects.addEffect(Emitters.newGunSmokeEmitter(entity, 100));
+                    if(timeSpentFiring > 500) {    
+                        if(weapon.emitBarrelSmoke()) {
+                            effects.addEffect(Emitters.newGunSmokeEmitter(entity, 100));
+                        }
                         wasFiring = false;                    
                     }                                        
                     timeSpentFiring = 0;
@@ -266,9 +268,10 @@ public class PlayerSprite implements Renderable {
         }        
         else {
             if(weapon.getState().equals(Weapon.WeaponState.FIRING)) {
-                if(!wasFiring) {
+                if(!wasFiring && weapon.emitBarrelSmoke()) {
                     effects.addEffect(Emitters.newGunSmokeEmitter(entity, 100));
                 }
+                
                 wasFiring = true;
             }
             else {

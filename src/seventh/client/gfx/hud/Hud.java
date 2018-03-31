@@ -31,6 +31,7 @@ import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
 import seventh.client.inputs.KeyMap;
 import seventh.client.sfx.Sounds;
+import seventh.client.weapon.ClientHammer;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.Type;
 import seventh.game.entities.PlayerEntity.Keys;
@@ -431,19 +432,14 @@ public class Hud implements Renderable {
         if(weapon!=null) {        
             canvas.setFont("Consola", 14);
             canvas.boldFont();
-            RenderFont.drawShadedString(canvas, weapon.getAmmoInClip() + " | " + weapon.getTotalAmmo()
-                                      , canvas.getWidth() - 200
-                                      , canvas.getHeight() - 50, 0xffffff00);
-            
+            if(!(weapon instanceof ClientHammer)) {
+                RenderFont.drawShadedString(canvas, weapon.getAmmoInClip() + " | " + weapon.getTotalAmmo()
+                                          , canvas.getWidth() - 200
+                                          , canvas.getHeight() - 50, 0xffffff00);
+            }
             TextureRegion icon = weapon.getWeaponIcon();
             if(icon!=null) {                                                    
                 canvas.drawImage(icon, canvas.getWidth() - icon.getRegionWidth() - 10, canvas.getHeight() - icon.getRegionHeight() - 30, null);
-            }
-            
-            // do recoil (shaking the camera)
-            // if this client has it enabled.
-            if(this.config.getWeaponRecoilEnabled()) {
-                weapon.cameraKick(camera);
             }
         }
     }

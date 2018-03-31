@@ -10,9 +10,11 @@ import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
 import seventh.client.ClientSeventhConfig;
 import seventh.client.entities.ClientControllableEntity;
+import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Cursor;
 import seventh.client.sfx.Sounds;
+import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.PlayerEntity.Keys;
 import seventh.map.Map;
 import seventh.map.Tile;
@@ -136,6 +138,25 @@ public class CameraController implements Updatable {
                 float force = Vector2f.Vector2fDistance(centerPos, sourcePosition);                
                 force = Math.max(130 - force/10, 10);                
                 camera.addShake(300, force);
+            }
+        }
+    }
+    
+    /**
+     * Checks to see if we need to shake the camera due to weapon firing
+     * 
+     * @param entity
+     */
+    private void checkWeaponCameraShake(ClientControllableEntity entity) {
+        if(!this.config.getWeaponRecoilEnabled()) {
+            return;
+        }
+        
+        if(entity instanceof ClientPlayerEntity) {
+            ClientPlayerEntity player = (ClientPlayerEntity) entity;
+            ClientWeapon weapon = player.getWeapon();
+            if(weapon != null) {
+                weapon.cameraKick(camera);
             }
         }
     }
@@ -371,7 +392,11 @@ public class CameraController implements Updatable {
                 camera.centerAround(cameraCenterAround);
         
                 Sounds.setPosition(entity.getCenterPos());
-                                
+                
+                // do recoil (shaking the camera)
+                // if this client has it enabled.
+                checkWeaponCameraShake(entity);
+                
                 
                 /* Calculates the Fog Of War
                  */
