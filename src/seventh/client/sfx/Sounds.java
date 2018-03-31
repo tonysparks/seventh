@@ -178,6 +178,8 @@ public class Sounds {
     public static final int[] fire = {176};
     public static final int[] flameThrowerShoot = {177};
     
+    public static final int[] hammer = {178};
+    
     
     public static final int[][] alliedSpeeches = {
             alliedSpeechAttack,
@@ -442,6 +444,8 @@ public class Sounds {
             loadSound("./assets/sfx/grenade/smoke_grenade.wav") ,   // 175
             loadSound("./assets/sfx/fire01.wav") ,   // 176
             loadSound("./assets/sfx/flamethrower/start_firing.wav") ,   // 177
+            
+            loadSound("./assets/sfx/hammer/hammer.wav") ,   // 178
         };
     };
 
@@ -936,6 +940,9 @@ public class Sounds {
             break;
         case PISTOL_RELOAD:
             sound = pistolReload;
+            break;
+        case HAMMER_SWING: 
+            sound = hammer;
             break;
         case UI_ELEMENT_HOVER:
             sound = uiHover;

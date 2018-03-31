@@ -64,7 +64,9 @@ public enum SoundType {
     
     MELEE_SWING,
     MELEE_HIT,
-
+    
+    HAMMER_SWING,
+    
     BREATH_LITE(SoundSourceType.REFERENCED_ATTACHED),
     BREATH_HEAVY(SoundSourceType.REFERENCED_ATTACHED),
     

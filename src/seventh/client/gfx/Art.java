@@ -54,6 +54,7 @@ public class Art {
     public static  TextureRegion pistolImage = null;
     public static  TextureRegion riskerImage = null;
     public static  TextureRegion flameThrowerImage = null;
+    public static  TextureRegion hammerImage = null;
     
     public static  TextureRegion bombImage = null;    
     public static  TextureRegion radioImage = null;
@@ -82,6 +83,7 @@ public class Art {
     public static  TextureRegion pistolIcon = null;
     public static  TextureRegion riskerIcon = null;
     public static  TextureRegion flameThrowerIcon = null;
+    public static  TextureRegion hammerIcon = null;
 
     public static  TextureRegion tdmIcon = null;
     public static  TextureRegion ctfIcon = null;
@@ -218,7 +220,8 @@ public class Art {
         mp40Image = loadImage("./assets/gfx/weapons/mp40.bmp", 0xff00ff);
         pistolImage = loadImage("./assets/gfx/weapons/pistol.bmp", 0xff00ff);
         riskerImage = loadImage("./assets/gfx/weapons/risker.bmp", 0xff00ff);
-        flameThrowerImage = loadImage("./assets/gfx/weapons/flame_thrower.bmp", 0xff00ff); 
+        flameThrowerImage = loadImage("./assets/gfx/weapons/flame_thrower.bmp", 0xff00ff);
+        hammerImage = loadImage("./assets/gfx/weapons/pistol.bmp", 0xff00ff); // TODO
         
         bombImage = loadImage("./assets/gfx/weapons/bomb.bmp", 0xff00ff);
         bombImage.flip(false, true);        
@@ -245,7 +248,8 @@ public class Art {
         mp40Icon = loadImage("./assets/gfx/weapons/mp40_icon.png");
         pistolIcon = loadImage("./assets/gfx/weapons/pistol_icon.png");
         riskerIcon = loadImage("./assets/gfx/weapons/risker_icon.png");
-        flameThrowerIcon = loadImage("./assets/gfx/weapons/flame_thrower_icon.png"); 
+        flameThrowerIcon = loadImage("./assets/gfx/weapons/flame_thrower_icon.png");
+        hammerIcon = loadImage("./assets/gfx/weapons/hammer_icon.png");
         
         explosionImage = TextureUtil.splitImage(loadImage("./assets/gfx/particles/explosion.png"), 4, 4);
         rocketImage = TextureUtil.splitImage(loadImage("./assets/gfx/weapons/rocket.bmp", 0xff00ff), 1, 1);

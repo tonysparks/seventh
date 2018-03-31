@@ -36,6 +36,7 @@ import seventh.game.net.NetPlayerPartial;
 import seventh.game.weapons.Bullet;
 import seventh.game.weapons.FlameThrower;
 import seventh.game.weapons.GrenadeBelt;
+import seventh.game.weapons.Hammer;
 import seventh.game.weapons.Kar98;
 import seventh.game.weapons.M1Garand;
 import seventh.game.weapons.MP40;
@@ -250,7 +251,10 @@ public class PlayerEntity extends Entity implements Controllable {
     }
         
     private void setupCommonWeapons() {        
-        this.inventory.addItem(new Pistol(game, this));        
+        this.inventory.addItem(new Pistol(game, this));
+        
+        // TODO - make class based
+        this.inventory.addItem(new Hammer(game, this));
     }
     
     /* (non-Javadoc)
@@ -897,15 +901,7 @@ public class PlayerEntity extends Entity implements Controllable {
             else {
                 noMoveX();
             }
-            
-            if(!Keys.SPRINT.isDown(keys)) {
-                if(Keys.SPRINT.isDown(previousKeys)) {
-                    // place tile if possible
-                    placeTile();
-                }
-            }
-            
-            /*
+                        
             if(Keys.SPRINT.isDown(keys)) {
                 if(!inputVel.isZero() && currentState != State.WALKING) {                                        
                     sprint();
@@ -913,7 +909,7 @@ public class PlayerEntity extends Entity implements Controllable {
             }
             else {
                 stopSprinting();        
-            }*/
+            }
             
             if(Keys.CROUCH.isDown(keys)) {
                 crouch();
@@ -938,16 +934,7 @@ public class PlayerEntity extends Entity implements Controllable {
         }
         
     }
-    
-    private void placeTile() {
-        Vector2f tilePos = this.cache;       
-        Vector2f.Vector2fMA(getCenterPos(), getFacing(), 32f, tilePos);
         
-        // TODO: Pick the current tile the user has
-        // TODO: Only allow if current weapon is Hammer
-        game.addTile( (byte)1, tilePos);
-    }
-    
     /* (non-Javadoc)
      * @see seventh.game.Entity#setOrientation(float)
      */
