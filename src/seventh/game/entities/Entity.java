@@ -136,6 +136,7 @@ public abstract class Entity implements Debugable {
         FLAME_THROWER,
         
         MG42,
+        HAMMER,
         
         BOMB,
         BOMB_TARGET,
@@ -655,6 +656,40 @@ public abstract class Entity implements Debugable {
         return currentX;
     }
     
+    private boolean checkCollision(int newX, int newY) {
+        Map map = game.getMap();
+        
+        boolean isBlocked = false;
+        
+        bounds.x = newX;
+        if( map.rectCollides(bounds, collisionHeightMask) ) {
+            isBlocked = collideX(newX, bounds.x);
+            if(isBlocked) { 
+                bounds.x = (int)pos.x;                
+            }
+                            
+        }
+        else if(collidesAgainstEntity(bounds) || collidesAgainstMapObject(bounds)) {
+            bounds.x = (int)pos.x;            
+            isBlocked = true;            
+        }
+        
+        
+        bounds.y = newY;
+        if( map.rectCollides(bounds, collisionHeightMask)) {
+            isBlocked = collideY((int)newY, bounds.y);
+            if(isBlocked) {
+                bounds.y = (int)pos.y;                
+            }
+        }
+        else if(collidesAgainstEntity(bounds) || collidesAgainstMapObject(bounds)) {                
+            bounds.y = (int)pos.y;            
+            isBlocked = true;            
+        }
+        
+        return isBlocked;
+    }
+    
     /**
      * @param dt
      * @return true if blocked
@@ -740,9 +775,15 @@ public abstract class Entity implements Debugable {
                 else if (!isBlockedByEntity) {
                     if(deltaX!=0 && deltaY==0) {                
                         newY = adjustY(xCollisionTilePos, deltaX, (int)(pos.x + deltaX), bounds.y);
+                        if(checkCollision( (int)newX, (int)newY)) {
+                            newY = pos.y;
+                        }
                     }
                     else if(deltaX==0 && deltaY!=0) {
                         newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(pos.y + deltaY));
+                        if(checkCollision( (int)newX, (int)newY)) {
+                            newX = pos.x;
+                        }
                     }
                 }
             }
