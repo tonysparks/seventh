@@ -616,8 +616,8 @@ public class BitArrayTest {
 	* Purpose: Test setAll for 2 byte.
 	* Input: data[1] => 0b1010 0101 data[0] => 0b0000 0000
 	* Expected:
-	* data[1] == 0b1111 1111
-	* data[0] == 0b1111 1111
+	* data[1] == 0b1111 1111 => -0b0000 0001 == -1
+	* data[0] == 0b1111 1111 => -0b0000 0001 == -1
 	*/	
 	@Test
 	public void testSetAll2() {
