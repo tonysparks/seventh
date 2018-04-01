@@ -579,7 +579,7 @@ public class BitArrayTest {
 	}
 	
 	/**
-	* Purpose: Test clear for 1 byte.
+	* Purpose: Test setAll in case all bits are 0.
 	* Input: data[0] => 0b0000 0000
 	* Expected:
 	* data[0] == 0b1111 1111 => -0b0000 0001 == -1
@@ -594,7 +594,7 @@ public class BitArrayTest {
 	}
 	
 	/**
-	* Purpose: Test clear for 1 byte.
+	* Purpose: Test setAll for 1 byte.
 	* Input: data[0] => 0b1010 0101
 	* Expected:
 	* data[0] == 0b1111 1111 => -0b0000 0001 == -1
@@ -613,7 +613,7 @@ public class BitArrayTest {
 	}
 	
 	/**
-	* Purpose: Test clear for 2 byte.
+	* Purpose: Test setAll for 2 byte.
 	* Input: data[1] => 0b1010 0101 data[0] => 0b0000 0000
 	* Expected:
 	* data[1] == 0b1111 1111
