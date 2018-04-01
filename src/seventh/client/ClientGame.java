@@ -12,6 +12,7 @@ import java.util.Random;
 
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
+import seventh.client.entities.ClientBase;
 import seventh.client.entities.ClientBombTarget;
 import seventh.client.entities.ClientControllableEntity;
 import seventh.client.entities.ClientDoor;
@@ -53,11 +54,9 @@ import seventh.client.weapon.ClientBomb;
 import seventh.game.Timers;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
-import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetCtfGameTypeInfo;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
-import seventh.game.net.NetFireTeam;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
@@ -69,7 +68,6 @@ import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
-import seventh.game.net.NetSquad;
 import seventh.game.type.GameType;
 import seventh.map.Map;
 import seventh.map.MapObject;
@@ -130,10 +128,7 @@ public class ClientGame {
     
     private final ClientEntities entities;
     private final ClientPlayers players;
-    
-    // Commander handling
-    private NetCommanderGameTypeInfo commanderInfo;
-    
+        
     private final Pools pools;
     
     private final ClientEntity[] backgroundEntities;
@@ -701,47 +696,8 @@ public class ClientGame {
     public ClientPlayers getPlayers() {
         return players;
     }
-    
-    public NetFireTeam getLocalPlayersFireTeam() {
-        if(this.commanderInfo != null && this.localPlayer.isAlive()) {
-            int localPlayerId = this.localPlayer.getId();
-            //
-            // TODO:            
-            // Optimize all of this and clean this shit up
-            // should keep a local cache that we alter given 
-            // movement of players (leaving, entering the game)
-            ClientTeam team = this.localPlayer.getTeam();
-            NetSquad squad = (team.getId() == ClientTeam.ALLIES.getId()) ?
-                                    this.commanderInfo.alliedSquad
-                                  : this.commanderInfo.axisSquad;
-            
-            
-            for(int i = 0; i < squad.squad.length; i++) {
-                NetFireTeam fireTeam = squad.squad[i];
-                if(fireTeam.teamLeaderPlayerId == localPlayerId) {
-                    return fireTeam;
-                }
-            }
-        }
+
         
-        return null;
-        
-    }
-    
-    public ClientPlayer getPlayerByFireTeamId(int fireTeamId) {
-        if(fireTeamId < 0 || fireTeamId>2) {
-            return null;
-        }
-        
-        NetFireTeam fireTeam = getLocalPlayersFireTeam();
-        if(fireTeam!=null) {
-            int playerId = fireTeam.memberPlayerIds[fireTeamId];
-            return this.players.getPlayer(playerId);
-        }
-                
-        return null;
-    }
-    
     /**
      * @return the localPlayer
      */
@@ -1143,7 +1099,15 @@ public class ClientGame {
             case AXIS_FLAG: {
                 entity = new ClientFlag(this, ClientTeam.AXIS, pos);
                 break;
-            }            
+            }          
+            case ALLIED_BASE: {
+                entity = new ClientBase(this, ClientTeam.ALLIES, pos);
+                break;
+            }
+            case AXIS_BASE: {
+                entity = new ClientBase(this, ClientTeam.AXIS, pos);
+                break;
+            }
             default: {
                 Cons.println("Unknown type of entity: " + type.name());
             }
@@ -1238,8 +1202,6 @@ public class ClientGame {
         
         this.gameEffects.removeAllLights();
         this.gameEffects.clearEffects();
-        
-        this.commanderInfo = null;
     }
     
     public void applyFullGameState(NetGameState gs) {
@@ -1276,7 +1238,8 @@ public class ClientGame {
             }
             
             if(this.gameType == GameType.Type.CMD) {
-                this.commanderInfo = (NetCommanderGameTypeInfo) gameType;                
+                // TODO
+                //this.commanderInfo = (NetCommanderGameTypeInfo) gameType;                
             }
             else if(this.gameType == GameType.Type.CTF) {
                 NetCtfGameTypeInfo ctfInfo = (NetCtfGameTypeInfo) gameType;

@@ -190,6 +190,13 @@ public class Team implements Debugable {
     }
     
     /**
+     * @param score the score to set
+     */
+    public void setScore(int score) {
+        this.score = score;
+    }
+    
+    /**
      * @return the score
      */
     public int getScore() {

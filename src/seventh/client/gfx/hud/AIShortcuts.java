@@ -80,7 +80,8 @@ public class AIShortcuts {
      * @param game
      */
     public boolean checkShortcuts(Inputs inputs, ClientGame game, int memberIndex) {
-        ClientPlayer aiPlayer = game.getPlayerByFireTeamId(memberIndex);
+        ClientPlayer aiPlayer = null; // TODO: 
+                // game.getPlayerByFireTeamId(memberIndex);
         
         boolean result = false;
         for(int i = 0; i < this.shortcuts.length; i++) {

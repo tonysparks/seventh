@@ -5,7 +5,6 @@ package seventh.client.gfx.hud;
 
 import seventh.client.ClientGame;
 import seventh.client.ClientPlayer;
-import seventh.game.net.NetFireTeam;
 
 /**
  * @author Tony
@@ -41,15 +40,16 @@ public abstract class AIGroupCommand {
     }    
     
     public void execute(ClientGame game) {        
-        NetFireTeam fireTeam = game.getLocalPlayersFireTeam();
-        if(fireTeam!=null) {
-            for(int i = 0; i < fireTeam.memberPlayerIds.length; i++) {
-                ClientPlayer aiPlayer = game.getPlayers().getPlayer(fireTeam.memberPlayerIds[i]);
-                if(aiPlayer!=null) {
-                    cmd.execute(game.getApp().getConsole(), game, aiPlayer);
-                }
-            }
-        }
+        // NetFireTeam fireTeam = game.getLocalPlayersFireTeam();
+     // TODO ::   
+//        if(fireTeam!=null) {
+//            for(int i = 0; i < fireTeam.memberPlayerIds.length; i++) {
+//                ClientPlayer aiPlayer = game.getPlayers().getPlayer(fireTeam.memberPlayerIds[i]);
+//                if(aiPlayer!=null) {
+//                    cmd.execute(game.getApp().getConsole(), game, aiPlayer);
+//                }
+//            }
+//        }
     }
 
 }

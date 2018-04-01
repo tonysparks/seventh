@@ -9,6 +9,8 @@ import seventh.game.Game;
 import seventh.game.Player;
 import seventh.game.Players;
 import seventh.game.Team;
+import seventh.game.net.NetGamePartialStats;
+import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetTeamStat;
 import seventh.math.Vector2f;
@@ -127,6 +129,9 @@ public interface GameType extends Debugable {
     public Player getPrevPlayerToSpectate(Players players, Player spectator);
         
     public NetGameTypeInfo getNetGameTypeInfo();
+    public NetGamePartialStats getNetGamePartialStats();
+    public NetGameStats getNetGameStats();
+    
     public NetTeamStat getAlliedNetTeamStats();
     public NetTeamStat getAxisNetTeamStats();
     

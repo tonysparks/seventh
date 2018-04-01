@@ -20,7 +20,11 @@ import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
+import seventh.game.net.NetGamePartialStats;
+import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
+import seventh.game.net.NetPlayerPartialStat;
+import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
 import seventh.math.Rectangle;
@@ -54,6 +58,9 @@ public abstract class AbstractTeamGameType implements GameType {
     
     private Team[] teams;
     
+    private NetGameStats gameStats;
+    private NetGamePartialStats gamePartialStats;
+    
     private NetGameTypeInfo gameTypeInfo;
     private GameState gameState;
     private Type type;
@@ -78,6 +85,7 @@ public abstract class AbstractTeamGameType implements GameType {
     private Rectangle spawnBounds;
     
     private Timer warmupTimer;
+    private Game game;
     
     /**
      * @param type
@@ -108,6 +116,9 @@ public abstract class AbstractTeamGameType implements GameType {
         this.gameTypeInfo.maxScore = maxScore;
         this.gameTypeInfo.maxTime = matchTime;        
         
+        this.gameStats = createNetGameStats();
+        this.gamePartialStats = createNetGamePartialStats();
+        
         this.gameTypeInfo.alliedTeam = new NetTeam();
         this.gameTypeInfo.alliedTeam.id = Team.ALLIED_TEAM_ID;
         
@@ -132,11 +143,21 @@ public abstract class AbstractTeamGameType implements GameType {
         return new NetGameTypeInfo();
     }
     
+    
+    protected NetGameStats createNetGameStats() {
+        return new NetGameStats();
+    }
+    
+    protected NetGamePartialStats createNetGamePartialStats() {
+        return new NetGamePartialStats();
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.type.GameType#registerListeners(seventh.game.GameInfo, leola.frontend.listener.EventDispatcher)
      */
     @Override
-    public void registerListeners(final Game game, EventDispatcher dispatcher) {    
+    public void registerListeners(final Game game, EventDispatcher dispatcher) {
+        this.game = game;
         this.dispatcher = dispatcher;
         
         dispatcher.addEventListener(RoundEndedEvent.class, new RoundEndedListener() {
@@ -669,6 +690,50 @@ public abstract class AbstractTeamGameType implements GameType {
         this.gameTypeInfo.axisTeam = this.teams[AXIS].getNetTeam();
         return this.gameTypeInfo;
     }
+    
+    /**
+     * @return just returns the networked game statistics
+     */
+    @Override
+    public NetGameStats getNetGameStats() {        
+        gameStats.playerStats = new NetPlayerStat[game.getPlayers().getNumberOfPlayers()];
+        Player[] players = game.getPlayers().getPlayers();
+        
+        int j = 0;
+        for(int i = 0; i < players.length; i++) {
+            Player player = players[i];
+            if(player != null) {
+                gameStats.playerStats[j++] = player.getNetPlayerStat();
+            }
+        }
+        
+        gameStats.alliedTeamStats = getAlliedNetTeamStats();
+        gameStats.axisTeamStats = getAxisNetTeamStats();
+        return gameStats;
+    }
+    
+    /**
+     * @return returns the networked game (partial) statistics
+     */
+    @Override
+    public NetGamePartialStats getNetGamePartialStats() {
+        gamePartialStats.playerStats = new NetPlayerPartialStat[game.getPlayers().getNumberOfPlayers()];
+        Player[] players = game.getPlayers().getPlayers();
+        
+        int j = 0;
+        for(int i = 0; i < players.length; i++) {
+            Player player = players[i];
+            if(player != null) {
+                gamePartialStats.playerStats[j++] = player.getNetPlayerPartialStat();
+            }
+        }
+        
+        gamePartialStats.alliedTeamStats = getAlliedNetTeamStats();
+        gamePartialStats.axisTeamStats = getAxisNetTeamStats();     
+        
+        return gamePartialStats;
+    }
+    
 
     /* (non-Javadoc)
      * @see seventh.game.type.GameType#getAlliedNetTeamStats()

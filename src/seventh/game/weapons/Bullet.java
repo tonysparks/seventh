@@ -35,38 +35,14 @@ public class Bullet extends Entity {
     private Entity lastEntityTouched;
     
     private static class BulletOnTouchListener implements Entity.OnTouchListener {
-        private Game game;
-        public BulletOnTouchListener(Game game) {
-            this.game = game;
-        }
-        
+                
         @Override
         public void onTouch(Entity me, Entity other) {
             Bullet bullet = (Bullet)me;
             Type otherType = other.getType();
             if(otherType.isDamagable()) {
-                if(other != bullet.lastEntityTouched && other.canTakeDamage()) {
-                    
-                    other.damage(me, bullet.getDamage());                                        
-                    if(otherType.isVehicle()) {                                                
-                        bullet.kill(other);        
-                        game.emitSound(bullet.getId(), SoundType.IMPACT_METAL, bullet.getCenterPos());
-                    }
-                    else if(otherType.isDoor()) {
-                        bullet.kill(other);        
-                        game.emitSound(bullet.getId(), SoundType.IMPACT_WOOD, bullet.getCenterPos());
-                    }
-                    else {
-                        
-                        if(otherType.isPlayer()) {
-                            game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getCenterPos());                                
-                        }
-                        
-                        if(!bullet.isPiercing()) {                    
-                            bullet.kill(other);    
-                        }    
-                    }
-                                                                                                                                            
+                if(other != bullet.lastEntityTouched && other.canTakeDamage()) {                    
+                    other.damage(me, bullet.getDamage());
                     bullet.lastEntityTouched = other;
                 }
             }            
@@ -114,7 +90,7 @@ public class Bullet extends Entity {
         this.previousPos = new Vector2f();
         this.delta = new Vector2f();
         this.origin = new Vector2f(position);
-        this.onTouch = new BulletOnTouchListener(game);
+        this.onTouch = new BulletOnTouchListener();
         this.onMapObjectTouch = new BulletOnMapObjectTouchListener(game);
         
         this.ownerHeightMask = owner.getHeightMask();
@@ -336,15 +312,19 @@ public class Bullet extends Entity {
     
     @Override
     protected boolean collidesAgainstEntity(Rectangle bounds) {
-        if ( game.doesTouchPlayers(this, origin, targetVel) && !this.piercing ) {
+        if(game.doesTouchPlayers(this, origin, targetVel) && !this.piercing) {
             return true;
         }            
-        if( game.doesTouchVehicles(this) ) {
+        if(game.doesTouchVehicles(this)) {
             return true;
         }
-        if (game.doesTouchDoors(this)) {
+        if(game.doesTouchDoors(this)) {
             return true;
         }
+        if(game.doesTouchBases(this)) {
+            return true;
+        }
+        
         return false;
     }
 

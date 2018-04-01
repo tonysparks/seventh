@@ -153,6 +153,8 @@ public abstract class Entity implements Debugable {
         ALLIED_FLAG,
         AXIS_FLAG,
         
+        ALLIED_BASE,
+        AXIS_BASE,
         
         UNKNOWN,
         
@@ -206,11 +208,15 @@ public abstract class Entity implements Debugable {
             return this == DOOR;
         }
         
+        public boolean isBase() {
+            return this == ALLIED_BASE || this == AXIS_BASE;
+        }
+        
         /**
          * @return true if this is entity type can take damage
          */
         public boolean isDamagable() {
-            return isPlayer() || isVehicle() || isDoor();
+            return isPlayer() || isVehicle() || isDoor() || isBase();
         }
         
         /* (non-Javadoc)

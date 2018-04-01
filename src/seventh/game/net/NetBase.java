@@ -4,26 +4,29 @@
 package seventh.game.net;
 
 import harenet.IOBuffer;
+import seventh.game.entities.Entity.Type;
 
 /**
  * @author Tony
  *
  */
-public class NetCommanderGameTypeInfo extends NetGameTypeInfo {
-
+public class NetBase extends NetEntity {               
     
-    public NetCommanderGameTypeInfo() {        
+    public NetBase(Type type) {
+        this.type = type;
     }
-
+    
+    public NetBase() {
+    }
+    
     @Override
     public void read(IOBuffer buffer) {
         super.read(buffer);
-        
     }
     
+
     @Override
-    public void write(IOBuffer buffer) {     
+    public void write(IOBuffer buffer) {
         super.write(buffer);
-        
     }
 }

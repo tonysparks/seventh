@@ -1319,6 +1319,11 @@ public class Tile implements Renderable {
     
     private float u,u2,v,v2;
     
+    /**
+     * When this tile is added by 
+     * a player, a type is attached to it
+     */
+    private byte type;
     
     /**
      * 
@@ -1399,6 +1404,20 @@ public class Tile implements Renderable {
         return true;
     }
 
+    /**
+     * @return the type
+     */
+    public byte getType() {
+        return type;
+    }
+    
+    /**
+     * @param type the type to set
+     */
+    public void setType(byte type) {
+        this.type = type;
+    }
+    
 
     /**
      * @return the surfaceType

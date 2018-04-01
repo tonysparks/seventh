@@ -488,6 +488,13 @@ public class PlayerEntity extends Entity implements Controllable {
                 }
                 
                 //DebugDraw.drawLineRelative(bullet.getCenterPos(), this.bulletDir, 0xff00ffff);
+                
+                
+                game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getCenterPos());                                
+                                
+                if(!bullet.isPiercing()) {                    
+                    bullet.kill(this);    
+                }  
             }
                 
             super.damage(damager, amount);           

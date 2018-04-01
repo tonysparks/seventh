@@ -20,6 +20,7 @@ import leola.vm.types.LeoObject;
 import seventh.ai.AISystem;
 import seventh.ai.basic.AILeolaLibrary;
 import seventh.ai.basic.DefaultAISystem;
+import seventh.game.entities.Base;
 import seventh.game.entities.Bomb;
 import seventh.game.entities.BombTarget;
 import seventh.game.entities.Door;
@@ -57,9 +58,9 @@ import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameUpdate;
+import seventh.game.net.NetMapAddition;
+import seventh.game.net.NetMapAdditions;
 import seventh.game.net.NetMapDestructables;
-import seventh.game.net.NetPlayerPartialStat;
-import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
@@ -170,6 +171,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private List<Door> doors;
     private List<Smoke> smokeEntities;
     private List<DroppedItem> droppedItems;
+    private List<Base> bases;
     
     private Players players;
                 
@@ -192,8 +194,6 @@ public class Game implements GameInfo, Debugable, Updatable {
         
     private NetGameUpdate[] playerUpdates;
     private NetGameState gameState;
-    private NetGameStats gameStats;
-    private NetGamePartialStats gamePartialStats;
     
     private Timers gameTimers;
     private Triggers gameTriggers;
@@ -241,6 +241,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.playerEntities = new PlayerEntity[MAX_PLAYERS];
         
         this.deadFrames = new int[MAX_ENTITIES];
+        markDeadFrames();
         
         this.playerUpdates = new NetGameUpdate[MAX_ENTITIES];
         for(int i = 0; i < this.playerUpdates.length; i++) {
@@ -253,6 +254,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.doors = new ArrayList<Door>();
         this.smokeEntities = new ArrayList<Smoke>();
         this.droppedItems = new ArrayList<DroppedItem>();
+        this.bases = new ArrayList<Base>();
         
         this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
         this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
@@ -264,8 +266,6 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.players = players;                
         
         this.gameState = new NetGameState();
-        this.gamePartialStats = new NetGamePartialStats();
-        this.gameStats = new NetGameStats();
         
         this.enableFOW = true;
         this.time = gameType.getMatchTime();
@@ -312,11 +312,7 @@ public class Game implements GameInfo, Debugable, Updatable {
             
             @Override
             public void onRoundStarted(RoundStartedEvent event) {
-                // mark all entities as dead, so that we can reload them
-                // on start up
-                for(int i = MAX_PLAYERS; i < deadFrames.length; i++) {
-                    deadFrames[i] = 999;
-                }
+                markDeadFrames();
                 
                 // remove any nodes we may have created by destructable
                 // terrain
@@ -838,6 +834,13 @@ public class Game implements GameInfo, Debugable, Updatable {
         return droppedItems;
     }
     
+    /**
+     * @return the bases
+     */
+    public List<Base> getBases() {
+        return bases;
+    }
+    
     public List<MapObject> getMapObjects() {
         return map.getMapObjects();
     }
@@ -890,7 +893,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.gameType.update(this, timeStep);
         this.time = this.gameType.getRemainingTime();
     }
-    
+        
     /**
      * Invoked after an update, a hack to work
      * around processing event queue
@@ -1522,6 +1525,17 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.flags.clear();
         this.doors.clear();
         this.smokeEntities.clear();
+        this.bases.clear();
+        
+        markDeadFrames();        
+    }
+    
+    private void markDeadFrames() {
+        // mark all entities as dead, so that we can reload them
+        // on start up
+        for(int i = MAX_PLAYERS; i < deadFrames.length; i++) {
+            deadFrames[i] = 999;
+        }
     }
     
     /**
@@ -1900,7 +1914,47 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         return flag;
     }
+    
+    /**
+     * @param position
+     * @return a new Allied base
+     */
+    public Base newAlliedBase(Vector2f position) {
+        final Base base = new Base(this, position, Type.ALLIED_BASE);
+        base.onKill = new KilledListener() {
+            
+            @Override
+            public void onKill(Entity entity, Entity killer) {
+                bases.remove(base);
+                newBigExplosion(base.getCenterPos(), killer, 45, 40, 1);
+            }
+        };
+        addEntity(base);
+        this.bases.add(base);
+        
+        return base;
+    }
 
+    /**
+     * @param position
+     * @return a new Axis base
+     */
+    public Base newAxisBase(Vector2f position) {
+        final Base base = new Base(this, position, Type.AXIS_BASE);
+        base.onKill = new KilledListener() {
+            
+            @Override
+            public void onKill(Entity entity, Entity killer) {
+                bases.remove(base);
+                newBigExplosion(base.getCenterPos(), killer, 45, 40, 1);
+            }
+        };
+        addEntity(base);
+        this.bases.add(base);
+        
+        return base;
+    }
+    
     /**
      * If the entity is near enough a dropped weapon to pick up.
      * 
@@ -2074,6 +2128,22 @@ public class Game implements GameInfo, Debugable, Updatable {
                     }
                 }
             }
+        }
+        
+        return false;
+    }
+    
+    public boolean doesTouchBases(Entity ent) {
+        for(int i = 0; i < this.bases.size(); i++) {
+            Base base = this.bases.get(i);
+            
+            if(base != ent && ent.isTouching(base)) {
+                if(ent.onTouch != null) {
+                    ent.onTouch.onTouch(ent, base);
+                    return true;
+                }
+            }
+            
         }
         
         return false;
@@ -2270,6 +2340,19 @@ public class Game implements GameInfo, Debugable, Updatable {
             gameState.mapDestructables.length = tiles.length;
             gameState.mapDestructables.tiles = tiles;
         }
+        
+        List<Tile> addedTiles = this.map.getAddedTiles();
+        if(!addedTiles.isEmpty()) {            
+            gameState.mapAdditions = new NetMapAdditions();
+            gameState.mapAdditions.tiles = new NetMapAddition[addedTiles.size()];
+            
+            for(int i = 0; i < addedTiles.size(); i++) {
+                Tile tile = addedTiles.get(i);
+            
+                gameState.mapAdditions.tiles[i] = new NetMapAddition(tile.getXIndex(), tile.getYIndex(), tile.getType());
+            }
+        }
+        
         return gameState;
     }
     
@@ -2277,41 +2360,14 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @return just returns the networked game statistics
      */
     public NetGameStats getNetGameStats() {        
-        gameStats.playerStats = new NetPlayerStat[this.players.getNumberOfPlayers()];
-        Player[] players = this.players.getPlayers();
-        
-        int j = 0;
-        for(int i = 0; i < players.length; i++) {
-            Player player = players[i];
-            if(player != null) {
-                gameStats.playerStats[j++] = player.getNetPlayerStat();
-            }
-        }
-        
-        gameStats.alliedTeamStats = this.gameType.getAlliedNetTeamStats();
-        gameStats.axisTeamStats = this.gameType.getAxisNetTeamStats();
-        return gameStats;
+        return gameType.getNetGameStats();
     }
     
     /**
      * @return returns the networked game (partial) statistics
      */
     public NetGamePartialStats getNetGamePartialStats() {
-        gamePartialStats.playerStats = new NetPlayerPartialStat[this.players.getNumberOfPlayers()];
-        Player[] players = this.players.getPlayers();
-        
-        int j = 0;
-        for(int i = 0; i < players.length; i++) {
-            Player player = players[i];
-            if(player != null) {
-                gamePartialStats.playerStats[j++] = player.getNetPlayerPartialStat();
-            }
-        }
-        
-        gamePartialStats.alliedTeamStats = this.gameType.getAlliedNetTeamStats();
-        gamePartialStats.axisTeamStats = this.gameType.getAxisNetTeamStats();     
-        
-        return gamePartialStats;
+        return gameType.getNetGamePartialStats();
     }
     
     
