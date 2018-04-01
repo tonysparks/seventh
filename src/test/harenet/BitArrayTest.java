@@ -571,7 +571,8 @@ public class BitArrayTest {
 		bitArray.setBit(10);
 		bitArray.setBit(13);
 		bitArray.setBit(15);
-		//data[0] == 0b1010 0101
+		//data[1] == 0b1010 0101
+		//data[0] == 0b1111 1111
 		
 		bitArray.clear();
 		assertEquals(bitArray.getData()[1],0);
@@ -587,7 +588,7 @@ public class BitArrayTest {
 	@Test
 	public void testSetAllZero() {
 		BitArray bitArray = new BitArray(8);
-		//data[0] == 0b1010 0101
+		//data[0] == 0b0000 0000
 		
 		bitArray.setAll();
 		assertEquals(bitArray.getData()[0],-1);
