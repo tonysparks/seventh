@@ -672,7 +672,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                     boolean persist = this.game.getGameType().equals(GameType.Type.OBJ);
                     
                     // spawn the death animation
-                    this.effects.addBackgroundEffect(new AnimationEffect(anim, pos, getOrientation(), persist));
+                    this.effects.addBackgroundEffect(new AnimationEffect(anim, pos, getOrientation(), persist, 34_000));
                     
                     Sounds.startPlaySound(Sounds.die, getId(), locationOfDeath.x, locationOfDeath.y);
                 }
