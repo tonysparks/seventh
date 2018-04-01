@@ -12,8 +12,8 @@ Videos/Screenshots
 ===
 [![Seventh Gameplay Video](http://img.youtube.com/vi/JEKWlPJX8V0/0.jpg)](http://youtube.com/watch?v=JEKWlPJX8V0)
 ![alt text](http://i.imgur.com/Y8bV3jM.png "Title Screen")
-![alt text](http://i.imgur.com/PgQNj1W.png "In Game")
-![alt text](http://i.imgur.com/BW2Txym.png "In Game #2")
+![alt text](https://i.imgur.com/R8JOvmE.png "Carnage")
+![alt text](https://i.imgur.com/OkuPlMz.png "Carnage2")
 
 
 Features
