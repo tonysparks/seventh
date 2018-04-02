@@ -628,10 +628,430 @@ public class BitArrayTest {
 		bitArray.setBit(13);
 		bitArray.setBit(15);
 		//data[1] == 1010 0101
-		//data[0] == 0b0000 00000
+		//data[0] == 0b0000 0000
 		
 		bitArray.setAll();
 		assertEquals(bitArray.getData()[1],-1);
 		assertEquals(bitArray.getData()[0],-1);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 0.
+	* Input: getBit => 0
+	* Expected:
+	* data[0] == 0b1111 1110
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero0() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,true);
+		//data[0] == 0b1111 1110
+				
+		assertEquals(bitArray.getBit(0),false);
+	}
+	
+	/**
+	* Purpose: Test whether  getBit returns false for bit 1.
+	* Input: getBit => 1
+	* Expected:
+	* data[0] == 0b1111 1101
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero1() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,true);
+		//data[0] == 0b1111 1101
+				
+		assertEquals(bitArray.getBit(1),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 2.
+	* Input: getBit => 2
+	* Expected:
+	* data[0] == 0b1111 1011
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero2() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,true);
+		//data[0] == 0b1111 1011
+				
+		assertEquals(bitArray.getBit(2),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 3.
+	* Input: getBit => 3
+	* Expected:
+	* data[0] == 0b1111 0111
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero3() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,true);
+		//data[0] == 0b1111 0111
+				
+		assertEquals(bitArray.getBit(3),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 4.
+	* Input: getBit => 4
+	* Expected:
+	* data[0] == 0b1110 1111
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero4() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,true);
+		//data[0] == 0b1110 1111
+				
+		assertEquals(bitArray.getBit(4),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 5.
+	* Input: getBit => 5
+	* Expected:
+	* data[0] == 0b1101 1111
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero5() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,true);
+		//data[0] == 0b1101 1111
+				
+		assertEquals(bitArray.getBit(5),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 6.
+	* Input: getBit => 6
+	* Expected:
+	* data[0] == 0b1011 1111
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero6() {
+		BitArray bitArray = new BitArray(8); 
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,true);
+		//data[0] == 0b0000 0000
+				
+		assertEquals(bitArray.getBit(6),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 7.
+	* Input: getBit => 7
+	* Expected:
+	* data[0] == 0b0111 1111
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero7() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0000 0000
+				
+		assertEquals(bitArray.getBit(7),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns false for bit 8.
+	* Input: getBit => 8
+	* Expected:
+	* data[1] == 0b0000 0000
+	* data[0] == 0b1111 1111
+	* 0 != 0 => false
+	*/	
+	@Test
+	public void testGetBitZero8() {
+		BitArray bitArray = new BitArray(9);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,true);
+		bitArray.setBit(8,false);
+		//data[1] == 0b0000 0000
+		//data[0] == 0b1111 1111
+				
+		assertEquals(bitArray.getBit(8),false);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 0.
+	* Input: getBit => 0
+	* Expected:
+	* data[0] == 0b0000 0001
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne0() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,true);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0000 0001
+				
+		assertEquals(bitArray.getBit(0),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 1.
+	* Input: getBit => 1
+	* Expected:
+	* data[0] == 0b0000 0010
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne1() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,true);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0000 0010
+				
+		assertEquals(bitArray.getBit(1),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 2.
+	* Input: getBit => 2
+	* Expected:
+	* data[0] == 0b0000 0100
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne2() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,true);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0000 0100
+				
+		assertEquals(bitArray.getBit(2),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 3.
+	* Input: getBit => 3
+	* Expected:
+	* data[0] == 0b0000 1000
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne3() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,true);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0000 1000
+				
+		assertEquals(bitArray.getBit(3),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 4.
+	* Input: getBit => 4
+	* Expected:
+	* data[0] == 0b0001 0000
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne4() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,true);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0001 0000
+				
+		assertEquals(bitArray.getBit(4),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 5.
+	* Input: getBit => 5
+	* Expected:
+	* data[0] == 0b0010 0000
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne5() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,true);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0010 0000
+				
+		assertEquals(bitArray.getBit(5),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 6.
+	* Input: getBit => 6
+	* Expected:
+	* data[0] == 0b0001 0000
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne6() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,true);
+		bitArray.setBit(7,false);
+		//data[0] == 0b0100 0000
+				
+		assertEquals(bitArray.getBit(6),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 6.
+	* Input: getBit => 6
+	* Expected:
+	* data[0] == 0b1000 0000
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne7() {
+		BitArray bitArray = new BitArray(8);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,true);
+		//data[0] == 0b1000 0000
+				
+		assertEquals(bitArray.getBit(7),true);
+	}
+	
+	/**
+	* Purpose: Test whether getBit returns true for bit 8.
+	* Input: getBit => 8
+	* Expected:
+	* data[1] == 0b0000 0001
+	* data[0] == 0b0000 0000
+	* 1 != 0 => true
+	*/	
+	@Test
+	public void testGetBitOne8() {
+		BitArray bitArray = new BitArray(9);
+		bitArray.setBit(0,false);
+		bitArray.setBit(1,false);
+		bitArray.setBit(2,false);
+		bitArray.setBit(3,false);
+		bitArray.setBit(4,false);
+		bitArray.setBit(5,false);
+		bitArray.setBit(6,false);
+		bitArray.setBit(7,false);
+		bitArray.setBit(8,true);
+		//data[1] == 0b0000 0001
+		//data[0] == 0b0000 0000
+				
+		assertEquals(bitArray.getBit(8),true);
 	}
 }
