@@ -571,7 +571,8 @@ public class BitArrayTest {
 		bitArray.setBit(10);
 		bitArray.setBit(13);
 		bitArray.setBit(15);
-		//data[0] == 0b1010 0101
+		//data[1] == 0b1010 0101
+		//data[0] == 0b1111 1111
 		
 		bitArray.clear();
 		assertEquals(bitArray.getData()[1],0);
@@ -579,7 +580,7 @@ public class BitArrayTest {
 	}
 	
 	/**
-	* Purpose: Test clear for 1 byte.
+	* Purpose: Test setAll in case all bits are 0.
 	* Input: data[0] => 0b0000 0000
 	* Expected:
 	* data[0] == 0b1111 1111 => -0b0000 0001 == -1
@@ -587,14 +588,14 @@ public class BitArrayTest {
 	@Test
 	public void testSetAllZero() {
 		BitArray bitArray = new BitArray(8);
-		//data[0] == 0b1010 0101
+		//data[0] == 0b0000 0000
 		
 		bitArray.setAll();
 		assertEquals(bitArray.getData()[0],-1);
 	}
 	
 	/**
-	* Purpose: Test clear for 1 byte.
+	* Purpose: Test setAll for 1 byte.
 	* Input: data[0] => 0b1010 0101
 	* Expected:
 	* data[0] == 0b1111 1111 => -0b0000 0001 == -1
@@ -613,11 +614,11 @@ public class BitArrayTest {
 	}
 	
 	/**
-	* Purpose: Test clear for 2 byte.
+	* Purpose: Test setAll for 2 byte.
 	* Input: data[1] => 0b1010 0101 data[0] => 0b0000 0000
 	* Expected:
-	* data[1] == 0b1111 1111
-	* data[0] == 0b1111 1111
+	* data[1] == 0b1111 1111 => -0b0000 0001 == -1
+	* data[0] == 0b1111 1111 => -0b0000 0001 == -1
 	*/	
 	@Test
 	public void testSetAll2() {
