@@ -13,7 +13,7 @@ public class PairTest {
 	 * Input: 	Pair default constructor
 	 * 			pairD()
 	 * Expected:
-	 * 			pairD.first = null, pairD.second = null
+	 * 			pairD.first == null, pairD.second = null
 	 */
 	@Test
 	public void testPairDefaultConstructor() {
@@ -51,9 +51,9 @@ public class PairTest {
 	 * Input: 	Pair<double, double> using positive, zero, negative
 	 * 			pairP(3.14, 5.26), pairZ(0.0, 0.0), pairN(-1.414, -4.19)
 	 * Expected:
-	 * 			pairP.fisrt =  3.14,  pairP.second =  5.26
-	 * 			pairZ.fisrt =  0.0,   pairZ.second =  0.0
-	 * 			pairN.first = -1.414, pairN.second = -4.19
+	 * 			pairP.fisrt ==  3.14,  pairP.second ==  5.26
+	 * 			pairZ.fisrt ==  0.0,   pairZ.second ==  0.0
+	 * 			pairN.first == -1.414, pairN.second == -4.19
 	 */
 	@Test
 	public void testPairDoubleConstructor() {
@@ -77,9 +77,9 @@ public class PairTest {
 	 * 			set pairZ(  0,   0),
 	 * 			set pairN(-10, -20)
 	 * Expected:
-	 * 			pairP.fisrt =  25,  pairP.second =  10
-	 * 			pairZ.fisrt =   0,  pairZ.second =   0
-	 * 			pairN.first = -10,  pairN.second = -20	 
+	 * 			pairP.fisrt ==  25,  pairP.second ==  10
+	 * 			pairZ.fisrt ==   0,  pairZ.second ==   0
+	 * 			pairN.first == -10,  pairN.second == -20	 
 	 * */
 	@Test
 	public void testPairSetInt() {
@@ -109,9 +109,9 @@ public class PairTest {
 	 * 			set pairZ(   0.0,    00.0000), 
 	 * 			set pairN(-148.14,  -41.149)
 	 * Expected:
-	 * 			pairP.fisrt =   26.56,  pairP.second =  1069.639
-	 * 			pairZ.fisrt =    0.0,   pairZ.second =    00.0000
-	 * 			pairN.first = -148.14,  pairN.second =   -41.149	
+	 * 			pairP.fisrt ==   26.56,  pairP.second ==  1069.639
+	 * 			pairZ.fisrt ==    0.0,   pairZ.second ==    00.0000
+	 * 			pairN.first == -148.14,  pairN.second ==   -41.149	
 	 */
 	@Test
 	public void testPairSetDouble() {
