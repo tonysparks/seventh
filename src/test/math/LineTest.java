@@ -511,4 +511,98 @@ public class LineTest {
 				null,
 				null);
 	}
+	
+	/*
+	 * Purpose: satisfy coverage - function : Line.outcode()
+	 * 			width of rectangle <= 0
+	 * 			height of rectangle <= 0
+	 * Input: lineIntersectsRectangle calls intersectsLine that calls outcode
+	 * 			
+	 * 			rectangle : x = 0, y = 0, width = -2, height = -2
+	 * 			line = ((-1.0f, 0.0f), (1.0f, 0.0f))
+	 * Expected:
+	 * 			return false
+	 */
+	@Test
+	public void testOutcodeNegRectWH() {
+		// rectangle.width <= 0, rectangle.height <=0
+		Rectangle rectangle = new Rectangle(0, 0, -2, -2);
+		Line line = new Line(new Vector2f(-1.0f, 0.0f), new Vector2f(1.0f, 0.0f));
+		
+		assertEquals(false, Line.lineIntersectsRectangle(line, rectangle));
+	}
+	
+	/*
+	 * Purpose: satisfy coverage - function : Line.outcode()
+	 * 			y of start or end point of line is lower than y of rectangle
+	 * Input: lineIntersectsRectangle calls intersectsLine that calls outcode
+	 * 			
+	 * 			rectangle : x = 0, y = 0, width = 3, height = 3
+	 * 			line = ((-1.0f, -3.0f), (1.0f, -1.0f))
+	 * Expected:
+	 * 			return false
+	 */
+	@Test
+	public void testOutcodeLineYltRectY() {
+		Rectangle rectangle = new Rectangle(0, 0, 3, 3);
+		Line line = new Line(new Vector2f(-1.0f, -3.0f), new Vector2f(1.0f, -1.0f));
+		
+		assertEquals(false, Line.lineIntersectsRectangle(line, rectangle));
+	}
+	
+	/* 
+	 * Purpose: satisfy coverage - function : Line.intersectsLine(Rectangle,float,float,float,float)
+	 * 			the right of the rectangle is to the start point of line.
+	 * Input: lineIntersectsRectangle calls intersectsLine
+	 * 			
+	 * 			rectangle : x = 0, y = 0, width = 3, height = 3
+	 * 			line = ((5.0f, 1.0f), (-1.0f, 1.0f))
+	 * Expected:
+	 * 			return true
+	 */
+	@Test
+	public void testRectIsOUT_RIGHT() {
+		Rectangle rectangle = new Rectangle(0, 0, 3, 3);
+		Line line = new Line(new Vector2f(5.0f, 1.0f), new Vector2f(-1.0f, 1.0f));
+		
+		assertEquals(true, Line.lineIntersectsRectangle(line, rectangle));
+	}
+	
+	/*
+	 * Purpose: satisfy coverage - function : Line.intersectsLine(Rectangle,float,float,float,float)
+	 * 			rectangle is OUT_BOTTOM, but is not OUT_LEFT | OUT_RIGHT
+	 * Input: lineIntersectsRectangle calls intersectsLine
+	 * 			
+	 * 			rectangle : x = 0, y = 0, width = 3, height = 3
+	 * 			line = ((1.0f, 4.0f), (1.0f, -1.0f))
+	 * Expected:
+	 * 			return true
+	 */
+	@Test
+	public void testRectIsBNotLR() {
+		Rectangle rectangle = new Rectangle(0, 0, 3, 3);
+		Line line = new Line(new Vector2f(1.0f, 4.0f), new Vector2f(1.0f, -1.0f));
+		
+		assertEquals(true, Line.lineIntersectsRectangle(line, rectangle));
+	}
+	
+	/*
+	 * Purpose: satisfy coverage - function : Line.intersectsLine(Rectangle,float,float,float,float)
+	 * 			rectangle is OUT_TOP, but is not OUT_LEFT | OUT_RIGHT
+	 * Input: lineIntersectsRectangle calls intersectsLine
+	 * 			
+	 * 			rectangle : x = 0, y = 0, width = 3, height = 3
+	 * 			line = ((1.0f, -1.0f), (1.0f, 4.0f))
+	 * Expected:
+	 * 			return true
+	 */
+	@Test
+	public void testRectIsTNotLR() {
+		Rectangle rectangle = new Rectangle(0, 0, 3, 3);
+		Line line = new Line(new Vector2f(1.0f, -1.0f), new Vector2f(1.0f, 4.0f));
+		
+		assertEquals(true, Line.lineIntersectsRectangle(line, rectangle));
+	}
+	
+	
 }
