@@ -10,6 +10,7 @@ import leola.vm.types.LeoArray;
 import leola.vm.types.LeoObject;
 import seventh.game.Game;
 import seventh.game.Player;
+import seventh.game.PlayerClass;
 import seventh.game.Team;
 import seventh.game.entities.Base;
 import seventh.game.events.RoundStartedEvent;
@@ -47,6 +48,9 @@ public class CommanderGameType extends AbstractTeamGameType {
     
     private Vector2f alliedBasePos, axisBasePos;
     
+    private Squad alliedSquad, 
+                  axisSquad;
+    
     /**
      * @param type
      * @param runtime
@@ -66,6 +70,9 @@ public class CommanderGameType extends AbstractTeamGameType {
         
         this.alliedBasePos = getVector2f(config, "alliedBasePos");
         this.axisBasePos   = getVector2f(config, "axisBasePos");
+        
+        this.alliedSquad = new Squad(getAlliedTeam(), 4, 4, 4, 4);
+        this.axisSquad   = new Squad(getAxisTeam(), 4, 4, 4, 4);
     }
     
     private Vector2f getVector2f(LeoObject config, String name) {
@@ -86,6 +93,30 @@ public class CommanderGameType extends AbstractTeamGameType {
         }
         
         return result;
+    }
+    
+    private Squad getSquad(Player player) {
+        if(getAlliedTeam().onTeam(player)) {
+            return alliedSquad;
+        }
+        
+        if(getAxisTeam().onTeam(player)) {
+            return axisSquad;
+        }
+        
+        return null;
+    }
+    
+    private Squad getSquad(Team team) {
+        if(getAlliedTeam().getId() == team.getId()) {
+            return alliedSquad;
+        }
+        
+        if(getAxisTeam().getId() == team.getId()) {
+            return axisSquad;
+        }
+        
+        return null;
     }
 
     @Override
@@ -109,15 +140,50 @@ public class CommanderGameType extends AbstractTeamGameType {
     
     @Override
     protected boolean joinTeam(Team team, Player player) {
+        Squad squad = getSquad(team);
+        if(squad != null) {
+            if(squad.assignPlayer(player, squad.getAvailableClass())) {
+                return super.joinTeam(team, player);
+            }            
+        }
         
-        return super.joinTeam(team, player);
+        return false;
     }
     
     @Override
     protected boolean leaveTeam(Team team, Player player) {
+        Squad squad = getSquad(team);
+        if(squad != null) {
+            squad.unassignPlayer(player);
+        }
         
         return super.leaveTeam(team, player);
     }     
+    
+    
+    @Override
+    public boolean switchPlayerClass(Player player, PlayerClass playerClass) {
+        Squad squad = getSquad(player);
+                
+        if(squad == null) {
+            return false;
+        }
+        
+        squad.unassignPlayer(player);
+        
+        if(squad.assignPlayer(player, playerClass)) {
+            return true;
+        }
+        
+        playerClass = squad.getAvailableClass();
+        if(playerClass != null) {
+            if(squad.assignPlayer(player, playerClass)) {
+                return true;
+            }
+        }
+        
+        return false;        
+    }
     
     @Override
     public void start(Game game) {

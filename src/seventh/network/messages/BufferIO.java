@@ -57,35 +57,34 @@ public class BufferIO {
     public static final byte PLAYER_SWITCH_TEAM = 17;
     public static final byte PLAYER_NAME_CHANGE = 18;
     public static final byte PLAYER_WEAPON_CLASS_CHANGE = 19;
-    public static final byte PLAYER_SPEECH = 20;
+    public static final byte PLAYER_CLASS_CHANGE = 20;
+    public static final byte PLAYER_SPEECH = 21;
+    public static final byte PLAYER_COMMANDER = 22;    
+    public static final byte PLAYER_AWARD  = 23;
     
+    public static final byte ROUND_ENDED = 24;
+    public static final byte ROUND_STARTED = 25;
+    public static final byte SPECTATING_PLAYER = 26;
+    public static final byte TEAM_TEXT = 27;
+    public static final byte TEXT = 28;
+    public static final byte PLAYER_INPUT = 29;
     
-    public static final byte ROUND_ENDED = 21;
-    public static final byte ROUND_STARTED = 22;
-    public static final byte SPECTATING_PLAYER = 23;
-    public static final byte TEAM_TEXT = 24;
-    public static final byte TEXT = 25;
-    public static final byte PLAYER_INPUT = 26;
+    public static final byte RCON_MESSAGE = 30;
+    public static final byte RCON_TOKEN_MESSAGE = 31;
     
-    public static final byte RCON_MESSAGE = 27;
-    public static final byte RCON_TOKEN_MESSAGE = 28;
+    public static final byte AI_COMMAND = 32;
     
-    public static final byte AI_COMMAND = 29;
+    public static final byte TILE_REMOVED = 33;
+    public static final byte TILES_REMOVED= 34;
     
-    public static final byte TILE_REMOVED = 30;
-    public static final byte TILES_REMOVED= 31;
+    public static final byte TILE_ADDED = 35;
+    public static final byte TILES_ADDED = 36;
     
-    public static final byte TILE_ADDED = 32;
-    public static final byte TILES_ADDED = 33;
+    public static final byte FLAG_CAPTURED = 37;
+    public static final byte FLAG_RETURNED = 38;
+    public static final byte FLAG_STOLEN = 39;
     
-    public static final byte FLAG_CAPTURED = 34;
-    public static final byte FLAG_RETURNED = 35;
-    public static final byte FLAG_STOLEN = 36;
-    
-    public static final byte PLAYER_COMMANDER = 37;
-    
-    public static final byte PLAYER_AWARD  = 38;
-    public static final byte SURVIVOR_EVENT  = 39;
+    public static final byte SURVIVOR_EVENT  = 40;
     
     /**
      * The Seventh {@link NetMessageFactory} implementation
@@ -142,10 +141,16 @@ public class BufferIO {
                     break;
                 case PLAYER_WEAPON_CLASS_CHANGE: message = new PlayerSwitchWeaponClassMessage();
                     break;
+                case PLAYER_CLASS_CHANGE: message = new PlayerSwitchPlayerClassMessage();
+                    break;
                 case PLAYER_SPEECH: message = new PlayerSpeechMessage();
                     break;
                 case PLAYER_INPUT: message = new PlayerInputMessage();
                     break;                    
+                case PLAYER_COMMANDER: message = new PlayerCommanderMessage();
+                    break;
+                case PLAYER_AWARD: message = new PlayerAwardMessage();
+                    break;
                 case ROUND_ENDED: message = new RoundEndedMessage();
                     break;
                 case ROUND_STARTED: message = new RoundStartedMessage();
@@ -175,10 +180,6 @@ public class BufferIO {
                 case FLAG_RETURNED: message = new FlagReturnedMessage();
                     break;
                 case FLAG_STOLEN: message = new FlagStolenMessage();
-                    break;
-                case PLAYER_COMMANDER: message = new PlayerCommanderMessage();
-                    break;
-                case PLAYER_AWARD: message = new PlayerAwardMessage();
                     break;
                 case SURVIVOR_EVENT: message = new SurvivorEventMessage();
                     break;

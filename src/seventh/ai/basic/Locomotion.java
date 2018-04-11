@@ -21,16 +21,16 @@ import seventh.ai.basic.actions.atom.body.SprintAction;
 import seventh.ai.basic.actions.atom.body.SwitchWeaponAction;
 import seventh.ai.basic.actions.atom.body.ThrowGrenadeAction;
 import seventh.ai.basic.actions.atom.body.WalkAction;
-import seventh.game.Game;
+import seventh.game.PlayerClass;
+import seventh.game.PlayerClass.WeaponEntry;
 import seventh.game.Team;
 import seventh.game.entities.BombTarget;
 import seventh.game.entities.Entity;
-import seventh.game.entities.PlayerEntity;
 import seventh.game.entities.Entity.Type;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
-import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.Tile;
 import seventh.math.Vector2f;
@@ -512,7 +512,7 @@ public class Locomotion implements Debugable {
         
         PlayerEntity bot = brain.getEntityOwner();
         Type type = getRandomWeapon(bot.getTeam());
-        bot.setWeaponClass(type);
+        bot.setPlayerClass(brain.getPlayer().getPlayerClass(), type);
         
         changeWeapon(type);
         
@@ -529,23 +529,21 @@ public class Locomotion implements Debugable {
      */
     private Type getRandomWeapon(Team team) {
         int index = -1;
-        if(team != null) {                        
+        if(team != null) {     
+            PlayerClass playerClass = this.brain.getPlayer().getPlayerClass();
+            List<WeaponEntry> availableWeapons = playerClass.getAvailableWeapons();
+            
+            int max = availableWeapons.size();
+            
             boolean pickSmart = random.nextBoolean();
             if(pickSmart) {
-                index = pickThoughtfulWeapon(team);
+                index = pickThoughtfulWeapon(team, availableWeapons);
             }
             else {
-                index = random.nextInt(Game.alliedWeapons.length);
+                index = random.nextInt(max);
             }
             
-            if(index > -1 && index < Game.alliedWeapons.length) {
-                if(team.getId()==Team.ALLIED_TEAM_ID) {
-                    return Game.alliedWeapons[index];
-                }
-                else {
-                    return Game.axisWeapons[index];
-                }
-            }
+            return availableWeapons.get(index).type;
         }
         
         return Type.UNKNOWN;
@@ -557,28 +555,10 @@ public class Locomotion implements Debugable {
      * @param team
      * @return the index to the weapon
      */
-    private int pickThoughtfulWeapon(Team team) {
+    private int pickThoughtfulWeapon(Team team, List<WeaponEntry> availableWeapons) {
         if(team != null) {
-            Map map = brain.getWorld().getMap();
-            boolean isSmallMap = false;
-            boolean isLargeMap = false;
-            
-            int size = map.getMapHeight() + map.getMapWidth();
-            if(size >= 3200 ) {
-                isLargeMap = true;
-            }
-            else if( size <= 1920) {
-                isSmallMap = true;
-            }
-            
-            if(isLargeMap) {
-                return random.nextInt(2) + 2;    
-            }
-            else if(isSmallMap) {
-                return random.nextInt(2);
-            }
-            
-            return random.nextInt(Game.alliedWeapons.length);
+            // TODO: Make a thoughtful selection
+            return random.nextInt(availableWeapons.size());
         }
         
         return -1;

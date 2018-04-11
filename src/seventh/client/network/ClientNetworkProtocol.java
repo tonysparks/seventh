@@ -46,6 +46,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -710,6 +711,14 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     @Override
     public void sendPlayerSwitchWeaponClassMessage(PlayerSwitchWeaponClassMessage msg) {
         queueSendReliableMessage(msg);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#sendPlayerSwitchPlayerClassMessage(seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void sendPlayerSwitchPlayerClassMessage(PlayerSwitchPlayerClassMessage msg) {
+        queueSendReliableMessage(msg);        
     }
 
     /* (non-Javadoc)

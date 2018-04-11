@@ -31,6 +31,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -112,6 +113,15 @@ public interface ServerProtocol {
      * @throws IOException
      */
     public void receivePlayerSwitchWeaponClassMessage(Connection conn, PlayerSwitchWeaponClassMessage message) throws IOException;
+    
+    /**
+     * The Player has requested to switch player classes
+     * 
+     * @param conn
+     * @param message
+     * @throws IOException
+     */
+    public void receivePlayerSwitchClassMessage(Connection conn, PlayerSwitchPlayerClassMessage message) throws IOException;
     
     /**
      * The Player has issued a voice command

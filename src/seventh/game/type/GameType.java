@@ -7,6 +7,7 @@ import java.util.List;
 
 import seventh.game.Game;
 import seventh.game.Player;
+import seventh.game.PlayerClass;
 import seventh.game.Players;
 import seventh.game.Team;
 import seventh.game.net.NetGamePartialStats;
@@ -111,6 +112,8 @@ public interface GameType extends Debugable {
     
     public void playerJoin(Player player);
     public void playerLeft(Player player);
+    
+    public boolean switchPlayerClass(Player player, PlayerClass playerClass);
     
     public Team getAttacker();
     public Team getDefender();

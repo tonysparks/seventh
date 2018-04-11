@@ -25,6 +25,9 @@ import java.util.List;
 import seventh.game.Controllable;
 import seventh.game.Game;
 import seventh.game.Inventory;
+import seventh.game.Player;
+import seventh.game.PlayerClass;
+import seventh.game.PlayerClass.WeaponEntry;
 import seventh.game.SoundEventPool;
 import seventh.game.SurfaceTypeToSoundType;
 import seventh.game.Team;
@@ -184,78 +187,95 @@ public class PlayerEntity extends Entity implements Controllable {
         setHearingRadius(PLAYER_HEARING_RADIUS);
     }
     
+    
     /**
-     * Sets the players weapon class -- their default
-     * inventory.
+     * Apply the player class
      * 
-     * @param weaponClass
+     * @param playerClass
+     * @param activeWeapon
+     * @return true if success, false otherwise
      */
-    public void setWeaponClass(Type weaponClass) {
+    public void setPlayerClass(PlayerClass playerClass, Type activeWeapon) {
+        if(!playerClass.isAvailableWeapon(activeWeapon)) {
+            activeWeapon = playerClass.getDefaultPrimaryWeapon();
+        }
+        
         this.inventory.clear();
         
-        switch(weaponClass) {        
-            case KAR98:
-                this.inventory.addItem(new Kar98(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 1));
-                break;        
-            case MP40:
-                this.inventory.addItem(new MP40(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
-                break;
-            case MP44:
-                this.inventory.addItem(new MP44(game, this));
-                this.inventory.addItem(GrenadeBelt.newSmoke(game, this, 2));
-                break;        
-            case ROCKET_LAUNCHER:
-                this.inventory.addItem(new RocketLauncher(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 5));
-                break;
-            case SHOTGUN:
-                this.inventory.addItem(new Shotgun(game, this));
-                break;
-            case SPRINGFIELD:
-                this.inventory.addItem(new Springfield(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 1));
-                break;        
-            case M1_GARAND:
-                this.inventory.addItem(new M1Garand(game, this));
-                this.inventory.addItem(GrenadeBelt.newSmoke(game, this, 2));
-                break;
-            case THOMPSON:
-                this.inventory.addItem(new Thompson(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
-                break;            
-            case RISKER: 
-                this.inventory.addItem(new Risker(game, this));
-                break;
-            case FLAME_THROWER:
-                this.inventory.addItem(new FlameThrower(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
-                break;
-            default:
-                if(team != null) {
-                    if(team.getId() == Team.ALLIED_TEAM_ID) {
-                        this.inventory.addItem(new Thompson(game, this));
-                    }
-                    else {
-                        this.inventory.addItem(new MP40(game, this));
-                    }
-                    this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
-                }
-                
-                break;        
+
+        WeaponEntry weaponEntry = playerClass.getAvailableWeaponEntry(activeWeapon);
+        Weapon currentWeapon = createWeapon(weaponEntry);
+        if(currentWeapon != null) {
+            this.inventory.addItem(currentWeapon);
         }
-                
-        setupCommonWeapons();
+        
+        List<WeaponEntry> weapons = playerClass.getDefaultWeapons();
+        for(int i = 0; i < weapons.size(); i++) {
+            WeaponEntry entry = weapons.get(i);
+            Weapon weapon = createWeapon(entry);
+            
+            if(weapon != null) {
+                this.inventory.addItem(weapon);
+            }
+        }
+        
+        
         checkLineOfSightChange();
     }
+    
+    private Weapon createWeapon(WeaponEntry entry) {
+        Weapon weapon = null;
+
+        switch(entry.type) {        
+            case SPRINGFIELD:
+            case KAR98:                
+                weapon = isAlliedPlayer() ? new Springfield(game, this) : new Kar98(game, this);                
+                break;
+                
+            case THOMPSON:
+            case MP40:                
+                weapon = isAlliedPlayer() ? new Thompson(game, this) : new MP40(game, this);
+                break;
+                
+            case M1_GARAND:
+            case MP44:
+                weapon = isAlliedPlayer() ? new M1Garand(game, this) : new MP44(game, this);                
+                break;
+                
+            case PISTOL:
+                weapon = new Pistol(game, this);
+                break;
+            case HAMMER:
+                weapon = new Hammer(game, this);
+                break;
+            case SHOTGUN:
+                weapon = new Shotgun(game, this);
+                break;
+            case RISKER: 
+                weapon = new Risker(game, this);
+                break;
+            case ROCKET_LAUNCHER:
+                weapon = new RocketLauncher(game, this);                
+                break;
+            case FLAME_THROWER:
+                weapon = new FlameThrower(game, this);
+                break;
+            case GRENADE:
+                weapon = GrenadeBelt.newFrag(game, this, entry.ammoBag);
+                break;
+            case SMOKE_GRENADE:
+                weapon = GrenadeBelt.newSmoke(game, this, entry.ammoBag);
+                break;            
+            default:                
+        }
         
-    private void setupCommonWeapons() {        
-        this.inventory.addItem(new Pistol(game, this));
+        if(weapon != null && entry.ammoBag > -1) {
+            weapon.setTotalAmmo(entry.ammoBag);
+        }
         
-        // TODO - make class based
-        this.inventory.addItem(new Hammer(game, this));
+        return weapon;
     }
+    
     
     /* (non-Javadoc)
      * @see seventh.game.Entity#kill(seventh.game.Entity)
@@ -426,6 +446,14 @@ public class PlayerEntity extends Entity implements Controllable {
     @Override
     public boolean isPlayer() {     
         return true;
+    }
+    
+    public boolean isAlliedPlayer() {
+        return getTeam().isAlliedTeam();
+    }
+    
+    public boolean isAxisPlayer() {
+        return getTeam().isAxisTeam();
     }
     
     /**
@@ -799,7 +827,8 @@ public class PlayerEntity extends Entity implements Controllable {
     public void setTeam(Team team) {
         this.team = team;
         if(this.team != null) {
-            setWeaponClass(Type.UNKNOWN);
+            Player player = team.getPlayerById(this.id);
+            setPlayerClass(player.getPlayerClass(), player.getWeaponClass());
         }
     }
         

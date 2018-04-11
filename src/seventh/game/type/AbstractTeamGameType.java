@@ -13,6 +13,7 @@ import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.game.Game;
 import seventh.game.Player;
+import seventh.game.PlayerClass;
 import seventh.game.Players;
 import seventh.game.Team;
 import seventh.game.events.GameEndEvent;
@@ -652,6 +653,19 @@ public abstract class AbstractTeamGameType implements GameType {
     protected boolean leaveTeam(Team team, Player player) {
         team.removePlayer(player);
         return true;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.game.type.GameType#switchPlayerClass(seventh.game.Player, seventh.game.PlayerClass)
+     */
+    @Override
+    public boolean switchPlayerClass(Player player, PlayerClass playerClass) {
+        if(playerClass == PlayerClass.Default) {
+            player.setPlayerClass(playerClass);
+            return true;
+        }
+        
+        return false;
     }
     
     /* (non-Javadoc)

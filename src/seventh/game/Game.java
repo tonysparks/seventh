@@ -1297,7 +1297,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         player.setEntity(playerEntity);
                 
-        playerEntity.setWeaponClass(player.getWeaponClass());
+        playerEntity.setPlayerClass(player.getPlayerClass(), player.getWeaponClass());
         
         addEntity(playerEntity);
         addPlayer(playerEntity);
@@ -1336,29 +1336,39 @@ public class Game implements GameInfo, Debugable, Updatable {
                 if(Team.SPECTATOR_TEAM_ID != teamId) {
                     player.stopSpectating();
                 }
-                
+                                
                 /* make sure the player has the teams weaponry */
                 switch(player.getWeaponClass()) {
                     case THOMPSON:
-                        player.setWeaponClass(Type.MP40);
-                        break;
                     case MP40: 
-                        player.setWeaponClass(Type.THOMPSON);
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.THOMPSON);
+                        }
+                        else {
+                            player.setWeaponClass(Type.MP40);    
+                        }
                         break;
                         
-                    case KAR98:
-                        player.setWeaponClass(Type.SPRINGFIELD);
-                        break;
+                    case KAR98:                        
                     case SPRINGFIELD:
-                        player.setWeaponClass(Type.KAR98);
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.SPRINGFIELD);
+                        }
+                        else {
+                            player.setWeaponClass(Type.KAR98);
+                        }
                         break;
                         
                     case MP44:
-                        player.setWeaponClass(Type.M1_GARAND);
-                        break;
                     case M1_GARAND:
-                        player.setWeaponClass(Type.MP44);
-                    
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.M1_GARAND);
+                        }
+                        else {
+                            player.setWeaponClass(Type.MP44);
+                        }
+                        break;
+                        
                     case SHOTGUN:
                     case ROCKET_LAUNCHER:
                     case RISKER:
@@ -1367,13 +1377,11 @@ public class Game implements GameInfo, Debugable, Updatable {
                         
                     /* make the player use the default weapon */
                     default: {
-                        switch(teamId) {
-                            case Team.ALLIED_TEAM_ID:
-                                player.setWeaponClass(Type.THOMPSON);
-                                break;
-                            case Team.AXIS_TEAM_ID:
-                                player.setWeaponClass(Type.MP40);
-                                break;
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.THOMPSON);
+                        }
+                        else {
+                            player.setWeaponClass(Type.MP40);    
                         }
                     }
                 }
@@ -1391,48 +1399,24 @@ public class Game implements GameInfo, Debugable, Updatable {
      */
     public void playerSwitchWeaponClass(int playerId, Type weaponType) {
         Player player = players.getPlayer(playerId);
-        if(player!=null) {            
-            Team team = player.getTeam();
-            if(team!=null) {
-                boolean allowed = false;
-                
-                switch(team.getId()) {
-                    case Team.ALLIED_TEAM_ID:
-                        switch(weaponType) {
-                            case THOMPSON:
-                            case M1_GARAND:
-                            case SPRINGFIELD:
-                            case RISKER:
-                            case SHOTGUN:
-                            case ROCKET_LAUNCHER:
-                            case FLAME_THROWER:
-                                allowed = true;
-                                break;
-                            default: allowed = false;
-                        }
-                        break;
-                    case Team.AXIS_TEAM_ID:
-                        switch(weaponType) {
-                            case MP40:
-                            case MP44:
-                            case KAR98:
-                            case RISKER:
-                            case SHOTGUN:
-                            case ROCKET_LAUNCHER:
-                            case FLAME_THROWER:
-                                allowed = true;
-                                break;
-                            default: allowed = false;
-                        }
-                        break;
-                    default:
-                            break;
-                }
-                
-                if(allowed) {
-                    player.setWeaponClass(weaponType);
-                }
+        if(player!=null) {
+            if(player.getPlayerClass().isAvailableWeapon(weaponType)) {                             
+                player.setWeaponClass(weaponType);
             }
+        }
+    }
+    
+    
+    /**
+     * A player has requested to switch its player class
+     * 
+     * @param playerId
+     * @param weaponType
+     */
+    public void playerSwitchPlayerClass(int playerId, PlayerClass playerClass) {
+        Player player = players.getPlayer(playerId);
+        if(player!=null) {            
+            gameType.switchPlayerClass(player, playerClass);
         }
     }
     

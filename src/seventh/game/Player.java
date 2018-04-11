@@ -57,6 +57,7 @@ public class Player implements PlayerInfo, Debugable {
     
     private Vector2f killedAt;
     
+    private PlayerClass playerClass;
     private Type weaponClass;
     
     private int previousKeys;
@@ -90,6 +91,7 @@ public class Player implements PlayerInfo, Debugable {
         
         this.killedAt = new Vector2f();
                 
+        setPlayerClass(PlayerClass.Default);
         setTeam(Team.SPECTATOR);
     }
     
@@ -165,6 +167,21 @@ public class Player implements PlayerInfo, Debugable {
     @Override
     public Type getWeaponClass() {
         return weaponClass;
+    }
+    
+    /**
+     * @param playerClass the playerClass to set
+     */
+    public void setPlayerClass(PlayerClass playerClass) {
+        this.playerClass = playerClass;
+    }
+    
+    /**
+     * @return the playerClass
+     */
+    @Override
+    public PlayerClass getPlayerClass() {
+        return playerClass;
     }
     
     /**

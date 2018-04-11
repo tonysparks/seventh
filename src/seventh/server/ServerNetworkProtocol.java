@@ -44,6 +44,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -276,6 +277,14 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
         game.playerSwitchWeaponClass(conn.getId(), message.weaponType);
     }
 
+    /* (non-Javadoc)
+     * @see seventh.server.ServerProtocol#receivePlayerSwitchClassMessage(harenet.api.Connection, seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void receivePlayerSwitchClassMessage(Connection conn, PlayerSwitchPlayerClassMessage message) throws IOException {
+        game.playerSwitchPlayerClass(conn.getId(), message.playerClass);
+    }
+    
     /* (non-Javadoc)
      * @see seventh.server.ServerProtocol#connectRequest(harenet.api.Connection, seventh.network.messages.ConnectRequestMessage)
      */
