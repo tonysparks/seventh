@@ -91,6 +91,7 @@ import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
@@ -1734,6 +1735,10 @@ public class ClientGame {
         // TODO : Update the CommanderInfo
     }
 
+    public void playerSwitchedPlayerClass(PlayerSwitchPlayerClassMessage msg) {
+        // TODO!
+    }
+    
     /**
      * @param msg
      */

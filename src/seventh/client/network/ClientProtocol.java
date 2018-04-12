@@ -137,6 +137,14 @@ public interface ClientProtocol {
     public void receivePlayerSwitchedTeamMessage(Connection conn, PlayerSwitchTeamMessage msg);
 
     /**
+     * A Player has switched player classes.
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receivePlayerSwitchedPlayerClassMessage(Connection conn, PlayerSwitchPlayerClassMessage msg);
+    
+    /**
      * A global text message.
      * 
      * @param conn

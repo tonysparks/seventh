@@ -372,6 +372,15 @@ public interface ServerProtocol {
     
     
     /**
+     * Sends a {@link PlayerSwitchPlayerClassMessage} to all clients
+     * 
+     * @param conn
+     * @param message
+     * @throws IOException
+     */
+    public void sendPlayerSwitchClassMessage(PlayerSwitchPlayerClassMessage message) throws IOException;
+    
+    /**
      * Sends a {@link ConnectAcceptedMessage} to a particular client
      * 
      * @param clientId

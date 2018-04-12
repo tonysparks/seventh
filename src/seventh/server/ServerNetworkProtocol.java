@@ -699,6 +699,14 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
     }
     
     /* (non-Javadoc)
+     * @see seventh.server.ServerProtocol#sendPlayerSwitchClassMessage(seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void sendPlayerSwitchClassMessage(PlayerSwitchPlayerClassMessage message) throws IOException {
+        queueSendToAll(Endpoint.FLAG_RELIABLE, message);        
+    }
+    
+    /* (non-Javadoc)
      * @see seventh.server.ServerProtocol#sendFlagCapturedMessage(seventh.network.messages.FlagCapturedMessage)
      */
     @Override

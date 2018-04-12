@@ -12,6 +12,7 @@ import seventh.game.PlayerClass;
  *
  */
 public class PlayerSwitchPlayerClassMessage extends AbstractNetMessage {
+    public int playerId;
     public PlayerClass playerClass;
     
     /**
@@ -24,12 +25,14 @@ public class PlayerSwitchPlayerClassMessage extends AbstractNetMessage {
     @Override
     public void read(IOBuffer buffer) {    
         super.read(buffer);
-        playerClass = PlayerClass.fromNet(buffer.getByteBits(3));
+        playerId = BufferIO.readPlayerId(buffer);
+        playerClass = BufferIO.readPlayerClassType(buffer);
     }
     
     @Override
     public void write(IOBuffer buffer) {    
         super.write(buffer);
-        buffer.putByteBits(PlayerClass.toNet(playerClass), 3);
+        BufferIO.writePlayerId(buffer, playerId);
+        BufferIO.writePlayerClassType(buffer, playerClass);
     }
 }

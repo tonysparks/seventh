@@ -501,6 +501,16 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         }
     }
     
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#receivePlayerSwitchedPlayerClassMessage(harenet.api.Connection, seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void receivePlayerSwitchedPlayerClassMessage(Connection conn, PlayerSwitchPlayerClassMessage msg) {
+        if(game!=null) {
+            game.playerSwitchedPlayerClass(msg);
+        }        
+    }
+    
     
     /* (non-Javadoc)
      * @see seventh.client.ClientProtocol#playerSpeech(harenet.api.Connection, seventh.network.messages.PlayerSpeechMessage)

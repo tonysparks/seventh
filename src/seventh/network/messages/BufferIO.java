@@ -6,6 +6,7 @@ package seventh.network.messages;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import harenet.messages.NetMessageFactory;
+import seventh.game.PlayerClass;
 import seventh.game.entities.Entity.State;
 import seventh.game.entities.Entity.Type;
 import seventh.game.net.NetBomb;
@@ -331,6 +332,14 @@ public class BufferIO {
         }
         
         return new String(chars);
+    }
+    
+    public static void writePlayerClassType(IOBuffer buffer, PlayerClass playerClass) {
+        buffer.putByteBits(PlayerClass.toNet(playerClass), 3);
+    }
+    
+    public static PlayerClass readPlayerClassType(IOBuffer buffer) {
+        return PlayerClass.fromNet(buffer.getByteBits(3));
     }
     
     public static NetEntity readEntity(IOBuffer buffer) {
