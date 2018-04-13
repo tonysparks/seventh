@@ -197,7 +197,7 @@ public class PlayerEntity extends Entity implements Controllable {
      */
     public void setPlayerClass(PlayerClass playerClass, Type activeWeapon) {
         if(!playerClass.isAvailableWeapon(activeWeapon)) {
-            activeWeapon = playerClass.getDefaultPrimaryWeapon();
+            activeWeapon = playerClass.getDefaultPrimaryWeapon().getTeamWeapon(getTeam());
         }
         
         this.inventory.clear();
@@ -226,7 +226,7 @@ public class PlayerEntity extends Entity implements Controllable {
     private Weapon createWeapon(WeaponEntry entry) {
         Weapon weapon = null;
 
-        switch(entry.type) {        
+        switch(entry.type.getTeamWeapon(getTeam())) {        
             case SPRINGFIELD:
             case KAR98:                
                 weapon = isAlliedPlayer() ? new Springfield(game, this) : new Kar98(game, this);                

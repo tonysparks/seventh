@@ -535,6 +535,13 @@ public class Locomotion implements Debugable {
             
             int max = availableWeapons.size();
             
+            // lean more towards standard guns vs flamethrower/RL
+            if(max > 3) {
+                if(random.nextInt(4) != 1) {
+                    max -= 1;
+                }
+            }
+            
             boolean pickSmart = random.nextBoolean();
             if(pickSmart) {
                 index = pickThoughtfulWeapon(team, availableWeapons);
@@ -543,7 +550,7 @@ public class Locomotion implements Debugable {
                 index = random.nextInt(max);
             }
             
-            return availableWeapons.get(index).type;
+            return availableWeapons.get(index).type.getTeamWeapon(team);
         }
         
         return Type.UNKNOWN;
