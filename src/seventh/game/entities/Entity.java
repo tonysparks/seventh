@@ -156,6 +156,12 @@ public abstract class Entity implements Debugable {
         ALLIED_BASE,
         AXIS_BASE,
         
+        
+        // Resources
+        METAL,
+        STONE,
+        OIL,
+        
         UNKNOWN,
         
         ;

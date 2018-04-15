@@ -16,7 +16,11 @@ import seventh.game.Player;
 import seventh.game.PlayerClass;
 import seventh.game.Players;
 import seventh.game.Team;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.events.GameEndEvent;
+import seventh.game.events.PlayerKilledEvent;
+import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
@@ -175,6 +179,14 @@ public abstract class AbstractTeamGameType implements GameType {
             }
         });
         
+        dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
+            
+            @Override
+            public void onPlayerKilled(PlayerKilledEvent event) {
+                onPlayerDeath(event);
+            }
+        });
+        
         doRegisterListeners(game, dispatcher);
     }
 
@@ -186,6 +198,33 @@ public abstract class AbstractTeamGameType implements GameType {
      */
     protected abstract void doRegisterListeners(final Game game, EventDispatcher dispatcher);
     
+    
+    /**
+     * Defaults to dropping any held weapons/items
+     * 
+     * @param event
+     */
+    protected void onPlayerDeath(PlayerKilledEvent event) {
+        final PlayerEntity ent = event.getPlayer().getEntity();
+        final Entity killer = event.getKilledBy();
+        
+        ent.dropFlag();
+        
+        /* suicides don't leave weapons */
+        if(killer != ent) {
+            if(ent.isYielding(seventh.game.entities.Entity.Type.FLAME_THROWER)) {
+                game.addGameTimer(new Timer(false, 20) {
+                    public void onFinish(Timer timer) {
+                        game.newBigFire(ent.getCenterPos(), ent, 1);
+                        game.newBigExplosion(ent.getCenterPos(), ent, 30, 10, 1);
+                    }
+                });                
+            }
+            else {
+                ent.dropItem(false);
+            }
+        } 
+    }
     
     /**
      * Executes the callback function

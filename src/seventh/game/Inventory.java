@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import seventh.game.entities.Entity.Type;
+import seventh.game.entities.Flag;
 import seventh.game.weapons.GrenadeBelt;
 import seventh.game.weapons.Weapon;
 
@@ -17,16 +18,44 @@ import seventh.game.weapons.Weapon;
  *
  */
 public class Inventory {
-
+   
     private List<Weapon> weapons;
     private final int maxPrimaryWeapons;
     private int currentItem;
     private GrenadeBelt grenades;
     
-    public Inventory(int maxPrimaryWeapons) {
+    private Flag carriedFlag;
+    
+    public Inventory(int maxPrimaryWeapons) {        
         this.maxPrimaryWeapons = maxPrimaryWeapons;
         this.weapons = new ArrayList<Weapon>();
-        this.currentItem = 0;
+        
+        this.currentItem = 0;        
+    }
+    
+    /**
+     * Pickup a flag
+     * 
+     * @param flag
+     */
+    public void pickupFlag(Flag flag) {
+        this.carriedFlag = flag;
+    }
+    
+    
+    /**
+     * Drops the flag if carrying one
+     */
+    public void dropFlag() {
+        if(this.carriedFlag!=null) {
+            Flag flag = this.carriedFlag;
+            this.carriedFlag = null;
+            flag.drop();
+        }
+    }
+    
+    public boolean isCarryingFlag() {
+        return this.carriedFlag != null;
     }
 
     public boolean hasGrenades() {

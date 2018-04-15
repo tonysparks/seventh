@@ -61,7 +61,6 @@ import seventh.math.Vector2f;
 import seventh.shared.Geom;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
-import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -79,25 +78,25 @@ public class PlayerEntity extends Entity implements Controllable {
      *
      */
     public static enum Keys {
-        UP        (1<<0),
-        DOWN    (1<<1),
-        LEFT    (1<<2),
-        RIGHT    (1<<3),
-        WALK    (1<<4),
-        FIRE    (1<<5),
-        RELOAD    (1<<6),
-        WEAPON_SWITCH_UP(1<<7),
-        WEAPON_SWITCH_DOWN(1<<8),
+        UP                  (1<<0),
+        DOWN                (1<<1),
+        LEFT                (1<<2),
+        RIGHT               (1<<3),
+        WALK                (1<<4),
+        FIRE                (1<<5),
+        RELOAD              (1<<6),
+        WEAPON_SWITCH_UP    (1<<7),
+        WEAPON_SWITCH_DOWN  (1<<8),
         
-        THROW_GRENADE(1<<9),
+        THROW_GRENADE       (1<<9),
         
-        SPRINT(1<<10),
-        CROUCH(1<<11),
+        SPRINT              (1<<10),
+        CROUCH              (1<<11),
         
-        USE(1<<12),
-        DROP_WEAPON(1<<13),
-        MELEE_ATTACK(1<<14),
-        IRON_SIGHTS(1<<15),
+        USE                 (1<<12),
+        DROP_WEAPON         (1<<13),
+        MELEE_ATTACK        (1<<14),
+        IRON_SIGHTS         (1<<15),
         ;
         
         private Keys(int value) {
@@ -147,8 +146,6 @@ public class PlayerEntity extends Entity implements Controllable {
     
     private boolean isFlashlightOn;
     private long vehicleTime;
-    
-    private Flag carriedFlag;
     
     private Rectangle headshot, limbshot;
     private Vector2f bulletDir;
@@ -283,26 +280,6 @@ public class PlayerEntity extends Entity implements Controllable {
     @Override
     public void kill(Entity killer) {    
         unuse();
-        
-        dropFlag();
-        
-        /* suicides don't leave weapons */
-        if(killer != this) {
-            if(isYielding(Type.FLAME_THROWER)) {
-                game.addGameTimer(new Timer(false, 20) {
-                    public void onFinish(Timer timer) {
-                        game.newBigFire(getCenterPos(), PlayerEntity.this, 1);
-                        game.newBigExplosion(getCenterPos(), PlayerEntity.this, 30, 10, 1);
-                    }
-                });
-                
-               // game.newBigFire(getCenterPos(), this, 1);
-            }
-            else {
-                dropItem(false);
-            }
-        }
-        
         super.kill(killer);
     }
     
@@ -310,11 +287,7 @@ public class PlayerEntity extends Entity implements Controllable {
      * Drops the flag if carrying one
      */
     public void dropFlag() {
-        if(this.carriedFlag!=null) {
-            Flag flag = this.carriedFlag;
-            this.carriedFlag = null;
-            flag.drop();
-        }
+        this.inventory.dropFlag();
     }
     
     /**
@@ -322,12 +295,12 @@ public class PlayerEntity extends Entity implements Controllable {
      * @param makeSound
      */
     public void dropItem(boolean makeSound) {
-        if(this.carriedFlag!=null) {
-            this.carriedFlag.drop();
+        if(this.inventory.isCarryingFlag()) {
+            dropFlag();
         }
         else {        
             Weapon weapon = this.inventory.currentItem();
-            if(weapon != null /*&& !weapon.getType().equals(Type.FLAME_THROWER)*/) {
+            if(weapon != null) {
                 this.inventory.removeItem(weapon);
                 this.inventory.nextItem();
                 
@@ -383,7 +356,7 @@ public class PlayerEntity extends Entity implements Controllable {
      * @param flag
      */
     public void pickupFlag(Flag flag) {
-        this.carriedFlag = flag;
+        this.inventory.pickupFlag(flag);
     }
     
     /**
