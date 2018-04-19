@@ -519,13 +519,15 @@ public class Player implements PlayerInfo, Debugable {
      */
     public void setEntity(PlayerEntity entity) {
         this.entity = entity;
-        if(hasEntity()) {
+        if(hasEntity()) {            
             this.entity.setTeam(team);
             this.spawnTime = SPAWN_DELAY;
             this.spectating = null;
             
             this.isLooking = false;
             this.lookAtDeathTime = 0;
+            
+            this.entity.setPlayerClass(getPlayerClass(), getWeaponClass());
         }
     }
     

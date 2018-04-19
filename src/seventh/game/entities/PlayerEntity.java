@@ -151,14 +151,16 @@ public class PlayerEntity extends Entity implements Controllable {
     private Vector2f bulletDir;
     
     
+    private int speedMultiplier, damageMultiplier;
+    
     /**
      * @param position
      * @param speed
      * @param game
      */
-    public PlayerEntity(int id, Vector2f position, Game game) {
+    public PlayerEntity(int id, PlayerClass playerClass, Vector2f position, Game game) {
         super(id, position, PLAYER_SPEED, game, Type.PLAYER);
-        
+                        
         this.player = new NetPlayer();
         this.player.id = id;
         
@@ -180,8 +182,14 @@ public class PlayerEntity extends Entity implements Controllable {
         
         this.visualBounds = new Rectangle(2000, 2000);
         
+        this.speedMultiplier  = playerClass.getSpeedMultiplier();
+        this.damageMultiplier = playerClass.getDamageMultiplier();
+        
         setLineOfSight(WeaponConstants.DEFAULT_LINE_OF_SIGHT);
         setHearingRadius(PLAYER_HEARING_RADIUS);
+        
+        setMaxHealth(getMaxHealth() + playerClass.getHealthMultiplier());
+        setHealth(getMaxHealth());
     }
     
     
@@ -197,8 +205,7 @@ public class PlayerEntity extends Entity implements Controllable {
             activeWeapon = playerClass.getDefaultPrimaryWeapon().getTeamWeapon(getTeam());
         }
         
-        this.inventory.clear();
-        
+        this.inventory.clear();        
 
         WeaponEntry weaponEntry = playerClass.getAvailableWeaponEntry(activeWeapon);
         Weapon currentWeapon = createWeapon(weaponEntry);
@@ -217,7 +224,7 @@ public class PlayerEntity extends Entity implements Controllable {
         }
         
         
-        checkLineOfSightChange();
+        checkLineOfSightChange();        
     }
     
     private Weapon createWeapon(WeaponEntry entry) {
@@ -371,6 +378,13 @@ public class PlayerEntity extends Entity implements Controllable {
      */
     public void setHearingRadius(int radius) {
         this.hearingRadius = radius;
+    }
+    
+    /**
+     * @return the damageMultiplier
+     */
+    public int getDamageMultiplier() {
+        return damageMultiplier;
     }
     
     /**
@@ -758,7 +772,7 @@ public class PlayerEntity extends Entity implements Controllable {
          */
         
         
-        int mSpeed = this.speed;
+        int mSpeed = this.speed + this.speedMultiplier;
         if(currentState==State.WALKING) {
             mSpeed = (int)( (float)this.speed * WALK_SPEED_FACTOR);
         }

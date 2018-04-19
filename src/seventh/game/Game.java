@@ -1261,7 +1261,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         }
                             
         // Spawn a bot (or dummy bot if need-be) or a remote controlled entity
-        final PlayerEntity playerEntity = new PlayerEntity(id, spawnPosition, this);    
+        final PlayerEntity playerEntity = new PlayerEntity(id, player.getPlayerClass(), spawnPosition, this);    
         
             
         // give them two seconds of invinceability        
@@ -1296,8 +1296,6 @@ public class Game implements GameInfo, Debugable, Updatable {
         spawnPosition = findFreeSpot(playerEntity);
         
         player.setEntity(playerEntity);
-                
-        playerEntity.setPlayerClass(player.getPlayerClass(), player.getWeaponClass());
         
         addEntity(playerEntity);
         addPlayer(playerEntity);
