@@ -161,7 +161,8 @@ public class OBB {
      * @param newOrientation
      */
     public void rotateTo(float newOrientation) {
-        update(orientation, center.x, center.y);
+//        update(orientation, center.x, center.y);
+        update(newOrientation, center.x, center.y); // I changed this, because the param was invalid.
     }
     
     /**
