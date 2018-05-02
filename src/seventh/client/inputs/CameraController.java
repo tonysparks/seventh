@@ -328,16 +328,16 @@ public class CameraController implements Updatable {
      * To remove duplicated code and for readability in updateCameraForRoamingMovements(TimeStep timeStep) function
      * 
      */
-	private boolean cameraForRoamingMovementsIsOutOfMap() {
-		final boolean boundsXYIsOutOfMap = map.checkBounds(bounds.x, bounds.y);
+    private boolean cameraForRoamingMovementsIsOutOfMap() {
+        final boolean boundsXYIsOutOfMap = map.checkBounds(bounds.x, bounds.y);
         final boolean boundsXIsLowerThanViewPortCenterX = bounds.x < bounds.width / 2;
         final boolean boundsYIsLowerThanViewPortCenterY = bounds.y < bounds.height / 2;
         final boolean boundsCenterIsOutOfMap = map.checkBounds(bounds.x + bounds.width/2, bounds.y + bounds.height/2);
-		
+        
         return boundsXYIsOutOfMap || 
-		    (boundsXIsLowerThanViewPortCenterX || boundsYIsLowerThanViewPortCenterY) ||
-		    boundsCenterIsOutOfMap;
-	}
+            (boundsXIsLowerThanViewPortCenterX || boundsYIsLowerThanViewPortCenterY) ||
+            boundsCenterIsOutOfMap;
+    }
     
     
     /**
