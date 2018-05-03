@@ -30,6 +30,8 @@ public class WeaponClassDialog extends Widget {
     private Label title;
     private Theme theme;
     
+    private static final int NUMBER_OF_WEAPON_CLASSES = 7;
+    
     private Button[] weaponClasses;
     private Label[] weaponClassDescriptions;
     private Button cancel;
@@ -47,8 +49,8 @@ public class WeaponClassDialog extends Widget {
         this.team = ClientTeam.ALLIES;
         this.theme = theme;
 
-        this.weaponClasses = new Button[7];
-        this.weaponClassDescriptions = new Label[7];
+        this.weaponClasses = new Button[NUMBER_OF_WEAPON_CLASSES];
+        this.weaponClassDescriptions = new Label[NUMBER_OF_WEAPON_CLASSES];
         
         createUI();
     }
