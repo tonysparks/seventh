@@ -65,7 +65,7 @@ public class OptionsScreen implements Screen {
     
     private UserInterfaceManager uiManager;
     
-    private Theme theme;
+	private Theme theme;
             
     private Timer flashText, flashDelay;
     
@@ -85,10 +85,11 @@ public class OptionsScreen implements Screen {
     private int displayModeIndex;
     
     private Button applyBtn;
+    
+    /* newly added: make screen much clearer */
+    private Font f_plain = new Font("Arial",Font.PLAIN);
+    private Font f_bold = new Font("Arial",Font.BOLD);
         
-    /**
-     * 
-     */
     public OptionsScreen(SeventhGame app) {
         this.app = app;
         this.theme = app.getTheme();                
@@ -115,6 +116,8 @@ public class OptionsScreen implements Screen {
         
         Vector2f uiPos = new Vector2f(200, app.getScreenHeight() - 20);
         
+        
+        
         if(applyBtn != null) {
             applyBtn.destroy();
         }
@@ -122,7 +125,9 @@ public class OptionsScreen implements Screen {
         applyBtn = setupButton(uiPos, "Apply", false);
         applyBtn.setVisible(false);
         applyBtn.getBounds().setSize(140, 80);
-        applyBtn.getTextLabel().setFont(theme.getPrimaryFontName());
+      
+        applyBtn.getTextLabel().setFont(f_bold);
+      
         applyBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
@@ -170,7 +175,9 @@ public class OptionsScreen implements Screen {
 
         Button backBtn = setupButton(uiPos, "Back", false);
         backBtn.getBounds().setSize(140, 80);
-        backBtn.getTextLabel().setFont(theme.getPrimaryFontName());
+        
+        backBtn.getTextLabel().setFont(f_bold);
+
         backBtn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
@@ -185,7 +192,7 @@ public class OptionsScreen implements Screen {
         nameTxtBox.setLabelText("Name: ");
         nameTxtBox.setTheme(theme);
         nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 55, 200, 25));        
-        nameTxtBox.setFont(theme.getSecondaryFontName()); 
+        nameTxtBox.setFont(f_plain); 
         nameTxtBox.setTextSize(14);
         nameTxtBox.getLabel().setTextSize(18);
         nameTxtBox.setFocus(false);
@@ -204,7 +211,7 @@ public class OptionsScreen implements Screen {
         controlsLbl.setTheme(theme);
         controlsLbl.setBounds(new Rectangle(10, 90, 400, 40));
         controlsLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
-        controlsLbl.setFont(theme.getPrimaryFontName());
+        controlsLbl.setFont(f_bold);
         controlsLbl.setTextSize(14);
         
         
@@ -313,7 +320,7 @@ public class OptionsScreen implements Screen {
         keyOverwriteLbl.setBounds(new Rectangle(app.getScreenWidth(), 40));
         keyOverwriteLbl.getBounds().y = app.getScreenHeight() - 30;
         keyOverwriteLbl.setHorizontalTextAlignment(TextAlignment.CENTER);
-        keyOverwriteLbl.setFont(theme.getPrimaryFontName());
+        keyOverwriteLbl.setFont(f_bold);
         keyOverwriteLbl.setTextSize(18);
         keyOverwriteLbl.setForegroundColor(0xffffffff);
         
@@ -330,7 +337,7 @@ public class OptionsScreen implements Screen {
         videoLbl.setTheme(theme);
         videoLbl.setBounds(new Rectangle(10, bottomPanelY - 50, 470, 40));
         videoLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
-        videoLbl.setFont(theme.getPrimaryFontName());
+        videoLbl.setFont(f_bold);
         videoLbl.setTextSize(16);
         
         uiPos.x = startX - 100;
@@ -382,7 +389,7 @@ public class OptionsScreen implements Screen {
         soundLbl.setTheme(theme);
         soundLbl.setBounds(new Rectangle(app.getScreenWidth()/2 - 120, bottomPanelY-50, 400, 40));
         soundLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
-        soundLbl.setFont(theme.getPrimaryFontName());
+        soundLbl.setFont(f_bold);
         soundLbl.setTextSize(16);
                 
         this.panelView.addElement(new LabelView(soundLbl));
@@ -441,7 +448,7 @@ public class OptionsScreen implements Screen {
         gameLbl.setTheme(theme);
         gameLbl.setBounds(new Rectangle(thirdSectionX + 30, bottomPanelY-50, 400, 40));
         gameLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
-        gameLbl.setFont(theme.getPrimaryFontName());
+        gameLbl.setFont(f_bold);
         gameLbl.setTextSize(16);
                 
         this.panelView.addElement(new LabelView(gameLbl));
@@ -546,7 +553,7 @@ public class OptionsScreen implements Screen {
         btn.setEnableGradiant(false);
         btn.setTextSize(15);
         btn.setHoverTextSize(20);        
-        btn.getTextLabel().setFont(theme.getSecondaryFontName());
+        btn.getTextLabel().setFont(f_plain);
         btn.getTextLabel().setHorizontalTextAlignment(TextAlignment.LEFT);
         btn.getTextLabel().setForegroundColor(theme.getForegroundColor());
         btn.addOnHoverListener(new OnHoverListener() {
@@ -706,7 +713,7 @@ public class OptionsScreen implements Screen {
         this.panelView.render(canvas, null, 0);
         
         canvas.begin();
-        canvas.setFont(theme.getPrimaryFontName(), 34);
+        canvas.setFont(f_bold, 34);
         canvas.boldFont();
         
         int fontColor = theme.getForegroundColor();
