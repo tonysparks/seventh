@@ -91,11 +91,11 @@ public class WeaponClassDialog extends Widget {
         
         Rectangle bounds = getBounds();
         
-        createTitleLabel(bounds);
+        setupTitleLabel(bounds);
                     
         refreshButtons();
 
-        createCancelButton(bounds);
+        setupCancelButton(bounds);
                 
         addWidget(cancel);
         addWidget(title);
@@ -104,7 +104,7 @@ public class WeaponClassDialog extends Widget {
     /**
      * @param bounds
      */
-    private void createTitleLabel(final Rectangle bounds) {
+    private void setupTitleLabel(final Rectangle bounds) {
         this.title = new Label("Select a Weapon");
         this.title.setTheme(theme);
         //this.title.setForegroundColor(0xffffffff);
@@ -119,7 +119,7 @@ public class WeaponClassDialog extends Widget {
     /**
      * @param bounds
      */
-    private void createCancelButton(final Rectangle bounds) {
+    private void setupCancelButton(final Rectangle bounds) {
         this.cancel = new Button();        
         this.cancel.setText("Cancel");
         this.cancel.setBounds(new Rectangle(0,0,100,40));
