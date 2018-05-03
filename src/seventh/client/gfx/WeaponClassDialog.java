@@ -91,7 +91,21 @@ public class WeaponClassDialog extends Widget {
         
         Rectangle bounds = getBounds();
         
-        this.title = new Label("Select a Weapon");
+        createTitleLabel(bounds);
+                    
+        refreshButtons();
+
+        createCancelButton(bounds);
+                
+        addWidget(cancel);
+        addWidget(title);
+    }
+
+    /**
+	 * @param bounds
+	 */
+	private void createTitleLabel(final Rectangle bounds) {
+		this.title = new Label("Select a Weapon");
         this.title.setTheme(theme);
         //this.title.setForegroundColor(0xffffffff);
         this.title.setBounds(new Rectangle(bounds));
@@ -100,10 +114,13 @@ public class WeaponClassDialog extends Widget {
         this.title.setFont(theme.getSecondaryFontName());
         this.title.setHorizontalTextAlignment(TextAlignment.CENTER);
         this.title.setTextSize(22);
-                    
-        refreshButtons();
-
-        this.cancel = new Button();        
+	}
+    
+	/**
+	 * @param bounds
+	 */
+	private void createCancelButton(final Rectangle bounds) {
+		this.cancel = new Button();        
         this.cancel.setText("Cancel");
         this.cancel.setBounds(new Rectangle(0,0,100,40));
         this.cancel.getBounds().centerAround(bounds.x + 205, bounds.y + bounds.height - 10);
@@ -120,10 +137,7 @@ public class WeaponClassDialog extends Widget {
                 owner.close();
             }
         });
-                
-        addWidget(cancel);
-        addWidget(title);
-    }
+	}
         
     private Vector2f refreshButtons() {
         Rectangle bounds = getBounds();
