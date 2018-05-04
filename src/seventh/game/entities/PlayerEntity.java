@@ -1012,11 +1012,15 @@ public class PlayerEntity extends Entity implements Controllable {
          * 6) you are not reloading
          */
         
-        if(currentState!=State.DEAD &&                
-           stamina > 0 &&
+    	final boolean isAlive = currentState!=State.DEAD;
+    	final boolean hasStamina = stamina > 0;
+    	final boolean noRecoveryTime = recoveryTime <= 0;
+    	
+        if(isAlive &&                
+        		hasStamina &&
            !firing &&
            !wasSprinting &&           
-           recoveryTime <= 0) {        
+           noRecoveryTime) {        
         
             Weapon weapon = this.inventory.currentItem();
             boolean isReady = weapon != null ? weapon.isReady() : true;

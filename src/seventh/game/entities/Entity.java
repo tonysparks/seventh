@@ -661,10 +661,13 @@ public abstract class Entity implements Debugable {
      */
     public boolean update(TimeStep timeStep) {
         boolean isBlocked = false;
+        boolean isWalking = currentState == State.WALKING;
+        boolean isSprinting = currentState == State.SPRINTING;
+        boolean isCrouching = currentState==State.CROUCHING;
         
         this.movementDir.zeroOut();
         if(this.isAlive && !this.vel.isZero()) {
-            if(currentState != State.WALKING && currentState != State.SPRINTING) {
+            if(!isWalking && !isSprinting) {
                 currentState = State.RUNNING;
             }
                                 
@@ -754,7 +757,7 @@ public abstract class Entity implements Debugable {
             this.walkingTime = WALK_TIME;
         }
         else {                        
-            if(this.walkingTime<=0 && currentState!=State.CROUCHING) {
+            if(this.walkingTime<=0 && !isCrouching) {
                 currentState = State.IDLE;
             }
             

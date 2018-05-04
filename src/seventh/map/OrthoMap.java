@@ -487,6 +487,9 @@ public class OrthoMap implements Map {
         }
     }
 
+    
+    
+
     /*
      * (non-Javadoc)
      * 
@@ -494,38 +497,10 @@ public class OrthoMap implements Map {
      */
     
     public void destroy() {
-        if ( this.backgroundLayers != null ) {
-            for (int i = 0; i < this.backgroundLayers.length; i++) {
-                Layer layer = this.backgroundLayers[i];
-                if ( layer == null ) {
-                    continue;
-                }
-                
-                
-                for( int j = 0; j < this.backgroundLayers[i].numberOfRows(); j++ ) {
-                    this.backgroundLayers[i].destroy();
-                }
-                this.backgroundLayers[i] = null;
-            }
-            
-        }
+
+    	destoryRowLayerisNotNULL(this.backgroundLayers);    	
         this.backgroundLayers = null;
-        
-        
-        if ( this.foregroundLayers != null ) {
-            for (int i = 0; i < this.foregroundLayers.length; i++) {
-                Layer layer = this.foregroundLayers[i];
-                if ( layer == null ) {
-                    continue;
-                }
-                
-                for( int j = 0; j < this.foregroundLayers[i].numberOfRows(); j++ ) {
-                    this.foregroundLayers[i].destroy();
-                }
-                
-                this.foregroundLayers[i] = null;
-            }
-        }        
+        destoryRowLayerisNotNULL(this.foregroundLayers);
         this.foregroundLayers = null;
         
         this.collidableLayers=null;
@@ -563,6 +538,24 @@ public class OrthoMap implements Map {
             this.mapObjects.clear();
         }
     }
+    
+    public void destoryRowLayerisNotNULL(Layer[] layers) {
+		// TODO Auto-generated method stub
+    	if ( layers != null ) {
+            for (int i = 0; i < layers.length; i++) {
+                Layer layer = layers[i];
+                if ( layer == null ) {
+                    continue;
+                }
+                
+                for( int j = 0; j < layers[i].numberOfRows(); j++ ) {
+                    layers[i].destroy();
+                }
+                layers[i] = null;
+            }
+        }
+	}
+    
 
     /* (non-Javadoc)
      * @see seventh.map.Map#getTileWorldHeight()
