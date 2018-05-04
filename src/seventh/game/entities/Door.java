@@ -392,6 +392,7 @@ public class Door extends Entity {
     	boolean isNotOpened = this.doorState != DoorState.OPENED;
     	boolean isNotOpening = this.doorState != DoorState.OPENING;
     	boolean isNotClosing = this.doorState != DoorState.CLOSING;
+    	
         if(isNotOpened || isNotOpening || isNotClosing) {
             if(!canBeHandledBy(ent)) {
                 return;
