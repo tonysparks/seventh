@@ -171,41 +171,61 @@ public class WeaponClassDialog extends Widget {
         
         switch(team) {            
             case AXIS:
-                this.weaponClasses[0] =setupButton(pos, Type.MP40); 
-                this.weaponClassDescriptions[0] = setupLabel(pos, Type.MP40); pos.y += yInc;
-                
-                this.weaponClasses[1] =setupButton(pos, Type.MP44);                
-                this.weaponClassDescriptions[1] = setupLabel(pos, Type.MP44); pos.y += yInc;
-                
-                this.weaponClasses[2] =setupButton(pos, Type.KAR98); 
-                this.weaponClassDescriptions[2] = setupLabel(pos, Type.KAR98); pos.y += yInc;
+                for (int weaponClassIndex = 0; weaponClassIndex < NUMBER_OF_WEAPON_CLASSES; weaponClassIndex++) {
+                    setupAXISWeaponClass(weaponClassIndex, pos);
+                    if (weaponClassIndex < NUMBER_OF_WEAPON_CLASSES - 1) {
+                        pos.y += yInc;
+                    }
+                }
                 break;        
             case ALLIES:
             default:
-                this.weaponClasses[0] =setupButton(pos, Type.THOMPSON); 
-                this.weaponClassDescriptions[0] = setupLabel(pos, Type.THOMPSON); pos.y += yInc;
-                
-                this.weaponClasses[1] =setupButton(pos, Type.M1_GARAND); 
-                this.weaponClassDescriptions[1] = setupLabel(pos, Type.M1_GARAND); pos.y += yInc;
-                
-                this.weaponClasses[2] =setupButton(pos, Type.SPRINGFIELD); 
-                this.weaponClassDescriptions[2] = setupLabel(pos, Type.SPRINGFIELD); pos.y += yInc;
-                break;
-            
-        }        
-        this.weaponClasses[3] =setupButton(pos, Type.RISKER); 
-        this.weaponClassDescriptions[3] = setupLabel(pos, Type.RISKER); pos.y += yInc;
-        
-        this.weaponClasses[4] =setupButton(pos, Type.SHOTGUN); 
-        this.weaponClassDescriptions[4] = setupLabel(pos, Type.SHOTGUN); pos.y += yInc;
-        
-        this.weaponClasses[5] =setupButton(pos, Type.ROCKET_LAUNCHER); 
-        this.weaponClassDescriptions[5] = setupLabel(pos, Type.ROCKET_LAUNCHER); pos.y += yInc;
-        
-        this.weaponClasses[6] =setupButton(pos, Type.FLAME_THROWER);
-        this.weaponClassDescriptions[6] = setupLabel(pos, Type.FLAME_THROWER); 
+                for (int weaponClassIndex = 0; weaponClassIndex < NUMBER_OF_WEAPON_CLASSES; weaponClassIndex++) {
+                    setupALLIESWeaponClass(weaponClassIndex, pos);
+                    if (weaponClassIndex < NUMBER_OF_WEAPON_CLASSES - 1) {
+                        pos.y += yInc;
+                    }
+                }
+                break;   
+        }
                 
         return pos;
+    }
+    
+    private static final Type[] AXIS_WEAPON_TYPES = {
+            // AXIS only
+            Type.MP40,
+            Type.MP44,
+            Type.KAR98,
+            
+            // AXIS, ALLIES share
+            Type.RISKER,
+            Type.SHOTGUN,
+            Type.ROCKET_LAUNCHER,
+            Type.FLAME_THROWER
+    };
+    
+    private static final Type[] ALLIES_WEAPON_TYPES = {
+            // ALLIES only
+            Type.THOMPSON,
+            Type.M1_GARAND,
+            Type.SPRINGFIELD,
+            
+            // AXIS, ALLIES share
+            Type.RISKER,
+            Type.SHOTGUN,
+            Type.ROCKET_LAUNCHER,
+            Type.FLAME_THROWER
+    };
+    
+    private void setupAXISWeaponClass(int weaponClassIndex, Vector2f pos) {
+        this.weaponClasses[weaponClassIndex] = setupButton(pos, AXIS_WEAPON_TYPES[weaponClassIndex]);
+        this.weaponClassDescriptions[weaponClassIndex] = setupLabel(pos, AXIS_WEAPON_TYPES[weaponClassIndex]);
+    }
+    
+    private void setupALLIESWeaponClass(int weaponClassIndex, Vector2f pos) {
+        this.weaponClasses[weaponClassIndex] = setupButton(pos, ALLIES_WEAPON_TYPES[weaponClassIndex]);
+        this.weaponClassDescriptions[weaponClassIndex] = setupLabel(pos, ALLIES_WEAPON_TYPES[weaponClassIndex]);
     }
     
     private String getClassDescription(Type type) {
