@@ -185,15 +185,34 @@ public class ClientMain {
      * @param console
      */
     public static void logSystemSpecs(Logger console) {
-        Runtime runtime = Runtime.getRuntime();
+        logSystemSpecsRuntime(console);
+        logSystemSpecsFileSystem(console);
+        logSystemSpecsSystemProperty(console);
+    }
+    
+    /**
+     * Prints out system specifications about runtime
+     * 
+     * @param console
+     */
+    private logSystemSpecsRuntime(Logger console) {
         final long MB = 1024 * 1024;
+        Runtime runtime = Runtime.getRuntime();        
         console.println("");
         console.println("Seventh: " + SeventhGame.getVersion());
         console.println("Available processors (cores): " + runtime.availableProcessors());
         console.println("Free memory (MiB): " + runtime.freeMemory()/MB);
         console.println("Max memory (MiB): " + (runtime.maxMemory()==Long.MAX_VALUE ? "no limit" : Long.toString(runtime.maxMemory()/MB)) );
         console.println("Available for JVM (MiB): " + runtime.totalMemory() / MB);
-        
+    }
+    
+    /**
+     * Prints out system specifications about filesystem root
+     * 
+     * @param console
+     */
+    private logSystemSpecsFileSystem(Logger console) {
+        final long MB = 1024 * 1024;
         /* Get a list of all filesystem roots on this system */
         File[] roots = File.listRoots();
 
@@ -204,8 +223,15 @@ public class ClientMain {
           console.println("\tFree space (MiB): " + root.getFreeSpace()/MB);
           console.println("\tUsable space (MiB): " + root.getUsableSpace()/MB);
         }
-        
-        
+    }
+    
+    /**
+     * Prints out system specifications about system property
+     * 
+     * @param console
+     */
+    private logSystemSpecsSystemProperty(Logger console) {
+        final long MB = 1024 * 1024;
         console.println("Java Version: " + System.getProperty("java.version"));
         console.println("Java Vendor: " + System.getProperty("java.vendor"));
         console.println("Java VM Version: " + System.getProperty("java.vm.version"));
