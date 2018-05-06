@@ -232,52 +232,34 @@ public class WeaponClassDialog extends Widget {
         String message = "";
         switch(type) {
             case THOMPSON:
-                message = "Thompson | 30/180 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Frag Grenades";
+                message = new ThompsonDescription().getDescription();
                 break;
             case M1_GARAND:                
-                message = "M1 Garand | 8/40 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Smoke Grenades";
+                message = new M1GarandDescription().getDescription();
                 break;
             case SPRINGFIELD:                
-                message = "Springfield | 5/35 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "1 Frag Grenades";
+                message = new SpringfieldDescription().getDescription();
                 break;
             case MP40:
-                message = "MP40 | 32/160 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Frag Grenades";
+                message = new Mp40Description().getDescription();
                 break;
             case MP44:                
-                message = "MP44 | 30/120 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Smoke Grenades";
+                message = new Mp44Description().getDescription();
                 break;
             case KAR98:                
-                message = "KAR-98 | 5/25 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "1 Frag Grenade";
+                message = new Kar98Description().getDescription();
                 break;
             case RISKER:                
-                message = "MG-z | 21/42 rnds\n" +
-                          "Pistol | 9/27 rnds";
+                message = new RiskerDescription().getDescription();
                 break;
             case SHOTGUN:                
-                message = "Shotgun | 5/35 rnds\n" +
-                          "Pistol | 9/27 rnds";
+                message = new ShotgunDescription().getDescription();
                 break;
             case ROCKET_LAUNCHER:                
-                message = "M1 | 5 rnds\n" +
-                          "Pistol | 9/27 rnds\n" +
-                          "5 Frag Grenades";
+                message = new RocketLauncherDescription().getDescription();
                 break;
             case FLAME_THROWER:                
-                message = "Flame Thrower\n" +
-                          "Pistol | 9/27 rnds\n" +
-                          "2 Frag Grenades";
+                message = new FlameThrowerDescription().getDescription();
                 break;                
             default:;
         }
