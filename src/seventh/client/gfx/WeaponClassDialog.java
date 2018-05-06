@@ -140,15 +140,13 @@ public class WeaponClassDialog extends Widget {
     }
         
     private Vector2f refreshButtons() {
-        Rectangle bounds = getBounds();
         
-        Vector2f pos = new Vector2f();
-        pos.x = bounds.x + 120;
-        pos.y = bounds.y + 50;
+        initWeaponClasses();
         
-        int yInc = 50;
-        
-        
+        return setupWeaponClasses();
+    }
+
+    private void initWeaponClasses() {
         for(int i = 0; i < weaponClasses.length; i++) {
             if( this.weaponClasses[i] != null ) {
                 removeWidget(weaponClasses[i]);
@@ -160,7 +158,16 @@ public class WeaponClassDialog extends Widget {
                 this.weaponClassDescriptions[i] = null;
             }
         }
+    }
+
+    private Vector2f setupWeaponClasses() {
+        Rectangle bounds = getBounds();
         
+        Vector2f pos = new Vector2f();
+        pos.x = bounds.x + 120;
+        pos.y = bounds.y + 50;
+        
+        int yInc = 50;
         
         switch(team) {            
             case AXIS:
