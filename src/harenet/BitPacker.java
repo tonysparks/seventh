@@ -559,16 +559,23 @@ public class BitPacker {
             }
 
         }
-        System.out.println();
-        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
+        printFooter();
     }
 
     public void dump() {
+        printHeader();
+        printBody();
+        printFooter();
+    }
+    
+    private void printHeader() {
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
         System.out.println("| Dumping bitset, length: " + numBits);
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
+	}
 
-        int count = 0;
+    private void printBody() {
+	    int count = 0;
 
         for (int i = 0; i < numBits; i++) {
             System.out.print(data.getBit(i) ? "1" : "0");
@@ -583,8 +590,13 @@ public class BitPacker {
             }
 
         }
-        System.out.println();
+	}
+
+    private static void printFooter() {
+	    System.out.println();
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-    }
+	}
+
+	
 
 }
