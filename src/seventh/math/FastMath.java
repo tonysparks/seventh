@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * Riven on JavaGaming.org for sin/cos/atan2 tables.<br>
  * Roquen on JavaGaming.org for random numbers.<br>
  * pjt33 on JavaGaming.org for fixed point.<br>
- * Jim Shima for atan2_fast.<br>
+ * Jim Shima for atan2_fast.<br> 
  * 
  * <p>
  * Taken from JavaGaming.org from <b>Nate</b>

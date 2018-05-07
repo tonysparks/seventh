@@ -19,7 +19,7 @@ import seventh.game.events.RoundStartedListener;
 import seventh.shared.EventDispatcher;
 import seventh.shared.SeventhConstants;
 
-/**
+/** 
  * Keeps track of player stats for kill streaks and bonuses
  * 
  * @author Tony

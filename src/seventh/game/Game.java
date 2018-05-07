@@ -821,7 +821,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.gameType.update(this, timeStep);
         this.time = this.gameType.getRemainingTime();
     }
-
+ 
 
 	private void updateEntity(TimeStep timeStep) {
 		for(int i = 0; i < entities.length; i++) {

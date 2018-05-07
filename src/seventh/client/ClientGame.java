@@ -116,7 +116,7 @@ import seventh.shared.Timer;
  * @author Tony
  *
  */
-public class ClientGame {    
+public class ClientGame {     
     
     private final SeventhGame app;    
     private final Map map;
