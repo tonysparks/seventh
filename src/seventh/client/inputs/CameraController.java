@@ -301,24 +301,18 @@ public class CameraController implements Updatable {
             
             double dt = timeStep.asFraction();
             int newX = (int)Math.round(pos.x + playerVelocity.x * movementSpeed * dt);
-            int newY = (int)Math.round(pos.y + playerVelocity.y * movementSpeed * dt);                    
-            
+            int newY = (int)Math.round(pos.y + playerVelocity.y * movementSpeed * dt);
             
             bounds.x = newX;
-            if( map.checkBounds(bounds.x, bounds.y) || 
-                ((bounds.x < bounds.width/2) || (bounds.y < bounds.height/2)) ||
-                map.checkBounds(bounds.x + bounds.width/2, bounds.y + bounds.height/2) ) {
+            if( cameraForRoamingMovementsIsOutOfMap() ) {
                 bounds.x = (int)pos.x;
-            }
-                    
+            }    
             
             bounds.y = newY;
-            if( map.checkBounds(bounds.x, bounds.y) ||
-                ((bounds.x < bounds.width/2) || (bounds.y < bounds.height/2)) ||
-                map.checkBounds(bounds.x + bounds.width/2, bounds.y + bounds.height/2) ) {
+            if( cameraForRoamingMovementsIsOutOfMap() ) {
                 bounds.y = (int)pos.y;
             }
-                        
+            
             pos.x = bounds.x;
             pos.y = bounds.y;
         
@@ -328,6 +322,21 @@ public class CameraController implements Updatable {
             camera.centerAround(cameraCenterAround);
             Sounds.setPosition(cameraCenterAround);
         }
+    }
+
+    /**
+     * To remove duplicated code and for readability in updateCameraForRoamingMovements(TimeStep timeStep) function
+     * 
+     */
+    private boolean cameraForRoamingMovementsIsOutOfMap() {
+        final boolean boundsXYIsOutOfMap = map.checkBounds(bounds.x, bounds.y);
+        final boolean boundsXIsLowerThanViewPortCenterX = bounds.x < bounds.width / 2;
+        final boolean boundsYIsLowerThanViewPortCenterY = bounds.y < bounds.height / 2;
+        final boolean boundsCenterIsOutOfMap = map.checkBounds(bounds.x + bounds.width/2, bounds.y + bounds.height/2);
+        
+        return boundsXYIsOutOfMap || 
+            (boundsXIsLowerThanViewPortCenterX || boundsYIsLowerThanViewPortCenterY) ||
+            boundsCenterIsOutOfMap;
     }
     
     

@@ -30,6 +30,8 @@ public class WeaponClassDialog extends Widget {
     private Label title;
     private Theme theme;
     
+    private static final int NUMBER_OF_WEAPON_CLASSES = 7;
+    
     private Button[] weaponClasses;
     private Label[] weaponClassDescriptions;
     private Button cancel;
@@ -47,8 +49,8 @@ public class WeaponClassDialog extends Widget {
         this.team = ClientTeam.ALLIES;
         this.theme = theme;
 
-        this.weaponClasses = new Button[7];
-        this.weaponClassDescriptions = new Label[7];
+        this.weaponClasses = new Button[NUMBER_OF_WEAPON_CLASSES];
+        this.weaponClassDescriptions = new Label[NUMBER_OF_WEAPON_CLASSES];
         
         createUI();
     }
@@ -89,6 +91,20 @@ public class WeaponClassDialog extends Widget {
         
         Rectangle bounds = getBounds();
         
+        setupTitleLabel(bounds);
+                    
+        refreshButtons();
+
+        setupCancelButton(bounds);
+                
+        addWidget(cancel);
+        addWidget(title);
+    }
+
+    /**
+     * @param bounds
+     */
+    private void setupTitleLabel(final Rectangle bounds) {
         this.title = new Label("Select a Weapon");
         this.title.setTheme(theme);
         //this.title.setForegroundColor(0xffffffff);
@@ -98,9 +114,12 @@ public class WeaponClassDialog extends Widget {
         this.title.setFont(theme.getSecondaryFontName());
         this.title.setHorizontalTextAlignment(TextAlignment.CENTER);
         this.title.setTextSize(22);
-                    
-        refreshButtons();
-
+    }
+    
+    /**
+     * @param bounds
+     */
+    private void setupCancelButton(final Rectangle bounds) {
         this.cancel = new Button();        
         this.cancel.setText("Cancel");
         this.cancel.setBounds(new Rectangle(0,0,100,40));
@@ -118,21 +137,16 @@ public class WeaponClassDialog extends Widget {
                 owner.close();
             }
         });
-                
-        addWidget(cancel);
-        addWidget(title);
     }
         
     private Vector2f refreshButtons() {
-        Rectangle bounds = getBounds();
         
-        Vector2f pos = new Vector2f();
-        pos.x = bounds.x + 120;
-        pos.y = bounds.y + 50;
+        initWeaponClasses();
         
-        int yInc = 50;
-        
-        
+        return setupWeaponClasses();
+    }
+
+    private void initWeaponClasses() {
         for(int i = 0; i < weaponClasses.length; i++) {
             if( this.weaponClasses[i] != null ) {
                 removeWidget(weaponClasses[i]);
@@ -144,97 +158,108 @@ public class WeaponClassDialog extends Widget {
                 this.weaponClassDescriptions[i] = null;
             }
         }
+    }
+
+    private Vector2f setupWeaponClasses() {
+        Rectangle bounds = getBounds();
         
+        Vector2f pos = new Vector2f();
+        pos.x = bounds.x + 120;
+        pos.y = bounds.y + 50;
+        
+        int yInc = 50;
         
         switch(team) {            
             case AXIS:
-                this.weaponClasses[0] =setupButton(pos, Type.MP40); 
-                this.weaponClassDescriptions[0] = setupLabel(pos, Type.MP40); pos.y += yInc;
-                
-                this.weaponClasses[1] =setupButton(pos, Type.MP44);                
-                this.weaponClassDescriptions[1] = setupLabel(pos, Type.MP44); pos.y += yInc;
-                
-                this.weaponClasses[2] =setupButton(pos, Type.KAR98); 
-                this.weaponClassDescriptions[2] = setupLabel(pos, Type.KAR98); pos.y += yInc;
+                for (int weaponClassIndex = 0; weaponClassIndex < NUMBER_OF_WEAPON_CLASSES; weaponClassIndex++) {
+                    setupAXISWeaponClass(weaponClassIndex, pos);
+                    if (weaponClassIndex < NUMBER_OF_WEAPON_CLASSES - 1) {
+                        pos.y += yInc;
+                    }
+                }
                 break;        
             case ALLIES:
             default:
-                this.weaponClasses[0] =setupButton(pos, Type.THOMPSON); 
-                this.weaponClassDescriptions[0] = setupLabel(pos, Type.THOMPSON); pos.y += yInc;
-                
-                this.weaponClasses[1] =setupButton(pos, Type.M1_GARAND); 
-                this.weaponClassDescriptions[1] = setupLabel(pos, Type.M1_GARAND); pos.y += yInc;
-                
-                this.weaponClasses[2] =setupButton(pos, Type.SPRINGFIELD); 
-                this.weaponClassDescriptions[2] = setupLabel(pos, Type.SPRINGFIELD); pos.y += yInc;
-                break;
-            
-        }        
-        this.weaponClasses[3] =setupButton(pos, Type.RISKER); 
-        this.weaponClassDescriptions[3] = setupLabel(pos, Type.RISKER); pos.y += yInc;
-        
-        this.weaponClasses[4] =setupButton(pos, Type.SHOTGUN); 
-        this.weaponClassDescriptions[4] = setupLabel(pos, Type.SHOTGUN); pos.y += yInc;
-        
-        this.weaponClasses[5] =setupButton(pos, Type.ROCKET_LAUNCHER); 
-        this.weaponClassDescriptions[5] = setupLabel(pos, Type.ROCKET_LAUNCHER); pos.y += yInc;
-        
-        this.weaponClasses[6] =setupButton(pos, Type.FLAME_THROWER);
-        this.weaponClassDescriptions[6] = setupLabel(pos, Type.FLAME_THROWER); 
+                for (int weaponClassIndex = 0; weaponClassIndex < NUMBER_OF_WEAPON_CLASSES; weaponClassIndex++) {
+                    setupALLIESWeaponClass(weaponClassIndex, pos);
+                    if (weaponClassIndex < NUMBER_OF_WEAPON_CLASSES - 1) {
+                        pos.y += yInc;
+                    }
+                }
+                break;   
+        }
                 
         return pos;
+    }
+    
+    private static final Type[] AXIS_WEAPON_TYPES = {
+            // AXIS only
+            Type.MP40,
+            Type.MP44,
+            Type.KAR98,
+            
+            // AXIS, ALLIES share
+            Type.RISKER,
+            Type.SHOTGUN,
+            Type.ROCKET_LAUNCHER,
+            Type.FLAME_THROWER
+    };
+    
+    private static final Type[] ALLIES_WEAPON_TYPES = {
+            // ALLIES only
+            Type.THOMPSON,
+            Type.M1_GARAND,
+            Type.SPRINGFIELD,
+            
+            // AXIS, ALLIES share
+            Type.RISKER,
+            Type.SHOTGUN,
+            Type.ROCKET_LAUNCHER,
+            Type.FLAME_THROWER
+    };
+    
+    private void setupAXISWeaponClass(int weaponClassIndex, Vector2f pos) {
+        this.weaponClasses[weaponClassIndex] = setupButton(pos, AXIS_WEAPON_TYPES[weaponClassIndex]);
+        this.weaponClassDescriptions[weaponClassIndex] = setupLabel(pos, AXIS_WEAPON_TYPES[weaponClassIndex]);
+    }
+    
+    private void setupALLIESWeaponClass(int weaponClassIndex, Vector2f pos) {
+        this.weaponClasses[weaponClassIndex] = setupButton(pos, ALLIES_WEAPON_TYPES[weaponClassIndex]);
+        this.weaponClassDescriptions[weaponClassIndex] = setupLabel(pos, ALLIES_WEAPON_TYPES[weaponClassIndex]);
     }
     
     private String getClassDescription(Type type) {
         String message = "";
         switch(type) {
             case THOMPSON:
-                message = "Thompson | 30/180 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Frag Grenades";
+                message = new ThompsonDescription().getDescription();
                 break;
             case M1_GARAND:                
-                message = "M1 Garand | 8/40 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Smoke Grenades";
+                message = new M1GarandDescription().getDescription();
                 break;
             case SPRINGFIELD:                
-                message = "Springfield | 5/35 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "1 Frag Grenades";
+                message = new SpringfieldDescription().getDescription();
                 break;
             case MP40:
-                message = "MP40 | 32/160 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Frag Grenades";
+                message = new Mp40Description().getDescription();
                 break;
             case MP44:                
-                message = "MP44 | 30/120 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "2 Smoke Grenades";
+                message = new Mp44Description().getDescription();
                 break;
             case KAR98:                
-                message = "KAR-98 | 5/25 rnds\n" +
-                          "Pistol | 9/27 rnds \n" +
-                          "1 Frag Grenade";
+                message = new Kar98Description().getDescription();
                 break;
             case RISKER:                
-                message = "MG-z | 21/42 rnds\n" +
-                          "Pistol | 9/27 rnds";
+                message = new RiskerDescription().getDescription();
                 break;
             case SHOTGUN:                
-                message = "Shotgun | 5/35 rnds\n" +
-                          "Pistol | 9/27 rnds";
+                message = new ShotgunDescription().getDescription();
                 break;
             case ROCKET_LAUNCHER:                
-                message = "M1 | 5 rnds\n" +
-                          "Pistol | 9/27 rnds\n" +
-                          "5 Frag Grenades";
+                message = new RocketLauncherDescription().getDescription();
                 break;
             case FLAME_THROWER:                
-                message = "Flame Thrower\n" +
-                          "Pistol | 9/27 rnds\n" +
-                          "2 Frag Grenades";
+                message = new FlameThrowerDescription().getDescription();
                 break;                
             default:;
         }
