@@ -115,7 +115,7 @@ import seventh.shared.Timer;
  * 
  * @author Tony
  *
- */
+ */ 
 public class ClientGame {      
     
     private final SeventhGame app;    

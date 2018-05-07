@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * Utility and fast math functions.
  * 
- * Thanks to:<br>
+ * Thanks to:<br> 
  * Riven on JavaGaming.org for sin/cos/atan2 tables.<br>
  * Roquen on JavaGaming.org for random numbers.<br>
  * pjt33 on JavaGaming.org for fixed point.<br>

@@ -112,7 +112,7 @@ import seventh.shared.Updatable;
  *
  */
 public class Game implements GameInfo, Debugable, Updatable {
-    
+     
     
     /**
      * Null Node Data.
