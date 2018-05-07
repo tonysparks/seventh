@@ -814,7 +814,7 @@ public class Game implements GameInfo, Debugable, Updatable {
      */
     @Override
     public void update(TimeStep timeStep) {        
-        updateEntity(timeStep);            
+        updateEntity(timeStep);             
         this.aiSystem.update(timeStep);
         this.gameTimers.update(timeStep);
         this.gameTriggers.update(timeStep);

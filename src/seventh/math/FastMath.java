@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * pjt33 on JavaGaming.org for fixed point.<br>
  * Jim Shima for atan2_fast.<br> 
  * 
- * <p>
+ * <p> 
  * Taken from JavaGaming.org from <b>Nate</b>
  * 
  * @author Nate
