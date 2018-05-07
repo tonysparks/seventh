@@ -9,13 +9,13 @@ import java.lang.reflect.Method;
 /**
  * Utility and fast math functions.
  * 
- * Thanks to:<br>
+ * Thanks to:<br> 
  * Riven on JavaGaming.org for sin/cos/atan2 tables.<br>
  * Roquen on JavaGaming.org for random numbers.<br>
  * pjt33 on JavaGaming.org for fixed point.<br>
- * Jim Shima for atan2_fast.<br>
+ * Jim Shima for atan2_fast.<br> 
  * 
- * <p>
+ * <p> 
  * Taken from JavaGaming.org from <b>Nate</b>
  * 
  * @author Nate
@@ -152,7 +152,7 @@ public class FastMath {
      * @return
      */
     public static float a_isqrt(float x) {
-        float hx = x * 0.5f;
+    	
         int ix;
         float r;
 
@@ -164,7 +164,7 @@ public class FastMath {
         // do some number of newton-ralphson steps,
         // each doubles the number of accurate
         // binary digits.
-        r = r * (1.5f - hx * r * r);
+        r = r * (1.5f - hx(x) * r * r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
@@ -180,7 +180,6 @@ public class FastMath {
      * @return
      */
     public static float a_sqrt(float x) {
-        float hx = x * 0.5f;
         int ix;
         float r;
 
@@ -192,13 +191,18 @@ public class FastMath {
         // do some number of newton-ralphson steps,
         // each doubles the number of accurate
         // binary digits.
-        r = r * (1.5f - hx * r * r);
+        r = r * (1.5f - hx(x) * r * r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
         
         return r*x; // sqrt(x)
     }
+
+	private static float hx(float x) {
+		float hx = x * 0.5f;
+		return hx;
+	}
 
     /**
      * Fixed point multiply.
@@ -223,28 +227,25 @@ public class FastMath {
      * @param range
      *            Must be >= 0.
      */
+	private static int seed() {
+		int seed = randomSeed * 1103515245 + 12345;
+        randomSeed = seed;
+		return seed;
+	}
     static public final int random(int range) {
-        int seed = randomSeed * 1103515245 + 12345;
-        randomSeed = seed;
-        return ((seed >>> 15) * (range + 1)) >>> 17;
+        return ((seed() >>> 15) * (range + 1)) >>> 17;
     }
-
+    
     static public final int random(int start, int end) {
-        int seed = randomSeed * 1103515245 + 12345;
-        randomSeed = seed;
-        return (((seed >>> 15) * ((end - start) + 1)) >>> 17) + start;
+        return (((seed() >>> 15) * ((end - start) + 1)) >>> 17) + start;
     }
 
     static public final boolean randomBoolean() {
-        int seed = randomSeed * 1103515245 + 12345;
-        randomSeed = seed;
-        return seed > 0;
+        return seed() > 0;
     }
 
     static public final float random() {
-        int seed = randomSeed * 1103515245 + 12345;
-        randomSeed = seed;
-        return (seed >>> 8) * (1f / (1 << 24));
+        return (seed() >>> 8) * (1f / (1 << 24));
     }
 
     static public int nextPowerOfTwo(int value) {

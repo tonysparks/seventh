@@ -1292,43 +1292,31 @@ public class ClientGame {
 
         gameClock = netUpdate.time;
         
-        if(netUpdate.entities != null) {
-            int size = netUpdate.entities.length;
-            for(int i = 0; i < size; i++) {
-                NetEntity netEnt = netUpdate.entities[i];
-                if(netEnt != null) {
-                    if(entities.containsEntity(netEnt.id)) {
-                        ClientEntity ent = entities.getEntity(netEnt.id);
-                        if(netEnt.type == ent.getType()) {                        
-                            ent.updateState(netEnt, gameClock);
-                        }
-                        else {
-                            removeEntity(i);
-                            createEntity(netEnt);
-                        }
-                    }
-                    else {
-                        createEntity(netEnt);
-                    }
-                }
-                else {
-                    
-                    if( i < SeventhConstants.MAX_PERSISTANT_ENTITIES) {
-                        /* if a persistant entity has been removed, lets
-                         * remove it on the client side
-                         */
-                        if(netUpdate.deadPersistantEntities.getBit(i)) {                    
-                            removeEntity(i);
-                        }
-                    }
-                    else {
-                        removeEntity(i);
-                    }
+        updateEntity(netUpdate);
+        
+        updateSound(netUpdate);
+        
+        updateSpectator(netUpdate);
+    }
+
+	private void updateSpectator(NetGameUpdate netUpdate) {
+		if(netUpdate.spectatingPlayerId > -1 && !cameraController.isCameraRoaming()) {
+            int previousSpec = localPlayer.getSpectatingPlayerId();
+            localPlayer.setSpectatingPlayerId(netUpdate.spectatingPlayerId);
+            if(previousSpec != netUpdate.spectatingPlayerId) {
+                ClientEntity ent = this.entities.getEntity(netUpdate.spectatingPlayerId);
+                if(ent!=null) {
+                    camera.centerAroundNow(ent.getCenterPos());
                 }
             }
         }
-        
-        if(netUpdate.sounds != null) {
+        else {
+            localPlayer.setSpectatingPlayerId(Entity.INVALID_ENTITY_ID);
+        }
+	}
+
+	private void updateSound(NetGameUpdate netUpdate) {
+		if(netUpdate.sounds != null) {
             int size = netUpdate.numberOfSounds;
             for(int i = 0; i < size; i++) {
                 NetSound snd = netUpdate.sounds[i];
@@ -1383,21 +1371,45 @@ public class ClientGame {
                 }
             }
         }
-        
-        if(netUpdate.spectatingPlayerId > -1 && !cameraController.isCameraRoaming()) {
-            int previousSpec = localPlayer.getSpectatingPlayerId();
-            localPlayer.setSpectatingPlayerId(netUpdate.spectatingPlayerId);
-            if(previousSpec != netUpdate.spectatingPlayerId) {
-                ClientEntity ent = this.entities.getEntity(netUpdate.spectatingPlayerId);
-                if(ent!=null) {
-                    camera.centerAroundNow(ent.getCenterPos());
+	}
+
+	private void updateEntity(NetGameUpdate netUpdate) {
+		if(netUpdate.entities != null) {
+            int size = netUpdate.entities.length;
+            for(int i = 0; i < size; i++) {
+                NetEntity netEnt = netUpdate.entities[i];
+                if(netEnt != null) {
+                    if(entities.containsEntity(netEnt.id)) {
+                        ClientEntity ent = entities.getEntity(netEnt.id);
+                        if(netEnt.type == ent.getType()) {                        
+                            ent.updateState(netEnt, gameClock);
+                        }
+                        else {
+                            removeEntity(i);
+                            createEntity(netEnt);
+                        }
+                    }
+                    else {
+                        createEntity(netEnt);
+                    }
+                }
+                else {
+                    
+                    if( i < SeventhConstants.MAX_PERSISTANT_ENTITIES) {
+                        /* if a persistant entity has been removed, lets
+                         * remove it on the client side
+                         */
+                        if(netUpdate.deadPersistantEntities.getBit(i)) {                    
+                            removeEntity(i);
+                        }
+                    }
+                    else {
+                        removeEntity(i);
+                    }
                 }
             }
         }
-        else {
-            localPlayer.setSpectatingPlayerId(Entity.INVALID_ENTITY_ID);
-        }
-    }
+
 
 	private void setSoundType(NetSound snd, Vector2f pos) {
 		switch(snd.getSoundType()) {
