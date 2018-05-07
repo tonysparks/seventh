@@ -533,10 +533,19 @@ public class BitPacker {
     
     
     public static void dumpBytes(byte[] value) {
+    	int length = value.length;
+        printByteHeader(length);
+        printByteBody(length);
+        printFooter();
+    }
+    
+    private void printByteHeader(int length) {
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-        System.out.println("| Dumping bytes, length: " + (value.length * 8) + " (" + value.length + " byte(s))");
+        System.out.println("| Dumping bytes, length: " + (length * 8) + " (" + length + " byte(s))");
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-
+	}
+    
+    private void printByteBody(int length) {
         int count = 0;
         for (int j = 0; j < value.length; j++) {
 
@@ -559,7 +568,6 @@ public class BitPacker {
             }
 
         }
-        printFooter();
     }
 
     public void dump() {
