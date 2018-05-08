@@ -1,3 +1,4 @@
+
 /*
  * see license.txt 
  */
@@ -279,18 +280,25 @@ public class Host {
                 peers[id].send(new DisconnectMessage());
                                 
                 /* remove the peer if they are disconnected */
-                if(peers[id].isDisconnected()) {
-                    synchronized (this) {                                            
-                        peers[id] = null;
-                        this.numberOfConnections--;
-                        if(this.numberOfConnections < 0) {
-                            this.numberOfConnections = 0;
-                        }
-                    }
-                }
+                removeDisconnetedPeer(id);
             }
         }
     }
+
+	/**
+	 * @param id
+	 */
+    private void removeDisconnetedPeer(byte id) {
+        if(peers[id].isDisconnected()) {
+		    synchronized (this) {                                            
+		        peers[id] = null;
+		        this.numberOfConnections--;
+		        if(this.numberOfConnections < 0) {
+		            this.numberOfConnections = 0;
+		        }
+		    }
+		}
+	}
 
     /**
      * Sends a {@link Message} to the peer

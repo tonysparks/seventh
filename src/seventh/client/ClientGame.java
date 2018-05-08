@@ -1292,7 +1292,89 @@ public class ClientGame {
 
         gameClock = netUpdate.time;
         
-        if(netUpdate.entities != null) {
+        updateEntity(netUpdate);
+        
+        updateSound(netUpdate);
+        
+        updateSpectator(netUpdate);
+    }
+
+	private void updateSpectator(NetGameUpdate netUpdate) {
+		if(netUpdate.spectatingPlayerId > -1 && !cameraController.isCameraRoaming()) {
+            int previousSpec = localPlayer.getSpectatingPlayerId();
+            localPlayer.setSpectatingPlayerId(netUpdate.spectatingPlayerId);
+            if(previousSpec != netUpdate.spectatingPlayerId) {
+                ClientEntity ent = this.entities.getEntity(netUpdate.spectatingPlayerId);
+                if(ent!=null) {
+                    camera.centerAroundNow(ent.getCenterPos());
+                }
+            }
+        }
+        else {
+            localPlayer.setSpectatingPlayerId(Entity.INVALID_ENTITY_ID);
+        }
+	}
+
+	private void updateSound(NetGameUpdate netUpdate) {
+		if(netUpdate.sounds != null) {
+            int size = netUpdate.numberOfSounds;
+            for(int i = 0; i < size; i++) {
+                NetSound snd = netUpdate.sounds[i];
+                if(snd!=null) {
+                    
+                    switch(snd.getSoundType().getSourceType()) {
+                        case POSITIONAL: {
+                            Sounds.playSound(snd, snd.posX, snd.posY);
+                            break;
+                        }
+                        case REFERENCED: {
+                            NetSoundByEntity soundByEntity = (NetSoundByEntity) snd;
+                            if(soundByEntity.hasPositionalInformation()) {
+                                Sounds.playSound(snd, snd.posX, snd.posY);    
+                            }
+                            else {
+                                ClientEntity entity = this.entities.getEntity(soundByEntity.entityId);
+                                if(entity != null) {
+                                    Vector2f pos = entity.getCenterPos();
+                                    if(entity.getId()==this.localPlayer.getViewingEntityId()) {
+                                        /* dampen the sound of the local players footsteps,
+                                         * otherwise it's too loud
+                                         */
+                                        setSoundType(snd, pos);                                        
+                                    }
+                                    else {                                    
+                                        Sounds.playSound(snd, pos.x, pos.y);
+                                    }
+                                }
+                            }
+                            
+                            break;
+                        }
+                        case REFERENCED_ATTACHED: {
+                            NetSoundByEntity soundByEntity = (NetSoundByEntity) snd;
+                            if(soundByEntity.hasPositionalInformation()) {
+                                Sounds.playSound(snd, snd.posX, snd.posY);    
+                            }
+                            else {
+                                ClientEntity entity = this.entities.getEntity(soundByEntity.entityId);
+                                if(entity != null) {
+                                    Vector2f pos = entity.getCenterPos();
+                                    entity.attachSound(Sounds.playSound(snd, pos.x, pos.y));
+                                }
+                            }
+                            break;
+                        }
+                        case GLOBAL:
+                            Sounds.playGlobalSound(snd);
+                            break;
+                    }                    
+                }
+            }
+        }
+	}
+
+	private void updateEntity(NetGameUpdate netUpdate) {
+		if(netUpdate.entities != null) {
             int size = netUpdate.entities.length;
             for(int i = 0; i < size; i++) {
                 NetEntity netEnt = netUpdate.entities[i];
@@ -1327,88 +1409,22 @@ public class ClientGame {
                 }
             }
         }
-        
-        if(netUpdate.sounds != null) {
-            int size = netUpdate.numberOfSounds;
-            for(int i = 0; i < size; i++) {
-                NetSound snd = netUpdate.sounds[i];
-                if(snd!=null) {
-                    
-                    switch(snd.getSoundType().getSourceType()) {
-                        case POSITIONAL: {
-                            Sounds.playSound(snd, snd.posX, snd.posY);
-                            break;
-                        }
-                        case REFERENCED: {
-                            NetSoundByEntity soundByEntity = (NetSoundByEntity) snd;
-                            if(soundByEntity.hasPositionalInformation()) {
-                                Sounds.playSound(snd, snd.posX, snd.posY);    
-                            }
-                            else {
-                                ClientEntity entity = this.entities.getEntity(soundByEntity.entityId);
-                                if(entity != null) {
-                                    Vector2f pos = entity.getCenterPos();
-                                    if(entity.getId()==this.localPlayer.getViewingEntityId()) {
-                                        /* dampen the sound of the local players footsteps,
-                                         * otherwise it's too loud
-                                         */
-                                        switch(snd.getSoundType()) {
-                                            case SURFACE_DIRT:
-                                            case SURFACE_GRASS:
-                                            case SURFACE_METAL:
-                                            case SURFACE_NORMAL:
-                                            case SURFACE_SAND:
-                                            case SURFACE_WATER:
-                                            case SURFACE_WOOD:
-                                                Sounds.playSound(snd, pos.x, pos.y, 0.35f );
-                                                break;
-                                            default: Sounds.playSound(snd, pos.x, pos.y );
-                                        }                                        
-                                    }
-                                    else {                                    
-                                        Sounds.playSound(snd, pos.x, pos.y);
-                                    }
-                                }
-                            }
-                            
-                            break;
-                        }
-                        case REFERENCED_ATTACHED: {
-                            NetSoundByEntity soundByEntity = (NetSoundByEntity) snd;
-                            if(soundByEntity.hasPositionalInformation()) {
-                                Sounds.playSound(snd, snd.posX, snd.posY);    
-                            }
-                            else {
-                                ClientEntity entity = this.entities.getEntity(soundByEntity.entityId);
-                                if(entity != null) {
-                                    Vector2f pos = entity.getCenterPos();
-                                    entity.attachSound(Sounds.playSound(snd, pos.x, pos.y));
-                                }
-                            }
-                            break;
-                        }
-                        case GLOBAL:
-                            Sounds.playGlobalSound(snd);
-                            break;
-                    }                    
-                }
-            }
-        }
-        
-        if(netUpdate.spectatingPlayerId > -1 && !cameraController.isCameraRoaming()) {
-            int previousSpec = localPlayer.getSpectatingPlayerId();
-            localPlayer.setSpectatingPlayerId(netUpdate.spectatingPlayerId);
-            if(previousSpec != netUpdate.spectatingPlayerId) {
-                ClientEntity ent = this.entities.getEntity(netUpdate.spectatingPlayerId);
-                if(ent!=null) {
-                    camera.centerAroundNow(ent.getCenterPos());
-                }
-            }
-        }
-        else {
-            localPlayer.setSpectatingPlayerId(Entity.INVALID_ENTITY_ID);
-        }
-    }
+
+
+	private void setSoundType(NetSound snd, Vector2f pos) {
+		switch(snd.getSoundType()) {
+		    case SURFACE_DIRT:
+		    case SURFACE_GRASS:
+		    case SURFACE_METAL:
+		    case SURFACE_NORMAL:
+		    case SURFACE_SAND:
+		    case SURFACE_WATER:
+		    case SURFACE_WOOD:
+		        Sounds.playSound(snd, pos.x, pos.y, 0.35f );
+		        break;
+		    default: Sounds.playSound(snd, pos.x, pos.y );
+		}
+	}
     
     public void applyGameStats(NetGameStats stats) {
         if(stats.playerStats != null) {

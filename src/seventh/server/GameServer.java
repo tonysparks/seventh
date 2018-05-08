@@ -202,21 +202,7 @@ public class GameServer {
         /* if this is a dedicated server, we'll contact the 
          * master server so that users know about this server
          */
-        this.console.print("Initializing MasterServerRegistration...");
-        this.registration = new MasterServerRegistration(this.serverContext);
-        if(settings.isDedicatedServer) {
-            this.registration.start();
-            this.console.println("done!");
-        }
-        else this.console.println("");
-        
-        this.console.print("Initializing LANServerRegistration...");
-        this.lanRegistration = new LANServerRegistration(this.serverContext);
-        if(settings.isLAN) {
-            this.lanRegistration.start();
-            this.console.println("done!");
-        }
-        else this.console.println("");
+        contactDedicatedServer(settings.isDedicatedServer,settings.isLAN);
         
         /* attempt to attach a debugger */
         if(config.isDebuggerEnabled()) {
@@ -294,6 +280,28 @@ public class GameServer {
         
         console.println("Done initialzing the game server, ready to launch network...");
     }
+
+
+	/**
+	 * @param settings
+	 */
+    private void contactDedicatedServer(boolean isDedicatedServer,boolean isLAN) {
+	    this.console.print("Initializing MasterServerRegistration...");
+        this.registration = new MasterServerRegistration(this.serverContext);
+        if(isDedicatedServer) {
+            this.registration.start();
+            this.console.println("done!");
+        }
+        else this.console.println("");
+        
+        this.console.print("Initializing LANServerRegistration...");
+        this.lanRegistration = new LANServerRegistration(this.serverContext);
+        if(isLAN) {
+            this.lanRegistration.start();
+            this.console.println("done!");
+        }
+        else this.console.println("");
+	}
     
     
     /**
@@ -302,7 +310,7 @@ public class GameServer {
      * @param config
      * @return the {@link DebugableListener} if one is available, or null
      */
-    private DebugableListener createDebugListener(ServerSeventhConfig config) {
+     private DebugableListener createDebugListener(ServerSeventhConfig config) {
         try {
             String className = config.getDebuggerClassName();
             if(className != null && !"".equals(className)) {
