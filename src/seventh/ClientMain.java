@@ -195,7 +195,7 @@ public class ClientMain {
      * 
      * @param console
      */
-    private logSystemSpecsRuntime(Logger console) {
+    private static void logSystemSpecsRuntime(Logger console) {
         final long MB = 1024 * 1024;
         Runtime runtime = Runtime.getRuntime();        
         console.println("");
@@ -211,7 +211,7 @@ public class ClientMain {
      * 
      * @param console
      */
-    private logSystemSpecsFileSystem(Logger console) {
+    private static void logSystemSpecsFileSystem(Logger console) {
         final long MB = 1024 * 1024;
         /* Get a list of all filesystem roots on this system */
         File[] roots = File.listRoots();
@@ -230,8 +230,7 @@ public class ClientMain {
      * 
      * @param console
      */
-    private logSystemSpecsSystemProperty(Logger console) {
-        final long MB = 1024 * 1024;
+    private static void logSystemSpecsSystemProperty(Logger console) {
         console.println("Java Version: " + System.getProperty("java.version"));
         console.println("Java Vendor: " + System.getProperty("java.vendor"));
         console.println("Java VM Version: " + System.getProperty("java.vm.version"));

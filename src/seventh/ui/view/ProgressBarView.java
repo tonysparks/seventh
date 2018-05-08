@@ -57,7 +57,7 @@ public class ProgressBarView implements Renderable {
      * @param canvas
      * @param bounds
      */
-    private void addAShadowEffect(Canvas canvas, Rectangle bounds) {
+    private static void addAShadowEffect(Canvas canvas, Rectangle bounds) {
         int x = bounds.x;
         int y = bounds.y;
                     
