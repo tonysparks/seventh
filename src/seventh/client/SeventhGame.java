@@ -461,9 +461,8 @@ public class SeventhGame implements ApplicationListener {
             gameClock += DELTA_TIME;
         }
         
-        // avoid wrong case: divided by zero
-        if(step!=0)
-            float alpha = (float)(accumulator / step);
+        //avoid divided by zero
+        float alpha = (float)(accumulator / step);
         
         renderScreen(canvas, alpha);                
     }

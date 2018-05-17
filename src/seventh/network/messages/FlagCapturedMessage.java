@@ -5,9 +5,6 @@ package seventh.network.messages;
 
 import harenet.IOBuffer;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-
 /**
  * @author Tony
  *
@@ -31,13 +28,8 @@ public class FlagCapturedMessage extends AbstractNetMessage {
         super.read(buffer);
         this.flagId = buffer.getUnsignedByte();
         
-        //test if flagID is unsigned
-        assertTrue(this.flagId >= 0);
-        
         this.capturedBy = buffer.getUnsignedByte();
         
-        //test if capturedBy is unsigned
-        assertTrue(this.capturedBy >= 0);
     }
     
     /* (non-Javadoc)
