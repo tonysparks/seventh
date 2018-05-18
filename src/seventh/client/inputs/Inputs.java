@@ -44,7 +44,7 @@ public class Inputs implements InputProcessor {
      * Clears the state of all buttons
      */
     public  void clearButtons() {
-        for(int i = 0; i < mouseButtons.length;i++) {
+        for(int i = 0; i < mouseButtons.length; i++) {
             mouseButtons[i] = false;
         }
     }
@@ -123,7 +123,7 @@ public class Inputs implements InputProcessor {
      */
     @Override
     public boolean keyDown(int key) {        
-        if(key>=0 && key<this.keys.length) {
+        if(key >= 0 && key < this.keys.length) {
             this.keys[key] = true;
         }
         return false;
@@ -134,7 +134,7 @@ public class Inputs implements InputProcessor {
      */
     @Override
     public boolean keyUp(int key) {        
-        if(key>=0 && key<this.keys.length) {
+        if(key >= 0 && key < this.keys.length) {
             this.keys[key] = false;
         }
         return false;

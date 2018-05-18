@@ -940,7 +940,7 @@ public class KeyMap {
      * @param key
      */
     public void setKey(String keymap, int key) {
-        if(key>NumberOfKeyboardKeys) {
+        if(key > NumberOfKeyboardKeys) {
             joystick.setObject(keymap, Leola.toLeoObject(keyToString(key)));
         }
         else {

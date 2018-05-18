@@ -51,7 +51,7 @@ public class InputMap extends Inputs {
         if(notches < 0) {
             if(this.scroller[0] != null) {
                 Action action = this.actions.get(scroller[0]);
-                if(action!=null) {
+                if(action != null) {
                     action.action();                    
                 }
             }
@@ -59,7 +59,7 @@ public class InputMap extends Inputs {
         else {
             if(this.scroller[1] != null) {
                 Action action = this.actions.get(scroller[1]);
-                if(action!=null) {
+                if(action != null) {
                     action.action();                    
                 }
             }
@@ -120,7 +120,7 @@ public class InputMap extends Inputs {
             int key = keys.next();
             if(isKeyDown(keys.next())) {
                 Action action = this.actions.get(this.keymap.get(key));
-                if(action!=null) {
+                if(action != null) {
                     action.action();
                 }
             }
@@ -131,7 +131,7 @@ public class InputMap extends Inputs {
             int button = keys.next();
             if(isButtonDown(keys.next())) {
                 Action action = this.actions.get(this.buttonmap.get(button));
-                if(action!=null) {
+                if(action != null) {
                     action.action();
                 }
             }
@@ -143,7 +143,7 @@ public class InputMap extends Inputs {
                 int button = keys.next();
                 if(controllerInput.isButtonDown(keys.next())) {
                     Action action = this.actions.get(this.controllermap.get(button));
-                    if(action!=null) {
+                    if(action != null) {
                         action.action();
                     }
                 }
@@ -155,7 +155,7 @@ public class InputMap extends Inputs {
                     String name = povButtons[i];
                     if(name != null) {
                         Action action = this.actions.get(name);
-                        if(action!=null) {
+                        if(action != null) {
                             action.action();
                             break;
                         }

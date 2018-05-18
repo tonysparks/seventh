@@ -56,7 +56,7 @@ public class ClientBombTarget extends ClientEntity {
             
             @Override
             public void onRemove(ClientEntity me, ClientGame game) {
-                if(activeSound!=null) {
+                if(activeSound != null) {
                     activeSound.stop();
                 }
             }
