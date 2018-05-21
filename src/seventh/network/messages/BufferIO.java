@@ -246,7 +246,7 @@ public class BufferIO {
     }
         
     public static void writeAngle(IOBuffer buffer, int degrees) {
-        int bangle = ( degrees * 256) / 360;
+        int bangle = (degrees * 256) / 360;
         buffer.putUnsignedByte(bangle);
     }
         
@@ -309,7 +309,7 @@ public class BufferIO {
         
         byte[] chars = str.getBytes();
         int len = chars.length;
-        buffer.putShort( (short)len);
+        buffer.putShort((short)len);
         for(int i = 0; i < len; i++) {
             buffer.putByte(chars[i]);
         }        
