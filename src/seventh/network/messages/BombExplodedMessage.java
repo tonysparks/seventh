@@ -3,9 +3,6 @@
  */
 package seventh.network.messages;
 
-
-
-
 /**
  * @author Tony
  *

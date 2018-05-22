@@ -179,14 +179,14 @@ public abstract class ClientControllableEntity extends ClientEntity {
             int offset = 32;
             
             if(!map.checkTileBounds(xIndex, yIndex - 1) && !map.hasCollidableTile(xIndex, yIndex - 1)) {
-                if(currentY < (collisionTile.getY()-(bounds.height-offset))) {
+                if(currentY < (collisionTile.getY() - (bounds.height - offset))) {
                     //DebugDraw.drawRectRelative(map.getTile(0, xIndex, yIndex-1).getBounds(), 0xafff0000);
                     return currentY - 1;
                 }
             }
             
             if(!map.checkTileBounds(xIndex, yIndex + 1) && !map.hasCollidableTile(xIndex, yIndex + 1)) {
-                if(currentY > (collisionTile.getY()+(collisionTile.getHeight()-offset))) {
+                if(currentY > (collisionTile.getY() + (collisionTile.getHeight() - offset))) {
                     //DebugDraw.drawRectRelative(map.getTile(0, xIndex, yIndex+1).getBounds(), 0xaf0000ff);
                     return currentY + 1;
                 }
@@ -218,15 +218,15 @@ public abstract class ClientControllableEntity extends ClientEntity {
             
             int offset = 32;
             
-            if(!map.checkTileBounds(xIndex-1, yIndex) && !map.hasCollidableTile(xIndex-1, yIndex)) {
-                if(currentX+bounds.width < (collisionTile.getX()+offset)) {
+            if(!map.checkTileBounds(xIndex - 1, yIndex) && !map.hasCollidableTile(xIndex - 1, yIndex)) {
+                if(currentX+bounds.width < (collisionTile.getX() + offset)) {
                     //DebugDraw.drawRectRelative(map.getTile(0, xIndex-1, yIndex).getBounds(), 0xafff0000);
                     return currentX - 1;
                 }
             }
             
-            if(!map.checkTileBounds(xIndex+1, yIndex) && !map.hasCollidableTile(xIndex+1, yIndex)) {
-                if(currentX > (collisionTile.getX()+collisionTile.getWidth()-offset)) {
+            if(!map.checkTileBounds(xIndex + 1, yIndex) && !map.hasCollidableTile(xIndex + 1, yIndex)) {
+                if(currentX > (collisionTile.getX() + collisionTile.getWidth() - offset)) {
                     //DebugDraw.drawRectRelative(map.getTile(0, xIndex+1, yIndex).getBounds(), 0xaf0000ff);
                     return currentX + 1;
                 }
@@ -306,10 +306,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
                  * a corner, if so auto adjust them
                  */
                 else if (!isBlockedByEntity) {
-                    if(deltaX!=0 && deltaY==0) {                
+                    if(deltaX != 0 && deltaY == 0) {                
                         newY = adjustY(xCollisionTilePos, deltaX, (int)(predictedPos.x + deltaX), bounds.y);
                     }
-                    else if(deltaX==0 && deltaY!=0) {
+                    else if(deltaX == 0 && deltaY != 0) {
                         newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(predictedPos.y + deltaY));
                     }
                 }

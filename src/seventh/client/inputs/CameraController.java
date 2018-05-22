@@ -153,7 +153,7 @@ public class CameraController implements Updatable {
      * @return the isCameraRoaming
      */
     public boolean isCameraRoaming() {
-        return isCameraRoaming && (this.localPlayer.isPureSpectator()||this.localPlayer.isCommander());
+        return isCameraRoaming && (this.localPlayer.isPureSpectator() || this.localPlayer.isCommander());
     }
     
     /* (non-Javadoc)
@@ -176,14 +176,14 @@ public class CameraController implements Updatable {
             if(mx < threshold) {
                 this.playerVelocity.x = -1;
             }
-            else if(mx > this.viewportWidth-threshold) {
+            else if(mx > this.viewportWidth - threshold) {
                 this.playerVelocity.x = 1;
             }
             
             if(my < threshold) {
                 this.playerVelocity.y = -1;
             }
-            else if(my > this.viewportHeight-threshold) {
+            else if(my > this.viewportHeight - threshold) {
                 this.playerVelocity.y = 1;
             }
         }
@@ -339,10 +339,10 @@ public class CameraController implements Updatable {
      * @param timeStep
      */
     private void updateCameraForPlayerMovements(TimeStep timeStep) {
-        if(this.localPlayer.isAlive()||this.localPlayer.isSpectating()) {
+        if(this.localPlayer.isAlive() || this.localPlayer.isSpectating()) {
             ClientControllableEntity entity = game.getLocalPlayerFollowingEntity();
                                                                                                             
-            if(entity!=null) {
+            if(entity != null) {
                 if( entity.isOperatingVehicle() ) {
                     entity = entity.getVehicle();
                 }
