@@ -27,7 +27,9 @@ public class FlagCapturedMessage extends AbstractNetMessage {
     public void read(IOBuffer buffer) {    
         super.read(buffer);
         this.flagId = buffer.getUnsignedByte();
+        
         this.capturedBy = buffer.getUnsignedByte();
+        
     }
     
     /* (non-Javadoc)

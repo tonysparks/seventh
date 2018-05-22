@@ -1,0 +1,8 @@
+#Code conduct
+
+1. add tab to 4 spaces
+2. please avoid uncessary spaces
+* for example, empty spaces at the end of code
+3. when you add test case, set class name as '[Original Class name]Test'
+* at test case, you have to comment 'purpose','input', 'expected output' before the class
+* you can use testframe as JUnit or EasyMock
