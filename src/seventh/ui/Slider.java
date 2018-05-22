@@ -73,7 +73,7 @@ public class Slider extends Widget implements Hoverable {
                     sliderHitbox.height *= 4;
                     sliderHitbox.y -= (getScreenBounds().height * 2);
                     
-                    if(sliderHitbox.contains(x,y)) {
+                    if(sliderHitbox.contains(x, y)) {
                         moveHandleTo(x);
                         return true;
                     }
@@ -84,8 +84,8 @@ public class Slider extends Widget implements Hoverable {
             @Override
             public boolean mouseMoved(int x, int y) {                        
                 super.mouseMoved(x, y);
-                if ( ! isDisabled() ) {
-                    if ( getScreenBounds().contains(x,y)) {                                                                            
+                if ( !isDisabled() ) {
+                    if ( getScreenBounds().contains(x, y) ) {                                                                            
                         setHovering(true);    
                         return false;
                     }
@@ -189,7 +189,7 @@ public class Slider extends Widget implements Hoverable {
 //        int width = getBounds().width - handle.getBounds().width;
         float percentage = (float)index / (float)MAX_INDEX;
         float x = getBounds().width * percentage;        
-        moveHandleTo( getBounds().x + (int)x);
+        moveHandleTo( getBounds().x + (int)x );
     }
 
 }

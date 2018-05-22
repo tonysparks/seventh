@@ -39,39 +39,39 @@ public class FastMath {
     static {
         for (int i = 0; i < SIN_COUNT; i++) {
             float a = (i + 0.5f) / SIN_COUNT * radFull;
-            sin[i] = (float) Math.sin(a);
-            cos[i] = (float) Math.cos(a);
+            sin[i] = (float)Math.sin(a);
+            cos[i] = (float)Math.cos(a);
         }
     }
 
     static public final float sin(float rad) {
-        return sin[(int) (rad * radToIndex) & SIN_MASK];
+        return sin[(int)(rad * radToIndex) & SIN_MASK];
     }
 
     static public final float cos(float rad) {
-        return cos[(int) (rad * radToIndex) & SIN_MASK];
+        return cos[(int)(rad * radToIndex) & SIN_MASK];
     }
 
     static public final float sin(int deg) {
-        return sin[(int) (deg * degToIndex) & SIN_MASK];
+        return sin[(int)(deg * degToIndex) & SIN_MASK];
     }
 
     static public final float cos(int deg) {
-        return cos[(int) (deg * degToIndex) & SIN_MASK];
+        return cos[(int)(deg * degToIndex) & SIN_MASK];
     }
 
     private static final int ATAN2_BITS = 7; // Adjust for accuracy.
     private static final int ATAN2_BITS2 = ATAN2_BITS << 1;
     private static final int ATAN2_MASK = ~(-1 << ATAN2_BITS2);
     private static final int ATAN2_COUNT = ATAN2_MASK + 1;
-    private static final int ATAN2_DIM = (int) Math.sqrt(ATAN2_COUNT);
+    private static final int ATAN2_DIM = (int)Math.sqrt(ATAN2_COUNT);
     private static final float INV_ATAN2_DIM_MINUS_1 = 1.0f / (ATAN2_DIM - 1);
     private static final float [] atan2 = new float[ATAN2_COUNT];
     static {
         for (int i = 0; i < ATAN2_DIM; i++) {
             for (int j = 0; j < ATAN2_DIM; j++) {
-                float x0 = (float) i / ATAN2_DIM;
-                float y0 = (float) j / ATAN2_DIM;
+                float x0 = (float)i / ATAN2_DIM;
+                float y0 = (float)j / ATAN2_DIM;
                 atan2[j * ATAN2_DIM + i] = (float) Math.atan2(y0, x0);
             }
         }
@@ -197,24 +197,24 @@ public class FastMath {
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
         
-        return r*x; // sqrt(x)
+        return r * x; // sqrt(x)
     }
 
     /**
      * Fixed point multiply.
      */
     static public int multiply(int x, int y) {
-        return (int) ((long) x * (long) y >> 16);
+        return (int)((long) x * (long) y >> 16);
     }
 
     /**
      * Fixed point divide.
      */
     static public int divide(int x, int y) {
-        return (int) ((((long) x) << 16) / y);
+        return (int)((((long) x) << 16) / y);
     }
 
-    static private int randomSeed = (int) System.currentTimeMillis();
+    static private int randomSeed = (int)System.currentTimeMillis();
 
     /**
      * Returns a random number between 0 (inclusive) and the specified value

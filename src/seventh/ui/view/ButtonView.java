@@ -67,7 +67,7 @@ public class ButtonView implements Renderable {
         this.labelView = new LabelView(this.button.getTextLabel()) {            
             @Override
             protected void setColor(Canvas renderer, Label label) {
-                renderer.setColor(Color.argb8888(currentColor), (int) (currentColor.a * 255) );
+                renderer.setColor(Color.argb8888(currentColor), (int)(currentColor.a * 255) );
                 //super.setColor(renderer, label);
             }
         };
@@ -115,7 +115,7 @@ public class ButtonView implements Renderable {
         if(button.isHovering()) {
             Theme theme = button.getTheme();                
             Color.argb8888ToColor(this.srcColor, button.getForegroundColor());
-            Color.argb8888ToColor(this.dstColor, (theme!=null) ? theme.getHoverColor() : button.getForegroundColor());
+            Color.argb8888ToColor(this.dstColor, (theme != null) ? theme.getHoverColor() : button.getForegroundColor());
             
             time += timeStep.asFraction() * 0.79;                        
             float t = (float)Math.cos(time);

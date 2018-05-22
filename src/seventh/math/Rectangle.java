@@ -68,7 +68,7 @@ public class Rectangle {
      * @param height
      */
     public Rectangle(int width, int height) {
-        this(0,0,width, height);        
+        this(0, 0, width, height);        
     }
 
     /**
@@ -81,7 +81,7 @@ public class Rectangle {
     /**
      */
     public Rectangle() {
-        this(0,0,0,0);
+        this(0, 0, 0, 0);
     }
 
     /**
@@ -284,8 +284,8 @@ public class Rectangle {
      * @param pos
      */
     public void centerAround(Vector2f pos) {
-        this.x = (int)pos.x - (this.width/2);
-        this.y = (int)pos.y - (this.height/2);
+        this.x = (int)pos.x - (this.width / 2);
+        this.y = (int)pos.y - (this.height / 2);
     }
     
     /**
@@ -294,8 +294,8 @@ public class Rectangle {
      * @param y
      */
     public void centerAround(int x, int y) {
-        this.x = x - (this.width/2);
-        this.y = y - (this.height/2);
+        this.x = x - (this.width / 2);
+        this.y = y - (this.height / 2);
     }
     
     /**
@@ -499,7 +499,7 @@ public class Rectangle {
         if (ty2 < Integer.MIN_VALUE)
             ty2 = Integer.MIN_VALUE;
         
-        dest.set(tx1, ty1, (int) tx2, (int) ty2);        
+        dest.set(tx1, ty1, (int)tx2, (int)ty2);        
     }
     
     /**

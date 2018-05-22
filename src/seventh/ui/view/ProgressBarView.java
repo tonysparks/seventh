@@ -51,20 +51,20 @@ public class ProgressBarView implements Renderable {
             int y = bounds.y;
                         
             // add a shadow effect
-            canvas.drawLine( x, y+1, x+bounds.width, y+1, 0x8f000000 );
-            canvas.drawLine( x, y+2, x+bounds.width, y+2, 0x5f000000 );
-            canvas.drawLine( x, y+3, x+bounds.width, y+3, 0x2f000000 );
-            canvas.drawLine( x, y+4, x+bounds.width, y+4, 0x0f000000 );
-            canvas.drawLine( x, y+5, x+bounds.width, y+5, 0x0b000000 );
-            canvas.drawLine( x, y+6, x+bounds.width, y+6, 0x0a000000 );
+            canvas.drawLine( x, y + 1, x + bounds.width, y + 1, 0x8f000000 );
+            canvas.drawLine( x, y + 2, x + bounds.width, y + 2, 0x5f000000 );
+            canvas.drawLine( x, y + 3, x + bounds.width, y + 3, 0x2f000000 );
+            canvas.drawLine( x, y + 4, x + bounds.width, y + 4, 0x0f000000 );
+            canvas.drawLine( x, y + 5, x + bounds.width, y + 5, 0x0b000000 );
+            canvas.drawLine( x, y + 6, x + bounds.width, y + 6, 0x0a000000 );
             
-            y = y+15;
-            canvas.drawLine( x, y-6, x+bounds.width, y-6, 0x0a000000 );
-            canvas.drawLine( x, y-5, x+bounds.width, y-5, 0x0b000000 );
-            canvas.drawLine( x, y-4, x+bounds.width, y-4, 0x0f000000 );
-            canvas.drawLine( x, y-3, x+bounds.width, y-3, 0x2f000000 );
-            canvas.drawLine( x, y-2, x+bounds.width, y-2, 0x5f000000 );
-            canvas.drawLine( x, y-1, x+bounds.width, y-1, 0x8f000000 );    
+            y = y + 15;
+            canvas.drawLine( x, y - 6, x + bounds.width, y - 6, 0x0a000000 );
+            canvas.drawLine( x, y - 5, x + bounds.width, y - 5, 0x0b000000 );
+            canvas.drawLine( x, y - 4, x + bounds.width, y - 4, 0x0f000000 );
+            canvas.drawLine( x, y - 3, x + bounds.width, y - 3, 0x2f000000 );
+            canvas.drawLine( x, y - 2, x + bounds.width, y - 2, 0x5f000000 );
+            canvas.drawLine( x, y - 1, x + bounds.width, y - 1, 0x8f000000 );    
         }
     }
 

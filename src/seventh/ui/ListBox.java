@@ -152,7 +152,7 @@ public class ListBox extends Widget {
         
         addWidget(button);
         
-        if(this.headerListener!=null) {
+        if(this.headerListener != null) {
             this.headerListener.onHeaderAdded(button);
         }
         
@@ -176,7 +176,7 @@ public class ListBox extends Widget {
         this.items.add(button);
         addWidget(button);        
         
-        if(this.itemListener!=null) {
+        if(this.itemListener != null) {
             this.itemListener.onItemAdded(button);
         }
         return this;

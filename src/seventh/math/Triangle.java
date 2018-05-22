@@ -219,33 +219,33 @@ public class Triangle {
         
         
         int b0 = 0;
-        if ( x0 > l ) b0=1;
-        if ( y0 > t ) b0 |= (b0<<1);
-        if ( x0 > r ) b0 |= (b0<<2);
-        if ( y0 > b ) b0 |= (b0<<3);
+        if ( x0 > l ) b0 = 1;
+        if ( y0 > t ) b0 |= (b0 << 1);
+        if ( x0 > r ) b0 |= (b0 << 2);
+        if ( y0 > b ) b0 |= (b0 << 3);
          
         if ( b0 == 3 ) return true;
          
         int b1 = 0;
-        if ( x1 > l ) b1=1;
-        if ( y1 > t ) b1 |= (b1<<1);
-        if ( x1 > r ) b1 |= (b1<<2);
-        if ( y1 > b ) b1 |= (b1<<3);
+        if ( x1 > l ) b1 = 1;
+        if ( y1 > t ) b1 |= (b1 << 1);
+        if ( x1 > r ) b1 |= (b1 << 2);
+        if ( y1 > b ) b1 |= (b1 << 3);
          
         if ( b1 == 3 ) return true;
          
         int b2 = 0;
-        if ( x2 > l ) b2=1;
-        if ( y2 > t ) b2 |= (b2<<1);
-        if ( x2 > r ) b2 |= (b2<<2);
-        if ( y2 > b ) b2 |= (b2<<3);
+        if ( x2 > l ) b2 = 1;
+        if ( y2 > t ) b2 |= (b2 << 1);
+        if ( x2 > r ) b2 |= (b2 << 2);
+        if ( y2 > b ) b2 |= (b2 << 3);
          
         if ( b2 == 3 ) return true;
 
         int i0 = b0 ^ b1;
         if (i0 != 0)
         {
-            float m = (y1-y0) / (x1-x0); 
+            float m = (y1 - y0) / (x1 - x0); 
             float c = y0 -(m * x0);
             if ( (i0 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
             if ( (i0 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
@@ -256,7 +256,7 @@ public class Triangle {
         int i1 = b1 ^ b2;
         if (i1 != 0)
         {
-            float m = (y2-y1) / (x2-x1); 
+            float m = (y2 - y1) / (x2 - x1); 
             float c = y1 -(m * x1);
             if ( (i1 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
             if ( (i1 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
@@ -267,8 +267,8 @@ public class Triangle {
         int i2 = b0 ^ b2;
         if (i2 != 0)
         {
-            float m = (y2-y0) / (x2-x0); 
-            float c = y0 -(m * x0);
+            float m = (y2 - y0) / (x2 - x0); 
+            float c = y0 - (m * x0);
             if ( (i2 & 1) > 0 ) { float s = m * l + c; if ( s > t && s < b) return true; }
             if ( (i2 & 2) > 0 ) { float s = (t - c) / m; if ( s > l && s < r) return true; }
             if ( (i2 & 4) > 0 ) { float s = m * r + c; if ( s > t && s < b) return true; }
