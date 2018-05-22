@@ -83,7 +83,7 @@ public class TextBoxView implements Renderable {
             renderGradiantBackground(textBox, renderer, camera, alpha);
             
             if(textBox.hasFocus() || textBox.isHovering()) {
-                renderer.drawRect(bounds.x-1, bounds.y-1, bounds.width+2, bounds.height+2, //textBox.getForegroundColor());
+                renderer.drawRect(bounds.x - 1, bounds.y - 1, bounds.width + 2, bounds.height + 2, //textBox.getForegroundColor());
                         0x5ff1f401);
 //                        0xff393939);
             }
@@ -93,11 +93,10 @@ public class TextBoxView implements Renderable {
             Rectangle lbounds = this.textBox.getTextLabel().getBounds();//update the text
             lbounds.set(bounds);
             lbounds.x += xTextOffset;  
-            lbounds.y += (lbounds.height / 2) - textHeight/3;
+            lbounds.y += (lbounds.height / 2) - textHeight / 3;
             this.textView.render(renderer, camera, alpha);
                         
-            if(showCursor && textBox.hasFocus()) 
-            {
+            if(showCursor && textBox.hasFocus()) {
                 String text = textBox.getText();
                 int textWidth = renderer.getWidth(text.substring(0, textBox.getCursorIndex())) + 5;
                 renderer.setFont(textBox.getTextLabel().getFont(), (int)textBox.getTextLabel().getTextSize());

@@ -43,7 +43,7 @@ public class Circle {
      */
     public static boolean circleContainsPoint(float cx, float cy, float radius, float x, float y) {
         float distSq = (cx - x) * 2 + (cy - y) * 2;
-        return distSq <= radius*radius;
+        return distSq <= radius * radius;
     }
     
     /**
@@ -71,8 +71,8 @@ public class Circle {
         int height = rect.getHeight();
         
         // check if it is inside
-        return (cx > x && cx < x+width &&
-                cy < y+height && cy > y );
+        return (cx > x && cx < x + width &&
+                cy < y + height && cy > y );
     }
     
 
@@ -98,14 +98,14 @@ public class Circle {
         float circleDistanceX = Math.abs(cx - rect.x);
         float circleDistanceY = Math.abs(cy - rect.y);
 
-        if (circleDistanceX > (rect.width/2 + radius)) { return false; }
-        if (circleDistanceY > (rect.height/2 + radius)) { return false; }
+        if (circleDistanceX > (rect.width / 2 + radius)) { return false; }
+        if (circleDistanceY > (rect.height / 2 + radius)) { return false; }
 
-        if (circleDistanceX <= (rect.width/2)) { return true; } 
-        if (circleDistanceY <= (rect.height/2)) { return true; }
+        if (circleDistanceX <= (rect.width / 2)) { return true; } 
+        if (circleDistanceY <= (rect.height / 2)) { return true; }
 
-        float cornerDistanceSq = (circleDistanceX - rect.width/2) * (circleDistanceX - rect.width/2) +
-                                 (circleDistanceY - rect.height/2) * (circleDistanceY - rect.height/2);
+        float cornerDistanceSq = (circleDistanceX - rect.width / 2) * (circleDistanceX - rect.width / 2) +
+                                 (circleDistanceY - rect.height / 2) * (circleDistanceY - rect.height / 2);
 
         return (cornerDistanceSq <= (radius * radius));
     }
@@ -143,7 +143,7 @@ public class Circle {
         float det = Vector2fDet(ca, cb);
 
         // only the discriminant matters:
-        float delta = circle.radius * circle.radius * dr - (det*det);
+        float delta = circle.radius * circle.radius * dr - (det * det);
 
         /*
          *     Delta<0    no intersection

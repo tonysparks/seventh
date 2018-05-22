@@ -82,7 +82,7 @@ public class LabelView implements Renderable {
             int width = renderer.getWidth(buttonTxt);
             int height = renderer.getHeight("W");
             
-            int vertical = bounds.y + (bounds.height/2);
+            int vertical = bounds.y + (bounds.height / 2);
             switch(this.label.getVerticalTextAlignment()) {
                 case BOTTOM:
                     vertical = bounds.y + (bounds.height - 5);
@@ -91,7 +91,7 @@ public class LabelView implements Renderable {
                     vertical = bounds.y + height;
                     break;
                 default:
-                    vertical = bounds.y + (bounds.height/2);
+                    vertical = bounds.y + (bounds.height / 2);
             }
             
             switch(this.label.getHorizontalTextAlignment()) {
@@ -113,7 +113,7 @@ public class LabelView implements Renderable {
                     RenderFont.drawShadedString(renderer
     //                renderer.drawString(
                                       , buttonTxt
-                                      , bounds.x + (bounds.width/2) - (width/2)
+                                      , bounds.x + (bounds.width / 2) - (width / 2)
                                       , vertical, null, label.isShadowed() );
                     break;
             }

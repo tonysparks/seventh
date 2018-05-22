@@ -19,7 +19,7 @@ public /*strictfp*/ final class Vector2f {
     /**
      * The zero vector
      */
-    public static final Vector2f ZERO_VECTOR = new Vector2f(0,0);
+    public static final Vector2f ZERO_VECTOR = new Vector2f(0, 0);
     
     /**
      * The Right vector
@@ -29,7 +29,7 @@ public /*strictfp*/ final class Vector2f {
     /**
      * X and Y components.
      */
-    public float x,y;
+    public float x, y;
 
     /**
      * Constructs a new Vector2f
@@ -71,7 +71,7 @@ public /*strictfp*/ final class Vector2f {
      * @return
      */
     public float get(int i) {
-        return (i==0) ? this.x : this.y;
+        return (i == 0) ? this.x : this.y;
     }
 
     /**
@@ -115,7 +115,7 @@ public /*strictfp*/ final class Vector2f {
      * @return
      */
     public boolean isZero() {
-        return this.x==0 && this.y==0;
+        return this.x == 0 && this.y == 0;
     }
 
     /**
@@ -195,7 +195,7 @@ public /*strictfp*/ final class Vector2f {
      */
     public void normalize() {
         float flLen = (float)Math.sqrt( (this.x * this.x + this.y * this.y) );
-        if ( flLen==0 ) return;
+        if ( flLen == 0 ) return;
 
         flLen = 1.0f / flLen;
         this.x = this.x * flLen;
@@ -250,7 +250,7 @@ public /*strictfp*/ final class Vector2f {
     public boolean equals(Object o) {
         if ( o instanceof Vector2f ) {
             Vector2f v = (Vector2f)o;
-            return v.x==this.x&&this.y==v.y;
+            return v.x == this.x && this.y == v.y;
         }
         return false;
     }
@@ -572,7 +572,7 @@ public /*strictfp*/ final class Vector2f {
      */
     public static /*strictfp*/ void Vector2fNormalize(Vector2f a, Vector2f dest) {
         float fLen = (float)Math.sqrt( (a.x * a.x + a.y * a.y) );
-        if ( fLen==0 ) return;
+        if ( fLen == 0 ) return;
 
         //fLen = 1.0f / fLen;
         dest.x = a.x / fLen;
@@ -686,13 +686,13 @@ public /*strictfp*/ final class Vector2f {
     public static /*strictfp*/ void Vector2fWholeNumber(Vector2f a, Vector2f dest) {
         int t = (int)a.x;
         float delta = a.x - (float)t;
-        if ( ! FloatUtil.eq(delta, 0) ) {
+        if ( !FloatUtil.eq(delta, 0) ) {
             dest.x = (a.x < 0) ? t - 1 : t + 1;
         }
 
         t = (int)a.y;
         delta = a.y - (float)t;
-        if ( ! FloatUtil.eq(delta, 0) ) {
+        if ( !FloatUtil.eq(delta, 0) ) {
             dest.y = (a.y < 0 ) ? t - 1 : t + 1;
         }
 

@@ -58,7 +58,7 @@ public class DefaultStyling implements Styling {
         dialog.setForegroundColor(WHITE);
         
         for( Widget widget: dialog.getWidgets()) {
-            if ( widget instanceof Button) {
+            if ( widget instanceof Button ) {
                 styleButton((Button)widget);
             }
         }
