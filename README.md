@@ -82,6 +82,11 @@ Run from Source
  - Mac/Linux/Unix:
  ```
  java -cp ./lib/*:./lib/libgdx/*:./bin/ -Djava.library.path="./lib/natives" -Xmx1g seventh.ClientMain
+
  ```
+
+Code Conduct
+===
+* convert all tabs to 4 spaces
 
 More to come!
