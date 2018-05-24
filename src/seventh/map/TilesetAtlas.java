@@ -34,7 +34,7 @@ public class TilesetAtlas {
     public TextureRegion getTile(int id) {
         for(Tileset t : tilesets) {
             TextureRegion img = t.getTile(id);
-            if(img!=null) {
+            if(img != null) {
                 return img;
             }
         }
@@ -49,7 +49,7 @@ public class TilesetAtlas {
     public boolean isAnimatedTile(int id) {
         for(Tileset t : tilesets) {
             TextureRegion img = t.getTile(id);
-            if(img!=null) {
+            if(img != null) {
                 return t.isAnimatedImage(id);
             }
         }
@@ -60,7 +60,7 @@ public class TilesetAtlas {
     public AnimatedImage getAnimatedTile(int id) {
         for(Tileset t : tilesets) {
             TextureRegion img = t.getTile(id);
-            if(img!=null) {
+            if(img != null) {
                 return t.getAnimatedImage(id);
             }
         }

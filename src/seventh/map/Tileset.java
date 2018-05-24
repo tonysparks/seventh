@@ -33,9 +33,9 @@ public class Tileset {
      * Frees the texture memory
      */
     public void destroy() {
-        if(this.image!=null&&this.image.length > 0) {
+        if(this.image != null && this.image.length > 0) {
             TextureRegion tex = this.image[0];
-            if(tex!=null) {
+            if(tex != null) {
                 tex.getTexture().dispose();
             }
         }

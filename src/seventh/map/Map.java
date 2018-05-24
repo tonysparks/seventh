@@ -269,8 +269,8 @@ public abstract interface Map extends Renderable, Debugable {
      * @param y - y array coordinate
      * @return
      */
-    public abstract Tile getTile( int layer, int x, int y );
-    public abstract Tile getDestructableTile(int x, int y );
+    public abstract Tile getTile(int layer, int x, int y);
+    public abstract Tile getDestructableTile(int x, int y);
     
     /**
      * Retrieve a Tile.
@@ -279,7 +279,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param y - y array coordinate
      * @return
      */
-    public abstract Tile getCollidableTile(int x, int y );
+    public abstract Tile getCollidableTile(int x, int y);
     
     
     
@@ -290,7 +290,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param y - y in world coordinate space
      * @return
      */
-    public abstract Tile getWorldTile( int layer, int x, int y);
+    public abstract Tile getWorldTile(int layer, int x, int y);
     
     
     /**
@@ -344,7 +344,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param y - y in world coordinate space
      * @return true if there is a height mask; false otherwise
      */
-    public abstract boolean hasHeightMask( int worldX, int worldY);
+    public abstract boolean hasHeightMask(int worldX, int worldY);
     
     /**
      * Check for a collision given a {@link Rectangle}
@@ -352,7 +352,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param rect
      * @return true if a collision occurs, false otherwise
      */
-    public abstract boolean rectCollides( Rectangle rect );
+    public abstract boolean rectCollides(Rectangle rect);
     
     /**
      * Check for a collision given a {@link OBB}
@@ -360,7 +360,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param oob
      * @return true if a collision occurs, false otherwise
      */
-    public abstract boolean rectCollides( OBB oob );
+    public abstract boolean rectCollides(OBB oob);
     
     /**
      * Check for a collision given a {@link Rectangle}
@@ -369,7 +369,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param heightMask
      * @return true if a collision occurs, false otherwise
      */
-    public abstract boolean rectCollides( Rectangle rect, int heightMask );
+    public abstract boolean rectCollides(Rectangle rect, int heightMask);
     
     /**
      * Check for a collision given a {@link Rectangle}
@@ -425,7 +425,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param worldY
      * @return true if out of bounds
      */
-    public abstract boolean checkBounds( int worldX, int worldY );
+    public abstract boolean checkBounds(int worldX, int worldY);
     
     /**
      * Checks the map boundaries based on tile coordinates
@@ -476,7 +476,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param y
      * @return
      */
-    public abstract Vector2f worldToTile( int x, int y);
+    public abstract Vector2f worldToTile(int x, int y);
     public abstract int worldToTileX(int x);
     public abstract int worldToTileY(int y);
     
@@ -487,7 +487,7 @@ public abstract interface Map extends Renderable, Debugable {
      * @param ty
      * @return
      */
-    public abstract Vector2f tileToWorld( int tx, int ty );
+    public abstract Vector2f tileToWorld(int tx, int ty);
     
     /**
      * Get {@link MapObject}s.
