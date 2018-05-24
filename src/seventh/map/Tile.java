@@ -65,7 +65,7 @@ public class Tile implements Renderable {
         public static SurfaceType fromString(String type) {
             SurfaceType result = UNKNOWN;
             try {
-                if(type!=null) {
+                if(type != null) {
                     result = SurfaceType.valueOf(type.toUpperCase());
                 }
             }
@@ -133,21 +133,21 @@ public class Tile implements Renderable {
         EAST_HALF_SOLID(3) {
             @Override
             public boolean pointCollide(Rectangle a, int x, int y) {
-                a.x += (a.width/2);
+                a.x += (a.width / 2);
                 a.width /= 2;
                 return a.contains(x, y);
             }
             
             @Override
             public boolean rectCollide(Rectangle a, OBB oob) {
-                a.x += (a.width/2);
+                a.x += (a.width / 2);
                 a.width /= 2;
                 return oob.intersects(a);
             }
             
             @Override
             public boolean rectCollide(Rectangle a, Rectangle b) {
-                a.x += (a.width/2);
+                a.x += (a.width / 2);
                 a.width /= 2;
                 return a.intersects(b);
             }
@@ -177,7 +177,7 @@ public class Tile implements Renderable {
         SOUTH_HALF_SOLID(5) {
             @Override
             public boolean pointCollide(Rectangle a, int x, int y) {
-                a.y += (a.height/2);
+                a.y += (a.height / 2);
                 a.height /= 2;
                 return a.contains(x, y);
             }
@@ -185,14 +185,14 @@ public class Tile implements Renderable {
 
             @Override
             public boolean rectCollide(Rectangle a, OBB oob) {
-                a.y += (a.height/2);
+                a.y += (a.height / 2);
                 a.height /= 2;
                 return oob.intersects(a);
             }        
             
             @Override
             public boolean rectCollide(Rectangle a, Rectangle b) {
-                a.y += (a.height/2);
+                a.y += (a.height / 2);
                 a.height /= 2;
                 return a.intersects(b);
             }        
@@ -210,7 +210,7 @@ public class Tile implements Renderable {
                     a.height = height;
                     a.width /= 2;
                     
-                    return a.contains(x,y);
+                    return a.contains(x, y);
                 }
                 return true;
             }
@@ -258,10 +258,10 @@ public class Tile implements Renderable {
                 if(!north) {
                     
                     a.height = height;
-                    a.x += (width/2);
+                    a.x += (width / 2);
                     a.width /= 2;
                     
-                    return a.contains(x,y);
+                    return a.contains(x, y);
                 }
                 return true;
             }
@@ -276,7 +276,7 @@ public class Tile implements Renderable {
                 if(!north) {
                     
                     a.height = height;
-                    a.x += (width/2);
+                    a.x += (width / 2);
                     a.width /= 2;
                     
                     return oob.intersects(a);
@@ -294,7 +294,7 @@ public class Tile implements Renderable {
                 if(!north) {
                     
                     a.height = height;
-                    a.x += (width/2);
+                    a.x += (width / 2);
                     a.width /= 2;
                     
                     return a.intersects(b);
@@ -316,7 +316,7 @@ public class Tile implements Renderable {
                     a.height = height;                    
                     a.width /= 2;
                     
-                    return a.contains(x,y);
+                    return a.contains(x, y);
                 }
                 return true;
             }
@@ -880,8 +880,8 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax+width/2, ay+height/2, width/2, height/2);                    
-                return a.contains(x,y);                
+                a.set(ax + width / 2, ay + height / 2, width / 2, height / 2);                    
+                return a.contains(x, y);                
             }
             
             @Override
@@ -891,7 +891,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax+width/2, ay+height/2, width/2, height/2);                    
+                a.set(ax + width / 2, ay + height / 2, width / 2, height / 2);                    
                 return oob.intersects(a);                                
             }
             
@@ -902,7 +902,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax+width/2, ay+height/2, width/2, height/2);                    
+                a.set(ax + width / 2, ay + height / 2, width / 2, height / 2);                    
                 return a.intersects(b);                                
             }
                 
@@ -916,8 +916,8 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax, ay, width/2, height/2);                    
-                return a.contains(x,y);                
+                a.set(ax, ay, width / 2, height / 2);                    
+                return a.contains(x, y);                
             }
             
             @Override
@@ -927,7 +927,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax, ay, width/2, height/2);                    
+                a.set(ax, ay, width / 2, height / 2);                    
                 return oob.intersects(a);                                
             }
             
@@ -938,7 +938,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax, ay, width/2, height/2);                    
+                a.set(ax, ay, width / 2, height / 2);                    
                 return a.intersects(b);                                
             }
                 
@@ -952,8 +952,8 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax+width/2, ay, width/2, height/2);                    
-                return a.contains(x,y);                
+                a.set(ax + width / 2, ay, width / 2, height / 2);                    
+                return a.contains(x, y);                
             }
             
             @Override
@@ -963,7 +963,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax+width/2, ay, width/2, height/2);                    
+                a.set(ax + width / 2, ay, width / 2, height / 2);                    
                 return oob.intersects(a);                                
             }
             
@@ -974,7 +974,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax+width/2, ay, width/2, height/2);                    
+                a.set(ax + width / 2, ay, width / 2, height / 2);                    
                 return a.intersects(b);                                
             }
                 
@@ -988,8 +988,8 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax, ay+height/2, width/2, height/2);                    
-                return a.contains(x,y);                
+                a.set(ax, ay + height / 2, width / 2, height / 2);                    
+                return a.contains(x, y);                
             }
             
             @Override
@@ -999,7 +999,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax, ay+height/2, width/2, height/2);                    
+                a.set(ax, ay + height / 2, width / 2, height / 2);                    
                 return oob.intersects(a);                                
             }
             
@@ -1010,7 +1010,7 @@ public class Tile implements Renderable {
                 int width = a.width;
                 int height = a.height;
                 
-                a.set(ax, ay+height/2, width/2, height/2);                    
+                a.set(ax, ay + height / 2, width / 2, height / 2);                    
                 return a.intersects(b);                                
             }
                 
@@ -1019,14 +1019,14 @@ public class Tile implements Renderable {
         MIDDLE_VERTICAL_SLICE_SOLID(24) {
             @Override
             public boolean pointCollide(Rectangle a, int x, int y) {
-                a.x += a.width/2;
+                a.x += a.width / 2;
                 a.width = 5;                    
                 return a.contains(x, y);                
             }
             
             @Override
             public boolean rectCollide(Rectangle a, OBB oob) {                                        
-                a.x += a.width/2;
+                a.x += a.width / 2;
                 a.width = 5;                        
                 return oob.intersects(a);
                 
@@ -1034,7 +1034,7 @@ public class Tile implements Renderable {
             
             @Override
             public boolean rectCollide(Rectangle a, Rectangle b) {                                        
-                a.x += a.width/2;
+                a.x += a.width / 2;
                 a.width = 5;                        
                 return a.intersects(b);
                 
@@ -1044,21 +1044,21 @@ public class Tile implements Renderable {
         MIDDLE_HORIZONTAL_SLICE_SOLID(25) {
             @Override
             public boolean pointCollide(Rectangle a, int x, int y) {
-                a.y += a.height/2;
+                a.y += a.height / 2;
                 a.height = 5;                    
                 return a.contains(x, y);                
             }
             
             @Override
             public boolean rectCollide(Rectangle a, OBB oob) {
-                a.y += a.height/2;
+                a.y += a.height / 2;
                 a.height = 5;                        
                 return oob.intersects(a);
             }
             
             @Override
             public boolean rectCollide(Rectangle a, Rectangle b) {                                        
-                a.y += a.height/2;
+                a.y += a.height / 2;
                 a.height = 5;                        
                 return a.intersects(b);
                 
@@ -1197,8 +1197,8 @@ public class Tile implements Renderable {
             
             @Override
             public boolean pointCollide(Rectangle a, int x, int y) {
-                float circleX = a.x + a.width/2;
-                float circleY = a.y + a.height/2;
+                float circleX = a.x + a.width / 2;
+                float circleY = a.y + a.height / 2;
                 float radius = 16f;
                                 
                 return Circle.circleContainsPoint(circleX, circleY, radius, x, y);
@@ -1211,8 +1211,8 @@ public class Tile implements Renderable {
             
             @Override
             public boolean rectCollide(Rectangle a, Rectangle b) {
-                float circleX = a.x + a.width/2;
-                float circleY = a.y + a.height/2;
+                float circleX = a.x + a.width / 2;
+                float circleY = a.y + a.height / 2;
                 float radius = 16f;
                                 
                 return Circle.circleIntersectsRect(circleX, circleY, radius, b);
@@ -1296,7 +1296,7 @@ public class Tile implements Renderable {
     /**
      * Flip masks
      */
-    private static final int isFlippedHorizontal=(1<<0), isFlippedVert=(1<<1), isFlippedDiagnally=(1<<2);
+    private static final int isFlippedHorizontal=(1 << 0), isFlippedVert=(1 << 1), isFlippedDiagnally=(1 << 2);
     
     private int x,y;
     private int width, height;    
@@ -1342,7 +1342,7 @@ public class Tile implements Renderable {
          * code to the render() method for quick
          * responsive feedback
          */
-        if(image!=null) {
+        if(image != null) {
             this.sprite = new Sprite(image);
             this.u = image.getU();
             this.u2 = image.getU2();
@@ -1355,11 +1355,11 @@ public class Tile implements Renderable {
             float adjustX = 0.0125f / width;
             float adjustY = 0.0125f / height;
             
-            sprite.setU(u+adjustX);
-            sprite.setU2(u2-adjustX);
+            sprite.setU(u + adjustX);
+            sprite.setU2(u2 - adjustX);
             
-            sprite.setV(v-adjustY);
-            sprite.setV2(v2+adjustY);
+            sprite.setV(v - adjustY);
+            sprite.setV2(v2 + adjustY);
             
         }
     }
@@ -1446,8 +1446,8 @@ public class Tile implements Renderable {
      * @return the centerPos
      */
     public Vector2f getCenterPos() {
-        this.centerPos.set(this.x + this.width/2, 
-                           this.y + this.height/2);
+        this.centerPos.set(this.x + this.width / 2, 
+                           this.y + this.height / 2);
         return centerPos;
     }
     
@@ -1545,7 +1545,7 @@ public class Tile implements Renderable {
         if(isFlippedDiagnally) this.flipMask |= Tile.isFlippedDiagnally;
         if(isFlippedHorizontal)    this.flipMask |= Tile.isFlippedHorizontal;
         if(isFlippedVert) this.flipMask |= Tile.isFlippedVert;
-        if(this.sprite==null) return;
+        if(this.sprite == null) return;
         
         TextureUtil.setFlips(this.sprite, isFlippedHorizontal, isFlippedVert, isFlippedDiagnally);        
     }

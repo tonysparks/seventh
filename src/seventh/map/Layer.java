@@ -111,9 +111,9 @@ public class Layer {
     public void applyHeightMask() {
         for(int rowIndex = 0; rowIndex < this.rows.length; rowIndex++) {
             Tile[] row = this.rows[rowIndex];
-            for(int i = 0; i < row.length;i++) {
+            for(int i = 0; i < row.length; i++) {
                 Tile t = row[i];
-                if(t!=null) {
+                if(t != null) {
                     t.setHeightMask(heightMask);                    
                 }
             }
@@ -203,9 +203,9 @@ public class Layer {
      */
     public void addRow(int index, Tile[] row) {
         this.rows[index] = row;        
-        for(int i = 0; i < row.length;i++) {
+        for(int i = 0; i < row.length; i++) {
             Tile t = row[i];
-            if(t!=null) {
+            if(t != null) {
                 t.setHeightMask(heightMask);
             }
         }
