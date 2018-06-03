@@ -33,7 +33,7 @@ public class OBB {
      * @param r
      */
     public OBB(Rectangle r) {
-        this(0, new Vector2f(r.x + r.width/2, r.y + r.height/2), r.width, r.height);
+        this(0, new Vector2f(r.x + r.width / 2, r.y + r.height / 2), r.width, r.height);
     }
     
     /**
@@ -43,7 +43,7 @@ public class OBB {
      * @param r
      */
     public OBB(float orientation, Rectangle r) {
-        this(orientation, new Vector2f(r.x + r.width/2, r.y + r.height/2), r.width, r.height);
+        this(orientation, new Vector2f(r.x + r.width / 2, r.y + r.height / 2), r.width, r.height);
     }
     
     /**
@@ -106,11 +106,11 @@ public class OBB {
     public void update(float newOrientation, float px, float py) {
         
         // first translate to center coordinate space
-        this.center.set(0,0);
-        this.topLeft.set(center.x-width/2f, center.y+height/2f);
-        this.topRight.set(center.x+width/2f, center.y+height/2f);
-        this.bottomLeft.set(center.x-width/2f, center.y-height/2f);
-        this.bottomRight.set(center.x+width/2f, center.y-height/2f);
+        this.center.set(0, 0);
+        this.topLeft.set(center.x - width / 2f, center.y + height / 2f);
+        this.topRight.set(center.x + width / 2f, center.y + height / 2f);
+        this.bottomLeft.set(center.x - width / 2f, center.y - height / 2f);
+        this.bottomRight.set(center.x + width / 2f, center.y - height / 2f);
 
         // rotate the rectangle
         this.orientation = newOrientation;
@@ -161,7 +161,8 @@ public class OBB {
      * @param newOrientation
      */
     public void rotateTo(float newOrientation) {
-        update(orientation, center.x, center.y);
+//        update(orientation, center.x, center.y);
+        update(newOrientation, center.x, center.y); // I changed this, because the param was invalid.
     }
     
     /**
@@ -190,7 +191,7 @@ public class OBB {
      * @param py
      */
     public void translate(float px, float py) {
-        setLocation(center.x+px, center.y+py);
+        setLocation(center.x + px, center.y + py);
     }
 
     /**
@@ -279,7 +280,7 @@ public class OBB {
         boolean b1 = sign(px, py, a, b) < 0f;
         boolean b2 = sign(px, py, b, c) < 0f;
         boolean b3 = sign(px, py, c, a) < 0f;
-        return ((b1==b2) && (b2==b3));
+        return ((b1 == b2) && (b2 == b3));
     }
     
     /**
@@ -424,10 +425,10 @@ public class OBB {
     }
     
     private boolean checkLineAgainstOOB(Vector2f a, Vector2f b, Rectangle other) {
-        return Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x            , other.y             , other.x+other.width, other.y) ||
-               Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x+other.width, other.y             , other.x+other.width, other.y+other.height) ||
-               Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x+other.width, other.y+other.height, other.x            , other.y+other.height) ||
-               Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x            , other.y+other.height, other.x            , other.y);
+        return Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x            , other.y               , other.x + other.width, other.y) ||
+               Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x+other.width, other.y               , other.x + other.width, other.y + other.height) ||
+               Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x+other.width, other.y + other.height, other.x              , other.y + other.height) ||
+               Line.lineIntersectLine(a.x, a.y, b.x, b.y, other.x            , other.y + other.height, other.x              , other.y);
     }
     
     
@@ -448,7 +449,7 @@ public class OBB {
     }
 
     public static void main(String[] args) {
-        OBB a = new OBB( (float)Math.PI/4f, new Vector2f(0,0), 50, 50);
+        OBB a = new OBB( (float)Math.PI / 4f, new Vector2f(0, 0), 50, 50);
         
         
         System.out.println(a.contains(1, 1));
@@ -466,7 +467,7 @@ public class OBB {
         System.out.println(a.contains(-d, 0));
         
         Vector2f v = new Vector2f(25, 0);
-        Vector2f.Vector2fRotate(v, 3*Math.PI/4, v);
+        Vector2f.Vector2fRotate(v, 3 * Math.PI / 4, v);
         System.out.println("Point is in a: " + a.contains(v));
         
        // a.setLocation(76, 76);
@@ -474,7 +475,7 @@ public class OBB {
         printOOB(a);
         
         
-        OBB b = new OBB( a.orientation, new Vector2f(35.355f,35.355f), 50, 50);
+        OBB b = new OBB( a.orientation, new Vector2f(35.355f, 35.355f), 50, 50 );
         b.translate(1, 1);
         b.translate(-1, -1);
         printOOB(b);
@@ -501,10 +502,10 @@ public class OBB {
     }
     
     private static void printOOB(OBB a) {
-        System.out.printf("C : (%3.1f, %3.1f)  D: %3.1f \n",a.center.x,a.center.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.center));
-        System.out.printf("TL: (%3.1f, %3.1f)  D: %3.1f \n",a.topLeft.x,a.topLeft.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.topLeft));
-        System.out.printf("TR: (%3.1f, %3.1f)  D: %3.1f \n",a.topRight.x,a.topRight.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.topRight));
-        System.out.printf("BL: (%3.1f, %3.1f)  D: %3.1f \n",a.bottomLeft.x,a.bottomLeft.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.bottomLeft));
-        System.out.printf("BR: (%3.1f, %3.1f)  D: %3.1f \n",a.bottomRight.x,a.bottomRight.y,Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.bottomRight));
+        System.out.printf("C : (%3.1f, %3.1f)  D: %3.1f \n", a.center.x, a.center.y, Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.center));
+        System.out.printf("TL: (%3.1f, %3.1f)  D: %3.1f \n", a.topLeft.x, a.topLeft.y, Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.topLeft));
+        System.out.printf("TR: (%3.1f, %3.1f)  D: %3.1f \n", a.topRight.x, a.topRight.y, Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.topRight));
+        System.out.printf("BL: (%3.1f, %3.1f)  D: %3.1f \n", a.bottomLeft.x, a.bottomLeft.y, Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.bottomLeft));
+        System.out.printf("BR: (%3.1f, %3.1f)  D: %3.1f \n", a.bottomRight.x, a.bottomRight.y, Vector2f.Vector2fDistance(Vector2f.ZERO_VECTOR, a.bottomRight));
     }
 }

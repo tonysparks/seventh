@@ -63,7 +63,7 @@ public class ListBoxView<T extends Renderable> implements Renderable {
                 int removeIndex = -1;
                 int i = 0;
                 for(ButtonView view : buttonViews) {
-                    if(view.getButton()==button) {
+                    if(view.getButton() == button) {
                         removeIndex = i;
                         break;
                     }
@@ -119,15 +119,15 @@ public class ListBoxView<T extends Renderable> implements Renderable {
         
         Rectangle bounds = box.getBounds();
         
-        renderer.fillRect(bounds.x-1, bounds.y, bounds.width, bounds.height+1, box.getBackgroundColor());
-        renderer.drawRect(bounds.x-1, bounds.y, bounds.width+1, bounds.height+1, 0xff000000);
+        renderer.fillRect(bounds.x - 1, bounds.y, bounds.width, bounds.height + 1, box.getBackgroundColor());
+        renderer.drawRect(bounds.x - 1, bounds.y, bounds.width + 1, bounds.height + 1, 0xff000000);
         
         bounds = box.getScreenBounds();
         int y = 40;
         
         
-        renderer.fillRect(bounds.x-1, bounds.y, bounds.width+1, 31, 0xff282c0c);
-        renderer.drawRect(bounds.x-1, bounds.y, bounds.width+1, 30+1, 0xff000000);
+        renderer.fillRect(bounds.x - 1, bounds.y, bounds.width + 1, 31, 0xff282c0c);
+        renderer.drawRect(bounds.x - 1, bounds.y, bounds.width + 1, 30 + 1, 0xff000000);
         
         int hsize = hderButtonViews.size();
         for(int i = 0; i < hsize; i++) {
@@ -142,10 +142,9 @@ public class ListBoxView<T extends Renderable> implements Renderable {
             btn.getBounds().y = y;
             Rectangle rect = btn.getScreenBounds();
             //rect.y = y;
-            if(bounds.contains(rect)) 
-            {
+            if(bounds.contains(rect)) {
                 if(btn.isHovering()) {
-                    renderer.fillRect(rect.x-10, rect.y-5, rect.width+40, rect.height, 0x0fffffff);
+                    renderer.fillRect(rect.x - 10, rect.y - 5, rect.width + 40, rect.height, 0x0fffffff);
                 }
                 view.render(renderer, camera, alpha);
             }

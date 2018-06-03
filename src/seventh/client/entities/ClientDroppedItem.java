@@ -103,7 +103,7 @@ public class ClientDroppedItem extends ClientEntity {
             default: {            
             }
         }
-        if(weapon!=null) {            
+        if(weapon != null) {            
             weapon.scale(-0.65f);
             weapon.rotate( (float)Math.toDegrees(this.orientation));
         }
@@ -112,11 +112,11 @@ public class ClientDroppedItem extends ClientEntity {
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
 
-        if(weapon!=null) {                        
+        if(weapon != null) {                        
             Vector2f cameraPos = camera.getRenderPosition(alpha);
             float x = (pos.x - cameraPos.x);
             float y = (pos.y - cameraPos.y);
-            weapon.setPosition(x-54f, y-24f);                        
+            weapon.setPosition(x - 54f, y - 24f);                        
     
             canvas.fillCircle(10f, (int)x, (int)y, 0xafafafff);//0x3f4a4f8f);
             canvas.drawSprite(weapon);

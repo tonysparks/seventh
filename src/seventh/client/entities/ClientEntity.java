@@ -1,5 +1,5 @@
 /*
- * see license.txt 
+  * see license.txt 
  */
 package seventh.client.entities;
 
@@ -160,7 +160,7 @@ public abstract class ClientEntity implements Renderable {
                 
         this.bounds.setLocation(pos);
         this.orientation = (float)Math.toRadians(state.orientation);
-        this.facing.set(1,0);
+        this.facing.set(1, 0);
         Vector2f.Vector2fRotate(facing, orientation, facing);
         
         this.updateReceived = true;
@@ -218,7 +218,7 @@ public abstract class ClientEntity implements Renderable {
      * @param sound
      */
     public void attachSound(Sound sound) {
-        if(this.attachedSounds==null) {
+        if(this.attachedSounds == null) {
             this.attachedSounds = new Sound[8];
         }
         

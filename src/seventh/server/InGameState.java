@@ -142,7 +142,7 @@ public class InGameState implements State {
         this.netPartialStatDelay = config.getServerNetPartialStatDelay();
         
         final long netRate = Math.abs(config.getServerNetUpdateRate());        
-        this.netUpdateRate = 1000 / netRate==0 ? 20 : netRate;
+        this.netUpdateRate = 1000 / netRate == 0 ? 20 : netRate;
         
         this.nextGameStatUpdate = 2_000; // first big update, wait only 2 seconds
         this.nextGamePartialStatUpdate = this.netPartialStatDelay;
@@ -222,7 +222,7 @@ public class InGameState implements State {
                 msg.stats = game.getNetGameStats();//event.getStats();
                 
                 Team winner = event.getWinner();
-                if(winner!=null) {
+                if(winner != null) {
                     msg.winnerTeamId = winner.getId();
                 }
                 
@@ -388,7 +388,7 @@ public class InGameState implements State {
             
             @Override
             public void execute(Console console, String... args) {
-                if(args.length>0) {
+                if(args.length > 0) {
                     int enabled = Integer.parseInt(args[0]);
                     game.enableFOW(enabled != 0);
                 }
@@ -449,7 +449,7 @@ public class InGameState implements State {
         
         // check for game end
         if(gameEnded) {
-            if(gameEndTime>GAME_END_DELAY) {    
+            if(gameEndTime > GAME_END_DELAY) {    
                 /* load up the next level */
                 serverContext.spawnGameSession();                
             }

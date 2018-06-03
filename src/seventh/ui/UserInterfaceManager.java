@@ -147,7 +147,7 @@ public class UserInterfaceManager extends Inputs {
      */
     @Override
     public boolean mouseMoved(int x, int y) {
-        cursor.moveTo(x,y);
+        cursor.moveTo(x, y);
         return Widget.globalInputListener.mouseMoved(cursor.getX(), cursor.getY());
     }
     
@@ -188,7 +188,7 @@ public class UserInterfaceManager extends Inputs {
      */
     @Override
     public boolean touchDragged(int x, int y, int pointer) {
-        cursor.moveTo(x,y);
+        cursor.moveTo(x, y);
         return Widget.globalInputListener.touchDragged(cursor.getX(), cursor.getY(), pointer);
     }
     

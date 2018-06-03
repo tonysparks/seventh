@@ -105,7 +105,7 @@ public class TiledMapLoader implements MapLoader {
             }
             
             int tileId = data.get(x).asInt();
-            int surfaceId = atlas.getTileId(tileId)-1; /* minus one to get back to zero based */
+            int surfaceId = atlas.getTileId(tileId) - 1; /* minus one to get back to zero based */
             surfaces[y][x % width] = SurfaceType.fromId(surfaceId);
         }
     }        
@@ -171,7 +171,7 @@ public class TiledMapLoader implements MapLoader {
         boolean isVisible = layer.getBoolean("visible");
         
         int heightMask = 0;
-        if ( layer.has(LeoString.valueOf("properties"))) {
+        if (layer.has(LeoString.valueOf("properties"))) {
             LeoMap properties = layer.getByString("properties").as();            
             isCollidable = properties.getString("collidable").equals("true");
             isForeground = properties.getString("foreground").equals("true");
@@ -234,7 +234,7 @@ public class TiledMapLoader implements MapLoader {
                 TextureRegion image = atlas.getTile(tileId);
                 if(image != null) {
                     Tile tile = null;
-                    if( atlas.isAnimatedTile(tileId) ) {
+                    if(atlas.isAnimatedTile(tileId)) {
                         tile = new AnimatedTile(atlas.getAnimatedTile(tileId), index, tileWidth, tileHeight); 
                         mapLayer.setContainsAnimations(true);
                     }
@@ -242,7 +242,7 @@ public class TiledMapLoader implements MapLoader {
                         tile = new Tile(image, index, tileWidth, tileHeight);
                     }
                                             
-                    tile.setPosition( (x%width) * tileWidth, y);
+                    tile.setPosition((x % width) * tileWidth, y);
 //                    tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
                     tile.setFlips(flippedHorizontally, flippedVertically, flippedDiagonally);
                     
@@ -250,27 +250,27 @@ public class TiledMapLoader implements MapLoader {
                         int collisionId = atlas.getTileId(tileId);
                         tile.setCollisionMaskById(collisionId);
                     }
-                    row[x%width] = tile;
+                    row[x % width] = tile;
                 }
                 else {
-                    row[x%width] = null;
+                    row[x % width] = null;
                 }
             }
             // if we are headless...
             else {
                 if(tileId != 0) {
-                    Tile tile = new Tile(null, index, tileWidth,tileHeight);
-                    tile.setPosition( (x%width) * tileWidth, y);
+                    Tile tile = new Tile(null, index, tileWidth, tileHeight);
+                    tile.setPosition( (x % width) * tileWidth, y);
 //                    tile.setSurfaceType(atlas.getTileSurfaceType(tileId));
                     
                     if(isCollidable) {
                         int collisionId = atlas.getTileId(tileId);
                         tile.setCollisionMaskById(collisionId);
                     }
-                    row[x%width] = tile;
+                    row[x % width] = tile;
                 }
                 else {
-                    row[x%width] = null;
+                    row[x % width] = null;
                 }
             }
         }

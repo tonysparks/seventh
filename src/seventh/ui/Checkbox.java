@@ -41,8 +41,8 @@ public class Checkbox extends Widget implements Hoverable {
             @Override
             public boolean mouseMoved(int x, int y) {                        
                 super.mouseMoved(x, y);
-                if ( ! isDisabled() ) {
-                    if ( getScreenBounds().contains(x,y)) {                                                                            
+                if ( !isDisabled() ) {
+                    if ( getScreenBounds().contains(x, y)) {                                                                            
                         setHovering(true);    
                         return false;
                     }
@@ -55,7 +55,7 @@ public class Checkbox extends Widget implements Hoverable {
             @Override
             public boolean touchUp(int x, int y, int pointer, int button) {
                 if(getScreenBounds().contains(x, y)) {
-                    setChecked(! isChecked() );
+                    setChecked(!isChecked() );
                     return true;
                 }
                 

@@ -200,14 +200,14 @@ public class Line {
             out |= OUT_LEFT | OUT_RIGHT;
         } else if (x < r.x) {
             out |= OUT_LEFT;
-        } else if (x > r.x + (float) r.width) {
+        } else if (x > r.x + (float)r.width) {
             out |= OUT_RIGHT;
         }
         if (r.height <= 0) {
             out |= OUT_TOP | OUT_BOTTOM;
         } else if (y < r.y) {
             out |= OUT_TOP;
-        } else if (y > r.y + (float) r.height) {
+        } else if (y > r.y + (float)r.height) {
             out |= OUT_BOTTOM;
         }
         return out;
@@ -294,7 +294,7 @@ public class Line {
         C.x = rect.getX() + E.x;
         C.y = rect.getY() + E.y;
         
-        float t[] = {0,0};    /* parametric values corresponding to the points where the line intersects the AABB. */
+        float t[] = {0, 0};    /* parametric values corresponding to the points where the line intersects the AABB. */
         boolean result = intersectLineAABB(O, D, C, E, t, FloatUtil.epsilon);
         
         Vector2f tmp = new Vector2f();
@@ -308,7 +308,7 @@ public class Line {
         Vector2f.Vector2fAdd(O, tmp, far);
                         
         return result && (rect.contains(far) 
-                || rect.contains(near));
+                 || rect.contains(near));
     }
     
     /**
@@ -373,7 +373,7 @@ public class Line {
         int parallel = 0;
         boolean found = false;
         Vector2f d = new Vector2f(); 
-        Vector2f.Vector2fSubtract(C,O, d);
+        Vector2f.Vector2fSubtract(C, O, d);
         
         for (int i = 0; i < 2; ++i)
         {
@@ -418,11 +418,11 @@ public class Line {
     }
     
     public static void main(String [] args) {
-        Line l = new Line(new Vector2f(-1,-1), new Vector2f(1,1));
+        Line l = new Line(new Vector2f(-1, -1), new Vector2f(1, 1));
 //        Vector2f Pnear = new Vector2f();
 //        Vector2f Pfar = new Vector2f();
-        Vector2f C = new Vector2f(2,2);
-        Vector2f E = new Vector2f(2,2);
+        Vector2f C = new Vector2f(2, 2);
+        Vector2f E = new Vector2f(2, 2);
 //        Vector2f [] D = new Vector2f[2];
 //        //for(int i = 0 ; i < 2; i++) {
 //            D[0] = new Vector2f(0,0);
@@ -430,7 +430,7 @@ public class Line {
 //        //}
 //        l.SegmentIntersectBox(l, C, R, D, Pnear, Pfar);
         
-        float [] t = {0,0};
+        float [] t = {0, 0};
         intersectLineAABB(l.a, l.b, C, E, t, FloatUtil.epsilon);
         
         Vector2f tmp = new Vector2f();

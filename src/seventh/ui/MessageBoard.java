@@ -118,7 +118,7 @@ public class MessageBoard extends Widget {
      * @param timeStep
      */
     public void update(TimeStep timeStep) {
-        if ( ! this.messages.isEmpty() ) {
+        if ( !this.messages.isEmpty() ) {
             
             // determine if the message has expired.
             Message msg = this.messages.peek();

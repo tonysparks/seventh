@@ -62,8 +62,8 @@ public class ClientBullet extends ClientEntity {
                 Vector2f.Vector2fPerpendicular(direction, offset);
                 
                 // randomly position the emitter position
-                Vector2f.Vector2fMS(victim.getCenterPos(), direction, 6+game.getRandom().nextInt(5), bloodPos);
-                float moveBy = rand.nextBoolean() ? -rand.nextInt(10) : rand.nextInt(10);
+                Vector2f.Vector2fMS(victim.getCenterPos(), direction, 6 + game.getRandom().nextInt(5), bloodPos);
+                float moveBy = rand.nextBoolean() ? -(rand.nextInt(10)) : rand.nextInt(10);
                 Vector2f.Vector2fMA(bloodPos, offset, moveBy, bloodPos);
                 
                 game.addBackgroundEffect(Emitters.newBulletImpactFleshEmitter(bloodPos, direction));
@@ -161,7 +161,7 @@ public class ClientBullet extends ClientEntity {
         if(ent instanceof ClientPlayerEntity) {
             ClientPlayerEntity playerEntity = (ClientPlayerEntity)ent;
             ClientWeapon weapon = playerEntity.getWeapon();
-            if(weapon!=null && weapon.isAutomatic()) {                
+            if(weapon != null && weapon.isAutomatic()) {                
                 playerEntity.emitBulletCasing();
             }
         }

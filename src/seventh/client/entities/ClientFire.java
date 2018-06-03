@@ -43,7 +43,7 @@ public class ClientFire extends ClientEntity {
             public void onRemove(ClientEntity me, ClientGame game) {
                                 
                 // fade the fire sound off
-                if(sound!=null) {
+                if(sound != null) {
                     game.addForegroundEffect(new Effect() {   
                         float volume = sound.getVolume();
                         

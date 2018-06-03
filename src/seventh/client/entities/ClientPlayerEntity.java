@@ -108,7 +108,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         this.bounds.width = 24;//16;
         this.bounds.height = 24;
         
-        this.selectionBounds = new Rectangle(40,40);
+        this.selectionBounds = new Rectangle(40, 40);
         this.bulletCasingPos = new Vector2f();
         
         this.damaged = new boolean[8];
@@ -192,7 +192,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     
     
     public void emitBulletCasing() {
-        if(!this.isOperatingVehicle() && (this.lastUpdate+200 > this.gameClock)) {
+        if(!this.isOperatingVehicle() && (this.lastUpdate + 200 > this.gameClock)) {
             Vector2f.Vector2fMA(getCenterPos(), getFacing(), 10.0f, this.bulletCasingPos);
             this.effects.spawnBulletCasing(this.bulletCasingPos, getOrientation());
         }
@@ -291,7 +291,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     protected int calculateMovementSpeed() {
         int speed = PLAYER_SPEED;
         int mSpeed = speed;
-        if(currentState==State.WALKING) {
+        if(currentState == State.WALKING) {
             mSpeed = (int)( (float)speed * WALK_SPEED_FACTOR);
         }
         else if(currentState == State.SPRINTING) {            
@@ -471,7 +471,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                 }
             }
             
-            if(weapon!=null) {
+            if(weapon != null) {
                 weapon.updateState(netWeapon, time);                
             }
         }
@@ -501,8 +501,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         this.sprite.update(timeStep);
         
         
-        if ((lastUpdate+150) < clockTime && !isControlledByLocalPlayer()) {
-            fadeAlphaColor = 255 - ((int)(clockTime-lastUpdate)/3);
+        if ((lastUpdate + 150) < clockTime && !isControlledByLocalPlayer()) {
+            fadeAlphaColor = 255 - ((int)(clockTime - lastUpdate) / 3);
             if (fadeAlphaColor < 0) fadeAlphaColor = 0;                        
         }
         else {
@@ -523,7 +523,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         
         Vector2f.Vector2fMA(mussleFlash.getPos(), getFacing(), 40.0f, mussleFlash.getPos());
         mussleFlash.setOrientation(getOrientation());
-        mussleFlash.setLuminacity((fadeAlphaColor-150)/255.0f);        
+        mussleFlash.setLuminacity((fadeAlphaColor - 150) / 255.0f);        
         mussleFlash.setLuminacity(0.9f);
         mussleFlash.setColor(0.7f,.7f,0.5f);
         
@@ -536,7 +536,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
          * would cause damageDelta to be < 0)
          */                
         if((previousNetUpdate+400) >= clockTime) {
-            for(int i = 0; i < this.damaged.length;i++) {
+            for(int i = 0; i < this.damaged.length; i++) {
                 if(this.damaged[i]) {
                     onDamage();
                     this.damaged[i] = false;
@@ -544,7 +544,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             }
         }    
         else {
-            for(int i = 0; i < this.damaged.length;i++) {                
+            for(int i = 0; i < this.damaged.length; i++) {                
                 this.damaged[i] = false;                
             }
         }
@@ -667,7 +667,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                 
                 
                 
-                if(anim!=null) {
+                if(anim != null) {
                     // Objective game type keeps the dead bodies around
                     boolean persist = this.game.getGameType().equals(GameType.Type.OBJ);
                     
@@ -689,7 +689,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
      */
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
-        canvas.setCompositeAlpha(fadeAlphaColor/255.0f);
+        canvas.setCompositeAlpha(fadeAlphaColor / 255.0f);
         canvas.setColor(teamColor, fadeAlphaColor);    
         
         //states[currentState].render(canvas, camera)
@@ -707,7 +707,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             if (invinceableTime > 0 || isSelected()) {
                 canvas.setColor(teamColor, 122);
                 canvas.fillCircle(20, rx - (bounds.width/2f), ry - (bounds.height/2f), null);
-                canvas.drawCircle(21, rx - (bounds.width/2f)-1f, ry - (bounds.height/2f)-1f, 0xff000000);
+                canvas.drawCircle(21, rx - (bounds.width/2f) - 1f, ry - (bounds.height/2f) - 1f, 0xff000000);
             }                
         }
                 

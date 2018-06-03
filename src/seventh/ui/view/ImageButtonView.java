@@ -171,8 +171,8 @@ public class ImageButtonView extends ButtonView {
                     int uw = this.buttonUpImage.getRegionWidth();
                     int uh = this.buttonUpImage.getRegionHeight();
                     
-                    int w = uw / 2 - this.buttonImage.getRegionWidth()/2;
-                    int h = uh / 2 - this.buttonImage.getRegionHeight()/2  + 5;
+                    int w = uw / 2 - this.buttonImage.getRegionWidth() / 2;
+                    int h = uh / 2 - this.buttonImage.getRegionHeight() / 2  + 5;
                     
                     if ( button.isPressed() ) {
                         if ( this.buttonDownImage != null) {        
@@ -200,7 +200,7 @@ public class ImageButtonView extends ButtonView {
                 }
                 else {
                     if(makeBig) {
-                        renderer.drawScaledImage(this.buttonUpImage, (int)position.x, (int)position.y, r.width+5, r.height+5, color);
+                        renderer.drawScaledImage(this.buttonUpImage, (int)position.x, (int)position.y, r.width + 5, r.height + 5, color);
                     }
                     else {
                         renderer.drawScaledImage(this.buttonUpImage, (int)position.x, (int)position.y, r.width, r.height, color);

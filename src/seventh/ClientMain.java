@@ -152,7 +152,7 @@ public class ClientMain {
         }
         finally {
     //        System.exit(0);
-            if(config!=null) {
+            if(config != null) {
                 //config.save(CLIENT_CFG_PATH);
             }
         }
@@ -160,7 +160,7 @@ public class ClientMain {
     
     public static void logVideoSpecs(Logger console) {
         try {
-            if(Gdx.graphics!=null) {                
+            if(Gdx.graphics != null) {                
                 console.println("GL30: " + Gdx.graphics.isGL30Available());
                 console.println("OpenGL Version: " + Gdx.gl.glGetString(GL20.GL_VERSION));
                 console.println("OpenGL Vendor: " + Gdx.gl.glGetString(GL20.GL_VENDOR));
@@ -190,8 +190,8 @@ public class ClientMain {
         console.println("");
         console.println("Seventh: " + SeventhGame.getVersion());
         console.println("Available processors (cores): " + runtime.availableProcessors());
-        console.println("Free memory (MiB): " + runtime.freeMemory()/MB);
-        console.println("Max memory (MiB): " + (runtime.maxMemory()==Long.MAX_VALUE ? "no limit" : Long.toString(runtime.maxMemory()/MB)) );
+        console.println("Free memory (MiB): " + runtime.freeMemory() / MB);
+        console.println("Max memory (MiB): " + (runtime.maxMemory() == Long.MAX_VALUE ? "no limit" : Long.toString(runtime.maxMemory() / MB)) );
         console.println("Available for JVM (MiB): " + runtime.totalMemory() / MB);
         
         /* Get a list of all filesystem roots on this system */
@@ -200,9 +200,9 @@ public class ClientMain {
         /* For each filesystem root, print some info */
         for (File root : roots) {
           console.println("File system root: " + root.getAbsolutePath());
-          console.println("\tTotal space (MiB): " + root.getTotalSpace()/MB);
-          console.println("\tFree space (MiB): " + root.getFreeSpace()/MB);
-          console.println("\tUsable space (MiB): " + root.getUsableSpace()/MB);
+          console.println("\tTotal space (MiB): " + root.getTotalSpace() / MB);
+          console.println("\tFree space (MiB): " + root.getFreeSpace() / MB);
+          console.println("\tUsable space (MiB): " + root.getUsableSpace() / MB);
         }
         
         

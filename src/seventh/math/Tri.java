@@ -8,7 +8,7 @@ package seventh.math;
  * @author Tony
  *
  */
-public class Tri<X,Y,Z> extends Pair<X, Y> {
+public class Tri<X, Y, Z> extends Pair<X, Y> {
 
     /**
      * Thrid Var
