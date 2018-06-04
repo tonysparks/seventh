@@ -12,7 +12,7 @@ import java.util.Comparator;
  *
  */
 public class Arrays {
-	private static SortStrategy sortStrategy;
+	private SortStrategy sortStrategy;
 	
 	/**
      * Set the strategy.
@@ -62,7 +62,7 @@ public class Arrays {
      * @param comp
      * @return the supplied array
      */
-    public static <T> T[] sort(T[] array, Comparator<T> comp) {
+    public <T> T[] sort(T[] array, Comparator<T> comp) {
         if (array == null || array.length == 0) {
             return array;
         }
