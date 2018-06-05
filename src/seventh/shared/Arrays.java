@@ -12,16 +12,6 @@ import java.util.Comparator;
  *
  */
 public class Arrays {
-	private SortStrategy sortStrategy;
-	
-	/**
-     * Set the strategy.
-     * 
-     * @param newSortStrategy
-     */
-	public void setSortStrategy(SortStrategy newSortStrategy) {
-		this.sortStrategy = newSortStrategy;
-	}
 	
     /**
      * Counts the amount of used elements in the array
@@ -63,7 +53,9 @@ public class Arrays {
      * @return the supplied array
      */
     public <T> T[] sort(T[] array, Comparator<T> comp) {
-        sortStrategy.sort(array, comp);
+    	SortStrategyFactory = new SortStrategyFactory();
+    	SortStrategy sortStrategy = SortStrategyFactory.getSortStrategy(array);
+    	sortStrategy.sort(array, comp);
         return array;
     }
 }
