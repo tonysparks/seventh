@@ -375,11 +375,9 @@ public class Hud implements Renderable {
             }
             
             drawHealth(canvas, ent.getHealth());
-            drawStamina(canvas, ent.getStamina());
         }
         else {
             drawHealth(canvas, 0);
-            drawStamina(canvas, 0);
         }
     
 
@@ -455,10 +453,10 @@ public class Hud implements Renderable {
         
         int imageWidth = sprite.getRegionWidth();
 
-        canvas.drawImage(sprite, 10, canvas.getHeight() - sprite.getRegionHeight() - 40, 0xffffff00);
+        canvas.drawImage(sprite, 10, canvas.getHeight() - sprite.getRegionHeight() - 20, 0xffffff00);
         canvas.setFont("Consola", 14);
         canvas.boldFont();                
-        RenderFont.drawShadedString(canvas, "x " + numberOfGrenades, imageWidth+20, canvas.getHeight() - 50, 0xffffff00);
+        RenderFont.drawShadedString(canvas, "x " + numberOfGrenades, imageWidth+20, canvas.getHeight() - 30, 0xffffff00);
         
     }
     
@@ -614,33 +612,6 @@ public class Hud implements Renderable {
         canvas.drawSprite(Art.healthIcon, x - 20, y - 16, null);
     }
     
-    
-    private void drawStamina(Canvas canvas, int stamina) {
-        int x = 15;
-        int y = canvas.getHeight() - 25;
-        
-        canvas.fillRect( x, y, 100, 15, 0x8f4a5f8f );
-        if (stamina > 0) {
-            canvas.fillRect( x, y, (100 * stamina/100), 15, 0xff3a9aFF );
-        }
-        
-        // add a shadow effect
-        canvas.drawLine( x, y+1, x+100, y+1, 0x8f000000 );
-        canvas.drawLine( x, y+2, x+100, y+2, 0x5f000000 );
-        canvas.drawLine( x, y+3, x+100, y+3, 0x2f000000 );
-        canvas.drawLine( x, y+4, x+100, y+4, 0x0f000000 );
-        canvas.drawLine( x, y+5, x+100, y+5, 0x0b000000 );
-        
-        y = y+15;
-        canvas.drawLine( x, y-5, x+100, y-5, 0x0b000000 );
-        canvas.drawLine( x, y-4, x+100, y-4, 0x0f000000 );
-        canvas.drawLine( x, y-3, x+100, y-3, 0x2f000000 );
-        canvas.drawLine( x, y-2, x+100, y-2, 0x5f000000 );
-        canvas.drawLine( x, y-1, x+100, y-1, 0x8f000000 );        
-        
-        canvas.drawRect( x, y-15, 101, 15, 0xff000000 );
-        canvas.drawSprite(Art.staminaIcon, x + 108, y - 14, null);
-    }
     
     private void drawBombProgressBar(Canvas canvas, Camera camera) {
         this.bombProgressBarView.render(canvas, camera, 0);

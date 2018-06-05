@@ -202,7 +202,21 @@ public class GameServer {
         /* if this is a dedicated server, we'll contact the 
          * master server so that users know about this server
          */
-        contactDedicatedServer(settings.isDedicatedServer,settings.isLAN);
+        this.console.print("Initializing MasterServerRegistration...");
+        this.registration = new MasterServerRegistration(this.serverContext);
+        if(settings.isDedicatedServer) {
+            this.registration.start();
+            this.console.println("done!");
+        }
+        else this.console.println("");
+        
+        this.console.print("Initializing LANServerRegistration...");
+        this.lanRegistration = new LANServerRegistration(this.serverContext);
+        if(settings.isLAN) {
+            this.lanRegistration.start();
+            this.console.println("done!");
+        }
+        else this.console.println("");
         
         /* attempt to attach a debugger */
         if(config.isDebuggerEnabled()) {
@@ -280,28 +294,6 @@ public class GameServer {
         
         console.println("Done initialzing the game server, ready to launch network...");
     }
-
-
-	/**
-	 * @param settings
-	 */
-    private void contactDedicatedServer(boolean isDedicatedServer,boolean isLAN) {
-	    this.console.print("Initializing MasterServerRegistration...");
-        this.registration = new MasterServerRegistration(this.serverContext);
-        if(isDedicatedServer) {
-            this.registration.start();
-            this.console.println("done!");
-        }
-        else this.console.println("");
-        
-        this.console.print("Initializing LANServerRegistration...");
-        this.lanRegistration = new LANServerRegistration(this.serverContext);
-        if(isLAN) {
-            this.lanRegistration.start();
-            this.console.println("done!");
-        }
-        else this.console.println("");
-	}
     
     
     /**
@@ -310,7 +302,7 @@ public class GameServer {
      * @param config
      * @return the {@link DebugableListener} if one is available, or null
      */
-     private DebugableListener createDebugListener(ServerSeventhConfig config) {
+    private DebugableListener createDebugListener(ServerSeventhConfig config) {
         try {
             String className = config.getDebuggerClassName();
             if(className != null && !"".equals(className)) {
@@ -395,7 +387,7 @@ public class GameServer {
             @Override
             public void execute(Console console, String... args) {
                 ServerSeventhConfig config = serverContext.getConfig();
-                if(args==null||args.length < 1) {
+                if(args == null || args.length < 1) {
                     console.println("sv_privatePassword: " + config.getPrivatePassword());
                 }
                 else {
@@ -404,12 +396,12 @@ public class GameServer {
             }
         });
         
-        console.addCommand(new Command("add_bot"){            
+        console.addCommand(new Command("add_bot") {            
             @Override
             public void execute(Console console, String... args) {
                 Game game = serverContext.getGameSession().getGame();
                 if(game != null) {
-                    if( args.length < 1) {
+                    if(args.length < 1) {
                         console.println("<usage> add_bot [bot name] [optional team]");
                     }
                     else {
@@ -446,7 +438,7 @@ public class GameServer {
         });
         
         
-        console.addCommand(new Command("add_dummy_bot"){            
+        console.addCommand(new Command("add_dummy_bot") {            
             @Override
             public void execute(Console console, String... args) {
                 Game game = serverContext.getGameSession().getGame();
@@ -461,7 +453,7 @@ public class GameServer {
             }
         });
         
-        console.addCommand(new Command("kick"){            
+        console.addCommand(new Command("kick") {            
             @Override
             public void execute(Console console, String... args) {
                 Game game = serverContext.getGameSession().getGame();
@@ -480,7 +472,7 @@ public class GameServer {
             }
         });
         
-        console.addCommand(new Command("kill"){            
+        console.addCommand(new Command("kill") {            
             @Override
             public void execute(Console console, String... args) {
                 GameInfo game = serverContext.getGameSession().getGame();
@@ -491,7 +483,7 @@ public class GameServer {
                         default: {
                             int id = Integer.parseInt(args[0]);
                             PlayerInfo player = game.getPlayerById(id);
-                            if(player!=null&&!player.isDead()) {
+                            if(player != null && !player.isDead()) {
                                 player.getEntity().kill(player.getEntity());
                             }
                         }
@@ -501,7 +493,7 @@ public class GameServer {
             }
         });
         
-        console.addCommand(new Command("players"){            
+        console.addCommand(new Command("players") {            
             @Override
             public void execute(final Console console, String... args) {
                 GameInfo game = serverContext.getGameSession().getGame();
@@ -522,7 +514,7 @@ public class GameServer {
             }
         });
         
-        console.addCommand(new Command("stats"){            
+        console.addCommand(new Command("stats") {            
             @Override
             public void execute(final Console console, String... args) {
                 Game game = serverContext.getGameSession().getGame();
@@ -564,7 +556,7 @@ public class GameServer {
             }
         });
         
-        console.addCommand(new Command("sv_exit"){            
+        console.addCommand(new Command("sv_exit") {            
             @Override
             public void execute(Console console, String... args) {
                 console.println("Shutting down the system...");
@@ -579,7 +571,7 @@ public class GameServer {
             console.addCommand("quit", console.getCommand("sv_exit"));
         }
         
-        console.addCommand(new Command("get"){            
+        console.addCommand(new Command("get") {            
             @Override
             public void execute(Console console, String... args) {
                 switch(args.length) {
@@ -592,7 +584,7 @@ public class GameServer {
             }
         });
                 
-        console.addCommand(new Command("set"){            
+        console.addCommand(new Command("set") {            
             @Override
             public void execute(Console console, String... args) {
                 switch(args.length) {
@@ -608,7 +600,7 @@ public class GameServer {
             }
         });
         
-        console.addCommand(new Command("seti"){            
+        console.addCommand(new Command("seti") {            
             @Override
             public void execute(Console console, String... args) {
                 switch(args.length) {
@@ -784,7 +776,7 @@ public class GameServer {
             final int maxIterations = 5;
             final long maxDelta = 250;
             final long frameRate = Math.abs(serverContext.getConfig().getServerFrameRate());
-            final long dt = 1000 / frameRate==0 ? 20 : frameRate;
+            final long dt = 1000 / frameRate == 0 ? 20 : frameRate;
 
             final TimeStep timeStep = new TimeStep();
             timeStep.setDeltaTime(dt);

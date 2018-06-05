@@ -27,7 +27,7 @@ public class JoystickGameController extends ControllerInput implements GameContr
     @Override
     public boolean buttonDown(Controller controller, int button) {
         boolean result = super.buttonDown(controller, button);
-        if(button >-1 && button < this.isButtonReleased.length)
+        if(button > -1 && button < this.isButtonReleased.length)
             this.isButtonReleased[button] = false;
         return result;
     }
@@ -36,7 +36,7 @@ public class JoystickGameController extends ControllerInput implements GameContr
     public boolean buttonUp(Controller controller, int button) {
         boolean result = super.buttonUp(controller, button);
         
-        if(button >-1 && button < this.isButtonReleased.length)
+        if(button > -1 && button < this.isButtonReleased.length)
             this.isButtonReleased[button] = true;
         return result;
     }
@@ -225,6 +225,7 @@ public class JoystickGameController extends ControllerInput implements GameContr
             
             if (isButtonDown(keyMap.getIronSightsBtn())) {
                 inputKeys |= Actions.IRON_SIGHTS.getMask();
+                inputKeys |= Actions.WALK.getMask();
             }
             
             if (isButtonDown(keyMap.getMeleeAttackBtn())) {

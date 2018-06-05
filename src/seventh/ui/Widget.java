@@ -183,7 +183,7 @@ public class Widget {
     }
 
     public void setTheme(Theme theme) {
-        if(theme!=null) {
+        if(theme != null) {
             setForegroundColor(theme.getForegroundColor());
             setBackgroundColor(theme.getBackgroundColor());
             this.theme = theme;
@@ -730,7 +730,7 @@ public class Widget {
             // don't remove from this list if 
             // we are destroying all Widgets - avoids
             // concurrent modification exception
-            if ( ! this.isDestroying ) {
+            if ( !this.isDestroying ) {
                 this.globalWidgets.remove(w);
             }
         }
@@ -744,7 +744,7 @@ public class Widget {
             int size = globalWidgets.size();
             for(int i = 0; i < size; i++) {
                 Widget widget = this.globalWidgets.get(i);
-                if ( widget.hasFocus() && ! widget.isDisabled() ) {
+                if ( widget.hasFocus() && !widget.isDisabled() ) {
                     if ( widget.fireKeyTypedEvent(key) ) {
                         return true;
                     }
@@ -762,7 +762,7 @@ public class Widget {
             int size = globalWidgets.size();
             for(int i = 0; i < size; i++) {
                 Widget widget = this.globalWidgets.get(i);
-                if ( widget.hasFocus() && ! widget.isDisabled() ) {
+                if ( widget.hasFocus() && !widget.isDisabled() ) {
                     if ( widget.fireKeyEvent(event, true) ) {
                         return true;
                     }
@@ -779,7 +779,7 @@ public class Widget {
             int size = globalWidgets.size();
             for(int i = 0; i < size; i++) {
                 Widget widget = this.globalWidgets.get(i);
-                if ( widget.hasFocus() && ! widget.isDisabled() ) {
+                if ( widget.hasFocus() && !widget.isDisabled() ) {
                     if ( widget.fireKeyEvent(event, false) ) {
                         return true;
                     }
@@ -796,7 +796,7 @@ public class Widget {
             int size = globalWidgets.size();
             for(int i = 0; i < size; i++) {
                 Widget widget = this.globalWidgets.get(i);
-                if ( /*widget.hasFocus() &&*/ ! widget.isDisabled() ) {
+                if ( /*widget.hasFocus() &&*/ !widget.isDisabled() ) {
                     if ( widget.fireMouseEvent(x, y, pointer, button, true) ) {
                         return true;
                     }
@@ -812,7 +812,7 @@ public class Widget {
             int size = globalWidgets.size();
             for(int i = 0; i < size; i++) {
                 Widget widget = this.globalWidgets.get(i);
-                if ( /*widget.hasFocus() &&*/ ! widget.isDisabled() ) {
+                if ( /*widget.hasFocus() &&*/ !widget.isDisabled() ) {
                     if ( widget.fireMouseEvent(x, y, pointer, button, false) ) {
                         return true;
                     }
@@ -846,8 +846,8 @@ public class Widget {
             int size = globalWidgets.size();
             for(int i = 0; i < size; i++) {
                 Widget widget = this.globalWidgets.get(i);
-                if ( /*widget.hasFocus() &&*/ ! widget.isDisabled() ) {
-                    if ( widget.fireMouseMotionEvent(x,y) ) {
+                if ( /*widget.hasFocus() &&*/ !widget.isDisabled() ) {
+                    if ( widget.fireMouseMotionEvent(x, y) ) {
                         return true;
                     }
                 }
@@ -863,7 +863,7 @@ public class Widget {
             int size = globalWidgets.size();
             for(int i = 0; i < size; i++) {
                 Widget widget = this.globalWidgets.get(i);
-                if ( /*widget.hasFocus() &&*/ ! widget.isDisabled() ) {
+                if ( /*widget.hasFocus() &&*/ !widget.isDisabled() ) {
                     if ( widget.fireMouseScrolledEvent(amount) ) {
                         return true;
                     }

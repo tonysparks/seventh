@@ -16,15 +16,15 @@ import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
-import seventh.shared.EventDispatcher; 
+import seventh.shared.EventDispatcher;
 import seventh.shared.SeventhConstants;
 
-/** 
+/**
  * Keeps track of player stats for kill streaks and bonuses
  * 
  * @author Tony
  *
- */ 
+ */
 public class PlayerAwardSystem {
     
     /**
@@ -96,12 +96,26 @@ public class PlayerAwardSystem {
         }
         
         public void roundEnded() {
-            awardByKill();
-            awardByRatio();
-        }
-
-		private void awardByRatio() {
-			float ratio = 1.0f;
+            if(deaths == 0) {
+                if(kills == 0) {
+                    // send out coward award
+                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.Coward));
+                }
+                else if(kills < 5) {
+                    // send out 
+                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.Excellence));                    
+                }
+                else if(kills < 10) {
+                    // send out 
+                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.BeastMode));                    
+                }
+                else {
+                    // send out 
+                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.FavreMode));                    
+                }
+            }
+            
+            float ratio = 1.0f;
             if(deaths>0) {
                 ratio = kills / deaths;
             }
@@ -122,40 +136,27 @@ public class PlayerAwardSystem {
                     dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.Marksman));
                 }
             }
-		}
-
-		private void awardByKill() {
-			if(deaths == 0) {
-                if(kills == 0) {
-                    // send out coward award
-                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.Coward));
-                }
-                else if(kills < 5) {
-                    // send out 
-                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.Excellence));                    
-                }
-                else if(kills < 10) {
-                    // send out 
-                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.BeastMode));                    
-                }
-                else {
-                    // send out 
-                    dispatcher.queueEvent(new PlayerAwardEvent(this, player, Award.FavreMode));                    
-                }
-            }
-		}
+            
+        }
         
         public void addKill() {                        
-            awardByKillStreak();
+            this.killStreak++;
+            if(this.killStreak > this.highestKillStreak) {
+                this.highestKillStreak = this.killStreak;
+            }
+            
+            // if the kill streak is worthy, send out an event
+            switch(this.killStreak) {
+                case 3:
+                case 5:                    
+                case 10:                    
+                case 15:
+                    dispatcher.queueEvent(new KillStreakEvent(this, player, this.killStreak));
+                    break;                
+            }
             
             // TODO - use game time, instead of wall time
-            awardByKillRoll();
-            
-            this.kills++;
-        }
-
-		private void awardByKillRoll() {
-			long killTime = System.currentTimeMillis();            
+            long killTime = System.currentTimeMillis();            
             if(killTime-this.lastKillTime < 3000) {
                 this.killRoll++;
                 
@@ -170,24 +171,9 @@ public class PlayerAwardSystem {
             }
             
             this.lastKillTime = killTime;
-		}
-
-		private void awardByKillStreak() {
-			this.killStreak++;
-            if(this.killStreak > this.highestKillStreak) {
-                this.highestKillStreak = this.killStreak;
-            }
             
-            // if the kill streak is worthy, send out an event
-            switch(this.killStreak) {
-                case 3:
-                case 5:                    
-                case 10:                    
-                case 15:
-                    dispatcher.queueEvent(new KillStreakEvent(this, player, this.killStreak));
-                    break;                
-            }
-		}
+            this.kills++;
+        }
         
         public void addDeath() {
             this.killStreak = 0;

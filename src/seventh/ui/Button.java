@@ -88,8 +88,8 @@ public class Button extends Widget implements Hoverable {
             @Override
             public boolean mouseMoved(int x, int y) {                        
                 super.mouseMoved(x, y);
-                if ( ! isDisabled() ) {
-                    if ( getScreenBounds().contains(x,y)) {                                                                            
+                if ( !isDisabled() ) {
+                    if ( getScreenBounds().contains(x, y) ) {                                                                            
                         setHovering(true);        
                         return false;
                     }
@@ -100,8 +100,8 @@ public class Button extends Widget implements Hoverable {
             
             @Override
             public boolean touchDown(int x, int y, int pointer, int button) {
-                if ( ! isDisabled() ) {
-                    if ( getScreenBounds().contains(x,y)) {                                                                            
+                if ( !isDisabled() ) {
+                    if ( getScreenBounds().contains(x, y) ) {                                                                            
                         setPressed(true);
                         click();
                         return true;                                                                
@@ -118,8 +118,8 @@ public class Button extends Widget implements Hoverable {
             @Override
             public boolean touchUp(int x, int y, int pointer, int button) {
                 setPressed(false);
-                if ( ! isDisabled() ) {
-                    if ( getScreenBounds().contains(x,y)) {                                                                                                    
+                if ( !isDisabled() ) {
+                    if ( getScreenBounds().contains(x, y) ) {                                                                                                    
                         return true;                                                                
                     }
                 }
@@ -183,7 +183,7 @@ public class Button extends Widget implements Hoverable {
     @Override
     public void setTheme(Theme theme) {    
         super.setTheme(theme);
-        if(theme!=null) {
+        if(theme != null) {
             label.setFont(theme.getPrimaryFontName());
         }
     }
@@ -252,7 +252,7 @@ public class Button extends Widget implements Hoverable {
         if(isHovering) {
             this.label.setTextSize(this.hoverTextSize);
             Theme theme = getTheme();
-            if(theme!=null) {
+            if(theme != null) {
                 this.label.setForegroundColor(theme.getHoverColor());
             }
             
@@ -264,7 +264,7 @@ public class Button extends Widget implements Hoverable {
         else {
             this.label.setTextSize(this.normalTextSize);
             Theme theme = getTheme();
-            if(theme!=null) {
+            if(theme != null) {
                 this.label.setForegroundColor(theme.getForegroundColor());
             }
         }

@@ -63,7 +63,7 @@ public class ClientGameEffects {
 
         this.playerBloodEmitters = new Emitter[SeventhConstants.MAX_PLAYERS*3];
         for(int i = 0; i < this.playerBloodEmitters.length; i++) {
-            this.playerBloodEmitters[i] = Emitters.newBloodEmitter(new Vector2f(), 5, 10_000, 30)                                                   
+            this.playerBloodEmitters[i] = Emitters.newBloodEmitter(new Vector2f(), 5, 20_000, 30)                                                   
                                                   .kill();             
         }
         

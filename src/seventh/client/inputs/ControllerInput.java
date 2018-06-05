@@ -71,7 +71,7 @@ public class ControllerInput implements ControllerListener {
             // adjust offset from the keyboard keys 
             key -= NumberOfKeyboardKeys;
             
-            if(key>-1&&key<values.length) {
+            if(key > -1 && key < values.length) {
                 return values[key];
             }
             return null;
@@ -160,7 +160,7 @@ public class ControllerInput implements ControllerListener {
      * @return true if the right trigger is down.
      */
     public boolean isRightTriggerDown() {
-        return this.triggers < -this.triggerSensitivity;
+        return this.triggers < -(this.triggerSensitivity);
     }
     
     /**
@@ -251,28 +251,28 @@ public class ControllerInput implements ControllerListener {
     }
     
     public boolean isXAxisMovedLeftOnLeftJoystick() {
-        return movements[1] < -this.leftJoystickSensitivity;
+        return movements[1] < -(this.leftJoystickSensitivity);
     }
     public boolean isXAxisMovedRightOnLeftJoystick() {
         return movements[1] > this.leftJoystickSensitivity;
     }
     
     public boolean isXAxisMovedLeftOnRightJoystick() {
-        return movements[3] < -this.rightJoystickSensitivity;
+        return movements[3] < -(this.rightJoystickSensitivity);
     }
     public boolean isXAxisMovedRightOnRightJoystick() {
         return movements[3] > this.rightJoystickSensitivity;
     }
     
     public boolean isYAxisMovedUpOnLeftJoystick() {
-        return movements[0] < -this.leftJoystickSensitivity;
+        return movements[0] < -(this.leftJoystickSensitivity);
     }    
     public boolean isYAxisMovedDownOnLeftJoystick() {
         return movements[0] > this.leftJoystickSensitivity;
     }
     
     public boolean isYAxisMovedUpOnRightJoystick() {
-        return movements[2] < -this.rightJoystickSensitivity;
+        return movements[2] < -(this.rightJoystickSensitivity);
     }    
     public boolean isYAxisMovedDownOnRightJoystick() {
         return movements[2] > this.rightJoystickSensitivity;
@@ -347,7 +347,7 @@ public class ControllerInput implements ControllerListener {
     
     @Override
     public boolean buttonUp(Controller controller, int button) {
-        if(button >-1 && button < this.buttons.length)
+        if(button > -1 && button < this.buttons.length)
             this.buttons[button] = false;
         
         System.out.println("ButtonUp:" + button);
@@ -356,7 +356,7 @@ public class ControllerInput implements ControllerListener {
     
     @Override
     public boolean buttonDown(Controller controller, int button) {
-        if(button >-1 && button < this.buttons.length)
+        if(button > -1 && button < this.buttons.length)
             this.buttons[button] = true;
         
 //        System.out.println("ButtonDown:" + button);
@@ -365,11 +365,11 @@ public class ControllerInput implements ControllerListener {
     
     @Override
     public boolean axisMoved(Controller controller, int axisCode, float value) {
-        if(axisCode==4) {
+        if(axisCode == 4) {
             triggers = value;
         }
                         
-        if(axisCode<4) {
+        if(axisCode < 4) {
             movements[axisCode] = value;
         }
                     

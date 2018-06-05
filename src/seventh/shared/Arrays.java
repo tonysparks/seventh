@@ -19,7 +19,7 @@ public class Arrays {
      * 
      * @param newSortStrategy
      */
-	public void setStrategy(SortStrategy newSortStrategy) {
+	public void setSortStrategy(SortStrategy newSortStrategy) {
 		this.sortStrategy = newSortStrategy;
 	}
 	

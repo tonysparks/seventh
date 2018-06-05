@@ -300,7 +300,12 @@ public class SeventhGame implements ApplicationListener {
     
         try {
             /* make sure the mouse doesn't move off the screen */
-            Gdx.input.setCursorCatched(true);
+            seventh.client.gfx.Cursor cursor = this.uiManager.getCursor();
+            cursor.setClampEnabled(config.getVideo().isFullscreen());
+            Gdx.input.setCursorCatched(config.getVideo().isFullscreen());
+            
+            //Gdx.input.setCursorCatched(true);
+            //Gdx.input.setCursorPosition(getScreenWidth()/2, getScreenHeight()/2);
             
             Cursor emptyCursor = null;
             if (Mouse.isCreated()) {
@@ -347,7 +352,6 @@ public class SeventhGame implements ApplicationListener {
         }
         
         Gdx.input.setInputProcessor(this.inputs);
-//        Gdx.input.setCursorCatched(true);
         
         initControllers();        
         videoReload();        
@@ -380,7 +384,7 @@ public class SeventhGame implements ApplicationListener {
     }
     
     private void videoReload() {
-        Gdx.input.setCursorPosition(getScreenWidth()/2, getScreenHeight()/2);        
+        Gdx.input.setCursorPosition(getScreenWidth()/2, getScreenHeight()/2);
         setHWCursorVisible(false);
         
         this.inputs.addProcessor(new Inputs() {
@@ -399,6 +403,7 @@ public class SeventhGame implements ApplicationListener {
         setVSync(config.getVideo().isVsync());
         
         
+        
         this.canvas = new GdxCanvas();
         try {
             this.canvas.loadFont("./assets/gfx/fonts/Courier New.ttf", "Courier New");
@@ -413,8 +418,6 @@ public class SeventhGame implements ApplicationListener {
         catch (IOException e) {
             Cons.println("*** Unable to load font: " + e);
         }
-
-        setHWCursorVisible(false);
     }
     
     /* (non-Javadoc)
@@ -716,7 +719,6 @@ public class SeventhGame implements ApplicationListener {
      * Restarts the video 
      */
     public void restartVideo() {
-        setHWCursorVisible(false);
         videoReload();
     }
     

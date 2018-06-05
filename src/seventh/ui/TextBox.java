@@ -66,8 +66,8 @@ public class TextBox extends Widget implements Hoverable {
             @Override
             public boolean mouseMoved(int x, int y) {            
                 super.mouseMoved(x, y);
-                if ( ! isDisabled() ) {
-                    if ( getScreenBounds().contains(x,y)) {
+                if ( !isDisabled() ) {
+                    if ( getScreenBounds().contains(x, y) ) {
                         if(!hasFocus()) {
                             setHovering(true);
                         }
@@ -80,8 +80,8 @@ public class TextBox extends Widget implements Hoverable {
             
             @Override
             public boolean touchDown(int x, int y, int pointer, int button) {                
-                if ( ! isDisabled() ) {
-                    if ( getScreenBounds().contains(x,y)) {                                                                            
+                if ( !isDisabled() ) {
+                    if ( getScreenBounds().contains(x, y) ) {                                                                            
                         setFocus(true);                        
                         return false;                                                                
                     }
@@ -100,7 +100,7 @@ public class TextBox extends Widget implements Hoverable {
             }
             
             public boolean keyDown(int key) {
-                if(isDisabled()|| !hasFocus()) {
+                if(isDisabled() || !hasFocus()) {
                     return false;
                 }
                 
@@ -150,7 +150,7 @@ public class TextBox extends Widget implements Hoverable {
             
             @Override
             public boolean keyUp(int key) {
-                if(isDisabled()|| !hasFocus()) {
+                if(isDisabled() || !hasFocus()) {
                     return false;
                 }
                 
@@ -173,7 +173,7 @@ public class TextBox extends Widget implements Hoverable {
                 
                 switch(key) {        
                     case /*Keys.BACKSPACE*/8: {
-                        if(cursorIndex>0) {
+                        if(cursorIndex > 0) {
                             inputBuffer.deleteCharAt(--cursorIndex);                        
                             if(cursorIndex < 0) {
                                 cursorIndex = 0;
@@ -195,8 +195,8 @@ public class TextBox extends Widget implements Hoverable {
                         break;
                     }                
                     default: {
-                        char c =key;
-                        if(c>31&&c<127 && c != 96 && inputBuffer.length() < maxSize) {
+                        char c = key;
+                        if(c > 31 && c < 127 && c != 96 && inputBuffer.length() < maxSize) {
                             inputBuffer.insert(cursorIndex, key);
                             cursorIndex++;                
                             Sounds.playGlobalSound(Sounds.uiKeyType);

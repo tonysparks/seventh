@@ -80,7 +80,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             this.obb = new OBB(rect);
             this.obb.rotateAround(pos, (float) Math.toRadians(data.rotation));
             
-            int length = (int) this.obb.length();
+            int length = (int)this.obb.length();
             this.bounds.setSize(length, length);
             this.bounds.centerAround(this.obb.getCenter());
             
@@ -198,7 +198,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         this.loadAssets = loadAssets;
         this.objectDefinitions = new HashMap<>();
         
-        File objectsFile = new File(mapFile + ".objects.json");
+        File objectsFile = new File(mapFile + ".objects.leola");
         if(objectsFile.exists()) {
             String contents = new String(Files.readAllBytes(objectsFile.toPath()));
             LeoMap objectData = JSON.parseJson(runtime, contents).as();

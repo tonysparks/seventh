@@ -97,7 +97,7 @@ public class ClientGrenade extends ClientEntity {
         }
         
         
-        if(prevState==null || scale > 1) {
+        if(prevState == null || scale > 1) {
             this.orientation += rate * spinDirection;    
         }
                 

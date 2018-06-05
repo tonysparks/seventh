@@ -44,7 +44,29 @@ public class CompoundCursor extends Cursor {
         this.active = b;
         return this;
     }
-
+    
+    @Override
+    public boolean isClampEnabled() {    
+        return this.active.isClampEnabled();
+    }
+    
+    @Override
+    public void setClampEnabled(boolean isClampEnabled) {    
+        this.a.setClampEnabled(isClampEnabled);
+        this.b.setClampEnabled(isClampEnabled);
+    }
+    
+    @Override
+    public boolean isInverted() {    
+        return this.active.isInverted();
+    }
+    
+    @Override
+    public void setInverted(boolean isInverted) {
+        this.a.setInverted(isInverted);
+        this.b.setInverted(isInverted);
+    }
+    
     @Override
     public float getAccuracy() {
         return this.active.getAccuracy();
@@ -63,6 +85,11 @@ public class CompoundCursor extends Cursor {
     @Override
     public Vector2f getCursorPos() {    
         return this.active.getCursorPos();
+    }
+        
+    @Override
+    public Vector2f getPreviousCursorPos() {    
+        return this.active.getPreviousCursorPos();
     }
     
     @Override
@@ -103,6 +130,18 @@ public class CompoundCursor extends Cursor {
     public void moveTo(int x, int y) {
         this.a.moveTo(x, y);
         this.b.moveTo(x, y);
+    }
+        
+    @Override
+    public void snapTo(int x, int y) {    
+        this.a.snapTo(x, y);
+        this.b.snapTo(x, y);
+    }
+    
+    @Override
+    public void snapTo(Vector2f screenPos) {    
+        this.a.snapTo(screenPos);
+        this.b.snapTo(screenPos);
     }
     
     @Override
@@ -146,3 +185,4 @@ public class CompoundCursor extends Cursor {
     protected void doRender(Canvas canvas) {       
     }
 }
+

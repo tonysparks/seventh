@@ -30,7 +30,7 @@ public class ClientSpringfield extends ClientWeapon {
         this.weaponWeight = WeaponConstants.SPRINGFIELD_WEIGHT;
         
         this.weaponKickTime = 150; 
-        this.endFireKick = 28.7f; 
+        this.endFireKick = 20.7f; 
         this.beginFireKick = 0f; 
     }
 

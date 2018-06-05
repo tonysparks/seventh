@@ -18,7 +18,7 @@ import seventh.shared.Updatable;
  */
 public abstract class Cursor implements Updatable {
 
-    private Vector2f cursorPos;
+    private Vector2f cursorPos, previousCursorPos;
     private Rectangle bounds;
     private boolean isVisible;
     
@@ -29,6 +29,7 @@ public abstract class Cursor implements Updatable {
     private int prevX, prevY;
 
     private boolean isInverted;
+    private boolean isClampEnabled;
     
     /**
      * @param bounds
@@ -37,10 +38,26 @@ public abstract class Cursor implements Updatable {
     public Cursor(Rectangle bounds) {
         this.bounds = bounds;
         this.cursorPos = new Vector2f();
+        this.previousCursorPos = new Vector2f();
         this.isVisible = true;
         this.mouseSensitivity = 1.0f;
         this.accuracy = 1.0f;
         this.isInverted = false;
+        this.isClampEnabled = true;
+    }
+    
+    /**
+     * @return the isClampEnabled
+     */
+    public boolean isClampEnabled() {
+        return isClampEnabled;
+    }
+    
+    /**
+     * @param isClampEnabled the isClampEnabled to set
+     */
+    public void setClampEnabled(boolean isClampEnabled) {
+        this.isClampEnabled = isClampEnabled;        
     }
 
     /**
@@ -133,6 +150,40 @@ public abstract class Cursor implements Updatable {
      * move outside of the screen
      */
     private void clamp() {
+        int width = SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH;
+        int height = SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT;
+
+        if(!this.isClampEnabled) {
+            if(this.cursorPos.x < 0 ||
+               this.cursorPos.y < 0 ||
+               this.cursorPos.x > width ||
+               this.cursorPos.y > height) {
+                
+                Gdx.input.setCursorCatched(false);
+                
+                this.prevX = (int) this.previousCursorPos.x;
+                this.prevY = (int) this.previousCursorPos.y;
+                
+                int windowWidth = Gdx.graphics.getWidth();
+                int windowHeight = Gdx.graphics.getHeight();
+                
+                int nativeMouseX = (int) ((this.cursorPos.x/(float)width)  * (float)windowWidth);
+                int nativeMouseY = (int) ((this.cursorPos.y/(float)height) * (float)windowHeight);
+                
+                nativeMouseX = Math.min(windowWidth, nativeMouseX);
+                nativeMouseY = Math.min(windowHeight, nativeMouseY);
+                
+                nativeMouseX = Math.max(0, nativeMouseX);
+                nativeMouseY = Math.max(0, nativeMouseY);
+                
+                moveNativeMouse(nativeMouseX, nativeMouseY);
+            }
+            else {
+                Gdx.input.setCursorCatched(true);                
+            }
+            
+        }
+        
         if(this.cursorPos.x < 0)  {
             this.cursorPos.x = 0f;
         }
@@ -141,9 +192,6 @@ public abstract class Cursor implements Updatable {
             this.cursorPos.y = 0f;
         }
         
-        int width = SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH;
-        int height = SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT;
-        
         if(this.cursorPos.x > width) {
             this.cursorPos.x = width;
         }
@@ -151,6 +199,7 @@ public abstract class Cursor implements Updatable {
         if(this.cursorPos.y > height) {
             this.cursorPos.y = height;
         }
+        
     }
     
     /**
@@ -197,16 +246,43 @@ public abstract class Cursor implements Updatable {
     }
 
     /**
-     * Moves the cursor to the specified location
+     * Instantly moves the cursor to the specified location.
      * 
      * @param x
      * @param y
      */
-    public void moveTo(int x, int y) {
-        if(isVisible()) {            
+    public void snapTo(int x, int y) {
+        this.cursorPos.set(x, y);
+        this.previousCursorPos.set(this.cursorPos);
+    }
+    
+    
+    /**
+     * Instantly moves the cursor to the specified location.
+     * 
+     * @param screenPos
+     */
+    public void snapTo(Vector2f screenPos) {
+        snapTo((int)screenPos.x, (int)screenPos.y);
+    }
+    
+    /**
+     * Moves the cursor towards the specified location
+     * 
+     * @param x
+     * @param y
+     */
+    public void moveTo(int x, int y) {        
+        // convert window coordinates to game screen coordinates
+        x = (int) (((float)x / (float)Gdx.graphics.getWidth())  * (float)SeventhGame.DEFAULT_MINIMIZED_SCREEN_WIDTH);
+        y = (int) (((float)y / (float)Gdx.graphics.getHeight()) * (float)SeventhGame.DEFAULT_MINIMIZED_SCREEN_HEIGHT);
+        
+        if(isVisible()) {     
             float deltaX = this.mouseSensitivity * (this.prevX - x);
             float deltaY = this.mouseSensitivity * (this.prevY - y);
                         
+            this.previousCursorPos.set(this.cursorPos);
+            
             if(this.isInverted) {
                 this.cursorPos.x += deltaX;            
                 this.cursorPos.y += deltaY;
@@ -233,6 +309,8 @@ public abstract class Cursor implements Updatable {
         
         this.prevX = (int)cursorPos.x;
         this.prevY = (int)cursorPos.y;
+        
+        this.previousCursorPos.set(this.cursorPos);
         
         if(this.isInverted) {
             this.cursorPos.x -= deltaX;
@@ -265,6 +343,13 @@ public abstract class Cursor implements Updatable {
      */
     public Vector2f getCursorPos() {
         return cursorPos;
+    }
+    
+    /**
+     * @return the previousCursorPos
+     */
+    public Vector2f getPreviousCursorPos() {
+        return previousCursorPos;
     }
     
     /**

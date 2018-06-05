@@ -41,13 +41,13 @@ public class Vector3f {
      * @param v
      */
     public Vector3f(Vector3f v) {
-        this(v.x,v.y,v.z);
+        this(v.x, v.y, v.z);
     }
     
     /**
      */
     public Vector3f() {
-        this(0,0,0);
+        this(0, 0, 0);
     }
     
     /**

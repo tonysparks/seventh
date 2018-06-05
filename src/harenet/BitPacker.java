@@ -451,7 +451,7 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.getBit(position++) ? 1 : 0) << (i % Long.SIZE);
+            value |= (data.getBit(position++) ? 1L : 0L) << (i % Long.SIZE);
         }
 
         return value;
@@ -483,10 +483,10 @@ public class BitPacker {
 
         for (int i = 0; i < length; i++) {
             checkPosition();
-            value |= (data.getBit(position++) ? 1 : 0) << (i % Double.SIZE);
+            value |= (data.getBit(position++) ? 1L : 0L) << (i % Double.SIZE);
         }
 
-        return Double.doubleToLongBits(value);
+        return Double.longBitsToDouble(value);
     }
 
     public boolean getBoolean() {
@@ -533,19 +533,10 @@ public class BitPacker {
     
     
     public static void dumpBytes(byte[] value) {
-    	int length = value.length;
-        printByteHeader(length);
-        printByteBody(length);
-        printFooter();
-    }
-    
-    private void printByteHeader(int length) {
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-        System.out.println("| Dumping bytes, length: " + (length * 8) + " (" + length + " byte(s))");
+        System.out.println("| Dumping bytes, length: " + (value.length * 8) + " (" + value.length + " byte(s))");
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-	}
-    
-    private void printByteBody(int length) {
+
         int count = 0;
         for (int j = 0; j < value.length; j++) {
 
@@ -568,22 +559,16 @@ public class BitPacker {
             }
 
         }
+        System.out.println();
+        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
     }
 
     public void dump() {
-        printHeader();
-        printBody();
-        printFooter();
-    }
-    
-    private void printHeader() {
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
         System.out.println("| Dumping bitset, length: " + numBits);
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-	}
 
-    private void printBody() {
-	    int count = 0;
+        int count = 0;
 
         for (int i = 0; i < numBits; i++) {
             System.out.print(data.getBit(i) ? "1" : "0");
@@ -598,13 +583,8 @@ public class BitPacker {
             }
 
         }
-	}
-
-    private static void printFooter() {
-	    System.out.println();
+        System.out.println();
         System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-	}
-
-	
+    }
 
 }

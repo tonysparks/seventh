@@ -230,7 +230,7 @@ public class Door extends Entity {
         this.autoCloseTimer = new Timer(false, 5_000);
         this.autoCloseTimer.stop();
         
-        this.rotation = new SmoothOrientation(0.05);
+        this.rotation = new SmoothOrientation(0.1);
         this.rotation.setOrientation(this.hinge.getClosedOrientation());
         setOrientation(this.rotation.getOrientation());
         
@@ -389,11 +389,10 @@ public class Door extends Entity {
     }
     
     public void open(Entity ent) {
-    	boolean isNotOpened = this.doorState != DoorState.OPENED;
-    	boolean isNotOpening = this.doorState != DoorState.OPENING;
-    	boolean isNotClosing = this.doorState != DoorState.CLOSING;
-    	
-        if(isNotOpened || isNotOpening || isNotClosing) {
+        if(this.doorState != DoorState.OPENED  ||
+           this.doorState != DoorState.OPENING ||
+           this.doorState != DoorState.CLOSING) {
+            
             if(!canBeHandledBy(ent)) {
                 return;
             }
@@ -408,35 +407,31 @@ public class Door extends Entity {
             // figure out what side the entity is 
             // of the door hinge, depending on their
             // side, we set the destinationOrientation
-            setDestinationOrientation(entPos, hingePos);
+            switch(this.hinge) {
+                
+                case NORTH_END:
+                case SOUTH_END:
+                    if(entPos.x < hingePos.x) {
+                        this.targetOrientation = (float)Math.toRadians(0);
+                    }
+                    else if(entPos.x > hingePos.x) {
+                        this.targetOrientation = (float)Math.toRadians(180);
+                    }
+                    break;
+                case EAST_END:                    
+                case WEST_END:
+                    if(entPos.y < hingePos.y) {
+                        this.targetOrientation = (float)Math.toRadians(90);
+                    }
+                    else if(entPos.y > hingePos.y) {
+                        this.targetOrientation = (float)Math.toRadians(270);
+                    }
+                    break;
+                default:
+                    break;            
+            }
         }
     }
-
-	private void setDestinationOrientation(Vector2f entPos, Vector2f hingePos) {
-		switch(this.hinge) {
-		    
-		    case NORTH_END:
-		    case SOUTH_END:
-		        if(entPos.x < hingePos.x) {
-		            this.targetOrientation = (float)Math.toRadians(0);
-		        }
-		        else if(entPos.x > hingePos.x) {
-		            this.targetOrientation = (float)Math.toRadians(180);
-		        }
-		        break;
-		    case EAST_END:                    
-		    case WEST_END:
-		        if(entPos.y < hingePos.y) {
-		            this.targetOrientation = (float)Math.toRadians(90);
-		        }
-		        else if(entPos.y > hingePos.y) {
-		            this.targetOrientation = (float)Math.toRadians(270);
-		        }
-		        break;
-		    default:
-		        break;            
-		}
-	}
     
     public void close(Entity ent) {
         if(this.doorState != DoorState.CLOSED  ||

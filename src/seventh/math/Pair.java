@@ -26,8 +26,8 @@ public class Pair<X, Y> {
      * @param second
      */
     public Pair(X first, Y second) {
-        this.first=first;
-        this.second=second;
+        this.first = first;
+        this.second = second;
     }
     
     /**

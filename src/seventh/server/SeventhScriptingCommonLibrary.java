@@ -34,10 +34,10 @@ public class SeventhScriptingCommonLibrary {
      * @return the {@link Vector2f}
      */
     public static Vector2f newVec2(Double x, Double y) {
-        if(x!=null&&y!=null)
-            return new Vector2f(x.floatValue(),y.floatValue());
-        if(x!=null)
-            return new Vector2f(x.floatValue(),0.0f);
+        if(x != null && y != null)
+            return new Vector2f(x.floatValue(), y.floatValue());
+        if(x != null)
+            return new Vector2f(x.floatValue(), 0.0f);
         return new Vector2f();        
     }
 
@@ -189,7 +189,7 @@ public class SeventhScriptingCommonLibrary {
             
             @Override
             public void execute(Game game) {
-                if(triggeredEntity!=null) {
+                if(triggeredEntity != null) {
                     game.newBigExplosion(new Vector2f(tile.getX(),tile.getY()), triggeredEntity, 15, 25, 1);
                 }
                 

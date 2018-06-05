@@ -128,10 +128,6 @@ public class BitArray {
         return this.data.length * WORD_SIZE;
     }
     
-    public void printBitArray(BitArray bitArray) {
-    	System.out.println("NumberOfBytes:" + bitArray.numberOfBytes() + " : " + bitArray.size() + " : " + bitArray);    	
-    }
-    
     public static void main(String[] args) {
         BitArray a = new BitArray(255);
         
@@ -140,7 +136,7 @@ public class BitArray {
             a.setBit(i);
         }
         
-        printBitArray(a);
+        System.out.println("NumberOfBytes:" + a.numberOfBytes() + " : " + a.size() + " : " + a);
         
         BitArray b = new BitArray(SeventhConstants.MAX_PERSISTANT_ENTITIES - 1);
         
@@ -149,6 +145,6 @@ public class BitArray {
             b.setBit(i);
         }
         
-        printBitArray(b);
+        System.out.println("NumberOfBytes:" + b.numberOfBytes() + " : " + b.size() + " : " + b);
     }
 }

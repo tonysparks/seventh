@@ -49,8 +49,8 @@ public class ClientLightBulb extends ClientEntity {
         super.updateState(state, time);
         
         NetLight netLight = (NetLight)state;
-        light.setColor( (float)(netLight.r/255.0f), (float)(netLight.g/255.0f), (float)(netLight.b/255.0f));        
-        light.setLuminacity((float)(netLight.luminacity/255.0f));
+        light.setColor( (float)(netLight.r / 255.0f), (float)(netLight.g / 255.0f), (float)(netLight.b / 255.0f));        
+        light.setLuminacity((float)(netLight.luminacity / 255.0f));
         light.setLightSize(netLight.size);        
     }
     

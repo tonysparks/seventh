@@ -139,6 +139,4 @@ public class LevelButton extends Button {
         this.levelName = levelName;
     }    
     
-    
-    
 }

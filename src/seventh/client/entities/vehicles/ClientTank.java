@@ -113,9 +113,9 @@ public class ClientTank extends ClientVehicle {
         NetTank netTank = (NetTank)state;
         this.currentState = State.fromNetValue(netTank.state);
         
-        if(this.currentState==State.DESTROYED) {
+        if(this.currentState == State.DESTROYED) {
             TankSprite tankSprite = getTankSprite();
-            if(tankSprite != null&&!tankSprite.isDestroyed()) {
+            if(tankSprite != null && !tankSprite.isDestroyed()) {
                 tankSprite.setDestroyed(true);
                                 
                 game.addForegroundEffect(new RenderableEffect(tankSprite) {                    
@@ -164,7 +164,7 @@ public class ClientTank extends ClientVehicle {
         
         if(netTank.operatorId != SeventhConstants.INVALID_PLAYER_ID) {
             ClientPlayer clientPlayer = game.getPlayers().getPlayer(netTank.operatorId);
-            if(clientPlayer!=null) {
+            if(clientPlayer != null) {
                 setOperator(clientPlayer.getEntity());
             }
         }
@@ -280,7 +280,7 @@ public class ClientTank extends ClientVehicle {
                 float distanceSq = (nextState.posX - previousTrackMark.x) * (nextState.posX - previousTrackMark.x) + 
                                    (nextState.posY - previousTrackMark.y) * (nextState.posY - previousTrackMark.y);
                 
-                if(distanceSq > 12*12) {
+                if(distanceSq > 12 * 12) {
                     previousTrackMark.set(nextState.posX, nextState.posY);
                     
                     // left track

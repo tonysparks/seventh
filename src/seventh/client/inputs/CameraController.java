@@ -54,8 +54,10 @@ public class CameraController implements Updatable {
     private int viewportWidth, viewportHeight;
     
     private boolean isCameraRoaming, isFastCamera;
-    private boolean isCameraActive;
+    private boolean isCameraActive;    
     private boolean isIronSights;
+    
+    
     private int previousKeys;
     private Cursor cursor;
     
@@ -81,7 +83,7 @@ public class CameraController implements Updatable {
         this.cameraShakeBounds = new Rectangle(600, 600);
         
         this.playerVelocity = new Vector2f();
-
+                        
         this.bounds = new Rectangle();
         this.viewportWidth = this.camera.getViewPort().width;
         this.viewportHeight = this.camera.getViewPort().height;
@@ -151,7 +153,7 @@ public class CameraController implements Updatable {
      * @return the isCameraRoaming
      */
     public boolean isCameraRoaming() {
-        return isCameraRoaming && (this.localPlayer.isPureSpectator()||this.localPlayer.isCommander());
+        return isCameraRoaming && (this.localPlayer.isPureSpectator() || this.localPlayer.isCommander());
     }
     
     /* (non-Javadoc)
@@ -174,14 +176,14 @@ public class CameraController implements Updatable {
             if(mx < threshold) {
                 this.playerVelocity.x = -1;
             }
-            else if(mx > this.viewportWidth-threshold) {
+            else if(mx > this.viewportWidth - threshold) {
                 this.playerVelocity.x = 1;
             }
             
             if(my < threshold) {
                 this.playerVelocity.y = -1;
             }
-            else if(my > this.viewportHeight-threshold) {
+            else if(my > this.viewportHeight - threshold) {
                 this.playerVelocity.y = 1;
             }
         }
@@ -301,18 +303,24 @@ public class CameraController implements Updatable {
             
             double dt = timeStep.asFraction();
             int newX = (int)Math.round(pos.x + playerVelocity.x * movementSpeed * dt);
-            int newY = (int)Math.round(pos.y + playerVelocity.y * movementSpeed * dt);
+            int newY = (int)Math.round(pos.y + playerVelocity.y * movementSpeed * dt);                    
+            
             
             bounds.x = newX;
-            if( cameraForRoamingMovementsIsOutOfMap() ) {
+            if( map.checkBounds(bounds.x, bounds.y) || 
+                ((bounds.x < bounds.width/2) || (bounds.y < bounds.height/2)) ||
+                map.checkBounds(bounds.x + bounds.width/2, bounds.y + bounds.height/2) ) {
                 bounds.x = (int)pos.x;
-            }    
+            }
+                    
             
             bounds.y = newY;
-            if( cameraForRoamingMovementsIsOutOfMap() ) {
+            if( map.checkBounds(bounds.x, bounds.y) ||
+                ((bounds.x < bounds.width/2) || (bounds.y < bounds.height/2)) ||
+                map.checkBounds(bounds.x + bounds.width/2, bounds.y + bounds.height/2) ) {
                 bounds.y = (int)pos.y;
             }
-            
+                        
             pos.x = bounds.x;
             pos.y = bounds.y;
         
@@ -323,21 +331,6 @@ public class CameraController implements Updatable {
             Sounds.setPosition(cameraCenterAround);
         }
     }
-
-    /**
-     * To remove duplicated code and for readability in updateCameraForRoamingMovements(TimeStep timeStep) function
-     * 
-     */
-    private boolean cameraForRoamingMovementsIsOutOfMap() {
-        final boolean boundsXYIsOutOfMap = map.checkBounds(bounds.x, bounds.y);
-        final boolean boundsXIsLowerThanViewPortCenterX = bounds.x < bounds.width / 2;
-        final boolean boundsYIsLowerThanViewPortCenterY = bounds.y < bounds.height / 2;
-        final boolean boundsCenterIsOutOfMap = map.checkBounds(bounds.x + bounds.width/2, bounds.y + bounds.height/2);
-        
-        return boundsXYIsOutOfMap || 
-            (boundsXIsLowerThanViewPortCenterX || boundsYIsLowerThanViewPortCenterY) ||
-            boundsCenterIsOutOfMap;
-    }
     
     
     /**
@@ -346,10 +339,10 @@ public class CameraController implements Updatable {
      * @param timeStep
      */
     private void updateCameraForPlayerMovements(TimeStep timeStep) {
-        if(this.localPlayer.isAlive()||this.localPlayer.isSpectating()) {
+        if(this.localPlayer.isAlive() || this.localPlayer.isSpectating()) {
             ClientControllableEntity entity = game.getLocalPlayerFollowingEntity();
                                                                                                             
-            if(entity!=null) {
+            if(entity != null) {
                 if( entity.isOperatingVehicle() ) {
                     entity = entity.getVehicle();
                 }
@@ -358,22 +351,27 @@ public class CameraController implements Updatable {
                 
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 
-                if(!this.localPlayer.isSpectating() && this.isCameraActive && (this.config.getFollowReticleEnabled() || this.isIronSights) ) {
-                    Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), config.getFollowReticleOffset(), cameraCenterAround); 
-                    
+                boolean adjustCameraView = !this.localPlayer.isSpectating() && this.isCameraActive && 
+                                              (this.config.getFollowReticleEnabled() || this.isIronSights);
+                
+                
+                if(adjustCameraView) {
+                    Vector2f.Vector2fMA(entity.getCenterPos(), entity.getFacing(), config.getFollowReticleOffset(), cameraCenterAround);
+                                                                                                    
                     // smooth out the camera
                     previousCameraPos.set(cameraCenterAround);
                     Vector2f.Vector2fLerp(cameraCenterAround, previousCameraPos, 0.15f, cameraCenterAround);
+ 
                 }
-                else {
+                else {                    
                     cameraCenterAround.set(entity.getCenterPos());
                 }
                 
-                //cameraCenterAround.set(entity.getPos());
                 Vector2f.Vector2fRound(cameraCenterAround, cameraCenterAround);;
                 camera.centerAround(cameraCenterAround);
         
-                Sounds.setPosition(cameraCenterAround);
+                Sounds.setPosition(entity.getCenterPos());
+                                
                 
                 /* Calculates the Fog Of War
                  */
@@ -384,7 +382,7 @@ public class CameraController implements Updatable {
                     
                     /* only calculate every 100 ms */
                     nextFOWUpdate = 100;                    
-                }            
+                }
             }
         }
     }

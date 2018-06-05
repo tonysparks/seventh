@@ -467,7 +467,9 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
                             
                             Logger logger = this.rconLoggers.put(client.getId(), new RconLogger(client.getId(), this));
                             console.removeLogger(logger);
-                            console.addLogger(this.rconLoggers.get(client.getId()));
+                            if(!serverContext.getGameServer().isLocal()) {
+                                console.addLogger(this.rconLoggers.get(client.getId()));
+                            }
                         }
                         else {
                             client.setRconAuthenticated(false);

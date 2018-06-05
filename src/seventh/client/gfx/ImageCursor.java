@@ -64,6 +64,6 @@ public class ImageCursor extends Cursor {
     @Override 
     protected void doRender(Canvas canvas) {
         Vector2f cursorPos = getCursorPos();        
-        canvas.drawImage(cursorImg, (int)cursorPos.x - imageOffset.x, (int)cursorPos.y - imageOffset.y, null);                
+        canvas.drawImage(cursorImg, (int)cursorPos.x - imageOffset.x, (int)cursorPos.y - imageOffset.y, null);        
     }
 }

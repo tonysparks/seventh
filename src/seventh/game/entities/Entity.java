@@ -595,7 +595,7 @@ public abstract class Entity implements Debugable {
             int xIndex = collisionTile.getXIndex();
             int yIndex = collisionTile.getYIndex();
             
-            int offset = 16;
+            int offset = 32;
             
             if(!map.checkTileBounds(xIndex, yIndex - 1) && !map.hasCollidableTile(xIndex, yIndex - 1)) {
                 if(currentY < (collisionTile.getY()-(bounds.height-offset))) {
@@ -635,7 +635,7 @@ public abstract class Entity implements Debugable {
             int xIndex = collisionTile.getXIndex();
             int yIndex = collisionTile.getYIndex();
             
-            int offset = 16;
+            int offset = 32;
             
             if(!map.checkTileBounds(xIndex-1, yIndex) && !map.hasCollidableTile(xIndex-1, yIndex)) {
                 if(currentX+bounds.width < (collisionTile.getX()+offset)) {
@@ -661,13 +661,10 @@ public abstract class Entity implements Debugable {
      */
     public boolean update(TimeStep timeStep) {
         boolean isBlocked = false;
-        boolean isWalking = currentState == State.WALKING;
-        boolean isSprinting = currentState == State.SPRINTING;
-        boolean isCrouching = currentState==State.CROUCHING;
         
         this.movementDir.zeroOut();
         if(this.isAlive && !this.vel.isZero()) {
-            if(!isWalking && !isSprinting) {
+            if(currentState != State.WALKING && currentState != State.SPRINTING) {
                 currentState = State.RUNNING;
             }
                                 
@@ -757,7 +754,7 @@ public abstract class Entity implements Debugable {
             this.walkingTime = WALK_TIME;
         }
         else {                        
-            if(this.walkingTime<=0 && !isCrouching) {
+            if(this.walkingTime<=0 && currentState!=State.CROUCHING) {
                 currentState = State.IDLE;
             }
             

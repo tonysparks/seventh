@@ -25,8 +25,7 @@ public class Matrix2f {
     /**
      * Identity matrix
      */
-    public static final Matrix2f IDENTITY = new Matrix2f(1,0
-                                                        ,0,1);
+    public static final Matrix2f IDENTITY = new Matrix2f(1, 0, 0, 1);
     
     /**
      * @param m

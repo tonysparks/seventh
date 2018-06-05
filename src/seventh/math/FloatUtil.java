@@ -30,7 +30,7 @@ public /*strictfp*/ class FloatUtil {
      * @return
      */
     public static boolean eq(float f1, float f2) {
-        return Math.abs(f1-f2) < epsilon;
+        return Math.abs(f1 - f2) < epsilon;
     }
     
     /**
@@ -42,7 +42,7 @@ public /*strictfp*/ class FloatUtil {
      * @return true if equal
      */
     public static boolean eq(float f1, float f2, float epsilon) {
-        return Math.abs(f1-f2) < epsilon;
+        return Math.abs(f1 - f2) < epsilon;
     }
     
     /**
@@ -169,7 +169,7 @@ public /*strictfp*/ class FloatUtil {
     
     public static void Vector2fNormalize(float[] a, float[] dest) {
         float fLen = (float)Math.sqrt( (a[X] * a[X] + a[Y] * a[Y]) );
-        if ( fLen==0 ) return;
+        if ( fLen == 0 ) return;
         
         fLen = 1.0f / fLen;
         dest[X] = a[X] * fLen;

@@ -34,10 +34,10 @@ public class MathLeolaLibrary implements LeolaLibrary {
     }
     
     public Vector2f newVec2(Double x, Double y) {
-        if(x!=null&&y!=null)
-            return new Vector2f(x.floatValue(),y.floatValue());
-        if(x!=null)
-            return new Vector2f(x.floatValue(),0.0f);
+        if(x != null && y != null)
+            return new Vector2f(x.floatValue(), y.floatValue());
+        if(x != null)
+            return new Vector2f(x.floatValue(), 0.0f);
         return new Vector2f();        
     }
 

@@ -1012,15 +1012,11 @@ public class PlayerEntity extends Entity implements Controllable {
          * 6) you are not reloading
          */
         
-    	final boolean isAlive = currentState!=State.DEAD;
-    	final boolean hasStamina = stamina > 0;
-    	final boolean noRecoveryTime = recoveryTime <= 0;
-    	
-        if(isAlive &&                
-        		hasStamina &&
+        if(currentState!=State.DEAD &&                
+           stamina > 0 &&
            !firing &&
            !wasSprinting &&           
-           noRecoveryTime) {        
+           recoveryTime <= 0) {        
         
             Weapon weapon = this.inventory.currentItem();
             boolean isReady = weapon != null ? weapon.isReady() : true;
@@ -1376,11 +1372,14 @@ public class PlayerEntity extends Entity implements Controllable {
      */
     protected void handleBombTarget(BombTarget target) {
         if(target!=null) {
-            if(target.bombActive()) {
-                Bomb bomb = target.getBomb();
-                bomb.disarm(this);                        
-                                        
-                game.emitSound(getId(), SoundType.BOMB_DISARM, getPos());                        
+            
+            if(target.getOwner().equals(getTeam())) {
+                if(target.bombActive()) {
+                    Bomb bomb = target.getBomb();
+                    bomb.disarm(this);                        
+                                            
+                    game.emitSound(getId(), SoundType.BOMB_DISARM, getPos());                        
+                }    
             }
             else {
                 if(!target.isBombAttached()) {                            
@@ -1388,8 +1387,8 @@ public class PlayerEntity extends Entity implements Controllable {
                     bomb.plant(this, target);
                     target.attachBomb(bomb);
                     game.emitSound(getId(), SoundType.BOMB_PLANT, getPos());
-                }                                                
-            }    
+                }
+            } 
         }
     }
     
@@ -1510,6 +1509,7 @@ public class PlayerEntity extends Entity implements Controllable {
         
         return false;
     }
+    
     
     /**
      * If this {@link PlayerEntity} is currently holding a specific
@@ -1835,8 +1835,6 @@ public class PlayerEntity extends Entity implements Controllable {
         }
         
         player.health = (byte)getHealth(); 
-//        player.events = (byte)getEvents();
-        player.stamina = getStamina();
         
         player.isOperatingVehicle = isOperatingVehicle();
         if(player.isOperatingVehicle) {

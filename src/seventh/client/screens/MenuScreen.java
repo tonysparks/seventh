@@ -250,7 +250,7 @@ public class MenuScreen implements Screen {
     @Override
     public void enter() {    
         menuPanel.show();
-        Sounds.playGlobalSound(Sounds.uiNavigate);
+        Sounds.playGlobalSound(Sounds.uiNavigate);        
     }
     
     /* (non-Javadoc)
@@ -259,7 +259,7 @@ public class MenuScreen implements Screen {
     @Override
     public void exit() {
         menuPanel.hide();
-        Sounds.playGlobalSound(Sounds.uiNavigate);
+        Sounds.playGlobalSound(Sounds.uiNavigate);        
     }
 
 

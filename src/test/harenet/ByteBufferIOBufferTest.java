@@ -97,5 +97,30 @@ public class ByteBufferIOBufferTest {
         int value = writeBuffer.getIntBits(13);// & (short)0b111111111111;
         assertEquals(8189, value);
     }
+    
+    
+    @Test
+    public void testLong() {
+        IOBuffer writeBuffer = IOBuffer.Factory.allocate(1500);
+        
+        long value = 0xf123a4234ac5af21L;
+        writeBuffer.putLong(value);
+        writeBuffer.flip();
+        long outputValue = writeBuffer.getLong();
+        assertEquals(value, outputValue);
+    }
+    
+    @Test
+    public void testDouble() {
+        IOBuffer writeBuffer = IOBuffer.Factory.allocate(1500);
+        
+        double value = 0xf123a4234ac5af21L;
+        writeBuffer.putDouble(value);
+        writeBuffer.flip();
+        double outputValue = writeBuffer.getDouble();  
+        System.out.println("output: " + Double.toHexString(outputValue));
+        System.out.println("given: " + Double.toHexString(value));
+        assertEquals(value, outputValue, 0.001D);
+    }
 }
 

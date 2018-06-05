@@ -9,13 +9,13 @@ import java.lang.reflect.Method;
 /**
  * Utility and fast math functions.
  * 
- * Thanks to:<br> 
+ * Thanks to:<br>
  * Riven on JavaGaming.org for sin/cos/atan2 tables.<br>
  * Roquen on JavaGaming.org for random numbers.<br>
  * pjt33 on JavaGaming.org for fixed point.<br>
- * Jim Shima for atan2_fast.<br> 
+ * Jim Shima for atan2_fast.<br>
  * 
- * <p> 
+ * <p>
  * Taken from JavaGaming.org from <b>Nate</b>
  * 
  * @author Nate
@@ -39,39 +39,39 @@ public class FastMath {
     static {
         for (int i = 0; i < SIN_COUNT; i++) {
             float a = (i + 0.5f) / SIN_COUNT * radFull;
-            sin[i] = (float) Math.sin(a);
-            cos[i] = (float) Math.cos(a);
+            sin[i] = (float)Math.sin(a);
+            cos[i] = (float)Math.cos(a);
         }
     }
 
     static public final float sin(float rad) {
-        return sin[(int) (rad * radToIndex) & SIN_MASK];
+        return sin[(int)(rad * radToIndex) & SIN_MASK];
     }
 
     static public final float cos(float rad) {
-        return cos[(int) (rad * radToIndex) & SIN_MASK];
+        return cos[(int)(rad * radToIndex) & SIN_MASK];
     }
 
     static public final float sin(int deg) {
-        return sin[(int) (deg * degToIndex) & SIN_MASK];
+        return sin[(int)(deg * degToIndex) & SIN_MASK];
     }
 
     static public final float cos(int deg) {
-        return cos[(int) (deg * degToIndex) & SIN_MASK];
+        return cos[(int)(deg * degToIndex) & SIN_MASK];
     }
 
     private static final int ATAN2_BITS = 7; // Adjust for accuracy.
     private static final int ATAN2_BITS2 = ATAN2_BITS << 1;
     private static final int ATAN2_MASK = ~(-1 << ATAN2_BITS2);
     private static final int ATAN2_COUNT = ATAN2_MASK + 1;
-    private static final int ATAN2_DIM = (int) Math.sqrt(ATAN2_COUNT);
+    private static final int ATAN2_DIM = (int)Math.sqrt(ATAN2_COUNT);
     private static final float INV_ATAN2_DIM_MINUS_1 = 1.0f / (ATAN2_DIM - 1);
     private static final float [] atan2 = new float[ATAN2_COUNT];
     static {
         for (int i = 0; i < ATAN2_DIM; i++) {
             for (int j = 0; j < ATAN2_DIM; j++) {
-                float x0 = (float) i / ATAN2_DIM;
-                float y0 = (float) j / ATAN2_DIM;
+                float x0 = (float)i / ATAN2_DIM;
+                float y0 = (float)j / ATAN2_DIM;
                 atan2[j * ATAN2_DIM + i] = (float) Math.atan2(y0, x0);
             }
         }
@@ -152,7 +152,7 @@ public class FastMath {
      * @return
      */
     public static float a_isqrt(float x) {
-    	
+        float hx = x * 0.5f;
         int ix;
         float r;
 
@@ -164,7 +164,7 @@ public class FastMath {
         // do some number of newton-ralphson steps,
         // each doubles the number of accurate
         // binary digits.
-        r = r * (1.5f - hx(x) * r * r);
+        r = r * (1.5f - hx * r * r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
@@ -180,6 +180,7 @@ public class FastMath {
      * @return
      */
     public static float a_sqrt(float x) {
+        float hx = x * 0.5f;
         int ix;
         float r;
 
@@ -191,34 +192,29 @@ public class FastMath {
         // do some number of newton-ralphson steps,
         // each doubles the number of accurate
         // binary digits.
-        r = r * (1.5f - hx(x) * r * r);
+        r = r * (1.5f - hx * r * r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
         // r = r*(1.5f-hx*r*r);
         
-        return r*x; // sqrt(x)
+        return r * x; // sqrt(x)
     }
-
-	private static float hx(float x) {
-		float hx = x * 0.5f;
-		return hx;
-	}
 
     /**
      * Fixed point multiply.
      */
     static public int multiply(int x, int y) {
-        return (int) ((long) x * (long) y >> 16);
+        return (int)((long) x * (long) y >> 16);
     }
 
     /**
      * Fixed point divide.
      */
     static public int divide(int x, int y) {
-        return (int) ((((long) x) << 16) / y);
+        return (int)((((long) x) << 16) / y);
     }
 
-    static private int randomSeed = (int) System.currentTimeMillis();
+    static private int randomSeed = (int)System.currentTimeMillis();
 
     /**
      * Returns a random number between 0 (inclusive) and the specified value
@@ -227,25 +223,28 @@ public class FastMath {
      * @param range
      *            Must be >= 0.
      */
-	private static int seed() {
-		int seed = randomSeed * 1103515245 + 12345;
-        randomSeed = seed;
-		return seed;
-	}
     static public final int random(int range) {
-        return ((seed() >>> 15) * (range + 1)) >>> 17;
+        int seed = randomSeed * 1103515245 + 12345;
+        randomSeed = seed;
+        return ((seed >>> 15) * (range + 1)) >>> 17;
     }
-    
+
     static public final int random(int start, int end) {
-        return (((seed() >>> 15) * ((end - start) + 1)) >>> 17) + start;
+        int seed = randomSeed * 1103515245 + 12345;
+        randomSeed = seed;
+        return (((seed >>> 15) * ((end - start) + 1)) >>> 17) + start;
     }
 
     static public final boolean randomBoolean() {
-        return seed() > 0;
+        int seed = randomSeed * 1103515245 + 12345;
+        randomSeed = seed;
+        return seed > 0;
     }
 
     static public final float random() {
-        return (seed() >>> 8) * (1f / (1 << 24));
+        int seed = randomSeed * 1103515245 + 12345;
+        randomSeed = seed;
+        return (seed >>> 8) * (1f / (1 << 24));
     }
 
     static public int nextPowerOfTwo(int value) {

@@ -55,7 +55,7 @@ public class ImagePanelView extends PanelView {
         renderer.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, panel.getForegroundColor());
         
         TextureRegion tex = panel.getImage();
-        if(tex!=null) {
+        if(tex != null) {
             renderer.drawScaledImage(tex, bounds.x, bounds.y, bounds.width, bounds.height, null);
         }
         super.render(renderer, camera, alpha);
