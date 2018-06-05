@@ -1,11 +1,11 @@
-import java.util.Comparator;
+package seventh.shared;
 
 public class SortStrategyFactory {
 	
 	public <T> SortStrategy getSortStrategy(T[] array) {
 		if (array == null || array.length == 0)
-            return new NoSortStrategy;
+            return new NoSortStrategy();
 		else
-			return new QuickSortStrategy;
+			return new QuickSortStrategy();
 	}
 }

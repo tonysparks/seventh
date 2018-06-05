@@ -53,8 +53,8 @@ public class Arrays {
      * @return the supplied array
      */
     public <T> T[] sort(T[] array, Comparator<T> comp) {
-    	SortStrategyFactory = new SortStrategyFactory();
-    	SortStrategy sortStrategy = SortStrategyFactory.getSortStrategy(array);
+    	SortStrategyFactory sortStrategyFactory = new SortStrategyFactory();
+    	SortStrategy sortStrategy = sortStrategyFactory.getSortStrategy(array);
     	sortStrategy.sort(array, comp);
         return array;
     }

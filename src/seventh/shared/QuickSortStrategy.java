@@ -3,6 +3,7 @@ package seventh.shared;
 import java.util.Comparator;
 
 public class QuickSortStrategy implements SortStrategy {
+	
 	public <T> void sort(T[] array, Comparator<T> comp) {
 		quickSort(array, comp, 0, array.length-1);
 	}
