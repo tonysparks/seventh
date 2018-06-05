@@ -63,11 +63,7 @@ public class Arrays {
      * @return the supplied array
      */
     public <T> T[] sort(T[] array, Comparator<T> comp) {
-        if (array == null || array.length == 0) {
-            return array;
-        }
-
-        sortStrategy.sort(array, comp, 0, array.length - 1);
+        sortStrategy.sort(array, comp);
         return array;
     }
 }

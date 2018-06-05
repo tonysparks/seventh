@@ -3,7 +3,11 @@ package seventh.shared;
 import java.util.Comparator;
 
 public class QuickSortStrategy implements SortStrategy {
-	public <T> void sort(T[] array, Comparator<T> comp, int low, int high) {
+	public <T> void sort(T[] array, Comparator<T> comp) {
+		quickSort(array, comp, 0, array.length-1);
+	}
+	
+	private static <T> void quickSort(T[] array, Comparator<T> comp, int low, int high) {
 		int i = low;
         int j = high;
 
@@ -24,11 +28,11 @@ public class QuickSortStrategy implements SortStrategy {
         }
 
         if (low < j) {
-        	sort(array, comp, low, j);
+        	quickSort(array, comp, low, j);
         }
 
         if (i < high) {
-        	sort(array, comp, i, high);
+        	quickSort(array, comp, i, high);
         }
 	}
 	
