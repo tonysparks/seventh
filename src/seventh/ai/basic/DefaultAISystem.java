@@ -19,9 +19,11 @@ import seventh.ai.basic.actions.Actions;
 import seventh.ai.basic.commands.AICommands;
 import seventh.ai.basic.teamstrategy.CaptureTheFlagTeamStrategy;
 import seventh.ai.basic.teamstrategy.CommanderTeamStrategy;
+import seventh.ai.basic.teamstrategy.DefaultAISystemTeamStrategyFactory;
 import seventh.ai.basic.teamstrategy.ObjectiveTeamStrategy;
 import seventh.ai.basic.teamstrategy.TDMTeamStrategy;
 import seventh.ai.basic.teamstrategy.TeamStrategy;
+import seventh.ai.basic.teamstrategy.TeamStrategyFactory;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.PlayerInfos;
@@ -169,27 +171,9 @@ public class DefaultAISystem implements AISystem {
         
         GameType gameType = game.getGameType();
         
-        switch(gameType.getType()) {
-            case CTF:
-                this.alliedAIStrategy = new CaptureTheFlagTeamStrategy(this, gameType.getAlliedTeam());
-                this.axisAIStrategy = new CaptureTheFlagTeamStrategy(this, gameType.getAxisTeam());
-                break;
-            case OBJ:
-                this.alliedAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAlliedTeam());
-                this.axisAIStrategy = new ObjectiveTeamStrategy(this, gameType.getAxisTeam());
-                break;
-            case CMD: 
-                this.alliedAIStrategy = new CommanderTeamStrategy((CommanderGameType)gameType, this, gameType.getAlliedTeam());
-                this.axisAIStrategy = new CommanderTeamStrategy((CommanderGameType)gameType, this, gameType.getAxisTeam());
-                break;
-            case TDM:
-            default:
-                this.alliedAIStrategy = new TDMTeamStrategy(this, gameType.getAlliedTeam());
-                this.axisAIStrategy = new TDMTeamStrategy(this, gameType.getAxisTeam());
-                break;
-        
-        }
-        
+        TeamStrategyFactory teamStrategyFactory = new DefaultAISystemTeamStrategyFactory();
+        this.alliedAIStrategy = teamStrategyFactory.createAlliedAIStrategy(this, gameType);
+        this.axisAIStrategy = teamStrategyFactory.createAxisAIStrategy(this, gameType);
         
         PlayerInfos players = game.getPlayerInfos();
         players.forEachPlayerInfo(new PlayerInfoIterator() {
