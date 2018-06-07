@@ -1,8 +1,14 @@
 package seventh.shared;
 
-public class SortStrategyFactory {
+public final class SortStrategyFactory {
 	
-	public <T> SortStrategy getSortStrategy(T[] array) {
+	/**
+     * Return SortStrategy for the supplied array
+     * 
+     * @param array
+     * @return SortStrategy
+     */
+	public static <T> SortStrategy getSortStrategy(T[] array) {
 		if (array == null || array.length == 0)
             return new NoSortStrategy();
 		else
