@@ -34,7 +34,6 @@ public class AIGroupAttackAction extends AIGroupAction {
         this.attackDirections = new ArrayList<>();
         action = new AttackGetAction(position);
         start = new AttackStart(position);
-
     }
 
     

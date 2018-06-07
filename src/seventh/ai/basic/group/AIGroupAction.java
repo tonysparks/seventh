@@ -15,7 +15,6 @@ public abstract class AIGroupAction implements Updatable {
     protected Start start;
     protected GetAction action;
     
-    
     public abstract void end(AIGroup aIGroup);
     public abstract void cancel(AIGroup aIGroup);
     public abstract boolean isFinished(AIGroup aIGroup);

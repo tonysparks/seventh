@@ -31,7 +31,6 @@ public class AIGroupDefendAction extends AIGroupAction {
         this.directionsToDefend = new ArrayList<>();
         action = new DefendGetAction(position);
         start = new DefendStart(position);
-
     }
 
     
