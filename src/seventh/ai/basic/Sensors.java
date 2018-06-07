@@ -13,16 +13,12 @@ import seventh.shared.TimeStep;
  */
 public class Sensors {
 
-    private SightSensor sightSensor;
-    private SoundSensor soundSensor;
-    private FeelSensor feelSensor;
+    private SensorFactory sensorfactory;
     
     
     
     public Sensors(Brain brain) {
-        this.sightSensor = new SightSensor(brain);
-        this.soundSensor = new SoundSensor(brain);
-        this.feelSensor = new FeelSensor(brain);
+        this.sensorfactory = new SensorFactory(brain);
     }
     
     
@@ -32,30 +28,28 @@ public class Sensors {
      * @param brain
      */
     public void reset(Brain brain) {
-        this.sightSensor.reset(brain);
-        this.soundSensor.reset(brain);
-        this.feelSensor.reset(brain);
+        this.sensorfactory.reset(brain);
     }
     
     /**
      * @return the feelSensor
      */
     public FeelSensor getFeelSensor() {
-        return feelSensor;
+        return this.sensorfactory.getFeelSensor();
     }
     
     /**
      * @return the sightSensor
      */
     public SightSensor getSightSensor() {
-        return sightSensor;
+        return this.sensorfactory.getSightSensor();
     }
     
     /**
      * @return the soundSensor
      */
     public SoundSensor getSoundSensor() {
-        return soundSensor;
+        return this.sensorfactory.getSoundSensor();
     }
     
     /**
@@ -63,9 +57,7 @@ public class Sensors {
      * @param timeStep
      */
     public void update(TimeStep timeStep) {
-        this.sightSensor.update(timeStep);
-        this.soundSensor.update(timeStep);
-        this.feelSensor.update(timeStep);        
+        this.sensorfactory.update(timeStep);       
     }
         
 }
