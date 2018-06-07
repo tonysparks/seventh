@@ -32,8 +32,9 @@ public class AIGroupAttackAction extends AIGroupAction {
     public AIGroupAttackAction(Vector2f position) {
         this.attackPosition = position;
         this.attackDirections = new ArrayList<>();
-        start = new AttackStart(position);
         action = new AttackGetAction(position);
+        start = new AttackStart(position);
+
     }
 
     

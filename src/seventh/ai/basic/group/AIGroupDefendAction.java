@@ -29,8 +29,9 @@ public class AIGroupDefendAction extends AIGroupAction {
     public AIGroupDefendAction(Vector2f position) {
         this.defendPosition = position;
         this.directionsToDefend = new ArrayList<>();
-        start = new DefendStart(position);
         action = new DefendGetAction(position);
+        start = new DefendStart(position);
+
     }
 
     
