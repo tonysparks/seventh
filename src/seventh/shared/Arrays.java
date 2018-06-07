@@ -12,7 +12,7 @@ import java.util.Comparator;
  *
  */
 public class Arrays {
-	
+    
     /**
      * Counts the amount of used elements in the array
      * 
@@ -53,8 +53,8 @@ public class Arrays {
      * @return the supplied array
      */
     public <T> T[] sort(T[] array, Comparator<T> comp) {
-    	SortStrategy sortStrategy = SortStrategyFactory.getSortStrategy(array);
-    	sortStrategy.sort(array, comp);
+        SortStrategy sortStrategy = SortStrategyFactory.getSortStrategy(array);
+        sortStrategy.sort(array, comp);
         return array;
     }
 }
