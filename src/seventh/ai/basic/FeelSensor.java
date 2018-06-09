@@ -21,7 +21,7 @@ public class FeelSensor implements Sensor, OnDamageListener {
     private FeelMemory memory;
     private TimeStep timeStep;
     private Brain brain;
-    
+     
     /**
      * @param brain
      */

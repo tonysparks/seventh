@@ -24,8 +24,7 @@ import seventh.shared.Timer;
  * @author Tony
  *
  */
-public class SoundSensor implements Sensor {
-
+public class SoundSensor implements Sensor{
     /**
      * Less important sounds
      */
