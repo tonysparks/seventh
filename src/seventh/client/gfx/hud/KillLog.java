@@ -119,15 +119,16 @@ public class KillLog implements Renderable {
             if(m.killer != null) {
                 killerColor = m.killer.getTeam().getColor();
                 if(m.killed.getId() == m.killer.getId()) {
-                    message = m.killed.getName() + " took their own life";
-                    int length = canvas.getWidth(message);
+                    message = m.killed.getName() + " took their own life";  
+                    
+                    float length = RenderFont.getTextWidth(canvas, message);                    
                     RenderFont.drawShadedString(canvas, message, startX-length, y, killerColor);
                 }
                 else {                                        
                     int yOffset = (int)Art.smallAssaultRifleIcon.getHeight() / 2;
                     
-                    int killedLength = canvas.getWidth(m.killed.getName()) + 10;
-                    int killerLength = canvas.getWidth(m.killer.getName()) + 10;
+                    float killedLength = RenderFont.getTextWidth(canvas, m.killed.getName()) + 10;
+                    float killerLength = RenderFont.getTextWidth(canvas, m.killer.getName()) + 10;
                     int iconLength = (int)Art.smallAssaultRifleIcon.getWidth() + 10;
                                         
                     switch(m.mod) {
@@ -219,7 +220,7 @@ public class KillLog implements Renderable {
                         }
                         default: {
                             message = m.killer.getName() + " killed " + m.killed.getName();
-                            int messageLength = canvas.getWidth(message) + 10;
+                            float messageLength = RenderFont.getTextWidth(canvas, message) + 10;
                             RenderFont.drawShadedString(canvas, message, startX-messageLength, y, killerColor);
                         }
                     }
@@ -228,7 +229,7 @@ public class KillLog implements Renderable {
                 }
             }
             else {
-                int messageLength = canvas.getWidth(message) + 10;
+                float messageLength = RenderFont.getTextWidth(canvas, message) + 10;
                 RenderFont.drawShadedString(canvas, message, startX-messageLength, y, killedColor);
             }
             

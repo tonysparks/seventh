@@ -66,6 +66,8 @@ public class Label extends Widget {
      */
     private boolean ignoreCR;
     private boolean shadow;
+    private boolean colorEncoding;
+    private boolean monospaced;
     
     /**
      * @param text
@@ -75,6 +77,8 @@ public class Label extends Widget {
         this.textSize = 12;
         this.ignoreCR = true;
         this.shadow = true;
+        this.colorEncoding = true;
+        this.monospaced = false;
         
         this.horizontalTextAlignment = TextAlignment.CENTER;
         this.verticalTextAlignment = TextAlignment.CENTER;
@@ -128,6 +132,34 @@ public class Label extends Widget {
      */
     public void setTextSize(float textSize) {
         this.textSize = textSize;
+    }
+    
+    /**
+     * @param colorEncoding the colorEncoding to set
+     */
+    public void setColorEncoding(boolean colorEncoding) {
+        this.colorEncoding = colorEncoding;
+    }
+    
+    /**
+     * @return the monospaced
+     */
+    public boolean isMonospaced() {
+        return monospaced;
+    }
+    
+    /**
+     * @param monospaced the monospaced to set
+     */
+    public void setMonospaced(boolean monospaced) {
+        this.monospaced = monospaced;
+    }
+    
+    /**
+     * @return the colorEncoding
+     */
+    public boolean isColorEncoding() {
+        return colorEncoding;
     }
     
     /**

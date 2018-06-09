@@ -53,6 +53,8 @@ public class TextBox extends Widget implements Hoverable {
 //        addWidget(label);
         
         this.textLbl = new Label();
+        this.textLbl.setColorEncoding(false);
+        this.textLbl.setMonospaced(true);
         this.textLbl.setHorizontalTextAlignment(TextAlignment.LEFT);
 //        addWidget(textLbl);
         
@@ -364,6 +366,6 @@ public class TextBox extends Widget implements Hoverable {
      * @return the cursorIndex
      */
     public int getCursorIndex() {
-        return cursorIndex;
+        return this.cursorIndex;
     }
 }

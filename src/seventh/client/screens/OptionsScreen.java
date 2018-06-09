@@ -185,7 +185,8 @@ public class OptionsScreen implements Screen {
         nameTxtBox.setLabelText("Name: ");
         nameTxtBox.setTheme(theme);
         nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 55, 200, 25));        
-        nameTxtBox.setFont(theme.getSecondaryFontName()); 
+        //nameTxtBox.setFont(theme.getSecondaryFontName()); 
+        nameTxtBox.setFont(Theme.DEFAULT_FONT);
         nameTxtBox.setTextSize(14);
         nameTxtBox.getLabel().setTextSize(18);
         nameTxtBox.setFocus(false);
@@ -254,7 +255,7 @@ public class OptionsScreen implements Screen {
         uiPos.y += 10;
         final Slider mouseSensitivitySlider = new Slider();
         
-        final Button mouseSensitivityBtn = setupButton(uiPos, "Mouse Sensitivity", false);
+        final Button mouseSensitivityBtn = setupButton(uiPos, "Mouse Sensitivity:", false);
         mouseSensitivityBtn.getBounds().width = 80;
         mouseSensitivityBtn.setHoverTextSize(16);
         mouseSensitivityBtn.getTextLabel().setForegroundColor(theme.getForegroundColor());
@@ -271,7 +272,7 @@ public class OptionsScreen implements Screen {
             }
         });
         
-        uiPos.x = 560;
+        uiPos.x = 570;
         uiPos.y -= 8;
         
         final Cursor cursor = uiManager.getCursor();
@@ -712,7 +713,7 @@ public class OptionsScreen implements Screen {
         int fontColor = theme.getForegroundColor();
         String message = "Options";
         RenderFont.drawShadedString(canvas, message
-                , canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/12, fontColor);
+                , canvas.getWidth()/2 - RenderFont.getTextWidth(canvas, message)/2, canvas.getHeight()/12, fontColor);
                 
         this.uiManager.render(canvas);
         

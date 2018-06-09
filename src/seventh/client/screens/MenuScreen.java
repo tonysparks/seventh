@@ -298,7 +298,7 @@ public class MenuScreen implements Screen {
                 
         int fontColor = theme.getForegroundColor();
         String message = "The Seventh";
-        int center = (canvas.getWidth() - canvas.getWidth(message)) / 2;
+        float center = (canvas.getWidth() - RenderFont.getTextWidth(canvas, message)) / 2;
         RenderFont.drawShadedString(canvas, message, center, canvas.getHeight()/6, fontColor);
         
         canvas.setFont(theme.getSecondaryFontName(), 12);

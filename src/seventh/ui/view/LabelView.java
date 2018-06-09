@@ -79,7 +79,7 @@ public class LabelView implements Renderable {
         if ( this.label.ignoreCR() ) {
     
             renderer.setFont(label.getFont(), (int)label.getTextSize());
-            int width = renderer.getWidth(buttonTxt);
+            float width = RenderFont.getTextWidth(renderer, buttonTxt);
             int height = renderer.getHeight("W");
             
             int vertical = bounds.y + (bounds.height / 2);
@@ -100,21 +100,21 @@ public class LabelView implements Renderable {
     //                renderer.drawString(
                               , buttonTxt
                               , bounds.x + 5
-                              , vertical, null, label.isShadowed() );
+                              , vertical, null, label.isShadowed(), label.isColorEncoding(), label.isMonospaced());
                     break;
                 case RIGHT:
                     RenderFont.drawShadedString(renderer
     //                renderer.drawString(
                               , buttonTxt
                               , bounds.x + bounds.width - width
-                              , vertical, null, label.isShadowed() );
+                              , vertical, null, label.isShadowed(), label.isColorEncoding(), label.isMonospaced());
                     break;
                 default:
                     RenderFont.drawShadedString(renderer
     //                renderer.drawString(
                                       , buttonTxt
                                       , bounds.x + (bounds.width / 2) - (width / 2)
-                                      , vertical, null, label.isShadowed() );
+                                      , vertical, null, label.isShadowed(), label.isColorEncoding(), label.isMonospaced());
                     break;
             }
 //            font.setSize(textSize);

@@ -223,7 +223,7 @@ public class TankSprite implements Renderable {
             canvas.boldFont();
             ClientPlayerEntity ent = tank.getOperator();
             ClientPlayer player = ent.getPlayer();
-            int strln = canvas.getWidth(player.getName());
+            float strln = RenderFont.getTextWidth(canvas, player.getName());
             RenderFont.drawShadedString(canvas, player.getName(), (int)(rx+WeaponConstants.TANK_AABB_WIDTH/2)-strln*2, 
                                 (int)ry+WeaponConstants.TANK_AABB_HEIGHT-100, player.getTeam().getColor() );            
         }

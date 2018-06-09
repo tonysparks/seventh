@@ -702,7 +702,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         canvas.boldFont();
                 
         if(fadeAlphaColor > 0) {            
-            RenderFont.drawShadedString(canvas, player.getName(), rx - (bounds.width/2f), ry + (bounds.height/2f) + 40f, teamColor );
+            RenderFont.drawShadedString(canvas, player.getPlainName(), rx - (bounds.width/2f), ry + (bounds.height/2f) + 40f, teamColor);
         
             if (invinceableTime > 0 || isSelected()) {
                 canvas.setColor(teamColor, 122);

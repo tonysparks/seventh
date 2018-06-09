@@ -575,7 +575,7 @@ public class Terminal implements Updatable, Logger {
         
         if(itemsSkipped) {
             String notificationText = "^  ^  ^  ^  ^  ^  ^  ^";
-            int width = canvas.getWidth(notificationText);
+            float width = RenderFont.getTextWidth(canvas, notificationText);
             RenderFont.drawShadedString(canvas, notificationText, background.width/2 - width/2, outputHeight - 5, foregroundColor);
         }
         canvas.end();
@@ -593,13 +593,12 @@ public class Terminal implements Updatable, Logger {
         
         canvas.begin();
         int inputBufferY = background.height - textHeight/2;
-        RenderFont.drawShadedString(canvas, "> ", x, inputBufferY, 0xffffffff);
-        RenderFont.drawShadedString(canvas, this.inputBuffer.toString(), x + canvas.getWidth("> "), inputBufferY, inputTextColor);
+        RenderFont.drawShadedString(canvas, "> ", x, inputBufferY, 0xffffffff, true, false, true);
+        RenderFont.drawShadedString(canvas, this.inputBuffer.toString(), x + RenderFont.getTextWidth(canvas, "> ", false, true), inputBufferY, inputTextColor, true, false, true);
         
-        if(showCursor) 
-        {
-            int textWidth = canvas.getWidth("> " + this.inputBuffer.substring(0, this.cursorIndex));
-            RenderFont.drawShadedString(canvas, "_", x + textWidth, inputBufferY, inputTextColor);
+        if(showCursor) {
+            float textWidth = RenderFont.getTextWidth(canvas, "> " + this.inputBuffer.substring(0, this.cursorIndex), false, true);
+            RenderFont.drawShadedString(canvas, "_", x + textWidth, inputBufferY, inputTextColor, true, false, true);
         }
                 
         canvas.end();

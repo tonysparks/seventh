@@ -456,7 +456,7 @@ public class AnimationEditorScreen implements Screen {
         int fontColor = theme.getForegroundColor();
         String message = "Animation Editor";
         RenderFont.drawShadedString(canvas, message
-                , canvas.getWidth()/2 - canvas.getWidth(message)/2, 30, fontColor);
+                , canvas.getWidth()/2 - RenderFont.getTextWidth(canvas, message)/2, 30, fontColor);
                 
 
         canvas.end();
