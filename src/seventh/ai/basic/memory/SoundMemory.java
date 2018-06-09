@@ -17,7 +17,7 @@ import seventh.shared.Updatable;
 /**
  * Sound memory -- what this bot has heard, we store in a small cache so that he doesn't immediately forget the
  * world around him
- * 
+ *
  * 
  * @author Tony
  *
@@ -31,20 +31,17 @@ public class SoundMemory implements Updatable {
      * @author Tony
      *
      */
-    public static class SoundMemoryRecord {
-        private final long expireTime;    
+    public static class SoundMemoryRecord extends MemoryRecord{
         private long timeHeard;
         private long timeHeardAgo;
         
         private SoundEmittedEvent sound;
-        private boolean isValid;
         
         /**
          * @param expireTime
          */
         public SoundMemoryRecord(long expireTime) {
-            this.expireTime = expireTime;                        
-            this.isValid = false;
+            super(expireTime);
             this.sound = new SoundEmittedEvent(this, 0, SoundType.MUTE, new Vector2f());
         }
         
@@ -79,19 +76,11 @@ public class SoundMemory implements Updatable {
         public void checkExpired(TimeStep timeStep) {
             this.timeHeardAgo = timeStep.getGameClock() - this.timeHeard;
             if(isExpired(timeStep)) {
-                expire();
+                expireStrategy = new SoundExpireStrategy();
             }
         }
         
-        /**
-         * Expire this record
-         */
-        public void expire() {
-            this.sound.setId(-1);
-            this.sound.setSoundType(SoundType.MUTE);
-            this.isValid = false;
-        }
-        
+   
         /**
          * If this sound is expired
          * 
@@ -153,7 +142,7 @@ public class SoundMemory implements Updatable {
      */
     public void clear() {
         for(int i = 0; i < this.soundRecords.length; i++) {
-            this.soundRecords[i].expire();            
+            this.soundRecords[i].expireStrategy = new SoundExpireStrategy();            
         }
     }
     
