@@ -533,58 +533,15 @@ public class BitPacker {
     
     
     public static void dumpBytes(byte[] value) {
-        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-        System.out.println("| Dumping bytes, length: " + (value.length * 8) + " (" + value.length + " byte(s))");
-        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-
-        int count = 0;
-        for (int j = 0; j < value.length; j++) {
-
-            byte v = value[j];
-
-            for (int i = 0; i < Byte.SIZE; i++) {
-                if (((v >> i) & 1) == 1) {
-                    System.out.print("1");
-                }
-                else {
-                    System.out.print("0");
-                }
-            }
-
-            System.out.print(" ");
-            count++;
-            if (count == 12) {
-                System.out.println();
-                count = 0;
-            }
-
-        }
-        System.out.println();
-        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
+    	StatementFactory statementFactory = new StatementFactory();
+        Statement statement = statementFactory.getInstance(value);
+        statement.print();
     }
 
     public void dump() {
-        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-        System.out.println("| Dumping bitset, length: " + numBits);
-        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
-
-        int count = 0;
-
-        for (int i = 0; i < numBits; i++) {
-            System.out.print(data.getBit(i) ? "1" : "0");
-            if ((i != 0) && (i % 8 == 7)) {
-                System.out.print(" ");
-                count++;
-                if (count == 12) {
-                    System.out.println();
-                    count = 0;
-                }
-
-            }
-
-        }
-        System.out.println();
-        System.out.println("+--------------- ------------- ------- ------ --- -- -- - -- -- --");
+    	StatementFactory statementFactory = new StatementFactory();
+        Statement statement = statementFactory.getInstance(numBits,data);
+        statement.print();
     }
 
 }
