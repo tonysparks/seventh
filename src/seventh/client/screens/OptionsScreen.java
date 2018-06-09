@@ -190,7 +190,7 @@ public class OptionsScreen implements Screen {
         nameTxtBox.setTextSize(14);
         nameTxtBox.getLabel().setTextSize(18);
         nameTxtBox.setFocus(false);
-        nameTxtBox.setMaxSize(16);
+        nameTxtBox.setMaxSize(21);
         nameTxtBox.setText(app.getConfig().getPlayerName());
         nameTxtBox.getTextLabel().setForegroundColor(0xffffffff);
         

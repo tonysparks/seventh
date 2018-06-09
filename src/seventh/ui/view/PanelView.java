@@ -26,7 +26,9 @@ import java.util.List;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
+import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
+import seventh.ui.Panel;
 
 /**
  * Renders a group of elements
@@ -40,11 +42,17 @@ public class PanelView implements Renderable {
      * Elements
      */
     private List<Renderable> uiElements;
+    private Panel panel;
+    
+    public PanelView() {
+        this(null);
+    }
     
     /**
-     * 
+     * @param panel
      */
-    public PanelView() {
+    public PanelView(Panel panel) {
+        this.panel = panel;
         this.uiElements = new ArrayList<>();
     }
     
@@ -74,6 +82,24 @@ public class PanelView implements Renderable {
      */
     @Override
     public void render(Canvas renderer, Camera camera, float alpha) {
+        if(this.panel != null && this.panel.getBorderWidth() > 0) {
+            
+            
+            Rectangle bounds = this.panel.getBounds();
+            int x = bounds.x;
+            int y = bounds.y;
+            int w = bounds.width;
+            int h = bounds.height;
+            
+            int color = this.panel.getBorderColor();
+            
+            renderer.fillRect(x, y, w, h, this.panel.getBackgroundColor());
+            
+            for(int i = 0; i < this.panel.getBorderWidth(); i++) {
+                renderer.drawRect(x+i, y+i, w-i*2, h-i*2, color);
+            }
+        }
+        
         int size = this.uiElements.size();
         for(int i = 0; i < size; i++) {
             this.uiElements.get(i).render(renderer, camera, alpha);

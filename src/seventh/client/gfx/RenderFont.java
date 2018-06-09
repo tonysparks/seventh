@@ -14,6 +14,7 @@ public class RenderFont {
      * Text color directory
      */
     public static final Integer[] COLORS = {
+            0xff000000,  // BLCK
             0xffff0000,  // RED    
             0xff00ff00,  // GREEN
             0xffffff00,  // YELLOW
@@ -22,8 +23,7 @@ public class RenderFont {
             0xffff00ff,  // PINK
             0xffffffff,  // WHITE
             0xff006600,  // DARK_GREEN
-            0xffd3d3d3,  // GREY
-            0xff000000,  // BLCK
+            0xffd3d3d3,  // GREY            
     };
     
 
