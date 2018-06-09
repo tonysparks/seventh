@@ -32,43 +32,10 @@ public class AIGroupAttackAction extends AIGroupAction {
     public AIGroupAttackAction(Vector2f position) {
         this.attackPosition = position;
         this.attackDirections = new ArrayList<>();
+        action = new AttackGetAction(position);
+        start = new AttackStart(position);
     }
 
-    @Override
-    public void start(AIGroup aIGroup) {
-        World world = aIGroup.getWorld();
-
-        this.attackDirections.addAll(world.getAttackDirections(attackPosition, 150f, aIGroup.groupSize()));        
-        if(attackDirections.isEmpty()) {
-            attackDirections.add(new AttackDirection(attackPosition));
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see seventh.ai.basic.group.AIGroupAction#getAction(seventh.ai.basic.group.AIGroup)
-     */
-    @Override
-    public Action getAction(AIGroup aIGroup) {
-        if(aIGroup.groupSize()>0) {
-            World world = aIGroup.getWorld();
-            Brain[] members = aIGroup.getMembers();
-            Roles roles = aIGroup.getRoles();
-            
-            int j = 0;
-            for(int i = 0; i < members.length; i++) {
-                Brain member = members[i];
-                if(member!=null) {
-                    if(roles.getAssignedRole(member.getPlayer()) != Role.None) {                    
-                        AttackDirection dir = attackDirections.get( (j+=1) % attackDirections.size());
-                        return new SequencedAction("squadAttack")
-                                    .addNext(world.getGoals().moveToAction(dir.getDirection()));
-                    }
-                }
-            }
-        }
-        
-        return new WaitAction(500);
-    }
     
     /* (non-Javadoc)
      * @see seventh.ai.basic.group.AIGroupAction#end(seventh.ai.basic.group.AIGroup)

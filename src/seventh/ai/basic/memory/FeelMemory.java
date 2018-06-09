@@ -7,7 +7,6 @@ import seventh.game.entities.Entity;
 import seventh.shared.SeventhConstants;
 import seventh.shared.TimeStep;
 import seventh.shared.Updatable;
-
 /**
  * @author Tony
  *
@@ -20,21 +19,18 @@ public class FeelMemory implements Updatable {
      * @author Tony
      *
      */
-    public static class FeelMemoryRecord {
-        private final long expireTime;
+    public static class FeelMemoryRecord extends MemoryRecord{
         
         private Entity damager;            
         private long timeFelt;
         private long timeFeltAgo;
         
-        private boolean isValid;
         
         /**
          * @param expireTime
          */
         public FeelMemoryRecord(long expireTime) {
-            this.expireTime = expireTime;                        
-            this.isValid = false;
+           super(expireTime);
         }
         
         
@@ -66,17 +62,14 @@ public class FeelMemory implements Updatable {
         public void checkExpired(TimeStep timeStep) {
             this.timeFeltAgo = timeStep.getGameClock() - this.timeFelt;
             if(isExpired(timeStep)) {
-                expire();
+                expireStrategy = new FeelExpireStrategy();
             }
         }
         
         /**
          * Expire this record
          */
-        public void expire() {
-            this.damager = null;                                                        
-            this.isValid = false;
-        }
+
         
         /**
          * If this entity is expired
@@ -141,7 +134,7 @@ public class FeelMemory implements Updatable {
      */
     public void clear() {
         for(int i = 0; i < this.feelingRecords.length; i++) {
-            this.feelingRecords[i].expire();            
+            this.feelingRecords[i].expireStrategy = new FeelExpireStrategy();            
         }
     }
     
