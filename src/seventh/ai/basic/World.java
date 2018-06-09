@@ -451,67 +451,160 @@ public class World {
     }
     
     private Zone getNorthZone(Rectangle bounds, int fuzzy, int minDistance) {
-        
-        int adjacentZoneX = bounds.x;
-        int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-        return adjacentZone;
+        return new NorthZone().getAdjacentZone(bounds, fuzzy, minDistance);
     }
     
     private Zone getNorthWestZone(Rectangle bounds, int fuzzy, int minDistance) {
-        
-        int adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
-        int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-        return adjacentZone;
+        return new NorthWestZone().getAdjacentZone(bounds, fuzzy, minDistance);
     }
     
     private Zone getNorthEastZone(Rectangle bounds, int fuzzy, int minDistance) {
-        
-        int adjacentZoneX = bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
-        int adjacentZoneY = bounds.y - (bounds.height/2 + fuzzy + minDistance);
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-        return adjacentZone;
+        return new NorthEastZone().getAdjacentZone(bounds, fuzzy, minDistance);
     }
     
     private Zone getEastZone(Rectangle bounds, int fuzzy, int minDistance) {
-        
-        int adjacentZoneX = bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
-        int adjacentZoneY = bounds.y;
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);        
-        return adjacentZone;
+        return new EastZone().getAdjacentZone(bounds, fuzzy, minDistance);
     }
     
     private Zone getSouthZone(Rectangle bounds, int fuzzy, int minDistance) {
-        
-        int adjacentZoneX = bounds.x;
-        int adjacentZoneY = bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-        return adjacentZone;
+        return new SouthZone().getAdjacentZone(bounds, fuzzy, minDistance);
     }
     
     private Zone getSouthWestZone(Rectangle bounds, int fuzzy, int minDistance) {
-        
-        int adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
-        int adjacentZoneY = bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-        return adjacentZone;
+        return new SouthWestZone().getAdjacentZone(bounds, fuzzy, minDistance);
     }
     
     private Zone getSouthEastZone(Rectangle bounds, int fuzzy, int minDistance) {
-        
-        int adjacentZoneX = bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
-        int adjacentZoneY = bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-        return adjacentZone;
+        return new SouthEastZone().getAdjacentZone(bounds, fuzzy, minDistance);
     }
     
     private Zone getWestZone(Rectangle bounds, int fuzzy, int minDistance) {
+        return new WestZone().getAdjacentZone(bounds, fuzzy, minDistance);
+    }
+    
+    private abstract class AdjacentZone {
+        public Zone getAdjacentZone(Rectangle bounds, int fuzzy, int minDistance) {
+            
+            int adjacentZoneX = getAdjacentZoneX(bounds, fuzzy, minDistance);
+            int adjacentZoneY = getAdjacentZoneY(bounds, fuzzy, minDistance);
+            Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
+            return adjacentZone;
+        }
         
-        int adjacentZoneX = bounds.x - (bounds.width/2 + fuzzy + minDistance);
-        int adjacentZoneY = bounds.y;
-        Zone adjacentZone = getZone(adjacentZoneX, adjacentZoneY);
-        return adjacentZone;
+        protected abstract int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance);
+        protected abstract int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance);
+    }
+    
+    private class NorthZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x;
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y - (bounds.height/2 + fuzzy + minDistance);
+        }
+        
+    }
+    
+    private class NorthWestZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x - (bounds.width/2 + fuzzy + minDistance);
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y - (bounds.height/2 + fuzzy + minDistance);
+        }
+        
+    }
+    
+    private class NorthEastZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y - (bounds.height/2 + fuzzy + minDistance);
+        }
+        
+    }
+    
+    private class EastZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y;
+        }
+        
+    }
+    
+    private class SouthZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x;
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
+        }
+        
+    }
+    
+    private class SouthWestZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x - (bounds.width/2 + fuzzy + minDistance);
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
+        }
+        
+    }
+    
+    private class SouthEastZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x + (bounds.width+(bounds.width/2) + fuzzy + minDistance);
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y + (bounds.height+(bounds.height/2) + fuzzy + minDistance);
+        }
+        
+    }
+    
+    private class WestZone extends AdjacentZone {
+
+        @Override
+        protected int getAdjacentZoneX(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.x - (bounds.width/2 + fuzzy + minDistance);
+        }
+
+        @Override
+        protected int getAdjacentZoneY(Rectangle bounds, int fuzzy, int minDistance) {
+            return bounds.y;
+        }
+        
     }
     
     /**
