@@ -650,7 +650,13 @@ public class Tank extends Vehicle {
         if(armor < 0) {                
             super.damage(damager, amount);
         }
-        
+        else {
+            if(damager instanceof Bullet) {
+                Bullet bullet = (Bullet) damager;
+                bullet.kill(this);        
+                game.emitSound(bullet.getId(), SoundType.IMPACT_METAL, bullet.getCenterPos());
+            }
+        }
     }
     
     
