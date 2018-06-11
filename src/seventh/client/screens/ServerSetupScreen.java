@@ -178,19 +178,19 @@ public class ServerSetupScreen extends AbstractServerSetupScreen {
         uiPos.y = startY;        
         
         final ImagePanel previewPanel = new ImagePanel(getCurrentMapPreview());
-        previewPanel.setBounds(new Rectangle(app.getScreenWidth() - 400, startY + 5, 325, 275));//168, 168));        
+        previewPanel.setBounds(new Rectangle(app.getScreenWidth() - 380, startY + 5, 325, 275));//168, 168));        
         previewPanel.setBackgroundColor(0xff383e18);
         previewPanel.setForegroundColor(0xff000000);
         
         setupLabel(uiPos, "Server Name: ", false);
         
-        uiPos.x = toggleX+95;
-        uiPos.y += yInc;
+        uiPos.x = toggleX+100;
+        uiPos.y += yInc - 5;
         
         final TextBox serverNameTxtBox = setupTextBox(uiPos, this.gameSettings.serverName);
-        serverNameTxtBox.setBounds(new Rectangle(240, 25));
+        serverNameTxtBox.setBounds(new Rectangle(285, 25));
         serverNameTxtBox.getBounds().centerAround(uiPos);
-        serverNameTxtBox.setMaxSize(26);
+        serverNameTxtBox.setMaxSize(21 + 9);
         serverNameTxtBox.addInputListenerToFront(new Inputs() {
             
             @Override

@@ -181,15 +181,17 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         // int startX = (int)pos.x;
         int startY = (int) pos.y;
 
-        final int xInc = 205;
+        final int xInc = 208;
         final int yInc = 25;
+        
+        pos.x -= 7;
         
         Panel alliedPanel = new Panel();
         alliedPanel.setBorderColor(0xff000000);//ClientTeam.ALLIES.getColor());
         alliedPanel.setBackgroundColor(0x1f000000);
         alliedPanel.setBorderWidth(1);
         //alliedPanel.setBackgroundColor(Colors.setAlpha(ClientTeam.ALLIES.getColor(), 255));
-        alliedPanel.setBounds(new Rectangle(5, (int)pos.y - 5, 418, 305));
+        alliedPanel.setBounds(new Rectangle(1, (int)pos.y - 5, 418, 305));
         
         this.panelView.addElement(new PanelView(alliedPanel));
         
@@ -198,7 +200,7 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         axisPanel.setBackgroundColor(0x1f000000);
         //axisPanel.setBackgroundColor(Colors.setAlpha(ClientTeam.AXIS.getColor(), 200));
         axisPanel.setBorderWidth(1);
-        axisPanel.setBounds(new Rectangle(423, (int)pos.y - 5, 418, 305));
+        axisPanel.setBounds(new Rectangle(421, (int)pos.y - 5, 418, 305));
         
         this.panelView.addElement(new PanelView(axisPanel));
         
@@ -225,7 +227,7 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
 
         }
 
-        pos.x = 430;
+        pos.x = 423;
         pos.y = startY;
 
         i = 0;

@@ -184,9 +184,9 @@ public class OptionsScreen implements Screen {
         nameTxtBox = new TextBox();
         nameTxtBox.setLabelText("Name: ");
         nameTxtBox.setTheme(theme);
-        nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 55, 200, 25));        
-        //nameTxtBox.setFont(theme.getSecondaryFontName()); 
-        nameTxtBox.setFont(Theme.DEFAULT_FONT);
+        nameTxtBox.setBounds(new Rectangle(app.getScreenWidth()/2 - 50, 55, 205, 25));                 
+        nameTxtBox.getTextLabel().setFont(Theme.DEFAULT_FONT);
+        nameTxtBox.getLabel().setFont(theme.getSecondaryFontName());
         nameTxtBox.setTextSize(14);
         nameTxtBox.getLabel().setTextSize(18);
         nameTxtBox.setFocus(false);

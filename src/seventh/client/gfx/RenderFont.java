@@ -14,16 +14,16 @@ public class RenderFont {
      * Text color directory
      */
     public static final Integer[] COLORS = {
-            0xff000000,  // BLCK
-            0xffff0000,  // RED    
-            0xff00ff00,  // GREEN
-            0xffffff00,  // YELLOW
-            0xff0000ff,  // BLUE
-            0xff00ffff,  // LIGHT BLUE
-            0xffff00ff,  // PINK
-            0xffffffff,  // WHITE
-            0xff006600,  // DARK_GREEN
-            0xffd3d3d3,  // GREY            
+            0xff000000,  // BLCK        0
+            0xffff0000,  // RED         1
+            0xff00ff00,  // GREEN       2
+            0xffffff00,  // YELLOW      3
+            0xff0000ff,  // BLUE        4
+            0xff00ffff,  // LIGHT BLUE  5
+            0xffff00ff,  // PINK        6
+            0xffffffff,  // WHITE       7
+            0xff006600,  // DARK_GREEN  8
+            0xffd3d3d3,  // GREY        9   
     };
     
 
