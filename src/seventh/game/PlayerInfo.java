@@ -24,7 +24,8 @@ public interface PlayerInfo {
     /**
      * @return the weaponClass
      */
-    public abstract Type getWeaponClass();
+    public abstract Type getWeaponClass();    
+    public abstract PlayerClass getPlayerClass();
 
     /**
      * @return true if we are ready to spawn

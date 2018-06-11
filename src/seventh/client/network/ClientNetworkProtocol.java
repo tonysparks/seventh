@@ -46,6 +46,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -55,7 +56,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
 import seventh.shared.NetworkProtocol;
@@ -284,6 +287,12 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         else if(message instanceof TilesRemovedMessage) {
             receiveTilesRemovedMessage(conn, (TilesRemovedMessage)message);
         }
+        else if(message instanceof TileAddedMessage) {
+            receiveTileAddedMessage(conn, (TileAddedMessage)message);
+        }
+        else if(message instanceof TilesAddedMessage) {
+            receiveTilesAddedMessage(conn, (TilesAddedMessage)message);
+        }
         else if(message instanceof PlayerCommanderMessage) {
             receivePlayerCommanderMessage(conn, (PlayerCommanderMessage)message);
         }
@@ -492,6 +501,16 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         }
     }
     
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#receivePlayerSwitchedPlayerClassMessage(harenet.api.Connection, seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void receivePlayerSwitchedPlayerClassMessage(Connection conn, PlayerSwitchPlayerClassMessage msg) {
+        if(game!=null) {
+            game.playerSwitchedPlayerClass(msg);
+        }        
+    }
+    
     
     /* (non-Javadoc)
      * @see seventh.client.ClientProtocol#playerSpeech(harenet.api.Connection, seventh.network.messages.PlayerSpeechMessage)
@@ -581,6 +600,26 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     public void receiveTilesRemovedMessage(Connection conn, TilesRemovedMessage msg) {
         if(game!=null) {
             game.removeTiles(msg);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#receiveTileAddedMessage(harenet.api.Connection, seventh.network.messages.TileAddedMessage)
+     */
+    @Override
+    public void receiveTileAddedMessage(Connection conn, TileAddedMessage msg) {
+        if(game!=null) {
+            game.addTile(msg);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#receiveTilesAddedMessage(harenet.api.Connection, seventh.network.messages.TilesAddedMessage)
+     */
+    @Override
+    public void receiveTilesAddedMessage(Connection conn, TilesAddedMessage msg) {
+        if(game!=null) {
+            game.addTiles(msg);
         }
     }
     
@@ -682,6 +721,14 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     @Override
     public void sendPlayerSwitchWeaponClassMessage(PlayerSwitchWeaponClassMessage msg) {
         queueSendReliableMessage(msg);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.client.network.ClientProtocol#sendPlayerSwitchPlayerClassMessage(seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void sendPlayerSwitchPlayerClassMessage(PlayerSwitchPlayerClassMessage msg) {
+        queueSendReliableMessage(msg);        
     }
 
     /* (non-Javadoc)

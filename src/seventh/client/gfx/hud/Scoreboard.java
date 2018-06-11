@@ -135,10 +135,12 @@ public class Scoreboard {
                 canvas.fillRect(x-5, y-15, 680, 20, 0x5fffffff);
             }
             
-            String output = String.format("%-30s %-13d %-13d %-10d %-8d %-13d", 
-                    player.getName(),player.getKills(), player.getAssists(), player.getDeaths(), player.getHitPercentage(), player.getPing());
+            RenderFont.drawShadedString(canvas, player.getName(), x, y, 0xffffffff);
             
-            RenderFont.drawShadedString(canvas, output, x, y, 0xffffffff );
+            String output = String.format("%-30s %-13d %-13d %-10d %-8d %-13d", 
+                    "",player.getKills(), player.getAssists(), player.getDeaths(), player.getHitPercentage(), player.getPing());
+            
+            RenderFont.drawShadedString(canvas, output, x, y, 0xffffffff, true, true, true);
             if(!player.isAlive()) {
                 canvas.drawScaledImage(Art.deathsImage, x-30, y-12, 20, 20, 0xffffffff);
             }
@@ -331,7 +333,7 @@ public class Scoreboard {
             
             
             y+=yIncBig;
-            int strWidth = canvas.getWidth(winner);
+            float strWidth = RenderFont.getTextWidth(canvas, winner);
             RenderFont.drawShadedString(canvas, winner, canvas.getWidth() / 2 - strWidth/2, y, color);
         }
         

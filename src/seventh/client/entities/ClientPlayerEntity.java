@@ -27,6 +27,7 @@ import seventh.client.gfx.effects.ClientGameEffects;
 import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.sfx.Sounds;
 import seventh.client.weapon.ClientFlameThrower;
+import seventh.client.weapon.ClientHammer;
 import seventh.client.weapon.ClientKar98;
 import seventh.client.weapon.ClientM1Garand;
 import seventh.client.weapon.ClientMP40;
@@ -45,6 +46,7 @@ import seventh.game.net.NetPlayer;
 import seventh.game.net.NetPlayerPartial;
 import seventh.game.net.NetWeapon;
 import seventh.game.type.GameType;
+import seventh.map.Tile;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -55,7 +57,7 @@ import seventh.shared.WeaponConstants;
  */
 public class ClientPlayerEntity extends ClientControllableEntity {
     
-    private final ClientWeapon[] WEAPONS = new ClientWeapon[11];
+    private final ClientWeapon[] WEAPONS = new ClientWeapon[12];
     
     private int health;        
     private long invinceableTime;
@@ -167,6 +169,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             WEAPONS[8] = new ClientPistol(this);
             WEAPONS[9] = new ClientRisker(this);
             WEAPONS[10] = new ClientFlameThrower(this);
+            WEAPONS[11] = new ClientHammer(this);
             
             player.setEntity(this);
         }
@@ -456,6 +459,12 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                     weaponWeight = WeaponConstants.FLAME_THROWER_WEIGHT;
                     break;
                 }
+                case HAMMER: {
+                    weapon = WEAPONS[11];
+                    lineOfSight = WeaponConstants.HAMMER_LINE_OF_SIGHT;
+                    weaponWeight = WeaponConstants.HAMMER_WEIGHT;
+                    break;
+                }
                 default: {                    
                     weapon = null;
                     weaponWeight = 0;
@@ -663,7 +672,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
                     boolean persist = this.game.getGameType().equals(GameType.Type.OBJ);
                     
                     // spawn the death animation
-                    this.effects.addBackgroundEffect(new AnimationEffect(anim, pos, getOrientation(), persist));
+                    this.effects.addBackgroundEffect(new AnimationEffect(anim, pos, getOrientation(), persist, 34_000));
                     
                     Sounds.startPlaySound(Sounds.die, getId(), locationOfDeath.x, locationOfDeath.y);
                 }
@@ -684,16 +693,16 @@ public class ClientPlayerEntity extends ClientControllableEntity {
         canvas.setColor(teamColor, fadeAlphaColor);    
         
         //states[currentState].render(canvas, camera)
-        Vector2f c = camera.getRenderPosition(alpha);
+        Vector2f cameraPos = camera.getRenderPosition(alpha);
         Vector2f pos = getRenderPos(alpha);
-        float rx = pos.x - c.x;
-        float ry = pos.y - c.y;
+        float rx = pos.x - cameraPos.x;
+        float ry = pos.y - cameraPos.y;
 
         canvas.setFont("Consola", 14);
         canvas.boldFont();
                 
         if(fadeAlphaColor > 0) {            
-            RenderFont.drawShadedString(canvas, player.getName(), rx - (bounds.width/2f), ry + (bounds.height/2f) + 40f, teamColor );
+            RenderFont.drawShadedString(canvas, player.getPlainName(), rx - (bounds.width/2f), ry + (bounds.height/2f) + 40f, teamColor);
         
             if (invinceableTime > 0 || isSelected()) {
                 canvas.setColor(teamColor, 122);
@@ -702,9 +711,30 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             }                
         }
                 
+        if(this.weapon instanceof ClientHammer) {
+            drawHighlightedTilePlant(canvas, cameraPos);
+        }
+        
+        
         sprite.render(canvas, camera, alpha);
         canvas.setCompositeAlpha(1.0f);
 
+    }
+    
+    private void drawHighlightedTilePlant(Canvas canvas, Vector2f cameraPos) {        
+        Vector2f tilePos = this.cache;       
+        Vector2f.Vector2fMA(getCenterPos(), getFacing(), 38f, tilePos);
+        
+        seventh.map.Map map = game.getMap();
+        
+        int tileX = (int)tilePos.x;
+        int tileY = (int)tilePos.y;
+        
+        int color = game.canAddTile(tilePos) ?  0x2f00ff00 : 0x2fff0000;
+        Tile groundTile = map.getWorldTile(0, tileX, tileY);
+        if(groundTile!=null) {
+            canvas.fillRect(groundTile.getX() - cameraPos.x, groundTile.getY() - cameraPos.y, map.getTileWidth(), map.getTileHeight(), color);
+        }
     }
 
 }

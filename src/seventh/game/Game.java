@@ -20,6 +20,7 @@ import leola.vm.types.LeoObject;
 import seventh.ai.AISystem;
 import seventh.ai.basic.AILeolaLibrary;
 import seventh.ai.basic.DefaultAISystem;
+import seventh.game.entities.Base;
 import seventh.game.entities.Bomb;
 import seventh.game.entities.BombTarget;
 import seventh.game.entities.Door;
@@ -50,15 +51,16 @@ import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
 import seventh.game.events.SurvivorEvent;
 import seventh.game.events.SurvivorEvent.EventType;
+import seventh.game.events.TileAddedEvent;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameUpdate;
+import seventh.game.net.NetMapAddition;
+import seventh.game.net.NetMapAdditions;
 import seventh.game.net.NetMapDestructables;
-import seventh.game.net.NetPlayerPartialStat;
-import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
 import seventh.game.type.GameType;
@@ -84,6 +86,7 @@ import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.MapObject;
 import seventh.map.Tile;
+import seventh.map.TileData;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -168,6 +171,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private List<Door> doors;
     private List<Smoke> smokeEntities;
     private List<DroppedItem> droppedItems;
+    private List<Base> bases;
     
     private Players players;
                 
@@ -190,8 +194,6 @@ public class Game implements GameInfo, Debugable, Updatable {
         
     private NetGameUpdate[] playerUpdates;
     private NetGameState gameState;
-    private NetGameStats gameStats;
-    private NetGamePartialStats gamePartialStats;
     
     private Timers gameTimers;
     private Triggers gameTriggers;
@@ -239,6 +241,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.playerEntities = new PlayerEntity[MAX_PLAYERS];
         
         this.deadFrames = new int[MAX_ENTITIES];
+        markDeadFrames();
         
         this.playerUpdates = new NetGameUpdate[MAX_ENTITIES];
         for(int i = 0; i < this.playerUpdates.length; i++) {
@@ -251,6 +254,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.doors = new ArrayList<Door>();
         this.smokeEntities = new ArrayList<Smoke>();
         this.droppedItems = new ArrayList<DroppedItem>();
+        this.bases = new ArrayList<Base>();
         
         this.soundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
         this.lastFramesSoundEvents = new SoundEventPool(SeventhConstants.MAX_SOUNDS);
@@ -262,8 +266,6 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.players = players;                
         
         this.gameState = new NetGameState();
-        this.gamePartialStats = new NetGamePartialStats();
-        this.gameStats = new NetGameStats();
         
         this.enableFOW = true;
         this.time = gameType.getMatchTime();
@@ -310,18 +312,18 @@ public class Game implements GameInfo, Debugable, Updatable {
             
             @Override
             public void onRoundStarted(RoundStartedEvent event) {
-                // mark all entities as dead, so that we can reload them
-                // on start up
-                for(int i = MAX_PLAYERS; i < deadFrames.length; i++) {
-                    deadFrames[i] = 999;
-                }
+                markDeadFrames();
                 
                 // remove any nodes we may have created by destructable
                 // terrain
                 for(Tile tile : map.getRemovedTiles()) {
                     graph.removeNode(tile.getXIndex(), tile.getYIndex());
                 }
+                
+                
                 map.restoreDestroyedTiles();
+                map.removeAddedTiles();
+                
                 loadMapScripts();
                 
                 aiSystem.startOfRound(Game.this);
@@ -701,6 +703,50 @@ public class Game implements GameInfo, Debugable, Updatable {
         });
     }
     
+    /**
+     * Adds a {@link Tile} to the game world
+     * 
+     * @param type
+     * @param pos
+     * @return true if it was added
+     */
+    public boolean addTile(byte type, Vector2f pos) {
+        int tileX = (int)pos.x;
+        int tileY = (int)pos.y;
+        
+        // ensure there is not already a collision tile here
+        // and also ensure no players are touching here
+        if(!map.hasWorldCollidableTile(tileX, tileY)) {
+            Tile groundTile = map.getWorldTile(0, tileX, tileY);
+            Rectangle bounds = groundTile.getBounds();
+            for(int i = 0; i < this.playerEntities.length; i++) {
+                PlayerEntity ent = this.playerEntities[i];
+                if(ent!=null) {
+                    if(ent.getBounds().intersects(bounds)) {
+                        return false;
+                    }
+                }
+            }
+            
+            TileData data = new TileData();
+            data.tileX = map.worldToTileX((int) pos.x);
+            data.tileY = map.worldToTileY((int) pos.y);
+            data.type = type;
+            Tile tile = map.getMapObjectFactory().createMapTile(map.geTilesetAtlas(), data);
+            if(tile != null) {
+                // add the tile to the world map
+                map.addTile(tile);
+                
+                // make this tile unwalkable, so that pathfinding works correctly
+                graph.removeNode(data.tileX, data.tileY);
+                
+                dispatcher.queueEvent(new TileAddedEvent(this, data.type, data.tileX, data.tileY));                
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getLastFramesSoundEvents()
      */
@@ -788,6 +834,13 @@ public class Game implements GameInfo, Debugable, Updatable {
         return droppedItems;
     }
     
+    /**
+     * @return the bases
+     */
+    public List<Base> getBases() {
+        return bases;
+    }
+    
     public List<MapObject> getMapObjects() {
         return map.getMapObjects();
     }
@@ -840,7 +893,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.gameType.update(this, timeStep);
         this.time = this.gameType.getRemainingTime();
     }
-    
+        
     /**
      * Invoked after an update, a hack to work
      * around processing event queue
@@ -1208,7 +1261,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         }
                             
         // Spawn a bot (or dummy bot if need-be) or a remote controlled entity
-        final PlayerEntity playerEntity = new PlayerEntity(id, spawnPosition, this);    
+        final PlayerEntity playerEntity = new PlayerEntity(id, player.getPlayerClass(), spawnPosition, this);    
         
             
         // give them two seconds of invinceability        
@@ -1243,8 +1296,6 @@ public class Game implements GameInfo, Debugable, Updatable {
         spawnPosition = findFreeSpot(playerEntity);
         
         player.setEntity(playerEntity);
-                
-        playerEntity.setWeaponClass(player.getWeaponClass());
         
         addEntity(playerEntity);
         addPlayer(playerEntity);
@@ -1283,29 +1334,39 @@ public class Game implements GameInfo, Debugable, Updatable {
                 if(Team.SPECTATOR_TEAM_ID != teamId) {
                     player.stopSpectating();
                 }
-                
+                                
                 /* make sure the player has the teams weaponry */
                 switch(player.getWeaponClass()) {
                     case THOMPSON:
-                        player.setWeaponClass(Type.MP40);
-                        break;
                     case MP40: 
-                        player.setWeaponClass(Type.THOMPSON);
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.THOMPSON);
+                        }
+                        else {
+                            player.setWeaponClass(Type.MP40);    
+                        }
                         break;
                         
-                    case KAR98:
-                        player.setWeaponClass(Type.SPRINGFIELD);
-                        break;
+                    case KAR98:                        
                     case SPRINGFIELD:
-                        player.setWeaponClass(Type.KAR98);
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.SPRINGFIELD);
+                        }
+                        else {
+                            player.setWeaponClass(Type.KAR98);
+                        }
                         break;
                         
                     case MP44:
-                        player.setWeaponClass(Type.M1_GARAND);
-                        break;
                     case M1_GARAND:
-                        player.setWeaponClass(Type.MP44);
-                    
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.M1_GARAND);
+                        }
+                        else {
+                            player.setWeaponClass(Type.MP44);
+                        }
+                        break;
+                        
                     case SHOTGUN:
                     case ROCKET_LAUNCHER:
                     case RISKER:
@@ -1314,13 +1375,11 @@ public class Game implements GameInfo, Debugable, Updatable {
                         
                     /* make the player use the default weapon */
                     default: {
-                        switch(teamId) {
-                            case Team.ALLIED_TEAM_ID:
-                                player.setWeaponClass(Type.THOMPSON);
-                                break;
-                            case Team.AXIS_TEAM_ID:
-                                player.setWeaponClass(Type.MP40);
-                                break;
+                        if(teamId == Team.ALLIED_TEAM_ID) {
+                            player.setWeaponClass(Type.THOMPSON);
+                        }
+                        else {
+                            player.setWeaponClass(Type.MP40);    
                         }
                     }
                 }
@@ -1338,48 +1397,24 @@ public class Game implements GameInfo, Debugable, Updatable {
      */
     public void playerSwitchWeaponClass(int playerId, Type weaponType) {
         Player player = players.getPlayer(playerId);
-        if(player!=null) {            
-            Team team = player.getTeam();
-            if(team!=null) {
-                boolean allowed = false;
-                
-                switch(team.getId()) {
-                    case Team.ALLIED_TEAM_ID:
-                        switch(weaponType) {
-                            case THOMPSON:
-                            case M1_GARAND:
-                            case SPRINGFIELD:
-                            case RISKER:
-                            case SHOTGUN:
-                            case ROCKET_LAUNCHER:
-                            case FLAME_THROWER:
-                                allowed = true;
-                                break;
-                            default: allowed = false;
-                        }
-                        break;
-                    case Team.AXIS_TEAM_ID:
-                        switch(weaponType) {
-                            case MP40:
-                            case MP44:
-                            case KAR98:
-                            case RISKER:
-                            case SHOTGUN:
-                            case ROCKET_LAUNCHER:
-                            case FLAME_THROWER:
-                                allowed = true;
-                                break;
-                            default: allowed = false;
-                        }
-                        break;
-                    default:
-                            break;
-                }
-                
-                if(allowed) {
-                    player.setWeaponClass(weaponType);
-                }
+        if(player!=null) {
+            if(player.getPlayerClass().isAvailableWeapon(weaponType)) {                             
+                player.setWeaponClass(weaponType);
             }
+        }
+    }
+    
+    
+    /**
+     * A player has requested to switch its player class
+     * 
+     * @param playerId
+     * @param weaponType
+     */
+    public void playerSwitchPlayerClass(int playerId, PlayerClass playerClass) {
+        Player player = players.getPlayer(playerId);
+        if(player!=null) {            
+            gameType.switchPlayerClass(player, playerClass);
         }
     }
     
@@ -1472,6 +1507,17 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.flags.clear();
         this.doors.clear();
         this.smokeEntities.clear();
+        this.bases.clear();
+        
+        markDeadFrames();        
+    }
+    
+    private void markDeadFrames() {
+        // mark all entities as dead, so that we can reload them
+        // on start up
+        for(int i = MAX_PLAYERS; i < deadFrames.length; i++) {
+            deadFrames[i] = 999;
+        }
     }
     
     /**
@@ -1850,7 +1896,47 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         return flag;
     }
+    
+    /**
+     * @param position
+     * @return a new Allied base
+     */
+    public Base newAlliedBase(Vector2f position) {
+        final Base base = new Base(this, position, Type.ALLIED_BASE);
+        base.onKill = new KilledListener() {
+            
+            @Override
+            public void onKill(Entity entity, Entity killer) {
+                bases.remove(base);
+                newBigExplosion(base.getCenterPos(), killer, 45, 40, 1);
+            }
+        };
+        addEntity(base);
+        this.bases.add(base);
+        
+        return base;
+    }
 
+    /**
+     * @param position
+     * @return a new Axis base
+     */
+    public Base newAxisBase(Vector2f position) {
+        final Base base = new Base(this, position, Type.AXIS_BASE);
+        base.onKill = new KilledListener() {
+            
+            @Override
+            public void onKill(Entity entity, Entity killer) {
+                bases.remove(base);
+                newBigExplosion(base.getCenterPos(), killer, 45, 40, 1);
+            }
+        };
+        addEntity(base);
+        this.bases.add(base);
+        
+        return base;
+    }
+    
     /**
      * If the entity is near enough a dropped weapon to pick up.
      * 
@@ -2024,6 +2110,22 @@ public class Game implements GameInfo, Debugable, Updatable {
                     }
                 }
             }
+        }
+        
+        return false;
+    }
+    
+    public boolean doesTouchBases(Entity ent) {
+        for(int i = 0; i < this.bases.size(); i++) {
+            Base base = this.bases.get(i);
+            
+            if(base != ent && ent.isTouching(base)) {
+                if(ent.onTouch != null) {
+                    ent.onTouch.onTouch(ent, base);
+                    return true;
+                }
+            }
+            
         }
         
         return false;
@@ -2220,6 +2322,19 @@ public class Game implements GameInfo, Debugable, Updatable {
             gameState.mapDestructables.length = tiles.length;
             gameState.mapDestructables.tiles = tiles;
         }
+        
+        List<Tile> addedTiles = this.map.getAddedTiles();
+        if(!addedTiles.isEmpty()) {            
+            gameState.mapAdditions = new NetMapAdditions();
+            gameState.mapAdditions.tiles = new NetMapAddition[addedTiles.size()];
+            
+            for(int i = 0; i < addedTiles.size(); i++) {
+                Tile tile = addedTiles.get(i);
+            
+                gameState.mapAdditions.tiles[i] = new NetMapAddition(tile.getXIndex(), tile.getYIndex(), tile.getType());
+            }
+        }
+        
         return gameState;
     }
     
@@ -2227,41 +2342,14 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @return just returns the networked game statistics
      */
     public NetGameStats getNetGameStats() {        
-        gameStats.playerStats = new NetPlayerStat[this.players.getNumberOfPlayers()];
-        Player[] players = this.players.getPlayers();
-        
-        int j = 0;
-        for(int i = 0; i < players.length; i++) {
-            Player player = players[i];
-            if(player != null) {
-                gameStats.playerStats[j++] = player.getNetPlayerStat();
-            }
-        }
-        
-        gameStats.alliedTeamStats = this.gameType.getAlliedNetTeamStats();
-        gameStats.axisTeamStats = this.gameType.getAxisNetTeamStats();
-        return gameStats;
+        return gameType.getNetGameStats();
     }
     
     /**
      * @return returns the networked game (partial) statistics
      */
     public NetGamePartialStats getNetGamePartialStats() {
-        gamePartialStats.playerStats = new NetPlayerPartialStat[this.players.getNumberOfPlayers()];
-        Player[] players = this.players.getPlayers();
-        
-        int j = 0;
-        for(int i = 0; i < players.length; i++) {
-            Player player = players[i];
-            if(player != null) {
-                gamePartialStats.playerStats[j++] = player.getNetPlayerPartialStat();
-            }
-        }
-        
-        gamePartialStats.alliedTeamStats = this.gameType.getAlliedNetTeamStats();
-        gamePartialStats.axisTeamStats = this.gameType.getAxisNetTeamStats();     
-        
-        return gamePartialStats;
+        return gameType.getNetGamePartialStats();
     }
     
     

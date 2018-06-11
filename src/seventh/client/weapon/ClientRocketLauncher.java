@@ -32,4 +32,9 @@ public class ClientRocketLauncher extends ClientWeapon {
     public boolean isHeavyWeapon() {
         return true;
     }
+    
+    @Override
+    public boolean emitBulletCasing() {    
+        return false;
+    }
 }

@@ -74,6 +74,21 @@ public abstract interface Map extends Renderable, Debugable {
         private TilesetAtlas atlas;
         
         private List<MapObject> mapObjects;
+        private MapObjectFactory mapObjectsFactory;
+        
+        /**
+         * @param mapObjectsFactory the mapObjectsFactory to set
+         */
+        public void setMapObjectsFactory(MapObjectFactory mapObjectsFactory) {
+            this.mapObjectsFactory = mapObjectsFactory;
+        }
+        
+        /**
+         * @return the mapObjectsFactory
+         */
+        public MapObjectFactory getMapObjectsFactory() {
+            return mapObjectsFactory;
+        }
         
         /**
          * @param mapObjects the mapObjects to set
@@ -488,6 +503,9 @@ public abstract interface Map extends Renderable, Debugable {
      * @return
      */
     public abstract Vector2f tileToWorld(int tx, int ty);
+    public abstract int tileToWorldX(int x);
+    public abstract int tileToWorldY(int y);
+
     
     /**
      * Get {@link MapObject}s.
@@ -578,5 +596,13 @@ public abstract interface Map extends Renderable, Debugable {
      */
     public abstract List<Tile> getRemovedTiles();
     public abstract boolean removeDestructableTilesAt(int[] tilePositions);
+    
+    public abstract void addTile(Tile tile);
+    public abstract List<Tile> getAddedTiles();
+    
+    public abstract void removeAddedTiles();
+    
+    public abstract TilesetAtlas geTilesetAtlas();
+    public abstract MapObjectFactory getMapObjectFactory();
 }
 

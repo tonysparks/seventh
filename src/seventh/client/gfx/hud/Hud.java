@@ -31,6 +31,7 @@ import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Renderable;
 import seventh.client.inputs.KeyMap;
 import seventh.client.sfx.Sounds;
+import seventh.client.weapon.ClientHammer;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.Type;
 import seventh.game.entities.PlayerEntity.Keys;
@@ -100,8 +101,10 @@ public class Hud implements Renderable {
         this.centerLog = new MessageLog(screenWidth/2, 50, 3000, 2) {
             @Override
             protected void onRenderMesage(Canvas canvas, Camera camera, String message, int x, int y) {
-                int width = canvas.getWidth(message);                
-                canvas.drawString(message, x - (width/2), y, 0xffffffff);
+//                int width = canvas.getWidth(message);   
+//                canvas.drawString(message, x - (width/2), y, 0xffffffff);
+                float width = RenderFont.getTextWidth(canvas, message);
+                RenderFont.drawShadedString(canvas, message, x - (width/2), y, 0xffffffff);
             }
         };
         this.centerLog.setFontSize(24);
@@ -431,19 +434,14 @@ public class Hud implements Renderable {
         if(weapon!=null) {        
             canvas.setFont("Consola", 14);
             canvas.boldFont();
-            RenderFont.drawShadedString(canvas, weapon.getAmmoInClip() + " | " + weapon.getTotalAmmo()
-                                      , canvas.getWidth() - 200
-                                      , canvas.getHeight() - 50, 0xffffff00);
-            
+            if(!(weapon instanceof ClientHammer)) {
+                RenderFont.drawShadedString(canvas, weapon.getAmmoInClip() + " | " + weapon.getTotalAmmo()
+                                          , canvas.getWidth() - 200
+                                          , canvas.getHeight() - 50, 0xffffff00);
+            }
             TextureRegion icon = weapon.getWeaponIcon();
             if(icon!=null) {                                                    
                 canvas.drawImage(icon, canvas.getWidth() - icon.getRegionWidth() - 10, canvas.getHeight() - icon.getRegionHeight() - 30, null);
-            }
-            
-            // do recoil (shaking the camera)
-            // if this client has it enabled.
-            if(this.config.getWeaponRecoilEnabled()) {
-                weapon.cameraKick(camera);
             }
         }
     }
@@ -463,9 +461,9 @@ public class Hud implements Renderable {
     private void drawScore(Canvas canvas) {                
         canvas.setFont("Consola", 18);
         
-        int textLen = canvas.getWidth("WWWWW");
-        int x = canvas.getWidth() / 2 - textLen;
-        int y = canvas.getHeight() - 10;
+        float textLen = RenderFont.getTextWidth(canvas, "WWWWW");
+        float x = canvas.getWidth() / 2 - textLen;
+        float y = canvas.getHeight() - 10;
         
         int width = 50;
         int height = 20;
@@ -474,7 +472,7 @@ public class Hud implements Renderable {
         canvas.drawRect(x, y-15, width, height, 0xff000000);
         
         String txt = scoreboard.getAlliedScore() + "";
-        RenderFont.drawShadedString(canvas, txt, x + (width - canvas.getWidth(txt)) - 1, y, 0xffffffff);
+        RenderFont.drawShadedString(canvas, txt, x + (width - RenderFont.getTextWidth(canvas, txt)) - 1, y, 0xffffffff);
         
         x += textLen + 2;
         canvas.fillRect(x-2, y-15, 2, height, 0xff000000);
@@ -544,7 +542,7 @@ public class Hud implements Renderable {
                 message += ": " + spectated.getName();
             }
             
-            int width = canvas.getWidth(message);
+            float width = RenderFont.getTextWidth(canvas, message);
             RenderFont.drawShadedString(canvas, message, canvas.getWidth()/2 - (width/2), canvas.getHeight() - canvas.getHeight("W") - 25, 0xffffffff);            
         }
     }
@@ -714,7 +712,7 @@ public class Hud implements Renderable {
     
     private void drawMessage(Canvas canvas, String text) {
         canvas.setFont("Consola", 18);
-        int width = canvas.getWidth(text);
+        float width = RenderFont.getTextWidth(canvas, text);
         RenderFont.drawShadedString(canvas, text, canvas.getWidth()/2 - width/2, 140, 0xffffff00);
     }
     

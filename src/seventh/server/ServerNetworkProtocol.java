@@ -44,6 +44,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -53,7 +54,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.shared.Cons;
 import seventh.shared.Console;
@@ -274,6 +277,14 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
         game.playerSwitchWeaponClass(conn.getId(), message.weaponType);
     }
 
+    /* (non-Javadoc)
+     * @see seventh.server.ServerProtocol#receivePlayerSwitchClassMessage(harenet.api.Connection, seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void receivePlayerSwitchClassMessage(Connection conn, PlayerSwitchPlayerClassMessage message) throws IOException {
+        game.playerSwitchPlayerClass(conn.getId(), message.playerClass);
+    }
+    
     /* (non-Javadoc)
      * @see seventh.server.ServerProtocol#connectRequest(harenet.api.Connection, seventh.network.messages.ConnectRequestMessage)
      */
@@ -602,6 +613,19 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
         queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
     }
     
+    @Override
+    public void sendTileAddedMessage(TileAddedMessage msg) {
+        queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.server.ServerProtocol#sendTilesRemovedMessage(seventh.network.messages.TilesRemovedMessage)
+     */
+    @Override
+    public void sendTilesAddedMessage(TilesAddedMessage msg) {
+        queueSendToAll(Endpoint.FLAG_RELIABLE, msg);
+    }
+    
     /* (non-Javadoc)
      * @see seventh.server.ServerProtocol#sendRconTokenMessage(int, seventh.network.messages.RconTokenMessage)
      */
@@ -672,6 +696,14 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
     @Override
     public void sendPlayerSpeechMessage(PlayerSpeechMessage msg, int exceptClientId) {
         queueSendToAllExcept(Endpoint.FLAG_RELIABLE, msg, exceptClientId);   
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.server.ServerProtocol#sendPlayerSwitchClassMessage(seventh.network.messages.PlayerSwitchPlayerClassMessage)
+     */
+    @Override
+    public void sendPlayerSwitchClassMessage(PlayerSwitchPlayerClassMessage message) throws IOException {
+        queueSendToAll(Endpoint.FLAG_RELIABLE, message);        
     }
     
     /* (non-Javadoc)

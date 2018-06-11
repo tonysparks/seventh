@@ -12,6 +12,7 @@ import java.util.Random;
 
 import leola.vm.Leola;
 import leola.vm.types.LeoObject;
+import seventh.client.entities.ClientBase;
 import seventh.client.entities.ClientBombTarget;
 import seventh.client.entities.ClientControllableEntity;
 import seventh.client.entities.ClientDoor;
@@ -53,26 +54,25 @@ import seventh.client.weapon.ClientBomb;
 import seventh.game.Timers;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
-import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetCtfGameTypeInfo;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetExplosion;
-import seventh.game.net.NetFireTeam;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
 import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetGameUpdate;
+import seventh.game.net.NetMapAddition;
 import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
-import seventh.game.net.NetSquad;
 import seventh.game.type.GameType;
 import seventh.map.Map;
 import seventh.map.MapObject;
 import seventh.map.Tile;
+import seventh.map.TileData;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.BombDisarmedMessage;
@@ -91,13 +91,16 @@ import seventh.network.messages.PlayerDisconnectedMessage;
 import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 import seventh.server.SeventhScriptingCommonLibrary;
 import seventh.shared.Arrays;
@@ -126,10 +129,7 @@ public class ClientGame {
     
     private final ClientEntities entities;
     private final ClientPlayers players;
-    
-    // Commander handling
-    private NetCommanderGameTypeInfo commanderInfo;
-    
+        
     private final Pools pools;
     
     private final ClientEntity[] backgroundEntities;
@@ -697,47 +697,8 @@ public class ClientGame {
     public ClientPlayers getPlayers() {
         return players;
     }
-    
-    public NetFireTeam getLocalPlayersFireTeam() {
-        if(this.commanderInfo != null && this.localPlayer.isAlive()) {
-            int localPlayerId = this.localPlayer.getId();
-            //
-            // TODO:            
-            // Optimize all of this and clean this shit up
-            // should keep a local cache that we alter given 
-            // movement of players (leaving, entering the game)
-            ClientTeam team = this.localPlayer.getTeam();
-            NetSquad squad = (team.getId() == ClientTeam.ALLIES.getId()) ?
-                                    this.commanderInfo.alliedSquad
-                                  : this.commanderInfo.axisSquad;
-            
-            
-            for(int i = 0; i < squad.squad.length; i++) {
-                NetFireTeam fireTeam = squad.squad[i];
-                if(fireTeam.teamLeaderPlayerId == localPlayerId) {
-                    return fireTeam;
-                }
-            }
-        }
+
         
-        return null;
-        
-    }
-    
-    public ClientPlayer getPlayerByFireTeamId(int fireTeamId) {
-        if(fireTeamId < 0 || fireTeamId>2) {
-            return null;
-        }
-        
-        NetFireTeam fireTeam = getLocalPlayersFireTeam();
-        if(fireTeam!=null) {
-            int playerId = fireTeam.memberPlayerIds[fireTeamId];
-            return this.players.getPlayer(playerId);
-        }
-                
-        return null;
-    }
-    
     /**
      * @return the localPlayer
      */
@@ -1139,7 +1100,15 @@ public class ClientGame {
             case AXIS_FLAG: {
                 entity = new ClientFlag(this, ClientTeam.AXIS, pos);
                 break;
-            }            
+            }          
+            case ALLIED_BASE: {
+                entity = new ClientBase(this, ClientTeam.ALLIES, pos);
+                break;
+            }
+            case AXIS_BASE: {
+                entity = new ClientBase(this, ClientTeam.AXIS, pos);
+                break;
+            }
             default: {
                 Cons.println("Unknown type of entity: " + type.name());
             }
@@ -1234,8 +1203,6 @@ public class ClientGame {
         
         this.gameEffects.removeAllLights();
         this.gameEffects.clearEffects();
-        
-        this.commanderInfo = null;
     }
     
     public void applyFullGameState(NetGameState gs) {
@@ -1272,7 +1239,8 @@ public class ClientGame {
             }
             
             if(this.gameType == GameType.Type.CMD) {
-                this.commanderInfo = (NetCommanderGameTypeInfo) gameType;                
+                // TODO
+                //this.commanderInfo = (NetCommanderGameTypeInfo) gameType;                
             }
             else if(this.gameType == GameType.Type.CTF) {
                 NetCtfGameTypeInfo ctfInfo = (NetCtfGameTypeInfo) gameType;
@@ -1528,6 +1496,7 @@ public class ClientGame {
         this.hud.getMessageLog().clearLogs();
         
         map.restoreDestroyedTiles();
+        map.removeAddedTiles();
         
         showScoreBoard(false);
         applyFullGameState(msg.gameState);
@@ -1766,6 +1735,10 @@ public class ClientGame {
         // TODO : Update the CommanderInfo
     }
 
+    public void playerSwitchedPlayerClass(PlayerSwitchPlayerClassMessage msg) {
+        // TODO!
+    }
+    
     /**
      * @param msg
      */
@@ -1832,7 +1805,6 @@ public class ClientGame {
         
         Tile tile = map.getDestructableTile(msg.x, msg.y);
         if(tile!=null) {
-            //this.gameEffects.addBackgroundEffect(new WallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
             this.gameEffects.addBackgroundEffect(Emitters.newWallCrumbleEmitter(tile, new Vector2f(tile.getX(), tile.getY())));
         }
         
@@ -1841,6 +1813,52 @@ public class ClientGame {
     
     public void removeTiles(TilesRemovedMessage msg) {
         map.removeDestructableTilesAt(msg.tiles);
+    }
+    
+    public boolean canAddTile(Vector2f tilePos) {
+        int tileX = (int)tilePos.x;
+        int tileY = (int)tilePos.y;
+        
+        // ensure there is not already a collision tile here
+        // and also ensure no players are touching here
+        if(!map.hasWorldCollidableTile(tileX, tileY)) {
+            Tile groundTile = map.getWorldTile(0, tileX, tileY);
+            Rectangle bounds = groundTile.getBounds();
+            for(int i = 0; i < this.players.getMaxNumberOfPlayers(); i++) {
+                ClientPlayer player = this.players.getPlayer(i);
+                if(player!=null && player.isAlive()) {
+                    ClientPlayerEntity ent = player.getEntity();
+                    if(ent.isRelativelyUpdated() && ent.getBounds().intersects(bounds)) {
+                        return false;
+                    }
+                }
+            }   
+            
+            return true;
+        }
+        return false;
+    }
+    
+    private void addTile(NetMapAddition addition) {
+        TileData data = new TileData();
+        data.tileX = addition.tileX;
+        data.tileY = addition.tileY;
+        data.type = addition.type;
+        
+        Tile tile = map.getMapObjectFactory().createMapTile(map.geTilesetAtlas(), data);
+        if(tile != null) {
+            map.addTile(tile);
+        }
+    }
+    
+    public void addTile(TileAddedMessage msg) {
+        addTile(msg.tile);
+    }
+    
+    public void addTiles(TilesAddedMessage msg) {
+        for(int i = 0; i < msg.tiles.tiles.length; i++) {
+            addTile(msg.tiles.tiles[i]);
+        }
     }
     
     public void flagCaptured(FlagCapturedMessage msg) {

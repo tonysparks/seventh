@@ -28,9 +28,43 @@ package seventh.ui;
  */
 public class Panel extends Widget {
 
+    
+    private int borderColor;
+    private int borderWidth;
+    
     /**
      */
     public Panel() {
+        this.borderColor = 0;
+        this.borderWidth = 0;
+    }
+    
+    /**
+     * @return the borderColor
+     */
+    public int getBorderColor() {
+        return borderColor;
+    }
+    
+    /**
+     * @param borderColor the borderColor to set
+     */
+    public void setBorderColor(int borderColor) {
+        this.borderColor = borderColor;
+    }
+    
+    /**
+     * @return the borderWidth
+     */
+    public int getBorderWidth() {
+        return borderWidth;
+    }
+    
+    /**
+     * @param borderWidth the borderWidth to set
+     */
+    public void setBorderWidth(int borderWidth) {
+        this.borderWidth = borderWidth;
     }
 
 }

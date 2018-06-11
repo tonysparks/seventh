@@ -81,7 +81,7 @@ public class Evaluators {
                     score = 0.2;
                     break;    
                 case ROCKET_LAUNCHER:
-                    score = 0.5;
+                    score = 0.6;
                     break;    
                 case MP40:
                     score = 0.7;
@@ -146,6 +146,11 @@ public class Evaluators {
             double clipSize = (double)weapon.getClipSize();
             if(clipSize != 0) {
                 return (double)weapon.getBulletsInClip() / clipSize;
+            }
+            else {
+                if(weapon.getBulletsInClip() > 0) {
+                    score += 0.1;
+                }
             }
         }
         

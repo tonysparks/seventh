@@ -43,6 +43,13 @@ public class MapGraph<T> {
         this.defaultSearchPath = new AStarGraphSearch<>();
     }
     
+    /**
+     * Removes a node, when removing this will make that tile
+     * not walkable.
+     * 
+     * @param x the tileX position
+     * @param y the tileY position
+     */
     public void removeNode(int x, int y) {
         GraphNode<Tile, T> node = graph[y][x];
         if(node != null) {
@@ -51,6 +58,13 @@ public class MapGraph<T> {
         }
     }
     
+    
+    /**
+     * Adds a node, making this tile walkable
+     * 
+     * @param x the tileX position
+     * @param y the tileY position
+     */
     public void addNode(int x, int y) {
         Tile tile = this.map.getTile(0, x, y);
         if(tile != null) {

@@ -7,6 +7,7 @@ import seventh.game.Game;
 import seventh.game.SmoothOrientation;
 import seventh.game.net.NetDoor;
 import seventh.game.net.NetEntity;
+import seventh.game.weapons.Bullet;
 import seventh.math.Line;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -451,7 +452,11 @@ public class Door extends Entity {
     
     @Override
     public void damage(Entity damager, int amount) {
-        // Do nothing
+        if(damager instanceof Bullet) {
+            Bullet bullet = (Bullet) damager;
+            bullet.kill(this);        
+            game.emitSound(bullet.getId(), SoundType.IMPACT_WOOD, bullet.getCenterPos());
+        }
     }
     
     /**

@@ -153,10 +153,10 @@ public abstract class AbstractServerSetupScreen implements Screen {
     
     protected TextBox setupTextBox(Vector2f pos, final String text) {
         TextBox box = new TextBox();
-        box.setBounds(new Rectangle((int)pos.x, (int)pos.y, 120, 20));
-        box.getTextLabel().setFont(theme.getSecondaryFontName());
+        box.setBounds(new Rectangle((int)pos.x, (int)pos.y, 205, 20));
+        box.getTextLabel().setFont(Theme.DEFAULT_FONT);
         box.setText(text);
-        box.setMaxSize(16);
+        box.setMaxSize(21);
         box.setTextSize(14);        
         box.setFocus(false);
         

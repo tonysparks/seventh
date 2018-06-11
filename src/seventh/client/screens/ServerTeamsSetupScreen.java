@@ -87,12 +87,14 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         uiPos.y = startY;
 
         setupLabel(uiPos, "Teams", true);
+        float yPos = uiPos.y + yInc + 5;
 
         uiPos.x = startX + 128;
-        uiPos.y += yInc + 5;
+        uiPos.y += yInc + 3;
         
         setupImagePanel(uiPos, Art.alliedIcon);
         
+        uiPos.y = yPos; 
         uiPos.x = startX + 100;
         uiPos.y += yInc*3 - 25;
         
@@ -141,7 +143,7 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         
         Vector2f otherPos = new Vector2f(uiPos);
         otherPos.x += 28;
-        otherPos.y -= 20;
+        otherPos.y -= 23;
         
         setupImagePanel(otherPos, Art.axisIcon);
 
@@ -166,7 +168,7 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
             }
         });
 
-        uiPos.x = startX;
+        uiPos.x = startX - 20;
         uiPos.y += yInc;
         createBotsPanel(uiPos);
 
@@ -179,8 +181,29 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
         // int startX = (int)pos.x;
         int startY = (int) pos.y;
 
-        final int xInc = 170;
+        final int xInc = 208;
         final int yInc = 25;
+        
+        pos.x -= 7;
+        
+        Panel alliedPanel = new Panel();
+        alliedPanel.setBorderColor(0xff000000);//ClientTeam.ALLIES.getColor());
+        alliedPanel.setBackgroundColor(0x1f000000);
+        alliedPanel.setBorderWidth(1);
+        //alliedPanel.setBackgroundColor(Colors.setAlpha(ClientTeam.ALLIES.getColor(), 255));
+        alliedPanel.setBounds(new Rectangle(1, (int)pos.y - 5, 418, 305));
+        
+        this.panelView.addElement(new PanelView(alliedPanel));
+        
+        Panel axisPanel = new Panel();
+        axisPanel.setBorderColor(0xff000000);//ClientTeam.AXIS.getColor());
+        axisPanel.setBackgroundColor(0x1f000000);
+        //axisPanel.setBackgroundColor(Colors.setAlpha(ClientTeam.AXIS.getColor(), 200));
+        axisPanel.setBorderWidth(1);
+        axisPanel.setBounds(new Rectangle(421, (int)pos.y - 5, 418, 305));
+        
+        this.panelView.addElement(new PanelView(axisPanel));
+        
         
         int i = 0;
         for (String name : gameSettings.alliedTeam) {
@@ -204,7 +227,7 @@ public class ServerTeamsSetupScreen extends AbstractServerSetupScreen {
 
         }
 
-        pos.x = 450;
+        pos.x = 423;
         pos.y = startY;
 
         i = 0;

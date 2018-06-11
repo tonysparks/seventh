@@ -29,6 +29,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -38,7 +39,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 
 
@@ -133,6 +136,14 @@ public interface ClientProtocol {
      */
     public void receivePlayerSwitchedTeamMessage(Connection conn, PlayerSwitchTeamMessage msg);
 
+    /**
+     * A Player has switched player classes.
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receivePlayerSwitchedPlayerClassMessage(Connection conn, PlayerSwitchPlayerClassMessage msg);
+    
     /**
      * A global text message.
      * 
@@ -239,6 +250,22 @@ public interface ClientProtocol {
     public void receiveTilesRemovedMessage(Connection conn, TilesRemovedMessage msg);
     
     /**
+     * A tile has been added to the world
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receiveTileAddedMessage(Connection conn, TileAddedMessage msg);
+    
+    /**
+     * A set of tiles have been added to the world
+     * 
+     * @param conn
+     * @param msg
+     */
+    public void receiveTilesAddedMessage(Connection conn, TilesAddedMessage msg);
+    
+    /**
      * A remote control message (response) from the server
      * 
      * @param conn
@@ -325,6 +352,13 @@ public interface ClientProtocol {
      * @param msg
      */
     public void sendPlayerSwitchWeaponClassMessage(PlayerSwitchWeaponClassMessage msg);
+    
+    /**
+     * Sends a {@link PlayerSwitchPlayerClassMessage}
+     * 
+     * @param msg
+     */
+    public void sendPlayerSwitchPlayerClassMessage(PlayerSwitchPlayerClassMessage msg);
     
     /**
      * Sends a {@link PlayerSpeechMessage}

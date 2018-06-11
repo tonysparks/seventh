@@ -53,6 +53,7 @@ public class InvestigateActionEvaluator extends ActionEvaluator {
                 case SHOTGUN_FIRE:            
                 case SPRINGFIELD_FIRE:
                 case THOMPSON_FIRE:
+                case HAMMER_SWING:
                     desirability += brain.getRandomRange(0.2, 0.4);
                     break;
                 

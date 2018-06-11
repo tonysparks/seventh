@@ -12,4 +12,5 @@ package seventh.map;
 public interface MapObjectFactory {
 
     public MapObject createMapObject(MapObjectData data);
+    public Tile createMapTile(TilesetAtlas atlas, TileData data);
 }

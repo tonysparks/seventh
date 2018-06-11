@@ -6,6 +6,7 @@ package seventh.client;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art;
 import seventh.client.gfx.PlayerSprite;
+import seventh.client.gfx.RenderFont;
 import seventh.game.entities.Entity;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
@@ -22,6 +23,8 @@ public class ClientPlayer {
     
     private int id;
     private String name;
+    private String plainName;
+    
     private int spectatingPlayerId;
     
     private PlayerSprite axisSprite;
@@ -34,6 +37,7 @@ public class ClientPlayer {
      */
     public ClientPlayer(String name, int playerId) {
         this.name = name;
+        this.plainName = RenderFont.getDecodedText(name);
         this.id = playerId;
         this.stats = new NetPlayerStat();
         this.team = ClientTeam.NONE;
@@ -49,7 +53,8 @@ public class ClientPlayer {
     
     public void updateStats(NetPlayerStat state) {
         this.stats= state;
-        this.name = state.name;
+        this.name = state.name;        
+        this.plainName = RenderFont.getDecodedText(this.name);
         //this.isCommander = state.isCommander;        
         
         if(this.team.getId() != this.stats.teamId) {
@@ -72,6 +77,13 @@ public class ClientPlayer {
      */
     public String getName() {
         return name;
+    }
+    
+    /**
+     * @return the plainName
+     */
+    public String getPlainName() {
+        return plainName;
     }
     
     public int getKills() {

@@ -5,32 +5,55 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.game.PlayerClass;
+import seventh.game.type.cmd.CommanderGameType;
 import seventh.game.type.cmd.Squad;
+import seventh.network.messages.BufferIO;
+import seventh.shared.SeventhConstants;
 
 /**
+ * The {@link CommanderGameType} contains {@link Squad}s which have a number
+ * of {@link PlayerClass}s.  This defines which players are which class.
+ * 
  * @author Tony
  *
  */
 public class NetSquad implements NetMessage {
-
-    public NetFireTeam[] squad;
     
-    public NetSquad() {
-        this.squad = new NetFireTeam[Squad.MAX_FIRETEAMS];
-    }
-
+    // The array index relates the player players ID    
+    public PlayerClass[] playerClasses;
+        
     @Override
-    public void read(IOBuffer buffer) {
-        for(int i = 0; i < this.squad.length; i++) {
-            this.squad[i] = new NetFireTeam();
-            this.squad[i].read(buffer);
+    public void read(IOBuffer buffer) {            
+        int playerIndexBits = buffer.getIntBits(SeventhConstants.MAX_PLAYERS);
+        for(int i = 0; i < SeventhConstants.MAX_PLAYERS; i++) {
+            if(((playerIndexBits >> i) & 1) == 1) {                
+                playerClasses[i] = BufferIO.readPlayerClassType(buffer); 
+            }
         }
+                
     }
     
     @Override
     public void write(IOBuffer buffer) {
-        for(int i = 0; i < this.squad.length; i++) {
-            this.squad[i].write(buffer);
+        if(playerClasses != null) {
+            int playerIndexBits = 0;
+            for(int i = 0; i < playerClasses.length; i++) {
+                if(playerClasses[i] != null) {
+                    playerIndexBits = (playerIndexBits << i) | 1;
+                }
+            }
+            
+            buffer.putIntBits(playerIndexBits, SeventhConstants.MAX_PLAYERS);
+            
+            for(int i = 0; i < playerClasses.length; i++) {
+                if(playerClasses[i] != null) {
+                    BufferIO.writePlayerClassType(buffer, playerClasses[i]);
+                }
+            }
+        }
+        else {
+            buffer.putIntBits(0, SeventhConstants.MAX_PLAYERS);
         }
     }
 }

@@ -14,6 +14,7 @@ import seventh.client.gfx.effects.ShadeTiles;
 import seventh.graph.Edge;
 import seventh.graph.GraphNode;
 import seventh.graph.Edges.Directions;
+import seventh.map.Tile.CollisionMask;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
@@ -70,6 +71,7 @@ public class OrthoMap implements Map {
      */
     //private boolean[][] originalLayer;
     private List<Tile> destroyedTiles;
+    private List<Tile> addedTiles;
     
     /**
      * The current frames viewport
@@ -92,6 +94,10 @@ public class OrthoMap implements Map {
     
     private Vector2f collisionTilePos;
     private List<MapObject> mapObjects;
+    private MapObjectFactory mapObjectsFactory;
+    
+    
+    private Layer collisionLayerToAddTiles;
     
     /**
      * Constructs a new {@link OrthoMap}.
@@ -99,6 +105,8 @@ public class OrthoMap implements Map {
     public OrthoMap(boolean loadAssets) {
         this.currentFrameViewport = new Rectangle();
         this.destroyedTiles = new ArrayList<Tile>();
+        this.addedTiles = new ArrayList<>();
+        
         this.collisionTilePos = new Vector2f();
         
         if(loadAssets) {
@@ -774,26 +782,16 @@ public class OrthoMap implements Map {
         this.atlas = info.getAtlas();
 
         this.mapObjects = info.getMapObjects();
-        
-//        this.originalLayer = new boolean[this.maxY][this.maxX];
-//        for(int i = 0; i < this.destructableLayer.length; i++) {
-//            Layer layer = this.destructableLayer[i];
-//            for(int y = 0; y < layer.numberOfRows(); y++) {
-//                Tile[] row = layer.getRow(y);
-//                for(int x = 0; x < row.length; x++) {
-//                    Tile tile = row[x];
-//                    if(tile != null) {
-//                        this.originalLayer[y][x] = true;
-//                    }
-//                }
-//            }
-//        }
+        this.mapObjectsFactory = info.getMapObjectsFactory();
 
-//        List<Tile> tiles = getTilesInCircle(200, 400, 250, null);
-//        for(Tile t : tiles) {
-//            t.setMask(1);
-//        }
-        
+        for(int i = 0; i < this.destructableLayer.length; i++) {
+            Layer layer = this.destructableLayer[i];
+            // TODO: Add height mask one too?
+            if(layer.collidable() && layer.isDestructable() && layer.getHeightMask() == 0) {
+                this.collisionLayerToAddTiles = layer;
+            }
+        }
+
         this.surfaces = info.getSurfaces();
         
         if(this.shadeTilesLookup != null) {
@@ -978,6 +976,16 @@ public class OrthoMap implements Map {
     
     public Vector2f tileToWorld(int tx, int ty) {
         return new Vector2f(tx * this.tileWidth, ty * this.tileHeight);
+    }
+    
+    @Override
+    public int tileToWorldX(int x) {    
+        return x * this.tileWidth;
+    }
+    
+    @Override
+    public int tileToWorldY(int y) {
+        return y * this.tileHeight;
     }
 
     /*
@@ -1445,13 +1453,59 @@ public class OrthoMap implements Map {
         for(int index = 0; index < this.destroyedTiles.size(); index++) {
             Tile tile = this.destroyedTiles.get(index);
             Layer layer = this.backgroundLayers[tile.getLayer()];
-            layer.getRow(tile.getYIndex())[tile.getXIndex()] = tile;
+            layer.addTile(tile);
+            
             tile.setDestroyed(false);            
         }
         
         this.destroyedTiles.clear();
     }
 
+    @Override
+    public void addTile(Tile tile) {
+        this.backgroundLayers[tile.getLayer()].addTile(tile);
+        this.addedTiles.add(tile);
+        
+        if(this.collisionLayerToAddTiles != null) {
+            Tile collisionTile = new Tile(null, this.collisionLayerToAddTiles.getIndex(), tile.getWidth(), tile.getHeight());
+            collisionTile.setCollisionMask(CollisionMask.ALL_SOLID);
+            collisionTile.setPosition(tile.getX(), tile.getY());
+            collisionTile.setIndexPosition(tile.getXIndex(), tile.getYIndex());
+            
+            this.collisionLayerToAddTiles.addTile(collisionTile);
+        }
+    }
+    
+    @Override
+    public List<Tile> getAddedTiles() {     
+        return this.addedTiles;
+    }
+    
+    @Override
+    public void removeAddedTiles() {
+        for(int index = 0; index < this.addedTiles.size(); index++) {
+            Tile tile = this.addedTiles.get(index);
+            Layer layer = this.backgroundLayers[tile.getLayer()];
+            layer.removeTile(tile);
+            
+            if(this.destructableLayer.length > 0) {
+                this.destructableLayer[0].removeTile(tile);
+            }
+        }
+        
+        this.addedTiles.clear();
+    }
+    
+    @Override
+    public TilesetAtlas geTilesetAtlas() {    
+        return this.atlas;
+    }
+    
+    @Override
+    public MapObjectFactory getMapObjectFactory() {
+        return this.mapObjectsFactory;
+    }
+    
     /* (non-Javadoc)
      * @see seventh.shared.Debugable#getDebugInformation()
      */

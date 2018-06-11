@@ -6,9 +6,13 @@ package seventh.game.type.cmd;
 import java.util.List;
 
 import leola.vm.Leola;
+import leola.vm.types.LeoArray;
+import leola.vm.types.LeoObject;
 import seventh.game.Game;
 import seventh.game.Player;
+import seventh.game.PlayerClass;
 import seventh.game.Team;
+import seventh.game.entities.Base;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetGameTypeInfo;
@@ -39,8 +43,13 @@ public class CommanderGameType extends AbstractTeamGameType {
 
     private NetCommanderGameTypeInfo netGameTypeInfo;
     
-    private Squad alliedSquad;
-    private Squad axisSquad;
+    private Base alliedBase;
+    private Base axisBase;
+    
+    private Vector2f alliedBasePos, axisBasePos;
+    
+    private Squad alliedSquad, 
+                  axisSquad;
     
     /**
      * @param type
@@ -54,24 +63,59 @@ public class CommanderGameType extends AbstractTeamGameType {
                              List<Vector2f> alliedSpawnPoints, 
                              List<Vector2f> axisSpawnPoints, 
                              int maxScore,
-                             long matchTime) {
+                             long matchTime,
+                             LeoObject config) {
         
         super(Type.CMD, runtime, alliedSpawnPoints, axisSpawnPoints, maxScore, matchTime);
         
-        this.alliedSquad = new Squad(getAlliedTeam());
-        this.axisSquad = new Squad(getAxisTeam());     
+        this.alliedBasePos = getVector2f(config, "alliedBasePos");
+        this.axisBasePos   = getVector2f(config, "axisBasePos");
         
-        this.netGameTypeInfo.alliedSquad = this.alliedSquad.getNetSquad();
-        this.netGameTypeInfo.axisSquad = this.axisSquad.getNetSquad();
+        this.alliedSquad = new Squad(getAlliedTeam(), 4, 4, 4, 4);
+        this.axisSquad   = new Squad(getAxisTeam(), 4, 4, 4, 4);
+    }
+    
+    private Vector2f getVector2f(LeoObject config, String name) {
+        LeoObject v = config.getObject(name);
+        Vector2f result = new Vector2f();
+        if(!LeoObject.isTrue(v)) {
+            return result;
+        }
+
+        if(v.isMap() || v.isClass() || v.isNativeClass()) {
+            result.x = v.getObject("x").asFloat();
+            result.y = v.getObject("y").asFloat();
+        }
+        else if(v.isArray()) {
+            LeoArray array = v.as();
+            result.x = array.get(0).asFloat();
+            result.y = array.get(1).asFloat();
+        }
+        
+        return result;
+    }
+    
+    private Squad getSquad(Player player) {
+        if(getAlliedTeam().onTeam(player)) {
+            return alliedSquad;
+        }
+        
+        if(getAxisTeam().onTeam(player)) {
+            return axisSquad;
+        }
+        
+        return null;
     }
     
     private Squad getSquad(Team team) {
-        if(team.isAlliedTeam()) {
-            return this.alliedSquad;
+        if(getAlliedTeam().getId() == team.getId()) {
+            return alliedSquad;
         }
-        if(team.isAxisTeam()) {
-            return this.axisSquad;
+        
+        if(getAxisTeam().getId() == team.getId()) {
+            return axisSquad;
         }
+        
         return null;
     }
 
@@ -83,31 +127,63 @@ public class CommanderGameType extends AbstractTeamGameType {
     
     @Override
     protected void doRegisterListeners(Game game, EventDispatcher dispatcher) {
-        // TODO Auto-generated method stub
+        if(this.alliedBase != null) {
+            this.alliedBase.softKill();
+        }
+        if(this.axisBase != null) {
+            this.axisBase.softKill();
+        }
         
+        this.alliedBase = game.newAlliedBase(alliedBasePos);
+        this.axisBase   = game.newAxisBase(axisBasePos);
     }
     
     @Override
     protected boolean joinTeam(Team team, Player player) {
         Squad squad = getSquad(team);
-        if(squad!=null) {
-            if(!squad.addPlayer(player)) {
-                return false;        
-            }
+        if(squad != null) {
+            if(squad.assignPlayer(player, squad.getAvailableClass())) {
+                return super.joinTeam(team, player);
+            }            
         }
         
-        return super.joinTeam(team, player);
+        return false;
     }
     
     @Override
     protected boolean leaveTeam(Team team, Player player) {
         Squad squad = getSquad(team);
-        if(squad!=null) {
-            squad.removePlayer(player);
+        if(squad != null) {
+            squad.unassignPlayer(player);
         }
         
         return super.leaveTeam(team, player);
     }     
+    
+    
+    @Override
+    public boolean switchPlayerClass(Player player, PlayerClass playerClass) {
+        Squad squad = getSquad(player);
+                
+        if(squad == null) {
+            return false;
+        }
+        
+        squad.unassignPlayer(player);
+        
+        if(squad.assignPlayer(player, playerClass)) {
+            return true;
+        }
+        
+        playerClass = squad.getAvailableClass();
+        if(playerClass != null) {
+            if(squad.assignPlayer(player, playerClass)) {
+                return true;
+            }
+        }
+        
+        return false;        
+    }
     
     @Override
     public void start(Game game) {
@@ -117,10 +193,27 @@ public class CommanderGameType extends AbstractTeamGameType {
 
     @Override
     protected GameState doUpdate(Game game, TimeStep timeStep) {
-        this.alliedSquad.update(timeStep);
-        this.axisSquad.update(timeStep);
         
         checkRespawns(timeStep, game);
+        
+        GameState gameState = getGameState();
+        if(gameState == GameState.IN_PROGRESS) {
+            // first check for a tie
+            if(!this.alliedBase.isAlive() && !this.axisBase.isAlive()) {
+                setGameState(GameState.TIE);
+            }
+            else {
+                if(!this.alliedBase.isAlive()) {
+                    getAxisTeam().setScore(1);
+                    setGameState(GameState.WINNER);
+                }
+                if(!this.axisBase.isAlive()) {
+                    getAlliedTeam().setScore(1);
+                    setGameState(GameState.WINNER);
+                }
+            }
+            
+        }
         
         return getGameState();
     }

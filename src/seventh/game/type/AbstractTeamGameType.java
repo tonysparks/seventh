@@ -13,14 +13,23 @@ import leola.vm.Leola;
 import leola.vm.types.LeoObject;
 import seventh.game.Game;
 import seventh.game.Player;
+import seventh.game.PlayerClass;
 import seventh.game.Players;
 import seventh.game.Team;
+import seventh.game.entities.Entity;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.events.GameEndEvent;
+import seventh.game.events.PlayerKilledEvent;
+import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
+import seventh.game.net.NetGamePartialStats;
+import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
+import seventh.game.net.NetPlayerPartialStat;
+import seventh.game.net.NetPlayerStat;
 import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
 import seventh.math.Rectangle;
@@ -54,6 +63,9 @@ public abstract class AbstractTeamGameType implements GameType {
     
     private Team[] teams;
     
+    private NetGameStats gameStats;
+    private NetGamePartialStats gamePartialStats;
+    
     private NetGameTypeInfo gameTypeInfo;
     private GameState gameState;
     private Type type;
@@ -78,6 +90,7 @@ public abstract class AbstractTeamGameType implements GameType {
     private Rectangle spawnBounds;
     
     private Timer warmupTimer;
+    private Game game;
     
     /**
      * @param type
@@ -108,6 +121,9 @@ public abstract class AbstractTeamGameType implements GameType {
         this.gameTypeInfo.maxScore = maxScore;
         this.gameTypeInfo.maxTime = matchTime;        
         
+        this.gameStats = createNetGameStats();
+        this.gamePartialStats = createNetGamePartialStats();
+        
         this.gameTypeInfo.alliedTeam = new NetTeam();
         this.gameTypeInfo.alliedTeam.id = Team.ALLIED_TEAM_ID;
         
@@ -132,11 +148,21 @@ public abstract class AbstractTeamGameType implements GameType {
         return new NetGameTypeInfo();
     }
     
+    
+    protected NetGameStats createNetGameStats() {
+        return new NetGameStats();
+    }
+    
+    protected NetGamePartialStats createNetGamePartialStats() {
+        return new NetGamePartialStats();
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.type.GameType#registerListeners(seventh.game.GameInfo, leola.frontend.listener.EventDispatcher)
      */
     @Override
-    public void registerListeners(final Game game, EventDispatcher dispatcher) {    
+    public void registerListeners(final Game game, EventDispatcher dispatcher) {
+        this.game = game;
         this.dispatcher = dispatcher;
         
         dispatcher.addEventListener(RoundEndedEvent.class, new RoundEndedListener() {
@@ -153,6 +179,14 @@ public abstract class AbstractTeamGameType implements GameType {
             }
         });
         
+        dispatcher.addEventListener(PlayerKilledEvent.class, new PlayerKilledListener() {
+            
+            @Override
+            public void onPlayerKilled(PlayerKilledEvent event) {
+                onPlayerDeath(event);
+            }
+        });
+        
         doRegisterListeners(game, dispatcher);
     }
 
@@ -164,6 +198,33 @@ public abstract class AbstractTeamGameType implements GameType {
      */
     protected abstract void doRegisterListeners(final Game game, EventDispatcher dispatcher);
     
+    
+    /**
+     * Defaults to dropping any held weapons/items
+     * 
+     * @param event
+     */
+    protected void onPlayerDeath(PlayerKilledEvent event) {
+        final PlayerEntity ent = event.getPlayer().getEntity();
+        final Entity killer = event.getKilledBy();
+        
+        ent.dropFlag();
+        
+        /* suicides don't leave weapons */
+        if(killer != ent) {
+            if(ent.isYielding(seventh.game.entities.Entity.Type.FLAME_THROWER)) {
+                game.addGameTimer(new Timer(false, 20) {
+                    public void onFinish(Timer timer) {
+                        game.newBigFire(ent.getCenterPos(), ent, 1);
+                        game.newBigExplosion(ent.getCenterPos(), ent, 30, 10, 1);
+                    }
+                });                
+            }
+            else {
+                ent.dropItem(false);
+            }
+        } 
+    }
     
     /**
      * Executes the callback function
@@ -634,6 +695,19 @@ public abstract class AbstractTeamGameType implements GameType {
     }
     
     /* (non-Javadoc)
+     * @see seventh.game.type.GameType#switchPlayerClass(seventh.game.Player, seventh.game.PlayerClass)
+     */
+    @Override
+    public boolean switchPlayerClass(Player player, PlayerClass playerClass) {
+        if(playerClass == PlayerClass.Default) {
+            player.setPlayerClass(playerClass);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /* (non-Javadoc)
      * @see palisma.game.type.GameType#switchTeam(palisma.game.Player, byte)
      */
     @Override
@@ -669,6 +743,50 @@ public abstract class AbstractTeamGameType implements GameType {
         this.gameTypeInfo.axisTeam = this.teams[AXIS].getNetTeam();
         return this.gameTypeInfo;
     }
+    
+    /**
+     * @return just returns the networked game statistics
+     */
+    @Override
+    public NetGameStats getNetGameStats() {        
+        gameStats.playerStats = new NetPlayerStat[game.getPlayers().getNumberOfPlayers()];
+        Player[] players = game.getPlayers().getPlayers();
+        
+        int j = 0;
+        for(int i = 0; i < players.length; i++) {
+            Player player = players[i];
+            if(player != null) {
+                gameStats.playerStats[j++] = player.getNetPlayerStat();
+            }
+        }
+        
+        gameStats.alliedTeamStats = getAlliedNetTeamStats();
+        gameStats.axisTeamStats = getAxisNetTeamStats();
+        return gameStats;
+    }
+    
+    /**
+     * @return returns the networked game (partial) statistics
+     */
+    @Override
+    public NetGamePartialStats getNetGamePartialStats() {
+        gamePartialStats.playerStats = new NetPlayerPartialStat[game.getPlayers().getNumberOfPlayers()];
+        Player[] players = game.getPlayers().getPlayers();
+        
+        int j = 0;
+        for(int i = 0; i < players.length; i++) {
+            Player player = players[i];
+            if(player != null) {
+                gamePartialStats.playerStats[j++] = player.getNetPlayerPartialStat();
+            }
+        }
+        
+        gamePartialStats.alliedTeamStats = getAlliedNetTeamStats();
+        gamePartialStats.axisTeamStats = getAxisNetTeamStats();     
+        
+        return gamePartialStats;
+    }
+    
 
     /* (non-Javadoc)
      * @see seventh.game.type.GameType#getAlliedNetTeamStats()

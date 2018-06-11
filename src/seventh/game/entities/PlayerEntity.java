@@ -25,6 +25,9 @@ import java.util.List;
 import seventh.game.Controllable;
 import seventh.game.Game;
 import seventh.game.Inventory;
+import seventh.game.Player;
+import seventh.game.PlayerClass;
+import seventh.game.PlayerClass.WeaponEntry;
 import seventh.game.SoundEventPool;
 import seventh.game.SurfaceTypeToSoundType;
 import seventh.game.Team;
@@ -36,6 +39,7 @@ import seventh.game.net.NetPlayerPartial;
 import seventh.game.weapons.Bullet;
 import seventh.game.weapons.FlameThrower;
 import seventh.game.weapons.GrenadeBelt;
+import seventh.game.weapons.Hammer;
 import seventh.game.weapons.Kar98;
 import seventh.game.weapons.M1Garand;
 import seventh.game.weapons.MP40;
@@ -57,7 +61,6 @@ import seventh.math.Vector2f;
 import seventh.shared.Geom;
 import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
-import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
 
 /**
@@ -75,25 +78,25 @@ public class PlayerEntity extends Entity implements Controllable {
      *
      */
     public static enum Keys {
-        UP        (1<<0),
-        DOWN    (1<<1),
-        LEFT    (1<<2),
-        RIGHT    (1<<3),
-        WALK    (1<<4),
-        FIRE    (1<<5),
-        RELOAD    (1<<6),
-        WEAPON_SWITCH_UP(1<<7),
-        WEAPON_SWITCH_DOWN(1<<8),
+        UP                  (1<<0),
+        DOWN                (1<<1),
+        LEFT                (1<<2),
+        RIGHT               (1<<3),
+        WALK                (1<<4),
+        FIRE                (1<<5),
+        RELOAD              (1<<6),
+        WEAPON_SWITCH_UP    (1<<7),
+        WEAPON_SWITCH_DOWN  (1<<8),
         
-        THROW_GRENADE(1<<9),
+        THROW_GRENADE       (1<<9),
         
-        SPRINT(1<<10),
-        CROUCH(1<<11),
+        SPRINT              (1<<10),
+        CROUCH              (1<<11),
         
-        USE(1<<12),
-        DROP_WEAPON(1<<13),
-        MELEE_ATTACK(1<<14),
-        IRON_SIGHTS(1<<15),
+        USE                 (1<<12),
+        DROP_WEAPON         (1<<13),
+        MELEE_ATTACK        (1<<14),
+        IRON_SIGHTS         (1<<15),
         ;
         
         private Keys(int value) {
@@ -144,20 +147,20 @@ public class PlayerEntity extends Entity implements Controllable {
     private boolean isFlashlightOn;
     private long vehicleTime;
     
-    private Flag carriedFlag;
-    
     private Rectangle headshot, limbshot;
     private Vector2f bulletDir;
     
+    
+    private int speedMultiplier, damageMultiplier;
     
     /**
      * @param position
      * @param speed
      * @param game
      */
-    public PlayerEntity(int id, Vector2f position, Game game) {
+    public PlayerEntity(int id, PlayerClass playerClass, Vector2f position, Game game) {
         super(id, position, PLAYER_SPEED, game, Type.PLAYER);
-        
+                        
         this.player = new NetPlayer();
         this.player.id = id;
         
@@ -179,79 +182,104 @@ public class PlayerEntity extends Entity implements Controllable {
         
         this.visualBounds = new Rectangle(2000, 2000);
         
+        this.speedMultiplier  = playerClass.getSpeedMultiplier();
+        this.damageMultiplier = playerClass.getDamageMultiplier();
+        
         setLineOfSight(WeaponConstants.DEFAULT_LINE_OF_SIGHT);
         setHearingRadius(PLAYER_HEARING_RADIUS);
+        
+        setMaxHealth(getMaxHealth() + playerClass.getHealthMultiplier());
+        setHealth(getMaxHealth());
     }
     
+    
     /**
-     * Sets the players weapon class -- their default
-     * inventory.
+     * Apply the player class
      * 
-     * @param weaponClass
+     * @param playerClass
+     * @param activeWeapon
+     * @return true if success, false otherwise
      */
-    public void setWeaponClass(Type weaponClass) {
-        this.inventory.clear();
+    public void setPlayerClass(PlayerClass playerClass, Type activeWeapon) {
+        if(!playerClass.isAvailableWeapon(activeWeapon)) {
+            activeWeapon = playerClass.getDefaultPrimaryWeapon().getTeamWeapon(getTeam());
+        }
         
-        switch(weaponClass) {        
-            case KAR98:
-                this.inventory.addItem(new Kar98(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 1));
-                break;        
-            case MP40:
-                this.inventory.addItem(new MP40(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
+        this.inventory.clear();        
+
+        WeaponEntry weaponEntry = playerClass.getAvailableWeaponEntry(activeWeapon);
+        Weapon currentWeapon = createWeapon(weaponEntry);
+        if(currentWeapon != null) {
+            this.inventory.addItem(currentWeapon);
+        }
+        
+        List<WeaponEntry> weapons = playerClass.getDefaultWeapons();
+        for(int i = 0; i < weapons.size(); i++) {
+            WeaponEntry entry = weapons.get(i);
+            Weapon weapon = createWeapon(entry);
+            
+            if(weapon != null) {
+                this.inventory.addItem(weapon);
+            }
+        }
+        
+        
+        checkLineOfSightChange();        
+    }
+    
+    private Weapon createWeapon(WeaponEntry entry) {
+        Weapon weapon = null;
+
+        switch(entry.type.getTeamWeapon(getTeam())) {        
+            case SPRINGFIELD:
+            case KAR98:                
+                weapon = isAlliedPlayer() ? new Springfield(game, this) : new Kar98(game, this);                
                 break;
+                
+            case THOMPSON:
+            case MP40:                
+                weapon = isAlliedPlayer() ? new Thompson(game, this) : new MP40(game, this);
+                break;
+                
+            case M1_GARAND:
             case MP44:
-                this.inventory.addItem(new MP44(game, this));
-                this.inventory.addItem(GrenadeBelt.newSmoke(game, this, 2));
-                break;        
-            case ROCKET_LAUNCHER:
-                this.inventory.addItem(new RocketLauncher(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 5));
+                weapon = isAlliedPlayer() ? new M1Garand(game, this) : new MP44(game, this);                
+                break;
+                
+            case PISTOL:
+                weapon = new Pistol(game, this);
+                break;
+            case HAMMER:
+                weapon = new Hammer(game, this);
                 break;
             case SHOTGUN:
-                this.inventory.addItem(new Shotgun(game, this));
+                weapon = new Shotgun(game, this);
                 break;
-            case SPRINGFIELD:
-                this.inventory.addItem(new Springfield(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 1));
-                break;        
-            case M1_GARAND:
-                this.inventory.addItem(new M1Garand(game, this));
-                this.inventory.addItem(GrenadeBelt.newSmoke(game, this, 2));
-                break;
-            case THOMPSON:
-                this.inventory.addItem(new Thompson(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
-                break;            
             case RISKER: 
-                this.inventory.addItem(new Risker(game, this));
+                weapon = new Risker(game, this);
+                break;
+            case ROCKET_LAUNCHER:
+                weapon = new RocketLauncher(game, this);                
                 break;
             case FLAME_THROWER:
-                this.inventory.addItem(new FlameThrower(game, this));
-                this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
+                weapon = new FlameThrower(game, this);
                 break;
-            default:
-                if(team != null) {
-                    if(team.getId() == Team.ALLIED_TEAM_ID) {
-                        this.inventory.addItem(new Thompson(game, this));
-                    }
-                    else {
-                        this.inventory.addItem(new MP40(game, this));
-                    }
-                    this.inventory.addItem(GrenadeBelt.newFrag(game, this, 2));
-                }
-                
-                break;        
+            case GRENADE:
+                weapon = GrenadeBelt.newFrag(game, this, entry.ammoBag);
+                break;
+            case SMOKE_GRENADE:
+                weapon = GrenadeBelt.newSmoke(game, this, entry.ammoBag);
+                break;            
+            default:                
         }
-                
-        setupCommonWeapons();
-        checkLineOfSightChange();
-    }
         
-    private void setupCommonWeapons() {        
-        this.inventory.addItem(new Pistol(game, this));        
+        if(weapon != null && entry.ammoBag > -1) {
+            weapon.setTotalAmmo(entry.ammoBag);
+        }
+        
+        return weapon;
     }
+    
     
     /* (non-Javadoc)
      * @see seventh.game.Entity#kill(seventh.game.Entity)
@@ -259,26 +287,6 @@ public class PlayerEntity extends Entity implements Controllable {
     @Override
     public void kill(Entity killer) {    
         unuse();
-        
-        dropFlag();
-        
-        /* suicides don't leave weapons */
-        if(killer != this) {
-            if(isYielding(Type.FLAME_THROWER)) {
-                game.addGameTimer(new Timer(false, 20) {
-                    public void onFinish(Timer timer) {
-                        game.newBigFire(getCenterPos(), PlayerEntity.this, 1);
-                        game.newBigExplosion(getCenterPos(), PlayerEntity.this, 30, 10, 1);
-                    }
-                });
-                
-               // game.newBigFire(getCenterPos(), this, 1);
-            }
-            else {
-                dropItem(false);
-            }
-        }
-        
         super.kill(killer);
     }
     
@@ -286,11 +294,7 @@ public class PlayerEntity extends Entity implements Controllable {
      * Drops the flag if carrying one
      */
     public void dropFlag() {
-        if(this.carriedFlag!=null) {
-            Flag flag = this.carriedFlag;
-            this.carriedFlag = null;
-            flag.drop();
-        }
+        this.inventory.dropFlag();
     }
     
     /**
@@ -298,12 +302,12 @@ public class PlayerEntity extends Entity implements Controllable {
      * @param makeSound
      */
     public void dropItem(boolean makeSound) {
-        if(this.carriedFlag!=null) {
-            this.carriedFlag.drop();
+        if(this.inventory.isCarryingFlag()) {
+            dropFlag();
         }
         else {        
             Weapon weapon = this.inventory.currentItem();
-            if(weapon != null /*&& !weapon.getType().equals(Type.FLAME_THROWER)*/) {
+            if(weapon != null) {
                 this.inventory.removeItem(weapon);
                 this.inventory.nextItem();
                 
@@ -359,7 +363,7 @@ public class PlayerEntity extends Entity implements Controllable {
      * @param flag
      */
     public void pickupFlag(Flag flag) {
-        this.carriedFlag = flag;
+        this.inventory.pickupFlag(flag);
     }
     
     /**
@@ -374,6 +378,13 @@ public class PlayerEntity extends Entity implements Controllable {
      */
     public void setHearingRadius(int radius) {
         this.hearingRadius = radius;
+    }
+    
+    /**
+     * @return the damageMultiplier
+     */
+    public int getDamageMultiplier() {
+        return damageMultiplier;
     }
     
     /**
@@ -422,6 +433,14 @@ public class PlayerEntity extends Entity implements Controllable {
     @Override
     public boolean isPlayer() {     
         return true;
+    }
+    
+    public boolean isAlliedPlayer() {
+        return getTeam().isAlliedTeam();
+    }
+    
+    public boolean isAxisPlayer() {
+        return getTeam().isAxisTeam();
     }
     
     /**
@@ -484,6 +503,13 @@ public class PlayerEntity extends Entity implements Controllable {
                 }
                 
                 //DebugDraw.drawLineRelative(bullet.getCenterPos(), this.bulletDir, 0xff00ffff);
+                
+                
+                game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getCenterPos());                                
+                                
+                if(!bullet.isPiercing()) {                    
+                    bullet.kill(this);    
+                }  
             }
                 
             super.damage(damager, amount);           
@@ -746,7 +772,7 @@ public class PlayerEntity extends Entity implements Controllable {
          */
         
         
-        int mSpeed = this.speed;
+        int mSpeed = this.speed + this.speedMultiplier;
         if(currentState==State.WALKING) {
             mSpeed = (int)( (float)this.speed * WALK_SPEED_FACTOR);
         }
@@ -788,7 +814,8 @@ public class PlayerEntity extends Entity implements Controllable {
     public void setTeam(Team team) {
         this.team = team;
         if(this.team != null) {
-            setWeaponClass(Type.UNKNOWN);
+            Player player = team.getPlayerById(this.id);
+            setPlayerClass(player.getPlayerClass(), player.getWeaponClass());
         }
     }
         
@@ -897,7 +924,7 @@ public class PlayerEntity extends Entity implements Controllable {
             else {
                 noMoveX();
             }
-                
+                        
             if(Keys.SPRINT.isDown(keys)) {
                 if(!inputVel.isZero() && currentState != State.WALKING) {                                        
                     sprint();
@@ -930,7 +957,7 @@ public class PlayerEntity extends Entity implements Controllable {
         }
         
     }
-    
+        
     /* (non-Javadoc)
      * @see seventh.game.Entity#setOrientation(float)
      */

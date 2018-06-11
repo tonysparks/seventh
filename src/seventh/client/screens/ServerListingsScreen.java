@@ -560,7 +560,7 @@ public class ServerListingsScreen implements Screen {
         int fontColor = theme.getForegroundColor();
         String message = "Servers";
         RenderFont.drawShadedString(canvas, message
-                , canvas.getWidth()/2 - canvas.getWidth(message)/2, canvas.getHeight()/12, fontColor);
+                , canvas.getWidth()/2 - RenderFont.getTextWidth(canvas, message)/2, canvas.getHeight()/12, fontColor);
                 
         this.menuScreen.getUiManager().render(canvas);
         

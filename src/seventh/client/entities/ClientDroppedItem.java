@@ -97,6 +97,9 @@ public class ClientDroppedItem extends ClientEntity {
             case FLAME_THROWER:
                 weapon = new Sprite(Art.flameThrowerIcon);
                 break;
+            case HAMMER:
+                weapon = new Sprite(Art.hammerIcon);
+                break;
             default: {            
             }
         }

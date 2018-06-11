@@ -11,6 +11,7 @@ import leola.vm.types.LeoObject;
 import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
+import seventh.game.entities.PlayerEntity;
 import seventh.game.net.NetWeapon;
 import seventh.math.Vector2f;
 import seventh.shared.Config;
@@ -88,6 +89,8 @@ public abstract class Weapon {
     private float bulletSpawnDistance, 
                   rocketSpawnDistance, 
                   grenadeSpawnDistance;
+    
+    private int damageMultiplier;
     
     /**     
      * @param game
@@ -167,6 +170,10 @@ public abstract class Weapon {
     public void setOwner(Entity owner) {
         this.owner = owner;
         this.gunSwing.setOwner(owner);
+        
+        if(owner instanceof PlayerEntity) {
+            this.damageMultiplier = ((PlayerEntity)owner).getDamageMultiplier();
+        }
     }
     
     /**
@@ -427,6 +434,13 @@ public abstract class Weapon {
     }
     
     /**
+     * @return the damageMultiplier
+     */
+    public int getDamageMultiplier() {
+        return damageMultiplier;
+    }
+    
+    /**
      * @param bulletSpawnDistance the bulletSpawnDistance to set
      */
     public void setBulletSpawnDistance(float bulletSpawnDistance) {
@@ -470,7 +484,7 @@ public abstract class Weapon {
         
         final int speed = 1500 + (random.nextInt(10) * 100);
         
-        Bullet bullet = new Bullet(pos, speed, game, owner, vel, damage, isPiercing);
+        Bullet bullet = new Bullet(pos, speed, game, owner, vel, damage + getDamageMultiplier(), isPiercing);
         bullet.setMaxDistance(getBulletRange());                
         
         game.addEntity(bullet); 

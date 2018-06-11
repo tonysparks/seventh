@@ -7,9 +7,11 @@ import seventh.game.Controllable;
 import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.game.entities.PlayerEntity;
+import seventh.game.weapons.Bullet;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.SoundType;
 import seventh.shared.TimeStep;
 import seventh.shared.Timer;
 import seventh.shared.WeaponConstants;
@@ -65,6 +67,17 @@ public abstract class Vehicle extends Entity implements Controllable {
                 getOperator().kill(killer);
             }
         }
+    }
+    
+    @Override
+    public void damage(Entity damager, int amount) {            
+        if(damager instanceof Bullet) {
+            Bullet bullet = (Bullet) damager;
+            bullet.kill(this);        
+            game.emitSound(bullet.getId(), SoundType.IMPACT_METAL, bullet.getCenterPos());
+        }
+        
+        super.damage(damager, amount);
     }
     
     /* (non-Javadoc)

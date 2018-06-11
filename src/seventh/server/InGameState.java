@@ -43,9 +43,12 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
 import seventh.game.events.SurvivorEvent;
 import seventh.game.events.SurvivorEventListener;
+import seventh.game.events.TileAddedEvent;
+import seventh.game.events.TileAddedListener;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.events.TileRemovedListener;
 import seventh.game.net.NetGameUpdate;
+import seventh.game.net.NetMapAddition;
 import seventh.network.messages.BombDisarmedMessage;
 import seventh.network.messages.BombExplodedMessage;
 import seventh.network.messages.BombPlantedMessage;
@@ -63,6 +66,7 @@ import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
 import seventh.server.RemoteClients.RemoteClientIterator;
 import seventh.shared.Command;
@@ -275,6 +279,19 @@ public class InGameState implements State {
                 protocol.sendTileRemovedMessage(msg);
             }
         });
+        
+        this.dispatcher.addEventListener(TileAddedEvent.class, new TileAddedListener() {
+            
+            @Override
+            public void onTileAdded(TileAddedEvent event) {
+                TileAddedMessage msg = new TileAddedMessage();
+                msg.tile = new NetMapAddition(event.getTileX(), event.getTileY(), event.getType());
+                
+                protocol.sendTileAddedMessage(msg);
+            }
+        });
+        
+        
         
         this.dispatcher.addEventListener(FlagCapturedEvent.class, new FlagCapturedListener() {
             

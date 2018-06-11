@@ -4,6 +4,7 @@
 package seventh.game.entities;
 
 import seventh.game.Game;
+import seventh.game.PlayerClass;
 import seventh.math.Vector2f;
 
 /**
@@ -19,7 +20,7 @@ public class DummyBotPlayerEntity extends PlayerEntity {
      * @param position
      * @param game
      */
-    public DummyBotPlayerEntity(int id, Vector2f position, Game game) {
-        super(id, position, game);        
+    public DummyBotPlayerEntity(int id, PlayerClass playerClass, Vector2f position, Game game) {
+        super(id, playerClass, position, game);        
     }
 }

@@ -190,6 +190,13 @@ public class Team implements Debugable {
     }
     
     /**
+     * @param score the score to set
+     */
+    public void setScore(int score) {
+        this.score = score;
+    }
+    
+    /**
      * @return the score
      */
     public int getScore() {
@@ -233,20 +240,24 @@ public class Team implements Debugable {
      * @return true if the supplied player is on the team
      */
     public boolean onTeam(Player p) {
-        return this.players.contains(p);
+        return onTeam(p.getId());
     }
     
     public boolean onTeam(int playerId) {
+        return getPlayerById(playerId) != null;
+    }
+    
+    public Player getPlayerById(int playerId) {
         int size = this.players.size();
         for(int i = 0; i < size; i++) {
-            if(this.players.get(i).getId() == playerId) {
-                return true;
+            Player player = this.players.get(i);
+            if(player.getId() == playerId) {
+                return player;
             }
         }
         
-        return false;
+        return null;
     }
-    
     
     /**
      * @return the number of players on this team

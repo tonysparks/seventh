@@ -1282,9 +1282,10 @@ public class Tile implements Renderable {
         public abstract boolean rectCollide(Rectangle a, OBB oob);
         public abstract boolean pointCollide(Rectangle a, int x, int y);
         
+        private static CollisionMask[] values = values();
         
         public static CollisionMask fromId(int id) {
-            for(CollisionMask m : values()) {
+            for(CollisionMask m : values) {
                 if(m.id == id) {
                     return m;
                 }
@@ -1318,6 +1319,11 @@ public class Tile implements Renderable {
     
     private float u,u2,v,v2;
     
+    /**
+     * When this tile is added by 
+     * a player, a type is attached to it
+     */
+    private byte type;
     
     /**
      * 
@@ -1398,6 +1404,20 @@ public class Tile implements Renderable {
         return true;
     }
 
+    /**
+     * @return the type
+     */
+    public byte getType() {
+        return type;
+    }
+    
+    /**
+     * @param type the type to set
+     */
+    public void setType(byte type) {
+        this.type = type;
+    }
+    
 
     /**
      * @return the surfaceType

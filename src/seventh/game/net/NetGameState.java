@@ -22,12 +22,14 @@ public class NetGameState  implements NetMessage {
     private static final int FL_GAMEMAP  = (1<<2);
     private static final int FL_GAMESTATS= (1<<3);
     private static final int FL_DESTRUCTABLES = (1<<4);
+    private static final int FL_ADDITIONS     = (1<<5);
     
     public NetGameTypeInfo gameType;
     public NetEntity[] entities;    
     public NetMap map;
     public NetGameStats stats;
     public NetMapDestructables mapDestructables;
+    public NetMapAdditions mapAdditions;
     
     protected byte bits;
     
@@ -82,6 +84,11 @@ public class NetGameState  implements NetMessage {
             mapDestructables = new NetMapDestructables();
             mapDestructables.read(buffer);
         }
+        
+        if( (bits & FL_ADDITIONS) != 0) {
+            mapAdditions = new NetMapAdditions();
+            mapAdditions.read(buffer);
+        }
     }
     
     /* (non-Javadoc)
@@ -104,6 +111,9 @@ public class NetGameState  implements NetMessage {
         }
         if(mapDestructables != null && mapDestructables.length > 0) {
             bits |= FL_DESTRUCTABLES;
+        }
+        if(mapAdditions != null && mapAdditions.tiles.length > 0) {
+            bits |= FL_ADDITIONS;
         }
         
         buffer.putByte(bits);
@@ -139,8 +149,11 @@ public class NetGameState  implements NetMessage {
         if(stats != null) {
             stats.write(buffer);
         }
-        if(mapDestructables != null) {
+        if( (bits & FL_DESTRUCTABLES) != 0) {
             mapDestructables.write(buffer);
+        }
+        if( (bits & FL_ADDITIONS) != 0) {
+            mapAdditions.write(buffer);
         }
     }
 }

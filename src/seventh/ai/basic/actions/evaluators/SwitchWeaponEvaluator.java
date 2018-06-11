@@ -51,7 +51,7 @@ public class SwitchWeaponEvaluator extends ActionEvaluator {
                  * the weapon
                  */
                 if(weapon.isReady()) {
-                    if( weapon.getTotalAmmo() <= 0 ) {
+                    if(weapon.getTotalAmmo() <= 0 && weapon.getBulletsInClip() <= 0) {
                         desire = 1;
                     }
                     

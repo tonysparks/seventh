@@ -48,6 +48,16 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         
     }
     
+    public static class TileDefinition {
+        public byte type;
+        public int layer;
+        public int tileId;
+        
+        public int collisionMaskId;
+        
+        public int width = 32, height = 32;
+    }
+    
     private static class DefaultMapObject extends MapObject {
         
         private OBB obb;        
@@ -190,6 +200,8 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
     
     
     private Map<String, MapObjectDefinition> objectDefinitions;
+    private Map<Byte, TileDefinition> tileDefinitions;
+    
     private boolean loadAssets;
     /**
      * 
@@ -197,16 +209,24 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
     public DefaultMapObjectFactory(Leola runtime, String mapFile, boolean loadAssets) throws Exception {
         this.loadAssets = loadAssets;
         this.objectDefinitions = new HashMap<>();
+        this.tileDefinitions = new HashMap<>();
         
         File objectsFile = new File(mapFile + ".objects.leola");
         if(objectsFile.exists()) {
             String contents = new String(Files.readAllBytes(objectsFile.toPath()));
             LeoMap objectData = JSON.parseJson(runtime, contents).as();
+            
             if(objectData != null) {
                 LeoArray objects = objectData.getArray("objects");
                 for(LeoObject object : objects) {
                     MapObjectDefinition definition = LeoObject.fromLeoObject(object, MapObjectDefinition.class);
                     this.objectDefinitions.put(definition.type.toLowerCase(), definition);
+                }
+                
+                LeoArray tiles = objectData.getArray("tiles");
+                for(LeoObject tile : tiles) {
+                    TileDefinition definition = LeoObject.fromLeoObject(tile, TileDefinition.class);
+                    this.tileDefinitions.put(definition.type, definition);
                 }
             }
         }
@@ -221,5 +241,21 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         }
         
         return new DefaultMapObject(loadAssets, definition, data);
+    }
+    
+    @Override
+    public Tile createMapTile(TilesetAtlas atlas, TileData data) {
+        TileDefinition definition = this.tileDefinitions.get(data.type);
+        if(definition == null) {
+            return null;
+        }
+        
+        Tile tile = new Tile(loadAssets ? atlas.getTile(definition.tileId) : null, definition.layer, definition.width, definition.height);
+        tile.setPosition(data.tileX * definition.width, data.tileY * definition.height);
+        tile.setIndexPosition(data.tileX, data.tileY);
+        tile.setCollisionMaskById(definition.collisionMaskId);
+        tile.setFlips(false, false, false);
+        
+        return tile;
     }
 }

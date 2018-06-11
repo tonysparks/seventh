@@ -31,6 +31,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
+import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
@@ -40,7 +41,9 @@ import seventh.network.messages.RoundStartedMessage;
 import seventh.network.messages.SurvivorEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
+import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
+import seventh.network.messages.TilesAddedMessage;
 import seventh.network.messages.TilesRemovedMessage;
 
 /**
@@ -110,6 +113,15 @@ public interface ServerProtocol {
      * @throws IOException
      */
     public void receivePlayerSwitchWeaponClassMessage(Connection conn, PlayerSwitchWeaponClassMessage message) throws IOException;
+    
+    /**
+     * The Player has requested to switch player classes
+     * 
+     * @param conn
+     * @param message
+     * @throws IOException
+     */
+    public void receivePlayerSwitchClassMessage(Connection conn, PlayerSwitchPlayerClassMessage message) throws IOException;
     
     /**
      * The Player has issued a voice command
@@ -282,6 +294,20 @@ public interface ServerProtocol {
     public void sendTilesRemovedMessage(TilesRemovedMessage msg);
     
     /**
+     * Sends a {@link TileAddedMessage} to all clients
+     * 
+     * @param msg
+     */
+    public void sendTileAddedMessage(TileAddedMessage msg);
+    
+    /**
+     * Sends a {@link TilesAddedMessage} to all clients
+     * 
+     * @param msg
+     */
+    public void sendTilesAddedMessage(TilesAddedMessage msg);
+    
+    /**
      * Sends an {@link RconTokenMessage} to a particular client
      * 
      * @param clientId
@@ -344,6 +370,15 @@ public interface ServerProtocol {
      */
     public void sendPlayerSpeechMessage(PlayerSpeechMessage msg, int exceptClientId);
     
+    
+    /**
+     * Sends a {@link PlayerSwitchPlayerClassMessage} to all clients
+     * 
+     * @param conn
+     * @param message
+     * @throws IOException
+     */
+    public void sendPlayerSwitchClassMessage(PlayerSwitchPlayerClassMessage message) throws IOException;
     
     /**
      * Sends a {@link ConnectAcceptedMessage} to a particular client
