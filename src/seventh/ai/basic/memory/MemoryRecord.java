@@ -8,17 +8,16 @@ public abstract class MemoryRecord {
     ExpireStrategy expireStrategy;
     public MemoryRecord(long expireTime)
     {
-    	this.expireTime = expireTime;
-    	this.setValid(false);
+        this.expireTime = expireTime;
+        this.setValid(false);
     }
-	public long getExpireTime() {
-		return expireTime;
-	}
-	public boolean isValid() {
-		return isValid;
-	}
-	public void setValid(boolean isValid) {
-		this.isValid = isValid;
-	}
-
+    public long getExpireTime() {
+        return expireTime;
+    }
+    public boolean isValid() {
+        return isValid;
+    }
+    public void setValid(boolean isValid) {
+        this.isValid = isValid;
+    }
 }
