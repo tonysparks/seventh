@@ -530,16 +530,16 @@ public class BitPacker {
 
         return this;
     }
-    
+   
     
     public static void dumpBytes(byte[] value) {
-    	StatementFactory statementFactory = new StatementFactory();
+        StatementFactory statementFactory = new StatementFactory();
         Statement statement = statementFactory.getInstance(value);
         statement.print();
     }
 
     public void dump() {
-    	StatementFactory statementFactory = new StatementFactory();
+        StatementFactory statementFactory = new StatementFactory();
         Statement statement = statementFactory.getInstance(numBits,data);
         statement.print();
     }

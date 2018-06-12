@@ -5,16 +5,16 @@ public class BitStatement extends Statement {
     private BitArray data;
 	
     public BitStatement(int number,BitArray bitData) {
-	    numBits = number;
-	    data = bitData;
-	}
-	
+        numBits = number;
+        data = bitData;
+    }
+
     protected void printHeaderContents() {
         System.out.println("| Dumping bitset, length: " + numBits);
     }
     
     public void printBody() {
-    	int count = 0;
+        int count = 0;
 
         for (int i = 0; i < numBits; i++) {
             printBit(data.getBit(i));
@@ -24,5 +24,4 @@ public class BitStatement extends Statement {
 
         }
     }
-    
 }
