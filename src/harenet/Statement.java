@@ -27,7 +27,7 @@ public abstract class Statement {
     protected abstract void printHeaderContents();
     
     protected void printBit(boolean isOne) {
-    	if (isOne) {
+        if (isOne) {
             System.out.print("1");
         }
         else {
@@ -44,5 +44,5 @@ public abstract class Statement {
             tempCount = 0;
         }
         return tempCount;
-	}
+    }
 }
