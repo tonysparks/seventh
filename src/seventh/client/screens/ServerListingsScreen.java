@@ -179,7 +179,7 @@ public class ServerListingsScreen implements Screen {
         serverListings.setBounds(new Rectangle((int)uiPos.x, (int)uiPos.y, app.getScreenWidth() - 220, 260));
         serverListings.addColumnHeader("Server Name", 240)
                       .addColumnHeader("Game Type", 150)
-                      .addColumnHeader("Map", 120)
+                      .addColumnHeader("Map", 140)
                       .addColumnHeader("Players", 80);
         
         uiPos.x = 140;
@@ -263,7 +263,7 @@ public class ServerListingsScreen implements Screen {
         String[] result = {"Error", ""};
         try {
             result = new String[] { 
-                    String.format("%-35s %-12s %-23s %d/%d", 
+                    String.format("%-48s^7 %-13s %-23s %d/%d", 
                             info.getServerName(), info.getGameType(), info.getMapName(), info.getAxis().size() + info.getAllies().size(), 12), 
                     info.getAddress() +":"+ info.getPort() 
             };

@@ -180,7 +180,8 @@ public class ServerInfo {
         map.putByString("address", LeoObject.valueOf(getAddress()));
         map.putByString("port", LeoObject.valueOf(getPort()));
         map.putByString("server_name", LeoObject.valueOf(getServerName()));
-        map.putByString("game_type", LeoObject.valueOf(getGameType()));
+        map.putByString("game_type", LeoObject.valueOf(getGameType()));        
+        map.putByString("map", LeoObject.valueOf(getMapName()));
         
         LeoArray leoAxis = new LeoArray();
         for(String player : this.axis) {
