@@ -21,7 +21,7 @@ import seventh.shared.SeventhConstants;
 public class NetSquad implements NetMessage {
     
     // The array index relates the player players ID    
-    public PlayerClass[] playerClasses;
+    public PlayerClass[] playerClasses = new PlayerClass[SeventhConstants.MAX_PLAYERS];
         
     @Override
     public void read(IOBuffer buffer) {            

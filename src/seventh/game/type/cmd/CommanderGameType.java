@@ -16,6 +16,7 @@ import seventh.game.entities.Base;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetGameTypeInfo;
+import seventh.game.net.NetSquad;
 import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Vector2f;
 import seventh.shared.EventDispatcher;
@@ -122,7 +123,34 @@ public class CommanderGameType extends AbstractTeamGameType {
     @Override
     protected NetGameTypeInfo createNetGameTypeInfo() {
         this.netGameTypeInfo = new NetCommanderGameTypeInfo();
+        this.netGameTypeInfo.alliedSquad = new NetSquad();
+        this.netGameTypeInfo.axisSquad = new NetSquad();
+        
         return this.netGameTypeInfo;
+    }
+    
+    /* (non-Javadoc)
+     * @see seventh.game.type.AbstractTeamGameType#getNetGameTypeInfo()
+     */
+    @Override
+    public NetGameTypeInfo getNetGameTypeInfo() {        
+        List<Player> allies = this.getAlliedTeam().getPlayers();
+        for(int i = 0; i < allies.size(); i++) {
+            Player p = allies.get(i);
+            if(p != null) {
+                this.netGameTypeInfo.alliedSquad.playerClasses[p.getId()] = p.getPlayerClass();
+            }
+        }
+        
+        List<Player> axis = this.getAxisTeam().getPlayers();
+        for(int i = 0; i < axis.size(); i++) {
+            Player p = axis.get(i);
+            if(p != null) {
+                this.netGameTypeInfo.axisSquad.playerClasses[p.getId()] = p.getPlayerClass();
+            }
+        }
+        
+        return super.getNetGameTypeInfo();
     }
     
     @Override
