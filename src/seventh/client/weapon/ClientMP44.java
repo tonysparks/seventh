@@ -25,7 +25,7 @@ public class ClientMP44 extends ClientWeapon {
         this.muzzleFlash = Art.newMP44MuzzleFlash();
         this.weaponWeight = WeaponConstants.MP44_WEIGHT;
         
-        this.weaponKickTime = 1; 
+        this.weaponKickTime = 100; 
         this.endFireKick = 0f; 
         this.beginFireKick = 6.2f; 
     }

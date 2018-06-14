@@ -25,7 +25,7 @@ public class ClientKar98 extends ClientWeapon {
         this.muzzleFlash = Art.newKar98MuzzleFlash();
         this.weaponWeight = WeaponConstants.KAR98_WEIGHT;
         
-        this.weaponKickTime = 150; 
+        this.weaponKickTime = 100; 
         this.endFireKick = 18.7f; 
         this.beginFireKick = 0f; 
     }

@@ -31,7 +31,7 @@ public class ClientRisker extends ClientWeapon {
         this.weaponWeight = WeaponConstants.RISKER_WEIGHT;
         
         this.weaponKickTime = 280; 
-        this.endFireKick = 18.7f; 
+        this.endFireKick = 10.7f; 
         this.beginFireKick = 0f; 
     }
 

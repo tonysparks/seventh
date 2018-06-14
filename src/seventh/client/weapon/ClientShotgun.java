@@ -28,7 +28,7 @@ public class ClientShotgun extends ClientWeapon {
         this.muzzleFlash = Art.newShotgunMuzzleFlash();        
         this.weaponWeight = WeaponConstants.SHOTGUN_WEIGHT;
         
-        this.weaponKickTime = 200; 
+        this.weaponKickTime = 66; 
         this.endFireKick = 18.7f; 
         this.beginFireKick = 0f; 
     }

@@ -29,7 +29,7 @@ public class ClientSpringfield extends ClientWeapon {
         this.muzzleFlash = Art.newSpringfieldMuzzleFlash();        
         this.weaponWeight = WeaponConstants.SPRINGFIELD_WEIGHT;
         
-        this.weaponKickTime = 150; 
+        this.weaponKickTime = 100; 
         this.endFireKick = 20.7f; 
         this.beginFireKick = 0f; 
     }

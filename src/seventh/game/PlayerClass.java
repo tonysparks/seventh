@@ -7,7 +7,6 @@ import static seventh.game.entities.Entity.Type.KAR98;
 import static seventh.game.entities.Entity.Type.M1_GARAND;
 import static seventh.game.entities.Entity.Type.MP40;
 import static seventh.game.entities.Entity.Type.MP44;
-import static seventh.game.entities.Entity.Type.RISKER;
 import static seventh.game.entities.Entity.Type.SPRINGFIELD;
 import static seventh.game.entities.Entity.Type.THOMPSON;
 
@@ -34,7 +33,8 @@ public class PlayerClass {
         GRENADE(Type.GRENADE),
         SMOKE_GRENADE(Type.SMOKE_GRENADE),
         SMG(THOMPSON, MP40),
-        RIFLE(M1_GARAND, MP44, RISKER),
+        RIFLE(M1_GARAND, MP44),
+        RISKER(Type.RISKER),
         SNIPER(SPRINGFIELD, KAR98),
         SHOTGUN(Type.SHOTGUN),
         FLAME_THROWER(Type.FLAME_THROWER),
@@ -142,6 +142,7 @@ public class PlayerClass {
     public static PlayerClass Infantry = new PlayerClass(0, 0, 0, 
                                                 Arrays.asList(entry(WeaponClass.SMG),                                                               
                                                               entry(WeaponClass.RIFLE),
+                                                              entry(WeaponClass.RISKER),
                                                               entry(WeaponClass.SNIPER),
                                                               entry(WeaponClass.SHOTGUN)), 
                                                 
@@ -160,6 +161,7 @@ public class PlayerClass {
     public static PlayerClass Default   = new PlayerClass(0, 0, 0, 
                                                 Arrays.asList(entry(WeaponClass.SMG),                                                               
                                                               entry(WeaponClass.RIFLE),
+                                                              entry(WeaponClass.RISKER),
                                                               entry(WeaponClass.SNIPER),
                                                               entry(WeaponClass.SHOTGUN),                                                              
                                                               entry(WeaponClass.FLAME_THROWER),

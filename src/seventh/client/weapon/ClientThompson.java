@@ -23,9 +23,9 @@ public class ClientThompson extends ClientWeapon {
         this.weaponIcon = Art.thompsonIcon;
         this.weaponImage = Art.thompsonImage;
         this.muzzleFlash = Art.newThompsonMuzzleFlash();        
-        this.weaponKickTime = 1;
+        this.weaponKickTime = 100;
         this.endFireKick = 0f; 
-        this.beginFireKick = 6f; // 85.7 
+        this.beginFireKick = 3.5f;  
         this.weaponWeight = WeaponConstants.THOMPSON_WEIGHT;
     }
 

@@ -13,6 +13,7 @@ import seventh.client.ClientPlayer;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.client.gfx.Art.Model;
 import seventh.client.gfx.effects.Effects;
+import seventh.client.gfx.effects.ScreenFlashEffect;
 import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.weapon.ClientFlameThrower;
 import seventh.client.weapon.ClientRocketLauncher;
@@ -115,6 +116,8 @@ public class PlayerSprite implements Renderable {
     private long timeSpentFiring;
     private boolean wasFiring;
     
+    private ScreenFlashEffect fireWeaponEffect;
+    
     /**
      * Debug class
      * 
@@ -208,6 +211,8 @@ public class PlayerSprite implements Renderable {
         effects = new Effects();
         sprite = new Sprite();
         
+        fireWeaponEffect = new ScreenFlashEffect(0xffff00, 0.045f, 25);
+        
         reset(player);
     }
         
@@ -228,6 +233,7 @@ public class PlayerSprite implements Renderable {
                 
         bobMotion.clear();
         swayMotion.clear();
+        
     }
     
     /**
@@ -244,6 +250,8 @@ public class PlayerSprite implements Renderable {
         
         resetLegMovements();
         effects.clearEffects();
+
+        fireWeaponEffect.reset();
     }
     
     private void updateSmokeEmitter(TimeStep timeStep, ClientWeapon weapon) {
@@ -414,6 +422,9 @@ public class PlayerSprite implements Renderable {
                 if(cycleFlash) {
                     this.showFlash = !this.showFlash;
                     this.flashTime = 90;
+                    
+                   // this.fireWeaponEffect.reset();
+                   // this.effects.addEffect(this.fireWeaponEffect);
                 }
                 else {
                     if(toggleFlash) {

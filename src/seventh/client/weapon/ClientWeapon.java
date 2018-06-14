@@ -271,13 +271,17 @@ public class ClientWeapon {
 //        this.weaponKickTime = 150; 
 //        this.endFireKick = 18.7f; 
 //        this.beginFireKick = 0f; 
+          //this.weaponKickTime = 100;
+          //this.beginFireKick = 3.8f;
         
         if(getState() == WeaponState.FIRING && weaponKickTime>0) {
             if(firstFire==1) {
-                camera.shake(weaponKickTime, endFireKick);
+                camera.shakeFrom(weaponKickTime, this.owner.getFacing(), this.endFireKick);
+                //camera.shake(weaponKickTime, endFireKick);
             }
             else if (beginFireKick > 0 ) {
-                camera.shake(weaponKickTime, beginFireKick);
+                //camera.shake(weaponKickTime, beginFireKick);
+                camera.shakeFrom(weaponKickTime, this.owner.getFacing(), this.beginFireKick);
             }
         }
     }

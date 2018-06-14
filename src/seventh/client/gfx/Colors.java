@@ -32,6 +32,11 @@ public class Colors {
         return (alpha << 24) | ((color<<8)>>>8);
     }
     
+    public static int setAlpha(int color, float alpha) {        
+        return setAlpha(color, (int) (255f * alpha));
+    }
+    
+    
     /**
      * Converts the {@link Vector3f} into a int color
      * @param v

@@ -57,7 +57,10 @@ public class Camera2d implements Camera {
     private Vector2f vMovementSpeed;
     
     private Vector2f worldBounds;    
-        
+    
+    // camera shake
+    private Vector2f shakeDirection;
+    private float shakeAngle;
     /**
      * Constructs a new {@link Camera}
      * 
@@ -89,6 +92,8 @@ public class Camera2d implements Camera {
         this.viewport         = new Rectangle();        
                 
         this.vShakeVelocity = new Vector2f();
+        this.shakeDirection = new Vector2f();
+        
         this.renderPosition = new Vector2f();
         
         this.rand = new Random();        
@@ -270,9 +275,11 @@ public class Camera2d implements Camera {
      */
     @Override
     public void shake(long time, float magnitude) {
-        this.randomAngle = rand.nextInt(360);
+        this.shakeAngle = rand.nextInt(360);
         this.shakeIntensity = magnitude;
         this.timeToShake = time; 
+        
+        this.shakeDirection.zeroOut();
     }
     
     /* (non-Javadoc)
@@ -282,8 +289,21 @@ public class Camera2d implements Camera {
     public void addShake(long time, float magnitude) {
         this.shakeIntensity = (this.shakeIntensity + magnitude) / 2.0f;
         this.timeToShake = (this.timeToShake + time) / 2;
+        
+        this.shakeDirection.zeroOut();
     }
 
+    @Override
+    public void shakeFrom(long time, Vector2f direction, float magnitude) {
+        if(this.timeToShake <= 0) {
+            this.shakeIntensity = magnitude;                        
+            this.timeToShake = time;
+            
+            Vector2f.Vector2fMult(direction, this.shakeIntensity, this.shakeDirection);
+            this.vShakeVelocity.zeroOut();
+        }
+    }
+    
     /* (non-Javadoc)
      * @see org.myriad.render.Camera#zoom(float)
      */
@@ -401,36 +421,30 @@ public class Camera2d implements Camera {
      * 
      * @param timeStep
      */
-    float randomAngle;
     private void checkShake(TimeStep timeStep) {
                 
         /*
          * If we are to shake do so
          */
-        if ( this.isShaking() ) {
+        if(isShaking()) {
 
             /* Decrement the amount of time to shake */
             this.timeToShake -= timeStep.getDeltaTime();    
             
-//            Vector2fSet(this.vShakeVelocity, rand.nextInt(3), rand.nextInt(3) );
-//            if ( this.vShakeVelocity.x >= 2 ) {
-//                this.vShakeVelocity.x = -1;
-//            }
-//            
-//            if ( this.vShakeVelocity.y >= 2 ) {
-//                this.vShakeVelocity.y = -1;
-//            }
-            
-//            this.vShakeVelocity.set(0,1);
-//            Vector2f.Vector2fRotate(vShakeVelocity, Math.toRadians(rand.nextInt(360)), vShakeVelocity);
-//            float dt = (float)timeStep.asFraction();
-//            Vector2fMult(this.vShakeVelocity, this.shakeIntensity * dt, this.vShakeVelocity);
-            
-            this.randomAngle += (150 + rand.nextInt(60));
-            this.vShakeVelocity.set((float)Math.sin(randomAngle) * this.shakeIntensity, (float)Math.cos(randomAngle) * this.shakeIntensity);
-            shakeIntensity *= 0.9f;
-            
-            
+            // if this is a directional shake, jitter in that direction (used for weapon recoil).
+            // otherwise make random shaking of the screen (used for explosives)
+            if(this.shakeDirection.lengthSquared() > 0) {
+                this.vShakeVelocity.set(this.shakeDirection);
+                Vector2f.Vector2fRotate(this.shakeDirection, Math.toRadians(180), this.shakeDirection);
+            }
+            else {
+                this.shakeAngle += (150 + rand.nextInt(60));
+                this.vShakeVelocity.set((float)Math.sin(this.shakeAngle) * this.shakeIntensity, 
+                                        (float)Math.cos(this.shakeAngle) * this.shakeIntensity);
+                
+                this.shakeIntensity *= 0.9f;
+            }
+             
             
             Vector2f position = getPosition();            
             Vector2fAdd(position, this.vShakeVelocity, position);
