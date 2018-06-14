@@ -79,6 +79,9 @@ public enum SoundType {
     HEALTH_PACK_PICKUP,
     RUFFLE(SoundSourceType.REFERENCED_ATTACHED),
     
+    BULLET_SHELL,
+    SHOTGUN_SHELL,
+    
     BOMB_TICK(SoundSourceType.GLOBAL),
     BOMB_PLANT,
     BOMB_DISARM,

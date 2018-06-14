@@ -379,7 +379,7 @@ public abstract class Weapon {
      * Invoked when the trigger is done being pulled.
      * @return true if the weapon discharged
      */
-    public boolean endFire() { 
+    public boolean endFire() {
         return false;
     }
     

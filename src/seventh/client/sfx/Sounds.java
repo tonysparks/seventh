@@ -180,6 +180,8 @@ public class Sounds {
     
     public static final int[] hammer = {178};
     
+    public static final int[] bulletShell = {179, 180,181};
+    public static final int[] shotgunShell = {182};
     
     public static final int[][] alliedSpeeches = {
             alliedSpeechAttack,
@@ -368,7 +370,7 @@ public class Sounds {
             loadSound("./assets/sfx/bullet_zing01.wav") ,   // 115
             loadSound("./assets/sfx/bullet_zing02.wav") ,   // 116
             loadSound("./assets/sfx/bullet_zing03.wav") ,   // 117
-            
+                        
 //            loadSound("./assets/sfx/tank/movement_start.wav") ,   // 118
 //            loadSound("./assets/sfx/tank/movement_loop.wav") ,   // 119
             null,null,
@@ -446,6 +448,12 @@ public class Sounds {
             loadSound("./assets/sfx/flamethrower/start_firing.wav") ,   // 177
             
             loadSound("./assets/sfx/hammer/hammer.wav") ,   // 178
+            
+
+            loadSound("./assets/sfx/bullet_shell01.wav") ,   // 179
+            loadSound("./assets/sfx/bullet_shell02.wav") ,   // 180
+            loadSound("./assets/sfx/bullet_shell03.wav") ,   // 181
+            loadSound("./assets/sfx/shotgun_shell01.wav") ,  // 182
         };
     };
 
@@ -907,6 +915,12 @@ public class Sounds {
             break;
         case WEAPON_SWITCH:
             sound = weaponSwitch;
+            break;
+        case BULLET_SHELL:
+            sound = bulletShell;
+            break;
+        case SHOTGUN_SHELL:
+            sound = shotgunShell;
             break;
         case RUFFLE:
             sound = ruffle;

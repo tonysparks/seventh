@@ -69,7 +69,7 @@ public class Pistol extends Weapon {
     
     @Override
     public boolean beginFire() {
-        if ( canFire() ) {
+        if (canFire()) {
             game.emitSound(getOwnerId(), SoundType.PISTOL_FIRE, getPos());
                         
             newBullet();
@@ -92,9 +92,12 @@ public class Pistol extends Weapon {
      * @see palisma.game.Weapon#endFire()
      */
     @Override
-    public boolean endFire() {
+    public boolean endFire() {        
         this.endFire = true;
-        
+
+        if(isFiring()) {
+            game.emitSound(getOwnerId(), SoundType.BULLET_SHELL, owner.getPos());
+        }
         return false;
     }
     

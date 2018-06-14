@@ -96,6 +96,7 @@ public class Risker extends Weapon {
                 if(burstCount<=0) {
                     burstCount = burst;
                     this.firing = false;
+                    game.emitSound(getOwnerId(), SoundType.BULLET_SHELL, owner.getPos());
                 }
             }
         }
@@ -165,7 +166,7 @@ public class Risker extends Weapon {
      */
     @Override
     public boolean endFire() {    
-        this.endFire = true;
+        this.endFire = true;        
         return false;
     }
     

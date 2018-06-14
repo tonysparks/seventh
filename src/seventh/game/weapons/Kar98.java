@@ -103,6 +103,9 @@ public class Kar98 extends Weapon {
     public boolean endFire() {
         this.endFire = true;
         
+        if(isFiring()) {
+            game.emitSound(getOwnerId(), SoundType.BULLET_SHELL, owner.getPos());
+        }        
         return false;
     }
     

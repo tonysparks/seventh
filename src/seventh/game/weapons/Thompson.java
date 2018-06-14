@@ -89,6 +89,14 @@ public class Thompson extends Weapon {
         return false;
     }
     
+    @Override
+    public boolean endFire() {
+        if(isFiring()) {
+            game.emitSound(getOwnerId(), SoundType.BULLET_SHELL, owner.getPos());
+        }
+        return super.endFire();
+    }
+    
     /* (non-Javadoc)
      * @see palisma.game.Weapon#calculateVelocity(palisma.game.Direction)
      */

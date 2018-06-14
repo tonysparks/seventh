@@ -88,6 +88,17 @@ public class MP40 extends Weapon {
     }
     
     /* (non-Javadoc)
+     * @see seventh.game.weapons.Weapon#endFire()
+     */
+    @Override
+    public boolean endFire() {
+        if(isFiring()) {
+            game.emitSound(getOwnerId(), SoundType.BULLET_SHELL, owner.getPos());
+        }
+        return super.endFire();
+    }
+    
+    /* (non-Javadoc)
      * @see palisma.game.Weapon#calculateVelocity(palisma.game.Direction)
      */
     @Override

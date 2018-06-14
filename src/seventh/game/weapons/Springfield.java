@@ -125,6 +125,10 @@ public class Springfield extends Weapon {
     @Override
     public boolean endFire() {    
         this.endFire = true;
+        
+        if(isFiring()) {
+            game.emitSound(getOwnerId(), SoundType.BULLET_SHELL, owner.getPos());
+        }
         return false;
     }
     

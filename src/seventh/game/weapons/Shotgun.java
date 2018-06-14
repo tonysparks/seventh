@@ -78,7 +78,7 @@ public class Shotgun extends Weapon {
             reloading = false;
             
             if(wasReloading) {
-                game.emitSound(getOwnerId(), SoundType.SHOTGUN_PUMP, getPos());                                
+                game.emitSound(getOwnerId(), SoundType.SHOTGUN_PUMP, getPos());                
                 wasReloading = false;                
             }
         }
@@ -146,6 +146,10 @@ public class Shotgun extends Weapon {
     @Override
     public boolean endFire() {
         this.endFire = true;
+        
+        if(isFiring()) {
+            game.emitSound(getOwnerId(), SoundType.SHOTGUN_SHELL, getPos());
+        }
         return false;
     }
     
