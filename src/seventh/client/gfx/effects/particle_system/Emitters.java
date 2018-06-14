@@ -358,7 +358,7 @@ public class Emitters {
         });
         
         emitter.addParticleUpdater(new KillIfAttachedIsDeadUpdater());    
-        emitter.addParticleRenderer(new RectParticleRenderer(2,2));
+        emitter.addParticleRenderer(new RectParticleRenderer(3,3));
         
         return emitter;
     }
