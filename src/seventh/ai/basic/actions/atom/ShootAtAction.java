@@ -67,8 +67,6 @@ public class ShootAtAction extends AdapterAction {
         if(this.inLOF) {
             if(player.canFire()) {
                 player.beginFire();
-            }
-            else {
                 player.endFire();
             }
         }        
