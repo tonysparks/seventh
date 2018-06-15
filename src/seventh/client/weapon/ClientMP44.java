@@ -30,10 +30,6 @@ public class ClientMP44 extends ClientWeapon {
         this.beginFireKick = 6.2f; 
     }
 
-//    @Override
-//    protected boolean onFire() {        
-//        return false;
-//    }
     /* (non-Javadoc)
      * @see seventh.client.weapon.ClientWeapon#isAutomatic()
      */

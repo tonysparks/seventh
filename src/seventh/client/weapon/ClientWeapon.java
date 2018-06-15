@@ -19,13 +19,16 @@ import seventh.shared.Timer;
  */
 public class ClientWeapon {
 
+    private static final long boltActionTime = 500;
+    private static final long pumpActionTime = 100;
+    
     protected final int channelId;
     private NetWeapon prevState, nextState;
     
     protected float beginFireKick, endFireKick;
     protected int weaponKickTime;
     protected int weaponWeight;
-    private boolean startReloading, canFireAgain;
+    private boolean startReloading;
             
     private int firstFire;
     
@@ -38,8 +41,6 @@ public class ClientWeapon {
     private Timer specialReloadActionReloadTimer;
     private Timer fireWaitTimer;
     
-    static final long boltActionTime = 1_000;
-    static final long pumpActionTime = 100;
     
     /**
      * 
@@ -104,12 +105,7 @@ public class ClientWeapon {
     }
     
 
-    public void updateState(NetWeapon state, long time) {
-//        if(getPreviousState() != State.FIRING 
-//            && State.fromNet(state.state) == State.FIRING) {
-//            firstFire++;
-//        }
-                        
+    public void updateState(NetWeapon state, long time) {             
         this.prevState = nextState;
         this.nextState = state;                        
     }
@@ -185,7 +181,7 @@ public class ClientWeapon {
     }
     
     private void startSpecialReloadActionTimer() {
-        if(isBoltAction()) this.specialReloadActionReloadTimer.setEndTime(500);//boltActionTime);
+        if(isBoltAction()) this.specialReloadActionReloadTimer.setEndTime(boltActionTime);
         else if(isPumpAction()) this.specialReloadActionReloadTimer.setEndTime(pumpActionTime);
         
         this.specialReloadActionReloadTimer.reset();
@@ -217,17 +213,8 @@ public class ClientWeapon {
                 }
                 case FIRING: {
                     firstFire++;
-                    if(!onFire()) {
-                        
-                        if(canFireAgain) {                                    
-                            canFireAgain = false;
-                        }
-                        else {
-                                
-                        }
-                    }
                     
-                    if(!this.fireWaitTimer.isUpdating() && firstFire == 1) {                        
+                    if(!this.fireWaitTimer.isUpdating() && isFirstFire()) {                        
                         this.fireWaitTimer.setEndTime(isBoltAction() ? 50 : 300);
                         this.fireWaitTimer.reset();
                         this.fireWaitTimer.start();
@@ -253,9 +240,6 @@ public class ClientWeapon {
                     break;
                 }
                 default: {
-//                    startFiring = false;
-                    canFireAgain = true;
-                    
                     startReloading = false;                    
                 }
             }
