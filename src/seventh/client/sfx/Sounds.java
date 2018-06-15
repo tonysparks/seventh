@@ -31,157 +31,161 @@ public class Sounds {
 
 //    private static ExecutorService service = Executors.newCachedThreadPool();
     public static final long uiChannel = 2004 >> 2;
-                            
-    public static final int[] die = {0,1,2};
-    public static final int[] hit = {3,4,5};
+    
+    private static int index = 0;
+    
+    public static final int[] die = {index++,index++,index++};
+    public static final int[] hit = {index++,index++,index++,index++,index++,index++};
+    public static final int[] hitIndication = {index++};
+    public static final int[] headshot = {index++};
             
 //    public static final int[] normalWalk = {6,7,8,9};
-    public static final int[] weaponDrop = {6,7};
-    public static final int[] uiHover = {8};
-    public static final int[] uiSelect = {9};
-    public static final int[] gib = {10,11};
+    public static final int[] weaponDrop = {index++,index++};
+    public static final int[] uiHover = {index++};
+    public static final int[] uiSelect = {index++};
+    public static final int[] gib = {index++,index++};
     
-    public static final int[] bombTick = {12};
-    public static final int[] bombPlant = {13};    
-    public static final int[] bombDisarm = {14};
+    public static final int[] bombTick = {index++};
+    public static final int[] bombPlant = {index++};    
+    public static final int[] bombDisarm = {index++};
     
-    public static final int[] logAlert = {15};
-    public static final int[] weaponPickupSnd = {16};
+    public static final int[] logAlert = {index++};
+    public static final int[] weaponPickupSnd = {index++};
     
-    public static final int[] explodeSnd = {17,18,19};
-    public static final int[] emptyFireSnd = {20};
-    public static final int[] ammoPickupSnd = {21};
-    public static final int[] respawnSnd = {22};    
-    public static final int[] weaponSwitch = {23};
+    public static final int[] explodeSnd = {index++,index++,index++};
+    public static final int[] emptyFireSnd = {index++};
+    public static final int[] ammoPickupSnd = {index++};
+    public static final int[] respawnSnd = {index++};    
+    public static final int[] weaponSwitch = {index++};
 
-    public static final int[] ruffle = {24,25,26};
+    public static final int[] ruffle = {index++,index++,index++};
 
-    public static final int[] thompsonFire = {27};
-    public static final int[] thompsonReload = {28};
+    public static final int[] thompsonFire = {index++};
+    public static final int[] thompsonReload = {index++};
     
 
-    public static final int[] shotgunFire = {29};
-    public static final int[] shotgunPump = {30};
-    public static final int[] shotgunReload = {31};
+    public static final int[] shotgunFire = {index++};
+    public static final int[] shotgunPump = {index++};
+    public static final int[] shotgunReload = {index++};
     
-    public static final int[] springfieldFire = {32};
-    public static final int[] springfieldReload = {33};
-    public static final int[] springfieldRechamber = {34};
+    public static final int[] springfieldFire = {index++};
+    public static final int[] springfieldReload = {index++};
+    public static final int[] springfieldRechamber = {index++};
     
-    public static final int[] m1Fire = {35};
-    public static final int[] m1FireLast = {36};
-    public static final int[] m1Reload = {37};
+    public static final int[] m1Fire = {index++};
+    public static final int[] m1FireLast = {index++};
+    public static final int[] m1Reload = {index++};
     
-    public static final int[] grenadePinPulled = {38};
-    public static final int[] grenadeThrow = {39};
+    public static final int[] grenadePinPulled = {index++};
+    public static final int[] grenadeThrow = {index++};
     
-    public static final int[] rocketFire = {40};
+    public static final int[] rocketFire = {index++};
     
     // TODO:
-    public static final int[] kar98Fire = {41};
-    public static final int[] kar98Reload = {42};
-    public static final int[] kar98Rechamber = {43};
+    public static final int[] kar98Fire = {index++};
+    public static final int[] kar98Reload = {index++};
+    public static final int[] kar98Rechamber = {index++};
     
-    public static final int[] mp44Fire = {44};
-    public static final int[] mp44Reload = {45};
+    public static final int[] mp44Fire = {index++};
+    public static final int[] mp44Reload = {index++};
     
-    public static final int[] mp40Fire = {46};
-    public static final int[] mp40Reload = {47};
+    public static final int[] mp40Fire = {index++};
+    public static final int[] mp40Reload = {index++};
     
-    public static final int[] meleeSwing = {48,49};
-    public static final int[] meleeHit = {50,51};
+    public static final int[] meleeSwing = {index++,index++};
+    public static final int[] meleeHit = {index++,index++};
     
-    public static final int[] normalWalk = {52, 53, 54, 55};
-    public static final int[] dirtWalk = {56,57,58,59};
-    public static final int[] grassWalk = {60,61,62,63};
-    public static final int[] metalWalk = {64,65,66,67};
-    public static final int[] waterWalk = {68,69,70,71};
-    public static final int[] woodWalk = {72,73,74,75};
+    public static final int[] normalWalk = {index++,index++,index++,index++};
+    public static final int[] dirtWalk = {index++,index++,index++,index++};
+    public static final int[] grassWalk = {index++,index++,index++,index++};
+    public static final int[] metalWalk = {index++,index++,index++,index++};
+    public static final int[] waterWalk = {index++,index++,index++,index++};
+    public static final int[] woodWalk = {index++,index++,index++,index++};
     
-    public static final int[] uiNavigate = {76,77};
-    public static final int[] uiKeyType = {78, 79, 80};
+    public static final int[] uiNavigate = {index++,index++};
+    public static final int[] uiKeyType = {index++,index++,index++};
     
-    public static final int[] pistolFire = {81};
-    public static final int[] pistolReload = {82};
+    public static final int[] pistolFire = {index++};
+    public static final int[] pistolReload = {index++};
     
     
-    public static final int[] impactMetal = {83,84,85,86,87};
-    public static final int[] impactWood = {88,89,90,91,92};
-    public static final int[] impactFoliage = {93,94,95,96,97};
-    public static final int[] impactDefault = {98,99,100,101,102};
+    public static final int[] impactMetal = {index++,index++,index++,index++,index++};
+    public static final int[] impactWood = {index++,index++,index++,index++,index++};
+    public static final int[] impactFoliage = {index++,index++,index++,index++,index++};
+    public static final int[] impactDefault = {index++,index++,index++,index++,index++};
     
-    public static final int[] riskerFire = {103};
-    public static final int[] riskerReload = {104};
-    public static final int[] riskerRechamber = {105};
+    public static final int[] riskerFire = {index++};
+    public static final int[] riskerReload = {index++};
+    public static final int[] riskerRechamber = {index++};
     
-    public static final int[] mechForwardFootstep = {106};
-    public static final int[] mechRetractFootstep = {107};
-    public static final int[] mechTorsoMove = {108};
+    public static final int[] mechForwardFootstep = {index++};
+    public static final int[] mechRetractFootstep = {index++};
+    public static final int[] mechTorsoMove = {index++};
     
-    public static final int[] breadthLite = {109,110,111};
-    public static final int[] breadthHeavy = {112,113,114};
+    public static final int[] breadthLite = {index++,index++,index++};
+    public static final int[] breadthHeavy = {index++,index++,index++};
     
-    public static final int[] bulletZing = {115,116,117};
+    public static final int[] bulletZing = {index++,index++,index++};
     
     //public static final int[] tankStart = {118};
     //public static final int[] tankMove = {119};
-    public static final int[] healthPackPickup = {120};
+    public static final int[] healthPackPickup = {index++};
 
-    public static final int[] alliedSpeechAttack = {121};
-    public static final int[] alliedSpeechCoverMe = {122};
-    public static final int[] alliedSpeechFollowMe = {123};
-    public static final int[] alliedSpeechGetOutOfMyWay = {124};
-    public static final int[] alliedSpeechGetUsKilled = {125};
-    public static final int[] alliedSpeechHoldPosition = {126};
-    public static final int[] alliedSpeechIllCoverYou = {127};
-    public static final int[] alliedSpeechTakingFire = {128};
-    public static final int[] alliedSpeechYouTakeLead = {129};
+    public static final int[] alliedSpeechAttack = {index++};
+    public static final int[] alliedSpeechCoverMe = {index++};
+    public static final int[] alliedSpeechFollowMe = {index++};
+    public static final int[] alliedSpeechGetOutOfMyWay = {index++};
+    public static final int[] alliedSpeechGetUsKilled = {index++};
+    public static final int[] alliedSpeechHoldPosition = {index++};
+    public static final int[] alliedSpeechIllCoverYou = {index++};
+    public static final int[] alliedSpeechTakingFire = {index++};
+    public static final int[] alliedSpeechYouTakeLead = {index++};
 
-    public static final int[] axisSpeechAttack = {130};
-    public static final int[] axisSpeechCoverMe = {131};
-    public static final int[] axisSpeechFollowMe = {132};
-    public static final int[] axisSpeechGetOutOfMyWay = {133};
-    public static final int[] axisSpeechGetUsKilled = {134};
-    public static final int[] axisSpeechHoldPosition = {135};
-    public static final int[] axisSpeechIllCoverYou = {136};
-    public static final int[] axisSpeechTakingFire = {137};
-    public static final int[] axisSpeechYouTakeLead = {138};
+    public static final int[] axisSpeechAttack = {index++};
+    public static final int[] axisSpeechCoverMe = {index++};
+    public static final int[] axisSpeechFollowMe = {index++};
+    public static final int[] axisSpeechGetOutOfMyWay = {index++};
+    public static final int[] axisSpeechGetUsKilled = {index++};
+    public static final int[] axisSpeechHoldPosition = {index++};
+    public static final int[] axisSpeechIllCoverYou = {index++};
+    public static final int[] axisSpeechTakingFire = {index++};
+    public static final int[] axisSpeechYouTakeLead = {index++};
 
-    public static final int[] tankOn = {139};
-    public static final int[] tankOff = {140};
-    public static final int[] tankIdle = {141};
-    public static final int[] tankShift = {142,143,144};
-    public static final int[] tankRevUp = {145};
-    public static final int[] tankRevDown = {146};
-    public static final int[] tankTurret = {147};
-    public static final int[] tankMove = {148};
-    public static final int[] tankFire = {149};
+    public static final int[] tankOn = {index++};
+    public static final int[] tankOff = {index++};
+    public static final int[] tankIdle = {index++};
+    public static final int[] tankShift = {index++,index++,index++};
+    public static final int[] tankRevUp = {index++};
+    public static final int[] tankRevDown = {index++};
+    public static final int[] tankTurret = {index++};
+    public static final int[] tankMove = {index++};
+    public static final int[] tankFire = {index++};
     
-    public static final int[] flagCaptured = {150};
-    public static final int[] flagStolen = {151};
-    public static final int[] flagReturned = {152};
-    public static final int[] enemyFlagCaptured = {153};
-    public static final int[] enemyFlagStolen = {154};
+    public static final int[] flagCaptured = {index++};
+    public static final int[] flagStolen = {index++};
+    public static final int[] flagReturned = {index++};
+    public static final int[] enemyFlagCaptured = {index++};
+    public static final int[] enemyFlagStolen = {index++};
     
-    public static final int[] mg42Fire = {155,156};    
-    public static final int[] radioStatic = {157,158};
-    public static final int[] alliedVictory = {159,160,161};
-    public static final int[] axisVictory = {162,163,164};
+    public static final int[] mg42Fire = {index++,index++};    
+    public static final int[] radioStatic = {index++,index++};
+    public static final int[] alliedVictory = {index++,index++,index++};
+    public static final int[] axisVictory = {index++,index++,index++};
     
-    public static final int[] doorOpen = {165,166,167,168};
-    public static final int[] doorClose = {169,170};
+    public static final int[] doorOpen = {index++,index++,index++,index++};
+    public static final int[] doorClose = {index++,index++};
     
-    public static final int[] doorCloseBlocked = {171,172,173};
-    public static final int[] doorOpenBlocked = {174};
+    public static final int[] doorCloseBlocked = {index++,index++,index++};
+    public static final int[] doorOpenBlocked = {index++};
     
-    public static final int[] smokeGrenade = {175};
-    public static final int[] fire = {176};
-    public static final int[] flameThrowerShoot = {177};
+    public static final int[] smokeGrenade = {index++};
+    public static final int[] fire = {index++};
+    public static final int[] flameThrowerShoot = {index++};
     
-    public static final int[] hammer = {178};
+    public static final int[] hammer = {index++};
     
-    public static final int[] bulletShell = {179, 180,181};
-    public static final int[] shotgunShell = {182};
+    public static final int[] bulletShell = {index++, index++,index++};
+    public static final int[] shotgunShell = {index++};
     
     public static final int[][] alliedSpeeches = {
             alliedSpeechAttack,
@@ -222,7 +226,13 @@ public class Sounds {
             loadSound("./assets/sfx/player/hit1.wav") ,   // 3
             loadSound("./assets/sfx/player/hit2.wav") ,   // 4
             loadSound("./assets/sfx/player/hit3.wav") ,   // 5                                                
-
+            loadSound("./assets/sfx/player/hit4.wav") ,   // 6
+            loadSound("./assets/sfx/player/hit5.wav") ,   // 7
+            loadSound("./assets/sfx/player/hit6.wav") ,   // 8
+            
+            loadSound("./assets/sfx/player/hit_indication01.wav") ,
+            loadSound("./assets/sfx/player/headshot01.wav") ,     
+            
             loadSound("./assets/sfx/weapon_drop01.wav") ,   // 6,
             loadSound("./assets/sfx/weapon_drop02.wav") ,   // 7,            
             loadSound("./assets/sfx/ui/element_hover.wav") ,   // 8,
@@ -370,10 +380,7 @@ public class Sounds {
             loadSound("./assets/sfx/bullet_zing01.wav") ,   // 115
             loadSound("./assets/sfx/bullet_zing02.wav") ,   // 116
             loadSound("./assets/sfx/bullet_zing03.wav") ,   // 117
-                        
-//            loadSound("./assets/sfx/tank/movement_start.wav") ,   // 118
-//            loadSound("./assets/sfx/tank/movement_loop.wav") ,   // 119
-            null,null,
+            
             loadSound("./assets/sfx/player/healthpack_pickup.wav") ,   // 120
             
             loadSound("./assets/sfx/player/speech/allied/attack.wav") ,   // 121
@@ -647,7 +654,7 @@ public class Sounds {
     }
     
     public static Sound playGlobalSound(SoundType type) {
-        return playGlobalSound(soundBank(type));
+        return playGlobalSound(soundBank(type), dampSound(type, 1.0f));
     }
     
     /**
@@ -657,6 +664,17 @@ public class Sounds {
      * @return the {@link Sound}
      */
     public static Sound playGlobalSound(int[] soundBank) {
+        return playGlobalSound(soundBank, 1.0f);
+    }
+    
+    
+    /**
+     * Plays the sound right next to the sound listener so it is
+     * always audible.
+     * @param soundBank
+     * @return the {@link Sound}
+     */
+    public static Sound playGlobalSound(int[] soundBank, float damp) {
         float x = 0;
         float y = 0;
         if(soundSystem != null) {
@@ -664,7 +682,7 @@ public class Sounds {
             x = data.position.x;
             y = data.position.y;
         }
-        return playFreeSound(soundBank, x, y);
+        return playFreeSound(soundBank, x, y, damp);
     }
     
     /**
@@ -984,7 +1002,13 @@ public class Sounds {
             break;
         case IMPACT_FLESH:
             sound = hit;
-            break;            
+            break;
+        case HIT_INDICATOR:
+            sound = hitIndication;
+            break;
+        case HEADSHOT:
+            sound = headshot;
+            break;
         case TANK_ON: 
             sound = tankOn;
             break;
@@ -1101,6 +1125,10 @@ public class Sounds {
             case SURFACE_WATER:
             case SURFACE_SAND:                
                 return damp * 0.22f;
+                
+            case HIT_INDICATOR:
+            case IMPACT_FLESH:
+                return damp * 2.0f;
             case TANK_FIRE:
             case TANK_IDLE:
             case TANK_MOVE:

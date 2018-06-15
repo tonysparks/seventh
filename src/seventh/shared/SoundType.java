@@ -98,6 +98,9 @@ public enum SoundType {
     IMPACT_DEFAULT(SoundSourceType.POSITIONAL),
     IMPACT_FLESH(SoundSourceType.POSITIONAL),
     
+    HIT_INDICATOR(SoundSourceType.GLOBAL),
+    HEADSHOT(SoundSourceType.GLOBAL),
+    
     TANK_REV_DOWN(SoundSourceType.REFERENCED_ATTACHED),
     TANK_REV_UP(SoundSourceType.REFERENCED_ATTACHED),
     TANK_ON(SoundSourceType.REFERENCED_ATTACHED),

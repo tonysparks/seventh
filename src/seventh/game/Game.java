@@ -405,7 +405,19 @@ public class Game implements GameInfo, Debugable, Updatable {
         // Should we throw an error
         return MAX_ENTITIES-1;
     }
-        
+    
+    /**
+     * Emits a sound specifically for a player
+     * 
+     * @param id
+     * @param sound
+     * @param pos
+     * @param forEntityId
+     */
+    public void emitSoundFor(int id, SoundType sound, Vector2f pos, int forEntityId) {
+        soundEvents.emitSoundFor(id, sound, pos, forEntityId);
+    }
+    
     /**
      * Emits a sound for the client to hear
      * 

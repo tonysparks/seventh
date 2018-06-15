@@ -471,6 +471,13 @@ public class PlayerEntity extends Entity implements Controllable {
             if(damager instanceof Bullet) {
                 Bullet bullet = (Bullet) damager;
                 
+                PlayerEntity damageOwner = null;
+                
+                Entity owner = bullet.getOwner();
+                if(owner instanceof PlayerEntity) {
+                    damageOwner = (PlayerEntity)owner;
+                }
+                
                 Vector2f center = getCenterPos();
                 Vector2f bulletCenter = bullet.getCenterPos();
                 
@@ -480,7 +487,11 @@ public class PlayerEntity extends Entity implements Controllable {
                 Vector2f.Vector2fMA(bulletCenter, bullet.getTargetVel(), 35, this.bulletDir);
                 if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.headshot)) {
                     // headshots deal out a lot of damage
-                    amount *= 3;                              
+                    amount *= 3;    
+                    
+                    if(damageOwner != null) {
+                        game.emitSoundFor(damageOwner.getId(), SoundType.HEADSHOT, bullet.getPos(), damageOwner.getId());
+                    }
                 }
                 else {
                     // limb shots are not as lethal
@@ -499,13 +510,21 @@ public class PlayerEntity extends Entity implements Controllable {
                     this.limbshot.centerAround(cache);
                     if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.limbshot)) {
                         amount /= 2;
-                    }                    
+                    }               
+                    
+                    if(damageOwner != null) {
+                        game.emitSoundFor(damageOwner.getId(), SoundType.HIT_INDICATOR, bullet.getPos(), damageOwner.getId());
+                    }
                 }
                 
                 //DebugDraw.drawLineRelative(bullet.getCenterPos(), this.bulletDir, 0xff00ffff);
                 
                 
-                game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getCenterPos());                                
+                game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getPos());
+                
+                if(damageOwner != null) {                    
+                    game.emitSoundFor(damageOwner.getId(), SoundType.IMPACT_FLESH, damageOwner.getPos(), damageOwner.getId());
+                }
                                 
                 if(!bullet.isPiercing()) {                    
                     bullet.kill(this);    
@@ -1602,7 +1621,9 @@ public class PlayerEntity extends Entity implements Controllable {
         int size = soundEvents.numberOfSounds();        
         for(int i = 0; i < size; i++) {
             SoundEmittedEvent event = soundEvents.getSound(i);
-            if(this.hearingBounds.contains(event.getPos())) {
+            if((this.hearingBounds.contains(event.getPos()) && event.getForEntityId() < 0) || 
+                this.id == event.getForEntityId()) {
+                
                 soundsHeard.add(event);                
             } 
         }

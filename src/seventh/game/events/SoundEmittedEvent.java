@@ -17,6 +17,8 @@ public class SoundEmittedEvent extends Event {
     private SoundType soundType;
     private Vector2f pos;
     private int entityId;
+    private int forEntityId;
+    
     /**
      * @param source
      * @param id
@@ -66,6 +68,19 @@ public class SoundEmittedEvent extends Event {
         this.id = id;
     }
 
+    /**
+     * @param forEntityId the forEntityId to set
+     */
+    public void setForEntityId(int forEntityId) {
+        this.forEntityId = forEntityId;
+    }
+    
+    /**
+     * @return the forEntityId
+     */
+    public int getForEntityId() {
+        return forEntityId;
+    }
 
 
     /**

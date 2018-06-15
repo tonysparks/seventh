@@ -33,7 +33,7 @@ public class Sound {
     }
 
     private float getFuzzyPitch() {
-        return (95 + rand.nextInt(5)) / 100.0f;
+        return (float)(95 + rand.nextInt(5)) / 100.0f;
     }
     
     /**
@@ -59,7 +59,7 @@ public class Sound {
     }
     
     public void play(float x, float y, boolean loop) {
-        this.soundSystem.setDistOrRoll(sourceName, 0.009f);
+        this.soundSystem.setDistOrRoll(sourceName, 0.005f);
         this.soundSystem.setPosition(sourceName, x, y, 0);
         this.soundSystem.setLooping(sourceName, loop);
         this.soundSystem.setPitch(sourceName, getFuzzyPitch());
