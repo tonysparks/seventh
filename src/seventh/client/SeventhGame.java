@@ -71,7 +71,7 @@ public class SeventhGame implements ApplicationListener {
             "                                                                             \n" 
             ;
     
-    private static final String VERSION = "v0.3.0-BETA";
+    private static final String VERSION = "v0.4.0-BETA";
     public static final int DEFAULT_MINIMIZED_SCREEN_WIDTH  = 840; // 640//960;//1024;
     public static final int DEFAULT_MINIMIZED_SCREEN_HEIGHT = 480;//400//600;//768;
     
