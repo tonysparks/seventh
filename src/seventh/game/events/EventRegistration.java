@@ -216,10 +216,10 @@ public class EventRegistration {
                 });
                 break;
             }
-            case "survivorevent": {
-                addEventListener(SurvivorEvent.class, new SurvivorEventListener() {                    
+            case "gameevent": {
+                addEventListener(GameEvent.class, new GameEventListener() {                    
                     @Override
-                    public void onSurvivorEvent(SurvivorEvent event) {
+                    public void onGameEvent(GameEvent event) {
                         callFunction(eventName, function, event);
                     }
                 });

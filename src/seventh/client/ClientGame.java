@@ -95,7 +95,7 @@ import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
-import seventh.network.messages.SurvivorEventMessage;
+import seventh.network.messages.GameEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileAddedMessage;
@@ -1990,7 +1990,7 @@ public class ClientGame {
         }        
     }
     
-    public void survivorEventMessage(SurvivorEventMessage msg) {
+    public void gameEventMessage(GameEventMessage msg) {
         switch(msg.eventType) {
             case CustomSound:
                 Sound snd = loadSound(msg.path);
@@ -2006,6 +2006,13 @@ public class ClientGame {
             case LightAdjust:
                 getLightSystem().setAmbientColor(msg.light.x, msg.light.y, msg.light.z);
                 getLightSystem().setAmbientIntensity(msg.light.w);
+                break;
+            case BrokenGlass:
+                playSound(SoundType.IMPACT_GLASS, msg.pos.x, msg.pos.y);
+                
+                Vector2f dir = new Vector2f(Vector2f.RIGHT_VECTOR);
+                Vector2f.Vector2fRotate(dir, (float)Math.toRadians(msg.rotation), dir);
+                this.gameEffects.addBackgroundEffect(Emitters.newGlassBreakEmitter(msg.pos, dir));
                 break;
             default:
                 break;

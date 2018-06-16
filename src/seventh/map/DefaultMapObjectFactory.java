@@ -185,7 +185,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         }
         
         @Override
-        public void onTouch(Game game, Entity ent) {
+        public boolean onTouch(Game game, Entity ent) {
             if(this.onTouched != null) {         
                 LeoObject func = null;
                 if(this.onTouched.isFunction()) {
@@ -196,12 +196,16 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                 }
                 
                 if(func!=null) {
-                    LeoObject result = func.call(LeoObject.valueOf(game), ent.asScriptObject());
+                    LeoObject result = func.call(game.asScriptObject(), ent.asScriptObject(), asScriptObject());
                     if(result.isError()) {
                         Cons.println("*** ERROR: Error touching MapObject: " + result);
                     }
-                }
+                    
+                    return result.isTrue();
+                }                                
             }
+            
+            return true;
         }
         
         @Override
@@ -219,8 +223,8 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                                 
 //                DebugDraw.drawRectRelative(bounds.x, bounds.y, bounds.width, bounds.height, 0xffffff00);
 //                DebugDraw.fillRectRelative((int)obb.center.x, (int)obb.center.y, 5, 5, 0xffff0000);
-//                DebugDraw.drawOOBRelative(obb, 0xff00ff00);
             }
+            //DebugDraw.drawOOBRelative(obb, 0xff00ff00);
         }
     }
     

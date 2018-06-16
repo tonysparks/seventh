@@ -41,8 +41,8 @@ import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundEndedListener;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
-import seventh.game.events.SurvivorEvent;
-import seventh.game.events.SurvivorEventListener;
+import seventh.game.events.GameEvent;
+import seventh.game.events.GameEventListener;
 import seventh.game.events.TileAddedEvent;
 import seventh.game.events.TileAddedListener;
 import seventh.game.events.TileRemovedEvent;
@@ -65,7 +65,7 @@ import seventh.network.messages.PlayerKilledMessage;
 import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
-import seventh.network.messages.SurvivorEventMessage;
+import seventh.network.messages.GameEventMessage;
 import seventh.network.messages.TileAddedMessage;
 import seventh.network.messages.TileRemovedMessage;
 import seventh.server.RemoteClients.RemoteClientIterator;
@@ -361,19 +361,21 @@ public class InGameState implements State {
             }
         });
         
-        this.dispatcher.addEventListener(SurvivorEvent.class, new SurvivorEventListener() {
+        this.dispatcher.addEventListener(GameEvent.class, new GameEventListener() {
             
             @Override
-            public void onSurvivorEvent(SurvivorEvent event) {
-                SurvivorEventMessage msg = new SurvivorEventMessage();
+            public void onGameEvent(GameEvent event) {
+                GameEventMessage msg = new GameEventMessage();
                 msg.eventType = event.getEventType();
                 msg.path = event.getPath();
                 msg.pos = event.getPos();
+                msg.pos2 = event.getPos2();
+                msg.rotation = event.getRotation();
                 msg.playerId1 = event.getPlayerId1();
                 msg.playerId2 = event.getPlayerId2();
                 msg.light = event.getLight();
                 
-                protocol.sendSurvivoEventrMessage(msg);                
+                protocol.sendGameEventMessage(msg);                
             }
         });
     }

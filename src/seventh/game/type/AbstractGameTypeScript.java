@@ -3,6 +3,7 @@
  */
 package seventh.game.type;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public abstract class AbstractGameTypeScript {
      */
     public AbstractGameTypeScript(Leola runtime) {
         this.runtime = runtime;
+        loadCore();
     }
 
     /**
@@ -35,6 +37,17 @@ public abstract class AbstractGameTypeScript {
         return runtime;
     }
     
+    protected void loadCore() {
+        try {
+            File coreLib = new File("./assets/maps/core.leola");
+            if(coreLib.exists()) {
+                this.runtime.eval(coreLib);
+            }
+        }
+        catch(Exception e) {
+            Cons.println("*** ERROR: Error loading core library: " + e);
+        }
+    }
     
     /**
      * Parses the spawn points for a team

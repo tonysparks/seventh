@@ -49,8 +49,8 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
-import seventh.game.events.SurvivorEvent;
-import seventh.game.events.SurvivorEvent.EventType;
+import seventh.game.events.GameEvent;
+import seventh.game.events.GameEvent.EventType;
 import seventh.game.events.TileAddedEvent;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.net.NetEntity;
@@ -209,6 +209,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private PlayerStatSystem statSystem;
     
     private EventRegistration eventRegistration;
+    private LeoObject scriptObj;
     
     /**
      * @param config
@@ -237,6 +238,8 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         this.entities = new Entity[MAX_ENTITIES];
         this.playerEntities = new PlayerEntity[MAX_PLAYERS];
+        
+        this.scriptObj = LeoObject.valueOf(this);
         
         this.deadFrames = new int[MAX_ENTITIES];
         markDeadFrames();
@@ -345,7 +348,15 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.awardSystem = new PlayerAwardSystem(this);
         this.statSystem = new PlayerStatSystem(this);        
     }
-        
+    
+    /**
+     * This as a script object
+     * 
+     * @return the script object of the game
+     */
+    public LeoObject asScriptObject() {
+        return this.scriptObj;
+    }
     
     /**
      * @return the next available slot for an entity
@@ -547,7 +558,7 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @param intensity
      */
     public void adjustLight(float r, float g, float b, float intensity) {
-        this.dispatcher.queueEvent(new SurvivorEvent(this, EventType.LightAdjust, null, null, -1, -1, new Vector4f(r, g, b, intensity)));
+        this.dispatcher.queueEvent(new GameEvent(this, EventType.LightAdjust, null, null, 0f, null, -1, -1, new Vector4f(r, g, b, intensity)));
     }
     
     /**
@@ -556,7 +567,18 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @param message
      */
     public void text(String message) {
-        this.dispatcher.queueEvent(new SurvivorEvent(this, EventType.Message, null, message, -1, -1, null));
+        this.dispatcher.queueEvent(new GameEvent(this, EventType.Message, null, null, 0f, message, -1, -1, null));
+    }
+    
+    /**
+     * Sends a message about broken glass
+     * 
+     * @param pos
+     * @param dir
+     */
+    public void breakGlass(Vector2f pos, Vector2f dir) {
+        double rotation = Vector2f.Vector2fAngle(Vector2f.RIGHT_VECTOR, dir);
+        this.dispatcher.queueEvent(new GameEvent(this, EventType.BrokenGlass, pos, null, (float)Math.toDegrees(rotation), null, -1, -1, null));
     }
     
     /**
@@ -643,7 +665,7 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @param function
      */
     public void addTrigger(final LeoObject function) {
-        final LeoObject gameClass = LeoObject.valueOf(this);
+        final LeoObject gameClass = asScriptObject();
         final LeoObject cond = function.getObject("checkCondition");
         final LeoObject exe = function.getObject("execute");
         
@@ -2134,7 +2156,9 @@ public class Game implements GameInfo, Debugable, Updatable {
                         return true;
                     }
                     
-                    object.onTouch(this, ent);
+                    if(!object.onTouch(this, ent)) {
+                        continue;
+                    }
                     
                     if(ent.onMapObjectTouch != null) {                
                         ent.onMapObjectTouch.onTouch(ent, object);

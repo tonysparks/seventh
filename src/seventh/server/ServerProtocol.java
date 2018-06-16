@@ -38,7 +38,7 @@ import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
-import seventh.network.messages.SurvivorEventMessage;
+import seventh.network.messages.GameEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileAddedMessage;
@@ -423,9 +423,9 @@ public interface ServerProtocol {
     public void sendPlayerAwardMessage(PlayerAwardMessage msg);
     
     /**
-     * Sends a {@link SurvivorEventMessage}
+     * Sends a {@link GameEventMessage}
      * 
      * @param msg
      */
-    public void sendSurvivoEventrMessage(SurvivorEventMessage msg);
+    public void sendGameEventMessage(GameEventMessage msg);
 }

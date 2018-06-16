@@ -68,8 +68,8 @@ public class ClientBullet extends ClientEntity {
                 
                 game.addBackgroundEffect(Emitters.newBulletImpactFleshEmitter(bloodPos, direction));
             }
-            else {
-                game.addBackgroundEffect(Emitters.newBulletImpactEmitter(pos, vel));
+            else {  
+                game.addBackgroundEffect(Emitters.newBulletImpactEmitter(pos, vel));                
             }
             
         }
@@ -90,7 +90,7 @@ public class ClientBullet extends ClientEntity {
         bounds.width = 5;
         bounds.height = 5;
         
-        trailEffect = Emitters.newBulletTracerEmitter(pos.createClone(), 10_000)
+        trailEffect = Emitters.newBulletTracerEmitter(pos, 10_000)
                               .attachTo(this);
         
         reset();
@@ -116,10 +116,7 @@ public class ClientBullet extends ClientEntity {
         
         iterations = 0;
 
-        trailEffect.reset();
-        
-//        trailEffect = Emitters.newBulletTracerEmitter(pos.createClone(), 10_000)
-//                  .attachTo(this);
+        trailEffect.reset();        
     }
     
     public void setId(int id) {

@@ -11,7 +11,7 @@ import seventh.shared.Event;
  * @author Tony
  *
  */
-public class SurvivorEvent extends Event {
+public class GameEvent extends Event {
 
     public static enum EventType {
         CustomSound,        
@@ -19,6 +19,7 @@ public class SurvivorEvent extends Event {
         CustomTrigger,
         Message,
         LightAdjust,
+        BrokenGlass,
         ;
         
         private static final EventType[] values = values();
@@ -36,6 +37,8 @@ public class SurvivorEvent extends Event {
     }
     
     private Vector2f pos;
+    private Vector2f pos2;
+    private float rotation;
     private String path;
     private int playerId1;
     private int playerId2;
@@ -46,10 +49,20 @@ public class SurvivorEvent extends Event {
     /**
      * @param source
      */
-    public SurvivorEvent(Object source, EventType eventType, Vector2f pos, String path, int playerId1, int playerId2, Vector4f light) {
+    public GameEvent(Object source, 
+                     EventType eventType, 
+                     Vector2f pos,
+                     Vector2f pos2,
+                     float rotation,
+                     String path, 
+                     int playerId1, 
+                     int playerId2, 
+                     Vector4f light) {
         super(source);
         this.eventType = eventType;
         this.pos = pos;
+        this.pos2 = pos2;
+        this.rotation = rotation;
         this.path = path;
         this.playerId1 = playerId1;
         this.playerId2 = playerId2;
@@ -63,6 +76,20 @@ public class SurvivorEvent extends Event {
      */
     public Vector2f getPos() {
         return pos;
+    }
+    
+    /**
+     * @return the pos2
+     */
+    public Vector2f getPos2() {
+        return pos2;
+    }
+    
+    /**
+     * @return the rotation
+     */
+    public float getRotation() {
+        return rotation;
     }
     
     /**

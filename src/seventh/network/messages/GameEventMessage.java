@@ -5,7 +5,7 @@
 package seventh.network.messages;
 
 import harenet.IOBuffer;
-import seventh.game.events.SurvivorEvent.EventType;
+import seventh.game.events.GameEvent.EventType;
 import seventh.math.Vector2f;
 import seventh.math.Vector4f;
 
@@ -13,17 +13,19 @@ import seventh.math.Vector4f;
  * @author Tony
  *
  */
-public class SurvivorEventMessage extends AbstractNetMessage {
+public class GameEventMessage extends AbstractNetMessage {
     public EventType eventType;
     public Vector2f pos;
+    public Vector2f pos2;
+    public float rotation;
     public String path;
     public int playerId1;
     public int playerId2;
     
     public Vector4f light;
     
-    public SurvivorEventMessage() {
-        super(BufferIO.SURVIVOR_EVENT);
+    public GameEventMessage() {
+        super(BufferIO.GAME_EVENT);
     }
     
     @Override
@@ -57,6 +59,13 @@ public class SurvivorEventMessage extends AbstractNetMessage {
                 this.light.z = (float)b / 255f;
                 this.light.w = (float)intensity / 255f;
                 break;
+            case BrokenGlass:
+                this.pos = new Vector2f();
+                this.pos.x = BufferIO.readPos(buffer);
+                this.pos.y = BufferIO.readPos(buffer);
+                
+                this.rotation = BufferIO.readAngle(buffer);
+                break;
             default:
                 break;
         }
@@ -86,6 +95,11 @@ public class SurvivorEventMessage extends AbstractNetMessage {
                 buffer.putUnsignedByte( (int)(255f * this.light.y) );
                 buffer.putUnsignedByte( (int)(255f * this.light.z) );
                 buffer.putUnsignedByte( (int)(255f * this.light.w) );
+                break;
+            case BrokenGlass:
+                BufferIO.writePos(buffer, this.pos.x);
+                BufferIO.writePos(buffer, this.pos.y);
+                BufferIO.writeAngle(buffer, (int)this.rotation);
                 break;
             default:
                 break;

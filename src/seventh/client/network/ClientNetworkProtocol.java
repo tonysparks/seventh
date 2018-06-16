@@ -53,7 +53,7 @@ import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
-import seventh.network.messages.SurvivorEventMessage;
+import seventh.network.messages.GameEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileAddedMessage;
@@ -299,8 +299,8 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         else if(message instanceof PlayerAwardMessage) {
             receivePlayerAwardMessage(conn, (PlayerAwardMessage)message);
         }
-        else if(message instanceof SurvivorEventMessage) {
-            receiveSurvivorEventMessage(conn, (SurvivorEventMessage)message);
+        else if(message instanceof GameEventMessage) {
+            receiveGameEventMessage(conn, (GameEventMessage)message);
         }
         /* None game messages */
         
@@ -682,12 +682,12 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     }
     
     /* (non-Javadoc)
-     * @see seventh.client.network.ClientProtocol#receiveSurvivorEventMessage(harenet.api.Connection, seventh.network.messages.SurvivorEventMessage)
+     * @see seventh.client.network.ClientProtocol#receiveSurvivorEventMessage(harenet.api.Connection, seventh.network.messages.GameEventMessage)
      */
     @Override
-    public void receiveSurvivorEventMessage(Connection conn, SurvivorEventMessage msg) {
+    public void receiveGameEventMessage(Connection conn, GameEventMessage msg) {
         if(game!=null) {
-            game.survivorEventMessage(msg);
+            game.gameEventMessage(msg);
         }        
     }
     

@@ -10,8 +10,8 @@ import seventh.shared.EventMethod;
  * @author Tony
  *
  */
-public interface SurvivorEventListener extends EventListener {
+public interface GameEventListener extends EventListener {
 
     @EventMethod
-    public void onSurvivorEvent(SurvivorEvent event);
+    public void onGameEvent(GameEvent event);
 }

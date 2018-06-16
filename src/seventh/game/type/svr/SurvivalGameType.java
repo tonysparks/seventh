@@ -23,8 +23,8 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
-import seventh.game.events.SurvivorEvent;
-import seventh.game.events.SurvivorEvent.EventType;
+import seventh.game.events.GameEvent;
+import seventh.game.events.GameEvent.EventType;
 import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -108,8 +108,8 @@ public class SurvivalGameType extends AbstractTeamGameType {
     }
     
     public void playSound(String path) {
-        if(game!=null) {
-            game.getDispatcher().queueEvent(new SurvivorEvent(this, EventType.CustomSound, null, path, 0, 0, null));
+        if(game!=null) {            
+            game.getDispatcher().queueEvent(new GameEvent(this, EventType.CustomSound, null, null, 0f, path, 0, 0, null));
         }
     }
     

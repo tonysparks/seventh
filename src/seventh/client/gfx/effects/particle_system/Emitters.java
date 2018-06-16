@@ -45,7 +45,7 @@ public class Emitters {
         int maxParticles = 140;
         int maxSpread = 40;
         
-        Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+        Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                 .setName("FireEmitter")                                
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 5)
@@ -87,7 +87,7 @@ public class Emitters {
 
     
     public static Emitter newBloodEmitter(Vector2f pos, int maxParticles, int emitterTimeToLive, int maxSpread) {        
-        Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+        Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                 .setName("BloodEmitter")
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, maxParticles)
@@ -115,7 +115,7 @@ public class Emitters {
         
         Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
         
-        Emitter emitter = new Emitter(pos, 100, 30)
+        Emitter emitter = new Emitter(pos.createClone(), 100, 30)
                             .setName("BulletImpactFleshEmitter")
                             .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 9);
@@ -153,7 +153,7 @@ public class Emitters {
         int emitterTimeToLive = 10_000;
         int maxSpread = 35;
         
-        Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+        Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                 .setName("GibEmitter")
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, maxParticles)
@@ -180,7 +180,7 @@ public class Emitters {
         int maxParticles = 1000;
         int maxSpread = 15;
         
-        Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+        Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                 .setName("RocketTrailEmitter")
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 7)
@@ -230,7 +230,7 @@ public class Emitters {
     public static Emitter newSmokeEmitter(Vector2f pos, int emitterTimeToLive, int colorStart, int colorEnd, int maxSpread, float minSize, float maxSize, boolean killIfAttachedIsDead) {
         int maxParticles = 1500;
                 
-        Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+        Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                 .setName("SmokeEmitter")
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(100, 4)
@@ -316,7 +316,7 @@ public class Emitters {
     public static Emitter newBulletTracerEmitter(Vector2f pos, int emitterTimeToLive) {
         int maxParticles = 68;
                 
-        final Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+        final Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                     .setName("BulletTracerEmitter")
                                     .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, maxParticles)
@@ -369,7 +369,7 @@ public class Emitters {
         
         Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
         
-        Emitter emitter = new Emitter(pos, 200, 30)
+        Emitter emitter = new Emitter(pos.createClone(), 200, 30)
                             .setName("BulletImpactEmitter")
                             .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
@@ -402,7 +402,7 @@ public class Emitters {
         
         Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
         
-        Emitter emitter = new Emitter(pos, 200, 30)
+        Emitter emitter = new Emitter(pos.createClone(), 200, 30)
                             .setName("TankTrackSplatterEmitter")
                             .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
@@ -430,9 +430,10 @@ public class Emitters {
     }
     
     public static Emitter newGlassBreakEmitter(Vector2f pos, Vector2f targetVel) {        
-        Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
+        Vector2f vel = targetVel.createClone();
         
-        Emitter emitter = new Emitter(pos, 10_000, 30)
+        final int ttl = 15_000;
+        Emitter emitter = new Emitter(pos.createClone(), ttl, 30)
                             .setName("GlassBreakEmitter")
                             .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
@@ -440,13 +441,14 @@ public class Emitters {
             
                 @Override
                 public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
-                    particles.speed[index] = 125f;
+                    particles.speed[index] = 125f;                    
                 }
             })
            .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
-           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xf8f8f83f), new Color(0xbde7f43f)))
+           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xf8f8f83f), new Color(0xbde7f43f),
+                                                                              new Color(0xf6f6f63f), new Color(0xadd7f43f)))
            .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 60))
-           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(10_000, 10_000))
+           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(ttl, ttl))
            .addSingleParticleGenerator(new RandomRotationSingleParticleGenerator())
            .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(8f, 15f))
         ;
@@ -455,9 +457,9 @@ public class Emitters {
         
         emitter.addParticleUpdater(new KillUpdater());
         emitter.addParticleUpdater(new MovementParticleUpdater(0, 12f));
-        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.995718f));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(3_000, 0f, 0.995718f));
         emitter.addParticleRenderer(new TriangleParticleRenderer(4.5f));
-        
+                
         return emitter;
     }
     
@@ -529,7 +531,7 @@ public class Emitters {
         int maxParticles = 40;
         int maxSpread = 45;
         
-        Emitter emitter = new Emitter(pos, emitterTimeToLive, maxParticles)
+        Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                 .setName("SpawnEmitter")
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(100, 2)

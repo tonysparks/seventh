@@ -3,6 +3,7 @@
  */
 package seventh.map;
 
+import leola.vm.types.LeoObject;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
@@ -23,10 +24,20 @@ public class MapObject implements Renderable {
     protected Vector2f pos;
     protected Rectangle bounds;
     
+    private LeoObject scriptObj;
+    
     public MapObject(String type) {
         this.type = type;
         this.pos = new Vector2f();
         this.bounds = new Rectangle();
+        this.scriptObj = LeoObject.valueOf(this);
+    }
+    
+    /**
+     * @return this script object
+     */
+    public LeoObject asScriptObject() {
+        return this.scriptObj;
     }
     
     /**
@@ -74,8 +85,10 @@ public class MapObject implements Renderable {
      * 
      * @param game
      * @param ent
+     * @return true if this should block the entity
      */
-    public void onTouch(Game game, Entity ent) {       
+    public boolean onTouch(Game game, Entity ent) {
+        return true;
     }
     
     public void destroy() {        

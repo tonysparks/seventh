@@ -85,7 +85,7 @@ public class BufferIO {
     public static final byte FLAG_RETURNED = 38;
     public static final byte FLAG_STOLEN = 39;
     
-    public static final byte SURVIVOR_EVENT  = 40;
+    public static final byte GAME_EVENT  = 40;
     
     /**
      * The Seventh {@link NetMessageFactory} implementation
@@ -182,7 +182,7 @@ public class BufferIO {
                     break;
                 case FLAG_STOLEN: message = new FlagStolenMessage();
                     break;
-                case SURVIVOR_EVENT: message = new SurvivorEventMessage();
+                case GAME_EVENT: message = new GameEventMessage();
                     break;
                 default: throw new IllegalArgumentException("Unknown type: " + type);
             }
