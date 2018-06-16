@@ -316,6 +316,7 @@ public abstract class Entity implements Debugable {
     public int deadFrame;
     
     private Vector2f xCollisionTilePos, yCollisionTilePos;
+    private Rectangle collisionRect;
     
     /**
      * @param position
@@ -361,6 +362,7 @@ public abstract class Entity implements Debugable {
         
         this.xCollisionTilePos = new Vector2f();
         this.yCollisionTilePos = new Vector2f();
+        this.collisionRect = new Rectangle();
     }
     
     /**
@@ -624,7 +626,21 @@ public abstract class Entity implements Debugable {
                 }
             }            
         }
-        
+        else {
+            // we're colliding with a map object            
+            collisionRect.set(bounds);
+            collisionRect.x = currentX;
+            collisionRect.y = currentY - 10;
+            
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentY - 1;
+            }
+            
+            collisionRect.y = currentY + 10;
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentY + 1;
+            }
+        }
         return currentY;
     }
     
@@ -663,6 +679,21 @@ public abstract class Entity implements Debugable {
                     return currentX + 1;
                 }
             }            
+        }
+        else {
+            // we're colliding with a map object
+            collisionRect.set(bounds);
+            collisionRect.x = currentX - 10;
+            collisionRect.y = currentY;
+            
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentX - 1;
+            }
+            
+            collisionRect.x = currentX + 10;
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentX + 1;
+            }
         }
         
         return currentX;
@@ -724,20 +755,18 @@ public abstract class Entity implements Debugable {
             float newX = pos.x + deltaX;
             float newY = pos.y + deltaY;
                         
-            if( Math.abs(pos.x - newX) > 2.5) {
+            if(Math.abs(pos.x - newX) > 2.5) {
                 this.movementDir.x = vel.x;
             }
             
-            if( Math.abs(pos.y - newY) > 2.5) {
+            if(Math.abs(pos.y - newY) > 2.5) {
                 this.movementDir.y = vel.y;
             }
             
             Map map = game.getMap();
             
-            boolean isBlockedByEntity = false;
-            
             bounds.x = (int)newX;
-            if( map.rectCollides(bounds, collisionHeightMask, xCollisionTilePos) ) {
+            if(map.rectCollides(bounds, collisionHeightMask, xCollisionTilePos)) {
                 isBlocked = collideX((int)newX, bounds.x);
                 if(isBlocked) { 
                     bounds.x = (int)pos.x;
@@ -749,12 +778,11 @@ public abstract class Entity implements Debugable {
                 bounds.x = (int)pos.x;
                 newX = pos.x;
                 isBlocked = true;
-                isBlockedByEntity = true;
             }
             
             
             bounds.y = (int)newY;
-            if( map.rectCollides(bounds, collisionHeightMask, yCollisionTilePos)) {
+            if(map.rectCollides(bounds, collisionHeightMask, yCollisionTilePos)) {
                 isBlocked = collideY((int)newY, bounds.y);
                 if(isBlocked) {
                     bounds.y = (int)pos.y;
@@ -765,7 +793,6 @@ public abstract class Entity implements Debugable {
                 bounds.y = (int)pos.y;
                 newY = pos.y;
                 isBlocked = true;
-                isBlockedByEntity = true;
             }
             
             if(isBlocked) {
@@ -784,16 +811,16 @@ public abstract class Entity implements Debugable {
                  * is a couple pixels off and is snagged on
                  * a corner, if so auto adjust them
                  */
-                else if (!isBlockedByEntity) {
+                else {
                     if(deltaX!=0 && deltaY==0) {                
                         newY = adjustY(xCollisionTilePos, deltaX, (int)(pos.x + deltaX), bounds.y);
-                        if(checkCollision( (int)newX, (int)newY)) {
+                        if(checkCollision((int)newX, (int)newY)) {
                             newY = pos.y;
                         }
                     }
                     else if(deltaX==0 && deltaY!=0) {
                         newX = adjustX(yCollisionTilePos, deltaY, bounds.x, (int)(pos.y + deltaY));
-                        if(checkCollision( (int)newX, (int)newY)) {
+                        if(checkCollision((int)newX, (int)newY)) {
                             newX = pos.x;
                         }
                     }
@@ -812,10 +839,7 @@ public abstract class Entity implements Debugable {
             }
             
             this.walkingTime -= timeStep.getDeltaTime();
-        
         }
-        
-        
         
         return isBlocked;
     }
