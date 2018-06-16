@@ -112,6 +112,7 @@ public class Sounds {
     public static final int[] impactMetal = {index++,index++,index++,index++,index++};
     public static final int[] impactWood = {index++,index++,index++,index++,index++};
     public static final int[] impactFoliage = {index++,index++,index++,index++,index++};
+    public static final int[] impactGlass = {index++,index++,index++,index++,index++};
     public static final int[] impactDefault = {index++,index++,index++,index++,index++};
     
     public static final int[] riskerFire = {index++};
@@ -353,6 +354,12 @@ public class Sounds {
             loadSound("./assets/sfx/impact/impact_foliage03.wav") ,   // 95
             loadSound("./assets/sfx/impact/impact_foliage04.wav") ,   // 96
             loadSound("./assets/sfx/impact/impact_foliage05.wav") ,   // 97
+            
+            loadSound("./assets/sfx/impact/impact_glass01.wav") ,   // 
+            loadSound("./assets/sfx/impact/impact_glass02.wav") ,   // 
+            loadSound("./assets/sfx/impact/impact_glass03.wav") ,   // 
+            loadSound("./assets/sfx/impact/impact_glass04.wav") ,   // 
+            loadSound("./assets/sfx/impact/impact_glass05.wav") ,   // 
             
             loadSound("./assets/sfx/impact/impact_default01.wav") ,   // 98
             loadSound("./assets/sfx/impact/impact_default02.wav") ,   // 99
@@ -999,6 +1006,9 @@ public class Sounds {
             break;        
         case IMPACT_WOOD:
             sound = impactWood;
+            break;
+        case IMPACT_GLASS:
+            sound = impactGlass;
             break;
         case IMPACT_FLESH:
             sound = hit;
