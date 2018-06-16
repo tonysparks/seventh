@@ -86,6 +86,9 @@ public class SurfaceTypeToSoundType {
             case WOOD:
                 result = SoundType.IMPACT_WOOD;
                 break;
+            case GLASS:
+                result = SoundType.IMPACT_GLASS;
+                break;
             default:
                 break;
             

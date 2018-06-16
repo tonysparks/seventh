@@ -49,7 +49,8 @@ public class Tile implements Renderable {
         GRASS,
         DIRT,
         SAND,
-        WATER,        
+        WATER, 
+        GLASS,
         ;
         
         private static SurfaceType[] values = values();
@@ -1297,7 +1298,9 @@ public class Tile implements Renderable {
     /**
      * Flip masks
      */
-    private static final int isFlippedHorizontal=(1 << 0), isFlippedVert=(1 << 1), isFlippedDiagnally=(1 << 2);
+    private static final int isFlippedHorizontal = (1 << 0), 
+                             isFlippedVert       = (1 << 1), 
+                             isFlippedDiagnally  = (1 << 2);
     
     private int x,y;
     private int width, height;    

@@ -41,7 +41,6 @@ public class Layer {
      * Light layer
      */
     private boolean isLightLayer;
-    
     private boolean isVisible;
     
     /**
@@ -73,7 +72,7 @@ public class Layer {
                  boolean collidable, 
                  boolean isForeground, 
                  boolean isDestructable, 
-                 boolean isLightLayer, 
+                 boolean isLightLayer,
                  boolean isVisible,
                  int index, 
                  int heightMask,
@@ -85,8 +84,10 @@ public class Layer {
         this.isForeground = isForeground;
         this.isDestructable = isDestructable;
         this.isLightLayer = isLightLayer;
-        this.isPropertyLayer = isLightLayer || collidable;
         this.isVisible = isVisible;
+        
+        this.isPropertyLayer = isLightLayer || collidable;
+        
         this.index = index;
         this.heightMask = heightMask;
     }
@@ -150,12 +151,14 @@ public class Layer {
         return isDestructable;
     }
     
+    
     /**
      * @return the isLightLayer
      */
     public boolean isLightLayer() {
         return isLightLayer;
     }
+
     
     /**
      * @return the isPropertyLayer

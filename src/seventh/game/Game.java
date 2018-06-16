@@ -80,8 +80,6 @@ import seventh.game.weapons.Thompson;
 import seventh.game.weapons.Weapon;
 import seventh.graph.GraphNode;
 import seventh.map.GraphNodeFactory;
-import seventh.map.Layer;
-import seventh.map.Layer.LayerTileIterator;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.map.MapObject;
@@ -948,28 +946,7 @@ public class Game implements GameInfo, Debugable, Updatable {
                 runtime.put("game", this);
                 runtime.eval(propertiesFile);
                 
-                final Map map = getMap();
-                
-                /* Load any layers that have predefined entities
-                 * on them, as or right now this only includes
-                 * lights
-                 */
-                Layer[] layers = map.getBackgroundLayers();
-                for(int i = 0; i < layers.length; i++) {
-                    Layer layer = layers[i];
-                    if(layer != null && layer.isLightLayer()) {                        
-                        layer.foreach(new LayerTileIterator() {                               
-                            @Override
-                            public void onTile(Tile tile, int x, int y) {
-                                if(tile != null) {
-                                    LightBulb light = newLight(map.tileToWorld(x, y));
-                                    light.setColor(0.9f, 0.85f, 0.85f);
-                                    light.setLuminacity(0.95f);
-                                }
-                            }
-                        });                                                    
-                    }
-                }
+                MapInteraction.create(this);
             }
             catch(Exception e) {
                 Cons.println("*** ERROR -> Loading map properties file: " + propertiesFile.getName() + " -> ");
@@ -977,7 +954,7 @@ public class Game implements GameInfo, Debugable, Updatable {
             }
         }
     }
-    
+        
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getMap()
      */
@@ -2157,6 +2134,8 @@ public class Game implements GameInfo, Debugable, Updatable {
                         return true;
                     }
                     
+                    object.onTouch(this, ent);
+                    
                     if(ent.onMapObjectTouch != null) {                
                         ent.onMapObjectTouch.onTouch(ent, object);
                         return true;
@@ -2510,3 +2489,4 @@ public class Game implements GameInfo, Debugable, Updatable {
         return me;
     }
 }
+

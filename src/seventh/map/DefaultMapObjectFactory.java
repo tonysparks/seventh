@@ -18,6 +18,7 @@ import leola.vm.types.LeoObject;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.TextureUtil;
+import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.weapons.Bullet;
@@ -25,6 +26,7 @@ import seventh.map.Tile.SurfaceType;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
+import seventh.shared.Cons;
 import seventh.shared.JSON;
 
 /**
@@ -45,7 +47,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         public int heightMask;
         public String surfaceType;
         public ImageData image;
-        
+        public LeoObject onTouched;
     }
     
     public static class TileDefinition {
@@ -69,6 +71,8 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         private Sprite sprite;
         private SurfaceType surfaceType;
         
+        private LeoObject onTouched;
+        
         /**
          * 
          */
@@ -86,6 +90,8 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             if(definition.width != 0 && definition.height != 0) {
                 rect.setSize((int)definition.width, (int)definition.height);
             }
+            
+            this.onTouched = definition.onTouched;
             
             this.obb = new OBB(rect);
             this.obb.rotateAround(pos, (float) Math.toRadians(data.rotation));
@@ -179,8 +185,28 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         }
         
         @Override
+        public void onTouch(Game game, Entity ent) {
+            if(this.onTouched != null) {         
+                LeoObject func = null;
+                if(this.onTouched.isFunction()) {
+                    func = this.onTouched;
+                }
+                else {
+                    func = game.getGameType().getRuntime().get(this.onTouched.toString());
+                }
+                
+                if(func!=null) {
+                    LeoObject result = func.call(LeoObject.valueOf(game), ent.asScriptObject());
+                    if(result.isError()) {
+                        Cons.println("*** ERROR: Error touching MapObject: " + result);
+                    }
+                }
+            }
+        }
+        
+        @Override
         public void render(Canvas canvas, Camera camera, float alpha) {
-            if(this.loadAssets) {
+            if(this.loadAssets && this.sprite != null) {
                 Vector2f cameraPos = camera.getRenderPosition(alpha);
                 float x = this.pos.x - cameraPos.x;
                 float y = this.pos.y - cameraPos.y;

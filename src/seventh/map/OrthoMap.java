@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.effects.ShadeTiles;
 import seventh.graph.Edge;
-import seventh.graph.GraphNode;
 import seventh.graph.Edges.Directions;
+import seventh.graph.GraphNode;
 import seventh.map.Tile.CollisionMask;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * The {@link OrthoMap} can be used for Top-down or Side-scrollers
@@ -64,7 +64,10 @@ public class OrthoMap implements Map {
     /**
      * Layers
      */
-    private Layer[] backgroundLayers, foregroundLayers, collidableLayers, destructableLayer;
+    private Layer[] backgroundLayers, 
+                    foregroundLayers, 
+                    collidableLayers,
+                    destructableLayer;
     
     /**
      * original destructable layer; used for comparison to get delta
@@ -339,7 +342,7 @@ public class OrthoMap implements Map {
 //               lineCollides(oob.center, oob.bottomRight) ||
 //               lineCollides(oob.center, oob.bottomLeft);
     }
-    
+        
     /* (non-Javadoc)
      * @see leola.live.game.Map#rectCollides(leola.live.math.Rectangle)
      */
@@ -744,6 +747,7 @@ public class OrthoMap implements Map {
             if(this.backgroundLayers[i].isDestructable()) {
                 destructableLayers.add(this.backgroundLayers[i]);
             }
+
         }
         
         int fgSize = info.getForegroundLayers().length;
@@ -764,7 +768,7 @@ public class OrthoMap implements Map {
 
         this.destructableLayer = new Layer[destructableLayers.size()];
         this.destructableLayer = destructableLayers.toArray(this.destructableLayer);
-        
+                
         this.backgroundImage = info.getBackgroundImage();
         
         this.maxX = info.getDimensionX();

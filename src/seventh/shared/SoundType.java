@@ -95,6 +95,7 @@ public enum SoundType {
     IMPACT_METAL(SoundSourceType.POSITIONAL),
     IMPACT_WOOD(SoundSourceType.POSITIONAL),
     IMPACT_FOLIAGE(SoundSourceType.POSITIONAL),
+    IMPACT_GLASS(SoundSourceType.POSITIONAL),
     IMPACT_DEFAULT(SoundSourceType.POSITIONAL),
     IMPACT_FLESH(SoundSourceType.POSITIONAL),
     

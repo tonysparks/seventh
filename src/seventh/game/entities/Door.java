@@ -390,11 +390,15 @@ public class Door extends Entity {
     }
     
     public void open(Entity ent) {
+        open(ent, false);
+    }
+    
+    public void open(Entity ent, boolean force) {
         if(this.doorState != DoorState.OPENED  ||
            this.doorState != DoorState.OPENING ||
            this.doorState != DoorState.CLOSING) {
             
-            if(!canBeHandledBy(ent)) {
+            if(!canBeHandledBy(ent) && !force) {
                 return;
             }
             
@@ -435,11 +439,15 @@ public class Door extends Entity {
     }
     
     public void close(Entity ent) {
+        close(ent, false);
+    }
+    
+    public void close(Entity ent, boolean force) {
         if(this.doorState != DoorState.CLOSED  ||
            this.doorState != DoorState.OPENING ||
            this.doorState != DoorState.CLOSING) {
             
-            if(!canBeHandledBy(ent)) {
+            if(!canBeHandledBy(ent) && !force) {
                 return;
             }
             

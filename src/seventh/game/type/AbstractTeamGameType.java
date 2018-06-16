@@ -250,6 +250,11 @@ public abstract class AbstractTeamGameType implements GameType {
         return type;
     }
     
+    @Override
+    public Leola getRuntime() {     
+        return this.runtime;
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.type.GameType#isInProgress()
      */

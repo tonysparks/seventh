@@ -5,6 +5,7 @@ package seventh.game.type;
 
 import java.util.List;
 
+import leola.vm.Leola;
 import seventh.game.Game;
 import seventh.game.Player;
 import seventh.game.PlayerClass;
@@ -114,6 +115,8 @@ public interface GameType extends Debugable {
     public void playerLeft(Player player);
     
     public boolean switchPlayerClass(Player player, PlayerClass playerClass);
+    
+    public Leola getRuntime();
     
     public Team getAttacker();
     public Team getDefender();

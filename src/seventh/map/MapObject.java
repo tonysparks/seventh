@@ -6,6 +6,7 @@ package seventh.map;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
+import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.Rectangle;
@@ -66,6 +67,15 @@ public class MapObject implements Renderable {
      */
     public boolean isTouching(Entity ent) {
         return false;
+    }
+    
+    /**
+     * This {@link MapObject} is touched by an {@link Entity}
+     * 
+     * @param game
+     * @param ent
+     */
+    public void onTouch(Game game, Entity ent) {       
     }
     
     public void destroy() {        
