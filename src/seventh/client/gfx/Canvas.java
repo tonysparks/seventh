@@ -107,9 +107,16 @@ public interface Canvas {
     
     public void drawLine(int x1, int y1, int x2, int y2, Integer startColor, Integer endColor, float thickness);
 
+    public void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Integer color);
+    public void drawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Integer color);
+    
     public void drawRect(int x, int y, int width, int height, Integer color);
     public void drawRect(float x, float y, float width, float height, Integer color);
 
+    
+    public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Integer color);
+    public void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Integer color);
+    
     public void fillRect(int x, int y, int width, int height, Integer color);
     public void fillRect(float x, float y, float width, float height, Integer color);
 

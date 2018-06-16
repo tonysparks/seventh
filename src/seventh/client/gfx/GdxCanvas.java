@@ -605,6 +605,25 @@ public class GdxCanvas implements Canvas {
         
     }
 
+
+    @Override
+    public void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Integer color) {
+        drawTriangle((float)x1, (float)y1, (float)x2, (float)y2, (float)x3, (float)y3, color);
+    }
+    
+    @Override
+    public void drawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Integer color) {
+        Color c=setTempColor(color);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        this.shapes.setColor(c);
+        
+        this.shapes.begin(ShapeType.Line);
+        this.shapes.triangle(x1, y1, x2, y2, x3, y3, c, c, c);
+        this.shapes.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+    
     /* (non-Javadoc)
      * @see seventh.client.gfx.Canvas#drawRect(int, int, int, int, java.lang.Integer)
      */
@@ -633,6 +652,24 @@ public class GdxCanvas implements Canvas {
         
         this.shapes.begin(ShapeType.Line);
         this.shapes.rect(x, y, width, height);
+        this.shapes.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+    
+    @Override
+    public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Integer color) {
+        fillTriangle((float)x1, (float)y1, (float)x2, (float)y2, (float)x3, (float)y3, color);
+    }
+    
+    @Override
+    public void fillTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Integer color) {
+        Color c=setTempColor(color);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        this.shapes.setColor(c);
+        
+        this.shapes.begin(ShapeType.Filled);
+        this.shapes.triangle(x1, y1, x2, y2, x3, y3, c, c, c);
         this.shapes.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
