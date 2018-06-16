@@ -403,7 +403,7 @@ public class Emitters {
         Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
         
         Emitter emitter = new Emitter(pos, 200, 30)
-                            .setName("BulletImpactEmitter")
+                            .setName("TankTrackSplatterEmitter")
                             .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
         gen.addSingleParticleGenerator(new SingleParticleGenerator() {
@@ -425,6 +425,38 @@ public class Emitters {
         emitter.addParticleUpdater(new RandomMovementParticleUpdater(85));
         emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.72718f));
         emitter.addParticleRenderer(new CircleParticleRenderer());
+        
+        return emitter;
+    }
+    
+    public static Emitter newGlassBreakEmitter(Vector2f pos, Vector2f targetVel) {        
+        Vector2f vel = targetVel.isZero() ? new Vector2f(-1.0f, -1.0f) : new Vector2f(-targetVel.x*1.0f, -targetVel.y*1.0f);
+        
+        Emitter emitter = new Emitter(pos, 10_000, 30)
+                            .setName("GlassBreakEmitter")
+                            .setDieInstantly(false);
+        BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 30);
+        gen.addSingleParticleGenerator(new SingleParticleGenerator() {
+            
+                @Override
+                public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+                    particles.speed[index] = 125f;
+                }
+            })
+           .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
+           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xf8f8f83f), new Color(0xbde7f43f)))
+           .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 60))
+           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(10_000, 10_000))
+           .addSingleParticleGenerator(new RandomRotationSingleParticleGenerator())
+           .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(8f, 15f))
+        ;
+        
+        emitter.addParticleGenerator(gen);
+        
+        emitter.addParticleUpdater(new KillUpdater());
+        emitter.addParticleUpdater(new MovementParticleUpdater(0, 12f));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.995718f));
+        emitter.addParticleRenderer(new TriangleParticleRenderer(4.5f));
         
         return emitter;
     }
