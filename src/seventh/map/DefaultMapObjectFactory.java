@@ -143,6 +143,12 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         }
         
         @Override
+        public Vector2f getCenterPos() {
+            this.centerPos.set(this.obb.getCenter());
+            return this.centerPos;
+        }
+        
+        @Override
         public boolean isCollidable() {         
             return this.isCollidable;
         }

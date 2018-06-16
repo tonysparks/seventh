@@ -22,6 +22,7 @@ public class MapObject implements Renderable {
 
     private String type;
     protected Vector2f pos;
+    protected Vector2f centerPos;
     protected Rectangle bounds;
     
     private LeoObject scriptObj;
@@ -29,6 +30,7 @@ public class MapObject implements Renderable {
     public MapObject(String type) {
         this.type = type;
         this.pos = new Vector2f();
+        this.centerPos = new Vector2f();
         this.bounds = new Rectangle();
         this.scriptObj = LeoObject.valueOf(this);
     }
@@ -52,6 +54,16 @@ public class MapObject implements Renderable {
      */
     public Vector2f getPos() {
         return pos;
+    }
+    
+    /**
+     * @return the centerPos
+     */
+    public Vector2f getCenterPos() {
+        this.centerPos.set(pos);
+        this.centerPos.x += bounds.width / 2;
+        this.centerPos.y += bounds.height / 2;
+        return centerPos;
     }
     
     public Rectangle getBounds() {

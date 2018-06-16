@@ -169,6 +169,8 @@ public abstract class AbstractTeamGameType implements GameType {
             @Override
             public void onRoundEnded(RoundEndedEvent event) {
                 executeCallbackScript("onRoundEnded", game);
+                
+                executeCallbackScript("coreDestroy", game);
             }
         });
         
@@ -176,6 +178,8 @@ public abstract class AbstractTeamGameType implements GameType {
             @Override
             public void onRoundStarted(RoundStartedEvent event) {
                 executeCallbackScript("onRoundStarted", game);
+
+                executeCallbackScript("coreInit", game);
             }
         });
         
@@ -188,6 +192,7 @@ public abstract class AbstractTeamGameType implements GameType {
         });
         
         doRegisterListeners(game, dispatcher);
+        
     }
 
     /**
@@ -235,7 +240,7 @@ public abstract class AbstractTeamGameType implements GameType {
     private void executeCallbackScript(String functionName, Game game) {
         LeoObject function = runtime.get(functionName);
         if(LeoObject.isTrue(function)) {
-            LeoObject result = function.call(LeoObject.valueOf(game));
+            LeoObject result = function.call(game.asScriptObject());
             if(result.isError()) {
                 Cons.println("*** ERROR: Calling '" + functionName + "' - " + result.toString());
             }
