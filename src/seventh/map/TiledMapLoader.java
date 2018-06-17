@@ -165,7 +165,6 @@ public class TiledMapLoader implements MapLoader {
         
         boolean isCollidable = false;
         boolean isForeground = false;
-        boolean isLightLayer = false;
         boolean isSurfaceTypes = false;
         boolean isDestructable = false;
         boolean isVisible = layer.getBoolean("visible");
@@ -180,10 +179,6 @@ public class TiledMapLoader implements MapLoader {
             if(properties.containsKeyByString("heightMask")) {
                 String strMask = properties.getString("heightMask");
                 heightMask = Integer.parseInt(strMask);
-            }
-            
-            if(properties.containsKeyByString("lights")) {
-                isLightLayer = true;
             }
             
             if(properties.containsKeyByString("surfaces")) {
@@ -204,7 +199,6 @@ public class TiledMapLoader implements MapLoader {
                                    isCollidable, 
                                    isForeground, 
                                    isDestructable, 
-                                   isLightLayer, 
                                    isVisible,
                                    index, 
                                    heightMask,

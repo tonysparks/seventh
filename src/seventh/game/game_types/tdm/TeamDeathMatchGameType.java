@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type.tdm;
+package seventh.game.game_types.tdm;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
-import seventh.game.type.AbstractTeamGameType;
+import seventh.game.game_types.AbstractTeamGameType;
 import seventh.math.Vector2f;
 import seventh.shared.EventDispatcher;
 import seventh.shared.EventMethod;
@@ -66,7 +66,7 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
     }
         
     /* (non-Javadoc)
-     * @see seventh.game.type.GameType#start(seventh.game.Game)
+     * @see seventh.game.game_types.GameType#start(seventh.game.Game)
      */
     @Override
     public void start(Game game) {

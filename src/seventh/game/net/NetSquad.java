@@ -6,8 +6,8 @@ package seventh.game.net;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.game.PlayerClass;
-import seventh.game.type.cmd.CommanderGameType;
-import seventh.game.type.cmd.Squad;
+import seventh.game.game_types.cmd.CommanderGameType;
+import seventh.game.game_types.cmd.Squad;
 import seventh.network.messages.BufferIO;
 import seventh.shared.SeventhConstants;
 

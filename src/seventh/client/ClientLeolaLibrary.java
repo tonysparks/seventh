@@ -15,7 +15,7 @@ import leola.vm.types.LeoObject;
 import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.LightSystem;
 import seventh.client.sfx.Sound;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.math.Rectangle;
 import seventh.shared.Cons;
 import seventh.shared.SoundType;

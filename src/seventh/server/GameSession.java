@@ -6,7 +6,7 @@ package seventh.server;
 import seventh.game.Game;
 import seventh.game.GameMap;
 import seventh.game.Players;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.shared.EventDispatcher;
 import seventh.shared.SeventhConfig;
 

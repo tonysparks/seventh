@@ -23,7 +23,7 @@ import seventh.game.PlayerInfo;
 import seventh.game.Team;
 import seventh.game.entities.Flag;
 import seventh.game.entities.PlayerEntity;
-import seventh.game.type.ctf.CaptureTheFlagGameType;
+import seventh.game.game_types.ctf.CaptureTheFlagGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.SeventhConstants;

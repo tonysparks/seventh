@@ -9,7 +9,7 @@ import seventh.game.Game;
 import seventh.game.Trigger;
 import seventh.game.entities.Door;
 import seventh.game.entities.Entity;
-import seventh.game.type.obj.BombTargetObjective;
+import seventh.game.game_types.obj.BombTargetObjective;
 import seventh.game.weapons.Bullet;
 import seventh.game.weapons.Explosion;
 import seventh.map.Tile;

@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type.cmd;
+package seventh.game.game_types.cmd;
 
 import seventh.game.Player;
 import seventh.game.PlayerClass;

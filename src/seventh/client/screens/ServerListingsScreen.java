@@ -19,7 +19,7 @@ import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Theme;
 import seventh.client.inputs.Inputs;
 import seventh.client.sfx.Sounds;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.BroadcastListener;

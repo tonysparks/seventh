@@ -13,7 +13,7 @@ import seventh.game.entities.Entity;
 import seventh.game.entities.Flag;
 import seventh.game.entities.PlayerEntity;
 import seventh.game.entities.vehicles.Vehicle;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.map.Map;
 import seventh.map.MapGraph;
 import seventh.math.Rectangle;

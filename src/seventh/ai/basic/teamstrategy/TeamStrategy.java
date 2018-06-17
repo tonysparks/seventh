@@ -8,7 +8,7 @@ import seventh.ai.basic.actions.Action;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.shared.Debugable;
 import seventh.shared.TimeStep;
 

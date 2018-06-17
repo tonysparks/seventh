@@ -11,7 +11,7 @@ import java.util.List;
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoObject;
 import leola.vm.types.LeoString;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.shared.Config;
 import seventh.shared.Cons;
 import seventh.shared.MapList;

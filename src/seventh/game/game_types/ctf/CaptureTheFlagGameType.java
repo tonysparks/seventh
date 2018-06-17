@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type.ctf;
+package seventh.game.game_types.ctf;
 
 import java.util.List;
 
@@ -22,9 +22,9 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
+import seventh.game.game_types.AbstractTeamGameType;
 import seventh.game.net.NetCtfGameTypeInfo;
 import seventh.game.net.NetGameTypeInfo;
-import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.EventDispatcher;
@@ -203,7 +203,7 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
     }
     
     /* (non-Javadoc)
-     * @see seventh.game.type.GameType#start(seventh.game.Game)
+     * @see seventh.game.game_types.GameType#start(seventh.game.Game)
      */
     @Override
     public void start(Game game) {
@@ -212,7 +212,7 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
     }
 
     /* (non-Javadoc)
-     * @see seventh.game.type.GameType#update(leola.live.TimeStep)
+     * @see seventh.game.game_types.GameType#update(leola.live.TimeStep)
      */
     @Override
     protected GameState doUpdate(Game game, TimeStep timeStep) {

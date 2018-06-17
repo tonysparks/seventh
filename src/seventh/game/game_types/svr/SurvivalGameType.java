@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type.svr;
+package seventh.game.game_types.svr;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.GameEvent;
 import seventh.game.events.GameEvent.EventType;
-import seventh.game.type.AbstractTeamGameType;
+import seventh.game.game_types.AbstractTeamGameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.EventDispatcher;

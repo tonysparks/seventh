@@ -393,7 +393,7 @@ public class Hud implements Renderable {
         
         drawSpectating(canvas);
         
-        if(game.getGameType()==seventh.game.type.GameType.Type.OBJ && isPlayerAlive) {
+        if(game.getGameType()==seventh.game.game_types.GameType.Type.OBJ && isPlayerAlive) {
             ClientPlayerEntity ent = localPlayer.getEntity();
             if(!ent.isOperatingVehicle()) {
                 ClientTeam attackingTeam = game.getAttackingTeam();
@@ -485,8 +485,8 @@ public class Hud implements Renderable {
     }
     
     private void drawPlayersRemaining(Canvas canvas) {
-        seventh.game.type.GameType.Type type = game.getGameType();
-        if(type!=null && type.equals(seventh.game.type.GameType.Type.OBJ)) {
+        seventh.game.game_types.GameType.Type type = game.getGameType();
+        if(type!=null && type.equals(seventh.game.game_types.GameType.Type.OBJ)) {
             int numberOfAxisAlive = 0;
             int numberOfAlliedAlive = 0;
             

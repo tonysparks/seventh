@@ -8,8 +8,8 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.game.type.GameType;
-import seventh.game.type.GameType.Type;
+import seventh.game.game_types.GameType;
+import seventh.game.game_types.GameType.Type;
 
 /**
  * Utility class for finding all maps in the maps directory

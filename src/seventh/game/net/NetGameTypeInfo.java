@@ -5,7 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
-import seventh.game.type.GameType.Type;
+import seventh.game.game_types.GameType.Type;
 
 /**
  * @author Tony

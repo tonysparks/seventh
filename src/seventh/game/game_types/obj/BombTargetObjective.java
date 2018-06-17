@@ -2,7 +2,7 @@
  * The Seventh
  * see license.txt 
  */
-package seventh.game.type.obj;
+package seventh.game.game_types.obj;
 
 import seventh.game.Game;
 import seventh.game.GameInfo;
@@ -39,7 +39,7 @@ public class BombTargetObjective implements Objective {
     }
 
     /* (non-Javadoc)
-     * @see seventh.game.type.Objective#reset(seventh.game.Game)
+     * @see seventh.game.game_types.Objective#reset(seventh.game.Game)
      */
     @Override
     public void reset(Game game) {
@@ -64,7 +64,7 @@ public class BombTargetObjective implements Objective {
     }
 
     /* (non-Javadoc)
-     * @see seventh.game.type.Objective#init(seventh.game.Game)
+     * @see seventh.game.game_types.Objective#init(seventh.game.Game)
      */
     @Override
     public void init(Game game) {
@@ -75,7 +75,7 @@ public class BombTargetObjective implements Objective {
     }
 
     /* (non-Javadoc)
-     * @see seventh.game.type.Objective#isCompleted(seventh.game.Game)
+     * @see seventh.game.game_types.Objective#isCompleted(seventh.game.Game)
      */
     @Override
     public boolean isCompleted(GameInfo game) {
@@ -83,7 +83,7 @@ public class BombTargetObjective implements Objective {
     }
     
     /* (non-Javadoc)
-     * @see seventh.game.type.Objective#isInProgress(seventh.game.GameInfo)
+     * @see seventh.game.game_types.Objective#isInProgress(seventh.game.GameInfo)
      */
     @Override
     public boolean isInProgress(GameInfo game) {
@@ -91,7 +91,7 @@ public class BombTargetObjective implements Objective {
     }
 
     /* (non-Javadoc)
-     * @see seventh.game.type.Objective#getName()
+     * @see seventh.game.game_types.Objective#getName()
      */
     @Override
     public String getName() {    

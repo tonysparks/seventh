@@ -6,7 +6,7 @@ package seventh.game.net;
 import harenet.BitArray;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
-import seventh.game.type.GameType.Type;
+import seventh.game.game_types.GameType.Type;
 import seventh.network.messages.BufferIO;
 import seventh.shared.SeventhConstants;
 

@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type.cmd;
+package seventh.game.game_types.cmd;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ import seventh.game.PlayerClass;
 import seventh.game.Team;
 import seventh.game.entities.Base;
 import seventh.game.events.RoundStartedEvent;
+import seventh.game.game_types.AbstractTeamGameType;
 import seventh.game.net.NetCommanderGameTypeInfo;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetSquad;
-import seventh.game.type.AbstractTeamGameType;
 import seventh.math.Vector2f;
 import seventh.shared.EventDispatcher;
 import seventh.shared.TimeStep;
@@ -130,7 +130,7 @@ public class CommanderGameType extends AbstractTeamGameType {
     }
     
     /* (non-Javadoc)
-     * @see seventh.game.type.AbstractTeamGameType#getNetGameTypeInfo()
+     * @see seventh.game.game_types.AbstractTeamGameType#getNetGameTypeInfo()
      */
     @Override
     public NetGameTypeInfo getNetGameTypeInfo() {        

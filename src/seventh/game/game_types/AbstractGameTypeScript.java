@@ -1,7 +1,7 @@
 /*
  * see license.txt 
  */
-package seventh.game.type;
+package seventh.game.game_types;
 
 import java.util.ArrayList;
 import java.util.List;

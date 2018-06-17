@@ -13,7 +13,7 @@ import leola.vm.types.LeoObject;
 import leola.vm.types.LeoUserFunction;
 import seventh.game.Player;
 import seventh.game.Team;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.server.GameSession;
 import seventh.server.ServerContext;
 import seventh.server.ServerSeventhConfig;

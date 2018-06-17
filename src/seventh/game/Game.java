@@ -37,6 +37,9 @@ import seventh.game.entities.vehicles.ShermanTank;
 import seventh.game.entities.vehicles.Tank;
 import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.events.EventRegistration;
+import seventh.game.events.GameEvent;
+import seventh.game.events.GameEvent.EventType;
+import seventh.game.game_types.GameType;
 import seventh.game.events.PlayerJoinedEvent;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
@@ -49,8 +52,6 @@ import seventh.game.events.RoundStartedEvent;
 import seventh.game.events.RoundStartedListener;
 import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
-import seventh.game.events.GameEvent;
-import seventh.game.events.GameEvent.EventType;
 import seventh.game.events.TileAddedEvent;
 import seventh.game.events.TileRemovedEvent;
 import seventh.game.net.NetEntity;
@@ -63,7 +64,6 @@ import seventh.game.net.NetMapAdditions;
 import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetSound;
 import seventh.game.net.NetSoundByEntity;
-import seventh.game.type.GameType;
 import seventh.game.weapons.Explosion;
 import seventh.game.weapons.Fire;
 import seventh.game.weapons.FlameThrower;
@@ -968,7 +968,11 @@ public class Game implements GameInfo, Debugable, Updatable {
                 runtime.put("game", this);
                 runtime.eval(propertiesFile);
                 
-                MapInteraction.create(this);
+                // Load the map objects
+                List<MapObject> objects = map.getMapObjects();
+                for(int i = 0; i < objects.size(); i++) {
+                    objects.get(i).onLoad(this);
+                }                
             }
             catch(Exception e) {
                 Cons.println("*** ERROR -> Loading map properties file: " + propertiesFile.getName() + " -> ");

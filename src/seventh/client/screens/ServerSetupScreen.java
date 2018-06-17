@@ -15,7 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import seventh.client.SeventhGame;
 import seventh.client.gfx.Art;
 import seventh.client.inputs.Inputs;
-import seventh.game.type.GameType;
+import seventh.game.game_types.GameType;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.server.GameServer.GameServerSettings;

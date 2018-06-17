@@ -11,7 +11,7 @@ import seventh.ai.basic.group.AIGroup;
 import seventh.game.GameInfo;
 import seventh.game.PlayerInfo;
 import seventh.game.Team;
-import seventh.game.type.cmd.CommanderGameType;
+import seventh.game.game_types.cmd.CommanderGameType;
 import seventh.shared.TimeStep;
 
 /**
