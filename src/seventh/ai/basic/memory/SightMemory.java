@@ -15,7 +15,7 @@ import seventh.shared.Updatable;
 /**
  * Visual sight memory -- what this bot has seen, we store in a small cache so that he doesn't immediately forget the
  * world around him
- * 
+ *
  * 
  * @author Tony
  *
@@ -29,8 +29,7 @@ public class SightMemory implements Updatable {
      * @author Tony
      *
      */
-    public static class SightMemoryRecord {
-        private final long expireTime;
+    public static class SightMemoryRecord extends MemoryRecord {
         
         private PlayerEntity entity;
         private Weapon lastSeenWithWeapon;
@@ -38,15 +37,13 @@ public class SightMemory implements Updatable {
         private long timeSeen;
         private long seenDelta;
         
-        private boolean isValid;
         
         /**
          * @param expireTime
          */
         public SightMemoryRecord(long expireTime) {
-            this.expireTime = expireTime;            
+            super(expireTime);
             this.lastSeenAt = new Vector2f();
-            this.isValid = false;
         }
         
         
@@ -82,20 +79,11 @@ public class SightMemory implements Updatable {
         public void checkExpired(TimeStep timeStep) {
             this.seenDelta = timeStep.getGameClock() - this.timeSeen;
             if(isExpired(timeStep)) {
-                expire();
+                expireStrategy = new SightExpireStrategy();
             }
         }
         
-        /**
-         * Expire this record
-         */
-        public void expire() {
-            this.entity = null;
-            this.lastSeenWithWeapon = null;
-            
-            this.lastSeenAt.zeroOut();                        
-            this.isValid = false;
-        }
+        
         
         /**
          * If this entity is expired
@@ -183,7 +171,7 @@ public class SightMemory implements Updatable {
      */
     public void clear() {
         for(int i = 0; i < this.entityRecords.length; i++) {
-            this.entityRecords[i].expire();            
+            this.entityRecords[i].expireStrategy = new SightExpireStrategy();            
         }
     }
     

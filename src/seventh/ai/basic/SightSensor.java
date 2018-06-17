@@ -30,7 +30,7 @@ public class SightSensor implements Sensor {
     private Timer updateSight;
         
     private List<PlayerEntity> entitiesInView;
-    
+     
     /**
      * @param width
      * @param height
