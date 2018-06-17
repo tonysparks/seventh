@@ -3,7 +3,6 @@
  */
 package seventh.server;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -31,6 +30,7 @@ import seventh.shared.Console;
 import seventh.shared.Debugable.DebugableListener;
 import seventh.shared.LANServerRegistration;
 import seventh.shared.MapList.MapEntry;
+import seventh.shared.Scripting;
 import seventh.shared.State;
 import seventh.shared.StateMachine;
 import seventh.shared.StateMachine.StateMachineListener;
@@ -371,14 +371,7 @@ public class GameServer {
             
             @Override
             public void execute(Console console, String... args) {
-                
-                try { 
-                    serverContext.getRuntime().eval(new File(args[0]));
-                }
-                catch(Exception e) {
-                    Cons.println("*** ERROR: Error running server script '" + mergeArgsDelim(" ", args) + "': " + e);
-                }
-                
+                Scripting.loadScript(serverContext.getRuntime(), mergeArgs(args));                                
             }
         });
         

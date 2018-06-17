@@ -3,6 +3,8 @@
  */
 package seventh.shared;
 
+import java.io.File;
+
 import leola.vm.Args;
 import leola.vm.Leola;
 import seventh.server.SeventhScriptingCommonLibrary;
@@ -15,6 +17,23 @@ import seventh.server.SeventhScriptingCommonLibrary;
  */
 public class Scripting {
 
+    /**
+     * Attempts to load a script file
+     * 
+     * @param runtime
+     * @param scriptFile
+     */
+    public static void loadScript(Leola runtime, String scriptFile) {
+        File file = new File(scriptFile);
+        if(file.exists()) {
+            try {                
+                runtime.eval(file);
+            }
+            catch(Exception e) {
+                Cons.println("*** ERROR -> Loading " + file.getName() + ":" + e);
+            }
+        }
+    }
     
     /**
      * Creates a new {@link Leola} runtime that is in sandboxed mode.

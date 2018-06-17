@@ -3,7 +3,10 @@
  */
 package seventh.map;
 
+import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
+import seventh.client.ClientGame;
+import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
@@ -20,15 +23,21 @@ import seventh.shared.TimeStep;
  */
 public class MapObject implements Renderable {
 
+    private String id;
     private String type;
     protected Vector2f pos;
     protected Vector2f centerPos;
+    protected float rotation;
     protected Rectangle bounds;
+    
+    protected MapObjectData data;
     
     private LeoObject scriptObj;
     
-    public MapObject(String type) {
-        this.type = type;
+    public MapObject(MapObjectData data) {
+        this.data = data;
+        this.id = data.id;
+        this.type = data.type;
         this.pos = new Vector2f();
         this.centerPos = new Vector2f();
         this.bounds = new Rectangle();
@@ -42,11 +51,29 @@ public class MapObject implements Renderable {
         return this.scriptObj;
     }
     
+    public LeoMap getProperties() {
+        return this.data.properties;
+    }
+    
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+    
     /**
      * @return the type
      */
     public String getType() {
         return type;
+    }
+    
+    /**
+     * @return the rotation
+     */
+    public float getRotation() {
+        return rotation;
     }
     
     /**
@@ -103,9 +130,36 @@ public class MapObject implements Renderable {
         return true;
     }
     
+    /**
+     * This {@link MapObject} is touched by a {@link ClientEntity}
+     * 
+     * @param game
+     * @param ent
+     * @return true if this should block the entity
+     */
+    public boolean onClientTouch(ClientGame game, ClientEntity ent) {
+        return true;
+    }
+    
     public void destroy() {        
     }
     
+    
+    /**
+     * The map was just loaded (server side)
+     * 
+     * @param game
+     */
+    public void onLoad(Game game) {        
+    }
+    
+    /**
+     * The map was just loaded (client side)
+     * 
+     * @param game
+     */
+    public void onClientLoad(ClientGame game) {        
+    }
 
     @Override
     public void update(TimeStep timeStep) {

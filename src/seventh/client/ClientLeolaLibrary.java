@@ -140,7 +140,7 @@ public class ClientLeolaLibrary implements LeolaLibrary {
         for(int i = 0; i < ents.length; i++) {
             ClientEntity ent = ents[i];
             if(ent!=null && !ent.isDestroyed()) {
-                r.add(ent.getScriptObj());
+                r.add(ent.asScriptObject());
             }
         }
         
@@ -164,7 +164,7 @@ public class ClientLeolaLibrary implements LeolaLibrary {
                 String entType = ent.getType().name();
                 if(entType.equalsIgnoreCase(type) || 
                    entType.replace("_", "").equalsIgnoreCase(type)) {
-                    r.add(ent.getScriptObj());
+                    r.add(ent.asScriptObject());
                 }
             }
         }
@@ -187,7 +187,7 @@ public class ClientLeolaLibrary implements LeolaLibrary {
             ClientEntity ent = ents[i];
             if(ent!=null && !ent.isDestroyed()) {
                 if(ent.getBounds().intersects(bounds)) {
-                    r.add(ent.getScriptObj());
+                    r.add(ent.asScriptObject());
                 }                
             }
         }
@@ -209,12 +209,12 @@ public class ClientLeolaLibrary implements LeolaLibrary {
         for(int i = 0; i < ents.length; i++) {
             ClientEntity ent = ents[i];
             if(ent!=null && !ent.isDestroyed()) {
-                LeoObject result = function.call(ent.getScriptObj());
+                LeoObject result = function.call(ent.asScriptObject());
                 if(result.isError()) {
                     Cons.println("*** Error calling getEntitiesFilter failed: " + result.toString());
                 }
                 else if(result.isTrue()) {
-                    r.add(ent.getScriptObj());
+                    r.add(ent.asScriptObject());
                 }
             }
         }

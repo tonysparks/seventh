@@ -98,7 +98,7 @@ public abstract class ClientEntity implements Renderable {
     /**
      * @return the scriptObj
      */
-    public LeoObject getScriptObj() {
+    public LeoObject asScriptObject() {
         return scriptObj;
     }
     

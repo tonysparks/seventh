@@ -100,7 +100,6 @@ public class Config {
     }
     
     private LeoMap loadConfig(Leola runtime, String file, String rootConfig) throws Exception {
-        
         runtime.eval(new File(file));
         LeoMap configMap = runtime.get(rootConfig).as();    
         return configMap;

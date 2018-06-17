@@ -3,10 +3,13 @@
  */
 package seventh.game;
 
+import java.util.List;
+
 import seventh.game.entities.LightBulb;
 import seventh.map.Layer;
 import seventh.map.Layer.LayerTileIterator;
 import seventh.map.Map;
+import seventh.map.MapObject;
 import seventh.map.Tile;
 
 /**
@@ -43,6 +46,11 @@ public class MapInteraction {
                     }
                 });                                                    
             }
+        }
+        
+        List<MapObject> objects = map.getMapObjects();
+        for(int i = 0; i < objects.size(); i++) {
+            objects.get(i).onLoad(game);
         }
     }
 

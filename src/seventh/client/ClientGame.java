@@ -4,7 +4,6 @@
 package seventh.client;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -82,6 +81,7 @@ import seventh.network.messages.FlagCapturedMessage;
 import seventh.network.messages.FlagReturnedMessage;
 import seventh.network.messages.FlagStolenMessage;
 import seventh.network.messages.GameEndedMessage;
+import seventh.network.messages.GameEventMessage;
 import seventh.network.messages.GameReadyMessage;
 import seventh.network.messages.GameUpdateMessage;
 import seventh.network.messages.PlayerAwardMessage;
@@ -95,7 +95,6 @@ import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
 import seventh.network.messages.RoundEndedMessage;
 import seventh.network.messages.RoundStartedMessage;
-import seventh.network.messages.GameEventMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
 import seventh.network.messages.TileAddedMessage;
@@ -170,7 +169,7 @@ public class ClientGame {
     private       ClientPlayerEntity selectedEntity;
 
     private Leola runtime;
-    
+    private LeoObject scriptObj;
     /**
      * Listens for {@link ClientEntity} life cycle
      * 
@@ -255,7 +254,23 @@ public class ClientGame {
     
         this.runtime = Scripting.newSandboxedRuntime();    
         this.runtime.loadLibrary(new ClientLeolaLibrary(this), "client");
+        
+        this.scriptObj = LeoObject.valueOf(this);
     }    
+    
+    /**
+     * @return the runtime
+     */
+    public Leola getRuntime() {
+        return runtime;
+    }
+    
+    /**
+     * @return this as a script object
+     */
+    public LeoObject asScriptObject() {
+        return this.scriptObj;
+    }
     
     /**
      * @return the attackingTeam
@@ -1141,26 +1156,15 @@ public class ClientGame {
      * @param mapFile
      * @param game
      */
-    private void loadMapProperties(String mapFile) {      
-        File propertiesFile = new File(mapFile + ".client.props.leola");
-        if(propertiesFile.exists()) {
-            try {
-                runtime.loadStatics(SeventhScriptingCommonLibrary.class);                
-                runtime.eval(propertiesFile);
-            }
-            catch(Exception e) {
-                Cons.println("*** ERROR -> Loading " + propertiesFile.getName() + ":" + e);
-            }
-        }
+    private void loadMapProperties(String mapFile) {
+        runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+        Scripting.loadScript(runtime, "./assets/maps/core-client.leola");
+        Scripting.loadScript(runtime, mapFile + ".client.props.leola");
+        Scripting.loadScript(runtime, mapFile + ".client." + getGameType().name().toLowerCase() + ".leola");
         
-        File gameTypeFile = new File(mapFile + ".client." + getGameType().name().toLowerCase() + ".leola");
-        if(gameTypeFile.exists()) {
-            try {                
-                runtime.eval(gameTypeFile);
-            }
-            catch(Exception e) {
-                Cons.println("*** ERROR -> Loading " + gameTypeFile.getName() + ":" + e);
-            }
+        List<MapObject> objects = map.getMapObjects();
+        for(int i = 0; i < objects.size(); i++) {
+            objects.get(i).onClientLoad(this);
         }
     }
     
@@ -1561,10 +1565,10 @@ public class ClientGame {
         ClientPlayer player = players.getPlayer(msg.playerId);
         if(player != null) {
             if(player.isAlive() || player.isCommander()) {
-                hud.postMessage("(Team) " + player.getName() + ": " + msg.message);
+                hud.postMessage("(Team) " + player.getName() + "^7: " + msg.message);
             }
             else {
-                hud.postMessage("(Team) (Dead)" + player.getName() + ": " + msg.message);
+                hud.postMessage("(Team) (Dead)" + player.getName() + "^7: " + msg.message);
             }
         }
         else {
@@ -1576,10 +1580,10 @@ public class ClientGame {
         ClientPlayer player = players.getPlayer(msg.playerId);
         if(player != null) {
             if(player.isAlive() || player.isCommander()) {
-                hud.postMessage(player.getName() + ": " + msg.message);
+                hud.postMessage(player.getName() + "^7: " + msg.message);
             }
             else {
-                hud.postMessage("(Dead) " + player.getName() + ": " + msg.message);
+                hud.postMessage("(Dead) " + player.getName() + "^7: " + msg.message);
             }
         }
         else {
@@ -1589,7 +1593,7 @@ public class ClientGame {
     
     public void playerConnected(PlayerConnectedMessage msg) {
         this.players.addPlayer(new ClientPlayer(msg.name, msg.playerId));
-        hud.postMessage(msg.name + " has joined the game.");
+        hud.postMessage(msg.name + "^7 has joined the game.");
         
         // TODO : Update the CommanderInfo
     }
@@ -1598,7 +1602,7 @@ public class ClientGame {
         ClientPlayer player = this.players.removePlayer(msg.playerId);
         if(player != null) {            
             removeEntity(player.getId());
-            hud.postMessage(player.getName() + " has left the game.");
+            hud.postMessage(player.getName() + "^7 has left the game.");
         }
         
         // TODO : Update the CommanderInfo
@@ -1725,10 +1729,10 @@ public class ClientGame {
             ClientTeam newTeam = ClientTeam.fromId(msg.teamId);
             player.changeTeam(newTeam);
             if(newTeam == ClientTeam.NONE) {
-                hud.postMessage(player.getName() + " is now spectating.");
+                hud.postMessage(player.getName() + "^7 is now spectating.");
             }
             else {
-                hud.postMessage(player.getName() + " switched to the " + newTeam.getName());
+                hud.postMessage(player.getName() + "^7 switched to the " + newTeam.getName());
             }
         }
         

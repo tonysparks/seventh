@@ -683,6 +683,22 @@ public class Tank extends Vehicle {
         }
     }
     
+
+    public void rotateAround(Vector2f pos, float radians) {
+        vehicleBB.center.x = pos.x + vehicleBB.width/2;
+        vehicleBB.center.y = pos.y + vehicleBB.height/2;
+        vehicleBB.rotateAround(pos, radians);
+        
+        center.set(vehicleBB.center);
+        this.pos.x = center.x - aabbWidth/2;
+        this.pos.y = center.y - aabbHeight/2;
+        
+        bounds.centerAround(center);
+        
+        this.orientation = radians;        
+        this.desiredOrientation = radians;
+    }
+    
     public void setOrientationNow(float desiredOrientation) {
         final float fullCircle = FastMath.fullCircle;
         if(desiredOrientation < 0) {

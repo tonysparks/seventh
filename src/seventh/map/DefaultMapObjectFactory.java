@@ -15,6 +15,8 @@ import leola.vm.Leola;
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
+import seventh.client.ClientGame;
+import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.TextureUtil;
@@ -48,6 +50,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         public String surfaceType;
         public ImageData image;
         public LeoObject onTouched;
+        public LeoObject onLoad;
     }
     
     public static class TileDefinition {
@@ -72,12 +75,10 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         private SurfaceType surfaceType;
         
         private LeoObject onTouched;
+        private LeoObject onLoad;
         
-        /**
-         * 
-         */
         public DefaultMapObject(boolean loadAssets, MapObjectDefinition definition, MapObjectData data) {
-            super(definition.type);
+            super(data);
             
             this.loadAssets = loadAssets;
             this.pos.set(data.x, data.y);
@@ -92,9 +93,13 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             }
             
             this.onTouched = definition.onTouched;
+            this.onLoad = definition.onLoad;
+            
+            this.rotation = data.rotation;
+            float rotRadians = (float) Math.toRadians(data.rotation);
             
             this.obb = new OBB(rect);
-            this.obb.rotateAround(pos, (float) Math.toRadians(data.rotation));
+            this.obb.rotateAround(pos, rotRadians);
             
             int length = (int)this.obb.length();
             this.bounds.setSize(length, length);
@@ -104,12 +109,18 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             this.isCollidable = definition.isCollidable;
             
             if(data.properties != null) {
-                if(data.properties.containsKey("heightMask")) {            
-                    String heightMask = data.properties.get("heightMask");
+                if(data.properties.containsKeyByString("heightMask")) {            
+                    String heightMask = data.properties.getString("heightMask");
                     this.heightMask = Integer.valueOf(heightMask);
                 }
-                if(data.properties.containsKey("collidable")) {
+                if(data.properties.containsKeyByString("collidable")) {
                     this.isCollidable = true;
+                }
+                if(data.properties.containsKeyByString("onTouched")) {
+                    this.onTouched = LeoObject.valueOf(data.properties.getString("onTouched"));
+                }
+                if(data.properties.containsKeyByString("onLoad")) {
+                    this.onLoad = LeoObject.valueOf(data.properties.getString("onLoad"));
                 }
             }
             
@@ -131,6 +142,46 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                 this.sprite.setRotation(data.rotation);                
             }
             
+        }
+                
+        @Override
+        public void onLoad(Game game) {
+            if(this.onLoad != null) {         
+                LeoObject func = null;
+                if(this.onLoad.isFunction()) {
+                    func = this.onLoad;
+                }
+                else {
+                    func = game.getGameType().getRuntime().get(this.onLoad.toString());
+                }
+                
+                if(func!=null) {
+                    LeoObject result = func.call(game.asScriptObject(), asScriptObject());
+                    if(result.isError()) {
+                        Cons.println("*** ERROR: Error onLoad MapObject: " + result);
+                    }                    
+                }                                
+            }
+        }
+        
+        @Override
+        public void onClientLoad(ClientGame game) {
+            if(this.onLoad != null) {         
+                LeoObject func = null;
+                if(this.onLoad.isFunction()) {
+                    func = this.onLoad;
+                }
+                else {
+                    func = game.getRuntime().get(this.onLoad.toString());
+                }
+                
+                if(func!=null) {
+                    LeoObject result = func.call(game.asScriptObject(), asScriptObject()); 
+                    if(result.isError()) {
+                        Cons.println("*** ERROR: Error onLoad MapObject: " + result);
+                    }
+                }                                
+            }
         }
         
         @Override
@@ -165,6 +216,10 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                 return false;
             }
 
+            if(this.rotation == 0) {
+                return true;
+            }
+            
             return this.obb.expensiveIntersects(bounds);
         }
         
@@ -182,11 +237,19 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             if(ent instanceof Bullet) {
                 Bullet bullet = (Bullet)ent;
                 if(bullet.getOwnerHeightMask() == this.heightMask) {
+                    if(this.rotation == 0) {
+                        return true;
+                    }
+                    
                     return this.obb.expensiveIntersects(bullet.getBounds());
                 }
                 return false;
             }
-                        
+            
+            if(this.rotation == 0) {
+                return true;
+            }
+            
             return this.obb.expensiveIntersects(ent.getBounds());
         }
         
@@ -203,6 +266,30 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                 
                 if(func!=null) {
                     LeoObject result = func.call(game.asScriptObject(), ent.asScriptObject(), asScriptObject());
+                    if(result.isError()) {
+                        Cons.println("*** ERROR: Error touching MapObject: " + result);
+                    }
+                    
+                    return result.isTrue();
+                }                                
+            }
+            
+            return true;
+        }
+        
+        @Override
+        public boolean onClientTouch(ClientGame game, ClientEntity ent) {
+            if(this.onTouched != null) {         
+                LeoObject func = null;
+                if(this.onTouched.isFunction()) {
+                    func = this.onTouched;
+                }
+                else {
+                    func = game.getRuntime().get(this.onTouched.toString());
+                }
+                
+                if(func!=null) {
+                    LeoObject result = func.call(game.asScriptObject(), ent.asScriptObject(), asScriptObject()); 
                     if(result.isError()) {
                         Cons.println("*** ERROR: Error touching MapObject: " + result);
                     }

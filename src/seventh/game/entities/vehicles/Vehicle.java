@@ -28,7 +28,7 @@ public abstract class Vehicle extends Entity implements Controllable {
     protected final Rectangle operateHitBox;
     protected final OBB vehicleBB;
     
-    private final Vector2f center;
+    protected final Vector2f center;
     protected int aabbWidth, aabbHeight;
     private PlayerEntity operator;
     
@@ -106,7 +106,7 @@ public abstract class Vehicle extends Entity implements Controllable {
     public OBB getOBB() {
         return vehicleBB;
     }
-    
+        
     /**
      * Synchronize the {@link OBB} with the current orientation and position
      * of the vehicle

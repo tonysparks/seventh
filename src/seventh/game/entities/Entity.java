@@ -225,6 +225,20 @@ public abstract class Entity implements Debugable {
             return isPlayer() || isVehicle() || isDoor() || isBase();
         }
         
+        /**
+         * @return if this type is a projectile (such as a bullet)
+         */
+        public boolean isProjectile() {
+            return this == BULLET || this == ROCKET;
+        }
+        
+        /**
+         * @return if this type can cause damage to other entities
+         */
+        public boolean isDamageInflictor() {
+            return isProjectile() || this == EXPLOSION || this == FIRE; 
+        }
+        
         /* (non-Javadoc)
          * @see java.lang.Enum#toString()
          */
@@ -850,7 +864,9 @@ public abstract class Entity implements Debugable {
             MapObject object = mapObjects.get(i);
             if(object.isCollidable()) {
                 if(object.isTouching(bounds)) {
-                    return true;
+                    if(object.onTouch(game, this)) {
+                        return true;
+                    }
                 }
             }
         }

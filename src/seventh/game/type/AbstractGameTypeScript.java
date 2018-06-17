@@ -3,7 +3,6 @@
  */
 package seventh.game.type;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import leola.vm.types.LeoArray;
 import leola.vm.types.LeoObject;
 import seventh.math.Vector2f;
 import seventh.shared.Cons;
+import seventh.shared.Scripting;
 
 /**
  * Loads an game type script file
@@ -38,15 +38,7 @@ public abstract class AbstractGameTypeScript {
     }
     
     protected void loadCore() {
-        try {
-            File coreLib = new File("./assets/maps/core.leola");
-            if(coreLib.exists()) {
-                this.runtime.eval(coreLib);
-            }
-        }
-        catch(Exception e) {
-            Cons.println("*** ERROR: Error loading core library: " + e);
-        }
+        Scripting.loadScript(runtime, "./assets/maps/core.leola");        
     }
     
     /**

@@ -1138,7 +1138,7 @@ public class Sounds {
                 
             case HIT_INDICATOR:
             case IMPACT_FLESH:
-                return damp * 2.0f;
+                return damp * 1.6f;
             case TANK_FIRE:
             case TANK_IDLE:
             case TANK_MOVE:
