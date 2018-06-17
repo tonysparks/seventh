@@ -386,7 +386,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
     }
     
     protected boolean collidesAgainstMapObject(Rectangle bounds) {
-        List<MapObject> mapObjects = game.getMapObjects();
+        List<MapObject> mapObjects = game.getCollidableMapObjects();
         for(int i = 0; i < mapObjects.size(); i++) {
             MapObject object = mapObjects.get(i);
             if(object.isCollidable()) {

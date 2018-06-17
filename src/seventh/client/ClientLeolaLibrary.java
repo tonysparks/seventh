@@ -14,6 +14,7 @@ import leola.vm.types.LeoNamespace;
 import leola.vm.types.LeoObject;
 import seventh.client.entities.ClientEntity;
 import seventh.client.gfx.LightSystem;
+import seventh.client.gfx.effects.particle_system.Emitters;
 import seventh.client.sfx.Sound;
 import seventh.game.game_types.GameType;
 import seventh.math.Rectangle;
@@ -40,6 +41,7 @@ public class ClientLeolaLibrary implements LeolaLibrary {
     @Override
     public void init(Leola leola, LeoNamespace namespace) throws LeolaRuntimeException {
         leola.putIntoNamespace(this, namespace);
+        leola.loadStatics(Emitters.class);
     }
     
     
@@ -335,5 +337,5 @@ public class ClientLeolaLibrary implements LeolaLibrary {
     public void unloadSound(Sound snd) {
         this.game.unloadSound(snd);
     }
-
+    
 }

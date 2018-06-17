@@ -39,7 +39,6 @@ import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.events.EventRegistration;
 import seventh.game.events.GameEvent;
 import seventh.game.events.GameEvent.EventType;
-import seventh.game.game_types.GameType;
 import seventh.game.events.PlayerJoinedEvent;
 import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
@@ -54,6 +53,7 @@ import seventh.game.events.SoundEmittedEvent;
 import seventh.game.events.SoundEmitterListener;
 import seventh.game.events.TileAddedEvent;
 import seventh.game.events.TileRemovedEvent;
+import seventh.game.game_types.GameType;
 import seventh.game.net.NetEntity;
 import seventh.game.net.NetGamePartialStats;
 import seventh.game.net.NetGameState;
@@ -162,6 +162,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     private MapGraph<Void> graph;
     private GameMap gameMap;
     private GameType gameType;
+    private List<MapObject> collidableMapObjects;
     
     private List<BombTarget> bombTargets;
     private List<Vehicle> vehicles;
@@ -231,6 +232,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         this.gameMap = gameMap;
         this.map = gameMap.getMap();
+        this.collidableMapObjects = new ArrayList<MapObject>();
         
         this.graph = map.createMapGraph(new NodeData());
         this.gameTimers = new Timers(MAX_TIMERS);
@@ -877,6 +879,13 @@ public class Game implements GameInfo, Debugable, Updatable {
         return map.getMapObjects();
     }
     
+    /**
+     * @return the collidableMapObjects
+     */
+    public List<MapObject> getCollidableMapObjects() {
+        return collidableMapObjects;
+    }
+    
     /* (non-Javadoc)
      * @see seventh.game.GameInfo#getPlayerInfos()
      */
@@ -968,10 +977,17 @@ public class Game implements GameInfo, Debugable, Updatable {
                 runtime.put("game", this);
                 runtime.eval(propertiesFile);
                 
+                this.collidableMapObjects.clear();
+                
                 // Load the map objects
                 List<MapObject> objects = map.getMapObjects();
                 for(int i = 0; i < objects.size(); i++) {
-                    objects.get(i).onLoad(this);
+                    MapObject mapObject = objects.get(i);
+                    mapObject.onLoad(this);
+                    
+                    if(mapObject.isCollidable()) {
+                        this.collidableMapObjects.add(mapObject);
+                    }
                 }                
             }
             catch(Exception e) {
@@ -2151,7 +2167,7 @@ public class Game implements GameInfo, Debugable, Updatable {
     }
     
     public boolean doesTouchMapObject(Entity ent, boolean invokeTouch) {
-        List<MapObject> mapObjects = getMapObjects();
+        List<MapObject> mapObjects = getCollidableMapObjects();
         for(int i = 0; i < mapObjects.size(); i++) {
             MapObject object = mapObjects.get(i);
             if(object.isCollidable()) {

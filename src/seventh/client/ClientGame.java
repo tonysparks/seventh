@@ -122,6 +122,8 @@ public class ClientGame {
     
     private final SeventhGame app;    
     private final Map map;
+    private String currentMapName;
+    private List<MapObject> collidableMapObjects;
     
     private final ClientPlayer localPlayer;
     private final LocalSession localSession;
@@ -233,7 +235,9 @@ public class ClientGame {
         this.doors = new ArrayList<ClientDoor>();
         this.smokeEntities = new ArrayList<ClientSmoke>();
         this.droppedItems = new ArrayList<ClientDroppedItem>();
-                
+    
+        this.collidableMapObjects = new ArrayList<MapObject>();
+        
         this.camera = newCamera(map.getMapWidth(), map.getMapHeight());
         this.cameraController = new CameraController(this);
         
@@ -252,8 +256,13 @@ public class ClientGame {
         this.pools = new Pools(this);
         this.zings = new Zings(this);
     
+        // NOTE: The Server side runs a new Runtime for each Round, and
+        // keeps a persistent Runtime in the GameType -- for now the 
+        // client keeps one runtime for the duration of the game session
         this.runtime = Scripting.newSandboxedRuntime();    
+        this.runtime.loadStatics(SeventhScriptingCommonLibrary.class);
         this.runtime.loadLibrary(new ClientLeolaLibrary(this), "client");
+        Scripting.loadScript(runtime, "./assets/maps/core-client.leola");
         
         this.scriptObj = LeoObject.valueOf(this);
     }    
@@ -571,6 +580,13 @@ public class ClientGame {
     
     public List<MapObject> getMapObjects() {
         return this.map.getMapObjects();
+    }
+    
+    /**
+     * @return the collidableMapObjects
+     */
+    public List<MapObject> getCollidableMapObjects() {
+        return collidableMapObjects;
     }
     
     /**
@@ -1144,6 +1160,8 @@ public class ClientGame {
      * @param gameState
      */
     public void prepareGame(String mapFile, NetGameState gameState) {
+        this.currentMapName = mapFile;
+        
         applyFullGameState(gameState);
         loadMapProperties(mapFile);
 
@@ -1156,15 +1174,20 @@ public class ClientGame {
      * @param mapFile
      * @param game
      */
-    private void loadMapProperties(String mapFile) {
-        runtime.loadStatics(SeventhScriptingCommonLibrary.class);
-        Scripting.loadScript(runtime, "./assets/maps/core-client.leola");
+    private void loadMapProperties(String mapFile) {        
         Scripting.loadScript(runtime, mapFile + ".client.props.leola");
         Scripting.loadScript(runtime, mapFile + ".client." + getGameType().name().toLowerCase() + ".leola");
         
+        this.collidableMapObjects.clear();
+        
         List<MapObject> objects = map.getMapObjects();
         for(int i = 0; i < objects.size(); i++) {
-            objects.get(i).onClientLoad(this);
+            MapObject mapObject = objects.get(i);
+            mapObject.onClientLoad(this);
+            
+            if(mapObject.isCollidable()) {
+                this.collidableMapObjects.add(mapObject);
+            }
         }
     }
     
@@ -1505,6 +1528,8 @@ public class ClientGame {
         showScoreBoard(false);
         applyFullGameState(msg.gameState);
         
+        loadMapProperties(this.currentMapName);
+        
         executeCallbackScript("onRoundStarted");
     }
     
@@ -1640,7 +1665,7 @@ public class ClientGame {
      * @return true if touching
      */
     public boolean doesTouchMapObject(ClientEntity ent) {
-        List<MapObject> mapObjects = getMapObjects();
+        List<MapObject> mapObjects = getCollidableMapObjects();
         for(int i = 0; i < mapObjects.size(); i++) {
             MapObject object = mapObjects.get(i);
             if(object.isCollidable()) {
