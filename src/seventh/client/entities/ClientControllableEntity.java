@@ -39,7 +39,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
     protected Rectangle hearingBounds;
     protected Rectangle visualBounds;
     
-    private Vector2f xCollisionTilePos, yCollisionTilePos;
+    private Vector2f xCollisionTilePos, 
+                     yCollisionTilePos;
+    
+    private Rectangle collisionRect;
     
     /**
      * @param game
@@ -63,6 +66,8 @@ public abstract class ClientControllableEntity extends ClientEntity {
         
         this.visualBounds = new Rectangle(5000,5000);
         this.visualBounds.centerAround(pos);
+        
+        this.collisionRect = new Rectangle();
     }
 
     /**
@@ -192,7 +197,21 @@ public abstract class ClientControllableEntity extends ClientEntity {
                 }
             }            
         }
-        
+        else {
+            // we're colliding with a map object            
+            collisionRect.set(bounds);
+            collisionRect.x = currentX;
+            collisionRect.y = currentY - 10;
+            
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentY - 1;
+            }
+            
+            collisionRect.y = currentY + 10;
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentY + 1;
+            }
+        }
         return currentY;
     }
     
@@ -231,6 +250,21 @@ public abstract class ClientControllableEntity extends ClientEntity {
                     return currentX + 1;
                 }
             }            
+        }
+        else {
+            // we're colliding with a map object
+            collisionRect.set(bounds);
+            collisionRect.x = currentX - 10;
+            collisionRect.y = currentY;
+            
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentX - 1;
+            }
+            
+            collisionRect.x = currentX + 10;
+            if(!collidesAgainstMapObject(collisionRect)) {
+                return currentX + 1;
+            }
         }
         
         return currentX;
@@ -356,8 +390,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
         for(int i = 0; i < mapObjects.size(); i++) {
             MapObject object = mapObjects.get(i);
             if(object.isCollidable()) {
-                if(object.isTouching(bounds) ) {                    
-                    return true;
+                if(object.isTouching(bounds) ) {  
+                    if(object.onClientTouch(game, this)) {
+                        return true;
+                    }
                 }
             }
         }
