@@ -115,11 +115,11 @@ public class KillLog implements Renderable {
             int killedColor = m.killed.getTeam().getColor();
             int killerColor = killedColor;
             
-            String message = m.killed.getName() + " died";
+            String message = m.killed.getName() + "^7 died";
             if(m.killer != null) {
                 killerColor = m.killer.getTeam().getColor();
                 if(m.killed.getId() == m.killer.getId()) {
-                    message = m.killed.getName() + " took their own life";  
+                    message = m.killed.getName() + "^7 took their own life";  
                     
                     float length = RenderFont.getTextWidth(canvas, message);                    
                     RenderFont.drawShadedString(canvas, message, startX-length, y, killerColor);
