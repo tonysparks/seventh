@@ -177,7 +177,7 @@ public class ServerListingsScreen implements Screen {
         serverListings.setBackgroundColor(0xff383e18);
         //serverListings.setTheme(theme);
         serverListings.setBounds(new Rectangle((int)uiPos.x, (int)uiPos.y, app.getScreenWidth() - 220, 260));
-        serverListings.addColumnHeader("Server Name", 240)
+        serverListings.addColumnHeader("Server Name", 255)
                       .addColumnHeader("Game Type", 150)
                       .addColumnHeader("Map", 140)
                       .addColumnHeader("Players", 80);
@@ -254,6 +254,22 @@ public class ServerListingsScreen implements Screen {
 
     }
 
+    private String format(String str, int maxLength) {
+        String decodedStr = RenderFont.getDecodedText(str);
+        int delta = maxLength - decodedStr.length();
+        if(delta < 0) {
+            return decodedStr.substring(0, decodedStr.length() + delta);
+        }
+        
+        int i = 0;
+        while(i < delta) {
+            str += " ";
+            i++;
+        }
+        
+        return str;
+    }
+    
     /**
      * Parses the JSON
      * @param entry
@@ -263,8 +279,11 @@ public class ServerListingsScreen implements Screen {
         String[] result = {"Error", ""};
         try {
             result = new String[] { 
-                    String.format("%-48s^7 %-13s %-23s %d/%d", 
-                            info.getServerName(), info.getGameType(), info.getMapName(), info.getAxis().size() + info.getAllies().size(), 12), 
+                    String.format("%s^7 %-13s %s %d/%d", 
+                            format(info.getServerName(), 32), 
+                            info.getGameType(), 
+                            format(info.getMapName(), 20), 
+                            info.getAxis().size() + info.getAllies().size(), 12), 
                     info.getAddress() +":"+ info.getPort() 
             };
         }
@@ -443,6 +462,7 @@ public class ServerListingsScreen implements Screen {
         btn.setHoverTextSize(11);
         btn.getTextLabel().setForegroundColor(0xffffffff);
         btn.getTextLabel().setFont("Courier New");
+        btn.getTextLabel().setMonospaced(true);
         btn.addOnButtonClickedListener(new OnButtonClickedListener() {
             
             @Override
