@@ -123,7 +123,7 @@ public class ListBoxView<T extends Renderable> implements Renderable {
         renderer.drawRect(bounds.x - 1, bounds.y, bounds.width + 1, bounds.height + 1, 0xff000000);
         
         bounds = box.getScreenBounds();
-        int y = 40;
+        int y = box.getHeaderHeight();
         
         
         renderer.fillRect(bounds.x - 1, bounds.y, bounds.width + 1, 31, 0xff282c0c);
@@ -143,10 +143,14 @@ public class ListBoxView<T extends Renderable> implements Renderable {
             Rectangle rect = btn.getScreenBounds();
             //rect.y = y;
             if(bounds.contains(rect)) {
+                btn.setDisabled(false);
                 if(btn.isHovering()) {
                     renderer.fillRect(rect.x - 10, rect.y - 5, rect.width + 40, rect.height, 0x0fffffff);
                 }
                 view.render(renderer, camera, alpha);
+            }
+            else {
+                btn.setDisabled(true);
             }
             y += 30;
         }

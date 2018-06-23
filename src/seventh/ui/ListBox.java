@@ -6,7 +6,7 @@ package seventh.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import seventh.client.inputs.Inputs;
+import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.EventDispatcher;
 import seventh.ui.Label.TextAlignment;
@@ -15,7 +15,7 @@ import seventh.ui.Label.TextAlignment;
  * @author Tony
  *
  */
-public class ListBox extends Widget {
+public class ListBox extends Widget implements Scrollable {
     public static interface ItemListener {
         void onItemAdded(Button button);
         void onItemRemove(Button button);
@@ -32,6 +32,8 @@ public class ListBox extends Widget {
     private List<Button> columnHeaders;
     
     private int index;
+    private int headerHeight;
+    private Rectangle viewport;
     
     /**
      * @param eventDispatcher
@@ -39,21 +41,11 @@ public class ListBox extends Widget {
     public ListBox(EventDispatcher eventDispatcher) {
         super(eventDispatcher);
         
+        this.headerHeight = 40;
         this.items = new ArrayList<>();
         this.columnHeaders = new ArrayList<>();
-        addInputListener(new Inputs() {
-            
-            @Override
-            public boolean scrolled(int amount) {
-                if(amount < 0) {
-                    previousIndex();
-                }
-                else {
-                    nextIndex();
-                }
-                return true;
-            }
-        });
+        
+        this.viewport = new Rectangle();
     }
 
     /**
@@ -138,7 +130,7 @@ public class ListBox extends Widget {
      */
     public ListBox addColumnHeader(String header, int width) {
         Button button = new Button();
-        button.getBounds().setSize(width, 25);
+        button.getBounds().setSize(width, 15);
         button.setText(header);    
         button.setTextSize(12);
         button.setHoverTextSize(15);
@@ -227,5 +219,40 @@ public class ListBox extends Widget {
      */
     public List<Button> getColumnHeaders() {
         return columnHeaders;
+    }
+    
+    /**
+     * @return the headerHeight
+     */
+    public int getHeaderHeight() {
+        return headerHeight;
+    }
+    
+    /**
+     * @param headerHeight the headerHeight to set
+     */
+    public void setHeaderHeight(int headerHeight) {
+        this.headerHeight = headerHeight;
+    }
+    
+    @Override
+    public Rectangle getViewport() {
+        this.viewport.set(getBounds());
+        this.viewport.height -= getHeaderHeight();
+        return this.viewport;
+    }
+    
+    @Override
+    public int getTotalHeight() {
+        int sum = 0;
+        for(int i = 0; i < this.items.size(); i++) {
+            sum += this.items.get(i).getBounds().height;
+        }
+        return sum - getHeaderHeight();
+    }
+    
+    @Override
+    public int getTotalWidth() {    
+        return getBounds().width;
     }
 }

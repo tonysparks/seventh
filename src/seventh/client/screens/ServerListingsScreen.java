@@ -13,7 +13,6 @@ import com.badlogic.gdx.Input.Keys;
 import leola.vm.types.LeoArray;
 import leola.vm.types.LeoObject;
 import seventh.client.SeventhGame;
-import seventh.client.gfx.Art;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.RenderFont;
 import seventh.client.gfx.Theme;
@@ -26,6 +25,7 @@ import seventh.shared.BroadcastListener;
 import seventh.shared.BroadcastListener.OnMessageReceivedListener;
 import seventh.shared.Broadcaster;
 import seventh.shared.Cons;
+import seventh.shared.EventDispatcher;
 import seventh.shared.JSON;
 import seventh.shared.LANServerConfig;
 import seventh.shared.MasterServerClient;
@@ -36,16 +36,20 @@ import seventh.ui.Label;
 import seventh.ui.Label.TextAlignment;
 import seventh.ui.ListBox;
 import seventh.ui.Panel;
+import seventh.ui.ScrollBar;
+import seventh.ui.ScrollBar.Orientation;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.HoverEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.events.OnHoverListener;
+import seventh.ui.events.OnScrollBarListener;
+import seventh.ui.events.ScrollBarEvent;
 import seventh.ui.view.ButtonView;
-import seventh.ui.view.ImageButtonView;
 import seventh.ui.view.LabelView;
 import seventh.ui.view.ListBoxView;
 import seventh.ui.view.PanelView;
+import seventh.ui.view.ScrollBarView;
 
 /**
  * Displays the players options
@@ -210,33 +214,7 @@ public class ServerListingsScreen implements Screen {
         
         optionsPanel.addWidget(noServersFoundLbl);
         panelView.addElement(new LabelView(noServersFoundLbl));
-        
-        uiPos.x = app.getScreenWidth() - 100;
-        uiPos.y = 220;
-        
-        Button upArrow = setupButton(uiPos, "", false, false);
-        //upArrow.setForegroundColor(0xff282c0c);
-        upArrow.addOnButtonClickedListener(new OnButtonClickedListener() {
-            
-            @Override
-            public void onButtonClicked(ButtonEvent event) {
-                serverListings.previousIndex();
-            }
-        });
-        panelView.addElement(new ImageButtonView(upArrow, null, Art.upArrow, null));
-        
-        uiPos.y += yInc*3;
-        Button downArrow = setupButton(uiPos, "", false, false);
-        //downArrow.setForegroundColor(0xff282c0c);
-        downArrow.addOnButtonClickedListener(new OnButtonClickedListener() {
-            
-            @Override
-            public void onButtonClicked(ButtonEvent event) {
-                serverListings.nextIndex();
-            }
-        });
-        panelView.addElement(new ImageButtonView(downArrow, null, Art.downArrow, null));
-        
+
         uiPos.x = app.getScreenWidth() - 80;
         uiPos.y = startY;
         
@@ -252,6 +230,33 @@ public class ServerListingsScreen implements Screen {
             }
         });
 
+
+        ScrollBar scrollBar = new ScrollBar(serverListings, new EventDispatcher());
+        scrollBar.getBounds().set(685, 171, 15, 230);
+        scrollBar.setTheme(theme);
+        scrollBar.setOrientation(Orientation.Vertical);
+        scrollBar.setAdjustAmount(serverListings.getItems().isEmpty() ? 1.0f : 1.0f / (float)serverListings.getItems().size());
+        scrollBar.addScrollBarListener(new OnScrollBarListener() {
+            
+            @Override
+            public void onScrollBar(ScrollBarEvent event) {
+                int delta = event.getMovementDelta();
+                if(delta < 0) {
+                    while(delta < 0) {
+                        serverListings.previousIndex();
+                        delta++;
+                    }
+                }
+                else if(delta > 0) {
+                    while(delta > 0) {
+                        serverListings.nextIndex();
+                        delta--;
+                    }
+                }
+            }
+        });
+        this.optionsPanel.addWidget(scrollBar);
+        this.panelView.addElement(new ScrollBarView(scrollBar));
     }
 
     private String format(String str, int maxLength) {
