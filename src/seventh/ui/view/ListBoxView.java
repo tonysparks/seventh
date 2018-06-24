@@ -30,8 +30,10 @@ import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
 import seventh.ui.Button;
 import seventh.ui.ListBox;
-import seventh.ui.ListBox.ColumnHeaderListener;
-import seventh.ui.ListBox.ItemListener;
+import seventh.ui.events.ListHeaderChangedEvent;
+import seventh.ui.events.ListItemChangedEvent;
+import seventh.ui.events.OnListHeaderChangedListener;
+import seventh.ui.events.OnListItemChangedListener;
 
 /**
  * Renders the {@link ListBox}
@@ -56,41 +58,43 @@ public class ListBoxView<T extends Renderable> implements Renderable {
         this.hderButtonViews = new ArrayList<>();
         
         this.box = box;
-        this.box.setItemListener(new ItemListener() {
+        this.box.addListItemChangedListener(new OnListItemChangedListener() {
             
             @Override
-            public void onItemRemove(Button button) {
-                int removeIndex = -1;
-                int i = 0;
-                for(ButtonView view : buttonViews) {
-                    if(view.getButton() == button) {
-                        removeIndex = i;
-                        break;
+            public void onListItemChanged(ListItemChangedEvent event) {
+                Button button = event.getButton();
+                if(event.isAdded()) {
+                    buttonViews.add(new ButtonView(button));
+                }
+                else {
+                    int removeIndex = -1;
+                    int i = 0;
+                    for(ButtonView view : buttonViews) {
+                        if(view.getButton() == button) {
+                            removeIndex = i;
+                            break;
+                        }
+                        i++;
                     }
-                    i++;
+                    
+                    if(removeIndex > -1) {
+                        buttonViews.remove(removeIndex);
+                    }
                 }
-                
-                if(removeIndex > -1) {
-                    buttonViews.remove(removeIndex);
-                }
-            }
-            
-            @Override
-            public void onItemAdded(Button button) {
-                buttonViews.add(new ButtonView(button));
             }
         });
-        
-        this.box.setHeaderListener(new ColumnHeaderListener() {
+
+        this.box.addListHeaderChangedListener(new OnListHeaderChangedListener() {
             
             @Override
-            public void onHeaderRemove(Button button) {
-                hderButtonViews.remove(button);
-            }
-            
-            @Override
-            public void onHeaderAdded(Button button) {
-                hderButtonViews.add(new ButtonView(button));
+            public void onListHeaderChanged(ListHeaderChangedEvent event) {
+                Button button = event.getButton();
+                if(event.isAdded()) {
+                    hderButtonViews.add(new ButtonView(button));    
+                }
+                else {
+                    hderButtonViews.remove(button);    
+                }
             }
         });
         
@@ -118,16 +122,17 @@ public class ListBoxView<T extends Renderable> implements Renderable {
     public void render(Canvas renderer, Camera camera, float alpha) {
         
         Rectangle bounds = box.getBounds();
+        int headerHeight = box.getHeaderHeight();       
+        int headerMargin = box.getHeaderMargin();
         
         renderer.fillRect(bounds.x - 1, bounds.y, bounds.width, bounds.height + 1, box.getBackgroundColor());
         renderer.drawRect(bounds.x - 1, bounds.y, bounds.width + 1, bounds.height + 1, 0xff000000);
         
         bounds = box.getScreenBounds();
-        int y = box.getHeaderHeight();
+        int y = headerHeight + headerMargin;
         
-        
-        renderer.fillRect(bounds.x - 1, bounds.y, bounds.width + 1, 31, 0xff282c0c);
-        renderer.drawRect(bounds.x - 1, bounds.y, bounds.width + 1, 30 + 1, 0xff000000);
+        renderer.fillRect(bounds.x - 1, bounds.y, bounds.width + 1, headerHeight + 1, 0xff282c0c);
+        renderer.drawRect(bounds.x - 1, bounds.y, bounds.width + 1, headerHeight + 1, 0xff000000);
         
         int hsize = hderButtonViews.size();
         for(int i = 0; i < hsize; i++) {
@@ -140,20 +145,25 @@ public class ListBoxView<T extends Renderable> implements Renderable {
             ButtonView view = this.buttonViews.get(i);
             Button btn = view.getButton();
             btn.getBounds().y = y;
-            Rectangle rect = btn.getScreenBounds();
-            //rect.y = y;
+            
+            Rectangle rect = btn.getScreenBounds();                        
             if(bounds.contains(rect)) {
                 btn.setDisabled(false);
                 if(btn.isHovering()) {
-                    renderer.fillRect(rect.x - 10, rect.y - 5, rect.width + 40, rect.height, 0x0fffffff);
+                    renderer.fillRect(rect.x - 10, rect.y - 5, bounds.width - 10, rect.height, 0x0fffffff);
                 }
-                view.render(renderer, camera, alpha);
+                view.render(renderer, camera, alpha);               
             }
             else {
                 btn.setDisabled(true);
             }
-            y += 30;
+            
+            y += rect.height + box.getMargin();
         }
+        
+        
+        //Rectangle rect = box.getBounds();
+        //renderer.fillRect(rect.x, rect.y + box.getHeaderHeight(), rect.width, rect.height - box.getHeaderHeight(), 0x3fff0000);
     }
 
     /* (non-Javadoc)

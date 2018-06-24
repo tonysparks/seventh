@@ -10,29 +10,25 @@ import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.EventDispatcher;
 import seventh.ui.Label.TextAlignment;
+import seventh.ui.events.ListHeaderChangedEvent;
+import seventh.ui.events.ListItemChangedEvent;
+import seventh.ui.events.OnListHeaderChangedListener;
+import seventh.ui.events.OnListItemChangedListener;
 
 /**
  * @author Tony
  *
  */
 public class ListBox extends Widget implements Scrollable {
-    public static interface ItemListener {
-        void onItemAdded(Button button);
-        void onItemRemove(Button button);
-    }
-    public static interface ColumnHeaderListener {
-        void onHeaderAdded(Button button);
-        void onHeaderRemove(Button button);
-    }
     
     private List<Button> items;
-    private ItemListener itemListener;
-    private ColumnHeaderListener headerListener;
-    
     private List<Button> columnHeaders;
     
     private int index;
     private int headerHeight;
+    private int headerMargin;
+    private int margin;
+    
     private Rectangle viewport;
     
     /**
@@ -41,11 +37,14 @@ public class ListBox extends Widget implements Scrollable {
     public ListBox(EventDispatcher eventDispatcher) {
         super(eventDispatcher);
         
-        this.headerHeight = 40;
+        this.headerHeight = 30;
+        this.headerMargin = 10;
+        
         this.items = new ArrayList<>();
         this.columnHeaders = new ArrayList<>();
         
         this.viewport = new Rectangle();
+        this.margin = 5;
     }
 
     /**
@@ -54,7 +53,7 @@ public class ListBox extends Widget implements Scrollable {
     public ListBox() {
         this(new EventDispatcher());
     }
-    
+        
     /**
      * @return the index
      */
@@ -94,34 +93,14 @@ public class ListBox extends Widget implements Scrollable {
         }
     }
     
-    
-    /**
-     * @param itemListener the itemListener to set
-     */
-    public void setItemListener(ItemListener itemListener) {
-        this.itemListener = itemListener;
+    public void addListItemChangedListener(OnListItemChangedListener listener) {
+        this.getEventDispatcher().addEventListener(ListItemChangedEvent.class, listener);
     }
     
-    /**
-     * @return the itemListener
-     */
-    public ItemListener getItemListener() {
-        return itemListener;
+    public void addListHeaderChangedListener(OnListHeaderChangedListener listener) {
+        this.getEventDispatcher().addEventListener(ListHeaderChangedEvent.class, listener);
     }
     
-    /**
-     * @param headerListener the headerListener to set
-     */
-    public void setHeaderListener(ColumnHeaderListener headerListener) {
-        this.headerListener = headerListener;
-    }
-    
-    /**
-     * @return the headerListener
-     */
-    public ColumnHeaderListener getHeaderListener() {
-        return headerListener;
-    }
     
     /**
      * Adds a button for column header
@@ -144,9 +123,7 @@ public class ListBox extends Widget implements Scrollable {
         
         addWidget(button);
         
-        if(this.headerListener != null) {
-            this.headerListener.onHeaderAdded(button);
-        }
+        this.getEventDispatcher().sendNow(new ListHeaderChangedEvent(this, button, true));
         
         return this;
     }
@@ -168,9 +145,8 @@ public class ListBox extends Widget implements Scrollable {
         this.items.add(button);
         addWidget(button);        
         
-        if(this.itemListener != null) {
-            this.itemListener.onItemAdded(button);
-        }
+        this.getEventDispatcher().sendNow(new ListItemChangedEvent(this, button, true));
+        
         return this;
     }
     
@@ -189,9 +165,7 @@ public class ListBox extends Widget implements Scrollable {
      * @param button
      */
     private void remoteInternalItem(Button button) {                
-        if(this.itemListener != null) {
-            this.itemListener.onItemRemove(button);
-        }
+        this.getEventDispatcher().sendNow(new ListItemChangedEvent(this, button, false));
         
         removeWidget(button);        
     }
@@ -222,6 +196,20 @@ public class ListBox extends Widget implements Scrollable {
     }
     
     /**
+     * @return the margin
+     */
+    public int getMargin() {
+        return margin;
+    }
+    
+    /**
+     * @param margin the margin to set
+     */
+    public void setMargin(int margin) {
+        this.margin = margin;
+    }
+    
+    /**
      * @return the headerHeight
      */
     public int getHeaderHeight() {
@@ -235,10 +223,24 @@ public class ListBox extends Widget implements Scrollable {
         this.headerHeight = headerHeight;
     }
     
+    /**
+     * @return the headerMargin
+     */
+    public int getHeaderMargin() {
+        return headerMargin;
+    }
+    
+    /**
+     * @param headerMargin the headerMargin to set
+     */
+    public void setHeaderMargin(int headerMargin) {
+        this.headerMargin = headerMargin;
+    }
+    
     @Override
     public Rectangle getViewport() {
         this.viewport.set(getBounds());
-        this.viewport.height -= getHeaderHeight();
+        this.viewport.height -= (getHeaderHeight());// + getHeaderMargin());
         return this.viewport;
     }
     
@@ -246,9 +248,9 @@ public class ListBox extends Widget implements Scrollable {
     public int getTotalHeight() {
         int sum = 0;
         for(int i = 0; i < this.items.size(); i++) {
-            sum += this.items.get(i).getBounds().height;
+            sum += this.items.get(i).getBounds().height + this.margin;
         }
-        return sum - getHeaderHeight();
+        return sum;
     }
     
     @Override

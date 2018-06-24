@@ -14,11 +14,19 @@ import seventh.ui.events.OnScrollBarListener;
 import seventh.ui.events.ScrollBarEvent;
 
 /**
+ * Scroll bar allows for a viewport of a {@link Scrollable} pane.
+ * 
  * @author Tony
  *
  */
 public class ScrollBar extends Widget {
 
+    /**
+     * Scroll bar orientation
+     * 
+     * @author Tony
+     *
+     */
     public enum Orientation {
         Horizontal,
         Vertical,
@@ -30,6 +38,7 @@ public class ScrollBar extends Widget {
     
     private float currentPosition;      
     private float adjustAmount;
+    private int scrollIncrement;
     private Orientation orientation;
     
     private boolean isDragging;
@@ -48,6 +57,7 @@ public class ScrollBar extends Widget {
         this.orientation = Orientation.Vertical;        
         this.currentPosition = 0;
         this.adjustAmount = 0.1f;
+        this.scrollIncrement = 1;
         
         this.dragSpot = new Vector2f();
         this.dragOffset = new Vector2f();
@@ -73,14 +83,13 @@ public class ScrollBar extends Widget {
             }
         });
         
-        // do
         this.handle = new Button();
         
         addWidget(this.top);
         addWidget(this.bottom);
         addWidget(this.handle);
         
-        calculateHandlePos();
+        calculateHandlePosition();
         
         addInputListener(new Inputs() {
             
@@ -171,17 +180,26 @@ public class ScrollBar extends Widget {
     }
     
     /**
-     * @param adjustAmount the adjustAmount to set
+     * @return the adjustAmount
      */
-    public void setAdjustAmount(float adjustAmount) {
-        this.adjustAmount = adjustAmount;
+    private float getAdjustAmount() {
+        return adjustAmount;
     }
     
     /**
-     * @return the adjustAmount
+     * @return the scrollIncrement
      */
-    public float getAdjustAmount() {
-        return adjustAmount;
+    public int getScrollIncrement() {
+        return scrollIncrement;
+    }
+    
+    /**
+     * @param scrollIncrement the scrollIncrement to set
+     */
+    public void setScrollIncrement(int scrollIncrement) {
+        this.scrollIncrement = scrollIncrement;
+        
+        this.calculateHandlePosition();
     }
     
     /**
@@ -220,21 +238,28 @@ public class ScrollBar extends Widget {
             this.currentPosition = 1f;
         }
         
-        calculateHandlePos();            
+        calculateHandlePosition();            
         
-        int movementDelta = 0;
-        float delta = this.currentPosition - previousPos;
-        float amount = 0;
-        while(amount < Math.abs(delta)) {
-            amount += this.adjustAmount;
-            movementDelta++;
+        
+        // only fire an event if we had a scroll motion;
+        // if adjustAmount is 1 that means nothing to scroll
+        if(this.adjustAmount < 1f) {
+            int movementDelta = 0;
+            
+            // calculate the number of scrolls we actually took
+            float delta = this.currentPosition - previousPos;
+            float amount = 0;
+            while(amount < Math.abs(delta)) {
+                amount += this.adjustAmount;
+                movementDelta++;
+            }
+            
+            if(delta < 0) {
+                movementDelta *= -1;
+            }
+            
+            fireScrollBarEvent(new ScrollBarEvent(this, movementDelta));
         }
-        
-        if(delta < 0) {
-            movementDelta *= -1;
-        }
-        
-        fireScrollBarEvent(new ScrollBarEvent(this, movementDelta));        
     }
     
     
@@ -242,6 +267,13 @@ public class ScrollBar extends Widget {
         this.getEventDispatcher().addEventListener(ScrollBarEvent.class, listener);
     }
     
+    
+    /**
+     * Moves the scroll bar handle to the desired position
+     * 
+     * @param x
+     * @param y
+     */
     public void moveHandle(int x, int y) {        
         final int handleSize = getHandleSize();
         switch(this.orientation) {
@@ -262,21 +294,15 @@ public class ScrollBar extends Widget {
                     targetY = height;
                 }
                 
+                // We must ensure that the position is a valid position
+                // based on the 'adjustAmount'
                 float newPosition = (float)targetY / (float)height;
-//                float delta = newPosition - this.currentPosition;
-//                if(delta < 0) {
-//                    delta = -this.adjustAmount;
-//                }
-//                else if(delta > 0) {
-//                    delta = this.adjustAmount;
-//                }
-                
-                float a = 0;
-                while(a < newPosition) {
-                    a += this.adjustAmount;
+                float properPosition = 0;
+                while(properPosition < newPosition) {
+                    properPosition += this.adjustAmount;
                 }
                 
-                //newPosition = a;
+                newPosition = properPosition;
                 
                 move(newPosition);
                 break;
@@ -304,31 +330,68 @@ public class ScrollBar extends Widget {
      */
     public void setOrientation(Orientation orientation) {
         this.orientation = orientation;        
-        calculateHandlePos();
+        calculateHandlePosition();
     }
     
-    private void calculateHandlePos() {        
-        //final int handleSize = BUTTON_ENDS_SIZE * 2;
+    
+    /**
+     * Calculates the percentage adjustments to the scrollbar
+     */
+    private void calculateAdjustments() {
         switch(this.orientation) {
             case Horizontal: {
                 // TODO
-//                int width = getBounds().width;
-//                int offset = (int)((float)width * this.currentPosition);
-//                Rectangle bounds = this.handle.getBounds();
-//                bounds.x = offset;
-//                bounds.y = getBounds().y;
-//                bounds.width = 30;
-//                bounds.height = 15;        
-//                
-//                this.top.getBounds().setLocation(getBounds().x, getBounds().y);
-//                this.bottom.getBounds().setLocation(getBounds().x + getBounds().width, getBounds().y);
+            }
+            case Vertical: {
+                Rectangle viewport = pane.getViewport();
+                int viewportHeight = viewport.height;
+                int maxHeight = pane.getTotalHeight();                
+                
+                if(maxHeight <= 0 || maxHeight < viewportHeight) {
+                    maxHeight = viewportHeight;
+                }
+                                
+                if(this.scrollIncrement > 0) {
+                    int scrollableArea = maxHeight - viewportHeight;
+                    int numberOfScrolls = scrollableArea / this.scrollIncrement;
+                    if( (scrollableArea % this.scrollIncrement) > 0) {
+                        numberOfScrolls++;
+                    }
+                    
+                    // 1 is weird, because we want to account for it (as in scroll one); but
+                    // we overload adjustAmount 1 to mean no scroll, so this is a work-around
+                    if(numberOfScrolls == 1) {
+                        this.adjustAmount = 0.5f;
+                    }
+                    else if(numberOfScrolls > 0) {
+                        this.adjustAmount = 1.0f / (float) numberOfScrolls;
+                    }
+                    else {
+                        this.adjustAmount = 1f;
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    /**
+     * Calculates the scrollbar handle position, this must be invoked if
+     * the {@link Scrollable} pane has adjusted in size
+     */
+    public void calculateHandlePosition() {        
+        calculateAdjustments();
+        
+        switch(this.orientation) {
+            case Horizontal: {
+                // TODO
                 break;
             }
             case Vertical: {
                 int handleSize = getHandleSize();
                 int height = getBounds().height - (handleSize + BUTTON_ENDS_SIZE*2);
                 int offset = (int)((float)height * this.currentPosition);
-                System.out.println("Pos: " + this.currentPosition + " offset: " + offset + " Adj: " + this.adjustAmount);
+
                 Rectangle bounds = this.handle.getBounds();
                 bounds.x = 0;
                 bounds.y = BUTTON_ENDS_SIZE + offset;
@@ -343,30 +406,39 @@ public class ScrollBar extends Widget {
     }
     
     private int getHandleSize() {
+        final int minHandleSize = BUTTON_ENDS_SIZE * 3;
+        
         switch(this.orientation) {
             case Horizontal: {
                 // TODO
-                return 15;
+                return minHandleSize;
             }
             case Vertical: {
                 Rectangle viewport = pane.getViewport();
-                int maxHeight = pane.getTotalHeight() - (BUTTON_ENDS_SIZE * 2);                
-                int viewportHeight = viewport.height  - (BUTTON_ENDS_SIZE * 2);
+                int viewportHeight = viewport.height;
+                int maxHeight = pane.getTotalHeight();                
                 
-                if(maxHeight <= 0) {
+                if(maxHeight <= 0 || maxHeight < viewportHeight) {
                     maxHeight = viewportHeight;
                 }
                 
-                int handleSize = BUTTON_ENDS_SIZE * 2;
+                int handleSize = minHandleSize;
                 if(maxHeight > 0) {
                     handleSize = (int) (((float)viewportHeight / (float) maxHeight) * (float)viewportHeight);
                 }
-
-                return handleSize;
+                
+                if(handleSize < minHandleSize) {
+                    handleSize = minHandleSize;
+                }
+                if(handleSize > maxHeight) {
+                    handleSize = maxHeight;
+                }
+                
+                return handleSize - (BUTTON_ENDS_SIZE * 2);
             }
         }
         
-        return 15;
+        return minHandleSize;
     }
     
     protected void fireScrollBarEvent(ScrollBarEvent event) {

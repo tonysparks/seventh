@@ -41,8 +41,10 @@ import seventh.ui.ScrollBar.Orientation;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
 import seventh.ui.events.HoverEvent;
+import seventh.ui.events.ListItemChangedEvent;
 import seventh.ui.events.OnButtonClickedListener;
 import seventh.ui.events.OnHoverListener;
+import seventh.ui.events.OnListItemChangedListener;
 import seventh.ui.events.OnScrollBarListener;
 import seventh.ui.events.ScrollBarEvent;
 import seventh.ui.view.ButtonView;
@@ -230,12 +232,11 @@ public class ServerListingsScreen implements Screen {
             }
         });
 
-
-        ScrollBar scrollBar = new ScrollBar(serverListings, new EventDispatcher());
+        final ScrollBar scrollBar = new ScrollBar(serverListings, new EventDispatcher());
         scrollBar.getBounds().set(685, 171, 15, 230);
         scrollBar.setTheme(theme);
         scrollBar.setOrientation(Orientation.Vertical);
-        scrollBar.setAdjustAmount(serverListings.getItems().isEmpty() ? 1.0f : 1.0f / (float)serverListings.getItems().size());
+        scrollBar.setScrollIncrement(25 + serverListings.getMargin());
         scrollBar.addScrollBarListener(new OnScrollBarListener() {
             
             @Override
@@ -253,6 +254,13 @@ public class ServerListingsScreen implements Screen {
                         delta--;
                     }
                 }
+            }
+        });
+        serverListings.addListItemChangedListener(new OnListItemChangedListener() {
+            
+            @Override
+            public void onListItemChanged(ListItemChangedEvent event) {
+                scrollBar.calculateHandlePosition();
             }
         });
         this.optionsPanel.addWidget(scrollBar);
@@ -339,11 +347,11 @@ public class ServerListingsScreen implements Screen {
                             for(LeoObject obj : array) {
                                 ServerInfo info = new ServerInfo(obj);
                                 servers.add(info);           
-                                for(int i = 0; i < 10; i++) {
+                                /*for(int i = 0; i < 11; i++) {
                                     LeoObject o = obj.clone();
                                     o.setObject("server_name", LeoObject.valueOf("Name" + i));
                                     servers.add(new ServerInfo(o));
-                                }
+                                }*/
                             }
                         }                                                
                     }
@@ -466,7 +474,7 @@ public class ServerListingsScreen implements Screen {
     
     private Button setupServerEntryButton(Vector2f pos, final String[] settings) {
         Button btn = setupButton(pos, settings[0], true, false);
-        btn.setBounds(new Rectangle(app.getScreenWidth() - 280, 24));
+        btn.setBounds(new Rectangle(app.getScreenWidth() - 280, 25));
         btn.getBounds().x += 20;
         btn.setTextSize(11);
         btn.setHoverTextSize(11);

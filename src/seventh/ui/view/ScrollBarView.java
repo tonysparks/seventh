@@ -20,17 +20,11 @@ public class ScrollBarView implements Renderable {
 
     private ScrollBar scrollBar;
     
-//    private ButtonView top, bottom, handle;
-    
     /**
-     * 
+     * @param scrollBar
      */
     public ScrollBarView(ScrollBar scrollBar) {
-        this.scrollBar = scrollBar;
-        
-//        this.top = new ButtonView(this.scrollBar.getTopButton());
-//        this.bottom = new ButtonView(this.scrollBar.getBottomButton());
-//        this.handle = new ButtonView(this.scrollBar.getHandleButton());
+        this.scrollBar = scrollBar;        
     }
 
     @Override
@@ -42,19 +36,18 @@ public class ScrollBarView implements Renderable {
         Rectangle bounds = btn.getScreenBounds();
         canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff383e18);
         
-//        int a = 100;
-//        if(btn.isHovering()) {
-//            a = 240;
-//        }
         int a = 240;
         if(btn.isHovering()) {
             a = 100;
+            canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, scrollBar.getForegroundColor());
         }
         
-     //
         canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, Colors.setAlpha(0xff282c0c, a));
-        //canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, Colors.setAlpha(scrollBar.getForegroundColor(), a));
         canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff000000);
+        
+        if(btn.isHovering()) {         
+            canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, Colors.setAlpha(scrollBar.getForegroundColor(), 180));
+        }
         
         final int stripColor = scrollBar.getForegroundColor();
         switch(this.scrollBar.getOrientation()) {
@@ -69,14 +62,12 @@ public class ScrollBarView implements Renderable {
                 
                 //y += stichesWidth/5;
                 canvas.drawLine(bounds.x + (stichHeight / 2) , y, bounds.x + (bounds.width - (stichHeight / 2)), y, stripColor);
-                
                 break;
             }
         }
     }
     
     private void renderHandle(Canvas canvas, Button btn) {
-        
         renderButton(canvas, btn);
         Rectangle bounds = btn.getScreenBounds();
         
@@ -87,6 +78,7 @@ public class ScrollBarView implements Renderable {
                 int stichesWidth = 21;
                 int x = bounds.x + (width / 2) - stichesWidth;
                 int stichHeight = bounds.height / 3;
+                
                 canvas.drawLine(x, bounds.y + (bounds.height - stichHeight), x, bounds.y + stichHeight, stripColor);
                 x += stichesWidth/3;
                 canvas.drawLine(x, bounds.y + (bounds.height - stichHeight), x, bounds.y + stichHeight, stripColor);
@@ -99,11 +91,12 @@ public class ScrollBarView implements Renderable {
                 int stichesWidth = 21;
                 int y = bounds.y + (width / 2) + (stichesWidth / 5);
                 int stichHeight = bounds.width - 5;
+                
                 canvas.drawLine(bounds.x + (stichHeight / 2) , y, bounds.x + (bounds.width - (stichHeight / 2)), y, stripColor);
                 y += stichesWidth/5;
                 canvas.drawLine(bounds.x + (stichHeight / 2) , y, bounds.x + (bounds.width - (stichHeight / 2)), y, stripColor);
                 y += stichesWidth/5;
-                canvas.drawLine(bounds.x + (stichHeight / 2) , y, bounds.x + (bounds.width - (stichHeight / 2)), y, stripColor);
+                canvas.drawLine(bounds.x + (stichHeight / 2) , y, bounds.x + (bounds.width - (stichHeight / 2)), y, stripColor);                
                 break;
             }
         }
@@ -111,25 +104,15 @@ public class ScrollBarView implements Renderable {
     
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
-        
-        
         Rectangle bounds = this.scrollBar.getBounds();
         canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, this.scrollBar.getBackgroundColor());
-//        switch(this.scrollBar.getOrientation()) {
-//            case Horizontal: {
-//                
-//                break;
-//            }
-//            case Vertical: {
-//                break;
-//            }
-//        }
+
+        canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff000000);
         
         renderButton(canvas, this.scrollBar.getTopButton());
         renderButton(canvas, this.scrollBar.getBottomButton());
         renderHandle(canvas, this.scrollBar.getHandleButton());
         
-        canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff000000);
     }
 
 }
