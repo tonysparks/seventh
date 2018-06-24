@@ -338,7 +338,12 @@ public class ServerListingsScreen implements Screen {
                             showNoServersLabel.set(array.isEmpty());
                             for(LeoObject obj : array) {
                                 ServerInfo info = new ServerInfo(obj);
-                                servers.add(info);
+                                servers.add(info);           
+                                for(int i = 0; i < 10; i++) {
+                                    LeoObject o = obj.clone();
+                                    o.setObject("server_name", LeoObject.valueOf("Name" + i));
+                                    servers.add(new ServerInfo(o));
+                                }
                             }
                         }                                                
                     }

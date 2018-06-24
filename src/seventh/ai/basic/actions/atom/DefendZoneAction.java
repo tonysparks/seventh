@@ -61,7 +61,9 @@ public class DefendZoneAction extends AdapterAction {
         Vector2f pos = brain.getWorld().getRandomSpot(brain.getEntityOwner(), zone.getBounds());
         
         Locomotion motion = brain.getMotion();
-        motion.moveTo(pos);
+        if(pos != null) {
+            motion.moveTo(pos);
+        }
     }
     
     /* (non-Javadoc)
@@ -75,7 +77,9 @@ public class DefendZoneAction extends AdapterAction {
                 zone = brain.getWorld().getZone(brain.getEntityOwner().getCenterPos());
             }
             Vector2f pos = brain.getWorld().getRandomSpot(brain.getEntityOwner(), zone.getBounds());
-            motion.moveTo(pos);
+            if(pos != null) {
+                motion.moveTo(pos);
+            }
         }
         
         timeSpentDefending += timeStep.getDeltaTime();
