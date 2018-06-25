@@ -120,6 +120,14 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         this.players = new ClientPlayers(SeventhConstants.MAX_PLAYERS);
     }
     
+    @Override
+    public void close() {
+        this.players.clear();
+        this.localPlayer.invalidate();
+        
+        super.close();
+    }
+    
     /*
      * (non-Javadoc)
      * @see seventh.shared.NetworkProtocol#postQueuedMessages()

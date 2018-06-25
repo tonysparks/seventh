@@ -1,9 +1,12 @@
 /*
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.screens.dialog;
 
 
+import seventh.client.gfx.Camera;
+import seventh.client.gfx.Canvas;
+import seventh.client.gfx.Renderable;
 import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
 import seventh.ui.view.ButtonView;

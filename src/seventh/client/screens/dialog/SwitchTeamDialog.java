@@ -1,9 +1,10 @@
 /*
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.screens.dialog;
 
 import seventh.client.ClientTeam;
+import seventh.client.gfx.Theme;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.Console;

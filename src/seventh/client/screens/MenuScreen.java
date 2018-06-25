@@ -210,7 +210,7 @@ public class MenuScreen implements Screen {
             public void run() {
                 try {
                     Leola runtime = Scripting.newRuntime();
-                    final GameServer server = new GameServer(console, runtime, true, settings );
+                    final GameServer server = new GameServer(console, runtime, true, settings);
                     server.setServerListener(new OnServerReadyListener() {
                         
                         @Override

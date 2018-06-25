@@ -1580,6 +1580,10 @@ public class ClientGame {
                 hud.getObjectiveLog().log("Commander Mode");
                 break;
             }
+            case SVR: {
+                hud.getObjectiveLog().log("Try to kill off wave upon wave of enemies.  In short, survive.");
+                break;
+            }
             default:
                 break;
             

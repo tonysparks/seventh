@@ -1,9 +1,10 @@
 /*
  * see license.txt 
  */
-package seventh.client.gfx;
+package seventh.client.screens.dialog;
 
 import seventh.client.ClientTeam;
+import seventh.client.gfx.Theme;
 import seventh.client.network.ClientConnection;
 import seventh.game.entities.Entity.Type;
 import seventh.math.Rectangle;

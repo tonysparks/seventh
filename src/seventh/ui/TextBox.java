@@ -62,14 +62,11 @@ public class TextBox extends Widget implements Hoverable {
         
         addInputListener(new Inputs() {
             
-            /* (non-Javadoc)
-             * @see seventh.client.Inputs#mouseMoved(int, int)
-             */
             @Override
             public boolean mouseMoved(int x, int y) {            
                 super.mouseMoved(x, y);
-                if ( !isDisabled() ) {
-                    if ( getScreenBounds().contains(x, y) ) {
+                if (!isDisabled()) {
+                    if (getScreenBounds().contains(x, y)) {
                         if(!hasFocus()) {
                             setHovering(true);
                         }
@@ -82,8 +79,8 @@ public class TextBox extends Widget implements Hoverable {
             
             @Override
             public boolean touchDown(int x, int y, int pointer, int button) {                
-                if ( !isDisabled() ) {
-                    if ( getScreenBounds().contains(x, y) ) {                                                                            
+                if (!isDisabled()) {
+                    if (getScreenBounds().contains(x, y)) {                                                                            
                         setFocus(true);                        
                         return false;                                                                
                     }
@@ -93,9 +90,6 @@ public class TextBox extends Widget implements Hoverable {
                 return false;
             }
 
-            /* (non-Javadoc)
-             * @see seventh.client.Inputs#touchDown(int, int, int, int)
-             */
             @Override
             public boolean touchUp(int x, int y, int pointer, int button) {                
                 return super.touchUp(x, y, pointer, button);                
@@ -293,10 +287,7 @@ public class TextBox extends Widget implements Hoverable {
         this.inputBuffer.append(text);
         this.cursorIndex = this.inputBuffer.length();
     }
-    
-    /* (non-Javadoc)
-     * @see seventh.ui.Widget#setFocus(boolean)
-     */
+        
     @Override
     public void setFocus(boolean focus) {    
         super.setFocus(focus);
