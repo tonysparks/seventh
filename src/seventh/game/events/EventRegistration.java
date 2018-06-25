@@ -52,6 +52,8 @@ public class EventRegistration {
         for(Pair<Class<?>, EventListener> pair : this.registeredListeners) {
             this.dispatcher.removeEventListener(pair.getFirst(), pair.getSecond());
         }
+        
+        this.registeredListeners.clear();
     }
     
     /**

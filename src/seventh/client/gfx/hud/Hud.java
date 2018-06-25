@@ -486,7 +486,9 @@ public class Hud implements Renderable {
     
     private void drawPlayersRemaining(Canvas canvas) {
         seventh.game.game_types.GameType.Type type = game.getGameType();
-        if(type!=null && type.equals(seventh.game.game_types.GameType.Type.OBJ)) {
+        if(type!=null && (type.equals(seventh.game.game_types.GameType.Type.OBJ) || 
+                type.equals(seventh.game.game_types.GameType.Type.SVR))) {
+            
             int numberOfAxisAlive = 0;
             int numberOfAlliedAlive = 0;
             

@@ -115,7 +115,11 @@ public class SurvivalGameType extends AbstractTeamGameType {
     
     public int spawnEnemy(Rectangle bounds) {
         Vector2f spawn = game.findFreeRandomSpot(new Rectangle(SeventhConstants.PLAYER_WIDTH, SeventhConstants.PLAYER_HEIGHT), bounds);
-        return spawnEnemy(spawn.x, spawn.y);
+        if(spawn != null) {
+            return spawnEnemy(spawn.x, spawn.y);
+        }
+        
+        return spawnEnemy(0f, 0f);
     }
     
     public int spawnEnemy(float x, float y) {
@@ -224,9 +228,10 @@ public class SurvivalGameType extends AbstractTeamGameType {
                     availablePlayers.add(player);
                 }
                 
-                if(getAlliedTeam().isTeamDead()) {
+                if(getAlliedTeam().isTeamDead() && startTimer.isExpired()) {
                     //failedMission();
                     getDispatcher().queueEvent(new RoundEndedEvent(this, getAxisTeam(), game.getNetGameStats()));
+                    //setGameState(GameState.INTERMISSION);
                     startTimer.reset().start();
                 }
             }
@@ -248,6 +253,8 @@ public class SurvivalGameType extends AbstractTeamGameType {
             for(Player player : getAlliedTeam().getPlayers()) {
                 super.spawnPlayer(player, game);
             }
+            
+            //setGameState(GameState.IN_PROGRESS);
             
             getDispatcher().queueEvent(new RoundStartedEvent(this));
         }
