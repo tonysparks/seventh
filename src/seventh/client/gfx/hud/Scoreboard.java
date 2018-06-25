@@ -30,6 +30,7 @@ public class Scoreboard {
     private boolean showScoreBoard;
     private boolean gameEnded;
     private Map<ClientTeam, Integer> teamScores;
+    private Map<ClientTeam, List<ClientPlayer>> teams;
     private ClientTeam winningTeam;
     
     private int yOffset;
@@ -42,6 +43,10 @@ public class Scoreboard {
         this.game = game;
         this.showScoreBoard = false;
         this.teamScores = new HashMap<ClientTeam, Integer>();
+        this.teams = new HashMap<ClientTeam, List<ClientPlayer>>();
+        this.teams.put(ClientTeam.NONE, new ArrayList<ClientPlayer>());
+        this.teams.put(ClientTeam.ALLIES, new ArrayList<ClientPlayer>());
+        this.teams.put(ClientTeam.AXIS, new ArrayList<ClientPlayer>());
         
         resetScroll();
         
@@ -191,11 +196,10 @@ public class Scoreboard {
 //        
 
         RenderFont.drawShadedString(canvas, "Name                  Kills     Assists     Deaths    Hit%   Ping", x, y, defaultColor);
-        List<ClientPlayer> vals = game.getPlayers().asList();
-        Map<ClientTeam, List<ClientPlayer>> teams = new HashMap<ClientTeam, List<ClientPlayer>>();
-        teams.put(ClientTeam.NONE, new ArrayList<ClientPlayer>());
-        teams.put(ClientTeam.ALLIES, new ArrayList<ClientPlayer>());
-        teams.put(ClientTeam.AXIS, new ArrayList<ClientPlayer>());
+        List<ClientPlayer> vals = game.getPlayers().asList();        
+        teams.get(ClientTeam.NONE).clear();
+        teams.get(ClientTeam.ALLIES).clear();
+        teams.get(ClientTeam.AXIS).clear();
         
         Collections.sort(vals, new Comparator<ClientPlayer>() {
 
