@@ -459,7 +459,7 @@ public class Emitters {
         emitter.addParticleUpdater(new MovementParticleUpdater(0, 12f));
         emitter.addParticleUpdater(new AlphaDecayUpdater(3_000, 0f, 0.995718f));
         emitter.addParticleRenderer(new TriangleParticleRenderer(4.5f));
-                
+        
         return emitter;
     }
     

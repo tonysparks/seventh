@@ -672,7 +672,7 @@ public class PlayerSprite implements Renderable {
                 float fy = facing.y - 5.0f;
                 
                 sprite.translate(fx, fy);
-                canvas.drawSprite(sprite);
+                canvas.drawSprite(sprite);                
                 sprite.translate(-fx, -fy);
             }
         }
@@ -681,7 +681,7 @@ public class PlayerSprite implements Renderable {
          */
         {
 
-            setTextureRegion(sprite, activeBodyPosition.getCurrentImage());        
+            setTextureRegion(sprite, activeBodyPosition.getCurrentImage());            
             canvas.drawRawSprite(sprite);                
             
             

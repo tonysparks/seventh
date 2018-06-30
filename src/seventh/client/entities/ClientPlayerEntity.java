@@ -691,7 +691,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     public void render(Canvas canvas, Camera camera, float alpha) {
         canvas.setCompositeAlpha(fadeAlphaColor / 255.0f);
         canvas.setColor(teamColor, fadeAlphaColor);    
-        
+                
         //states[currentState].render(canvas, camera)
         Vector2f cameraPos = camera.getRenderPosition(alpha);
         Vector2f pos = getRenderPos(alpha);

@@ -83,7 +83,7 @@ public class Emitter implements Effect {
          */
         public void update(TimeStep timeStep, ParticleData particles);
         
-        public void render(Canvas canvas, Camera camera, float alpha, ParticleData particles);
+        public void render(Canvas canvas, Camera camera, float alpha, ParticleData particles);        
     }
     
     protected Timer timeToLive;    
