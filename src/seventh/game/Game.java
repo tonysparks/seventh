@@ -953,18 +953,12 @@ public class Game implements GameInfo, Debugable, Updatable {
      * be invoked every time a new Round begins  
      */
     private void loadMapScripts() {
+        // remove any previous scripted listeners
+        this.eventRegistration.unregisterListeners();
+        
         File propertiesFile = new File(gameMap.getMapFileName() + ".props.leola");
         if(propertiesFile.exists()) {
             try {   
-                // remove any previous scripted listeners
-                this.eventRegistration.unregisterListeners();
-                
-                // TODO:
-                // Clean this up, I don't think we actually need a 'properties'
-                // loading, this can all be done thru the gameType scripts.
-                // The weird thing about this is the lighting entities,
-                // this should probably be moved to a post load
-                // of the Map.
                 Leola runtime = Scripting.newSandboxedRuntime();                   
                 runtime.loadStatics(SeventhScriptingCommonLibrary.class);
                 
@@ -976,25 +970,25 @@ public class Game implements GameInfo, Debugable, Updatable {
                 
                 runtime.put("game", this);
                 runtime.eval(propertiesFile);
-                
-                this.collidableMapObjects.clear();
-                
-                // Load the map objects
-                List<MapObject> objects = map.getMapObjects();
-                for(int i = 0; i < objects.size(); i++) {
-                    MapObject mapObject = objects.get(i);
-                    mapObject.onLoad(this);
-                    
-                    if(mapObject.isCollidable()) {
-                        this.collidableMapObjects.add(mapObject);
-                    }
-                }                
             }
             catch(Exception e) {
                 Cons.println("*** ERROR -> Loading map properties file: " + propertiesFile.getName() + " -> ");
                 Cons.println(e);
             }
         }
+        
+        this.collidableMapObjects.clear();
+        
+        // Load the map objects
+        List<MapObject> objects = map.getMapObjects();
+        for(int i = 0; i < objects.size(); i++) {
+            MapObject mapObject = objects.get(i);
+            mapObject.onLoad(this);
+            
+            if(mapObject.isCollidable()) {
+                this.collidableMapObjects.add(mapObject);
+            }
+        }      
     }
         
     /* (non-Javadoc)
