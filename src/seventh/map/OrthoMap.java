@@ -1257,8 +1257,6 @@ public class OrthoMap implements Map {
         if (this.mapOffset == null || this.currentFrameViewport == null) {
             return;
         }
-        boolean doIt = false;
-        if(!doIt) return;
         
         Vector2f camPos = this.mapOffset;
         Rectangle viewport = this.currentFrameViewport;
