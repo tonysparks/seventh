@@ -7,6 +7,7 @@ import java.io.File;
 
 import leola.vm.Args;
 import leola.vm.Leola;
+import seventh.math.Vector2f;
 import seventh.server.SeventhScriptingCommonLibrary;
 
 /**
@@ -50,6 +51,7 @@ public class Scripting {
         
         /* load some helper functions for objective scripts */
         runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+        runtime.loadStatics(Vector2f.class);
         runtime.put("console", Cons.getImpl());
         
         
@@ -70,6 +72,7 @@ public class Scripting {
         
         /* load some helper functions for objective scripts */
         runtime.loadStatics(SeventhScriptingCommonLibrary.class);
+        runtime.loadStatics(Vector2f.class);
         runtime.put("console", Cons.getImpl());
         
         return runtime;

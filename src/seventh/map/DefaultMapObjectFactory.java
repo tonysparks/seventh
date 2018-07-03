@@ -334,7 +334,12 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         this.objectDefinitions = new HashMap<>();
         this.tileDefinitions = new HashMap<>();
         
-        File objectsFile = new File(mapFile + ".objects.leola");
+        loadObjectFile(runtime, "./assets/maps/map-objects.leola");
+        loadObjectFile(runtime, mapFile + ".objects.leola");        
+    }
+
+    private void loadObjectFile(Leola runtime, String fileName) throws Exception {
+        File objectsFile = new File(fileName);
         if(objectsFile.exists()) {
             String contents = new String(Files.readAllBytes(objectsFile.toPath()));
             LeoMap objectData = JSON.parseJson(runtime, contents).as();
@@ -354,7 +359,6 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             }
         }
     }
-
     
     @Override
     public MapObject createMapObject(MapObjectData data) {
