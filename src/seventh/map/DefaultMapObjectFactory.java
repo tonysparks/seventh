@@ -46,6 +46,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         public String type;    
         public float width, height;
         public boolean isCollidable;
+        public boolean allowRotation;
         public int heightMask;
         public String surfaceType;
         public ImageData image;
@@ -101,9 +102,14 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             this.obb = new OBB(rect);
             this.obb.rotateAround(pos, rotRadians);
             
-            int length = (int)this.obb.length();
-            this.bounds.setSize(length, length);
-            this.bounds.centerAround(this.obb.getCenter());
+            if(definition.allowRotation) {
+                int length = (int)this.obb.length();
+                this.bounds.setSize(length, length);
+                this.bounds.centerAround(this.obb.getCenter());
+            }
+            else {
+                this.bounds.set(rect);
+            }
             
             this.heightMask = definition.heightMask;
             this.isCollidable = definition.isCollidable;
@@ -318,6 +324,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
 //                DebugDraw.fillRectRelative((int)obb.center.x, (int)obb.center.y, 5, 5, 0xffff0000);
             }
             //DebugDraw.drawOOBRelative(obb, 0xff00ff00);
+            //DebugDraw.drawRectRelative(getBounds(), 0xff00ff00);
         }
     }
     

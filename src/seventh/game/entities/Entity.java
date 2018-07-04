@@ -305,6 +305,8 @@ public abstract class Entity implements Debugable {
     protected int speed;
     protected int collisionHeightMask;
     
+    private Vector2f teleportPos;
+    
     private boolean canTakeDamage;
     private boolean isAlive;
     private int health;
@@ -373,6 +375,8 @@ public abstract class Entity implements Debugable {
         this.centerPos = new Vector2f();
         
         this.scriptObj = LeoObject.valueOf(this);
+       
+        this.teleportPos = new Vector2f();
         
         this.xCollisionTilePos = new Vector2f();
         this.yCollisionTilePos = new Vector2f();
@@ -531,6 +535,15 @@ public abstract class Entity implements Debugable {
     public void moveTo(Vector2f pos) {
         this.pos.set(pos);
         this.bounds.setLocation(pos);
+    }
+    
+    /**
+     * Teleports this entity to the supplied location
+     * 
+     * @param pos
+     */
+    public void teleportTo(Vector2f pos) {
+        this.teleportPos.set(pos);
     }
 
     /**
@@ -755,6 +768,13 @@ public abstract class Entity implements Debugable {
         boolean isBlocked = false;
         
         this.movementDir.zeroOut();
+        
+        if(!this.teleportPos.isZero()) {
+            moveTo(this.teleportPos);
+            this.teleportPos.zeroOut();
+            return false;
+        }
+        
         if(this.isAlive && !this.vel.isZero()) {
             if(currentState != State.WALKING && currentState != State.SPRINTING) {
                 currentState = State.RUNNING;
