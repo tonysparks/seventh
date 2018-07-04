@@ -24,6 +24,10 @@ public class MovementParticleUpdater implements ParticleUpdater {
         this.minSpeed = minSpeed;        
         this.speedDecay = speedDecay;
     }
+    
+    @Override
+    public void reset() {       
+    }
 
     /* (non-Javadoc)
      * @see seventh.client.gfx.particle_system.Emitter.ParticleUpdater#update(seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)

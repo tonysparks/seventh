@@ -134,6 +134,10 @@ public class ClientTank extends ClientVehicle {
                 Emitter smoke = Emitters.newSmokeEmitter(getCenterPos(), 40_000).addParticleUpdater(new ParticleUpdater() {
                     
                     @Override
+                    public void reset() {                       
+                    }
+                    
+                    @Override
                     public void update(TimeStep timeStep, ParticleData particles) {
                         Emitter emitter = particles.emitter;
                         if(removeGfx()) {

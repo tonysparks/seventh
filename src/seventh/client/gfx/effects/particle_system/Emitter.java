@@ -58,6 +58,8 @@ public class Emitter implements Effect {
      */
     public static interface ParticleUpdater {
 
+        public void reset();
+        
         /**
          * Updates the particles
          * 
@@ -266,14 +268,30 @@ public class Emitter implements Effect {
         resetTimeToLive();
         this.particles.reset();
         this.kill = false;
+                
+        resetUpdaters();
+        
+        return this;
+    }
+    
+    public Emitter resetUpdaters() {
+        for(int i = 0; i < this.updaters.size(); i++) {
+            this.updaters.get(i).reset();
+        }
+        
+        return this;
+    }
+    
+    public Emitter resetGenerators() {
+        for(int i = 0; i < this.generators.size(); i++) {
+            this.generators.get(i).reset();
+        }
         return this;
     }
     
     public Emitter resetTimeToLive() {
         this.timeToLive.reset();
-        for(int i = 0; i < this.generators.size(); i++) {
-            this.generators.get(i).reset();
-        }
+        resetGenerators();
         return this;
     }
     

@@ -20,6 +20,10 @@ public class KillIfAttachedIsDeadUpdater implements ParticleUpdater {
      */
     public KillIfAttachedIsDeadUpdater() {
     }
+    
+    @Override
+    public void reset() {       
+    }
 
     /* (non-Javadoc)
      * @see seventh.client.gfx.particle_system.Emitter.ParticleUpdater#update(seventh.shared.TimeStep, seventh.client.gfx.particle_system.ParticleData)

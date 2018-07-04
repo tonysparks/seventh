@@ -335,6 +335,10 @@ public class Emitters {
         emitter.addParticleUpdater(new ParticleUpdater() {
             
             @Override
+            public void reset() {               
+            }
+            
+            @Override
             public void update(TimeStep timeStep, ParticleData particles) {
                 ClientEntity ent = emitter.attachedTo();
                 if(ent!=null) {
@@ -463,6 +467,75 @@ public class Emitters {
         return emitter;
     }
     
+    
+    public static Emitter newSingleSparksEmitter(final Vector2f pos, Vector2f targetVel) {        
+        final Vector2f vel = targetVel.createClone();
+        
+        final int maxParticles = 60;
+        final Emitter emitter = new Emitter(pos.createClone(), Integer.MAX_VALUE, maxParticles)
+                            .setName("SparksEmitter")
+                            .setDieInstantly(false);
+        
+        
+        BatchedParticleGenerator gen = new BatchedParticleGenerator(5050, 8200, maxParticles);
+        gen.addSingleParticleGenerator(new SingleParticleGenerator() {
+            
+                @Override
+                public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+                    particles.speed[index] = 285;
+                    particles.pos[index].set(emitter.getPos());       
+                }
+            })
+           .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
+           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xF7DC6Fff), new Color(0xF9E79Fff),new Color(0xF4D03Fff)))
+           .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 60))
+           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(2000, 2050))           
+        ;
+        
+        emitter.addParticleGenerator(gen);
+        
+        emitter.addParticleUpdater(new KillUpdater());
+        emitter.addParticleUpdater(new RandomMovementParticleUpdater(285, 0.6f, 0f));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9822718f));
+        emitter.addParticleRenderer(new CircleParticleRenderer());
+        
+        return emitter;
+    }
+    
+    
+    public static Emitter newSparksEmitter(final Vector2f pos, Vector2f targetVel) {        
+        final Vector2f vel = targetVel.createClone();
+        
+        final int maxParticles = 30;
+        final CompositeEmitter emitter = new CompositeEmitter(pos.createClone(), Integer.MAX_VALUE, maxParticles, newSingleSparksEmitter(pos, targetVel));
+        emitter.setName("SparksEmitter");
+        emitter.setDieInstantly(false);
+        
+        
+        BatchedParticleGenerator gen = new BatchedParticleGenerator(2050, 3200, maxParticles);
+        gen.addSingleParticleGenerator(new SingleParticleGenerator() {
+            
+                @Override
+                public void onGenerateParticle(int index, TimeStep timeStep, ParticleData particles) {
+                    particles.speed[index] = 285;
+                    particles.pos[index].set(emitter.getPos());                    
+                }
+            })
+           .addSingleParticleGenerator(new SetPositionSingleParticleGenerator()) 
+           .addSingleParticleGenerator(new RandomColorSingleParticleGenerator(new Color(0xF7DC6Fff), new Color(0xF9E79Fff),new Color(0xF4D03Fff)))
+           .addSingleParticleGenerator(new RandomVelocitySingleParticleGenerator(vel, 30))
+           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(2000, 2050))           
+        ;
+        
+        emitter.addParticleGenerator(gen);
+        
+        emitter.addParticleUpdater(new KillUpdater());
+        emitter.addParticleUpdater(new RandomMovementParticleUpdater(285, 0.5f, 0f));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9822718f));
+        emitter.addParticleRenderer(new CircleParticleRenderer());
+                
+        return emitter;
+    }
     
     public static Emitter newWallCrumbleEmitter(Tile tile, Vector2f pos) {
         final int maxParticles = 44;

@@ -16,6 +16,7 @@ public class AlphaDecayUpdater implements ParticleUpdater {
 
     private final float endingAlpha;
     private final float decayFactor;
+    private final long startTime;
     private       long startDecayAfterTime;
     
     public AlphaDecayUpdater(float endingAlpha, float decayFactor) {
@@ -23,11 +24,17 @@ public class AlphaDecayUpdater implements ParticleUpdater {
     }
     
     public AlphaDecayUpdater(long startDecayAfterTime, float endingAlpha, float decayFactor) {
+        this.startTime = startDecayAfterTime;
         this.startDecayAfterTime = startDecayAfterTime;
         this.endingAlpha = endingAlpha;
         this.decayFactor = decayFactor;
     }
 
+    @Override
+    public void reset() {
+        this.startDecayAfterTime = this.startTime;
+    }
+    
     @Override
     public void update(TimeStep timeStep, ParticleData particles) {
         this.startDecayAfterTime -= timeStep.getDeltaTime();

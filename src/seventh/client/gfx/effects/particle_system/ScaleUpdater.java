@@ -25,6 +25,10 @@ public class ScaleUpdater implements ParticleUpdater {
         this.decayFactor = decayFactor;
         this.isMin = decayFactor < 0;
     }
+    
+    @Override
+    public void reset() {       
+    }
 
     @Override
     public void update(TimeStep timeStep, ParticleData particles) {
