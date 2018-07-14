@@ -27,14 +27,14 @@ public class FlameThrower extends Weapon {
     public FlameThrower(Game game, Entity owner) {
         super(game, owner, Type.FLAME_THROWER);
         
-        this.bulletsInClip = 140;
+        this.bulletsInClip = 255;
         this.spread = 1;
-        this.emitRatePerSec = 8;
+        this.emitRatePerSec = 18;
         this.isDoneFiring = true;
         this.lineOfSight = WeaponConstants.FLAME_THROWER_LINE_OF_SIGHT;
         this.weaponWeight = WeaponConstants.FLAME_THROWER_WEIGHT;
         
-        setBulletSpawnDistance(55);
+        setBulletSpawnDistance(35);
     }
     
     @Override

@@ -149,7 +149,7 @@ public class Evaluators {
             }
             else {
                 if(weapon.getBulletsInClip() > 0) {
-                    score += 0.1;
+                    score += 0.3;
                 }
             }
         }

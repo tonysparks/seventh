@@ -19,6 +19,7 @@ import seventh.client.sfx.Sound;
 import seventh.game.game_types.GameType;
 import seventh.math.Rectangle;
 import seventh.shared.Cons;
+import seventh.shared.Scripting;
 import seventh.shared.SoundType;
 import seventh.shared.Timer;
 
@@ -68,7 +69,7 @@ public class ClientLeolaLibrary implements LeolaLibrary {
             
             @Override
             public void onFinish(Timer timer) {
-                function.xcall();
+                Scripting.execute(function);
             }
         });
     }

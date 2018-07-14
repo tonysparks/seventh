@@ -7,6 +7,7 @@ import java.io.File;
 
 import leola.vm.Args;
 import leola.vm.Leola;
+import leola.vm.types.LeoObject;
 import seventh.math.Vector2f;
 import seventh.server.SeventhScriptingCommonLibrary;
 
@@ -18,6 +19,15 @@ import seventh.server.SeventhScriptingCommonLibrary;
  */
 public class Scripting {
 
+    public static void execute(LeoObject function) {
+        if(function != null) {
+            LeoObject result = function.call();
+            if(result.isError()) {
+                Cons.println("*** ERROR -> " + result);
+            }
+        }
+    }
+    
     /**
      * Attempts to load a script file
      * 
