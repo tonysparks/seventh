@@ -32,6 +32,7 @@ public class RocketLauncher extends Weapon {
         this.bulletsInClip = this.clipSize;
         this.lineOfSight = WeaponConstants.RPG_LINE_OF_SIGHT;
         this.weaponWeight = WeaponConstants.RPG_WEIGHT;
+        this.endFire = true;
         
         applyScriptAttributes("rocket_launcher");
     }
