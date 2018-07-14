@@ -462,77 +462,77 @@ public class PlayerEntity extends Entity implements Controllable {
      */
     @Override
     public void damage(Entity damager, int amount) {
-        if(this.invinceableTime<=0) {
+        boolean isInviceable = this.invinceableTime > 0;
+                    
+        /* if the damager is a bullet, we should
+         * determine the entrance wound, as it will
+         * impact the amount of damage done.
+         */
+        if(damager instanceof Bullet) {
+            Bullet bullet = (Bullet) damager;
             
-            /* if the damager is a bullet, we should
-             * determine the entrance wound, as it will
-             * impact the amount of damage done.
-             */
-            if(damager instanceof Bullet) {
-                Bullet bullet = (Bullet) damager;
-                
-                PlayerEntity damageOwner = null;
-                
-                Entity owner = bullet.getOwner();
-                if(owner instanceof PlayerEntity) {
-                    damageOwner = (PlayerEntity)owner;
-                }
-                
-                Vector2f center = getCenterPos();
-                Vector2f bulletCenter = bullet.getCenterPos();
-                
-                this.headshot.centerAround(center);
-                
-                // determine which body part the bullet hit
-                Vector2f.Vector2fMA(bulletCenter, bullet.getTargetVel(), 35, this.bulletDir);
-                if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.headshot)) {
-                    // headshots deal out a lot of damage
-                    amount *= 3;    
-                    
-                    if(damageOwner != null) {
-                        game.emitSoundFor(damageOwner.getId(), SoundType.HEADSHOT, bullet.getPos(), damageOwner.getId());
-                    }
-                }
-                else {
-                    // limb shots are not as lethal
-                    
-                    // right side
-                    Vector2f.Vector2fPerpendicular(getFacing(), cache);
-                    Vector2f.Vector2fMA(center, cache, 10, cache);
-                    this.limbshot.centerAround(cache);
-                    if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.limbshot)) {
-                        amount /= 2;
-                    }
-                                 
-                    // left side
-                    Vector2f.Vector2fPerpendicular(getFacing(), cache);
-                    Vector2f.Vector2fMS(center, cache, 10, cache);
-                    this.limbshot.centerAround(cache);
-                    if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.limbshot)) {
-                        amount /= 2;
-                    }               
-                    
-                    if(damageOwner != null) {
-                        game.emitSoundFor(damageOwner.getId(), SoundType.HIT_INDICATOR, bullet.getPos(), damageOwner.getId());
-                    }
-                }
-                
-                //DebugDraw.drawLineRelative(bullet.getCenterPos(), this.bulletDir, 0xff00ffff);
-                
-                
-                game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getPos());
-                
-                if(damageOwner != null) {                    
-                    game.emitSoundFor(damageOwner.getId(), SoundType.IMPACT_FLESH, damageOwner.getPos(), damageOwner.getId());
-                }
-                                
-                if(!bullet.isPiercing()) {                    
-                    bullet.kill(this);    
-                }  
+            PlayerEntity damageOwner = null;
+            
+            Entity owner = bullet.getOwner();
+            if(owner instanceof PlayerEntity) {
+                damageOwner = (PlayerEntity)owner;
             }
-                
-            super.damage(damager, amount);           
             
+            Vector2f center = getCenterPos();
+            Vector2f bulletCenter = bullet.getCenterPos();
+            
+            this.headshot.centerAround(center);
+            
+            // determine which body part the bullet hit
+            Vector2f.Vector2fMA(bulletCenter, bullet.getTargetVel(), 35, this.bulletDir);
+            if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.headshot)) {
+                // headshots deal out a lot of damage
+                amount *= 3;    
+                
+                if(damageOwner != null) {
+                    game.emitSoundFor(damageOwner.getId(), SoundType.HEADSHOT, bullet.getPos(), damageOwner.getId());
+                }
+            }
+            else {
+                // limb shots are not as lethal
+                
+                // right side
+                Vector2f.Vector2fPerpendicular(getFacing(), cache);
+                Vector2f.Vector2fMA(center, cache, 10, cache);
+                this.limbshot.centerAround(cache);
+                if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.limbshot)) {
+                    amount /= 2;
+                }
+                             
+                // left side
+                Vector2f.Vector2fPerpendicular(getFacing(), cache);
+                Vector2f.Vector2fMS(center, cache, 10, cache);
+                this.limbshot.centerAround(cache);
+                if(Line.lineIntersectsRectangle(bulletCenter, this.bulletDir, this.limbshot)) {
+                    amount /= 2;
+                }               
+                
+                if(damageOwner != null) {
+                    game.emitSoundFor(damageOwner.getId(), SoundType.HIT_INDICATOR, bullet.getPos(), damageOwner.getId());
+                }
+            }
+            
+            //DebugDraw.drawLineRelative(bullet.getCenterPos(), this.bulletDir, 0xff00ffff);
+            
+            
+            game.emitSound(bullet.getId(), SoundType.IMPACT_FLESH, bullet.getPos());
+            
+            if(damageOwner != null) {                    
+                game.emitSoundFor(damageOwner.getId(), SoundType.IMPACT_FLESH, damageOwner.getPos(), damageOwner.getId());
+            }
+                            
+            if(!bullet.isPiercing() || isInviceable) {                    
+                bullet.kill(this);    
+            }  
+        }
+            
+        if(!isInviceable) {
+            super.damage(damager, amount);
         }
     }
 
