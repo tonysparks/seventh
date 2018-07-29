@@ -1355,7 +1355,7 @@ public class ClientGame {
                                             case SURFACE_SAND:
                                             case SURFACE_WATER:
                                             case SURFACE_WOOD:
-                                                Sounds.playSound(snd, pos.x, pos.y, 0.35f);
+                                                Sounds.playSound(snd, pos.x, pos.y, 0.85f);
                                                 break;
                                             default: Sounds.playSound(snd, pos.x, pos.y);
                                         }                                        

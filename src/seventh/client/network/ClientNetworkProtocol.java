@@ -120,10 +120,22 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
         this.players = new ClientPlayers(SeventhConstants.MAX_PLAYERS);
     }
     
+    
+    private void cleanup() {
+        this.players.clear();
+        this.outboundQ.clear();
+        
+        this.localPlayer.invalidate();
+        
+        if(game!=null) {
+            game.destroy();
+            game=null;
+        }
+    }
+    
     @Override
     public void close() {
-        this.players.clear();
-        this.localPlayer.invalidate();
+        cleanup();
         
         super.close();
     }
@@ -203,6 +215,7 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     public void onConnected(Connection conn) {
         Cons.println("Client connected");
     }
+
     
     /*
      * (non-Javadoc)
@@ -211,16 +224,7 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     @Override
     public void onDisconnected(Connection conn) {            
         Cons.println("Client disconnected");
-        this.players.clear();
-        this.outboundQ.clear();
-        
-        this.localPlayer.invalidate();
-        
-        if(game!=null) {
-            game.destroy();
-            game=null;
-        }
-        
+        cleanup();        
         app.goToMenuScreen();
     }
     
