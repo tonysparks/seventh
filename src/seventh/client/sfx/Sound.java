@@ -8,6 +8,7 @@ import java.util.Random;
 
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
+import seventh.math.Vector2f;
 
 /**
  * @author Tony
@@ -19,21 +20,30 @@ public class Sound {
     private String sourceName;    
     private String soundFile;
     private SoundSystem soundSystem;
+    
+    private SoundConfig soundCfg;
+    
+    private Vector2f pos;
+    
     /**
      * @param soundFile
      * @param soundSystem
      */
-    public Sound(SoundSystem soundSystem, String soundFile, String soundName) throws Exception {        
+    public Sound(SoundSystem soundSystem, String soundFile, String soundName, SoundConfig soundCfg) throws Exception {        
         this.soundSystem = soundSystem;
         this.sourceName = soundName;
         this.soundFile = soundFile;
+        this.soundCfg = soundCfg;
+        
+        this.pos = new Vector2f();
         
         this.soundSystem.newSource(true, this.sourceName, soundFile, false, 0, 0, 0, 
-                SoundSystemConfig.ATTENUATION_ROLLOFF, SoundSystemConfig.getDefaultRolloff());                
+                SoundSystemConfig.ATTENUATION_ROLLOFF, soundCfg.rolloff);                
     }
 
     private float getFuzzyPitch() {
-        return (float)(95 + rand.nextInt(5)) / 100.0f;
+        int delta = soundCfg.maxPitch - soundCfg.minPitch;
+        return (float)(soundCfg.minPitch + rand.nextInt(delta)) / 100.0f;
     }
     
     /**
@@ -51,7 +61,12 @@ public class Sound {
     }
     
     public void setPosition(float x, float y) {
+        this.pos.set(x, y);
         this.soundSystem.setPosition(sourceName, x, y, 0);
+    }
+    
+    public Vector2f getPosition() {
+        return this.pos;
     }
     
     public void play(float x, float y) {
@@ -59,7 +74,8 @@ public class Sound {
     }
     
     public void play(float x, float y, boolean loop) {
-        this.soundSystem.setDistOrRoll(sourceName, 0.005f);
+        this.pos.set(x, y);
+        this.soundSystem.setDistOrRoll(sourceName, this.soundCfg.rolloff);
         this.soundSystem.setPosition(sourceName, x, y, 0);
         this.soundSystem.setLooping(sourceName, loop);
         this.soundSystem.setPitch(sourceName, getFuzzyPitch());
@@ -83,7 +99,8 @@ public class Sound {
     }
     
     public void setVolume(float v) {
-        this.soundSystem.setVolume(sourceName, v);
+        float volume = v * this.soundCfg.maxVolume * this.soundCfg.volumeDamp;
+        this.soundSystem.setVolume(sourceName, volume);
     }
     
     public float getVolume() {

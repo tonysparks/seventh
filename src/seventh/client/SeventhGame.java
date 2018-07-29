@@ -364,24 +364,20 @@ public class SeventhGame implements ApplicationListener {
         videoReload();        
         
         this.menuScreen = new MenuScreen(this);
+        goToMenuScreen();
         
-        if(!launchStartupScript(this.startupConfig)) {
-            goToMenuScreen();
-        }
+        launchStartupScript(this.startupConfig);
     }
     
-    private boolean launchStartupScript(String startupScript) {
+    private void launchStartupScript(String startupScript) {
         if(startupScript != null) {
             LeoObject result = Scripting.loadScript(Scripting.newSandboxedRuntime(), startupScript);
             if(LeoObject.isTrue(result)) {
                 GameServerSettings settings = LeoObject.fromLeoObject(result, GameServerSettings.class);
                         
                 this.menuScreen.startLocalServer(settings);
-                return true;
             }
         }
-        
-        return false;
     }
 
     /**

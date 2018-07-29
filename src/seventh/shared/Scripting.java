@@ -41,7 +41,7 @@ public class Scripting {
                 return runtime.eval(file);
             }
             catch(Exception e) {
-                Cons.println("*** ERROR -> Loading " + file.getName() + ":" + e);
+                Cons.println("*** ERROR -> Loading " + file.getName() + ": " + e);
             }
         }
         

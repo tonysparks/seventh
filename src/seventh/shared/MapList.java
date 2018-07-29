@@ -27,7 +27,7 @@ public class MapList {
          * @param fileName
          */
         public MapEntry(String fileName) {
-            this(MapList.stripFileExtension(fileName), fileName);
+            this(MapList.getDisplayName(fileName), fileName);
         }
         
         /**
@@ -151,6 +151,13 @@ public class MapList {
         }
         
         return mapName;
+    }
+    
+    private static String getDisplayName(String mapFilePath) {
+        int startIndex = mapFilePath.lastIndexOf("/") + 1;
+        int endIndex   = mapFilePath.lastIndexOf(".");
+        
+        return mapFilePath.substring(startIndex, endIndex);
     }
     
     public static String stripFileExtension(String fileName) {

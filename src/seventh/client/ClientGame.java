@@ -655,9 +655,8 @@ public class ClientGame {
      * @param y
      * @return the {@link Sound}
      */
-    public Sound playSound(Sound snd, float x, float y, Float damp, Boolean loop) {
-        float d = (damp != null) ? damp : 1.0f;
-        snd.setVolume(Sounds.getVolume() * d);
+    public Sound playSound(Sound snd, float x, float y, Boolean loop) {        
+        snd.setVolume(Sounds.getVolume());
         snd.play(x, y, loop != null ? loop : false);
         return snd;
     }
@@ -669,7 +668,7 @@ public class ClientGame {
      */
     public Sound playGlobalSound(Sound snd) {
         Vector2f pos = Sounds.getPosition();
-        return playSound(snd, pos.x, pos.y, null, false);
+        return playSound(snd, pos.x, pos.y, false);
     }
     
     public Sound playGlobalSound(SoundType type) {
@@ -1356,9 +1355,9 @@ public class ClientGame {
                                             case SURFACE_SAND:
                                             case SURFACE_WATER:
                                             case SURFACE_WOOD:
-                                                Sounds.playSound(snd, pos.x, pos.y, 0.35f );
+                                                Sounds.playSound(snd, pos.x, pos.y, 0.35f);
                                                 break;
-                                            default: Sounds.playSound(snd, pos.x, pos.y );
+                                            default: Sounds.playSound(snd, pos.x, pos.y);
                                         }                                        
                                     }
                                     else {                                    

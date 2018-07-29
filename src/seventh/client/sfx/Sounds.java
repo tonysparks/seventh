@@ -3,10 +3,14 @@
  */
 package seventh.client.sfx;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import leola.vm.types.LeoMap;
+import leola.vm.types.LeoObject;
 import paulscode.sound.ListenerData;
 import paulscode.sound.SoundSystem;
 import paulscode.sound.SoundSystemConfig;
@@ -21,6 +25,7 @@ import seventh.math.Vector2f;
 import seventh.shared.Command;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.Scripting;
 import seventh.shared.SoundType;
 
 /**
@@ -218,6 +223,10 @@ public class Sounds {
     private static float volume = 0.1f;
     private static Vector2f listenerPosition = new Vector2f();
     private static ClientSeventhConfig config;
+    
+    
+    private static Map<String, SoundConfig> soundConfigs = new HashMap<>();
+    private static SoundConfig defaultSoundConfig = new SoundConfig();
     
     private static Sound[] createChannel() {
         return new Sound[] {                    
@@ -481,7 +490,6 @@ public class Sounds {
             config = cfg;
             volume = config.getVolume();
             
-            SoundSystemConfig.setMasterGain(volume);                    
             SoundSystemConfig.setLogger(new SoundSystemLogger() {
                 @Override
                 public void errorMessage(String message, String error, int code) {
@@ -497,13 +505,26 @@ public class Sounds {
                     Cons.println("*** (I) Sound system: " + message + " :: " + code);
                 }
             });
+            
             SoundSystemConfig.addLibrary(LibraryLWJGLOpenAL.class);
             SoundSystemConfig.setCodec( "wav", CodecWav.class );
-            SoundSystemConfig.setDefaultFadeDistance(10000f);
+            SoundSystemConfig.setDefaultFadeDistance(32f * 3.f);//10000f);
+            SoundSystemConfig.setMasterGain(volume);                    
             SoundSystemConfig.setNumberNormalChannels(cfg.getNumberOfSoundChannels());
             
             soundSystem = new SoundSystem(LibraryLWJGLOpenAL.class);
+            soundSystem.checkFadeVolumes();
+            
             setVolume(volume);        
+            
+            LeoObject soundCfgs = Scripting.loadScript(Scripting.newSandboxedRuntime(), config.getSoundConfigPath());
+            if(LeoObject.isTrue(soundCfgs)) {
+                LeoMap map = soundCfgs.as();
+                for(Entry<LeoObject, LeoObject> e: map.entrySet()) {
+                    SoundConfig sndCfg = LeoObject.fromLeoObject(e.getValue(), SoundConfig.class);
+                    soundConfigs.put(e.getKey().toString(), sndCfg);
+                }
+            }
             
             for(int i = 0; i < channels.length; i++) {
                 channels[i] = createChannel();
@@ -599,7 +620,12 @@ public class Sounds {
                 sound = loadedSounds.get(soundFile).newSound();
             }
             else {
-                SoundBuffer buffer = new SoundBuffer(soundSystem, soundFile, random);
+                SoundConfig soundCfg = soundConfigs.get(parseName(soundFile));
+                if(soundCfg == null) {
+                    soundCfg = defaultSoundConfig;
+                }
+                
+                SoundBuffer buffer = new SoundBuffer(soundSystem, soundFile, random, soundCfg);
                 loadedSounds.put(soundFile, buffer);
                 
                 sound = buffer.newSound();
@@ -613,6 +639,17 @@ public class Sounds {
         }
         
         return null;
+    }
+    
+    private static String parseName(String soundFile) {
+        int startIndex = soundFile.lastIndexOf("/") + 1;
+        int endIndex   = soundFile.lastIndexOf(".");
+        
+        while(endIndex > startIndex && Character.isDigit(soundFile.charAt(endIndex-1))) {
+            endIndex--;
+        }
+        
+        return soundFile.substring(startIndex, endIndex);
     }
     
     
@@ -661,7 +698,7 @@ public class Sounds {
     }
     
     public static Sound playGlobalSound(SoundType type) {
-        return playGlobalSound(soundBank(type), dampSound(type, 1.0f));
+        return playGlobalSound(soundBank(type), 1.0f);
     }
     
     /**
@@ -1119,38 +1156,10 @@ public class Sounds {
         Sound sound = null;
         int[] soundBank = soundBank(type);
         if(soundBank != null) {
-            sound = playFreeSound(soundBank, x, y, dampSound(type, damp));
+            sound = playFreeSound(soundBank, x, y, damp);
         }
         
         return sound;
     }
 
-    private static float dampSound(SoundType type, float damp) {
-        // avoid these from being too loud and
-        // annoying
-        switch(type) {
-            case SURFACE_WOOD:
-            case SURFACE_GRASS:
-            case SURFACE_METAL:
-            case SURFACE_WATER:
-            case SURFACE_SAND:                
-                return damp * 0.22f;
-                
-            case HIT_INDICATOR:
-            case IMPACT_FLESH:
-                return damp * 1.6f;
-            case TANK_FIRE:
-            case TANK_IDLE:
-            case TANK_MOVE:
-            case TANK_OFF:
-            case TANK_ON:
-            case TANK_REV_DOWN:
-            case TANK_REV_UP:
-            case TANK_SHIFT:
-            case TANK_TURRET_MOVE:
-                return damp * 1.82f;
-            default:
-        }
-        return damp;
-    }
 }

@@ -36,6 +36,7 @@ public class ClientSeventhConfig extends SeventhConfig {
             {"game", "follow_reticle_offset"},  // 10
             {"show_debug_info"},                // 11
             {"show_fps"},                       // 12
+            {"sound","sound_config_path"},      // 13
     };
      
     private KeyMap keyMap;
@@ -225,5 +226,13 @@ public class ClientSeventhConfig extends SeventhConfig {
     
     public void showFps(boolean show) {
         this.config.set(show, KEYS[12]);
+    }
+    
+    public String getSoundConfigPath() {
+        return this.config.getStr("./assets/sfx/sounds.leola", KEYS[13]);
+    }
+    
+    public void setSoundConfigPath(String path) {
+        this.config.set(LeoObject.valueOf(path), KEYS[13]);
     }
 }

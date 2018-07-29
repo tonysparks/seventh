@@ -297,8 +297,8 @@ public class ClientLeolaLibrary implements LeolaLibrary {
      * @param y
      * @return the {@link Sound}
      */
-    public Sound playSound(Sound snd, float x, float y, Float damp, Boolean loop) {        
-        return this.game.playSound(snd, x, y, damp, loop);
+    public Sound playSound(Sound snd, float x, float y, Boolean loop) {        
+        return this.game.playSound(snd, x, y, loop);
     }
     
     /**
