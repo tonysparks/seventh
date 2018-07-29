@@ -214,7 +214,7 @@ public class ClientWeapon {
                 case FIRING: {
                     firstFire++;
                     
-                    if(!this.fireWaitTimer.isUpdating() && isFirstFire()) {                        
+                    if(!this.fireWaitTimer.isUpdating() && isFirstFire() && !isAutomatic()) {                        
                         this.fireWaitTimer.setEndTime(isBoltAction() ? 50 : 300);
                         this.fireWaitTimer.reset();
                         this.fireWaitTimer.start();
