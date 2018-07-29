@@ -253,11 +253,14 @@ public class SurvivalGameType extends AbstractTeamGameType {
             for(Player player : getAlliedTeam().getPlayers()) {
                 super.spawnPlayer(player, game);
             }
+
             
             //setGameState(GameState.IN_PROGRESS);
             
             getDispatcher().queueEvent(new RoundStartedEvent(this));
         }
+        
+        checkSpectating(timeStep, game);
         
         return this.currentGameState;
     }
