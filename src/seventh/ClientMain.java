@@ -144,7 +144,12 @@ public class ClientMain {
                 cfg.height = 480; //600;
             }
             
-            new LwjglApplication(new SeventhGame(config), cfg);            
+            String startupScript = null;
+            if(args.length > 0) {
+                startupScript = args[0];
+            }
+            
+            new LwjglApplication(new SeventhGame(config, startupScript), cfg);            
             
         }
         catch(Exception e) {

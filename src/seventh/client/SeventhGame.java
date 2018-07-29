@@ -46,10 +46,12 @@ import seventh.client.screens.Screen;
 import seventh.client.screens.ShaderEditorScreen;
 import seventh.client.sfx.Sounds;
 import seventh.network.messages.PlayerNameChangeMessage;
+import seventh.server.GameServer.GameServerSettings;
 import seventh.shared.Command;
 import seventh.shared.CommonCommands;
 import seventh.shared.Cons;
 import seventh.shared.Console;
+import seventh.shared.Scripting;
 import seventh.shared.StateMachine;
 import seventh.shared.TimeStep;
 import seventh.ui.UserInterfaceManager;
@@ -105,9 +107,14 @@ public class SeventhGame implements ApplicationListener {
     private static final long DELTA_TIME = 1000 / 30;
     
     /**
+     * Development mode startup script
+     */
+    private String startupConfig;
+    
+    /**
      * @param config
      */
-    public SeventhGame(ClientSeventhConfig config) throws Exception {
+    public SeventhGame(ClientSeventhConfig config, String startupConfig) throws Exception {
         this.console = Cons.getImpl();
         this.timeStep = new TimeStep();
         this.terminal = new Terminal(console, config);
@@ -118,9 +125,9 @@ public class SeventhGame implements ApplicationListener {
         Cons.println("*** Initializing " + VERSION + " ***");
         Cons.println("Start Stamp: " + new Date());
         
-
         this.config = config;        
         this.keyMap = config.getKeyMap();
+        this.startupConfig = startupConfig;
                         
         this.connection = new ClientConnection(this, config, console);
         
@@ -357,7 +364,24 @@ public class SeventhGame implements ApplicationListener {
         videoReload();        
         
         this.menuScreen = new MenuScreen(this);
-        goToMenuScreen();
+        
+        if(!launchStartupScript(this.startupConfig)) {
+            goToMenuScreen();
+        }
+    }
+    
+    private boolean launchStartupScript(String startupScript) {
+        if(startupScript != null) {
+            LeoObject result = Scripting.loadScript(Scripting.newSandboxedRuntime(), startupScript);
+            if(LeoObject.isTrue(result)) {
+                GameServerSettings settings = LeoObject.fromLeoObject(result, GameServerSettings.class);
+                        
+                this.menuScreen.startLocalServer(settings);
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**

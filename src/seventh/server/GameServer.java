@@ -241,9 +241,10 @@ public class GameServer {
                  * Bots not spawning
                  */
                 if( (state instanceof InGameState) ) {
-                    console.println("Running startup script...");
+                    console.println("Entering game state");
                     
                     if(settings.startupScript != null) {
+                        console.println("Running startup script: '" + settings.startupScript + "'");
                         console.execute("run", settings.startupScript);
                     }
                     

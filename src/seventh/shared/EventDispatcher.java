@@ -179,7 +179,9 @@ public class EventDispatcher {
                 EventMethodEntry entry = this.eventMethodMap.get(listenerClass);
                 
                 /* Send out the event */
-                entry.invoke(listener, event);
+                if(entry != null) {
+                    entry.invoke(listener, event);
+                }
                 
                 /* If its been consumed, don't continue */
                 if ( event.isConsumed() ) {

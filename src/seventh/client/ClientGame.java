@@ -655,9 +655,10 @@ public class ClientGame {
      * @param y
      * @return the {@link Sound}
      */
-    public Sound playSound(Sound snd, float x, float y) {        
-        snd.setVolume(Sounds.getVolume());
-        snd.play(x, y);
+    public Sound playSound(Sound snd, float x, float y, Float damp, Boolean loop) {
+        float d = (damp != null) ? damp : 1.0f;
+        snd.setVolume(Sounds.getVolume() * d);
+        snd.play(x, y, loop != null ? loop : false);
         return snd;
     }
     
@@ -668,7 +669,7 @@ public class ClientGame {
      */
     public Sound playGlobalSound(Sound snd) {
         Vector2f pos = Sounds.getPosition();
-        return playSound(snd, pos.x, pos.y);
+        return playSound(snd, pos.x, pos.y, null, false);
     }
     
     public Sound playGlobalSound(SoundType type) {
@@ -1735,6 +1736,7 @@ public class ClientGame {
      * Cleans up resources
      */
     public void destroy() {
+        executeCallbackScript("coreDestroy");
         executeCallbackScript("onDestroy");
         
         this.pools.destroy();

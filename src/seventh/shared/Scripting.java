@@ -34,16 +34,18 @@ public class Scripting {
      * @param runtime
      * @param scriptFile
      */
-    public static void loadScript(Leola runtime, String scriptFile) {
+    public static LeoObject loadScript(Leola runtime, String scriptFile) {
         File file = new File(scriptFile);
         if(file.exists()) {
             try {                
-                runtime.eval(file);
+                return runtime.eval(file);
             }
             catch(Exception e) {
                 Cons.println("*** ERROR -> Loading " + file.getName() + ":" + e);
             }
         }
+        
+        return LeoObject.NULL;
     }
     
     /**
