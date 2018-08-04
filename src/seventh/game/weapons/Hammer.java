@@ -4,6 +4,7 @@
 package seventh.game.weapons;
 
 import seventh.game.Game;
+import seventh.game.PlayerInfo;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
 import seventh.math.Vector2f;
@@ -47,7 +48,10 @@ public class Hammer extends Weapon {
             
             // TODO: Pick the current tile the user has
             // TODO: Only allow if current weapon is Hammer
-            return game.addTile( (byte)1, tilePos);
+            PlayerInfo player = game.getPlayerById(owner.getId());
+            if(player != null) {
+                return game.addTile(player.getActiveTile(), tilePos);
+            }
         }
         
         return false;

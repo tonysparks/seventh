@@ -5,6 +5,7 @@ package seventh.game.net;
 
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
+import seventh.network.messages.BufferIO;
 
 /**
  * A tile addition, specifies the location of the
@@ -16,12 +17,12 @@ import harenet.messages.NetMessage;
 public class NetMapAddition implements NetMessage {
 
     public int tileX, tileY;
-    public byte type;
+    public int type;
 
     public NetMapAddition() {     
     }
     
-    public NetMapAddition(int tileX, int tileY, byte type) {
+    public NetMapAddition(int tileX, int tileY, int type) {
         this.tileX = tileX;
         this.tileY = tileY;
         this.type = type;
@@ -31,14 +32,14 @@ public class NetMapAddition implements NetMessage {
     public void read(IOBuffer buffer) {
         this.tileX = buffer.getUnsignedByte();
         this.tileY = buffer.getUnsignedByte();  
-        this.type = buffer.getByteBits(4);
+        this.type = BufferIO.readTileType(buffer);
     }
 
     @Override
     public void write(IOBuffer buffer) {
         buffer.putUnsignedByte(this.tileX);
         buffer.putUnsignedByte(this.tileY);
-        buffer.putByteBits(this.type, 4);
+        BufferIO.writeTileType(buffer, this.type);
     }
 
 }

@@ -12,11 +12,11 @@ import seventh.shared.Event;
 public class TileAddedEvent extends Event {
 
     private int x, y;
-    private byte type;
+    private int type;
     /**
      * 
      */
-    public TileAddedEvent(Object source, byte type, int x, int y) {
+    public TileAddedEvent(Object source, int type, int x, int y) {
         super(source);
         this.type = type;
         this.x = x;
@@ -26,7 +26,7 @@ public class TileAddedEvent extends Event {
     /**
      * @return the type
      */
-    public byte getType() {
+    public int getType() {
         return type;
     }
     

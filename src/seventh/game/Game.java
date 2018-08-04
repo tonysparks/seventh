@@ -744,7 +744,7 @@ public class Game implements GameInfo, Debugable, Updatable {
      * @param pos
      * @return true if it was added
      */
-    public boolean addTile(byte type, Vector2f pos) {
+    public boolean addTile(int type, Vector2f pos) {
         int tileX = (int)pos.x;
         int tileY = (int)pos.y;
         
@@ -1443,6 +1443,19 @@ public class Game implements GameInfo, Debugable, Updatable {
         }
     }
     
+    /**
+     * A player has requested to switch their active tile 
+     * (this is for builder player classes) 
+     * 
+     * @param playerId
+     * @param newTileId
+     */
+    public void playerSwitchTile(int playerId, int newTileId) {
+        Player player = players.getPlayer(playerId);
+        if(player!=null) {            
+            player.setActiveTile(newTileId);
+        }
+    }
     
     /**
      * Attempts to change the player's commander status

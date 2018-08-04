@@ -35,19 +35,19 @@ import seventh.math.Vector2f;
  *
  */
 public class BufferIO {
-    public static final byte BOMB_DIARMED = 1;
+    public static final byte BOMB_DIARMED  = 1;
     public static final byte BOMB_EXPLODED = 2;
-    public static final byte BOMB_PLANTED = 3;
+    public static final byte BOMB_PLANTED  = 3;
     
     public static final byte CLIENT_DISCONNECTED = 4;
-    public static final byte CLIENT_READY = 5;
+    public static final byte CLIENT_READY        = 5;
     
     public static final byte CONNECT_ACCEPTED = 6;
-    public static final byte CONNECT_REQUEST = 7;
+    public static final byte CONNECT_REQUEST  = 7;
     
-    public static final byte GAME_ENDED = 8;
-    public static final byte GAME_READY = 9;
-    public static final byte GAME_STATS = 10;
+    public static final byte GAME_ENDED  = 8;
+    public static final byte GAME_READY  = 9;
+    public static final byte GAME_STATS  = 10;
     public static final byte GAME_PARTIAL_STATS = 11;
     public static final byte GAME_UPDATE = 12;
     
@@ -62,30 +62,32 @@ public class BufferIO {
     public static final byte PLAYER_SPEECH = 21;
     public static final byte PLAYER_COMMANDER = 22;    
     public static final byte PLAYER_AWARD  = 23;
+    public static final byte PLAYER_SWITCH_TILE  = 24;
+    public static final byte PLAYER_INPUT = 25;
     
-    public static final byte ROUND_ENDED = 24;
-    public static final byte ROUND_STARTED = 25;
-    public static final byte SPECTATING_PLAYER = 26;
-    public static final byte TEAM_TEXT = 27;
-    public static final byte TEXT = 28;
-    public static final byte PLAYER_INPUT = 29;
+    public static final byte ROUND_ENDED   = 26;
+    public static final byte ROUND_STARTED = 27;
+    public static final byte SPECTATING_PLAYER = 28;
     
-    public static final byte RCON_MESSAGE = 30;
-    public static final byte RCON_TOKEN_MESSAGE = 31;
+    public static final byte TEAM_TEXT   = 29;
+    public static final byte TEXT        = 30;
     
-    public static final byte AI_COMMAND = 32;
+    public static final byte RCON_MESSAGE       = 31;
+    public static final byte RCON_TOKEN_MESSAGE = 32;
     
-    public static final byte TILE_REMOVED = 33;
-    public static final byte TILES_REMOVED= 34;
+    public static final byte AI_COMMAND = 33;
     
-    public static final byte TILE_ADDED = 35;
-    public static final byte TILES_ADDED = 36;
+    public static final byte TILE_REMOVED  = 34;
+    public static final byte TILES_REMOVED = 35;
     
-    public static final byte FLAG_CAPTURED = 37;
-    public static final byte FLAG_RETURNED = 38;
-    public static final byte FLAG_STOLEN = 39;
+    public static final byte TILE_ADDED  = 36;
+    public static final byte TILES_ADDED = 37;
     
-    public static final byte GAME_EVENT  = 40;
+    public static final byte FLAG_CAPTURED = 38;
+    public static final byte FLAG_RETURNED = 39;
+    public static final byte FLAG_STOLEN   = 40;
+    
+    public static final byte GAME_EVENT  = 41;
     
     /**
      * The Seventh {@link NetMessageFactory} implementation
@@ -145,6 +147,8 @@ public class BufferIO {
                 case PLAYER_CLASS_CHANGE: message = new PlayerSwitchPlayerClassMessage();
                     break;
                 case PLAYER_SPEECH: message = new PlayerSpeechMessage();
+                    break;
+                case PLAYER_SWITCH_TILE: message = new PlayerSwitchTileMessage();
                     break;
                 case PLAYER_INPUT: message = new PlayerInputMessage();
                     break;                    
@@ -332,6 +336,14 @@ public class BufferIO {
         }
         
         return new String(chars);
+    }
+    
+    public static int readTileType(IOBuffer buffer) {
+        return buffer.getByteBits(4);
+    }
+    
+    public static void writeTileType(IOBuffer buffer, int tileType) {
+        buffer.putByteBits( (byte)tileType, 4);
     }
     
     public static void writePlayerClassType(IOBuffer buffer, PlayerClass playerClass) {

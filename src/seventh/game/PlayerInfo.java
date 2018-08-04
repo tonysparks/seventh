@@ -54,6 +54,11 @@ public interface PlayerInfo {
     public abstract String getName();
 
     /**
+     * @return Get the players current active tile (for builder player class only)
+     */
+    public int getActiveTile();
+    
+    /**
      * @return true if this player is a bot
      */
     public abstract boolean isBot();

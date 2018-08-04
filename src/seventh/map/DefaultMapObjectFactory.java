@@ -55,7 +55,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
     }
     
     public static class TileDefinition {
-        public byte type;
+        public int type;
         public int layer;
         public int tileId;
         
@@ -330,7 +330,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
     
     
     private Map<String, MapObjectDefinition> objectDefinitions;
-    private Map<Byte, TileDefinition> tileDefinitions;
+    private Map<Integer, TileDefinition> tileDefinitions;
     
     private boolean loadAssets;
     /**
@@ -389,6 +389,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         tile.setIndexPosition(data.tileX, data.tileY);
         tile.setCollisionMaskById(definition.collisionMaskId);
         tile.setFlips(false, false, false);
+        tile.setType(data.type);
         
         return tile;
     }

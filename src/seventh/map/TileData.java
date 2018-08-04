@@ -8,6 +8,6 @@ package seventh.map;
  *
  */
 public class TileData {
-    public byte type;
+    public int type;
     public int tileX, tileY;
 }

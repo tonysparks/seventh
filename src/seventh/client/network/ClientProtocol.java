@@ -31,6 +31,7 @@ import seventh.network.messages.PlayerSpawnedMessage;
 import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchPlayerClassMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
+import seventh.network.messages.PlayerSwitchTileMessage;
 import seventh.network.messages.PlayerSwitchWeaponClassMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.RconTokenMessage;
@@ -388,6 +389,13 @@ public interface ClientProtocol {
      * @param msg
      */
     public void sendPlayerCommanderMessage(PlayerCommanderMessage msg);
+
+    /**
+     * Sends a {@link PlayerSwitchTileMessage}
+     * 
+     * @param msg
+     */
+    public void sendPlayerSwitchTileMessage(PlayerSwitchTileMessage msg);
     
     /**
      * Sends an {@link AICommandMessage}

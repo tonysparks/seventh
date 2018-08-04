@@ -1326,7 +1326,7 @@ public class Tile implements Renderable {
      * When this tile is added by 
      * a player, a type is attached to it
      */
-    private byte type;
+    private int type;
     
     /**
      * 
@@ -1410,14 +1410,14 @@ public class Tile implements Renderable {
     /**
      * @return the type
      */
-    public byte getType() {
+    public int getType() {
         return type;
     }
     
     /**
      * @param type the type to set
      */
-    public void setType(byte type) {
+    public void setType(int type) {
         this.type = type;
     }
     

@@ -25,6 +25,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
 import seventh.ClientMain;
 import seventh.client.gfx.Art;
@@ -373,9 +374,12 @@ public class SeventhGame implements ApplicationListener {
         if(startupScript != null) {
             LeoObject result = Scripting.loadScript(Scripting.newSandboxedRuntime(), startupScript);
             if(LeoObject.isTrue(result)) {
-                GameServerSettings settings = LeoObject.fromLeoObject(result, GameServerSettings.class);
-                        
-                this.menuScreen.startLocalServer(settings);
+                LeoMap map = result.as();
+                if(!map.isEmpty()) {
+                    GameServerSettings settings = LeoObject.fromLeoObject(result, GameServerSettings.class);
+                            
+                    this.menuScreen.startLocalServer(settings);
+                }
             }
         }
     }

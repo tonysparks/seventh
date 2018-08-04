@@ -60,6 +60,9 @@ public class Player implements PlayerInfo, Debugable {
     private PlayerClass playerClass;
     private Type weaponClass;
     
+    // For builders, their active tile
+    private int activeTile;
+    
     private int previousKeys;
     
     /**
@@ -90,6 +93,8 @@ public class Player implements PlayerInfo, Debugable {
         this.weaponClass = Type.UNKNOWN;
         
         this.killedAt = new Vector2f();
+        
+        this.activeTile = 1;
                 
         setPlayerClass(PlayerClass.Default);
         setTeam(Team.SPECTATOR);
@@ -530,6 +535,22 @@ public class Player implements PlayerInfo, Debugable {
             this.entity.setPlayerClass(getPlayerClass(), getWeaponClass());
         }
     }
+    
+    /**
+     * @return the activeTile
+     */
+    @Override
+    public int getActiveTile() {
+        return activeTile;
+    }
+    
+    /**
+     * @param activeTile the activeTile to set
+     */
+    public void setActiveTile(int activeTile) {
+        this.activeTile = activeTile;
+    }
+    
     
     /**
      * @param team the team to set
