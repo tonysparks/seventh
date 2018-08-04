@@ -63,6 +63,7 @@ import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetGameUpdate;
 import seventh.game.net.NetMapAddition;
+import seventh.game.net.NetMapAdditions;
 import seventh.game.net.NetMapDestructables;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
@@ -1279,6 +1280,14 @@ public class ClientGame {
         NetMapDestructables destructables = gs.mapDestructables;
         if(destructables != null) {
             this.map.removeDestructableTilesAt(destructables.tiles);
+        }
+        
+        NetMapAdditions additions = gs.mapAdditions;
+        if(additions != null && additions.tiles != null) {
+            for(int i = 0; i < additions.tiles.length; i++) {
+                NetMapAddition addition = additions.tiles[i];
+                addTile(addition);
+            }
         }
     }
     
