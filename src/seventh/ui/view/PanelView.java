@@ -28,7 +28,7 @@ import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
 import seventh.math.Rectangle;
 import seventh.shared.TimeStep;
-import seventh.ui.Panel;
+import seventh.ui.Widget;
 
 /**
  * Renders a group of elements
@@ -42,7 +42,7 @@ public class PanelView implements Renderable {
      * Elements
      */
     private List<Renderable> uiElements;
-    private Panel panel;
+    private Widget panel;
     
     public PanelView() {
         this(null);
@@ -51,7 +51,7 @@ public class PanelView implements Renderable {
     /**
      * @param panel
      */
-    public PanelView(Panel panel) {
+    public PanelView(Widget panel) {
         this.panel = panel;
         this.uiElements = new ArrayList<>();
     }

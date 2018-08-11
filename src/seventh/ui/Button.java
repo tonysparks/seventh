@@ -258,7 +258,7 @@ public class Button extends Widget implements Hoverable {
             
             if(!this.isHovering) {
                 Sounds.playGlobalSound(Sounds.uiHover);
-                getEventDispatcher().sendNow(new HoverEvent(this, this));
+                getEventDispatcher().sendNow(new HoverEvent(this, this, isHovering));
             }
         }
         else {
@@ -266,6 +266,11 @@ public class Button extends Widget implements Hoverable {
             Theme theme = getTheme();
             if(theme != null) {
                 this.label.setForegroundColor(theme.getForegroundColor());
+            }
+            
+            // we stopped hovering
+            if(this.isHovering) {
+                getEventDispatcher().sendNow(new HoverEvent(this, this, isHovering));
             }
         }
         this.isHovering = isHovering;

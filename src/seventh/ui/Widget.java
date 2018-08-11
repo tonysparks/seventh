@@ -143,6 +143,10 @@ public class Widget {
      * Gradiant color
      */
     private int gradiantColor;
+
+    private int borderColor;
+    private int borderWidth;
+
     
     /**
      * The theme
@@ -164,6 +168,9 @@ public class Widget {
         this.enableGradiant = true;
         this.gradiantColor = 0xff999999;// new Vector3f(0.63f,0.63f,0.63f);
         this.focus = true;
+
+        this.borderColor = 0;
+        this.borderWidth = 0;
         
         
         this.screenPosition = new Vector2f();
@@ -624,6 +631,34 @@ public class Widget {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    /**
+     * @return the borderColor
+     */
+    public int getBorderColor() {
+        return borderColor;
+    }
+    
+    /**
+     * @param borderColor the borderColor to set
+     */
+    public void setBorderColor(int borderColor) {
+        this.borderColor = borderColor;
+    }
+    
+    /**
+     * @return the borderWidth
+     */
+    public int getBorderWidth() {
+        return borderWidth;
+    }
+    
+    /**
+     * @param borderWidth the borderWidth to set
+     */
+    public void setBorderWidth(int borderWidth) {
+        this.borderWidth = borderWidth;
     }
 
 

@@ -104,7 +104,7 @@ public class ScrollBarView implements Renderable {
     
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
-        Rectangle bounds = this.scrollBar.getBounds();
+        Rectangle bounds = this.scrollBar.getScreenBounds();
         canvas.fillRect(bounds.x, bounds.y, bounds.width, bounds.height, this.scrollBar.getBackgroundColor());
 
         canvas.drawRect(bounds.x, bounds.y, bounds.width, bounds.height, 0xff000000);

@@ -50,6 +50,8 @@ import seventh.client.sfx.Sound;
 import seventh.client.sfx.Sounds;
 import seventh.client.sfx.Zings;
 import seventh.client.weapon.ClientBomb;
+import seventh.client.weapon.ClientHammer;
+import seventh.client.weapon.ClientWeapon;
 import seventh.game.Timers;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.Type;
@@ -823,6 +825,22 @@ public class ClientGame {
             this.scoreboard.setGameEnded(true);
             this.scoreboard.showScoreBoard(true); 
         }
+    }
+    
+    /**
+     * @return true if the local player is yielding a hammer
+     */
+    public boolean isLocalPlayerYieldingHammer() {
+        if(this.localPlayer != null) {
+            if(this.localPlayer.isAlive()) {
+                ClientWeapon weapon = this.localPlayer.getEntity().getWeapon();
+                if(weapon != null) {
+                    return weapon instanceof ClientHammer;
+                }
+            }
+        }
+        
+        return false;
     }
     
     /**

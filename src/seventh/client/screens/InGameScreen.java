@@ -32,9 +32,13 @@ import seventh.client.network.ClientConnection;
 import seventh.client.network.ClientProtocol;
 import seventh.client.screens.dialog.InGameOptionsDialog;
 import seventh.client.screens.dialog.InGameOptionsDialogView;
+import seventh.client.screens.dialog.TileSelectDialog;
+import seventh.client.screens.dialog.TileSelectDialogView;
 import seventh.client.screens.dialog.InGameOptionsDialog.OnHideListener;
 import seventh.client.sfx.Sounds;
+import seventh.map.DefaultMapObjectFactory;
 import seventh.map.Tile;
+import seventh.map.TilesetAtlas;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.network.messages.AICommandMessage;
@@ -42,6 +46,7 @@ import seventh.network.messages.PlayerCommanderMessage;
 import seventh.network.messages.PlayerInputMessage;
 import seventh.network.messages.PlayerSpeechMessage;
 import seventh.network.messages.PlayerSwitchTeamMessage;
+import seventh.network.messages.PlayerSwitchTileMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
@@ -113,6 +118,9 @@ public class InGameScreen implements Screen {
         
     private InGameOptionsDialog dialog;
     private InGameOptionsDialogView dialogView;
+    
+    private TileSelectDialog tileSelectDialog;
+    private TileSelectDialogView tileSelectDialogView;
     
     private TextBox sayTxtBx;
     private TextBox teamSayTxtBx;
@@ -248,6 +256,7 @@ public class InGameScreen implements Screen {
     private void createUI() {
         createSayBoxesUI();        
         createDialogUI();
+        createTileSelectUI();
     }
     
     private void createSayBoxesUI() {
@@ -266,6 +275,23 @@ public class InGameScreen implements Screen {
         this.teamSayTxtBx.setLabelText("Team Say:");
         this.teamSayTxtBxView = new TextBoxView(teamSayTxtBx);
         setupTextbox(teamSayTxtBx);
+    }
+    
+    private void createTileSelectUI() {
+        if(this.tileSelectDialog != null) {
+            this.tileSelectDialog.destroy();
+        }
+        
+        DefaultMapObjectFactory factory = (DefaultMapObjectFactory) game.getMap().getMapObjectFactory();
+        TilesetAtlas atlas = game.getMap().geTilesetAtlas();        
+        this.tileSelectDialog = new TileSelectDialog(app.getConsole(), game.getLocalPlayer(), atlas, factory, app.getTheme());
+        this.tileSelectDialog.setBorderWidth(1);
+        this.tileSelectDialog.setBorderColor(0xff000000);
+        this.tileSelectDialog.setBackgroundColor(0xcf383e18); //0xff282c0c        
+        this.tileSelectDialog.setBounds(new Rectangle(100, 100, 600, 300));
+        
+        this.tileSelectDialogView = new TileSelectDialogView(this.tileSelectDialog);
+        this.app.addInputToFront(app.getUiManager());
     }
     
     private void createDialogUI() {
@@ -319,7 +345,7 @@ public class InGameScreen implements Screen {
         });
         
         this.dialogView = new InGameOptionsDialogView(dialog);
-        this.app.addInputToFront(app.getUiManager());
+        this.app.addInputToFront(app.getUiManager());        
     }
     
     private void dialogMenu() {
@@ -340,6 +366,24 @@ public class InGameScreen implements Screen {
         }
     }
     
+    private void tileSelectMenu() {
+        if(this.tileSelectDialog.isOpen()) {
+            app.removeInput(app.getUiManager());
+            this.tileSelectDialog.close();
+            Sounds.playGlobalSound(Sounds.uiNavigate);
+        }
+        else {
+            createTileSelectUI();               
+            Sounds.playGlobalSound(Sounds.uiNavigate);
+        }
+    }
+    
+    private void showTileSelect() {
+        inputs.clearKeys();
+        inputs.clearButtons();
+        tileSelectMenu();
+    }
+    
     private void showTextBox(TextBox box) {
         box.show();
         inputs.clearKeys();
@@ -351,7 +395,7 @@ public class InGameScreen implements Screen {
         box.hide();
         
         app.removeInput(app.getUiManager());
-    }
+    }        
     
     private void setupTextbox(final TextBox box) {
         box.setBounds(new Rectangle(150, app.getScreenHeight() - 200, app.getScreenWidth() - 275, 35));
@@ -523,6 +567,29 @@ public class InGameScreen implements Screen {
             }
         });
         
+        console.addCommand(new Command("change_tile") {
+            
+            @Override
+            public void execute(Console console, String... args) {
+                if(args.length < 1) {
+                    console.println("<usage> change_tile [tile id]");
+                }
+                else {
+                    PlayerSwitchTileMessage msg = new PlayerSwitchTileMessage();
+                    String tileId = args[0];
+                    msg.newTileId = Integer.parseInt(tileId);
+                    
+                    ClientPlayer player = game.getLocalPlayer();
+                    if(player != null) {
+                        if(player.getActiveTileId() != msg.newTileId) {
+                            player.setActiveTileId(msg.newTileId);                    
+                            protocol.sendPlayerSwitchTileMessage(msg);
+                        }
+                    }
+                }
+            }
+        });
+        
         console.addCommand(new Command("rcon") {
 
             @Override
@@ -595,6 +662,7 @@ public class InGameScreen implements Screen {
         this.dialog.destroy();
         this.sayTxtBx.destroy();
         this.teamSayTxtBx.destroy();
+        this.tileSelectDialog.destroy();
     }
 
     
@@ -629,6 +697,12 @@ public class InGameScreen implements Screen {
             }                        
             else if(inputs.isKeyDown(keyMap.getTeamSayKey())) {
                 showTextBox(teamSayTxtBx);
+            }
+            
+            if(game.isLocalPlayerYieldingHammer()) {
+                if(inputs.isKeyDown(keyMap.getTileSelectKey())) {
+                    showTileSelect();
+                }
             }
             
             /* AI command shortcuts, the player can issue AI commands to nearby
@@ -718,7 +792,11 @@ public class InGameScreen implements Screen {
         this.teamSayTxtBxView.render(canvas, camera, alpha);
         
         this.aiShortcutsMenu.render(canvas, camera, alpha);
-               
+        
+        if(this.tileSelectDialog.isOpen()) {
+            this.tileSelectDialogView.render(canvas, camera, alpha);
+        }
+        
         if(dialog.isOpen() || game.showCursor()) {
             this.cursor.render(canvas);    
         }

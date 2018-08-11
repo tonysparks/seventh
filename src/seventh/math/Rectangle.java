@@ -360,6 +360,11 @@ public class Rectangle {
                RectangleContains(this, oob.bottomLeft);
     }
     
+    public void addSize(int w, int h) {
+        this.width += w;
+        this.height += h;
+    }
+    
     /**
      * Adds b to this.
      * @param b

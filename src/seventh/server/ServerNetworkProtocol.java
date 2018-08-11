@@ -243,6 +243,9 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
         else if(message instanceof PlayerSwitchTeamMessage) {
             receivePlayerSwitchedTeamMessage(conn, (PlayerSwitchTeamMessage)message);
         }
+        else if(message instanceof PlayerSwitchTileMessage) {
+            receivePlayerSwitchTileMessage(conn, (PlayerSwitchTileMessage)message);
+        }
         else if(message instanceof PlayerSpeechMessage) {
             receivePlayerSpeechMessage(conn, (PlayerSpeechMessage)message);
         }

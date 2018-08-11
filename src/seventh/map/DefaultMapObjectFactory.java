@@ -359,12 +359,31 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                 }
                 
                 LeoArray tiles = objectData.getArray("tiles");
+                int typeIndex = 0;
                 for(LeoObject tile : tiles) {
                     TileDefinition definition = LeoObject.fromLeoObject(tile, TileDefinition.class);
+                    definition.type = typeIndex;
+                    
                     this.tileDefinitions.put(definition.type, definition);
+                    
+                    typeIndex++;
                 }
             }
         }
+    }
+    
+    /**
+     * @return the objectDefinitions
+     */
+    public Map<String, MapObjectDefinition> getObjectDefinitions() {
+        return objectDefinitions;
+    }
+    
+    /**
+     * @return the tileDefinitions
+     */
+    public Map<Integer, TileDefinition> getTileDefinitions() {
+        return tileDefinitions;
     }
     
     @Override

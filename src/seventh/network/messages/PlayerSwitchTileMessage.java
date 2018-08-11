@@ -17,7 +17,7 @@ public class PlayerSwitchTileMessage extends AbstractNetMessage {
      * 
      */
     public PlayerSwitchTileMessage() {
-        super(BufferIO.PLAYER_SWITCH_TEAM);
+        super(BufferIO.PLAYER_SWITCH_TILE);
     }
     
     @Override

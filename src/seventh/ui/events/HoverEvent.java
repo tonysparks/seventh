@@ -35,16 +35,25 @@ public class HoverEvent extends Event {
      * Widget
      */
     private Widget widget;
-
+    private boolean isHovering;
+    
     /**
      * @param source
      * @param button
      */
-    public HoverEvent(Object source, Widget widget) {
+    public HoverEvent(Object source, Widget widget, boolean isHovering) {
         super(source);
         this.widget = widget;
+        this.isHovering = isHovering;
     }
 
+    /**
+     * @return the isHovering
+     */
+    public boolean isHovering() {
+        return isHovering;
+    }
+    
     /**
      * @return the widget
      */

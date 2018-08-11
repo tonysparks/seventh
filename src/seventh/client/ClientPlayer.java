@@ -30,6 +30,8 @@ public class ClientPlayer {
     private PlayerSprite axisSprite;
     private PlayerSprite alliedSprite;
 
+    private int activeTileId;
+    
     private boolean isCommander;
     
     /**
@@ -65,6 +67,20 @@ public class ClientPlayer {
     public void updatePartialStats(NetPlayerPartialStat state) {
         this.stats.deaths = state.deaths;
         this.stats.kills = state.kills;        
+    }
+    
+    /**
+     * @param activeTileId the activeTileId to set
+     */
+    public void setActiveTileId(int activeTileId) {
+        this.activeTileId = activeTileId;
+    }
+    
+    /**
+     * @return the activeTileId
+     */
+    public int getActiveTileId() {
+        return activeTileId;
     }
 
     

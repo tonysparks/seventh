@@ -121,7 +121,12 @@ public class Slider extends Widget implements Hoverable {
             
             if(!this.isHovering) {
                 Sounds.playGlobalSound(Sounds.uiHover);
-                getEventDispatcher().sendNow(new HoverEvent(this, this));
+                getEventDispatcher().sendNow(new HoverEvent(this, this, isHovering));
+            }
+        }
+        else {
+            if(this.isHovering) {
+                getEventDispatcher().sendNow(new HoverEvent(this, this, isHovering));
             }
         }
         

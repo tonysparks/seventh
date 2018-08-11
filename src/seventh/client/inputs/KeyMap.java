@@ -43,6 +43,7 @@ public class KeyMap {
                 dropWeaponKey,
                 meleeAttackKey,
                 ironSightsKey,
+                tileSelectKey,
                 
                 sayKey,
                 teamSayKey;
@@ -65,7 +66,8 @@ public class KeyMap {
                 useBtn,
                 dropWeaponBtn,
                 meleeAttackBtn,
-                ironSightsBtn;
+                ironSightsBtn,
+                tileSelectBtn;
     
     private boolean invertJoystick;
     private boolean isSouthPaw;
@@ -494,6 +496,7 @@ public class KeyMap {
         this.meleeAttackKey = getKey(config, "melee_attack", Keys.Q);
         this.ironSightsKey = getKey(config, "iron_sites", Keys.Z);
         this.invertMouse = LeoObject.isTrue(config.getByString("inverted"));
+        this.tileSelectKey = getKey(config, "tile_select", Keys.F1);
         
         this.sayKey = getKey(config, "say", Keys.Y);
         this.teamSayKey = getKey(config, "team_say", Keys.T);
@@ -512,6 +515,8 @@ public class KeyMap {
         this.dropWeaponBtn = getKey(joystick, "drop_weapon", ControllerButtons.SELECT_BTN);
         this.meleeAttackBtn = getKey(joystick, "melee_attack", ControllerButtons.RIGHT_JOYSTICK_BTN);
         this.ironSightsBtn = getKey(joystick, "iron_sites", ControllerButtons.RIGHT_BUMPER_BTN);
+        // TODO: this.tileSelectBtn = getKey(joystick, "tile_select", ControllerButtons.SELECT_BTN);
+        
         this.invertJoystick = LeoObject.isTrue(joystick.getByString("inverted"));
         this.isSouthPaw = LeoObject.isTrue(joystick.getByString("south_paw"));
     }
@@ -707,6 +712,13 @@ public class KeyMap {
     }
 
     /**
+     * @return the tileSelectBtn
+     */
+    public ControllerInput.ControllerButtons getTileSelectBtn() {
+        return tileSelectBtn;
+    }
+    
+    /**
      * @return the ironSightsKey
      */
     public int getIronSightsKey() {
@@ -816,6 +828,13 @@ public class KeyMap {
     }
     
     /**
+     * @return the tileSelectKey
+     */
+    public int getTileSelectKey() {
+        return tileSelectKey;
+    }
+    
+    /**
      * @return the sayKey
      */
     public int getSayKey() {
@@ -920,6 +939,13 @@ public class KeyMap {
         this.meleeAttackKey = meleeAttack;
     }
 
+    /**
+     * @param tileSelectKey the tileSelectKey to set
+     */
+    public void setTileSelectKey(int tileSelectKey) {
+        this.tileSelectKey = tileSelectKey;
+    }
+    
     /**
      * @param sayKey the sayKey to set
      */
