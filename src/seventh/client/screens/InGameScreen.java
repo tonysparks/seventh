@@ -3,7 +3,6 @@
  */
 package seventh.client.screens;
 
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.controllers.Controllers;
 
@@ -18,7 +17,6 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Cursor;
 import seventh.client.gfx.Theme;
-import seventh.client.gfx.effects.AnimationEffect;
 import seventh.client.gfx.effects.Effects;
 import seventh.client.gfx.hud.AIShortcuts;
 import seventh.client.gfx.hud.AIShortcutsMenu;
@@ -31,10 +29,10 @@ import seventh.client.inputs.KeyboardGameController;
 import seventh.client.network.ClientConnection;
 import seventh.client.network.ClientProtocol;
 import seventh.client.screens.dialog.InGameOptionsDialog;
+import seventh.client.screens.dialog.InGameOptionsDialog.OnHideListener;
 import seventh.client.screens.dialog.InGameOptionsDialogView;
 import seventh.client.screens.dialog.TileSelectDialog;
 import seventh.client.screens.dialog.TileSelectDialogView;
-import seventh.client.screens.dialog.InGameOptionsDialog.OnHideListener;
 import seventh.client.sfx.Sounds;
 import seventh.map.DefaultMapObjectFactory;
 import seventh.map.Tile;
@@ -256,7 +254,9 @@ public class InGameScreen implements Screen {
     private void createUI() {
         createSayBoxesUI();        
         createDialogUI();
-        createTileSelectUI();
+        createTileSelectUI();   
+        
+        this.tileSelectDialog.close();
     }
     
     private void createSayBoxesUI() {
@@ -348,11 +348,51 @@ public class InGameScreen implements Screen {
         this.app.addInputToFront(app.getUiManager());        
     }
     
+    private boolean uiActive() {
+        return dialog.isOpen() || 
+               tileSelectDialog.isOpen() ||
+               !sayTxtBx.isDisabled() ||
+               !teamSayTxtBx.isDisabled();
+    }
+    
+    private void checkUI(int inputKeys) {
+        if(inputs.isKeyDown(keyMap.getSayKey())) {
+            showTextBox(sayTxtBx);
+        }                        
+        else if(inputs.isKeyDown(keyMap.getTeamSayKey())) {
+            showTextBox(teamSayTxtBx);
+        }
+        
+        if(game.isLocalPlayerYieldingHammer()) {
+            if(inputs.isKeyDown(keyMap.getTileSelectKey())) {
+                showTileSelect();
+            }
+        }
+        
+        /* AI command shortcuts, the player can issue AI commands to nearby
+         * Bots */
+        if(this.aiShortcutsMenu.isShowing()) {
+            if( this.aiShortcuts.checkShortcuts(inputs, game, this.aiShortcutsMenu.getActiveMemberIndex()) ) {
+                this.aiShortcutsMenu.hide();
+            }
+        }
+        
+        this.aiShortcuts.checkGroupCommands(inputs, game);
+    }
+    
     private void dialogMenu() {
+        // when Escape is pressed, either
+        // close out the active dialog or 
+        // open the main menu dialog
+        
         if(getDialog().isOpen()) {                
             app.removeInput(app.getUiManager());
             getDialog().close();
             Sounds.playGlobalSound(Sounds.uiNavigate);
+        }
+        else if(tileSelectDialog.isOpen()) {
+            app.removeInput(app.getUiManager());
+            tileSelectDialog.close();
         }
         else if(!getSayTxtBx().isDisabled()) {
             hideTextBox(getSayTxtBx());
@@ -683,44 +723,22 @@ public class InGameScreen implements Screen {
         // DEBUG mode while LEFT_ALT is pressed
         isDebugMode = inputs.isKeyDown(Keys.ALT_LEFT);
         
-        if(!dialog.isOpen() && (sayTxtBx.isDisabled()&&teamSayTxtBx.isDisabled()) ) {
-            if(controllerInput.isButtonReleased(ControllerButtons.START_BTN)) {
-                dialogMenu();
-            }
-            
-            
-            inputKeys = controllerInput.pollInputs(timeStep, keyMap, cursor, inputKeys);
-            inputKeys = inputs.pollInputs(timeStep, keyMap, cursor, inputKeys);
-                    
-            if(inputs.isKeyDown(keyMap.getSayKey())) {
-                showTextBox(sayTxtBx);
-            }                        
-            else if(inputs.isKeyDown(keyMap.getTeamSayKey())) {
-                showTextBox(teamSayTxtBx);
-            }
-            
-            if(game.isLocalPlayerYieldingHammer()) {
-                if(inputs.isKeyDown(keyMap.getTileSelectKey())) {
-                    showTileSelect();
-                }
-            }
-            
-            /* AI command shortcuts, the player can issue AI commands to nearby
-             * Bots */
-            if(this.aiShortcutsMenu.isShowing()) {
-                if( this.aiShortcuts.checkShortcuts(inputs, game, this.aiShortcutsMenu.getActiveMemberIndex()) ) {
-                    this.aiShortcutsMenu.hide();
-                }
-            }
-            
-            this.aiShortcuts.checkGroupCommands(inputs, game);
-        }
-        else {            
+        if(uiActive()) {
             this.uiManager.update(timeStep);
             this.uiManager.checkIfCursorIsHovering();
             this.dialogView.update(timeStep);
             
-            inputKeys = 0;
+            inputKeys = 0; // don't move the character
+        }
+        else {
+            if(controllerInput.isButtonReleased(ControllerButtons.START_BTN)) {
+                dialogMenu();
+            }
+            
+            inputKeys = controllerInput.pollInputs(timeStep, keyMap, cursor, inputKeys);
+            inputKeys = inputs.pollInputs(timeStep, keyMap, cursor, inputKeys);
+                    
+            checkUI(inputKeys);
         }
             
         /* capture the inputs for moving the camera if
@@ -743,21 +761,7 @@ public class InGameScreen implements Screen {
                 
         inputKeys = 0;
         
-        if(isDebugMode) {
-            if(inputs.isButtonDown(Buttons.LEFT)) {
-                if(debugEffects.isEmpty()) {
-                    Vector2f effectPos = game.screenToWorldCoordinates( (int)mousePos.x, (int)mousePos.y);
-                    debugEffects.addEffect(new AnimationEffect(Art.newAxisBackDeathAnim(), effectPos, 90));
-                    debugEffects.addEffect(new AnimationEffect(Art.newAxisBackDeath2Anim(), effectPos.addition(new Vector2f(60,0)), 90));
-                    debugEffects.addEffect(new AnimationEffect(Art.newAxisFrontDeathAnim(), effectPos.addition(new Vector2f(120,0)), 90));
-                    debugEffects.addEffect(new AnimationEffect(Art.newAxisFrontDeath2Anim(), effectPos.addition(new Vector2f(180,0)), 90));
-                    
-                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedBackDeathAnim(), effectPos.addition(new Vector2f(0,90)), 90));
-                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedBackDeath2Anim(), effectPos.addition(new Vector2f(60,90)), 90));                    
-                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedFrontDeathAnim(), effectPos.addition(new Vector2f(120,90)), 90));
-                    debugEffects.addEffect(new AnimationEffect(Art.newAlliedFrontDeath2Anim(), effectPos.addition(new Vector2f(180,90)), 90));
-                }
-            }
+        if(isDebugMode) {            
             debugEffects.update(timeStep);
         }
         
