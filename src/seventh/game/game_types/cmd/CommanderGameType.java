@@ -222,10 +222,10 @@ public class CommanderGameType extends AbstractTeamGameType {
     @Override
     protected GameState doUpdate(Game game, TimeStep timeStep) {
         
-        checkRespawns(timeStep, game);
-        
         GameState gameState = getGameState();
         if(gameState == GameState.IN_PROGRESS) {
+            checkRespawns(timeStep, game);
+            
             // first check for a tie
             if(!this.alliedBase.isAlive() && !this.axisBase.isAlive()) {
                 setGameState(GameState.TIE);

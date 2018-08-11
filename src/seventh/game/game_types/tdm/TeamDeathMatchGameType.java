@@ -96,10 +96,8 @@ public class TeamDeathMatchGameType extends AbstractTeamGameType {
                     getDispatcher().queueEvent(new RoundEndedEvent(this, leaders.get(0), game.getNetGameStats()));
                 }
             }
+            checkRespawns(timeStep, game);
         }
-        
-        
-        checkRespawns(timeStep, game);
         
         return getGameState();
     }

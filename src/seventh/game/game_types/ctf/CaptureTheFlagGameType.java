@@ -231,10 +231,10 @@ public class CaptureTheFlagGameType extends AbstractTeamGameType {
                     getDispatcher().queueEvent(new RoundEndedEvent(this, leaders.get(0), game.getNetGameStats()));
                 }
             }
+            
+            checkRespawns(timeStep, game);
+            checkSpectating(timeStep, game);
         }
-        
-        checkRespawns(timeStep, game);
-        checkSpectating(timeStep, game);
         
         if (GameState.IN_PROGRESS == getGameState()) {
             

@@ -23,6 +23,7 @@ import seventh.game.events.PlayerKilledEvent;
 import seventh.game.events.PlayerKilledListener;
 import seventh.game.events.RoundEndedEvent;
 import seventh.game.events.RoundStartedEvent;
+import seventh.game.events.RoundStartedListener;
 import seventh.game.events.GameEvent;
 import seventh.game.events.GameEvent.EventType;
 import seventh.game.game_types.AbstractTeamGameType;
@@ -236,26 +237,29 @@ public class SurvivalGameType extends AbstractTeamGameType {
                 }
             }
         });
+        
+//        dispatcher.addEventListener(RoundStartedEvent.class, new RoundStartedListener() {
+//            
+//            @Override
+//            public void onRoundStarted(RoundStartedEvent event) {
+//                for(Player player : getAlliedTeam().getPlayers()) {
+//                    SurvivalGameType.super.spawnPlayer(player, game);
+//                }
+//            }
+//        });
     }
 
     @Override
     protected GameState doUpdate(Game game, TimeStep timeStep) {
         this.startTimer.update(timeStep);
         if(this.startTimer.isOnFirstTime()) {
-            this.availablePlayers.clear();
+            availablePlayers.clear();
             
             initializeGame(game);
             
             for(Player player : getAxisTeam().getPlayers()) {                
-                this.availablePlayers.add(player);
+                availablePlayers.add(player);
             }
-            
-            for(Player player : getAlliedTeam().getPlayers()) {
-                super.spawnPlayer(player, game);
-            }
-
-            
-            //setGameState(GameState.IN_PROGRESS);
             
             getDispatcher().queueEvent(new RoundStartedEvent(this));
         }
