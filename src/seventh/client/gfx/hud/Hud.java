@@ -35,6 +35,8 @@ import seventh.client.weapon.ClientHammer;
 import seventh.client.weapon.ClientWeapon;
 import seventh.game.entities.Entity.Type;
 import seventh.game.entities.PlayerEntity.Keys;
+import seventh.map.DefaultMapObjectFactory;
+import seventh.map.DefaultMapObjectFactory.TileDefinition;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 import seventh.shared.TimeStep;
@@ -375,6 +377,7 @@ public class Hud implements Renderable {
             if(!ent.isOperatingVehicle()) {
                 drawWeaponIcons(canvas, camera, weapon);            
                 drawGrenadeIcons(canvas, ent.getNumberOfGrenades());
+                drawActiveTile(canvas, localPlayer, weapon);
             }
             
             drawHealth(canvas, ent.getHealth());
@@ -546,6 +549,20 @@ public class Hud implements Renderable {
             
             float width = RenderFont.getTextWidth(canvas, message);
             RenderFont.drawShadedString(canvas, message, canvas.getWidth()/2 - (width/2), canvas.getHeight() - canvas.getHeight("W") - 25, 0xffffffff);            
+        }
+    }
+    
+    private void drawActiveTile(Canvas canvas, ClientPlayer player, ClientWeapon weapon) {
+        if(weapon instanceof ClientHammer) {
+            DefaultMapObjectFactory factory = (DefaultMapObjectFactory) game.getMap().getMapObjectFactory();
+            
+            TileDefinition def = factory.getTileDefinitions().get(player.getActiveTileId());
+            if(def != null) {
+                TextureRegion tileTex = game.getMap().geTilesetAtlas().getTile(def.tileId);
+                if(tileTex != null) {
+                    canvas.drawScaledImage(tileTex, 695, 430, 16, 16, 0xffffffff);
+                }
+            }
         }
     }
     

@@ -94,7 +94,7 @@ public class Player implements PlayerInfo, Debugable {
         
         this.killedAt = new Vector2f();
         
-        this.activeTile = 1;
+        this.activeTile = 0;
                 
         setPlayerClass(PlayerClass.Default);
         setTeam(Team.SPECTATOR);

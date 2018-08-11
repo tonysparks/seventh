@@ -25,8 +25,8 @@ public class AnimatedTile extends Tile {
      * @param width
      * @param height
      */
-    public AnimatedTile(AnimatedImage image, int layer, int width, int height) {
-        super(null, layer, width, height);
+    public AnimatedTile(AnimatedImage image, int tileId, int layer, int width, int height) {
+        super(null, tileId, layer, width, height);
         this.image = image;
         this.image.loop(true);
     }

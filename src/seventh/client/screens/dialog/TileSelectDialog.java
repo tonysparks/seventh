@@ -14,6 +14,7 @@ import seventh.client.gfx.Camera;
 import seventh.client.gfx.Canvas;
 import seventh.client.gfx.Renderable;
 import seventh.client.gfx.Theme;
+import seventh.client.screens.dialog.InGameOptionsDialog.OnHideListener;
 import seventh.map.DefaultMapObjectFactory;
 import seventh.map.DefaultMapObjectFactory.TileDefinition;
 import seventh.map.TilesetAtlas;
@@ -46,12 +47,6 @@ import seventh.ui.view.ScrollBarView;
  */
 public class TileSelectDialog extends Widget implements Scrollable {
 
-    public static interface OnHideListener {
-        void onShow();
-        void onHide();
-    }
-    
-    
     private Theme theme;
     
     private Button closeBtn;
@@ -138,6 +133,9 @@ public class TileSelectDialog extends Widget implements Scrollable {
     @Override
     public void hide() {     
         super.hide();
+        if(this.onHide!=null) {
+            this.onHide.onHide();
+        }
     }
     
     /* (non-Javadoc)
@@ -364,6 +362,7 @@ public class TileSelectDialog extends Widget implements Scrollable {
                     btn.setDisabled(false);
                     if(btn.isHovering()) {
 //                        renderer.fillRect(rect.x - 10, rect.y - 5, bounds.width - 10, rect.height, 0x0fffffff);
+                        btnBnds.y = y - 4;
                     }
                     view.render(canvas, camera, alpha);
                     

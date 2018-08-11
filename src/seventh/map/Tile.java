@@ -1329,9 +1329,15 @@ public class Tile implements Renderable {
     private int type;
     
     /**
+     * The tile ID
+     */
+    private int tileId;
+    
+    /**
      * 
      */
-    public Tile(TextureRegion image, int layer, int width, int height) {
+    public Tile(TextureRegion image, int tileId, int layer, int width, int height) {
+        this.tileId = tileId;
         this.layer = layer;
         this.width = width;
         this.height = height;
@@ -1408,11 +1414,19 @@ public class Tile implements Renderable {
     }
 
     /**
+     * @return the tileId
+     */
+    public int getTileId() {
+        return tileId;
+    }
+
+    /**
      * @return the type
      */
     public int getType() {
         return type;
     }
+    
     
     /**
      * @param type the type to set

@@ -355,20 +355,24 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             
             if(objectData != null) {
                 LeoArray objects = objectData.getArray("objects");
-                for(LeoObject object : objects) {
-                    MapObjectDefinition definition = LeoObject.fromLeoObject(object, MapObjectDefinition.class);
-                    this.objectDefinitions.put(definition.type.toLowerCase(), definition);
+                if(objects != null) {
+                    for(LeoObject object : objects) {
+                        MapObjectDefinition definition = LeoObject.fromLeoObject(object, MapObjectDefinition.class);
+                        this.objectDefinitions.put(definition.type.toLowerCase(), definition);
+                    }
                 }
                 
                 LeoArray tiles = objectData.getArray("tiles");
-                int typeIndex = 0;
-                for(LeoObject tile : tiles) {
-                    TileDefinition definition = LeoObject.fromLeoObject(tile, TileDefinition.class);
-                    definition.type = typeIndex;
-                    
-                    this.tileDefinitions.put(definition.type, definition);
-                    
-                    typeIndex++;
+                if(tiles != null) {
+                    int typeIndex = 0;
+                    for(LeoObject tile : tiles) {
+                        TileDefinition definition = LeoObject.fromLeoObject(tile, TileDefinition.class);
+                        definition.type = typeIndex;
+                        
+                        this.tileDefinitions.put(definition.type, definition);
+                        
+                        typeIndex++;
+                    }
                 }
             }
         }
@@ -405,7 +409,9 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             return null;
         }
         
-        Tile tile = new Tile(loadAssets ? atlas.getTile(definition.tileId) : null, definition.layer, definition.width, definition.height);
+        Tile tile = new Tile(loadAssets ? atlas.getTile(definition.tileId) : null, definition.tileId, 
+                definition.layer, definition.width, definition.height);
+        
         tile.setPosition(data.tileX * definition.width, data.tileY * definition.height);
         tile.setIndexPosition(data.tileX, data.tileY);
         tile.setCollisionMaskById(definition.collisionMaskId);

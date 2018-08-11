@@ -339,11 +339,11 @@ public class BufferIO {
     }
     
     public static int readTileType(IOBuffer buffer) {
-        return buffer.getByteBits(4);
+        return buffer.getIntBits(8);
     }
     
     public static void writeTileType(IOBuffer buffer, int tileType) {
-        buffer.putByteBits( (byte)tileType, 4);
+        buffer.putIntBits(tileType, 8);
     }
     
     public static void writePlayerClassType(IOBuffer buffer, PlayerClass playerClass) {

@@ -35,6 +35,7 @@ import seventh.client.screens.dialog.TileSelectDialog;
 import seventh.client.screens.dialog.TileSelectDialogView;
 import seventh.client.sfx.Sounds;
 import seventh.map.DefaultMapObjectFactory;
+import seventh.map.Map;
 import seventh.map.Tile;
 import seventh.map.TilesetAtlas;
 import seventh.math.Rectangle;
@@ -113,6 +114,7 @@ public class InGameScreen implements Screen {
     
     private PlayerInputMessage inputMessage;
     private int inputKeys;
+    private Vector2f mousePos;
         
     private InGameOptionsDialog dialog;
     private InGameOptionsDialogView dialogView;
@@ -221,6 +223,7 @@ public class InGameScreen implements Screen {
         this.debugEffects = new Effects();
         
         this.cursor = app.getUiManager().getCursor();
+        this.mousePos = new Vector2f();
         
         this.aiShortcuts = new AIShortcuts(this.keyMap);
         this.aiShortcutsMenu = new AIShortcutsMenu(game, keyMap, aiShortcuts);
@@ -289,6 +292,22 @@ public class InGameScreen implements Screen {
         this.tileSelectDialog.setBorderColor(0xff000000);
         this.tileSelectDialog.setBackgroundColor(0xcf383e18); //0xff282c0c        
         this.tileSelectDialog.setBounds(new Rectangle(100, 100, 600, 300));
+        this.tileSelectDialog.setOnHide(new OnHideListener() {
+            
+            @Override
+            public void onShow() {
+                game.activateCamera(false);
+                uiManager.menuCursor();
+            }
+            
+            @Override
+            public void onHide() {
+                game.activateCamera(true);
+                uiManager.gameCursor().setInverted(app.getConfig().getKeyMap().isMouseInverted());
+            }
+        }); 
+        
+        this.tileSelectDialog.show();
         
         this.tileSelectDialogView = new TileSelectDialogView(this.tileSelectDialog);
         this.app.addInputToFront(app.getUiManager());
@@ -378,6 +397,7 @@ public class InGameScreen implements Screen {
         }
         
         this.aiShortcuts.checkGroupCommands(inputs, game);
+        this.mousePos.set(cursor.getCursorPos());
     }
     
     private void dialogMenu() {
@@ -718,6 +738,7 @@ public class InGameScreen implements Screen {
         this.teamSayTxtBxView.update(timeStep);
         
         this.cursor.update(timeStep);
+        Vector2f mousePos = cursor.getCursorPos();
         
         // TODO: Remove from final build, this enables
         // DEBUG mode while LEFT_ALT is pressed
@@ -729,6 +750,7 @@ public class InGameScreen implements Screen {
             this.dialogView.update(timeStep);
             
             inputKeys = 0; // don't move the character
+            mousePos = this.mousePos;
         }
         else {
             if(controllerInput.isButtonReleased(ControllerButtons.START_BTN)) {
@@ -751,7 +773,6 @@ public class InGameScreen implements Screen {
             inputMessage.keys = 0;
         }
         
-        Vector2f mousePos = cursor.getCursorPos();
         inputMessage.orientation = game.calcPlayerOrientation(mousePos.x, mousePos.y);                 
         connection.getClientProtocol().sendPlayerInputMessage(inputMessage);
         connection.updateNetwork(timeStep);
@@ -810,9 +831,18 @@ public class InGameScreen implements Screen {
             int len = canvas.getWidth(message);
             canvas.drawString(message, cursor.getX() - len/2, cursor.getY() + 50, 0xffffffff);
             Vector2f pos = camera.getRenderPosition(alpha);
-            Tile tile = game.getMap().getWorldTile(0, cursor.getX()+(int)pos.x, cursor.getY()+(int)pos.y);
+            int tileX = cursor.getX()+(int)pos.x;
+            int tileY = cursor.getY()+(int)pos.y;
+            
+            Map map = game.getMap();
+            
+            Tile tile = map.getWorldCollidableTile(tileX, tileY);
+            if(tile == null) {
+                tile = map.getWorldTile(0, tileX, tileY);
+            }
+            
             if(tile!=null) {
-                message = "(" + tile.getXIndex() + "," + tile.getYIndex() + ")";
+                message = String.format("(%d, %d : %d)", tile.getXIndex(), tile.getYIndex(), tile.getTileId());
                 len = canvas.getWidth(message);
                 canvas.drawString(message, cursor.getX() - len/2, cursor.getY() + 90, 0xffffffff);
                 canvas.drawRect(tile.getX() - pos.x, tile.getY() - pos.y, tile.getWidth(), tile.getHeight(), 0xffff0000);

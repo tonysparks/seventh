@@ -1468,7 +1468,9 @@ public class OrthoMap implements Map {
         this.addedTiles.add(tile);
         
         if(this.collisionLayerToAddTiles != null) {
-            Tile collisionTile = new Tile(null, this.collisionLayerToAddTiles.getIndex(), tile.getWidth(), tile.getHeight());
+            Tile collisionTile = new Tile(null, tile.getTileId(), 
+                    this.collisionLayerToAddTiles.getIndex(), tile.getWidth(), tile.getHeight());
+            
             collisionTile.setCollisionMask(tile.getCollisionMask());
             collisionTile.setHeightMask(tile.getHeightMask());
             collisionTile.setPosition(tile.getX(), tile.getY());
