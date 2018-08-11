@@ -16,7 +16,6 @@ import seventh.client.gfx.effects.ShadeTiles;
 import seventh.graph.Edge;
 import seventh.graph.Edges.Directions;
 import seventh.graph.GraphNode;
-import seventh.map.Tile.CollisionMask;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
@@ -1470,7 +1469,8 @@ public class OrthoMap implements Map {
         
         if(this.collisionLayerToAddTiles != null) {
             Tile collisionTile = new Tile(null, this.collisionLayerToAddTiles.getIndex(), tile.getWidth(), tile.getHeight());
-            collisionTile.setCollisionMask(CollisionMask.ALL_SOLID);
+            collisionTile.setCollisionMask(tile.getCollisionMask());
+            collisionTile.setHeightMask(tile.getHeightMask());
             collisionTile.setPosition(tile.getX(), tile.getY());
             collisionTile.setIndexPosition(tile.getXIndex(), tile.getYIndex());
             

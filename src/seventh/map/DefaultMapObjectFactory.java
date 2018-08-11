@@ -24,6 +24,7 @@ import seventh.game.Game;
 import seventh.game.entities.Entity;
 import seventh.game.entities.vehicles.Vehicle;
 import seventh.game.weapons.Bullet;
+import seventh.map.Tile.CollisionMask;
 import seventh.map.Tile.SurfaceType;
 import seventh.math.OBB;
 import seventh.math.Rectangle;
@@ -59,7 +60,8 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         public int layer;
         public int tileId;
         
-        public int collisionMaskId;
+        public int collisionMaskId = CollisionMask.ALL_SOLID.ordinal();
+        public int heightMask = 0;
         
         public int width = 32, height = 32;
     }
@@ -407,6 +409,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         tile.setPosition(data.tileX * definition.width, data.tileY * definition.height);
         tile.setIndexPosition(data.tileX, data.tileY);
         tile.setCollisionMaskById(definition.collisionMaskId);
+        tile.setHeightMask(definition.heightMask);
         tile.setFlips(false, false, false);
         tile.setType(data.type);
         
