@@ -101,6 +101,10 @@ public class MapObject implements Renderable {
         return true;
     }
     
+    public boolean isForeground() {
+        return false;
+    }
+    
     public SurfaceType geSurfaceType() {
         return SurfaceType.UNKNOWN;
     }

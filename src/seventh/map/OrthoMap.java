@@ -98,6 +98,8 @@ public class OrthoMap implements Map {
     private List<MapObject> mapObjects;
     private MapObjectFactory mapObjectsFactory;
     
+    private List<MapObject> backgroundMapObjects;
+    private List<MapObject> foregroundMapObjects;
     
     private Layer collisionLayerToAddTiles;
     
@@ -110,6 +112,9 @@ public class OrthoMap implements Map {
         this.addedTiles = new ArrayList<>();
         
         this.collisionTilePos = new Vector2f();
+        
+        this.backgroundMapObjects = new ArrayList<>();
+        this.foregroundMapObjects = new ArrayList<>();
         
         if(loadAssets) {
             this.shadeTilesLookup = new HashMap<Integer, TextureRegion>();
@@ -571,6 +576,8 @@ public class OrthoMap implements Map {
             }
             
             this.mapObjects.clear();
+            this.foregroundMapObjects.clear();
+            this.backgroundMapObjects.clear();
         }
     }
 
@@ -786,6 +793,17 @@ public class OrthoMap implements Map {
 
         this.mapObjects = info.getMapObjects();
         this.mapObjectsFactory = info.getMapObjectsFactory();
+        
+        for(int i = 0; i < this.mapObjects.size(); i++) {
+            MapObject object = this.mapObjects.get(i);
+            if(object.isForeground()) {
+                this.foregroundMapObjects.add(object);
+            }
+            else {
+                this.backgroundMapObjects.add(object);
+            }
+        }
+        
 
         for(int i = 0; i < this.destructableLayer.length; i++) {
             Layer layer = this.destructableLayer[i];
@@ -1114,7 +1132,7 @@ public class OrthoMap implements Map {
             }
         }
         
-        renderMapObjects(canvas, camera, alpha);
+        renderMapObjects(canvas, camera, alpha, this.backgroundMapObjects);
             
     }
     
@@ -1177,6 +1195,8 @@ public class OrthoMap implements Map {
                 }
             }
         }
+        
+        renderMapObjects(canvas, camera, alpha, this.foregroundMapObjects);
     }
 
     /*
@@ -1323,11 +1343,11 @@ public class OrthoMap implements Map {
         }
     }
     
-    private void renderMapObjects(Canvas canvas, Camera camera, float alpha) {
+    private void renderMapObjects(Canvas canvas, Camera camera, float alpha, List<MapObject> mapObjects) {
         Rectangle viewport = camera.getWorldViewPort();
         
-        for(int i = 0; i < this.mapObjects.size(); i++) {
-            MapObject object = this.mapObjects.get(i);
+        for(int i = 0; i < mapObjects.size(); i++) {
+            MapObject object = mapObjects.get(i);
             if(viewport.intersects(object.getBounds())) {
                 object.render(canvas, camera, alpha);
             }

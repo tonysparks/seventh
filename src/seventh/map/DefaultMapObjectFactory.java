@@ -46,8 +46,11 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
     public static class MapObjectDefinition {
         public String type;    
         public float width, height;
+        public float imageWidth, imageHeight;
         public boolean isCollidable;
         public boolean allowRotation;
+        public boolean centerSprite;
+        public boolean isForeground;
         public int heightMask;
         public String surfaceType;
         public ImageData image;
@@ -71,6 +74,8 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         private OBB obb;        
         private int heightMask;
         private boolean isCollidable;
+        private boolean isForeground;
+        private boolean centerSprite;
         
         private boolean loadAssets;
         
@@ -95,6 +100,19 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                 rect.setSize((int)definition.width, (int)definition.height);
             }
             
+            float imageWidth = rect.width;
+            float imageHeight = rect.height;
+            
+            if(definition.imageWidth != 0) {
+                imageWidth = definition.imageWidth;
+            }
+            
+            if(definition.imageHeight != 0) {
+                imageHeight = definition.imageHeight;
+            }
+            
+            this.centerSprite = definition.centerSprite;
+            
             this.onTouched = definition.onTouched;
             this.onLoad = definition.onLoad;
             
@@ -115,6 +133,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
             
             this.heightMask = definition.heightMask;
             this.isCollidable = definition.isCollidable;
+            this.isForeground = definition.isForeground;
             
             if(data.properties != null) {
                 if(data.properties.containsKeyByString("heightMask")) {            
@@ -145,7 +164,7 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
                 
                 this.sprite = new Sprite(texture);
                 //this.sprite.setPosition(data.x, data.y);
-                this.sprite.setSize(rect.width, rect.height);
+                this.sprite.setSize(imageWidth, imageHeight);
                 this.sprite.setOrigin(0, 0); // TileD origin coordinates
                 this.sprite.setRotation(data.rotation);                
             }
@@ -210,6 +229,11 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         @Override
         public boolean isCollidable() {         
             return this.isCollidable;
+        }
+        
+        @Override
+        public boolean isForeground() {
+            return this.isForeground;
         }
         
         @Override
@@ -313,9 +337,13 @@ public class DefaultMapObjectFactory implements MapObjectFactory {
         public void render(Canvas canvas, Camera camera, float alpha) {
             if(this.loadAssets && this.sprite != null) {
                 Vector2f cameraPos = camera.getRenderPosition(alpha);
-                float x = this.pos.x - cameraPos.x;
-                float y = this.pos.y - cameraPos.y;
+                Vector2f pos = centerSprite ? getCenterPos() : this.pos;
+                
+                float x = pos.x - cameraPos.x;
+                float y = pos.y - cameraPos.y;
                 this.sprite.setPosition(x, y);
+                
+                
                 canvas.drawRawSprite(this.sprite);
                 //canvas.drawRect(bounds.x - cameraPos.x, bounds.y - cameraPos.y, bounds.width, bounds.height, 0xff00ff00);
                 

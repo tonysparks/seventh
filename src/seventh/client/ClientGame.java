@@ -1884,6 +1884,10 @@ public class ClientGame {
         // and also ensure no players are touching here
         if(!map.hasWorldCollidableTile(tileX, tileY)) {
             Tile groundTile = map.getWorldTile(0, tileX, tileY);
+            if(groundTile == null) {
+                return false;
+            }
+            
             Rectangle bounds = groundTile.getBounds();
             for(int i = 0; i < this.players.getMaxNumberOfPlayers(); i++) {
                 ClientPlayer player = this.players.getPlayer(i);
