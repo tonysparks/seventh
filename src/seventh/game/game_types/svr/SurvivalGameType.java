@@ -198,9 +198,9 @@ public class SurvivalGameType extends AbstractTeamGameType {
             }
         }
         
-        for(Player player : getAlliedTeam().getPlayers()) {
-            super.spawnPlayer(player, game);
-        }
+//        for(Player player : getAlliedTeam().getPlayers()) {
+//            super.spawnPlayer(player, game);
+//        }
         
         this.joinAllies = false;
         
@@ -238,15 +238,15 @@ public class SurvivalGameType extends AbstractTeamGameType {
             }
         });
         
-//        dispatcher.addEventListener(RoundStartedEvent.class, new RoundStartedListener() {
-//            
-//            @Override
-//            public void onRoundStarted(RoundStartedEvent event) {
-//                for(Player player : getAlliedTeam().getPlayers()) {
-//                    SurvivalGameType.super.spawnPlayer(player, game);
-//                }
-//            }
-//        });
+        dispatcher.addEventListener(RoundStartedEvent.class, new RoundStartedListener() {
+            
+            @Override
+            public void onRoundStarted(RoundStartedEvent event) {
+                for(Player player : getAlliedTeam().getPlayers()) {
+                    SurvivalGameType.super.spawnPlayer(player, game);
+                }
+            }
+        });
     }
 
     @Override

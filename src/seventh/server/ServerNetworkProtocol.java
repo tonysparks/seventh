@@ -186,34 +186,18 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
 //    private void queueSendToClient(int protocolFlags, NetMessage message, int id) {
 //        this.outboundQ.add(new OutboundMessage(message, MessageType.ONE, id, protocolFlags));
 //    }
-        
-    /* (non-Javadoc)
-     * @see com.esotericsoftware.kryonet.Listener#connected(com.esotericsoftware.kryonet.Connection)
-     */
+       
     @Override
     public void onConnected(Connection conn) {                
         this.clients.addRemoteClient(conn.getId(), new RemoteClient(conn));
         this.console.println("Negotiating connection with remote client: " + conn.getRemoteAddress());
     }
     
-    /* (non-Javadoc)
-     * @see com.esotericsoftware.kryonet.Listener#disconnected(com.esotericsoftware.kryonet.Connection)
-     */
     @Override
-    public void onDisconnected(Connection conn) {                            
-        try {
-            this.receiveClientDisconnectMessage(conn, new ClientDisconnectMessage());
-        } 
-        catch (IOException e) {
-            Cons.println("*** Error disconnecting client: " + e);
-        }        
-        
-        this.clients.removeClient(conn.getId());        
+    public void onDisconnected(Connection conn) {
+        this.queueInboundMessage(conn, new ClientDisconnectMessage());                
     }
     
-    /* (non-Javadoc)
-     * @see harenet.api.ConnectionListener#onServerFull(harenet.api.Connection)
-     */
     @Override
     public void onServerFull(Connection conn) {
         Cons.println("Connected attempted but the server is full.");        
@@ -356,6 +340,8 @@ public class ServerNetworkProtocol extends NetworkProtocol implements GameSessio
         PlayerDisconnectedMessage disconnectBroadcast = new PlayerDisconnectedMessage();
         disconnectBroadcast.playerId = conn.getId();
         sendPlayerDisconnectedMessage(disconnectBroadcast, conn.getId());
+        
+        this.clients.removeClient(conn.getId());   
     }
     
     /* (non-Javadoc)

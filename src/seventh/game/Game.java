@@ -191,9 +191,6 @@ public class Game implements GameInfo, Debugable, Updatable {
     List<SoundEmittedEvent> aSoundsHeard = new ArrayList<SoundEmittedEvent>();
     List<Entity> aEntitiesInView = new ArrayList<Entity>();
         
-    private NetGameUpdate[] playerUpdates;
-    private NetGameState gameState;
-    
     private Timers gameTimers;
     private Triggers gameTriggers;
     
@@ -245,12 +242,7 @@ public class Game implements GameInfo, Debugable, Updatable {
         
         this.deadFrames = new int[MAX_ENTITIES];
         markDeadFrames();
-        
-        this.playerUpdates = new NetGameUpdate[MAX_ENTITIES];
-        for(int i = 0; i < this.playerUpdates.length; i++) {
-            this.playerUpdates[i] = new NetGameUpdate();
-        }
-        
+                
         this.bombTargets = new ArrayList<BombTarget>();
         this.vehicles = new ArrayList<Vehicle>();
         this.flags = new ArrayList<Flag>();
@@ -267,8 +259,6 @@ public class Game implements GameInfo, Debugable, Updatable {
         this.random = new Random();
         
         this.players = players;                
-        
-        this.gameState = new NetGameState();
         
         this.enableFOW = true;
         this.time = gameType.getMatchTime();
@@ -1534,6 +1524,8 @@ public class Game implements GameInfo, Debugable, Updatable {
             if(ent!=null) {
                 ent.softKill();
             }
+            
+            entities[i] = null;
         }    
         
         for(int i = 0; i < playerEntities.length; i++) {
@@ -2331,7 +2323,8 @@ public class Game implements GameInfo, Debugable, Updatable {
     /**
      * @return the full networked game state
      */
-    public NetGameState getNetGameState() {                            
+    public NetGameState getNetGameState() {      
+        NetGameState gameState = new NetGameState();
         for(int i = 0; i < this.entities.length; i++) {
             Entity other = this.entities[i];
             if(other != null) {
@@ -2440,10 +2433,7 @@ public class Game implements GameInfo, Debugable, Updatable {
             return null;
         }
                                 
-        // TODO: Figure out a way to cache the NetGameUpdate object
-        NetGameUpdate netUpdate =  new NetGameUpdate();//
-                    //this.playerUpdates[playerId];                
-        netUpdate.clear();                
+        NetGameUpdate netUpdate =  new NetGameUpdate();
         
         if (player.isPureSpectator()) {
             NetEntity.toNetEntities(entities, netUpdate.entities);

@@ -223,10 +223,11 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
      * @see net.ConnectionListener#onDisconnected(net.Connection)
      */
     @Override
-    public void onDisconnected(Connection conn) {            
-        Cons.println("Client disconnected");
-        cleanup();        
-        app.goToMenuScreen();
+    public void onDisconnected(Connection conn) {
+        PlayerDisconnectedMessage msg = new PlayerDisconnectedMessage();
+        msg.playerId = conn.getId();
+        
+        queueInboundMessage(conn, msg);
     }
     
     /* (non-Javadoc)
@@ -461,6 +462,12 @@ public class ClientNetworkProtocol extends NetworkProtocol implements ClientProt
     public void receivePlayerDisconnectedMessage(Connection conn, PlayerDisconnectedMessage msg) {
         if(this.game != null) {
             this.game.playerDisconnected(msg);
+            
+            if(msg.playerId == this.client.getId()) {
+                Cons.println("Client disconnected");
+                cleanup();        
+                app.goToMenuScreen();
+            }
         }
     }
 

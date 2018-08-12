@@ -4,11 +4,11 @@
 package seventh.shared;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -38,7 +38,7 @@ public class DefaultConsole implements Console {
      * @param logger
      */
     public DefaultConsole(Logger logger) {
-        this.commands = new HashMap<String, Command>();
+        this.commands = new ConcurrentHashMap<String, Command>();
         this.loggers = new ArrayList<Logger>();
         this.loggers.add(logger);
         this.queuedCommands = new ConcurrentLinkedQueue<>();
@@ -197,7 +197,7 @@ public class DefaultConsole implements Console {
     /* (non-Javadoc)
      * @see shared.Logger#print(java.lang.Object)
      */
-    public void print(Object msg) {
+    public synchronized void print(Object msg) {
         int size = loggers.size();
         for(int i = 0; i < size; i++) {
             loggers.get(i).print(msg);
@@ -207,7 +207,7 @@ public class DefaultConsole implements Console {
     /* (non-Javadoc)
      * @see shared.Logger#printf(java.lang.Object, java.lang.Object[])
      */
-    public void printf(Object msg, Object... args) {
+    public synchronized void printf(Object msg, Object... args) {
         int size = loggers.size();
         for(int i = 0; i < size; i++) {
             loggers.get(i).printf(msg, args);
@@ -217,7 +217,7 @@ public class DefaultConsole implements Console {
     /* (non-Javadoc)
      * @see shared.Logger#println(java.lang.Object)
      */
-    public void println(Object msg) {
+    public synchronized void println(Object msg) {
         int size = loggers.size();
         for(int i = 0; i < size; i++) {
             loggers.get(i).println(msg);

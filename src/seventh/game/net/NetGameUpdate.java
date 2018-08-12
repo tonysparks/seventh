@@ -7,7 +7,6 @@ import harenet.BitArray;
 import harenet.IOBuffer;
 import harenet.messages.NetMessage;
 import seventh.network.messages.BufferIO;
-import seventh.shared.Arrays;
 import seventh.shared.SeventhConstants;
 
 /**
@@ -48,21 +47,6 @@ public class NetGameUpdate implements NetMessage {
         hasDeadEntities = true;
         
         numberOfBytes = entityBitArray.numberOfBytes();        
-    }
-    
-    
-    /**
-     * Clears out, ready for reuse
-     */
-    public void clear() {
-        entityBitArray.clear();
-        deadPersistantEntities.clear();
-        
-        Arrays.clear(entities);
-//        Arrays.clear(sounds);
-                
-        numberOfSounds = 0;
-        hasDeadEntities = true;
     }
     
     /* (non-Javadoc)

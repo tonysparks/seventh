@@ -89,6 +89,7 @@ public class GameServer {
      *
      */
     public static class GameServerSettings {
+        public String serverConfigPath = "./assets/server_config.leola";
         public String serverName;
         public MapEntry currentMap;
         public String startupScript;
@@ -160,7 +161,7 @@ public class GameServer {
                       boolean isLocal, 
                       GameServerSettings settings) throws Exception  {
         
-        this(new ServerSeventhConfig(new Config("./assets/server_config.leola", "server_config", runtime)), 
+        this(new ServerSeventhConfig(new Config(settings.serverConfigPath, "server_config", runtime)), 
                 console, 
                 runtime, 
                 isLocal, 

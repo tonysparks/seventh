@@ -42,8 +42,6 @@ import seventh.shared.TimeStep;
  */
 public class CommanderGameType extends AbstractTeamGameType {
 
-    private NetCommanderGameTypeInfo netGameTypeInfo;
-    
     private Base alliedBase;
     private Base axisBase;
     
@@ -122,23 +120,24 @@ public class CommanderGameType extends AbstractTeamGameType {
 
     @Override
     protected NetGameTypeInfo createNetGameTypeInfo() {
-        this.netGameTypeInfo = new NetCommanderGameTypeInfo();
-        this.netGameTypeInfo.alliedSquad = new NetSquad();
-        this.netGameTypeInfo.axisSquad = new NetSquad();
+        NetCommanderGameTypeInfo netGameTypeInfo = new NetCommanderGameTypeInfo();
+        netGameTypeInfo.alliedSquad = new NetSquad();
+        netGameTypeInfo.axisSquad = new NetSquad();
         
-        return this.netGameTypeInfo;
+        return netGameTypeInfo;
     }
     
     /* (non-Javadoc)
      * @see seventh.game.game_types.AbstractTeamGameType#getNetGameTypeInfo()
      */
     @Override
-    public NetGameTypeInfo getNetGameTypeInfo() {        
+    public NetGameTypeInfo getNetGameTypeInfo() {   
+        NetCommanderGameTypeInfo netGameTypeInfo = (NetCommanderGameTypeInfo) super.getNetGameTypeInfo();
         List<Player> allies = this.getAlliedTeam().getPlayers();
         for(int i = 0; i < allies.size(); i++) {
             Player p = allies.get(i);
             if(p != null) {
-                this.netGameTypeInfo.alliedSquad.playerClasses[p.getId()] = p.getPlayerClass();
+                netGameTypeInfo.alliedSquad.playerClasses[p.getId()] = p.getPlayerClass();
             }
         }
         
@@ -146,11 +145,11 @@ public class CommanderGameType extends AbstractTeamGameType {
         for(int i = 0; i < axis.size(); i++) {
             Player p = axis.get(i);
             if(p != null) {
-                this.netGameTypeInfo.axisSquad.playerClasses[p.getId()] = p.getPlayerClass();
+                netGameTypeInfo.axisSquad.playerClasses[p.getId()] = p.getPlayerClass();
             }
         }
         
-        return super.getNetGameTypeInfo();
+        return netGameTypeInfo;
     }
     
     @Override

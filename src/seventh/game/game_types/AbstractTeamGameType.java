@@ -30,7 +30,6 @@ import seventh.game.net.NetGameStats;
 import seventh.game.net.NetGameTypeInfo;
 import seventh.game.net.NetPlayerPartialStat;
 import seventh.game.net.NetPlayerStat;
-import seventh.game.net.NetTeam;
 import seventh.game.net.NetTeamStat;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
@@ -63,10 +62,6 @@ public abstract class AbstractTeamGameType implements GameType {
     
     private Team[] teams;
     
-    private NetGameStats gameStats;
-    private NetGamePartialStats gamePartialStats;
-    
-    private NetGameTypeInfo gameTypeInfo;
     private GameState gameState;
     private Type type;
     
@@ -115,21 +110,7 @@ public abstract class AbstractTeamGameType implements GameType {
         this.teams[ALLIED] = Team.newAlliedTeam();
         
         this.highScoreTeams = new ArrayList<Team>(2);
-        
-        this.gameTypeInfo = createNetGameTypeInfo();
-        this.gameTypeInfo.type = type.netValue();
-        this.gameTypeInfo.maxScore = maxScore;
-        this.gameTypeInfo.maxTime = matchTime;        
-        
-        this.gameStats = createNetGameStats();
-        this.gamePartialStats = createNetGamePartialStats();
-        
-        this.gameTypeInfo.alliedTeam = new NetTeam();
-        this.gameTypeInfo.alliedTeam.id = Team.ALLIED_TEAM_ID;
-        
-        this.gameTypeInfo.axisTeam = new NetTeam();
-        this.gameTypeInfo.axisTeam.id = Team.AXIS_TEAM_ID;
-        
+                
         this.gameState = GameState.INTERMISSION;
         this.random = new Random();
         this.spawnBounds = new Rectangle(300, 300);
@@ -749,16 +730,21 @@ public abstract class AbstractTeamGameType implements GameType {
      */
     @Override
     public NetGameTypeInfo getNetGameTypeInfo() {
-        this.gameTypeInfo.alliedTeam = this.teams[ALLIED].getNetTeam();
-        this.gameTypeInfo.axisTeam = this.teams[AXIS].getNetTeam();
-        return this.gameTypeInfo;
+        NetGameTypeInfo gameTypeInfo = createNetGameTypeInfo();
+        gameTypeInfo.type = type.netValue();
+        gameTypeInfo.maxScore = maxScore;
+        gameTypeInfo.maxTime = matchTime;     
+        gameTypeInfo.alliedTeam = this.teams[ALLIED].getNetTeam();
+        gameTypeInfo.axisTeam = this.teams[AXIS].getNetTeam();
+        return gameTypeInfo;
     }
     
     /**
      * @return just returns the networked game statistics
      */
     @Override
-    public NetGameStats getNetGameStats() {        
+    public NetGameStats getNetGameStats() {     
+        NetGameStats gameStats = createNetGameStats();
         gameStats.playerStats = new NetPlayerStat[game.getPlayers().getNumberOfPlayers()];
         Player[] players = game.getPlayers().getPlayers();
         
@@ -780,6 +766,7 @@ public abstract class AbstractTeamGameType implements GameType {
      */
     @Override
     public NetGamePartialStats getNetGamePartialStats() {
+        NetGamePartialStats gamePartialStats = createNetGamePartialStats();
         gamePartialStats.playerStats = new NetPlayerPartialStat[game.getPlayers().getNumberOfPlayers()];
         Player[] players = game.getPlayers().getPlayers();
         

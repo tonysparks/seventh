@@ -87,26 +87,16 @@ public class Team implements Debugable {
     }
     private final byte id;
     private List<Player> players;
-    private NetTeam netTeam;
-    private NetTeamStat netTeamStats;
     
     private int score;
     private boolean isAttacker;
     private boolean isDefender;
-    
-    
     
     /**
      * 
      */
     private Team(byte id) {
         this.id = id;
-        netTeam = new NetTeam();
-        netTeam.id = id;        
-        
-        netTeamStats = new NetTeamStat();
-        netTeamStats.id = id;
-                
         this.players = new ArrayList<Player>();
     }
     
@@ -560,6 +550,8 @@ public class Team implements Debugable {
      * @return this team on a serializable form
      */
     public NetTeam getNetTeam() {
+        NetTeam netTeam = new NetTeam();
+        netTeam.id = id;        
         netTeam.playerIds = new int[this.players.size()];
         for(int i = 0; i < this.players.size(); i++) {
             netTeam.playerIds[i] = this.players.get(i).getId();
@@ -573,7 +565,10 @@ public class Team implements Debugable {
      * @return the netTeamStats
      */
     public NetTeamStat getNetTeamStats() {
-        netTeamStats.score = score; 
+        NetTeamStat netTeamStats = new NetTeamStat();
+        netTeamStats.id = id;
+        netTeamStats.score = score;
+        
         return netTeamStats;
     }
     

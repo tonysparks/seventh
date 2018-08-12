@@ -59,14 +59,14 @@ public abstract class NetworkProtocol implements ConnectionListener {
     @Override
     public void onReceived(Connection conn, Object message) {
         if(message instanceof NetMessage) {
-            queueMessage(conn, (NetMessage)message);
+            queueInboundMessage(conn, (NetMessage)message);
         }
         else {
             //Cons.println("Received a non Message object type: " + message.getClass());
         }
     }
     
-    private void queueMessage(Connection conn, NetMessage msg) {
+    protected void queueInboundMessage(Connection conn, NetMessage msg) {
         this.messageQ.add(new InboundMessage(conn, msg));
     }
     
