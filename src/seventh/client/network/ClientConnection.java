@@ -37,7 +37,7 @@ public class ClientConnection {
         this.protocol = new ClientNetworkProtocol(this, app);
         this.client.addConnectionListener(this.protocol);
         
-//      this.client.addConnectionListener(new LagConnectionListener(50, 100, listener));
+        //this.client.addConnectionListener(new LagConnectionListener(350, 400, this.protocol));
         
         console.addCommand(new Command("netstat") {
             

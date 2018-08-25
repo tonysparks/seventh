@@ -88,6 +88,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     private Vector2f bulletCasingPos;
     
     private ClientSeventhConfig config;
+    
     /**
      * @param game
      * @param player
@@ -291,6 +292,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
     protected int calculateMovementSpeed() {
         int speed = PLAYER_SPEED;
         int mSpeed = speed;
+        State currentState = getCurrentState();
         if(currentState == State.WALKING) {
             mSpeed = (int)( (float)speed * WALK_SPEED_FACTOR);
         }
@@ -330,6 +332,8 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             NetPlayer ps = (NetPlayer) state;
             
             this.currentState = ps.state;
+           // this.predictedState = this.currentState;
+            
             int newHealth = ps.health;
             int newDamageDelta = newHealth - this.health;
             if(newDamageDelta < 0) {
@@ -509,7 +513,7 @@ public class ClientPlayerEntity extends ClientControllableEntity {
             fadeAlphaColor = 255;
         }    
         
-        if(currentState.isVehicleState()) {
+        if(getCurrentState().isVehicleState()) {
             if(this.vehicle != null) {
                 this.vehicle.setOperator(this);
             }

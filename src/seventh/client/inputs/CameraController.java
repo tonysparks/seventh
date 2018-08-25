@@ -45,6 +45,7 @@ public class CameraController implements Updatable {
     private ClientPlayer localPlayer;
     
     private Vector2f playerVelocity;
+    private Vector2f mousePos;
     
     private long nextFOWUpdate;
     private List<Tile> fowTiles;
@@ -58,7 +59,6 @@ public class CameraController implements Updatable {
     private boolean isCameraRoaming, isFastCamera;
     private boolean isCameraActive;    
     private boolean isIronSights;
-    
     
     private int previousKeys;
     private Cursor cursor;
@@ -85,6 +85,7 @@ public class CameraController implements Updatable {
         this.cameraShakeBounds = new Rectangle(600, 600);
         
         this.playerVelocity = new Vector2f();
+        this.mousePos = new Vector2f();
                         
         this.bounds = new Rectangle();
         this.viewportWidth = this.camera.getViewPort().width;
@@ -271,6 +272,7 @@ public class CameraController implements Updatable {
             }            
         }
         
+        this.mousePos.set(mx, my);
         this.previousKeys = keys;
     }
     
@@ -367,8 +369,10 @@ public class CameraController implements Updatable {
                 if( entity.isOperatingVehicle() ) {
                     entity = entity.getVehicle();
                 }
-                
-                entity.movementPrediction(map, timeStep, playerVelocity);
+
+                if(!this.localPlayer.isSpectating()) {
+                    entity.movementPrediction(map, timeStep, playerVelocity, mousePos, previousKeys);
+                }
                 
                 cursor.setAccuracy(entity.getAimingAccuracy());
                 

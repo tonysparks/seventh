@@ -53,36 +53,7 @@ public class LagConnectionListener implements ConnectionListener {
         this.random = new Random();
         this.inbox = new ConcurrentLinkedQueue<>();
         
-        this.service = Executors.newScheduledThreadPool(1);        
-//        Runnable runner = new Runnable() {
-//            
-//            @Override
-//            public void run() {
-//                for(;;) {
-//                    Msg msg = inbox.poll();
-//                    if(msg != null) {
-//                    
-//                        long sleep = minLag + random.nextInt(maxLag-minLag);
-//                        if(sleep > maxLag) {
-//                            sleep = maxLag;
-//                        }
-//                        
-//                        try {
-//                            Thread.sleep(sleep);
-//                        } catch (InterruptedException e) {
-//                        }
-//                        decorator.onReceived(msg.conn, msg.msg);
-//                    }
-//                    else {
-//                        Thread.yield();
-//                    }
-//                }
-//            }
-//        };
-//        
-//        Thread thread = new Thread(runner, "LagIntroducer");
-//        thread.setDaemon(true);
-//        thread.start();        
+        this.service = Executors.newScheduledThreadPool(1);              
     }
     
 
@@ -117,8 +88,8 @@ public class LagConnectionListener implements ConnectionListener {
     public void onReceived(Connection conn, Object msg) {
         this.inbox.add(new Msg(conn,msg));
         
-        minLag = 50;
-        maxLag = 60;
+        minLag = 150;
+        maxLag = 200;
         
         long sleep = minLag + random.nextInt(maxLag-minLag);
         if(sleep > maxLag) {

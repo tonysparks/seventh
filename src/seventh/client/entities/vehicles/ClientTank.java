@@ -181,7 +181,7 @@ public class ClientTank extends ClientVehicle {
      * @see seventh.client.ClientControllableEntity#movementPrediction(seventh.map.Map, seventh.shared.TimeStep, seventh.math.Vector2f)
      */
     @Override
-    public void movementPrediction(Map map, TimeStep timeStep, Vector2f vel) {
+    public void movementPrediction(Map map, TimeStep timeStep, Vector2f vel, Vector2f mousePos, int keys) {
 //        if(isAlive() && !vel.isZero()) {            
 //            int movementSpeed = calculateMovementSpeed();
 //                                    

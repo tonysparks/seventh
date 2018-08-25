@@ -68,12 +68,12 @@ public abstract class ClientVehicle extends ClientControllableEntity {
     }
         
     
-    /**
-     * @return the currentState
-     */
-    public State getCurrentState() {
-        return currentState;
-    }
+//    /**
+//     * @return the currentState
+//     */
+//    public State getCurrentState() {
+//        return currentState;
+//    }
     
     /**
      * @return the client side predicted position

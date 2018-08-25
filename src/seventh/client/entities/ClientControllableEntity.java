@@ -9,6 +9,8 @@ import seventh.client.ClientGame;
 import seventh.client.entities.vehicles.ClientVehicle;
 import seventh.game.entities.Entity;
 import seventh.game.entities.Entity.State;
+import seventh.game.entities.PlayerEntity.Keys;
+import seventh.game.net.NetEntity;
 import seventh.map.Map;
 import seventh.map.MapObject;
 import seventh.map.Tile;
@@ -23,10 +25,14 @@ import seventh.shared.TimeStep;
  *
  */
 public abstract class ClientControllableEntity extends ClientEntity {
+    private static final int WALK_TIME = 150;
     
+    private int walkingTime;
     protected State currentState;
+    protected State predictedState;
     protected int lineOfSight;
     
+    protected float predictedOrientation;
     protected Vector2f predictedPos;
     protected Vector2f renderPos;
     protected Vector2f cache;
@@ -70,6 +76,19 @@ public abstract class ClientControllableEntity extends ClientEntity {
         this.collisionRect = new Rectangle();
     }
 
+    @Override
+    public void updateState(NetEntity state, long time) {     
+        super.updateState(state, time);
+        
+        
+        // if we are not controlling this player, we can't
+        // do client side prediction
+        if(!isControlledByLocalPlayer()) {
+            this.predictedOrientation = this.orientation;
+            this.predictedState = this.currentState;            
+        }
+    }
+    
     /**
      * @return true if we are operating a vehicle
      */
@@ -111,7 +130,7 @@ public abstract class ClientControllableEntity extends ClientEntity {
      * @return the currentState
      */
     public State getCurrentState() {
-        return currentState;
+        return predictedState != null ? predictedState : currentState;
     }
     
     /**
@@ -140,12 +159,24 @@ public abstract class ClientControllableEntity extends ClientEntity {
         
         return renderPos;
     }
+    
+    @Override
+    public float getOrientation() {            
+        return this.predictedOrientation;        
+    }
+    
+    @Override
+    public Vector2f getFacing() {
+        this.facing.set(1, 0);
+        Vector2f.Vector2fRotate(facing, getOrientation(), facing);
+        return this.facing;
+    }
         
     /**
      * @return the height mask for if the entity is crouching or standing
      */
     public int getHeightMask() {
-        if( currentState == State.CROUCHING ) {
+        if(getCurrentState() == State.CROUCHING) {
             return Entity.CROUCHED_HEIGHT_MASK;
         }
         return Entity.STANDING_HEIGHT_MASK;
@@ -278,11 +309,45 @@ public abstract class ClientControllableEntity extends ClientEntity {
         return true;
     }
     
+    protected State calculatePredictedState(TimeStep timeStep, Vector2f vel, int keys) {
+        if(!vel.isZero()) {
+            if(Keys.WALK.isDown(keys)) {
+                predictedState = State.WALKING;
+            }
+//            else if(Keys.SPRINT.isDown(keys)) {
+//                    // Are we still doing sprint for the game??
+//            }
+            else {            
+                predictedState = State.RUNNING;
+            }
+            
+            walkingTime = WALK_TIME;
+        }
+        else {
+            if(walkingTime <= 0 && predictedState != State.CROUCHING) {
+                predictedState = State.IDLE;
+            }
+            
+            walkingTime -= timeStep.getDeltaTime();
+            
+            if(predictedState == State.CROUCHING && !Keys.CROUCH.isDown(keys)) {
+                predictedState = State.IDLE;
+            }
+            else if(Keys.CROUCH.isDown(keys)) {
+                predictedState = State.CROUCHING;
+            }
+        }
+        
+        return predictedState;
+    }
+    
     /**
      * Does client side movement prediction
      * 
      */
-    public void movementPrediction(Map map, TimeStep timeStep, Vector2f vel) {    
+    public void movementPrediction(Map map, TimeStep timeStep, Vector2f vel, Vector2f mousePos, int keys) {    
+        calculatePredictedState(timeStep, vel, keys);
+        predictedOrientation = game.calcPlayerOrientation(mousePos.x, mousePos.y);
         
         if(isAlive() && !vel.isZero()) {            
             int movementSpeed = calculateMovementSpeed();
@@ -350,8 +415,8 @@ public abstract class ClientControllableEntity extends ClientEntity {
             }
             
             predictedPos.set(newX, newY);
-            
             clientSideCorrection(pos, predictedPos, predictedPos, 0.15f);
+            
             lastMoveTime = timeStep.getGameClock();
         }        
         else {
@@ -359,8 +424,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
             if(alpha > 0.75f) {
                 alpha = 0.75f;
             }
+
             clientSideCorrection(pos, predictedPos, predictedPos, alpha);
         }
+        
     }
     
     protected boolean collidesAgainstEntity(Rectangle bounds) {
@@ -431,6 +498,10 @@ public abstract class ClientControllableEntity extends ClientEntity {
         }            
             
     }        
+    
+    public float clientSideCorrection(float serverOrientation, float predictedOrientation, float alpha) {
+        return predictedOrientation + (alpha * (serverOrientation - predictedOrientation));
+    }
     
     /**
      * Calculates the aiming accuracy of this entity.  The accuracy is impacted

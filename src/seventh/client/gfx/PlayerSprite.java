@@ -118,6 +118,10 @@ public class PlayerSprite implements Renderable {
     
     private ScreenFlashEffect fireWeaponEffect;
     
+    private State currentState;
+    private Vector2f facing;
+    private float orientation;
+    
     /**
      * Debug class
      * 
@@ -212,6 +216,9 @@ public class PlayerSprite implements Renderable {
         sprite = new Sprite();
         
         fireWeaponEffect = new ScreenFlashEffect(0xffff00, 0.045f, 25);
+        
+        facing = new Vector2f();
+        currentState = State.IDLE;
         
         reset(player);
     }
@@ -320,8 +327,9 @@ public class PlayerSprite implements Renderable {
         activeBodyPosition = idleBody; 
         activeLegsAnimation = idleLegsAnimation;
         
-        Vector2f dir = entity.getFacing();
-        State currentState = entity.getCurrentState();
+        facing.set(entity.getFacing());
+        currentState = entity.getCurrentState();
+        orientation = entity.getOrientation();
         
         switch(currentState) {
         case IDLE:
@@ -341,8 +349,8 @@ public class PlayerSprite implements Renderable {
             bobMotion.set(5, 0.6);
             swayMotion.set(4, 1.55*weaponWeight);
             
-            xOffset += (dir.y * swayMotion.direction) * 0.815f;
-            yOffset += (dir.x * swayMotion.direction) * 0.815f;
+            xOffset += (facing.y * swayMotion.direction) * 0.815f;
+            yOffset += (facing.x * swayMotion.direction) * 0.815f;
             
         } break;
         case RUNNING: {
@@ -351,8 +359,8 @@ public class PlayerSprite implements Renderable {
                         
             bobMotion.set(12*weaponWeight,2.4*weaponWeight); //(8, 1.4);
             swayMotion.set(4, 2.5*weaponWeight);            
-            xOffset += (dir.y * swayMotion.direction) * 0.755f;
-            yOffset += (dir.x * swayMotion.direction) * 0.755f;
+            xOffset += (facing.y * swayMotion.direction) * 0.755f;
+            yOffset += (facing.x * swayMotion.direction) * 0.755f;
         } break;
         case SPRINTING:
             activeBodyPosition = sprintBody;
@@ -361,8 +369,8 @@ public class PlayerSprite implements Renderable {
             bobMotion.set(0, 0);
             swayMotion.set(4, 3.25*weaponWeight);
             
-            xOffset += (dir.y * swayMotion.direction) * 1.25f;
-            yOffset += (dir.x * swayMotion.direction) * 1.25f;
+            xOffset += (facing.y * swayMotion.direction) * 1.25f;
+            yOffset += (facing.x * swayMotion.direction) * 1.25f;
             break;
         case DEAD:
             resetLegMovements();
@@ -577,7 +585,7 @@ public class PlayerSprite implements Renderable {
                         muzzleAnim.moveToLastFrame();                        
                     }
                     
-                    boolean isCrouching = entity.getCurrentState()==State.CROUCHING; 
+                    boolean isCrouching = currentState==State.CROUCHING; 
                     
                     float offsetX = isCrouching ? 22f : 26f; //24 
                     if(weapon.hasLongBarrel()) {
@@ -617,8 +625,6 @@ public class PlayerSprite implements Renderable {
         float x = rx - 32f;//offset; -32
         float y = ry - 42f;//offset; -42
         
-        State currentState = this.entity.getCurrentState();
-        
         // TODO: do the math to do this outside
         // in imageScaler program
         sprite.setScale(0.8f, 0.8f);
@@ -640,7 +646,6 @@ public class PlayerSprite implements Renderable {
                 sprite.setRotation(rot);
                 sprite.setPosition(x, y);
                 
-                Vector2f facing = entity.getFacing();
                 sprite.translate(facing.x * -6.0f, facing.y * -6.0f);
                 break;
             }
@@ -651,7 +656,6 @@ public class PlayerSprite implements Renderable {
                 
                 setTextureRegion(sprite, activeLegsAnimation.getCurrentImage());
                                         
-                Vector2f facing = entity.getFacing();                
                 float fx = (facing.y-9.0f);
                 float fy = -(facing.x+5);
                 
@@ -667,7 +671,6 @@ public class PlayerSprite implements Renderable {
                                 
                 setTextureRegion(sprite, activeLegsAnimation.getCurrentImage());
                 
-                Vector2f facing = entity.getFacing();
                 float fx = facing.x + -12.0f;
                 float fy = facing.y - 5.0f;
                 
@@ -706,7 +709,7 @@ public class PlayerSprite implements Renderable {
         float rx = (pos.x - cameraPos.x) + (bounds.width/2.0f) + nx;
         float ry = (pos.y - cameraPos.y) + (bounds.height/2.0f) + ny;
                 
-        double angle = Math.toDegrees(entity.getOrientation()) + 90.0;
+        double angle = Math.toDegrees(orientation) + 90.0;
         float rot = (float)(angle + bobMotion.value);        
                 
         renderBody(canvas, rx, ry, rot, color);
