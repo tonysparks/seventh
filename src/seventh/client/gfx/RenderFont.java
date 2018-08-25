@@ -136,8 +136,10 @@ public class RenderFont {
                 }
                 
                 
-                String text = Character.toString(c);                
-                canvas.drawString(text, xPos-1.5f, yPos+1, 0xff000000);
+                String text = Character.toString(c);    
+                if(!text.equals(" ")) {
+                    canvas.drawString(text, xPos-1.5f, yPos+1, 0xff000000);
+                }
                                 
                 xPos += monospaced ? CharWidth : (canvas.getWidth(text) - 0.5f);
             }   
@@ -163,8 +165,10 @@ public class RenderFont {
                 yPos += canvas.getHeight("n") - 0.5f;
             }
             
-            String text = Character.toString(c);
-            canvas.drawString(text, xPos, yPos, currentColor);
+            String text = Character.toString(c);            
+            if(!text.equals(" ")) {
+                canvas.drawString(text, xPos, yPos, currentColor);
+            }
             
             xPos += monospaced ? CharWidth : (canvas.getWidth(text) - 0.5f);
         }

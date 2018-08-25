@@ -25,6 +25,14 @@ import seventh.client.gfx.RenderFont;
  */
 public class Scoreboard {
 
+    private static final Comparator<ClientPlayer> comparator = new Comparator<ClientPlayer>() {
+
+        @Override
+        public int compare(ClientPlayer a, ClientPlayer b) {
+            return b.getKills() - a.getKills();
+        }
+    };
+    
     private ClientGame game;
 
     private boolean showScoreBoard;
@@ -34,8 +42,8 @@ public class Scoreboard {
     private ClientTeam winningTeam;
     
     private int yOffset;
-    private static final int Y_START = 50; 
-    
+    private static final int Y_START = 50;
+
     /**
      * 
      */
@@ -129,7 +137,9 @@ public class Scoreboard {
     
     private int drawTeam(Canvas canvas, List<ClientPlayer> team, int x, int y) {
         setSmallFont(canvas);
-        for(ClientPlayer player : team) {
+        
+        for(int i = 0; i < team.size(); i++) {
+            ClientPlayer player = team.get(i);
             y += 20;
             
             if(y < Y_START + 20) {
@@ -142,8 +152,8 @@ public class Scoreboard {
             
             RenderFont.drawShadedString(canvas, player.getName(), x, y, 0xffffffff);
             
-            String output = String.format("%-30s %-13d %-13d %-10d %-8d %-13d", 
-                    "",player.getKills(), player.getAssists(), player.getDeaths(), player.getHitPercentage(), player.getPing());
+            String output = String.format("%-30s %-13d %-13d %-10d %-8d %-13d", ""
+                    , player.getKills(), player.getAssists(), player.getDeaths(), player.getHitPercentage(), player.getPing());
             
             RenderFont.drawShadedString(canvas, output, x, y, 0xffffffff, true, true, true);
             if(!player.isAlive()) {
@@ -201,15 +211,11 @@ public class Scoreboard {
         teams.get(ClientTeam.ALLIES).clear();
         teams.get(ClientTeam.AXIS).clear();
         
-        Collections.sort(vals, new Comparator<ClientPlayer>() {
-
-            @Override
-            public int compare(ClientPlayer a, ClientPlayer b) {
-                return b.getKills() - a.getKills();
-            }
-        });
+        Collections.sort(vals, comparator);
         
-        for(ClientPlayer player : vals) {
+        for(int i = 0; i < vals.size(); i++) {
+            ClientPlayer player = vals.get(i);
+            
             ClientTeam team = player.getTeam();
             if(team != null) {
                 teams.get(team).add(player);
