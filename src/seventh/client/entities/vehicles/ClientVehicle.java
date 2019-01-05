@@ -8,6 +8,7 @@ import seventh.client.entities.ClientControllableEntity;
 import seventh.client.entities.ClientEntity;
 import seventh.client.entities.ClientPlayerEntity;
 import seventh.game.entities.Entity.State;
+import seventh.game.net.NetEntity;
 import seventh.math.Rectangle;
 import seventh.math.Vector2f;
 
@@ -28,6 +29,13 @@ public abstract class ClientVehicle extends ClientControllableEntity {
     public ClientVehicle(ClientGame game, Vector2f pos) {
         super(game, pos);           
         this.operateHitBox = new Rectangle();
+    }
+    
+    @Override
+    public void updateState(NetEntity state, long time) {     
+        super.updateState(state, time);
+        this.predictedOrientation = this.orientation;
+        this.predictedState = this.currentState;
     }
     
     public boolean hasOperator() {

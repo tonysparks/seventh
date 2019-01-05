@@ -693,6 +693,10 @@ public class ClientPlayerEntity extends ClientControllableEntity {
      */
     @Override
     public void render(Canvas canvas, Camera camera, float alpha) {
+        if(isOperatingVehicle()) {
+           return; 
+        }
+        
         canvas.setCompositeAlpha(fadeAlphaColor / 255.0f);
         canvas.setColor(teamColor, fadeAlphaColor);    
                 
