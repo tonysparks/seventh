@@ -26,7 +26,7 @@ public class ClientKar98 extends ClientWeapon {
         this.weaponWeight = WeaponConstants.KAR98_WEIGHT;
         
         this.weaponKickTime = 100; 
-        this.endFireKick = 18.7f; 
+        this.endFireKick = 4.7f; 
         this.beginFireKick = 0f; 
     }
 

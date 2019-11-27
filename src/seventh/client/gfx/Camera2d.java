@@ -370,16 +370,11 @@ public class Camera2d implements Camera {
             
             if(Vector2f.Vector2fLengthSq(vDelta) > 0.99f) 
             { 
-                //Vector2fLerp(vPosition, vNextPosition, 0.242f, vPosition);
-                //Vector2f.Vector2fInterpolate(vPosition, vNextPosition, 0.242f, vPosition);
-                final float speed = 0.242f;
-                final float ispeed = 1.0f - speed;
-                Vector2fMult(vPosition, ispeed, vPosition);
-                Vector2fMult(vNextPosition, speed, vVelocity);
-                Vector2fAdd(vPosition, vVelocity, vPosition);
-                
-                Vector2f.Vector2fRound(vPosition, vPosition);                
-            }            
+                Vector2f.Vector2fInterpolate(vPosition, vNextPosition, 0.192f, vPosition);
+            }
+            else {
+                Vector2f.Vector2fRound(vPosition, vPosition);
+            }
         }
         else {                            
             this.vDelta.zeroOut();

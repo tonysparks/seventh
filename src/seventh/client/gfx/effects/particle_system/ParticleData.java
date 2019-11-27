@@ -57,6 +57,10 @@ public class ParticleData {
         
     }
     
+    public boolean atLimit() {
+        return this.numberOfAliveParticles >= this.maxParticles;
+    }
+    
     public int spawnParticle() {
         int index = -1;
         if(this.numberOfAliveParticles < this.maxParticles) {

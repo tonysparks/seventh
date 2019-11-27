@@ -180,7 +180,7 @@ public class Emitters {
         int maxParticles = 1000;
         int maxSpread = 15;
         
-        Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
+        final Emitter emitter = new Emitter(pos.createClone(), emitterTimeToLive, maxParticles)
                                 .setName("RocketTrailEmitter")
                                 .setDieInstantly(false);
         BatchedParticleGenerator gen = new BatchedParticleGenerator(0, 7)
@@ -192,20 +192,19 @@ public class Emitters {
                     particles.color[index].a = 0.92f;
                 }
             })
-           .addSingleParticleGenerator(new RandomPositionInRadiusSingleParticleGenerator(maxSpread))
+           .addSingleParticleGenerator(new RandomInterpolatedPositionInRadiusSingleParticleGenerator(0.2f, 0.9f, maxSpread))
            .addSingleParticleGenerator(new RandomRotationSingleParticleGenerator())
            .addSingleParticleGenerator(new RandomScaleSingleParticleGenerator(0.25f, 1.2f))
            .addSingleParticleGenerator(new RandomSpeedSingleParticleGenerator(0, 0))
-           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(5500, 6000))
+           .addSingleParticleGenerator(new RandomTimeToLiveSingleParticleGenerator(6500, 6600))
            .addSingleParticleGenerator(new RandomSpriteSingleParticleGenerator(Art.smokeImage)) 
         ;
-        
         emitter.addParticleGenerator(gen);
         
         emitter.addParticleUpdater(new KillUpdater());
         emitter.addParticleUpdater(new KillIfAttachedIsDeadUpdater());        
         emitter.addParticleUpdater(new RandomMovementParticleUpdater(80));
-        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9498f));
+        emitter.addParticleUpdater(new AlphaDecayUpdater(0f, 0.9298f));
         emitter.addParticleRenderer(new SpriteParticleRenderer());
         
         return emitter;
@@ -542,6 +541,7 @@ public class Emitters {
         final int timeToLive = 100_000;
         
         Emitter emitter = new Emitter(pos, timeToLive, maxParticles)
+                .setName("WallCrumble")
                 .setPersistent(true)
                 .setDieInstantly(false);
         

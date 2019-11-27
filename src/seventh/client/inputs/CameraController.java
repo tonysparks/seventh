@@ -137,7 +137,7 @@ public class CameraController implements Updatable {
             cameraShakeBounds.centerAround(centerPos);
             if(cameraShakeBounds.contains(sourcePosition)) {
                 float force = Vector2f.Vector2fDistance(centerPos, sourcePosition);                
-                force = Math.max(130 - force/10, 10);                
+                force = Math.max(70 - force/10, 10);                
                 camera.addShake(300, force);
             }
         }

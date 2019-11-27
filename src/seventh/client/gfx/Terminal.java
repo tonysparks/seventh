@@ -497,7 +497,7 @@ public class Terminal implements Updatable, Logger {
         
         if(this.isOpening) {
             if(background.height < MAX_HEIGHT) {
-                background.height += 100;                
+                background.height += 1800 * timeStep.asFraction();
             }
             else {
                 this.isOpening = false;
@@ -506,7 +506,7 @@ public class Terminal implements Updatable, Logger {
         
         if(this.isCollapsing) {
             if(background.height > 0) {
-                background.height -= 50;
+                background.height -= 800 * timeStep.asFraction();
             }
             else {
                 this.isActive = false;
@@ -524,10 +524,10 @@ public class Terminal implements Updatable, Logger {
         }
         
         if(scrollY>0) {
-            scrollPosition += 5;
+            scrollPosition += 300 * timeStep.asFraction();
         }
         else if(scrollY<0) {
-            scrollPosition -= 5;
+            scrollPosition -= 300 * timeStep.asFraction();
         }
     }
     

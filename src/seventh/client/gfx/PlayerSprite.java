@@ -45,7 +45,7 @@ public class PlayerSprite implements Renderable {
         
         @Override
         public void update(TimeStep timeStep) {
-            value += direction*velocity;        
+            value += direction*velocity*timeStep.asFraction();        
             
             if(value>max) {
                 value=max;
@@ -59,8 +59,9 @@ public class PlayerSprite implements Renderable {
 
         
         public void set(double maxValue, double velocity) {
+            final double factor = 30.0;
             this.max = maxValue;
-            this.velocity = velocity;
+            this.velocity = velocity * factor;
         }
         
         public void clear() {

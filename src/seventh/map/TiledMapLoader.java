@@ -158,6 +158,34 @@ public class TiledMapLoader implements MapLoader {
         return mapObjects;
     }
     
+    /**
+     * Required for back porting different TileD versions for handling properties.
+     * 
+     * @param newProps
+     * @return the old properties format
+     */
+    private LeoMap toProperties(LeoObject newProps) {
+        
+        if(LeoObject.isNull(newProps)) {
+            return new LeoMap();
+        }
+        
+        if(newProps.isArray()) {
+            LeoMap result = new LeoMap();
+            LeoArray array = newProps.as();
+            for(LeoObject v : array) {
+                result.put(v.getObject("name"), v.getObject("value"));
+            }
+            return result;
+        }
+
+        if(newProps.isMap()) {
+            return newProps.as();
+        }
+        
+        return new LeoMap();
+    }
+    
     private Layer parseLayer(LeoMap layer, int index, TilesetAtlas atlas, boolean loadImages, int tileWidth, int tileHeight, SurfaceType[][] surfaces) {
         LeoArray data = layer.getByString("data").as();
         int width = layer.getInt("width");    
@@ -171,7 +199,7 @@ public class TiledMapLoader implements MapLoader {
         
         int heightMask = 0;
         if (layer.has(LeoString.valueOf("properties"))) {
-            LeoMap properties = layer.getByString("properties").as();            
+            LeoMap properties = toProperties(layer.getByString("properties"));            
             isCollidable = properties.getString("collidable").equals("true");
             isForeground = properties.getString("foreground").equals("true");
             isDestructable = properties.getString("destructable").equals("true");
@@ -321,6 +349,12 @@ public class TiledMapLoader implements MapLoader {
             if(LeoObject.isTrue(props) && props.isMap()) {
                 tilesetprops = props.as();
             }
+            else {
+                props = tileset.getByString("properties");
+                if(LeoObject.isTrue(props) && props.isMap()) {
+                    tilesetprops = props.as();
+                }
+            }
 
             TextureRegion image = null;
             TextureRegion[] images = null;
@@ -336,7 +370,7 @@ public class TiledMapLoader implements MapLoader {
                 image.flip(false, true);
                 image.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
                 image.getTexture().setWrap(TextureWrap.MirroredRepeat, TextureWrap.MirroredRepeat);
-                
+                                
                 images = TextureUtil.toTileSet(image, tilewidth, tileheight, margin, spacing);            
             }
             atlas.addTileset(new Tileset(firstgid, images, tilesetprops));

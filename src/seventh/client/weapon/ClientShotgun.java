@@ -24,7 +24,7 @@ public class ClientShotgun extends ClientWeapon {
         this.weaponWeight = WeaponConstants.SHOTGUN_WEIGHT;
         
         this.weaponKickTime = 66; 
-        this.endFireKick = 18.7f; 
+        this.endFireKick = 8.7f; 
         this.beginFireKick = 0f; 
     }
     

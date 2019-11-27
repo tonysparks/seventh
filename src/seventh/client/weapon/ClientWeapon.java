@@ -261,10 +261,8 @@ public class ClientWeapon {
         if(getState() == WeaponState.FIRING && weaponKickTime>0) {
             if(firstFire==1) {
                 camera.shakeFrom(weaponKickTime, this.owner.getFacing(), this.endFireKick);
-                //camera.shake(weaponKickTime, endFireKick);
             }
-            else if (beginFireKick > 0 ) {
-                //camera.shake(weaponKickTime, beginFireKick);
+            else if (beginFireKick > 0) {
                 camera.shakeFrom(weaponKickTime, this.owner.getFacing(), this.beginFireKick);
             }
         }

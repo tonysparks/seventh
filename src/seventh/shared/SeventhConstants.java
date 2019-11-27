@@ -34,8 +34,8 @@ public interface SeventhConstants {
     public static final int PLAYER_WIDTH = 24;//16;
     public static final int PLAYER_HEIGHT = 24;
     
-    public static final int PLAYER_SPEED = 140; 
-    public static final int PLAYER_MIN_SPEED = 40;
+    public static final int PLAYER_SPEED = 200; // 140
+    public static final int PLAYER_MIN_SPEED = 60; // 40
     public static final int RUN_DELAY_TIME = 300;
     public static final int SPRINT_DELAY_TIME = 200;
     

@@ -97,7 +97,7 @@ public class Springfield extends Weapon {
      */
     @Override
     public boolean beginFire() {
-        if ( canFire() ) {
+        if (canFire()) {
             game.emitSound(getOwnerId(), SoundType.SPRINGFIELD_FIRE, getPos());
             game.emitSound(getOwnerId(), SoundType.SPRINGFIELD_RECHAMBER, getPos());
             
@@ -111,7 +111,7 @@ public class Springfield extends Weapon {
         else if (reloading) {
             reloading = false;
         }
-        else if (bulletsInClip <= 0 ) {
+        else if (bulletsInClip <= 0 && !isFiring()) {
             setFireEmptyState();            
         }
                 

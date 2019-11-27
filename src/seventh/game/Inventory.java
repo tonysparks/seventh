@@ -120,8 +120,8 @@ public class Inventory {
     }
     
     public Weapon currentItem() {
-        return (this.weapons.isEmpty()) ? null :
-            this.weapons.get(this.currentItem);
+        return (this.currentItem < this.weapons.size()) ? 
+            this.weapons.get(this.currentItem) : null;
     }
     
     public Weapon nextItem() {

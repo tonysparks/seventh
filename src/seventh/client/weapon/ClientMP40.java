@@ -27,7 +27,7 @@ public class ClientMP40 extends ClientWeapon {
         
         this.weaponKickTime = 100; 
         this.endFireKick = 0f; 
-        this.beginFireKick = 3.2f; 
+        this.beginFireKick = 1.3f; 
     }
 
     /* (non-Javadoc)

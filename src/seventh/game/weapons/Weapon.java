@@ -482,7 +482,7 @@ public abstract class Weapon {
         Vector2f pos = newBulletPosition();
         Vector2f vel = calculateVelocity(owner.getFacing());
         
-        final int speed = 1500 + (random.nextInt(10) * 100);
+        final int speed = 1800 + (random.nextInt(10) * 100);
         
         Bullet bullet = new Bullet(pos, speed, game, owner, vel, damage + getDamageMultiplier(), isPiercing);
         bullet.setMaxDistance(getBulletRange());                
@@ -526,7 +526,7 @@ public abstract class Weapon {
         Vector2f pos = newRocketPosition();
         Vector2f vel = calculateVelocity(owner.getFacing());
         
-        final int speed = 650;
+        final int speed = 950;
         final int splashDamage = 80;
         
         Rocket bullet = new Rocket(pos, speed, game, owner, vel, damage, splashDamage);

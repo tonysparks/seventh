@@ -33,7 +33,7 @@ public class FramedAnimation extends Animation {
     /**
      * Time elapsed
      */
-    private long elapsedTime;
+    private double elapsedTime;
 
     /**
      * Number of frames
@@ -75,7 +75,7 @@ public class FramedAnimation extends Animation {
         }
 
         /* Increment the elapsed time */
-        this.elapsedTime += timeStep.getDeltaTime();
+        this.elapsedTime += (timeStep.asFraction() * 1000.0);
 
         /* If the frame time has expired, increment to the next frame */
         if ( this.elapsedTime > this.currentAnimationFrame.getFrameTime() ) {

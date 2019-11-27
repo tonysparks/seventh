@@ -27,7 +27,7 @@ public class ClientM1Garand extends ClientWeapon {
         
         this.weaponKickTime = 50; 
         this.endFireKick = 0f; 
-        this.beginFireKick = 8.5f; 
+        this.beginFireKick = 2.5f; 
     }
 
 }

@@ -85,7 +85,11 @@ public abstract class ClientControllableEntity extends ClientEntity {
         // do client side prediction
         if(!isControlledByLocalPlayer()) {
             this.predictedOrientation = this.orientation;
-            this.predictedState = this.currentState;            
+            this.predictedState = this.currentState;
+            this.interpolationAlpha = NON_CONTROLLED_INTERPOLATION;
+        }
+        else {
+            this.interpolationAlpha = CONTROLLED_INTERPOLATION;
         }
     }
     

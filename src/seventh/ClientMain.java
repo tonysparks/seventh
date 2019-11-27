@@ -138,6 +138,7 @@ public class ClientMain {
             cfg.resizable = true;
             cfg.useGL30 = vConfig.useGL30();            
             cfg.vSyncEnabled = vConfig.isVsync();
+            cfg.foregroundFPS = 60;
                         
             if(!cfg.fullscreen) {
                 cfg.width = 840;// 960;

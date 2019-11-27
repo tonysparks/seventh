@@ -24,6 +24,9 @@ import seventh.shared.TimeStep;
  *
  */
 public abstract class ClientEntity implements Renderable {
+    protected static final float NON_CONTROLLED_INTERPOLATION = 0.15f;
+    protected static final float CONTROLLED_INTERPOLATION = 0.95f;
+    
     protected int id;
     
     protected ClientGame game;
@@ -37,6 +40,7 @@ public abstract class ClientEntity implements Renderable {
     protected long gameClock;
     protected int  zOrder;
     protected Type type;
+    protected float interpolationAlpha;
     
     private boolean updateReceived;
     
@@ -93,6 +97,7 @@ public abstract class ClientEntity implements Renderable {
         this.zOrder = 100;
         
         this.scriptObj = LeoObject.valueOf(this);
+        this.interpolationAlpha = NON_CONTROLLED_INTERPOLATION;
     }
     
     /**
@@ -314,8 +319,6 @@ public abstract class ClientEntity implements Renderable {
      */
     protected void interpolate(TimeStep timeStep) {
         if(this.prevState != null && this.nextState != null) {
-            // TODO :: figure out ping time
-            float alpha = 0.75f;             
             float dist = (pos.x - nextState.posX) * (pos.x - nextState.posX) + 
                          (pos.y - nextState.posY) * (pos.y - nextState.posY);
             
@@ -329,8 +332,8 @@ public abstract class ClientEntity implements Renderable {
             }
             else {
             
-                this.pos.x = pos.x + (alpha * (nextState.posX - pos.x));
-                this.pos.y = pos.y + (alpha * (nextState.posY - pos.y));
+                this.pos.x = pos.x + (this.interpolationAlpha * (nextState.posX - pos.x));
+                this.pos.y = pos.y + (this.interpolationAlpha * (nextState.posY - pos.y));
             }
             
             this.bounds.setLocation(pos);
@@ -346,7 +349,7 @@ public abstract class ClientEntity implements Renderable {
                 this.orientation = nextState.orientation;
             }
             else {
-                this.orientation = prevState.orientation + (alpha * (nextState.orientation - prevState.orientation));
+                this.orientation = prevState.orientation + (this.interpolationAlpha * (nextState.orientation - prevState.orientation));
             }
             
             this.orientation = (float) Math.toRadians(this.orientation);

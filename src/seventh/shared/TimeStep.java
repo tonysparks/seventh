@@ -35,7 +35,8 @@ public class TimeStep {
      * @return returns the time step as a fraction
      */
     public double asFraction() {
-        return deltaTime / 1000.0d;
+        return 1.0 / 60.0;
+        //return deltaTime / 1000.0d;
     }
     /**
      * @param deltaTime the deltaTime to set

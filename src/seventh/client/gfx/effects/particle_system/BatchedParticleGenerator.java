@@ -76,6 +76,10 @@ public class BatchedParticleGenerator implements ParticleGenerator {
     
     @Override
     public void update(TimeStep timeStep, ParticleData particles) {
+        if(particles.atLimit()) {
+            return;
+        }
+        
         this.spawnTimer.update(timeStep);
         if(this.spawnTimer.isOnFirstTime()) {
             particles.emitter.resetUpdaters();

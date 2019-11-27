@@ -18,7 +18,7 @@ import seventh.shared.TimeStep;
 public class RandomPositionInRadiusSingleParticleGenerator implements SingleParticleGenerator {
 
     private final int maxDistance;
-    
+        
     /**
      * 
      */

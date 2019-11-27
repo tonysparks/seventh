@@ -106,7 +106,7 @@ public class MG42 extends Weapon {
             setFireState(); 
             return true;
         }
-        else if (bulletsInClip <= 0 ) {                
+        else if (bulletsInClip <= 0 && !isFiring()) {                
             setFireEmptyState();            
         }
 

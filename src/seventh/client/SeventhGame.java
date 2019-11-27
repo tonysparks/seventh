@@ -48,13 +48,7 @@ import seventh.client.screens.ShaderEditorScreen;
 import seventh.client.sfx.Sounds;
 import seventh.network.messages.PlayerNameChangeMessage;
 import seventh.server.GameServer.GameServerSettings;
-import seventh.shared.Command;
-import seventh.shared.CommonCommands;
-import seventh.shared.Cons;
-import seventh.shared.Console;
-import seventh.shared.Scripting;
-import seventh.shared.StateMachine;
-import seventh.shared.TimeStep;
+import seventh.shared.*;
 import seventh.ui.UserInterfaceManager;
 
 /**
@@ -102,10 +96,11 @@ public class SeventhGame implements ApplicationListener {
     private TimeStep timeStep;
     private long gameClock;
     
-    private double currentTime;
+    private long currentTime;
+    private long dt;
     private double accumulator;
     private static final double step = 1.0/30.0;    
-    private static final long DELTA_TIME = 1000 / 30;
+    private static final long DELTA_TIME = 16;//1000.0 / 60.0;
     
     /**
      * Development mode startup script
@@ -118,6 +113,8 @@ public class SeventhGame implements ApplicationListener {
     public SeventhGame(ClientSeventhConfig config, String startupConfig) throws Exception {
         this.console = Cons.getImpl();
         this.timeStep = new TimeStep();
+        this.timeStep.setDeltaTime(DELTA_TIME);
+        
         this.terminal = new Terminal(console, config);
                         
         this.inputs = new InputMultiplexer();
@@ -467,26 +464,35 @@ public class SeventhGame implements ApplicationListener {
      */
     @Override
     public void render() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        long newTime = TimeUtils.millis();
+        long frameTime = newTime - currentTime;
+        dt = frameTime;
         
-        double newTime = TimeUtils.millis() / 1000.0;
-        double frameTime = Math.min(newTime - currentTime, 0.25);
-        
-        currentTime = newTime;
-        accumulator += frameTime;
-        
-        while(accumulator >= step) {
-            timeStep.setDeltaTime(DELTA_TIME);
-            timeStep.setGameClock(gameClock);
-                        
-            updateScreen(timeStep);
-            
-            accumulator -= step;
-            gameClock += DELTA_TIME;
+        if(frameTime > DELTA_TIME) {
+            accumulator ++;
         }
         
-        float alpha = (float)(accumulator / step);
-        renderScreen(canvas, alpha);                
+        // spin/sleep if necessary
+//        do {
+//            long timeRemaining = DELTA_TIME - frameTime;
+//            if(timeRemaining >= 10) {
+//                OS.sleep(timeRemaining);
+//            }
+//            
+//            frameTime = TimeUtils.millis() - currentTime;
+//        }
+//        while(frameTime < DELTA_TIME);
+        
+        currentTime = newTime;
+        timeStep.setGameClock(gameClock);
+        gameClock += DELTA_TIME;
+        
+        updateScreen(timeStep);
+        
+        
+        float alpha = 1.0f;
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        renderScreen(canvas, alpha);
     }
     
     /**
@@ -687,7 +693,11 @@ public class SeventhGame implements ApplicationListener {
         if(this.terminal.isActive()) {            
             this.terminal.render(canvas, alpha);            
         }
-        canvas.postRender();
+        /*canvas.drawString("Timer: " + gameClock, 10, 20, 0xffffffff);
+        canvas.drawString("# Skipped Frames: " + accumulator, 10, 50, 0xffffffff);
+        canvas.drawString("FrameTime: " + dt, 10, 80, 0xffffffff);
+        canvas.drawString("GdxFrameTime: " + Gdx.app.getGraphics().getDeltaTime(), 10, 110, 0xffffffff);
+        */canvas.postRender();
     }
     
     private void updateInputs(Screen previousScreen) {

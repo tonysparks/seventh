@@ -132,7 +132,7 @@ public class Shotgun extends Weapon {
         else if (reloading) {
             reloading = false;
         }
-        else if (bulletsInClip <= 0 ) {
+        else if (bulletsInClip <= 0 && !isFiring()) {
             setFireEmptyState();            
         }
                 

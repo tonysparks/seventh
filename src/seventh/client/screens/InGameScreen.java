@@ -49,11 +49,7 @@ import seventh.network.messages.PlayerSwitchTileMessage;
 import seventh.network.messages.RconMessage;
 import seventh.network.messages.TeamTextMessage;
 import seventh.network.messages.TextMessage;
-import seventh.shared.Command;
-import seventh.shared.Cons;
-import seventh.shared.Console;
-import seventh.shared.RconHash;
-import seventh.shared.TimeStep;
+import seventh.shared.*;
 import seventh.ui.TextBox;
 import seventh.ui.UserInterfaceManager;
 import seventh.ui.events.ButtonEvent;
@@ -133,6 +129,8 @@ public class InGameScreen implements Screen {
     private KeyMap keyMap;
     private AIShortcuts aiShortcuts;
     private AIShortcutsMenu aiShortcutsMenu;
+    
+    private Timer networkTimer;
     
     private JoystickGameController controllerInput;    
     private KeyboardGameController inputs = new KeyboardGameController() {
@@ -228,6 +226,8 @@ public class InGameScreen implements Screen {
         this.aiShortcuts = new AIShortcuts(this.keyMap);
         this.aiShortcutsMenu = new AIShortcutsMenu(game, keyMap, aiShortcuts);
         this.controllerInput = new JoystickGameController();
+        
+        this.networkTimer = new Timer(true, 1000/30).start();
         
         createUI();
     }
@@ -773,9 +773,14 @@ public class InGameScreen implements Screen {
             inputMessage.keys = 0;
         }
         
-        inputMessage.orientation = game.calcPlayerOrientation(mousePos.x, mousePos.y);                 
-        connection.getClientProtocol().sendPlayerInputMessage(inputMessage);
-        connection.updateNetwork(timeStep);
+        this.networkTimer.update(timeStep);
+        if(this.networkTimer.isTime()) {
+            this.networkTimer.reset();
+            
+            inputMessage.orientation = game.calcPlayerOrientation(mousePos.x, mousePos.y);                 
+            connection.getClientProtocol().sendPlayerInputMessage(inputMessage);
+            connection.updateNetwork(timeStep);
+        }
                         
         game.update(timeStep);
         game.applyPlayerInput(mousePos.x, mousePos.y, inputKeys);

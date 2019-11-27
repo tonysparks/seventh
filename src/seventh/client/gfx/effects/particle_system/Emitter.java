@@ -91,6 +91,7 @@ public class Emitter implements Effect {
     protected Timer timeToLive;    
         
     private Vector2f pos;
+    private Vector2f previousPos;
     private Random random;
         
     private boolean dieInstantly;    
@@ -113,6 +114,8 @@ public class Emitter implements Effect {
      */
     public Emitter(Vector2f pos, int timeToLive, int maxParticles) {
         this.pos = pos;
+        this.previousPos = new Vector2f();
+        this.previousPos.set(pos);
         
         this.generators = new ArrayList<>();
         this.updaters = new ArrayList<>();
@@ -206,6 +209,7 @@ public class Emitter implements Effect {
      * @param pos the pos to set
      */
     public Emitter setPos(Vector2f pos) {
+        this.previousPos.set(this.pos);
         this.pos.set(pos);
         this.visibileBounds.centerAround(pos);
         return this;
@@ -234,6 +238,13 @@ public class Emitter implements Effect {
      */
     public Vector2f getPos() {
         return pos;
+    }
+    
+    /**
+     * @return the previousPos
+     */
+    public Vector2f getPreviousPos() {
+        return previousPos;
     }
     
     public Emitter kill() {
@@ -342,6 +353,7 @@ public class Emitter implements Effect {
     public void update(TimeStep timeStep) {
         if(isAlive() /*&& !this.isPaused*/) {
             if(this.attachedTo!=null) {
+                this.previousPos.set(this.pos);
                 this.pos.set(this.attachedTo.getPos());
             }
             
