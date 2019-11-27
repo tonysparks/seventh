@@ -23,7 +23,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.utils.TimeUtils;
 
 import leola.vm.types.LeoMap;
 import leola.vm.types.LeoObject;
@@ -96,11 +95,7 @@ public class SeventhGame implements ApplicationListener {
     private TimeStep timeStep;
     private long gameClock;
     
-    private long currentTime;
-    private long dt;
-    private double accumulator;
-    private static final double step = 1.0/30.0;    
-    private static final long DELTA_TIME = 16;//1000.0 / 60.0;
+    private static final long DELTA_TIME = 1000 / 60;
     
     /**
      * Development mode startup script
@@ -464,35 +459,13 @@ public class SeventhGame implements ApplicationListener {
      */
     @Override
     public void render() {
-        long newTime = TimeUtils.millis();
-        long frameTime = newTime - currentTime;
-        dt = frameTime;
-        
-        if(frameTime > DELTA_TIME) {
-            accumulator ++;
-        }
-        
-        // spin/sleep if necessary
-//        do {
-//            long timeRemaining = DELTA_TIME - frameTime;
-//            if(timeRemaining >= 10) {
-//                OS.sleep(timeRemaining);
-//            }
-//            
-//            frameTime = TimeUtils.millis() - currentTime;
-//        }
-//        while(frameTime < DELTA_TIME);
-        
-        currentTime = newTime;
         timeStep.setGameClock(gameClock);
         gameClock += DELTA_TIME;
         
         updateScreen(timeStep);
-        
-        
-        float alpha = 1.0f;
+                
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        renderScreen(canvas, alpha);
+        renderScreen(canvas, 1.0f);
     }
     
     /**
